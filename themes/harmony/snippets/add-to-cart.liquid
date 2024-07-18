@@ -1,0 +1,46 @@
+{%- assign uniq = 0 | rand %}
+
+{%- style -%}
+  .yc-{{ uniq }}-add-to-cart button {
+    background: {{ block_settings.background_color.hex }};
+    color: {{ block_settings.text_color.hex }};
+    border: 1px solid;
+    border-color: {{ block_settings.border_color.hex }};
+    font-family: var(--yc-font-family);
+  }
+
+  .yc-{{ uniq }}-add-to-cart .spinner {
+    width: 21px;
+    height: 21px;
+  }
+
+  .yc-{{ uniq }}-add-to-cart .btn-content.hidden {
+    display: none !important;
+  }
+{%- endstyle -%}
+
+<div class='yc-{{ uniq }}-add-to-cart{% if block_settings.is_sticky %} is_sticky{% endif %} add-to-cart-btn'>
+  <button
+    onclick='addToCart("{{ snippetId }}")'
+    {% if is_placeholder %} disabled {% endif %}
+  >
+    <span
+      class='spinner hidden'
+      id='loading__cart'
+    ></span>
+    <span class="btn-content">
+      {% render 'icon', name: 'bag' %}
+      {{ block_settings.text_content }}
+    </span>
+  </button>
+</div>
+
+{% javascript %}
+
+  const TRANSLATED_TEXT = {
+    empty_inventory: "{{ 'errors.empty_inventory' | t }}"
+  }
+
+  const IS_CART_SKIPED = "{{ block_settings.skip_cart }}";
+  const CHECKOUT_PAGE_URL = "{{ checkout_page_url }}";
+{% endjavascript %}

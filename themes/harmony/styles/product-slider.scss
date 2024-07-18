@@ -1,0 +1,108 @@
+@import 'helpers/mixins';
+
+.product-slider {
+  .product-thumbnail {
+    position: relative;
+    overflow: hidden;
+    padding: 0 0 100%;
+    height: 0;
+
+    img, svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 100%;
+      transform: translate(-50%,-50%);
+      transition: transform .25s ease;
+
+      &:hover {
+        transform: translate(-50%,-50%) scale(1.1);
+      }
+    }
+  }
+
+  .prices {
+    text-align: center;
+    padding-bottom: 12px;
+
+    .product-price {
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--yc-primary-color);
+      line-height: 24px;
+
+     @include breakpoint('md') {
+        font-size: 20px;
+      }
+    }
+
+
+    .compare-at-price {
+      text-decoration: line-through;
+      font-size: 12px;
+      font-weight: 300;
+      color: #9B9B9B;
+
+     @include breakpoint('md') {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .splide__pagination {
+    display: flex !important;
+    justify-content: center;
+    margin-bottom: -36px;
+  }
+
+  .product-block {
+    width: 100%;
+    background-color: white;
+    border-radius: 3px;
+
+    .product-details {
+      padding: 0 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: center;
+      margin: 8px auto;
+      .product-title {
+        min-height: 48px;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        @supports (-webkit-line-clamp: 2) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: initial;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+        }
+      }
+    }
+
+
+    .prices {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .compare-at-price {
+      font-weight: 400;
+      color: #8D8D8D;
+      line-height: 120%;
+      text-decoration-line: line-through;
+    }
+  }
+
+  .product-slider-placeholder {
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,41 @@
+{{ 'queries-handler.css' | asset_url | stylesheet_tag }}
+{{ 'collection-listing.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  .collection-title {
+    color: {{ section.settings.category_title_color.hex }};
+  }
+{% endstyle %}
+
+{%- assign per_page = section.settings.items_per_page -%}
+<div class='yc-collection-listing container'>
+    {%- render 'breadcrumbs' -%}
+  {%- paginate collections by per_page cod %}
+    <div class='collection-list'>
+      {% for collection in items %}
+        {%- render 'collection-preview', category: collection %}
+      {% endfor %}
+    </div>
+  {%- endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "Collections",
+  "templates": ["list-collections"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "number",
+      "id": "items_per_page",
+      "label": "Collections per page",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "category_title_color",
+      "label": "Category title color"
+    }
+  ]
+}
+{% endschema %}

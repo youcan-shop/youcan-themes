@@ -1,0 +1,153 @@
+<meta charset='UTF-8'>
+<meta
+  http-equiv='X-UA-Compatible'
+  content='IE=edge'
+>
+<meta
+  name='viewport'
+  content='width=device-width, initial-scale=1.0'
+>
+
+<link
+  href='https://fonts.googleapis.com/css2?family={{ settings.font_family }}:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap'
+  rel='stylesheet'
+>
+
+{%- style -%}
+  :root {
+    /* main */
+    --yc-font-family:
+    {{ settings.font_family }},
+    sans-serif;
+    --yc-inputs-shadow: 0 0 0 1px var(--yc-primary-color);
+    --yc-main-shadow: rgba(0, 0, 0, 0.04) 0 0 0 1px, rgba(0, 0, 0, 0.03) 0 1px 1px, rgba(0, 0, 0, 0.03) 0 2px 2px, rgba(0, 0, 0, 0.03) 0 4px 4px, rgba(0, 0, 0, 0.03) 0 8px 8px, rgba(0, 0, 0, 0.03) 0 16px 16px;
+    --yc-theme-direction: {{ settings.theme_direction }};
+
+    /* colors */
+    --yc-primary-color: {{ settings.primary_color.hex }};
+    --yc-primary-color-rgb: {{settings.primary_color.red}},{{settings.primary_color.green}},{{settings.primary_color.blue}};
+    --yc-success-color: {{ settings.success_color.hex }};
+    --yc-error-color: {{ settings.error_color.hex }};
+    --yc-warning-color: {{ settings.warning_color.hex }};
+    --yc-neutral-color: {{ settings.neutral_color.hex }};
+    --yc-neutral-light-color: {{ settings.neutral_light_color.hex }};
+
+    /* Borders  */
+    --yc-main-border: 1px solid var(--yc-neutral-light-color);
+
+    /* Navbar */
+    --yc-nav-height: {{ settings.navbar_height }}px;
+    --yc-nav-background: {{ settings.navbar_background_color.hex }};
+    --yc-nav-links-color: {%- if settings.navbar_links_color -%}
+      {{ settings.navbar_links_color.hex }}
+    {%- else -%}
+      var(--yc-neutral-color){%- endif -%};
+    --yc-nav-links-font-weight: {{ settings.navbar_links_font_weight }};
+    --yc-nav-links-hover-transparency: {{ settings.navbar_links_hover_transparency }};
+    --yc-nav-font-family: {%- if settings.navbar_font_family -%}
+      {{ settings.navbar_font_family }}, sans-serif{%- else -%}
+      var(--yc-font-family){%- endif -%};
+    --yc-nav-font-size: {{ settings.navbar_font_size }}px;
+
+    /* Sliders */
+    /* -- Desktop */
+    --yc-slider-arrows-background: {{ settings.slider_mobile_arrows_background_color.hex }};
+
+    /* -- Mobile */
+    --yc-slider-mobile-arrows-background: {{ settings.slider_mobile_desktop_arrows_background_color.hex }};
+    --yc-slider-mobile-arrows-size: {{ settings.slider_mobile_arrows_size }}px;
+    --yc-slider-mobile-arrows-content-size: {{ settings.slider_mobile_arrows_content_size }}px;
+
+    /* Notification toast */
+    --yc-notification-toast-height: {{ settings.notification_toast_height }}px;
+    --yc-notification-toast-font-weight: {{ settings.notification_toast_font_weight }};
+    --yc-notification-toast-font-size: {{ settings.notification_toast_font_size }}px;
+    --yc-notification-toast-background-color: {{ settings.notification_toast_background_color.hex }};
+    --yc-notification-toast-text-color: {{ settings.notification_toast_text_color.hex }};
+    --yc-notification-toast-border-radius: {{ settings.notification_toast_border_radius }}px;
+    --yc-notification-toast-border-width: {{ settings.notification_toast_border_width }}px;
+    --yc-notification-toast-border-color: {{ settings.notification_toast_border_color.hex }};
+    {%- if settings.notification_toast_position == 'top-left' -%}
+      --yc-notification-toast-top: 0;
+      --yc-notification-toast-left: 0;
+    {%- endif -%}
+    {%- if settings.notification_toast_position == 'top-right' -%}
+      --yc-notification-toast-top: 0;
+      --yc-notification-toast-right: 0;
+    {%- endif -%}
+    {%- if settings.notification_toast_position == 'bottom-left' -%}
+      --yc-notification-toast-bottom: 0;
+      --yc-notification-toast-left: 0;
+    {%- endif -%}
+    {%- if settings.notification_toast_position == 'bottom-right' -%}
+      --yc-notification-toast-bottom: 0;
+      --yc-notification-toast-right: 0;
+    {%- endif -%}
+  }
+{%- endstyle -%}
+
+{%- if settings.favicon %}
+  <link
+    rel='shortcut icon'
+    href='{{ settings.favicon.src }}'
+  >
+{% endif %}
+
+{%- if settings.meta_description %}
+  <meta
+    name='description'
+    content='{{ settings.meta_description }}'
+  >
+{% endif %}
+
+{%- if settings.meta_keywords %}
+  <meta
+    name='keywords'
+    content='{{ settings.meta_keywords }}'
+  >
+{% endif %}
+
+{%- if settings.og_image %}
+  <meta
+    property='og:image'
+    content='{{ settings.og_image.src }}'
+  >
+{% endif %}
+
+<script
+  type='module'
+  src='https://unpkg.com/ionicons@latest/dist/ionicons/ionicons.esm.js'
+></script>
+
+{% javascript %}
+  const defaultAvatar = "{{ 'avatar.png' | asset_url }}";
+  const ratings = "{{ 'reviews.ratings' | t }}";
+{% endjavascript %}
+
+{{ 'main.css' | asset_url | stylesheet_tag }}
+{{ 'utils.css' | asset_url | stylesheet_tag }}
+
+{% assign store_title = store.title | default: store.name %}
+
+<title>
+  {% if page %}
+    {{ store_title }} | {{ page.name }}
+  {% elsif product %}
+    {{ store_title }} | {{ product.name }}
+  {% elsif category %}
+    {{ store_title }} | {{ category.name }}
+  {% elsif template %}
+    {% case template.name %}
+      {% when 'index' %}
+        {{ store_title }}
+      {% when 'list-collections' %}
+        {{ store_title }} | {{ 'head_metadata.collections' | t }}
+      {% when 'cart' %}
+        {{ store_title }} | {{ 'head_metadata.cart' | t }}
+      {% when 'thankyou' %}
+        {{ store_title }} | {{ 'head_metadata.thankyou' | t }}
+      {% else %}
+        {{ store_title }} | {{ template.name }}
+    {% endcase %}
+  {% endif %}
+</title>

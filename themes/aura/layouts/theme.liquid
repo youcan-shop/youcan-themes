@@ -1,0 +1,36 @@
+<!doctype html>
+<html
+  lang='en'
+  dir='{{ settings.theme_direction }}'
+>
+  <head>
+    {%- render 'head-config' -%}
+
+    {{ content_for_header }}
+
+    {{ 'youcan-js.min.js' | asset_url | script_tag }}
+    {{ 'helper.js' | asset_url | script_tag }}
+  </head>
+  <body>
+    {%- render 'overlay' -%}
+    {%- render 'alert' -%}
+
+    {%- section 'notice-bar' %}
+    {%- section 'main-navbar' %}
+
+    <main class="main-content">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'main-footer' %}
+    {%- render 'cart-drawer' -%}
+
+    {% javascript %}
+      const FORM = {
+        errors:  '{{ form.errors | first }}',
+      }
+    {% endjavascript %}
+
+    {{ 'main.js' | asset_url | script_tag }}
+  </body>
+</html>

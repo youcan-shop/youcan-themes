@@ -1,0 +1,32 @@
+{{ 'pages.css' | asset_url | stylesheet_tag }}
+
+<div class='yc-page container'>
+  {%- render 'breadcrumbs' -%}
+  <div class="yc-page-container">
+    {{ page.content }}
+  </div>
+</div>
+
+<script>
+  const CONTACT_FORM_PLACEHOLDERS = {
+    email: '{{- 'page.contact.form_placeholders.email' | t -}}',
+    subject: '{{- 'page.contact.form_placeholders.subject' | t -}}',
+    message: '{{- 'page.contact.form_placeholders.message' | t -}}'
+  }
+
+  const CONTACT_PAGE_CONTENT = {
+    title: '{{- 'page.contact.title' | t -}}',
+    subtitle: '{{- 'page.contact.subtitle' | t -}}',
+    button: '{{- 'page.contact.button' | t -}}'
+  }
+</script>
+
+{{ 'page.js' | asset_url | script_tag }}
+
+{%- schema -%}
+{
+  "label": "Page",
+  "templates": ["page"],
+  "limit": 1
+}
+{%- endschema -%}

@@ -1,0 +1,23 @@
+<div class="breadcrumbs-container">
+  <div class="breadcrumbs-listings">
+    <div class="listings__item">
+      <a href="/" class="first-listing">{{ 'snippets.collection-listing.home' | t }}</a>
+    </div>
+      {%- if template contains 'collection' or template contains 'list-collections' -%}
+        <div class="listings__item arrow-item">
+          /
+        </div>
+        <div class="listings__item">
+          <a href="/collections" class="second-listing">{{ 'snippets.collection-listing.collections' | t }}</a>
+        </div>
+      {% endif %}
+      {% if category %}
+        <div class="listings__item arrow">
+          /
+        </div>
+        <div class="listings__item">
+          <a href="/collections/{{ category.slug }}" class="third-listing">{{ category.name}}</a>
+        </div>
+      {%- endif -%}
+  </div>
+</div>

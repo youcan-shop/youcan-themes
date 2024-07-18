@@ -1,0 +1,53 @@
+{{ 'express-checkout.css' | asset_url | stylesheet_tag }}
+
+<div id="yc-sticky-checkout" class="yc-sticky-checkout {% if is_placeholder %}sticky-checkout-placeholder{% endif %}">
+  <section class="sticky-container container">
+    <div class="empty-spacer"></div>
+    <div class="step_2" id="checkout_step_2">
+      <div class="step-2-wrapper">
+        <button class="close-icon" onclick="hideCheckout()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+        <div class="variant-card-2">
+          {% render 'product-card' %}
+        </div>
+        <div class="checkout-form"></div>
+      </div>
+      <div class="cta-bottom-wrapper">
+        <button
+          type='submit'
+          class='yc-btn w-full express-checkout-button'
+          {% if is_placeholder %} disabled {% endif %}
+          onclick='placeOrder(this)'>
+          <span class='spinner hidden' id='loading__checkout'></span>
+          <span>{{ settings.express_checkout_cta }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  function dynamicMarginBottom() {
+    const elementHeight = $('.cta-bottom-wrapper').offsetHeight;
+
+    $('.step-2-wrapper').style.marginBottom = `${elementHeight}px`;
+  }
+
+  document.addEventListener('DOMContentLoaded', (e) => {
+    dynamicMarginBottom();
+  });
+
+  if (window.matchMedia("(min-width: 768px)").matches) {
+    const parent = $('.yc-sticky-checkout');
+    const child  = $("#checkout_step_2");
+
+    parent?.addEventListener('click', function(event) {
+      hideCheckout();
+    });
+
+    child?.addEventListener('click', function(event) {
+      event.stopPropagation();
+    });
+  }
+</script>

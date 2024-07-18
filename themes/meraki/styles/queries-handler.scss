@@ -1,0 +1,52 @@
+@import 'helpers/mixins';
+
+/* ---------------------- */
+/* ----- pagination ----- */
+/* ---------------------- */
+.yc-pagination-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  width: fit-content;
+
+  @include max-screen('xs') {
+    max-width: 270px;
+  }
+
+  .paginate-btn {
+    &,
+    &-prev,
+    &-next {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #B1B1B1;
+      width: 32px;
+      height: 32px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    &:hover,
+    &.active {
+      background-color: #000;
+      color: #FFF;
+    }
+
+    &-prev,
+    &-next {
+      color: #000;
+      border: 0;
+      font-size: 18px;
+
+      &.disabled {
+        cursor: not-allowed;
+        color: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}

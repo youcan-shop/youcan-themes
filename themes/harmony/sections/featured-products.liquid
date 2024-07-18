@@ -1,0 +1,218 @@
+{% assign id = 100 | rand: 2000 %}
+
+{% style %}
+  .section-featured-products-{{ id }} {
+    padding-top: {{ section.settings.space_top }}px;
+    padding-bottom: {{ section.settings.space_bottom }}px;
+  }
+
+  .section-featured-products-{{ id }} .yc-section-title {
+    text-align: {{ section.settings.section_title_position }}
+  }
+
+  .section-featured-products-{{ id }} * {
+    color: {{ section.settings.text_color.hex }};
+  }
+
+  .section-featured-products-{{ id }} .product-container-{{ id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.rows_desktop }}, minmax(0, 1fr)) !important;
+  }
+
+  @media screen and (max-width: 1024px) {
+    .section-featured-products-{{ id }} .product-container-{{ id }} {
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .section-featured-products-{{ id }} .product-container-{{ id }} {
+      grid-template-columns: repeat({{ section.settings.rows_mobile }}, minmax(0, 1fr)) !important;
+    }
+  }
+
+  .product-container-{{ id }} .product-title {
+    {% if section.settings.show_product_title == false %}
+      display: none;
+    {% endif %}
+  }
+{% endstyle %}
+
+{% assign products_exist = false %}
+
+{% for block in section.blocks %}
+  {% if block.settings.product %}
+    {% assign products_exist = true %}
+  {% endif %}
+{% endfor %}
+
+<section class='section-featured-products-{{ id }} yc-featured-products'>
+  <div class="container">
+    <h1 class='yc-section-title'>
+      {{ section.settings.title }}
+    </h1>
+    <div class='product-list product-container-{{ id }}'>
+      {% for block in section.blocks %}
+        {% if block.settings.product %}
+          <div {{ block.youcan_attributes }} class="product-item-{{ id }}">
+            {%- render 'product-preview', item: block.settings.product, block_settings: block.settings, section_settings: section.settings -%}
+          </div>
+        {% elsif products_exist == false %}
+          {%- assign index = forloop.index0 | modulo: 4 -%}
+          <div {{ block.youcan_attributes }} class="product-item-{{ id }}">
+            {%- render 'product-placeholder', index: index -%}
+           </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{%- schema -%}
+{
+  "label": "Featured products",
+  "templates": ["index", "page"],
+  "max_blocks": 25,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "المنتجات الأكتر مبيعاً"
+    },
+    {
+      "type": "select",
+      "id": "section_title_position",
+      "label": "Title position",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "rows_desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "range",
+      "id": "rows_mobile",
+      "label": "Number of columns on mobile",
+      "min": 1,
+      "max": 2,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_title",
+      "label": "Show product title",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "space_top",
+      "min": 5,
+      "max": 160,
+      "step": 1,
+      "unit": "px",
+      "label": "Space top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "space_bottom",
+      "min": 5,
+      "max": 160,
+      "step": 1,
+      "unit": "px",
+      "label": "Space Bottom",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000FF"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_at_price",
+      "label": "Show compare at price",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Banner settings"
+    },
+    {
+      "type": "color",
+      "id": "tag_color",
+      "label": "Banner background color",
+      "default": "#F33520FF"
+    },
+    {
+      "type": "color",
+      "id": "tag_text_color",
+      "label": "Banner text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "tag_position",
+      "label": "Banner position",
+      "options": [
+        {
+          "label": "Top right",
+          "value": "top_right"
+        },
+        {
+          "label": "Top left",
+          "value": "top_left"
+        },
+        {
+          "label": "Bottom right",
+          "value": "bottom_right"
+        },
+        {
+          "label": "Bottom left",
+          "value": "bottom_left"
+        }
+      ],
+      "default": "top_left"
+    }
+  ],
+  "blocks": [
+    {
+      "label": "Product",
+      "type": "product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "To ensure your images look great and load quickly, use a size of \"256px x 256px\" (1:1 aspect ratio)."
+        },
+        {
+          "type": "text",
+          "id": "tag_text",
+          "label": "Banner text"
+        }
+      ]
+    }
+  ]
+}
+{%- endschema -%}

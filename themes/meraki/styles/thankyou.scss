@@ -1,0 +1,212 @@
+@import 'helpers/mixins';
+
+body {
+  background: #F7F7F7;
+}
+
+.thankyou-page-container {
+  max-width: 440px;
+  width: 100%;
+  margin: 50px auto;
+
+  @include max-screen('md') {
+    padding: 0 16px;
+  }
+
+  @include breakpoint('md') {
+    margin: 100px auto;
+  }
+
+  .thankyou-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 33px;
+
+      .image {
+        width: 54px;
+        height: 54px;
+        object-fit: contain;
+      }
+
+      .heading {
+        text-align: center;
+        .title {
+          display: block;
+          font-size: 30px;
+          font-weight: 800;
+          line-height: 140%;
+        }
+
+        .subtitle {
+          font-size: 24px;
+          font-weight: 600;
+          line-height: 140%;
+        }
+      }
+
+      .description {
+        font-size: 14px;
+        text-align: center;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+  }
+
+  .cart-result-section {
+    .cart-items {
+      margin-bottom: 6px;
+
+      .product-list {
+        display: grid;
+        gap: 6px;
+
+        .product-item {
+          display: flex;
+          gap: 16px;
+          background: white;
+          padding: 20px 24px;
+
+          .product-image {
+            width: 62px;
+            height: 62px;
+            object-fit: contain;
+            flex-shrink: 0;
+          }
+
+          .product-details {
+            .product-name {
+              display: block;
+              color: #000;
+              font-size: 14px;
+              font-weight: 600;
+              line-height: 120%;
+              margin-bottom: 10px;
+
+              &:hover {
+                text-decoration: underline;
+              }
+            }
+
+            .product-variations {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 14px;
+              color: #000;
+              font-size: 12px;
+              font-weight: 400;
+              line-height: 150%;
+            }
+
+            .price-wrapper {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              margin-top: 10px;
+
+              .product-price {
+                color: var(--yc-primary-color);
+                font-size: 18px;
+                font-weight: 700;
+                line-height: 97%;
+              }
+
+              .compare-price {
+                color: #757575;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 120%;
+                text-decoration: line-through;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .order-details {
+      padding: 20px 24px;
+      background-color: white;
+
+      .data-listing {
+        display: grid;
+        gap: 14px;
+
+        .data-item {
+          display: flex;
+          justify-content: space-between;
+
+          & > :first-child {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 140%;
+          }
+
+          & > :last-child,
+          & > :last-child * {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 140%;
+          }
+
+          .coupon-wrapper {
+            display: inherit;
+            gap: 5px;
+
+            .coupon-value {
+              display: inherit;
+
+              .minus {
+                [dir='ltr'] & {
+                  order: -1;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .total-price {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 24px;
+        border-top: 1px solid #EBEBEB;
+        padding-top: 15px;
+
+        & > :first-child {
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 140%;
+        }
+
+        & > :last-child {
+          color: var(--yc-primary-color);
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 97%;
+        }
+      }
+    }
+  }
+
+  .home-page {
+    margin-top: 33px;
+
+    & .yc-btn {
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 150%;
+    }
+  }
+}

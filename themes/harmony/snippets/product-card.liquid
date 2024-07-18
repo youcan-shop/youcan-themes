@@ -1,0 +1,27 @@
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+<section class="yc-product-card">
+  <div class="product-container">
+    <img
+      class="main-image"
+      src="{% if product.images.size > 0 %}{{ product.images.first }}{% else %}{{ 'default_product.jpeg' | asset_url }}{% endif %}"
+      alt="product image"
+    >
+    <div class="details">
+      <span class="product-name" id="product-name"></span>
+      <div class="price">
+        <span id="sticky-price"></span>
+      </div>
+    </div>
+    <ul class="selected-preview">
+      <li class='quantity-preview'>
+        <span>{{ 'snippets.single_product.quantity' | t }}&nbsp;:</span>
+        <div id='variant_quantity'></div>
+      </li>
+      <li>
+        <div id="selected-product-variants">
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>

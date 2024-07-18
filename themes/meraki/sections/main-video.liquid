@@ -1,0 +1,122 @@
+{{ 'video.css' | asset_url | stylesheet_tag }}
+
+{% assign id = 100 | rand: 2000 %}
+
+{% style %}
+.section-video-{{ id }} {
+  margin-top: {{ section.settings.space_top }}px;
+  margin-bottom: {{ section.settings.space_bottom }}px;
+}
+
+.section-video-{{ id }} .youtube-play-button {
+  background-color: {{ section.settings.play_button_background_color.hex }};
+}
+{% endstyle %}
+
+<section class='section-video-{{ id }} video-wrapper container'
+  data-video-link="{{ section.settings.video_link }}"
+  data-video-width="{{ section.settings.video_width }}"
+  data-video-height="{{ section.settings.video_height }}"
+>
+  {% if section.settings.video_link %}
+    {% if section.settings.video_type == 'youtube' %}
+      <div class='youtube-video'>
+        <img class='youtube-thumbnail' src='' loading='lazy'>
+        <div class='youtube-play-button'>
+          <div class="triangle"></div>
+        </div>
+        <div class="spinner video-spinner"></div>
+      </div>
+    {% endif %}
+    {% if section.settings.video_type == 'facebook' %}
+    <iframe
+      class='facebook-video'
+      src='https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2FAymanJadaofficial%2Fvideos%2F1344326396104890%2F&show_text=false&width=560&t=0'
+      style='border:none;overflow:hidden'
+      scrolling='no'
+      frameborder='0'
+      allowfullscreen='true'
+      allow='autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share'
+      allowFullScreen='true'
+      loading='lazy'
+    ></iframe>
+    {% endif %}
+  {% endif %}
+</section>
+
+{% schema %}
+  {
+    "label": "Video",
+    "templates": ["index", "product", "page"],
+    "settings": [
+      {
+        "type": "select",
+        "id": "video_type",
+        "label": "Video type",
+        "options": [
+          {
+            "value": "youtube",
+            "label": "Youtube"
+          },
+          {
+            "value": "facebook",
+            "label": "Facebook"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "video_link",
+        "label": "Video link",
+        "accept": ["youtube", "vimeo"]
+      },
+      {
+        "type": "range",
+        "id": "video_height",
+        "label": "Video height",
+        "min": 100,
+        "max": 1000,
+        "step": 10,
+        "unit": "px",
+        "default": 500
+      },
+      {
+        "type": "range",
+        "id": "video_width",
+        "label": "Video width",
+        "min": 10,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 100
+      },
+      {
+        "type": "color",
+        "id": "play_button_background_color",
+        "label": "Youtube play icon color",
+        "default": "#FFFFFFFF"
+      },
+      {
+        "type": "range",
+        "id": "space_top",
+        "label": "Space top",
+        "min": 5,
+        "max": 160,
+        "step": 1,
+        "unit": "px",
+        "default": 20
+
+      },
+      {
+        "type": "range",
+        "id": "space_bottom",
+        "label": "Space bottom",
+        "min": 5,
+        "max": 160,
+        "step": 1,
+        "unit": "px",
+        "default": 20
+      }
+    ]
+  }
+  {% endschema %}

@@ -1,0 +1,149 @@
+{{ 'thankyou.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+.content-wrapper .title {
+  color: {{ section.settings.title_color.hex }};
+}
+
+.content-wrapper .subtitle {
+  color: {{ section.settings.subtitle_color.hex }};
+}
+{% endstyle %}
+
+<article class="thankyou-page-container">
+  <div class='thankyou-wrapper'>
+    <div class='content-wrapper'>
+      {%- if section.settings.upload_thankyou_img.src -%}
+        <img loading='lazy' class='image' src="{{ section.settings.upload_thankyou_img.src }}" alt='Upload thank you image'>
+      {% else %}
+        <ion-icon name="checkmark-circle-outline" class="icon"></ion-icon>
+      {%- endif -%}
+      <div class="heading">
+        <div class='title'>{{ section.settings.title }}
+        <div class='subtitle'>{{ section.settings.subtitle }}</div>
+      </div>
+      </div>
+      <div class='description'>
+        {{ section.settings.description }}
+      </div>
+    </div>
+  </div>
+
+  <section class="cart-result-section">
+    <h2 class="title">{{- 'thankyou.details.title' | t -}}</h2>
+    <div class="cart-items">
+      <ul class="product-list">
+        {% for item in order.order_variants %}
+          <li class="product-item">
+            <img class="product-image" src="{{- item.image -}}" />
+            <div class="product-details">
+              <a class="product-name" href="/products/{{- item.slug -}}" target="_blank">{{- item.name -}}</a>
+              <ul class="product-variations">
+                <li>{{- 'thankyou.details.quantity' | t -}}: &nbsp; {{- item.quantity -}}</li>
+                {% for variation in item.variations %}
+                  <li>
+                    {% if variation[0] != 'default' or variation[1] != 'default' %}
+                      <span>{{ variation[0] }}: {{ variation[1] }}</span>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+              <span class="product-price">{{- item.price * item.quantity | money -}}</span>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="order-details">
+      <ul class="data-listing">
+        <li class="data-item">
+          <span>{{- 'thankyou.details.sub_total' | t -}}</span>
+          <span>{{- order.sub_total | money -}}</span>
+        </li>
+        {%- if order.coupon -%}
+          <li class="data-item">
+            <span>{{- 'thankyou.details.coupon' | t -}}</span>
+            <div class="coupon-wrapper">
+              <div class="coupon-value">
+                <span>{{- order.coupon.deducted_amount | money -}}</span>
+                <span class="minus">-</span>
+              </div>
+              <span>
+                {%- if order.coupon.is_percentage -%}
+                  ({{- order.coupon.value -}}%)
+                {%- else -%}
+                  ({{- order.coupon.value | money -}})
+                {%- endif -%}
+              </span>
+            </div>
+          </li>
+        {%- endif -%}
+        <li class="data-item">
+          <span>{{ 'thankyou.details.shipping_cost' | t }}</span>
+          <span>{{- order.shippingCost | money -}}</span>
+        </li>
+        {%- if store.vat > 0 -%}
+          <li class="data-item">
+            <span>{{- 'thankyou.details.vat' | t -}}</span>
+            <div>
+              <span>{{- order.total_tax_amount | money -}}</span>
+              <span>({{- store.vat -}}%)</span>
+            </div>
+          </li>
+        {%- endif -%}
+      </ul>
+      <div class="total-price">
+        <span>{{ 'thankyou.details.total' | t }}</span>
+        <span>{{- order.total | money -}}</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="home-page">
+    <a href='/' class='yc-btn'>
+      <ion-icon name="home-outline"></ion-icon>
+      {{ 'thankyou.return_cta' | t }}
+    </a>
+  </div>
+</article>
+
+{%- schema -%}
+{
+  "label": "Thank you page",
+  "templates": ["thankyou"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "upload_thankyou_img",
+      "label": "Upload thank you image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    }
+  ]
+}
+{%- endschema -%}

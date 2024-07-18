@@ -1,0 +1,143 @@
+{{ 'footer.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+  :root  {
+    --yc-footer-background-color: {%- if section.settings.footer_background_color -%}
+      {{ section.settings.footer_background_color.hex }}
+    {%- else -%}
+      var(--yc-primary-color){%- endif -%};
+    --yc-footer-text-color: {{ section.settings.footer_text_color.hex }};
+    --yc-footer-copyright-background: {{ section.settings.footer_copyright_background.hex }};
+  }
+
+  .toggle-footer {
+    display: {{ section.settings.toggle_footer ? 'none' : 'block' }};
+  }
+
+  .yc-footer {
+    {%- if section.settings.top_border_color -%}
+      border-top: 1px solid {{- section.settings.top_border_color.hex -}};
+    {%- endif -%}
+  }
+{% endstyle %}
+
+{% if section.settings.toggle_footer != true %}
+  <footer class='yc-footer'>
+    <div class="columns container">
+      <div class="column logo">
+        {% if section.settings.footer_logo.src %}
+          <img src="{{ section.settings.footer_logo.src }}">
+        {% else %}
+          <img src="{{ 'default-white-logo.png' | asset_url }}">
+        {% endif %}
+      </div>
+
+      {%- for linklist in link-lists -%}
+        {%- if linklist.links | count > 0  and linklist != main-link-list -%}
+          <div class="column">
+            <div class="links">
+              <h1 class="title">{{ linklist.title }}</h1>
+
+              {%- for item in linklist.links -%}
+                <a class="item" href="{{ item.url }}">{{ item.title }}</a>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if section.settings.social_media_exist -%}
+        <div class="column social-media">
+          {%- for block in section.blocks -%}
+            {%- if block.settings.social_media_icon_image.src -%}
+              <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">
+                <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links'>
+              </a>
+              {% else %}
+              <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">
+                <img loading='lazy' src='{{ 'default_product.jpeg' | asset_url }}' alt='image placeholder'>
+              </a>
+            {%- endif -%}
+          {%- endfor %}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="copyright-wrapper" {{ block.youcan_attributes }}>
+      <div class="container">
+        <div class="copyright-title">
+          {{ section.settings.copyright }}
+        </div>
+      </div>
+    </div>
+  </footer>
+{% endif %}
+
+{%- schema -%}
+{
+  "label": "Footer",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Footer menu can be managed from your [Menu settings](https:\/\/seller-area.youcan.shop\/admin\/menus)"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_footer",
+      "label": "Hide footer",
+      "default": false
+    },
+    {
+        "type": "image_picker",
+        "id": "footer_logo",
+        "label": "Logo"
+    },
+    {
+      "type": "color",
+      "id": "footer_background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "footer_text_color",
+      "label": "Text color",
+      "default": "#fff"
+    },
+    {
+      "type": "checkbox",
+      "id": "social_media_exist",
+      "label": "Social media",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "copyright",
+      "label": "Copyright text",
+      "default": "All rights reserved"
+    },
+    {
+      "type": "color",
+      "id": "top_border_color",
+      "label": "Top border color",
+      "default": "#e5e5e5"
+    }
+  ],
+  "blocks": [
+    {
+      "label": "Social media",
+      "type": "social-media",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "social_media_icon_image",
+          "label": "Social media icon"
+        },
+        {
+          "type": "text",
+          "id": "social_media_url",
+          "label": "Url"
+        }
+      ]
+    }
+  ]
+}
+{%- endschema -%}

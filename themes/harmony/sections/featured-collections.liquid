@@ -1,0 +1,95 @@
+{{ 'featured-collections.css' | asset_url | stylesheet_tag }}
+{% assign id = 100 | rand: 2000 %}
+
+{% style %}
+  .section-featured-collections-{{ id }} .yc-featured-container{
+    justify-content: {{ section.settings.section_title_position }};
+  }
+
+  .section-featured-collections-{{ id }} {
+    margin-top: {{ section.settings.space_top }}px;
+    margin-bottom: {{ section.settings.space_bottom }}px;
+  }
+{% endstyle %}
+
+<section class='section-featured-collections-{{ id }} yc-featured-collections container'>
+  <div class="yc-featured-container">
+    <h1 class='yc-section-title'>
+      {{ section.settings.title }}
+    </h1>
+  </div>
+  <div class='collections-list'>
+    {%- for block in section.blocks -%}
+      {%- render 'collection-preview', category: block.settings.category -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{%- schema -%}
+{
+  "label": "Featured collections",
+  "templates": ["index", "product", "page"],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "تصنيفات رائجة"
+    },
+    {
+      "type": "select",
+      "id": "section_title_position",
+      "label": "Title position",
+      "default": "center",
+      "options": [
+        {
+          "label": "Left",
+          "value": "left"
+        },
+        {
+          "label": "Center",
+          "value": "center"
+        },
+        {
+          "label": "Right",
+          "value": "right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "space_top",
+      "min": 5,
+      "max": 160,
+      "step": 1,
+      "unit": "px",
+      "label": "Space top",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "space_bottom",
+      "min": 5,
+      "max": 160,
+      "step": 1,
+      "unit": "px",
+      "label": "Space bottom",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "label": "Category",
+      "type": "category",
+      "settings": [
+        {
+          "type": "category",
+          "id": "category",
+          "label": "Category",
+          "info": "To ensure your images look great and load quickly, use a size of \"350px x 350px\" (1:1 aspect ratio)."
+        }
+      ]
+    }
+  ]
+}
+{%- endschema -%}

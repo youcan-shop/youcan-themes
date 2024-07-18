@@ -1,0 +1,49 @@
+{{ 'featured-products.css' | asset_url | stylesheet_tag }}
+{{ 'countdown.css' | asset_url | stylesheet_tag }}
+
+<a
+  href='{{ item.url }}'
+  class='product-block'
+>
+  <div class='product-thumbnail'>
+    <div class="tag {{ section_settings.tag_position }}">
+      {% if block_settings.tag_text %}
+        <div class="tag-banner" style="background: {{ section_settings.tag_color.hex }}; color: {{ section_settings.tag_text_color.hex }}">
+          {{ block_settings.tag_text }}
+        </div>
+        {% endif %}
+        {% if section_settings.discount_text %}
+          <div class="tag-banner" style="background: {{ section_settings.discount_color.hex }}; color: {{ section_settings.discount_text_color.hex }}">
+            {{ section_settings.discount_text }}
+          </div>
+      {% endif %}
+    </div>
+    {% if item.thumbnail %}
+      <img loading='lazy' src='{{ item.thumbnail }}'>
+    {% else %}
+      <img loading='lazy' src='{{ 'default_product.jpeg' | asset_url }}'>
+    {% endif %}
+  </div>
+  <div class='product-details'>
+    <span class='product-title'>{{ item.name }}</span>
+    <div class='prices'>
+      {% if item.price %}
+        <span class='product-price'>{{ item.price | money }}</span>
+      {% endif %}
+      {% if section.settings.show_compare_at_price and item.compare_at_price or show_compare_at_price_on_collection_temp %}
+        <span class='compare-at-price'>{{ item.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+    <div class='product-btn'>
+      {% if settings.direct_add_to_cart and item.variants.size <= 1 %}
+        <button class="yc-btn-secondary" onclick="directAddToCart(event, '{{ item.variants[0].id }}')">
+          {{ 'general.direct_add_to_cart' | t }}
+        </button>
+      {% else %}
+        <button class="yc-btn-secondary">
+          {{ 'general.buy_now' | t }}
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</a>

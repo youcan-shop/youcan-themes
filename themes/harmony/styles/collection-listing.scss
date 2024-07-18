@@ -1,0 +1,64 @@
+@import 'helpers/mixins';
+
+.yc-collection-listing {
+  .collection-list {
+    display: grid;
+    gap: 24px;
+    margin-bottom: 80px;
+
+    .collection-block {
+      position: relative;
+    }
+
+    .collection-thumbnail {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 5px;
+
+      img {
+        width: 100%;
+        height: 362px;
+        object-fit: cover;
+        transition: transform .25s ease;
+
+        &:hover {
+          opacity: 0.9;
+          transform: scale(1.1);
+        }
+
+        @include breakpoint('md') {
+          height: 345px;
+        }
+      }
+    }
+
+    .collection-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%,-50%);
+
+      .collection-name {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 28px;
+        display: block;
+      }
+    }
+
+    @include breakpoint('md') {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include breakpoint('lg') {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
