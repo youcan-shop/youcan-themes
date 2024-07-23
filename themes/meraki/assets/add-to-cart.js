@@ -35,8 +35,10 @@ async function addToCart(snippetId) {
 
     stopLoad('#loading__cart');
 
+    const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
+
     if (IS_CART_SKIPED){
-      window.location.href = CHECKOUT_PAGE_URL;
+      window.location.href = checkoutPageUrl;
 
       return;
     }
