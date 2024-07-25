@@ -208,7 +208,7 @@ function selectDefaultOptions(parentSection) {
   }
 
   options.forEach((option) => {
-    const optionType = option.id.split('-')[2];
+    const optionType = option.dataset.type;
 
     switch (optionType) {
       case 'dropdown':
@@ -252,8 +252,8 @@ function getSelectedOptions(parentSection) {
 
   const selectedOptions = {};
   options.forEach((option) => {
-    const optionName = option.id.split('-')[1];
-    const optionType = option.id.split('-')[2];
+    const optionName = option.dataset.name;
+    const optionType = option.dataset.type;
 
     switch (optionType) {
       case 'dropdown':
@@ -282,6 +282,7 @@ function getSelectedOptions(parentSection) {
         break;
     }
   });
+
   return selectedOptions;
 }
 
@@ -494,8 +495,8 @@ function showSelectedVariants() {
   $('#selected-product-variants').innerHTML = '';
 
   variants.forEach((variant) => {
-    const variantType = variant.id.split('-')[2];
-    const variantName = variant.id.split('-')[1];
+    const variantType = variant.dataset.type;
+    const variantName = variant.dataset.name;
 
     let variantOption = document.createElement('div');
 
