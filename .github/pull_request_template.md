@@ -4,9 +4,9 @@
 
 ## QA Steps
 
--  [ ]  - Check this branch locally and run `pnpm run release`
--  [ ]  - 3 new files will be generated in this format `theme name + date + .zip`
--  [ ]  - Upload generated file locally or in seller-area test env
+-  [ ]  Check this branch locally and run `pnpm run release`
+-  [ ]  3 new files will be generated in this format `theme name + date + .zip`
+-  [ ]  Upload generated file locally or in seller-area test env
 
 ## Note
 
