@@ -56,14 +56,11 @@
 
 <script>
   (function() {
-    const isMobile1 = window.matchMedia("(max-width: 768px)");
+    const isMobile = window.matchMedia("(max-width: 768px)");
     const products = {{ section.blocks.size }};
-    let perPage = 3;
-    if (products < 3) {
-      perPage = products;
-    }
+    const desktopBlocksPerPage = Math.max(products, 3);
 
-    const desktopSlider1 = new Splide(`#yc_slider_{{ id }}.yc-slider__desktop`, {
+    const desktopSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__desktop`, {
       type: '{{ section.settings.slider_transition_type }}',
       arrows: '{{ section.settings.slider_arrows }}' ? true : false,
       autoplay: '{{ section.settings.slider_autoplay }}' ? true : false,
@@ -73,29 +70,29 @@
       interval: '{{ section.settings.duration_between_each_slide | times: 1000 }}',
       rewind: true,
       drag: 'free',
-      perPage: perPage,
+      perPage: desktopBlocksPerPage,
       perMove: 1,
       snap: true,
       gap: '20px',
     });
 
-    const mobileImagesPerPage = 2;
+    const mobileBlocksPerPage = 2;
 
-    const mobileSlider1 = new Splide(`#yc_slider_{{ id }}.yc-slider__mobile`, {
+    const mobileSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__mobile`, {
       type: '{{ section.settings.slider_mobile_transition_type }}',
-      arrows: mobileImagesPerPage == products ? false : ('{{ section.settings.slider_mobile_arrows }}' ? true : false),
+      arrows: mobileBlocksPerPage == products ? false : ('{{ section.settings.slider_mobile_arrows }}' ? true : false),
       autoplay: '{{ section.settings.slider_mobile_autoplay }}' ? true : false,
       cover: true,
       interval: '{{ section.settings.slider_mobile_timeout | times: 1000 }}',
       rewind: true,
       drag: 'free',
-      perPage: mobileImagesPerPage,
+      perPage: mobileBlocksPerPage,
       perMove: 1,
       gap: '12px',
       snap: true,
     });
 
-    mountSlider(isMobile1, mobileSlider1, desktopSlider1);
+    mountSlider(isMobile, mobileSlider, desktopSlider);
   })();
 </script>
 

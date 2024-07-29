@@ -31,10 +31,7 @@
     (function() {
       const isMobile = window.matchMedia("(max-width: 768px)");
       const products = {{ product.related_products.size }};
-      let perPage = 3;
-      if (products < 3) {
-        perPage = products;
-      }
+      const desktopBlocksPerPage = Math.max(products, 3);
 
       const desktopSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__desktop`, {
         type: products < 4 ? 'slide' : '{{ section.settings.slider_transition_type }}',
@@ -47,14 +44,14 @@
         interval: '{{ section.settings.duration_between_each_slide | times: 1000 }}',
         rewind: true,
         drag: 'free',
-        perPage: perPage,
+        perPage: desktopBlocksPerPage,
         perMove: 1,
         snap: true,
         gap: '20px',
         focus: 'center',
       });
 
-      const mobileImagesPerPage = 2;
+      const mobileBlocksPerPage = 2;
 
       const mobileSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__mobile`, {
         type: '{{ section.settings.slider_mobile_transition_type }}',
@@ -65,7 +62,7 @@
         interval: '{{ section.settings.slider_mobile_timeout | times: 1000 }}',
         rewind: true,
         drag: 'free',
-        perPage: mobileImagesPerPage,
+        perPage: mobileBlocksPerPage,
         perMove: 1,
         gap: '12px',
         snap: true,
