@@ -16,6 +16,20 @@
   width: max-content;
   padding: 12px 42px;
 }
+
+{% for block in blocks %}
+  #yc_slider_{{ id }} .btn-{{ forloop.index }} {
+    {% if block.settings.button_font_weight %}
+      font-weight: {{ block.settings.button_font_weight }} !important;
+    {% endif %}
+    {% if block.settings.button_bg_color %}
+      background-color: {{ block.settings.button_bg_color.hex }} !important;
+    {% endif %}
+    {% if block.settings.button_color %}
+      color: {{ block.settings.button_color.hex }} !important;
+    {% endif %}
+  }
+{% endfor %}
 </style>
 
 <div
@@ -45,7 +59,7 @@
                       <a
                         href='{{ block.settings.product.url }}'
                         class='yc-btn slide-content-box-button'
-                        style='font-weight: {{ block.settings.button_font_weight }}!important'
+                        class='yc-btn slide-content-box-button btn-{{ forloop.index }}'
                       >
                         {{ block.settings.button_text }}
                       </a>
