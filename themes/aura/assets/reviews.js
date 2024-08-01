@@ -25,7 +25,7 @@ function reviewTemplate(review) {
   return `
     <div class='header'>
       <div class="profil">
-        <img loading='lazy' class='image' src='${review.images_urls[0] || defaultAvatar}' />
+        <img loading='lazy' class='image' src='${review.images_urls[0] || defaultAvatar}' alt='${review.first_name || ''} ${review.last_name || ''}' />
         <div class='info'>
           <span class='name'>${review.first_name || ''} ${review.last_name || ''}</span>
           <span class='created-at-date'>${review.created_at}</span>
