@@ -34,6 +34,7 @@ function reviewTemplate(review) {
       <div class='yc-reviews-stars'
            style='--rating: ${review.ratings}'
            aria-label="Rating of this product is ${review.ratings} out of 5"
+           role="img"
       ></div>
     </div>
     <div class='content'>
