@@ -25,7 +25,7 @@ function reviewTemplate(review) {
   return `
     <div class='header'>
       <div class="profil">
-        <img loading='lazy' class='image' src='${review.images_urls[0] || defaultAvatar}' />
+        <img loading='lazy' class='image' src='${review.images_urls[0] || defaultAvatar}' alt='${review.first_name || ''} ${review.last_name || ''}' />
         <div class='info'>
           <span class='name'>${review.first_name || ''} ${review.last_name || ''}</span>
         </div>
@@ -33,6 +33,7 @@ function reviewTemplate(review) {
       <div class='yc-reviews-stars'
            style='--rating: ${review.ratings}'
            aria-label="Rating of this product is ${review.ratings} out of 5"
+           role="img"
       ></div>
     </div>
     <div class='content'>
