@@ -43,7 +43,7 @@
                 </a>
               </div>
             {%- when 'menu' %}
-              <div class='menu'>
+              <div class='menu' style="--background-color: {{ block.settings.navbar_menu_background_color }}">
                 <button id="menuButton" class='hamburger'>
                   <div class="bar"></div>
                   <div class="bar"></div>
@@ -127,7 +127,31 @@
     {
       "label": "Menu",
       "limit": 1,
-      "type": "menu"
+      "type": "menu",
+      "settings": [
+        {
+          "type": "color",
+          "id": "navbar_menu_background_color",
+          "label": "Background color",
+          "default": "#00000000"
+        },
+        {
+          "type": "color",
+          "id": "navbar_menu_icon_color",
+          "label": "Icon color",
+          "default": "#FFFFFF"
+        },
+        {
+          "type": "range",
+          "id": "navbar_menu_size",
+          "min": -1,
+          "step": 0.1,
+          "max": 1,
+          "unit": "px",
+          "label": "Size",
+          "default": 0
+        }
+      ]
     },
     {
       "label": "Search and cart",
