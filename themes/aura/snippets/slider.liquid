@@ -13,12 +13,13 @@
     margin-top: calc(var(--slider-height) / 5);
     width: max-content;
     padding: 12px 42px;
+    margin-top: 1rem;
   }
 
 {% for block in blocks %}
   #yc_slider_{{ id }} .btn-{{ forloop.index }} {
     {% if block.settings.button_font_weight %}
-      font-weight: {{ block.settings.button_font_weight }} !important;
+      font-weight: {{ block.settings.button_font_weight }};
     {% endif %}
     {% if block.settings.button_bg_color %}
       background-color: {{ block.settings.button_bg_color.hex }} !important;
@@ -56,7 +57,6 @@
                     <div class='btn-holder'>
                       <a
                         href='{{ block.settings.product.url }}'
-                        class='yc-btn'
                         class='yc-btn slide-content-box-button btn-{{ forloop.index }}'
                       >
                         {{ block.settings.button_text }}
