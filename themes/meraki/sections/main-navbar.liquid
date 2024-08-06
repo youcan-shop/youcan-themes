@@ -35,16 +35,16 @@
           {%- case block.type %}
             {%- when 'logo' %}
               <div class='logo'>
-                <a href='/'>
+                <a href='/' aria-label='home'>
                   <img
-                    loading='lazy'
                     src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-white-logo.png' | asset_url }} {%- endif -%}'
+                    alt='{{ store.name }}'  
                   >
                 </a>
               </div>
             {%- when 'menu' %}
               <div class='menu'>
-                <button id="menuButton" class='hamburger'>
+                <button id="menuButton" class='hamburger' aria-label='open menu'>
                   <div class="bar"></div>
                   <div class="bar"></div>
                   <div class="bar"></div>
@@ -62,6 +62,7 @@
                 <button
                   class='search'
                   onclick='openSearch()'
+                  aria-label='search'
                 >
                   <ion-icon name="search-outline"></ion-icon>
                 </button>
