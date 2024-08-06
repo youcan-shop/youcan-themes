@@ -31,7 +31,7 @@
     (function() {
       const isMobile = window.matchMedia("(max-width: 768px)");
       const products = {{ product.related_products.size }};
-      const desktopBlocksPerPage = Math.min(products, 3);
+      const desktopBlocksPerPage = Math.max(products, 3);
 
       const desktopSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__desktop`, {
         type: products < 4 ? 'slide' : '{{ section.settings.slider_transition_type }}',
