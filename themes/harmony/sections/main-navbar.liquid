@@ -50,10 +50,10 @@
         {%- case block.type %}
           {%- when 'logo' %}
             <div class='logo'>
-              <a href='/'>
+              <a href='/' aria-label='home'>
                 <img
-                  loading='lazy'
                   src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-black-logo.png' | asset_url }} {%- endif -%}'
+                  alt='{{ store.name }}'  
                 >
               </a>
             </div>
@@ -74,6 +74,7 @@
               <button
                 class='menu-toggler text-3xl'
                 onclick="openDrawer('.navbar-drawer')"
+                aria-label='open menu'
               >
                 <ion-icon name='menu-outline'></ion-icon>
               </button>
@@ -114,6 +115,7 @@
                     <button
                       type='submit'
                       class='search-btn'
+                      aria-label='search'
                     >
                       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.5 25C20.299 25 25 20.299 25 14.5C25 8.701 20.299 4 14.5 4C8.70101 4 4 8.701 4 14.5C4 20.299 8.70101 25 14.5 25Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -126,6 +128,7 @@
               <button
                 class='search'
                 onclick='openSearch()'
+                aria-label="search"
               >
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14.5 25C20.299 25 25 20.299 25 14.5C25 8.701 20.299 4 14.5 4C8.70101 4 4 8.701 4 14.5C4 20.299 8.70101 25 14.5 25Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -143,10 +146,10 @@
       <ion-icon name="close-outline" class='close-svg'></ion-icon>
     </div>
     <div class='logo flex items-center justify-center'>
-      <a href='/'>
+      <a href='/' aria-label='home'>
         <img
-          loading='lazy'
           src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-black-logo.png' | asset_url }} {%- endif -%}'
+          alt='{{ store.name }}'
         >
       </a>
     </div>
@@ -164,6 +167,7 @@
         >
         <button
           type='submit'
+          aria-label='search'
         >
           <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.5 25C20.299 25 25 20.299 25 14.5C25 8.701 20.299 4 14.5 4C8.70101 4 4 8.701 4 14.5C4 20.299 8.70101 25 14.5 25Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

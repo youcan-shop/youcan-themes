@@ -12,7 +12,7 @@ async function fetchReviewsForProduct(productId, closetParent, averageRating) {
     generalReviewsContainers.forEach(container => container.style.display = 'block');
     generalReviewsWrappers.forEach(wrapper => wrapper.innerHTML = `
       <li class='rating-stars'>
-        <div class="yc-reviews-stars" style="--rating: ${averageRating};" aria-label="Rating of this product is ${averageRating} out of 5"></div>
+        <div class="yc-reviews-stars" style="--rating: ${averageRating};" aria-label="Rating of this product is ${averageRating} out of 5" role="img"></div>
       </li>
       <li class='general-count'>
         (${totalReviews.length} ${ratings})
