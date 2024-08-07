@@ -144,7 +144,7 @@ function setupEventListeners() {
   const starRadios = document.querySelectorAll('.star-rating input[type="radio"]');
 
   reviewForm.addEventListener('submit', handleReviewFormSubmit);
-  btn.addEventListener('click', showModal);
+  btn && btn.addEventListener('click', showModal);
   span.addEventListener('click', hideModal);
 
   starRadios.forEach(radio => {
