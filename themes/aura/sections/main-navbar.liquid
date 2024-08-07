@@ -19,6 +19,22 @@
   .toggle-navbar {
     display: {{ section.settings.toggle_navbar ? 'none' : 'block' }};
   }
+
+  .menu .menu-toggler {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    transform: scale(calc(var(--size) / 100));
+  }
+
+  .menu .menu-toggler ion-icon {
+    color: var(--color) !important;
+  }
 {% endstyle %}
 
 {% if section.settings.toggle_navbar != true %}
@@ -42,7 +58,19 @@
               </a>
             </div>
           {%- when 'menu' %}
-            <div class='menu'>
+            <div
+              class='menu'
+              style='
+                --background-color: {{ block.settings.navbar_menu_background_color.hex }};
+                --border-radius: {{ block.settings.navbar_menu_border_radius }}%;
+                --color:{%- if block.settings.navbar_menu_icon_color.hex -%}
+                          {{ block.settings.navbar_menu_icon_color.hex }}
+                        {%- else -%}
+                          var(--yc-nav-links-color)
+                        {%- endif -%};
+                --size: {{ block.settings.navbar_menu_size }};
+              '
+            >
               <button
                 class='menu-toggler text-3xl'
                 onclick="openDrawer('.navbar-drawer')"
@@ -113,25 +141,25 @@
         >
       </a>
     </div>
-      <form
-        action='/search'
-        method='GET'
-        class='mobile-search w-full flex gap-1 items-center'
-        >
-        <input
-          placeholder='{{ 'navbar.search.placeholder' | t }}'
-          type='text'
-          name='q'
-          value=''
-          class='w-full'
-        >
-        <button
-          type='submit'
-          aria-label='search'
-        >
-          <ion-icon name="search-outline" class="search-icon"></ion-icon>
-        </button>
-      </form>
+    <form
+      action='/search'
+      method='GET'
+      class='mobile-search w-full flex gap-1 items-center'
+    >
+      <input
+        placeholder='{{ 'navbar.search.placeholder' | t }}'
+        type='text'
+        name='q'
+        value=''
+        class='w-full'
+      />
+      <button
+        type='submit'
+        aria-label='search'
+      >
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      </button>
+    </form>
     <div class='flex flex-col items-wrapper'>
       {% for item in main-link-list.links %}
         <a
@@ -161,7 +189,40 @@
     {
       "label": "Menu",
       "limit": 1,
-      "type": "menu"
+      "type": "menu",
+      "settings": [
+        {
+          "type": "color",
+          "id": "navbar_menu_background_color",
+          "label": "Background color",
+          "default": "#00000000"
+        },
+        {
+          "type": "color",
+          "id": "navbar_menu_icon_color",
+          "label": "Icon color"
+        },
+        {
+          "type": "range",
+          "id": "navbar_menu_size",
+          "min": 1,
+          "step": 1,
+          "max": 200,
+          "unit": "%",
+          "label": "Size",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "navbar_menu_border_radius",
+          "min": 0,
+          "step": 1,
+          "max": 50,
+          "unit": "%",
+          "label": "Border radius",
+          "default": 0
+        }
+      ]
     },
     {
       "label": "Search and cart",

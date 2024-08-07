@@ -1,7 +1,7 @@
 {{ 'navbar.css' | asset_url | stylesheet_tag }}
 
 {% style %}
-  :root{
+  :root {
     --yc-nav-height: {{ section.settings.navbar_height }}px;
     --yc-nav-background: {{ section.settings.navbar_background_color.hex }};
     --yc-nav-links-color: {%- if section.settings.navbar_links_color -%}
@@ -18,6 +18,22 @@
 
   .toggle-navbar {
     display: {{ section.settings.toggle_navbar ? 'none' : 'block' }};
+  }
+
+  .menu #menuButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    transform: scale(calc(var(--size) / 100));
+  }
+
+  .menu #menuButton .bar {
+    background-color: var(--color);
   }
 {% endstyle %}
 
@@ -43,11 +59,25 @@
                 </a>
               </div>
             {%- when 'menu' %}
-              <div class='menu'>
-                <button id="menuButton" class='hamburger' aria-label='open menu'>
-                  <div class="bar"></div>
-                  <div class="bar"></div>
-                  <div class="bar"></div>
+              <div
+                class='menu'
+                style='
+                  --background-color: {{ block.settings.navbar_menu_background_color.hex }};
+                  --border-radius: {{ block.settings.navbar_menu_border_radius }}%;
+                  --color:{%- if block.settings.navbar_menu_icon_color.hex -%}
+                            {{ block.settings.navbar_menu_icon_color.hex }}
+                          {%- else -%}
+                            var(--yc-nav-links-color)
+                          {%- endif -%};
+                  --size: {{ block.settings.navbar_menu_size }};
+                '
+              >
+                <button id="menuButton" class='hamburger'>
+                  <div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                  </div>
                 </button>
                 <ul class='menu-list'>
                   {% for item in main-link-list.links %}
@@ -128,7 +158,40 @@
     {
       "label": "Menu",
       "limit": 1,
-      "type": "menu"
+      "type": "menu",
+      "settings": [
+        {
+          "type": "color",
+          "id": "navbar_menu_background_color",
+          "label": "Background color",
+          "default": "#00000000"
+        },
+        {
+          "type": "color",
+          "id": "navbar_menu_icon_color",
+          "label": "Icon color"
+        },
+        {
+          "type": "range",
+          "id": "navbar_menu_size",
+          "min": 1,
+          "step": 1,
+          "max": 200,
+          "unit": "%",
+          "label": "Size",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "navbar_menu_border_radius",
+          "min": 0,
+          "step": 1,
+          "max": 50,
+          "unit": "%",
+          "label": "Border radius",
+          "default": 0
+        }
+      ]
     },
     {
       "label": "Search and cart",
