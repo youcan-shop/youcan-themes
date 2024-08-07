@@ -63,7 +63,11 @@
               style='
                 --background-color: {{ block.settings.navbar_menu_background_color.hex }};
                 --border-radius: {{ block.settings.navbar_menu_border_radius }}%;
-                --color: {{ block.settings.navbar_menu_icon_color.hex }};
+                --color:{%- if block.settings.navbar_menu_icon_color.hex -%}
+                          {{ block.settings.navbar_menu_icon_color.hex }}
+                        {%- else -%}
+                          var(--yc-neutral-color)
+                        {%- endif -%};
                 --size: {{ block.settings.navbar_menu_size }};
               '
             >
@@ -207,8 +211,7 @@
         {
           "type": "color",
           "id": "navbar_menu_icon_color",
-          "label": "Icon color",
-          "default": "#FFFFFF"
+          "label": "Icon color"
         },
         {
           "type": "range",
