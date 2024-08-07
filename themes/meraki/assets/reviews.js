@@ -26,14 +26,15 @@ function reviewTemplate(review) {
     <div class='header'>
       <div class='yc-reviews-stars'
           style='--rating: ${review.ratings}'
-          aria-label="Rating of this product is ${review.ratings} out of 5">
+          aria-label="Rating of this product is ${review.ratings} out of 5"
+          role="img">
       </div>
         <div class='content'>
           ${review.content === null ? '' : review.content}
         </div>
     </div>
     <div class="profil">
-      <img loading='lazy' class='image' src='${review.images_urls[0] || defaultAvatar}' />
+      <img loading='lazy' class='image' src='${review.images_urls[0] || defaultAvatar}' alt='${review.first_name || ''} ${review.last_name || ''}'/>
       <div class='info'>
         <span class='name'>${review.first_name || ''} ${review.last_name || ''}</span>
         <span class='created-at-date'>${review.created_at}</span>
