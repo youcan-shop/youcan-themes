@@ -23,7 +23,7 @@
       alt='{{ product_name }}'>
   </div>
   <div class='product-details product-home'>
-    {%- for block in section.blocks -%}
+      {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when 'product_title' -%}
             <h1 class='product-name'>{{ product.name }}</h1>
@@ -40,19 +40,10 @@
                 </h3>
               {% endif %}
             </div>
-          {%- endcase -%}
-        {%- endfor -%}
+        {%- endcase -%}
+      {%- endfor -%}
       <p class='product-description'>{{ section.settings.product_description }}</p>
-    <a href='{{ product.url }}' class='yc-btn buy-btn'>إتمام الشراء</a>
-    </div>
+      <a href='{{ product.url }}' class='yc-btn buy-btn'>إتمام الشراء</a>
     </div>
   </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const homePageProductId = '{{ product_id }}';
-    const parentContainer = '.product-home';
-
-    fetchReviewsForProduct(homePageProductId, parentContainer, {{ product.averageRating }});
-  });
-</script>
+</div>

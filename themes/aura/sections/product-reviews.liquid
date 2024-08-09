@@ -7,7 +7,7 @@
 {%- endif %}
 
 {%- if selected_product %}
-  {%- render 'reviews', reviews_title: section.settings.reviews_title, reviews_product_id: selected_product.id, product: selected_product -%}
+  {%- render 'reviews', settings: section.settings, reviews_title: section.settings.reviews_title, reviews_product_id: selected_product.id, product: selected_product -%}
 {%- endif %}
 
 {% schema %}
@@ -25,6 +25,12 @@
       "id": "reviews_title",
       "label": "Reviews title",
       "default": "Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_comment_button",
+      "label": "Show add comment button",
+      "default": true
     },
     {
       "type": "header",
