@@ -235,8 +235,8 @@ function selectDefaultOptions(parentSection) {
 
   const selectedVariant = getSelectedVariant(parentSection);
 
-  setInventory(parentSection, selectedVariant.inventory);
-  setVariant(parentSection, selectedVariant.id);
+  setInventory(parentSection, selectedVariant?.inventory);
+  setVariant(parentSection, selectedVariant?.id);
 }
 
 /**
@@ -577,16 +577,16 @@ function setup() {
       const observer = new MutationObserver(() => {
         const selectedVariant = getSelectedVariant(section);
         const variantIdInput = section.querySelector('#variantId');
-        variantIdInput.value = selectedVariant.id;
+        variantIdInput.value = selectedVariant?.id;
 
         updateProductDetails(
           section,
-          selectedVariant.image,
-          selectedVariant.price,
-          selectedVariant.compare_at_price
+          selectedVariant?.image,
+          selectedVariant?.price,
+          selectedVariant?.compare_at_price
         );
 
-        setInventory(section, selectedVariant.inventory);
+        setInventory(section, selectedVariant?.inventory);
       });
 
       observer.observe(productDetails, {
