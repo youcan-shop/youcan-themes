@@ -194,7 +194,6 @@ function updateCartItemCount(count) {
 }
 
 async function removeItem(cartItemId, productVariantId) {
-  console.log('JAJA')
   load(`#loading__${cartItemId}`);
   try {
     await youcanjs.cart.removeItem({ cartItemId, productVariantId });
