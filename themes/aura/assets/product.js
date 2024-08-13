@@ -577,7 +577,7 @@ function setup() {
       const observer = new MutationObserver(() => {
         const selectedVariant = getSelectedVariant(section);
         const variantIdInput = section.querySelector('#variantId');
-        variantIdInput.value = selectedVariant?.id;
+        variantIdInput.value = selectedVariant.id;
 
         updateProductDetails(
           section,
