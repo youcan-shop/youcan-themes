@@ -200,32 +200,6 @@ overlay.addEventListener('click', closeSearch);
 })();
 
 /* ------------------------------------------------------ */
-/* ----- Stick the footer at the bottom of the page ----- */
-/* ------------------------------------------------------ */
-
-/**
- * This function is for always putting the footer at the bottom of the screen
- */
-function stickFooterAtBottom() {
-  const mainContent = $('.main-content');
-  let htmlPageHeight = document.documentElement.clientHeight;
-  let bodyHeight = document.body.offsetHeight;
-  let emptySpaceHeight = `${htmlPageHeight - bodyHeight}px`;
-
-  if (emptySpaceHeight < '0px') {
-    emptySpaceHeight = '0px';
-  }
-
-  if (mainContent) {
-    mainContent.style.marginBottom = emptySpaceHeight;
-  }
-}
-
-window.addEventListener('load', (event) => {
-  stickFooterAtBottom();
-});
-
-/* ------------------------------------------------------ */
 /* ----- Display each video section -------------------- */
 /* ------------------------------------------------------ */
 function processVideoSections() {
