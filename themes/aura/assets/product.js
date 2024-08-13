@@ -197,7 +197,7 @@ function setInventory(parentSection, inventory) {
  * Sets default options for a product
  * @param {HTMLElement} parentSection
  */
-function selectDefaultOptions(parentSection) {
+function selectDefaultOptions(parentSection) {  
   const options = parentSection.querySelectorAll('.product-options > div');
 
   if (!options || !options.length) {
@@ -235,7 +235,7 @@ function selectDefaultOptions(parentSection) {
 
   const selectedVariant = getSelectedVariant(parentSection);
 
-  setInventory(parentSection, selectedVariant.inventory);
+  setInventory(parentSection, selectedVariant?.inventory);
   setVariant(parentSection, selectedVariant.id);
 }
 
@@ -558,6 +558,9 @@ function goToCheckoutStep(close = false) {
 }
 
 function setup() {
+  console.log('Hey');
+  alert('hey');
+  
   const singleProductSections = document.querySelectorAll('.yc-single-product');
 
   if (!singleProductSections) return;
@@ -577,7 +580,7 @@ function setup() {
       const observer = new MutationObserver(() => {
         const selectedVariant = getSelectedVariant(section);
         const variantIdInput = section.querySelector('#variantId');
-        variantIdInput.value = selectedVariant.id;
+        variantIdInput.value = selectedVariant?.id;
 
         updateProductDetails(
           section,
@@ -586,7 +589,7 @@ function setup() {
           selectedVariant.compare_at_price
         );
 
-        setInventory(section, selectedVariant.inventory);
+        setInventory(section, selectedVariant?.inventory);
       });
 
       observer.observe(productDetails, {
