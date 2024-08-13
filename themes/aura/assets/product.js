@@ -558,9 +558,6 @@ function goToCheckoutStep(close = false) {
 }
 
 function setup() {
-  console.log('Hey');
-  alert('hey');
-  
   const singleProductSections = document.querySelectorAll('.yc-single-product');
 
   if (!singleProductSections) return;
