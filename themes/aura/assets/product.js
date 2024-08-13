@@ -211,7 +211,9 @@ function selectDefaultOptions(parentSection) {
 
     switch (optionType) {
       case 'dropdown':
-        option.querySelector('.dropdown-content li:first-child').classList.add('selected');
+        const firstOption = option.querySelector('.dropdown-content li:first-child');
+        firstOption.classList.add('selected')
+        option.querySelector('.option-name').textContent = firstOption.textContent;
         break;
       case 'textual_buttons':
         option.querySelector('.yc-options-item').classList.add('active');
