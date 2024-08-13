@@ -235,10 +235,8 @@ function selectDefaultOptions(parentSection) {
 
   const selectedVariant = getSelectedVariant(parentSection);
 
-  if (selectedVariant) {
-    setInventory(parentSection, selectedVariant.inventory);
-    setVariant(parentSection, selectedVariant.id);
-  }
+  setInventory(parentSection, selectedVariant.inventory);
+  setVariant(parentSection, selectedVariant.id);
 }
 
 /**
@@ -567,9 +565,7 @@ function setup() {
   singleProductSections.forEach((section) => {
     const productDetails = section.querySelector('.product-options');
     const variant = defaultVariant;
-    console.log('====================================');
-    console.log('Default Variant', variant);
-    console.log('====================================');
+
     updateProductDetails(
       section,
       variant.image,
@@ -581,23 +577,16 @@ function setup() {
       const observer = new MutationObserver(() => {
         const selectedVariant = getSelectedVariant(section);
         const variantIdInput = section.querySelector('#variantId');
-        
         variantIdInput.value = selectedVariant?.id;
 
-        console.log('====================================');
-        console.log('Selected variant', selectedVariant);
-        console.log('====================================');
+        updateProductDetails(
+          section,
+          selectedVariant.image,
+          selectedVariant.price,
+          selectedVariant.compare_at_price
+        );
 
-        if (selectedVariant) {
-          updateProductDetails(
-            section,
-            selectedVariant.image,
-            selectedVariant.price,
-            selectedVariant.compare_at_price
-          );
-  
-          setInventory(section, selectedVariant.inventory);
-        }
+        setInventory(section, selectedVariant.inventory);
       });
 
       observer.observe(productDetails, {
