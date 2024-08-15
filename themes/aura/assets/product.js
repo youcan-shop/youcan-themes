@@ -255,7 +255,7 @@ function selectDefaultOptions(parentSection) {
  * @returns {Object} selected options
  */
 function getSelectedOptions(parentSection) {
-  const options = parentSection.querySelectorAll('.product-options > div');  
+  const options = parentSection.querySelectorAll('.product-options > div');
 
   if (!options || !options.length) return null;
 
