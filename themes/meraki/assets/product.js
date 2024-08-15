@@ -1,8 +1,7 @@
 /**
  * Updates the main product image with the source of the clicked/hovered thumbnail.
- * @param {HTMLElement} element - The clicked thumbnail element that contains the new image source.
- * @param {Event} event - The event object associated with the click action. Optional.
- * 
+ * @param {HTMLElement} element
+ * @param {Event} event
  * @returns {void}
  */
 function previewProductImage(element, event) {
