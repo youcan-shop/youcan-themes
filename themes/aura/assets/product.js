@@ -1,4 +1,6 @@
-function previewProductImage(element) {
+function previewProductImage(element, event) {
+  event?.stopPropagation();
+
   const parentSection = element.closest('.yc-single-product');
   const thumbnail = parentSection.querySelector('.main-image');
 
@@ -247,7 +249,7 @@ function selectDefaultOptions(parentSection) {
  * @returns {Object} selected options
  */
 function getSelectedOptions(parentSection) {
-  const options = parentSection.querySelectorAll('.product-options > div');
+  const options = parentSection.querySelectorAll('.product-options > div');  
 
   if (!options || !options.length) return null;
 
