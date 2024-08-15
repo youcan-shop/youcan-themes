@@ -1,3 +1,9 @@
+/**
+ * Updates the main product image with the source of the clicked/hovered thumbnail.
+ * @param {HTMLElement} element
+ * @param {Event} event
+ * @returns {void}
+ */
 function previewProductImage(element, event) {
   event?.stopPropagation();
 
