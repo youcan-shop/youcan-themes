@@ -1,4 +1,6 @@
-function previewProductImage(element) {
+function previewProductImage(element, event) {
+  event?.stopPropagation();
+  
   const parentSection = element.closest('.yc-single-product');
   const thumbnail = parentSection.querySelector('.main-image');
 
