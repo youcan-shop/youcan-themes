@@ -147,7 +147,7 @@ function cartTemplate(item) {
     <li class="cart-item">
       <div class="item-body">
         <div class="right-items">
-          ${imageUrl && `<img src="${imageUrl}" />`}
+          ${imageUrl && `<img src="${imageUrl}" alt="${item.productVariant.product.name}" />`}
           <div class="item-details">
             <p class="product-name">${item.productVariant.product.name}</p>
             <div class="variants">
