@@ -11,8 +11,13 @@
 
 <div class='product-block featured-product-placeholder'>
   <div class='product-thumbnail'>
-    {% assign svg_name = random_titles[index] %}
-    {% render 'product-placeholder-svg', svg_name: svg_name %}
+    {% assign incremented_index = index | plus: 1 %}
+    {% assign product_image = "product-placeholder-" | append: incremented_index | append: '.png' %}
+    <img 
+      src="{{ product_image | asset_url  }}" 
+      loading="lazy" width="194" style="height: auto;" 
+      alt="{{ random_titles[index] }}" 
+    />
   </div>
   <div class='product-details'>
     <span class='product-title'>{{ random_titles[index] }}</span>
