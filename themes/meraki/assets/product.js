@@ -1,4 +1,12 @@
-function previewProductImage(element) {
+/**
+ * Updates the main product image with the source of the clicked/hovered thumbnail.
+ * @param {HTMLElement} element
+ * @param {Event} event
+ * @returns {void}
+ */
+function previewProductImage(element, event) {
+  event?.stopPropagation();
+  
   const parentSection = element.closest('.yc-single-product');
   const thumbnail = parentSection.querySelector('.main-image');
 
