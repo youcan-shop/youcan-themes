@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"sass": "sass ./styles:./assets --no-source-map --watch",
+		"sass": "sass ./styles:./assets --no-source-map --watch & postcss ./assets/*.css --replace",
 		"fix": "onchange \"**/*.*\" -- prettier --write --ignore-unknown ./**/*.* --plugin-search-dir=. --ignore-path=.prettierignore",
 		"lint": "onchange \"**/*.*\" -- prettier --check .",
 		"wind": "npx tailwindcss build -i ./styles/_utils.css -o ./styles/utils.scss",
@@ -22,9 +22,14 @@
 		"node-watch": "^0.7.3",
 		"npm-run-all": "^4.1.5",
 		"onchange": "^7.1.0",
+		"postcss": "^8.4.41",
+		"postcss-discard-comments": "^7.0.2",
 		"prettier": "1.12.1",
 		"sass": "^1.56.1",
 		"strip-css-comments-cli": "^3.0.0",
 		"tailwindcss": "^3.2.4"
+	},
+	"dependencies": {
+		"postcss-cli": "^11.0.0"
 	}
 }
