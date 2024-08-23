@@ -124,8 +124,11 @@
   const ratings = "{{ 'reviews.ratings' | t }}";
 {% endjavascript %}
 
-{{ 'main.css' | asset_url | stylesheet_tag }}
-{{ 'utils.css' | asset_url | stylesheet_tag }}
+<link rel="preload" href="{{ 'main.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'main.css' | asset_url }}"></noscript>
+
+<link rel="preload" href="{{ 'utils.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="{{ 'utils.css' | asset_url }}"></noscript>
 
 {% assign store_title = store.title | default: store.name %}
 
