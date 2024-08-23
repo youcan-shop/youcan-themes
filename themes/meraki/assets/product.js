@@ -19,12 +19,13 @@ function previewProductImage(element, event) {
  * @param {HTMLElement} element
  */
 function uploadImage(element) {
+  console.log('Hello sir');
   const parentSection = element.closest('.yc-single-product');
   const uploadInput = parentSection.querySelector('#yc-upload');
   const uploadArea = parentSection.querySelector('.yc-upload');
   const imagePreview = parentSection.querySelector('.yc-upload-preview');
   const imageWrapper = imagePreview.querySelector('.yc-image-preview');
-  const progressContainer =  imagePreview.querySelector('.progress-container');
+  const progressContainer = imagePreview.querySelector('.progress-container');
   const imageName = $('.yc-image-info .image-name');
   const imageSize = $('.yc-image-info .image-size');
   const closePreviewButton = $('#close-preview');
@@ -68,10 +69,13 @@ function uploadImage(element) {
         smoothProgressBar();
       });
 
-      const res = await youcanjs.product.upload(this.files[0]);
-      if (res.error) return notify(res.error, 'error');
+      try {
+        const res = await youcanjs.product.upload(this.files[0]);
 
-      uploadedImageLink.value = res.link;
+        uploadedImageLink.value = res.link;
+      } catch (error) {
+        error.meta.fields.image.map(message => notify(message, 'error'));
+      }
     }
   });
 
@@ -80,13 +84,13 @@ function uploadImage(element) {
     const fileSizeInKB = fileSizeInBytes / 1024;
     const fileSizeInMB = fileSizeInKB / 1024;
 
-    if(fileSizeInMB > 2) {
+    if (fileSizeInMB > 2) {
       source.src = '';
       source.style.height = "40px";
       imageName.style.color = "red";
       imageName.innerText = sizeBigMessage;
       imageSize.innerText = fileSizeInMB.toFixed(2) + " Mb";
-    } else if(fileSizeInMB < 1) {
+    } else if (fileSizeInMB < 1) {
       imageName.style.color = "inherit";
       imageSize.innerText = fileSizeInKB.toFixed(2) + " Kb";
     } else {
@@ -332,8 +336,8 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
     const productPrices = parentSection.querySelectorAll('.product-price');
     const showStickyCheckoutPrice = $('#sticky-price');
 
-    if(productPrices.length === 0){
-      if(showStickyCheckoutPrice) {
+    if (productPrices.length === 0) {
+      if (showStickyCheckoutPrice) {
         showStickyCheckoutPrice.innerHTML = `${price} ${Dotshop.currency}`;
       }
 
@@ -345,7 +349,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
 
       productPrice.innerText = displayValue;
 
-      if(showStickyCheckoutPrice) {
+      if (showStickyCheckoutPrice) {
         showStickyCheckoutPrice.innerHTML = productPrice.innerHTML;
       }
     });
@@ -353,7 +357,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
 
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
 
-  if(compareAtPrice) {
+  if (compareAtPrice) {
     variantCompareAtPrices.forEach(variantComparePrice => {
       variantComparePrice.innerHTML = `<del> ${compareAtPrice} ${Dotshop.currency} </del>`;
     })
@@ -400,7 +404,7 @@ function teleportCheckoutElements(parentSection) {
   const quantity = parentSection.querySelector('.product-quantity');
   const options = parentSection.querySelector('.product-options');
 
-  if(!quantity || !options){
+  if (!quantity || !options) {
     return;
   }
 
@@ -512,9 +516,9 @@ function showSelectedVariants() {
 
     switch (variantType) {
       case 'textual_buttons':
-        const textualButton =  variant.querySelector('.yc-options-item.active')?.textContent;
+        const textualButton = variant.querySelector('.yc-options-item.active')?.textContent;
         variantOption = createAndSetText(variantName, textualButton, 'yc-textual-item').element;
-      break;
+        break;
       case 'color_base_buttons':
         const colorBaseButton = variant.querySelector('.color-item.active .preview')?.outerHTML;
         variantOption = createAndSetText(variantName, colorBaseButton, 'colored-button').element;
@@ -522,7 +526,7 @@ function showSelectedVariants() {
       case 'radio_buttons':
         const radioButton = variant.querySelector('.yc-radio-buttons.active input[type="radio"]')?.value;
         variantOption = createAndSetText(variantName, radioButton).element;
-      break;
+        break;
       case 'dropdown':
         const dropDown = variant.querySelector('.dropdown-content li.selected')?.innerText;
         variantOption = createAndSetText(variantName, dropDown).element;
