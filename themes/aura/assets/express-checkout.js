@@ -26,7 +26,7 @@ async function placeOrder() {
 
         formFields.forEach(field => {
           const fieldName = field.indexOf('extra_fields') > -1 ? field.replace('extra_fields.', 'extra_fields[') + ']' : field;
-      
+
           const formField = form.querySelector(`[name="${fieldName}"]`);
           const errorEl = form.querySelector(`.validation-error[data-error="${fieldName}"]`);
           if (formField) {
@@ -44,11 +44,9 @@ async function placeOrder() {
           });
         });
 
-        notify(err.detail, 'error');
-
         const formTop = form.getBoundingClientRect().top;
 
-        if(!document.querySelector('#yc-sticky-checkout')) {
+        if (!document.querySelector('#yc-sticky-checkout')) {
           window.scrollBy({ top: formTop - window.innerHeight / 3, behavior: 'smooth' });
         }
       })
