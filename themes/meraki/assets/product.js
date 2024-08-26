@@ -6,7 +6,7 @@
  */
 function previewProductImage(element, event) {
   event?.stopPropagation();
-  
+
   const parentSection = element.closest('.yc-single-product');
   const thumbnail = parentSection.querySelector('.main-image');
 
@@ -19,7 +19,6 @@ function previewProductImage(element, event) {
  * @param {HTMLElement} element
  */
 function uploadImage(element) {
-  console.log('Hello sir');
   const parentSection = element.closest('.yc-single-product');
   const uploadInput = parentSection.querySelector('#yc-upload');
   const uploadArea = parentSection.querySelector('.yc-upload');
