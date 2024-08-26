@@ -45,11 +45,9 @@ async function placeOrder() {
           });
         });
 
-        notify(err.detail, 'error');
-
         const formTop = form.getBoundingClientRect().top;
 
-        if(!document.querySelector('#yc-sticky-checkout')) {
+        if (!document.querySelector('#yc-sticky-checkout')) {
           window.scrollBy({ top: formTop - window.innerHeight / 3, behavior: 'smooth' });
         }
       })
