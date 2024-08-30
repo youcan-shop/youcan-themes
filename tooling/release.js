@@ -5,7 +5,9 @@ const path = require('path');
 const theme_folders = ['layouts', 'sections', 'locales', 'snippets', 'assets', 'config', 'templates'];
 const themes_path = path.resolve(__dirname, '..', 'themes');
 const themes_dist = path.resolve(__dirname, '..', 'dist');
-const themes = fs.readdirSync(themes_path);
+const themes = fs.readdirSync(themes_path).filter(theme => {
+  return fs.statSync(path.resolve(themes_path, theme)).isDirectory();
+});
 
 themes.forEach(theme => {
   const currentDate = new Date();
