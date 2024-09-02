@@ -226,8 +226,6 @@ function selectDefaultOptions(parentSection) {
         firstOption.classList.add('selected')
         option.querySelector('.option-name').textContent = firstOption.textContent;
         break;
-      case 'textual_buttons':
-        break;
       case 'radio_buttons':
         const radioLabel = option.querySelector('.yc-radio-buttons');
         radioLabel.classList.add('active');
