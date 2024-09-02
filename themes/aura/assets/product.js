@@ -499,8 +499,6 @@ function createAndSetText(tagType = '', tagValue = '', cssClass = '') {
 // Show selected variants in checkout_step_2
 
 function showSelectedVariants() {
-  console.log('showSelectedVariants');
-  
   const variants = document.querySelectorAll('.product-options > div');
 
   if (!variants || !variants.length) return null;
