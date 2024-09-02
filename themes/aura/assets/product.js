@@ -499,6 +499,8 @@ function createAndSetText(tagType = '', tagValue = '', cssClass = '') {
 // Show selected variants in checkout_step_2
 
 function showSelectedVariants() {
+  console.log('showSelectedVariants');
+  
   const variants = document.querySelectorAll('.product-options > div');
 
   if (!variants || !variants.length) return null;
@@ -513,7 +515,7 @@ function showSelectedVariants() {
 
     switch (variantType) {
       case 'textual_buttons':
-        const textualButton = variant.querySelector('.yc-options-item.active')?.textContent;
+        const textualButton = variant.querySelector('.yc-options-item-v2 input[type="radio"]:checked')?.value;
         variantOption = createAndSetText(variantName, textualButton, 'yc-textual-item').element;
         break;
       case 'color_base_buttons':
