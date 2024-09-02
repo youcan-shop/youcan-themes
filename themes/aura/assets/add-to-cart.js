@@ -157,7 +157,7 @@ function cartTemplate(item) {
           </div>
         </div>
         <div class="left-items">
-          <button class="remove-item-btn">
+          <button class="remove-item-btn" aria-label="remove item">
           <ion-icon data-cart-item-id="${item.id}" data-product-variant-id="${item.productVariant.id}" name="close-outline"></ion-icon>
           </button>
           <div class="spinner" data-spinner-id="${item.id}" style="display: none;"></div>
