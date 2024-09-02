@@ -24,6 +24,22 @@
             </ul>
           </div>
         {% when 'textual_buttons' %}
+          {% for item in option.values %}
+           
+          {% endfor %}
+          <ul class='yc-options-list'>
+            {% for item in option.values %}
+              <li>
+                <label for="{{ item }}" class="yc-options-item-v2">
+                  {{ item }}
+                  <input type="radio" id="{{ item }}" name="{{ option.name }}" value="{{ item }}" 
+                  {% if forloop.index == 1 %}
+                    checked="checked"
+                  {% endif %} />
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
           <ul class='yc-options-list'>
             {% for item in option.values %}
               <li
