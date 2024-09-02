@@ -20,9 +20,6 @@
 }
 
 {% for block in blocks %}
-  #yc_slider_{{ id }} {
-    height: {{ section.settings.slider_height_percentage }}vh;
-  };
   #yc_slider_{{ id }} .btn-{{ forloop.index }} {
     {% if block.settings.button_font_weight %}
       font-weight: {{ block.settings.button_font_weight }};
@@ -40,6 +37,10 @@
 <div
   class='splide yc-slider__{{ view }}'
   id='yc_slider_{{ id }}'
+  style="
+    --desktop-height: '{{ section.settings.slider_height_percentage }}vh'; 
+    --mobile-height: '{{ section.settings.slider_mobile_height_percentage }}vh';
+  "
 >
   <div class='splide__track'>
     <ul class='splide__list'>
