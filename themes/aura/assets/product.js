@@ -270,7 +270,7 @@ function getSelectedOptions(parentSection) {
         break;
       case 'textual_buttons':
         selectedOptions[optionName] =
-          option.querySelector('.yc-options-item-v2 input[type="radio"]:checked')?.value;
+          option.querySelector('.yc-options-item input[type="radio"]:checked')?.value;
 
         break;
       case 'radio_buttons':
@@ -511,7 +511,7 @@ function showSelectedVariants() {
 
     switch (variantType) {
       case 'textual_buttons':
-        const textualButton = variant.querySelector('.yc-options-item-v2 input[type="radio"]:checked')?.value;
+        const textualButton = variant.querySelector('.yc-options-item input[type="radio"]:checked')?.value;
         variantOption = createAndSetText(variantName, textualButton, 'yc-textual-item').element;
         break;
       case 'color_base_buttons':
