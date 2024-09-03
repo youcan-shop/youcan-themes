@@ -1,44 +1,56 @@
 {% assign count = 0 %}
 
 <style>
-.slide-box {
-  -webkit-justify-content: flex-end;
-  align-items: flex-end;
-  -webkit-align-items: flex-end;
-}
-
-.slide-content-box {
-  padding: 80px 20px;
-}
-
-.slide-content-box-button {
-  margin-top: calc(var(--slider-height) / 5);
-  width: max-content;
-  padding: 12px 42px;
-  border-color: transparent !important;
-  margin-top: 1rem;
-}
-
-{% for block in blocks %}
-  #yc_slider_{{ id }} .btn-{{ forloop.index }} {
-    {% if block.settings.button_font_weight %}
-      font-weight: {{ block.settings.button_font_weight }};
-    {% endif %}
-    {% if block.settings.button_bg_color %}
-      background-color: {{ block.settings.button_bg_color.hex }} !important;
-    {% endif %}
-    {% if block.settings.button_color %}
-      color: {{ block.settings.button_color.hex }} !important;
-    {% endif %}
+  .slide-box {
+    -webkit-justify-content: flex-end;
+    align-items: flex-end;
+    -webkit-align-items: flex-end;
   }
-{% endfor %}
+
+  .slide-content-box {
+    padding: 80px 20px;
+  }
+
+  .slide-content-box-button {
+    margin-top: calc(var(--slider-height) / 5);
+    width: max-content;
+    padding: 12px 42px;
+    border-color: transparent !important;
+    margin-top: 1rem;
+  }
+
+  {% for block in blocks %}
+    #yc_slider_{{ id }} .btn-{{ forloop.index }} {
+      {% if block.settings.button_font_weight %}
+        font-weight: {{ block.settings.button_font_weight }};
+      {% endif %}
+      {% if block.settings.button_bg_color %}
+        background-color: {{ block.settings.button_bg_color.hex }} !important;
+      {% endif %}
+      {% if block.settings.button_color %}
+        color: {{ block.settings.button_color.hex }} !important;
+      {% endif %}
+    }
+
+    #yc_slider_{{ id }} .hero-image-{{ forloop.index }} {
+      background: center center / cover no-repeat url('{%- if block.settings.image.src -%} {{ block.settings.image.src }} {%- else -%} {{ 'hero.png' | asset_url }} {%- endif -%}');
+    }
+
+    {%- if block.settings.mobile_image.src -%}
+      @media screen and (max-width: 768px) {
+        #yc_slider_{{ id }} .hero-image-{{ forloop.index }} {
+          background: center center / cover no-repeat url('{{ block.settings.mobile_image.src }}');
+        }
+      }
+    {%- endif -%}
+  {% endfor %}
 </style>
 
 <div
   class='splide yc-slider__{{ view }}'
   id='yc_slider_{{ id }}'
   style="
-    --desktop-height: '{{ section.settings.slider_height_percentage }}vh'; 
+    --desktop-height: '{{ section.settings.slider_height_percentage }}vh';
     --mobile-height: '{{ section.settings.slider_mobile_height_percentage }}vh';
   "
 >
@@ -47,8 +59,8 @@
       {%- for block in blocks %}
         {% assign count = count | plus: 1 %}
         <li
-          class='splide__slide'
-          style="width: 100%; background: center center / cover no-repeat url('{%- if block.settings.image.src -%} {{ block.settings.image.src }} {%- else -%} {{ 'hero.png' | asset_url }} {%- endif -%}')"
+          class='splide__slide hero-image-{{ forloop.index }}'
+          style="width: 100%;"
           {{ block.youcan_attributes }}
         >
           {%- if block.settings.caption %}
