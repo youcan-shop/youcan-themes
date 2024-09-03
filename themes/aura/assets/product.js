@@ -271,7 +271,6 @@ function getSelectedOptions(parentSection) {
       case 'textual_buttons':
         selectedOptions[optionName] =
           option.querySelector('.yc-options-item input[type="radio"]:checked')?.value;
-
         break;
       case 'radio_buttons':
         selectedOptions[optionName] =
