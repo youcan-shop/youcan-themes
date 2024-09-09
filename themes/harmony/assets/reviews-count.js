@@ -18,6 +18,8 @@ async function fetchReviewsForProduct(productId, closetParent, averageRating) {
         (${totalReviews.length} ${ratings})
       </li>
     `);
+
+    document.querySelector('#addReviewBtn').style.display = 'block';
   } catch (error) {
     noDataSetter();
   }
