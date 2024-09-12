@@ -62,22 +62,21 @@
           {{ block.youcan_attributes }}
         >
           {%- if block.settings.caption %}
-            <div class='content flex items-center h-full w-full slide-box'>
-              <div class='container flex items-center justify-center slide-content-box'>
-                <div class="caption-wrapper">
-                  <div class='caption'>{{ block.settings.caption }}</div>
-                  {% if block.settings.product %}
-                    <div class='btn-holder'>
-                      <a
-                        href='{{ block.settings.product.url }}'
-                        class='yc-btn slide-content-box-button btn-{{ forloop.index }}'
-                      >
-                        {{ block.settings.button_text }}
-                      </a>
-                    </div>
-                  {% endif %}
+            <div 
+              class='content' 
+              style="--alignment: {{ block.settings.content_alignment }}"
+            >
+              <div class='caption w-full'>{{ block.settings.caption }}</div>
+              {% if block.settings.product %}
+                <div class="btn-holder">
+                  <a
+                    href='{{ block.settings.product.url }}'
+                    class='yc-btn slide-content-box-button btn-{{ forloop.index }}'
+                  >
+                    {{ block.settings.button_text }}
+                  </a>
                 </div>
-              </div>
+              {% endif %}
             </div>
           {%- endif %}
         </li>
