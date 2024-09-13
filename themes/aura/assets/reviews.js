@@ -1,17 +1,15 @@
 /**
  * Converts date from yyyy-mm-dd to dd.mm.yyyy
  */
-function convertDate() {
-  const createdAtDate = document.querySelectorAll('.created-at-date');
-
-  createdAtDate.forEach(date => {
-    const originalDateString = date.textContent;
-    const originalDate = new Date(originalDateString);
-    const day = originalDate.getDate().toString().padStart(2, '0');
-    const month = (originalDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = originalDate.getFullYear().toString();
-    const formattedDate = `${day}.${month}.${year}`;
-    date.textContent = formattedDate;
+function convertDate(reviews) {
+  return reviews.map(review => {
+    const date = new Date(review.created_at);
+    const formattedDate = `/${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+    
+    return {
+      ...review,
+      created_at: formattedDate
+    };
   });
 }
 
@@ -105,21 +103,19 @@ const setupReviews = async () => {
    * Append reviews to the reviewsWrapper.
    */
   const addReviews = (reviewsWrapper, reviews) => {
-    reviewsWrapper.append(...reviews.map(review => createReviewItem(review)));
+    reviewsWrapper.append(...convertDate(reviews).map(review => createReviewItem(review)));
   }
 
   try {
     const res = youcanjs.product.fetchReviews(reviewsProductId, { limit: 3 });
     reviews = await res.data();
 
-    addReviews(reviewsWrapper, reviews);
+    addReviews(reviewsWrapper, reviews);  
     handelPagination(res);
 
-    if(reviews && reviews.length) {
-      return convertDate();
+    if(reviews.length===0) {
+      return removeReviewsIfNone();
     }
-
-    return removeReviewsIfNone();
 
   } catch (error) {
     removeReviewsIfNone();
