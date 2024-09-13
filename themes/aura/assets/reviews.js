@@ -103,7 +103,7 @@ const setupReviews = async () => {
    * Append reviews to the reviewsWrapper.
    */
   const addReviews = (reviewsWrapper, reviews) => {
-    reviewsWrapper.append(...reviews.map(review => createReviewItem(review)));
+    reviewsWrapper.append(...convertDate(reviews).map(review => createReviewItem(review)));
   }
 
   try {
