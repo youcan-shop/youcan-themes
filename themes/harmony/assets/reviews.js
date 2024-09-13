@@ -112,7 +112,7 @@ try {
   addReviews(reviewsWrapper, reviews);  
   handelPagination(res);
 
-  if(reviews.length===0) {
+  if (reviews.length === 0) {
     return removeReviewsIfNone();
   }
 } catch (error) {
