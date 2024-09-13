@@ -71,7 +71,6 @@
   (function() {
     const isMobile = window.matchMedia("(max-width: 768px)");
     const products = {{ section.blocks.size }};
-    const desktopBlocksPerPage = Math.max(products, 3);
 
     const desktopSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__desktop`, {
       type: '{{ section.settings.slider_transition_type }}',
@@ -84,21 +83,21 @@
       interval: '{{ section.settings.duration_between_each_slide | times: 1000 }}',
       rewind: true,
       drag: 'free',
-      perPage: desktopBlocksPerPage,
+      perPage: {{ section.settings.slider_desktop_per_page }},
       perMove: 1,
       snap: true,
       gap: '20px',
       focus: 'center',
     });
 
-    const mobileBlocksPerPage = 2;
+    const mobileBlocksPerPage = {{ section.settings.slider_mobile_per_page }};
 
     const mobileSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__mobile`, {
       type: '{{ section.settings.slider_mobile_transition_type }}',
       arrows: false,
       autoplay: '{{ section.settings.slider_mobile_autoplay }}' ? true : false,
       cover: true,
-      pagination: mobileBlocksPerPage == products ? false : ('{{ section.settings.slider_mobile_pagination }}' ? true : false),
+      pagination: mobileBlocksPerPage == products ? false : (mobileBlocksPerPage ? true : false),
       interval: '{{ section.settings.slider_mobile_timeout | times: 1000 }}',
       rewind: true,
       drag: 'free',
@@ -264,6 +263,15 @@
     },
     {
       "type": "range",
+      "id": "slider_desktop_per_page",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "label": "Per page",
+      "default": 3
+    },
+    {
+      "type": "range",
       "id": "duration_between_each_slide",
       "min": 1,
       "max": 15,
@@ -325,6 +333,15 @@
     {
       "type": "paragraph",
       "content": "ℹ️ These settings will be applied to mobile devices."
+    },
+    {
+      "type": "range",
+      "id": "slider_mobile_per_page",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Per page",
+      "default": 2
     },
     {
       "type": "range",
