@@ -1,7 +1,7 @@
 /**
  * Converts date from yyyy-mm-dd to dd.mm.yyyy
  */
-function convertDate() {
+function convertDate(reviews) {
   return reviews.map(review => {
     const date = new Date(review.created_at);
     const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
