@@ -171,17 +171,12 @@ function setVariant(parentSection, id) {
 }
 
 /**
- * Sets inventory of product variant.
- * And disable add to cart button when inventory is not sufficient.
+ * Disable add to cart button if stock is out.
  *
  * @param {HTMLElement} parentSection
- * @param {Number} inventory
+ * @param {Boolean} isStockOut
  */
-function setInventory(parentSection, inventory) {
-  const inventoryInput = parentSection.querySelector('#_inventory');
-
-  inventoryInput.value = globalProduct.isTrackingInventory ? inventory : null;
-
+function isAddToCartDisabled(parentSection, isStockOut) {
   /** @type {HTMLButtonElement} addToCartButton */
   const addToCartButton = parentSection.querySelector('.yc-btn');
 
@@ -193,15 +188,57 @@ function setInventory(parentSection, inventory) {
     addToCartButton.setAttribute('data-text', addToCartButton.innerHTML);
   }
 
-  const isAddToCartDisabled = globalProduct.isTrackingInventory && inventory === 0;
+  addToCartButton.disabled = isStockOut;
 
-  addToCartButton.disabled = isAddToCartDisabled;
-
-  if (isAddToCartDisabled) {
+  if (isStockOut) {
     addToCartButton.innerHTML = TRANSLATED_TEXT.empty_inventory;
   } else {
     addToCartButton.innerHTML = addToCartButton.getAttribute('data-text');
   }
+}
+
+/**
+ * Disable express checkout button if stock is out.
+ *
+ * @param {Boolean} isStockOut
+ */
+function isExpressCheckoutDisabled(isStockOut) {
+  /** @type {HTMLButtonElement} ExpressCheckoutButton */
+  const expressCheckoutButtons = document.querySelectorAll('.express-checkout-button');
+
+  if(!expressCheckoutButtons.length) {
+    return;
+  }
+
+  expressCheckoutButtons.forEach((button, index) => {
+    if (!button.disabled && button.getAttribute('data-text') === null) {
+      button.setAttribute('data-text', button.innerHTML);
+    }
+
+    button.disabled = isStockOut;
+
+    if (isStockOut) {
+      button.innerHTML = TRANSLATED_TEXT.empty_inventory;
+    } else {
+      button.innerHTML = button.getAttribute('data-text');
+    }
+  });
+}
+
+/**
+ * Sets inventory of product variant.
+ * And disable action buttons if the inventory is not sufficient (out of stock).
+ *
+ * @param {HTMLElement} parentSection
+ * @param {Number} inventory
+ */
+function setInventory(parentSection, inventory) {
+  const inventoryInput = parentSection.querySelector('#_inventory');
+  const isStockOut = globalProduct.isTrackingInventory && inventory === 0;
+
+  inventoryInput.value = globalProduct.isTrackingInventory ? inventory : null;
+  isAddToCartDisabled(parentSection, isStockOut);
+  isExpressCheckoutDisabled(isStockOut);
 }
 
 /**
