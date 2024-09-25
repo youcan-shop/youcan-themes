@@ -42,8 +42,7 @@
               {% endif %}
             {% endfor %}
             <div>
-              <span class='product-price'> {{ item.price }}</span>
-              <span class='product-currency'></span>
+              <span class='product-price'> {{ item.price | money }}</span>
             </div>
           </div>
         </div>
@@ -58,8 +57,7 @@
             <span class='spinner h-7 w-7'></span>
           </div>
           <div class="total-price-wrapper">
-            <span class="total-price">{{ item.price | times: item.quantity }}</span>
-            <span class="product-currency"></span>
+            <span class="total-price">{{ item.price | times: item.quantity | money }}</span>
           </div>
         </div>
         <div class="cell adjust-space close-btn">
@@ -116,8 +114,7 @@
                         <div class='product-price'>{{ item.price }}</div>
                       </div>
                       <div>
-                        <span class="item-price">{{ item.price | times: item.quantity }}</span>
-                        <span class="product-currency"></span>
+                        <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
                       </div>
                     </div>
                 {%- endfor %}
