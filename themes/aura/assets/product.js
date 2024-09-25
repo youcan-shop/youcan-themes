@@ -210,7 +210,7 @@ function isExpressCheckoutDisabled(isStockOut) {
     return;
   }
 
-  expressCheckoutButtons.forEach((button, index) => {
+  expressCheckoutButtons.forEach((button) => {
     if (!button.disabled && button.getAttribute('data-text') === null) {
       button.setAttribute('data-text', button.innerHTML);
     }
@@ -223,6 +223,22 @@ function isExpressCheckoutDisabled(isStockOut) {
       button.innerHTML = button.getAttribute('data-text');
     }
   });
+}
+
+/**
+ * Force set the max inventory value if the current value is over than him on each variant.
+ *
+ * @param {HTMLElement} parentSection
+ * @param {Number} inventoryValue
+ */
+function forceMaxInventoryOnQuantityInput(parentSection, inventoryValue) {
+  const quantityInput = parentSection.querySelector('.quantity-input');
+  let currentValue = parseInt(quantityInput.value);
+  let maxInventoryValue = parseInt(inventoryValue);
+
+  if (currentValue > maxInventoryValue) {
+    quantityInput.value = maxInventoryValue;
+  }
 }
 
 /**
@@ -239,6 +255,7 @@ function setInventory(parentSection, inventory) {
   inventoryInput.value = globalProduct.isTrackingInventory ? inventory : null;
   isAddToCartDisabled(parentSection, isStockOut);
   isExpressCheckoutDisabled(isStockOut);
+  forceMaxInventoryOnQuantityInput(parentSection, inventoryInput.value);
 }
 
 /**

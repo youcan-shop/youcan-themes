@@ -5,6 +5,7 @@ function manipulateQuantity() {
   const decrementButton = $('.decrement-button');
   const incrementButton = $('.increment-button');
   const quantityInput = $('.quantity-input');
+  const inventoryInput = $('#_inventory');
 
   /**
    * Decreases quantity value by 1 when decrement button is clicked
@@ -21,7 +22,23 @@ function manipulateQuantity() {
    */
   incrementButton?.addEventListener('click', () => {
     const currentValue = parseInt(quantityInput.value);
-    quantityInput.value = currentValue + 1;
+    const maxInventoryValue = parseInt(inventoryInput.value);
+
+    if(maxInventoryValue > currentValue) {
+      quantityInput.value = currentValue + 1;
+    }
+  });
+
+  /**
+   * Check if the current value exceeds the max inventory
+   */
+  quantityInput?.addEventListener('input', () => {
+    let currentValue = parseInt(quantityInput.value);
+    const maxInventoryValue = parseInt(inventoryInput.value);
+
+    if (currentValue > maxInventoryValue) {
+      quantityInput.value = maxInventoryValue;
+    }
   });
 }
 
