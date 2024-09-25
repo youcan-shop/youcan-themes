@@ -323,34 +323,11 @@ function getSelectedVariant(parentSection) {
  * @param {String} price
  * @param {String} compareAtPrice
  */
-function updateProductDetails(parentSection, image, price, compareAtPrice) {
+function updateProductDetails(parentSection, image, compareAtPrice) {
   if (image) {
     const mainImgs = parentSection.querySelectorAll('.main-image');
 
     mainImgs.forEach(mainImg => mainImg.src = image)
-  }
-
-  if (price) {
-    const productPrices = parentSection.querySelectorAll('.product-price');
-    const showStickyCheckoutPrice = $('#sticky-price');
-
-    if (productPrices.length === 0) {
-      if (showStickyCheckoutPrice) {
-        showStickyCheckoutPrice.innerHTML = `${price} ${Dotshop.currency}`;
-      }
-
-      return;
-    }
-
-    productPrices.forEach(productPrice => {
-      const displayValue = `${price} ${Dotshop.currency}`;
-
-      productPrice.innerText = displayValue;
-
-      if (showStickyCheckoutPrice) {
-        showStickyCheckoutPrice.innerHTML = productPrice.innerHTML;
-      }
-    });
   }
 
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
@@ -582,7 +559,6 @@ function setup() {
     updateProductDetails(
       section,
       variant.image,
-      variant.price,
       variant.compare_at_price
     );
 
@@ -595,7 +571,6 @@ function setup() {
         updateProductDetails(
           section,
           selectedVariant.image,
-          selectedVariant.price,
           selectedVariant.compare_at_price
         );
 
