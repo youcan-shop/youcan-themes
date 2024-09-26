@@ -33,12 +33,8 @@ function manipulateQuantity() {
    * Check if the current value exceeds the max inventory
    */
   quantityInput?.addEventListener('input', () => {
-    let currentValue = parseInt(quantityInput.value);
     const maxInventoryValue = parseInt(inventoryInput.value);
-
-    if (currentValue > maxInventoryValue) {
-      quantityInput.value = maxInventoryValue;
-    }
+    restrictInputValue(quantityInput, maxInventoryValue);
   });
 }
 

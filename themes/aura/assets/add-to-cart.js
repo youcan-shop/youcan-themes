@@ -30,6 +30,12 @@ async function addToCart(snippetId) {
 
     if (response.error) throw new Error(response.error);
 
+    response.items.forEach((item) => {
+      if (item.quantity > item.productVariant.inventory) {
+        throw new Error(ADD_TO_CART_EXPECTED_ERRORS.max_quantity);
+      }
+    })
+
     updateCartCount(response.count);
     await updateCartDrawer();
 
@@ -105,23 +111,28 @@ async function updateCartItem(cartItemId, productVariantId, quantity) {
   }
 }
 
-function increaseCartQuantity(cartItemId, productVariantId) {
-  updateCartQuantity(cartItemId, productVariantId, 1);
+function increaseCartQuantity(cartItemId, productVariantId, inventory) {
+  updateCartQuantity(cartItemId, productVariantId, 1, inventory);
 }
 
-function decreaseCartQuantity(cartItemId, productVariantId) {
-  updateCartQuantity(cartItemId, productVariantId, -1);
+function decreaseCartQuantity(cartItemId, productVariantId, inventory) {
+  updateCartQuantity(cartItemId, productVariantId, -1, inventory);
 }
 
-function updateCartQuantity(cartItemId, productVariantId, delta) {
+function updateCartQuantity(cartItemId, productVariantId, delta, inventory) {
   const input = document.querySelector(`#quantity-${cartItemId}`);
   if (input) {
     const newQuantity = parseInt(input.value) + delta;
-    if (newQuantity >= 1) {
+
+    if (newQuantity >= 1 && parseInt(inventory) >= newQuantity) {
       input.value = newQuantity;
       updateCartItem(cartItemId, productVariantId, newQuantity);
     }
   }
+}
+
+function restrictInputToInventoryRange(event, inventory) {
+  restrictInputValue(event.target, parseInt(inventory));
 }
 
 function cartTemplate(item) {
@@ -145,7 +156,7 @@ function cartTemplate(item) {
         <div class="item-details">
           <p class="product-name">${item.productVariant.product.name}</p>
           <div class="variants">
-          ${CART_DRAWER_TRANSLATION.quantityVariant}: ${item.quantity} <br/>'${variationsCheck}
+          ${CART_DRAWER_TRANSLATION.quantityVariant}: ${item.quantity} <br/> ${variationsCheck}
           </div>
           <div class="product-price">
           ${
@@ -164,9 +175,9 @@ function cartTemplate(item) {
           </button>
           <div class="spinner" data-spinner-id="${item.id}" style="display: none;"></div>
           <div class="quantity-control">
-            <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}')">+</button>
-            <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)">
-            <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}')">-</button>
+            <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}', '${item.productVariant.inventory}')">+</button>
+            <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)" oninput="restrictInputToInventoryRange(event, '${item.productVariant.inventory}')">
+            <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}', '${item.productVariant.inventory}')">-</button>
           </div>
         </div>
       </div>

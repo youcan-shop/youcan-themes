@@ -294,7 +294,7 @@ function decodeHtmlEntities(text) {
 function renderTextContent(htmlContent) {
   let tempElement = document.createElement('div');
   tempElement.innerHTML = htmlContent;
-  
+
   return tempElement.innerText || tempElement.textContent;
 }
 
