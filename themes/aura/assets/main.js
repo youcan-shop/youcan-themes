@@ -312,7 +312,6 @@ function restrictInputValue(inputElement, maxInventoryValue) {
   let currentValue = parseInt(inputElement.value);
 
   if (currentValue < 1) {
-    console.log('hello');
     inputElement.value = 1;
   }
 
