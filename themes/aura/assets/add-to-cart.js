@@ -4,6 +4,7 @@ async function addToCart(snippetId) {
   const quantity = parentSection.querySelector(`#quantity`)?.value || 1;
   const inventory = parentSection.querySelector(`#_inventory`)?.value || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
+  const cartQuantityInput = document.querySelector('#cartQuantity');
 
   if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
@@ -17,6 +18,10 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
   }
 
+  if (cartQuantityInput.value >= inventory) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity, 'error');
+  }
+
   try {
     requestAnimationFrame(() => {
       load('#loading__cart');
@@ -28,13 +33,9 @@ async function addToCart(snippetId) {
       quantity,
     });
 
-    if (response.error) throw new Error(response.error);
+    await trackVariantQuantityOnCart(variantId);
 
-    response.items.forEach((item) => {
-      if (item.quantity > item.productVariant.inventory) {
-        throw new Error(ADD_TO_CART_EXPECTED_ERRORS.max_quantity);
-      }
-    })
+    if (response.error) throw new Error(response.error);
 
     updateCartCount(response.count);
     await updateCartDrawer();
@@ -80,6 +81,8 @@ async function removeCartItem(cartItemId, productVariantId) {
       cartItemId,
       productVariantId,
     });
+
+    await trackVariantQuantityOnCart(productVariantId);
   } catch (error) {
     notify(error.message, 'error');
   } finally {

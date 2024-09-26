@@ -346,3 +346,29 @@ function shouldUsePrecision(amount) {
 
   return isMulticurrencyActive && usePrecision;
 }
+
+/**
+ * Tracks the quantity of a specific variant in the cart and set it in the hidden quantity input.
+ *
+ * @param {string} selectedVariantId - The ID of the selected product variant.
+ */
+async function trackVariantQuantityOnCart(selectedVariantId) {
+  load('#loading__cart');
+  try {
+    const cart = await youcanjs.cart.fetch();
+    const cartItem = cart.items.find((item) => item.productVariant.id === selectedVariantId);
+    const cartQuantityInput = document.querySelector('#cartQuantity');
+
+    if (!cartItem) {
+      cartQuantityInput.value = 0;
+    }
+
+    if (cartItem && globalProduct.isTrackingInventory) {
+      cartQuantityInput.value = cartItem.quantity;
+    }
+  } catch(e) {
+    notify(e.message, 'error');
+  } finally {
+    stopLoad('#loading__cart');
+  }
+}

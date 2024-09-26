@@ -257,11 +257,12 @@ function setInventory(parentSection, inventory) {
  * Sets default options for a product
  * @param {HTMLElement} parentSection
  */
-function selectDefaultOptions(parentSection) {
+async function selectDefaultOptions(parentSection) {
   const options = parentSection.querySelectorAll('.product-options > div');
 
   if (!options || !options.length) {
     setInventory(parentSection, defaultVariant?.inventory);
+    await trackVariantQuantityOnCart(defaultVariant?.id);
 
     return setVariant(parentSection, defaultVariant?.id);
   }
@@ -294,11 +295,6 @@ function selectDefaultOptions(parentSection) {
         break;
     }
   });
-
-  const selectedVariant = getSelectedVariant(parentSection);
-
-  setInventory(parentSection, selectedVariant.inventory);
-  setVariant(parentSection, selectedVariant.id);
 }
 
 /**
@@ -637,7 +633,7 @@ function setup() {
     );
 
     if (productDetails) {
-      const observer = new MutationObserver(() => {
+      const observer = new MutationObserver(async () => {
         const selectedVariant = getSelectedVariant(section);
         const variantIdInput = section.querySelector('#variantId');
         variantIdInput.value = selectedVariant.id;
@@ -650,6 +646,7 @@ function setup() {
         );
 
         setInventory(section, selectedVariant.inventory);
+        await trackVariantQuantityOnCart(selectedVariant.id);
       });
 
       observer.observe(productDetails, {
