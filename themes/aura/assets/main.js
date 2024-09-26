@@ -303,9 +303,9 @@ if (FORM.errors) {
 }
 
 /**
- * Restrict the input value to the inventory range
+ * Restrict the input value based on the inventory number
  *
- * @param {HTMLInputElement} inputElement - The input element whose value is to be restricted.
+ * @param {HTMLInputElement} inputElement - The input element.
  * @param {number} maxInventoryValue - The maximum allowable inventory value.
  */
 function restrictInputValue(inputElement, maxInventoryValue) {
