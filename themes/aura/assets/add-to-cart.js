@@ -134,10 +134,6 @@ function updateCartQuantity(cartItemId, productVariantId, delta, inventory) {
   }
 }
 
-function restrictInputToInventoryRange(event, inventory) {
-  restrictInputValue(event.target, parseInt(inventory));
-}
-
 function cartTemplate(item) {
   // Loop through variations
   const variationsArray = [];
@@ -179,7 +175,7 @@ function cartTemplate(item) {
           <div class="spinner" data-spinner-id="${item.id}" style="display: none;"></div>
           <div class="quantity-control">
             <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}', '${item.productVariant.inventory}')">+</button>
-            <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)" oninput="restrictInputToInventoryRange(event, '${item.productVariant.inventory}')">
+            <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)" oninput="restrictInputValue(event.target, parseInt(${item.productVariant.inventory}))">
             <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}', '${item.productVariant.inventory}')">-</button>
           </div>
         </div>
