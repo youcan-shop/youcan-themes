@@ -293,11 +293,30 @@ function decodeHtmlEntities(text) {
 function renderTextContent(htmlContent) {
   let tempElement = document.createElement('div');
   tempElement.innerHTML = htmlContent;
-  
+
   return tempElement.innerText || tempElement.textContent;
 }
 
 if (FORM.errors) {
   let decodedText = decodeHtmlEntities(FORM.errors);
   notify(renderTextContent(decodedText), 'error', 20000);
+}
+
+/**
+ * Restrict the input value to the inventory range
+ *
+ * @param {HTMLInputElement} inputElement - The input element whose value is to be restricted.
+ * @param {number} maxInventoryValue - The maximum allowable inventory value.
+ */
+function restrictInputValue(inputElement, maxInventoryValue) {
+  let currentValue = parseInt(inputElement.value);
+
+  if (currentValue < 1) {
+    console.log('hello');
+    inputElement.value = 1;
+  }
+
+  if (currentValue > maxInventoryValue) {
+    inputElement.value = maxInventoryValue;
+  }
 }
