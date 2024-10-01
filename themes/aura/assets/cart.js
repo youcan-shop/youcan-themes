@@ -90,23 +90,22 @@ async function removeCoupons(e) {
   }
 }
 
-function updateCart(item, quantity, totalPriceSelector, cartItemId, productVariantId) {
+function updateCart(item, quantity, totalPriceSelector, cartItemId, productVariantId, inventory) {
   const inputHolder = document.getElementById(item);
   const input = inputHolder.querySelector(`input[id="${productVariantId}"]`);
   input.value = quantity;
   const decrease = input.previousElementSibling;
   const increase = input.nextElementSibling;
-
   const productPrice = inputHolder.querySelector('.product-price');
   const price = productPrice.innerText;
   const totalPrice = inputHolder.querySelector(totalPriceSelector);
 
   decrease
     .querySelector('button')
-    .setAttribute('onclick', `decreaseQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}')`);
+    .setAttribute('onclick', `decreaseQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}', ${inventory})`);
   increase
     .querySelector('button')
-    .setAttribute('onclick', `increaseQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}')`);
+    .setAttribute('onclick', `increaseQuantity('${cartItemId}', '${productVariantId}', '${quantity}', ${inventory})`);
 
   if (isNaN(quantity)) {
     totalPrice.innerText = 0;
@@ -143,16 +142,16 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchCoupons();
 });
 
-function updateDOM(cartItemId, productVariantId, quantity) {
-  updateCart(cartItemId, quantity, '.total-price', cartItemId, productVariantId);
+function updateDOM(cartItemId, productVariantId, quantity, inventory) {
+  updateCart(cartItemId, quantity, '.total-price', cartItemId, productVariantId, inventory);
   updateTotalPrice();
 }
 
-function updatePrice(cartItemUniqueId, productVariantId, quantity) {
-  updateCart(`cart-item-${cartItemUniqueId}`, quantity, '.item-price', cartItemUniqueId, productVariantId);
+function updatePrice(cartItemUniqueId, productVariantId, quantity, inventory) {
+  updateCart(`cart-item-${cartItemUniqueId}`, quantity, '.item-price', cartItemUniqueId, productVariantId, inventory);
 }
 
-async function updateQuantity(cartItemId, productVariantId, quantity) {
+async function updateQuantity(cartItemId, productVariantId, quantity, inventory) {
   load(`#loading__${cartItemId}`);
   try {
     await youcanjs.cart.updateItem({ cartItemId, productVariantId, quantity });
@@ -162,28 +161,32 @@ async function updateQuantity(cartItemId, productVariantId, quantity) {
     stopLoad(`#loading__${cartItemId}`);
   }
 
-  updateDOM(cartItemId, productVariantId, quantity);
-  updatePrice(cartItemId,productVariantId,quantity);
+  updateDOM(cartItemId, productVariantId, quantity, inventory);
+  updatePrice(cartItemId,productVariantId,quantity, inventory);
   updateTotalPrice();
 }
 
-async function updateOnchange(cartItemId, productVariantId) {
+async function updateOnchange(cartItemId, productVariantId, inventory) {
   const inputHolder = document.getElementById(cartItemId);
   const input = inputHolder.querySelector(`input[id="${productVariantId}"]`);
   const quantity = input.value;
 
-  await updateQuantity(cartItemId, productVariantId, quantity);
+  await updateQuantity(cartItemId, productVariantId, quantity, inventory);
 }
 
-async function decreaseQuantity(cartItemId, productVariantId, quantity) {
-  if (quantity < 1) {
+async function decreaseQuantity(cartItemId, productVariantId, quantity, inventory) {
+  if (Number(quantity) < 1) {
     return;
   }
-  await updateQuantity(cartItemId, productVariantId, quantity);
+  await updateQuantity(cartItemId, productVariantId, quantity, inventory);
 }
 
-async function increaseQuantity(cartItemId, productVariantId, quantity) {
-  await updateQuantity(cartItemId, productVariantId, quantity);
+async function increaseQuantity(cartItemId, productVariantId, quantity, inventory) {
+  if (inventory && (Number(quantity) >= inventory)) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
+  }
+
+  await updateQuantity(cartItemId, productVariantId, (Number(quantity) + 1), inventory);
 }
 
 function updateCartItemCount(count) {

@@ -24,9 +24,11 @@ function manipulateQuantity() {
     const currentValue = parseInt(quantityInput.value);
     const maxInventoryValue = parseInt(inventoryInput.value);
 
-    if(maxInventoryValue > currentValue) {
-      quantityInput.value = currentValue + 1;
+    if(maxInventoryValue && currentValue >= maxInventoryValue) {
+      return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + maxInventoryValue, 'warning');
     }
+
+    quantityInput.value = currentValue + 1;
   });
 
   /**
