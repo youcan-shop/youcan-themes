@@ -4,7 +4,7 @@ async function addToCart(snippetId) {
   const quantity = parentSection.querySelector(`#quantity`)?.value || 1;
   const inventory = parentSection.querySelector(`#_inventory`)?.value || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
-  const cartQuantityInput = document.querySelector('#cartQuantity');
+  const variantQuantityInCart = document.querySelector('#cartQuantity')?.value || null;
 
   if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
@@ -18,7 +18,7 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
   }
 
-  if (cartQuantityInput.value >= inventory) {
+  if (variantQuantityInCart && inventory && (variantQuantityInCart >= inventory)) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity, 'error');
   }
 

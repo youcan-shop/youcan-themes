@@ -250,7 +250,7 @@ function setInventory(parentSection, inventory) {
   inventoryInput.value = globalProduct.isTrackingInventory ? inventory : null;
   isAddToCartDisabled(parentSection, isStockOut);
   isExpressCheckoutDisabled(isStockOut);
-  forceResetQuantityInput(parentSection, inventoryInput.value);
+  forceResetQuantityInput(parentSection);
 }
 
 /**

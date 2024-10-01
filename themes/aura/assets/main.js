@@ -34,12 +34,22 @@ if (fixedNavbar && notice) {
 /* ----- spinner-loader ----- */
 /* -------------------------- */
 function load(el) {
-  const loader = document.querySelector(el);
-  if (loader) {
-    loader.classList.remove('hidden');
+  const element = document.querySelector(el);
+
+  if (!element) {
+    return;
   }
 
-  const nextEl = loader ? loader.nextElementSibling : null;
+  if (element) {
+    element.classList.remove('hidden');
+  }
+
+  if (element.parentElement.hasAttribute('data-type')) {
+    element.parentElement.setAttribute('data-type', 'loading');
+    element.parentElement.disabled = true;
+  }
+
+  const nextEl = element ? element.nextElementSibling : null;
 
   if (nextEl) {
     nextEl.classList.add('hidden');
@@ -47,12 +57,22 @@ function load(el) {
 }
 
 function stopLoad(el) {
-  const loader = document.querySelector(el);
-  if (loader) {
-    loader.classList.add('hidden');
+  const element = document.querySelector(el);
+
+  if (!element) {
+    return;
   }
 
-  const nextEl = loader ? loader.nextElementSibling : null;
+  if (element) {
+    element.classList.add('hidden');
+  }
+
+  if (element.parentElement.hasAttribute('data-type')) {
+    element.parentElement.setAttribute('data-type', '');
+    element.parentElement.disabled = false;
+  }
+
+  const nextEl = element ? element.nextElementSibling : null;
   if (nextEl) {
     nextEl.classList.remove('hidden');
   }
@@ -356,16 +376,23 @@ async function trackVariantQuantityOnCart(selectedVariantId) {
   load('#loading__cart');
   try {
     const cart = await youcanjs.cart.fetch();
+
+    if (!cart) {
+      return;
+    }
+
+    if (cart.items.length === 0 || cart.items.data?.length === 0) {
+      return;
+    }
+
     const cartItem = cart.items.find((item) => item.productVariant.id === selectedVariantId);
     const cartQuantityInput = document.querySelector('#cartQuantity');
 
-    if (!cartItem) {
-      cartQuantityInput.value = 0;
+    if (!cartItem || cartItem.productVariant.product.track_inventory === false) {
+      return;
     }
 
-    if (cartItem && globalProduct.isTrackingInventory) {
-      cartQuantityInput.value = cartItem.quantity;
-    }
+    cartQuantityInput.value = cartItem.quantity;
   } catch(e) {
     notify(e.message, 'error');
   } finally {
