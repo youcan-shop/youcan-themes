@@ -373,8 +373,8 @@ function shouldUsePrecision(amount) {
  * @param {string} selectedVariantId - The ID of the selected product variant.
  */
 async function trackVariantQuantityOnCart(selectedVariantId) {
-  load('#loading__cart');
   try {
+    load('#loading__cart');
     const cart = await youcanjs.cart.fetch();
 
     if (!cart) {

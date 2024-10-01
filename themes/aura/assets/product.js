@@ -171,56 +171,29 @@ function setVariant(parentSection, id) {
 }
 
 /**
- * Disable add to cart button if stock is out.
+ * Disable action buttons (express checkout button / add to cart button) if stock is out.
  *
- * @param {HTMLElement} parentSection
+ * @param {HTMLElement} el
  * @param {Boolean} isStockOut
  */
-function isAddToCartDisabled(parentSection, isStockOut) {
-  /** @type {HTMLButtonElement} addToCartButton */
-  const addToCartButton = parentSection.querySelector('.yc-btn');
+function disableActionButtons(el, isStockOut) {
+  const elements = document.querySelectorAll(el);
 
-  if (!addToCartButton) {
+  if(!elements.length) {
     return;
   }
 
-  if (!addToCartButton.disabled && addToCartButton.getAttribute('data-text') === null) {
-    addToCartButton.setAttribute('data-text', addToCartButton.innerHTML);
-  }
-
-  addToCartButton.disabled = isStockOut;
-
-  if (isStockOut) {
-    addToCartButton.innerHTML = TRANSLATED_TEXT.empty_inventory;
-  } else {
-    addToCartButton.innerHTML = addToCartButton.getAttribute('data-text');
-  }
-}
-
-/**
- * Disable express checkout button if stock is out.
- *
- * @param {Boolean} isStockOut
- */
-function isExpressCheckoutDisabled(isStockOut) {
-  /** @type {HTMLButtonElement} ExpressCheckoutButton */
-  const expressCheckoutButtons = document.querySelectorAll('.express-checkout-button');
-
-  if(!expressCheckoutButtons.length) {
-    return;
-  }
-
-  expressCheckoutButtons.forEach((button) => {
-    if (!button.disabled && button.getAttribute('data-text') === null) {
-      button.setAttribute('data-text', button.innerHTML);
+  elements.forEach((element) => {
+    if (!element.disabled && element.getAttribute('data-text') === null) {
+      element.setAttribute('data-text', element.innerHTML);
     }
 
-    button.disabled = isStockOut;
+    element.disabled = isStockOut;
 
     if (isStockOut) {
-      button.innerHTML = TRANSLATED_TEXT.empty_inventory;
+      element.innerHTML = TRANSLATED_TEXT.empty_inventory;
     } else {
-      button.innerHTML = button.getAttribute('data-text');
+      element.innerHTML = element.getAttribute('data-text');
     }
   });
 }
@@ -237,8 +210,7 @@ function forceResetQuantityInput(parentSection) {
 }
 
 /**
- * Sets inventory of product variant.
- * And disable action buttons if the inventory is not sufficient (out of stock).
+ * Sets inventory of product variant and disable action buttons if the inventory is not sufficient (out of stock).
  *
  * @param {HTMLElement} parentSection
  * @param {Number} inventory
@@ -248,8 +220,8 @@ function setInventory(parentSection, inventory) {
   const isStockOut = globalProduct.isTrackingInventory && inventory === 0;
 
   inventoryInput.value = globalProduct.isTrackingInventory ? inventory : null;
-  isAddToCartDisabled(parentSection, isStockOut);
-  isExpressCheckoutDisabled(isStockOut);
+  disableActionButtons('.add-to-cart-button', isStockOut);
+  disableActionButtons('.express-checkout-button', isStockOut);
   forceResetQuantityInput(parentSection);
 }
 
@@ -619,7 +591,7 @@ function goToCheckoutStep(close = false) {
 function setup() {
   const singleProductSections = document.querySelectorAll('.yc-single-product');
 
-  if (!singleProductSections) return;
+  if (!singleProductSections || typeof defaultVariant === 'undefined' ) return;
 
   singleProductSections.forEach((section) => {
     const productDetails = section.querySelector('.product-options');
