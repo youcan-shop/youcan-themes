@@ -356,11 +356,20 @@ function preventCartDrawerOpening(templateName) {
   window.location.reload();
 }
 
-async function directAddToCart(productId) {
+async function directAddToCart(productId, inventory) {
+  await trackVariantQuantityOnCart(productId);
+
+  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
+  const newQuantity = 1;
+
+  if (variantQuantityInCart && inventory && ((variantQuantityInCart + newQuantity) > inventory)) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
+  }
+
   try {
     const response = await youcanjs.cart.addItem({
       productVariantId: productId,
-      quantity: 1
+      quantity: newQuantity
     });
 
     if (response.error) throw new Error(response.error);
