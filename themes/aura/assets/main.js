@@ -329,6 +329,11 @@ if (FORM.errors) {
  * @param {number} maxInventoryValue - The maximum allowable inventory value.
  */
 function restrictInputValue(inputElement, maxInventoryValue) {
+
+  if (maxInventoryValue === null) {
+    return;
+  }
+
   let currentValue = parseInt(inputElement.value);
 
   if (currentValue < 1) {
@@ -346,8 +351,8 @@ function restrictInputValue(inputElement, maxInventoryValue) {
  * @param {string} selectedVariantId - The ID of the selected product variant.
  */
 async function trackVariantQuantityOnCart(selectedVariantId) {
-  load('#loading__cart');
   try {
+    load('#loading__cart');
     const cart = await youcanjs.cart.fetch();
 
     if (!cart) {
