@@ -316,6 +316,42 @@ function getSelectedVariant(parentSection) {
   });
 }
 
+function formatCurrency(amount, currencySymbol, locale = 'en-US', usePercision = false) {
+  const shouldUsePercision = !(amount % 1 === 0) || usePercision;
+
+  try {
+    const formatter = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currencySymbol,
+      minimumFractionDigits: shouldUsePercision ? 2 : 0,
+    });
+    
+    return formatter.format(amount);
+  } catch (error) {
+    // Fallback formatting
+    const formatter = new Intl.NumberFormat(locale, {
+      style: 'decimal',
+      minimumFractionDigits: shouldUsePercision ? 2 : 0,
+    });
+
+    const formattedValue = formatter.format(amount);
+
+    const determineSymbolPositionFormatter = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: 'USD',
+      currencyDisplay: 'symbol',
+    });
+
+    const parts = determineSymbolPositionFormatter.formatToParts(1);
+    const symbolIndex = parts.findIndex(part => part.type === 'currency');
+    const isSymbolOnRight = symbolIndex === 0;
+
+    return isSymbolOnRight
+      ? `${currencySymbol} ${formattedValue}`
+      : `${formattedValue} ${currencySymbol}`;
+  }
+}
+
 /**
  * Updates product details after variant change
  * @param {HTMLElement} parentSection
@@ -326,26 +362,25 @@ function getSelectedVariant(parentSection) {
 function updateProductDetails(parentSection, image, price, compareAtPrice) {
   if (image) {
     const mainImgs = parentSection.querySelectorAll('.main-image');
-
-    mainImgs.forEach(mainImg => mainImg.src = image)
+    mainImgs.forEach(mainImg => mainImg.src = image);
   }
 
   if (price) {
     const productPrices = parentSection.querySelectorAll('.product-price');
-    const showStickyCheckoutPrice = $('#sticky-price');
+    const showStickyCheckoutPrice = document.getElementById('sticky-price');
+    const usePercision = Dotshop?.store?.multicurrency_settings.usePrecision;
+
+    const formattedPrice = formatCurrency(price, Dotshop.currency, Dotshop.customer_locale, usePercision);
 
     if (productPrices.length === 0) {
       if (showStickyCheckoutPrice) {
-        showStickyCheckoutPrice.innerHTML = `${price} ${Dotshop.currency}`;
+        showStickyCheckoutPrice.innerHTML = formattedPrice;
       }
-
       return;
     }
 
     productPrices.forEach(productPrice => {
-      const displayValue = `${price} ${Dotshop.currency}`;
-
-      productPrice.innerText = displayValue;
+      productPrice.innerText = formattedPrice;
 
       if (showStickyCheckoutPrice) {
         showStickyCheckoutPrice.innerHTML = productPrice.innerHTML;
@@ -356,13 +391,15 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
 
   if (compareAtPrice) {
+    const usePercision = Dotshop?.store?.multicurrency_settings.usePrecision;
+    const formattedCompareAtPrice = formatCurrency(compareAtPrice, Dotshop.currency, Dotshop.customer_locale, usePercision);
     variantCompareAtPrices.forEach(variantComparePrice => {
-      variantComparePrice.innerHTML = `<del> ${compareAtPrice} ${Dotshop.currency} </del>`;
-    })
+      variantComparePrice.innerHTML = `<del>${formattedCompareAtPrice}</del>`;
+    });
   } else {
     variantCompareAtPrices.forEach(variantComparePrice => {
       variantComparePrice.innerHTML = ``;
-    })
+    });
   }
 
   goToCheckoutStep();
