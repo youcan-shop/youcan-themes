@@ -333,17 +333,21 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   if (price) {
     const productPrices = parentSection.querySelectorAll('.product-price');
     const showStickyCheckoutPrice = $('#sticky-price');
+    const isMultiCurrencyActive = Dotshop?.store?.multicurrency_settings.isMulticurrencyActive;
+    const usePercision = isMultiCurrencyActive && Dotshop?.store?.multicurrency_settings.usePrecision;
+
+    const formattedPrice = formatCurrency(price, Dotshop.currency, Dotshop.customer_locale, usePercision);
 
     if (productPrices.length === 0) {
       if (showStickyCheckoutPrice) {
-        showStickyCheckoutPrice.innerHTML = `${price} ${Dotshop.currency}`;
+        showStickyCheckoutPrice.innerHTML = formattedPrice;
       }
 
       return;
     }
 
     productPrices.forEach(productPrice => {
-      const displayValue = `${price} ${Dotshop.currency}`;
+      const displayValue = formattedPrice;
 
       productPrice.innerText = displayValue;
 
@@ -356,13 +360,17 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
 
   if (compareAtPrice) {
+    const isMultiCurrencyActive = Dotshop?.store?.multicurrency_settings.isMulticurrencyActive;
+    const usePercision = isMultiCurrencyActive && Dotshop?.store?.multicurrency_settings.usePrecision;
+    const formattedCompareAtPrice = formatCurrency(compareAtPrice, Dotshop.currency, Dotshop.customer_locale, usePercision);
+
     variantCompareAtPrices.forEach(variantComparePrice => {
-      variantComparePrice.innerHTML = `<del> ${compareAtPrice} ${Dotshop.currency} </del>`;
+      variantComparePrice.innerHTML = `<del> ${formattedCompareAtPrice} </del>`;
     })
   } else {
     variantCompareAtPrices.forEach(variantComparePrice => {
       variantComparePrice.innerHTML = ``;
-    })
+    });
   }
 
   goToCheckoutStep();
