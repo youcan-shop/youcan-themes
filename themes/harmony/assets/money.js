@@ -1,11 +1,11 @@
-function formatCurrency(amount, currencySymbol, locale = 'en-US', usePercision = false) {
-  const shouldUsePercision = !(amount % 1 === 0) || usePercision;
+function formatCurrency(amount, currencySymbol, locale = 'en-US', usePrecision = false) {
+  const shouldUsePrecision = !(amount % 1 === 0) || usePrecision;
 
   try {
     const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currencySymbol,
-      minimumFractionDigits: shouldUsePercision ? 2 : 0,
+      minimumFractionDigits: shouldUsePrecision ? 2 : 0,
     });
 
     return formatter.format(amount);
@@ -13,7 +13,7 @@ function formatCurrency(amount, currencySymbol, locale = 'en-US', usePercision =
     // Fallback formatting for when the currency symbol is invalid
     const formatter = new Intl.NumberFormat(locale, {
       style: 'decimal',
-      minimumFractionDigits: shouldUsePercision ? 2 : 0,
+      minimumFractionDigits: shouldUsePrecision ? 2 : 0,
     });
 
     const formattedValue = formatter.format(amount);
