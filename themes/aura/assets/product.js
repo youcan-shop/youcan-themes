@@ -267,6 +267,11 @@ async function selectDefaultOptions(parentSection) {
         break;
     }
   });
+
+  const selectedVariant = getSelectedVariant(parentSection);
+
+  setInventory(parentSection, selectedVariant.inventory);
+  setVariant(parentSection, selectedVariant.id);
 }
 
 /**
