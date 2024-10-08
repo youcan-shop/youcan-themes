@@ -332,18 +332,24 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
 
   if (price) {
     const productPrices = parentSection.querySelectorAll('.product-price');
-    const showStickyCheckoutPrice = $('#sticky-price');
+    const showStickyCheckoutPrice = document.getElementById('sticky-price');
+
+    const { store, currency, customer_locale } = Dotshop;
+    const { isMulticurrencyActive, usePrecision} = store.multicurrency_settings;
+    const shouldUsePrecision = isMulticurrencyActive && usePrecision;
+
+    const formattedPrice = formatCurrency(price, currency, customer_locale, shouldUsePrecision);
 
     if (productPrices.length === 0) {
       if (showStickyCheckoutPrice) {
-        showStickyCheckoutPrice.innerHTML = `${price} ${Dotshop.currency}`;
+        showStickyCheckoutPrice.innerHTML = formattedPrice;
       }
 
       return;
     }
 
     productPrices.forEach(productPrice => {
-      const displayValue = `${price} ${Dotshop.currency}`;
+      const displayValue = formattedPrice;
 
       productPrice.innerText = displayValue;
 
@@ -356,13 +362,19 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
 
   if (compareAtPrice) {
+    const { store, currency, customer_locale } = Dotshop;
+    const { isMulticurrencyActive, usePrecision} = store.multicurrency_settings;
+    const shouldUsePrecision = isMulticurrencyActive && usePrecision;
+
+    const formattedCompareAtPrice = formatCurrency(compareAtPrice, currency, customer_locale, shouldUsePrecision);
+
     variantCompareAtPrices.forEach(variantComparePrice => {
-      variantComparePrice.innerHTML = `<del> ${compareAtPrice} ${Dotshop.currency} </del>`;
-    })
+      variantComparePrice.innerHTML = `<del> ${formattedCompareAtPrice} </del>`;
+    });
   } else {
     variantCompareAtPrices.forEach(variantComparePrice => {
       variantComparePrice.innerHTML = ``;
-    })
+    });
   }
 
   goToCheckoutStep();
