@@ -332,10 +332,12 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   if (price) {
     const productPrices = parentSection.querySelectorAll('.product-price');
     const showStickyCheckoutPrice = document.getElementById('sticky-price');
-    const isMultiCurrencyActive = Dotshop?.store?.multicurrency_settings?.isMulticurrencyActive;
-    const usePercision = isMultiCurrencyActive && Dotshop?.store?.multicurrency_settings?.usePrecision;
+  
+    const { store, currency, customer_locale } = Dotshop;
+    const { isMulticurrencyActive, usePrecision} = store.multicurrency_settings
+    const shouldUsePercision = isMulticurrencyActive && usePrecision;
 
-    const formattedPrice = formatCurrency(price, Dotshop.currency, Dotshop.customer_locale, usePercision);
+    const formattedPrice = formatCurrency(price, currency, customer_locale, shouldUsePercision);
 
     if (productPrices.length === 0) {
       if (showStickyCheckoutPrice) {
@@ -356,9 +358,12 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
 
   if (compareAtPrice) {
-    const isMultiCurrencyActive = Dotshop?.store?.multicurrency_settings?.isMulticurrencyActive;
-    const usePercision = isMultiCurrencyActive && Dotshop?.store?.multicurrency_settings?.usePrecision;
-    const formattedCompareAtPrice = formatCurrency(compareAtPrice, Dotshop.currency, Dotshop.customer_locale, usePercision);
+    const { store, currency, customer_locale } = Dotshop;
+    const { isMulticurrencyActive, usePrecision} = store.multicurrency_settings
+    const shouldUsePercision = isMulticurrencyActive && usePrecision;
+
+    const formattedCompareAtPrice = formatCurrency(compareAtPrice, currency, customer_locale, shouldUsePercision);
+    
     variantCompareAtPrices.forEach(variantComparePrice => {
       variantComparePrice.innerHTML = `<del>${formattedCompareAtPrice}</del>`;
     });
