@@ -18,7 +18,7 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
   }
 
-  if (variantQuantityInCart && inventory && ((variantQuantityInCart + quantity) > inventory)) {
+  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + quantity) > inventory) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
@@ -362,7 +362,7 @@ async function directAddToCart(productId, inventory) {
   const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
   const newQuantity = 1;
 
-  if (variantQuantityInCart && inventory && ((variantQuantityInCart + newQuantity) > inventory)) {
+  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
