@@ -85,7 +85,11 @@
         {%- endif -%}
         <li class="data-item">
           <span>{{ 'thankyou.details.shipping_cost' | t }}</span>
-          <span>{{- order.shippingCost | money -}}</span>
+          {% if order.shippingCost == 0 %}
+            {{ 'thankyou.details.free_shipping' | t }}
+          {% else %}
+            {{ order.shippingCost | money }}
+          {% endif %}
         </li>
         {%- if store.vat > 0 -%}
           <li class="data-item">
