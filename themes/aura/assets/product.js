@@ -360,7 +360,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
 
   if (compareAtPrice) {
     const { store, currency, customer_locale } = Dotshop;
-    const { isMulticurrencyActive, usePrecision} = store.multicurrency_settings
+    const { isMulticurrencyActive, usePrecision} = store.multicurrency_settings;
     const shouldUsePercision = isMulticurrencyActive && usePrecision;
 
     const formattedCompareAtPrice = formatCurrency(compareAtPrice, currency, customer_locale, shouldUsePercision);
