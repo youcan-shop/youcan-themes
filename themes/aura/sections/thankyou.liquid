@@ -91,10 +91,14 @@
     {%- endif -%}
     <div class="head">
       <div class="item">
-         {{ 'thankyou.details.shipping_cost' | t }}
+        {{ 'thankyou.details.shipping_cost' | t }}
       </div>
       <div class="data-item">
-        {{- order.shippingCost | money -}}
+        {% if order.shippingCost == 0 %}
+          {{ 'thankyou.details.free_shipping' | t }}
+        {% else %}
+          {{ order.shippingCost | money }}
+        {% endif %}
       </div>
     </div>
     {%- if store.vat > 0 -%}
