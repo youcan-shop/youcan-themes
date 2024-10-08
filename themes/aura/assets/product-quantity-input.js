@@ -22,9 +22,9 @@ function manipulateQuantity() {
    */
   incrementButton?.addEventListener('click', () => {
     const currentValue = parseInt(quantityInput.value);
-    const maxInventoryValue = parseInt(inventoryInput.value);
+    const inventory = parseInt(inventoryInput.value);
 
-    if(maxInventoryValue && currentValue >= maxInventoryValue) {
+    if(Number.isFinite(inventory) && currentValue >= maxInventoryValue) {
       return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + maxInventoryValue, 'warning');
     }
 

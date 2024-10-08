@@ -182,7 +182,7 @@ async function decreaseQuantity(cartItemId, productVariantId, quantity, inventor
 }
 
 async function increaseQuantity(cartItemId, productVariantId, quantity, inventory) {
-  if (inventory && (Number(quantity) >= inventory)) {
+  if (Number.isFinite(inventory) && (Number(quantity) >= inventory)) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
