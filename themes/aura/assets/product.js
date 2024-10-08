@@ -343,6 +343,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
       if (showStickyCheckoutPrice) {
         showStickyCheckoutPrice.innerHTML = formattedPrice;
       }
+
       return;
     }
 
