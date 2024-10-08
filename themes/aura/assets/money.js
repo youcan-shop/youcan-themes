@@ -26,9 +26,9 @@ function formatCurrency(amount, currencySymbol, locale = 'en-US', usePercision =
 
     const parts = determineSymbolPositionFormatter.formatToParts(1);
     const symbolIndex = parts.findIndex(part => part.type === 'currency');
-    const isSymbolOnRight = symbolIndex === 0;
+    const isSymbolOnLeft = symbolIndex === 0;
 
-    return isSymbolOnRight
+    return isSymbolOnLeft
       ? `${currencySymbol} ${formattedValue}`
       : `${formattedValue} ${currencySymbol}`;
   }
