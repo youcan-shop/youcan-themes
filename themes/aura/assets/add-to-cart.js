@@ -227,13 +227,14 @@ async function updateCartDrawer() {
       cartDrawerContent.appendChild(p);
     }
 
+    cartData.sub_total = formatCurrency(cartData.sub_total, currencyCode, customerLocale, usePrecision);
+
     const footerContainerHTML = `
       <div class="footer">
         <div class="price-wrapper">
           <span class="total-price">${CART_DRAWER_TRANSLATION.totalAmount}</span>
           <div class="currency-wrapper">
-            <span class="currency-value">${cartData.sub_total.toFixed(2)}</span>
-            <span class="currency-code">${currencyCode}</span>
+            <span class="currency-value">${cartData.sub_total}</span>
           </div>
           <span class="spinner footer-spinner" style="display: none;"></span>
         </div>
