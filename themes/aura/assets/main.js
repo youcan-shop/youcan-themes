@@ -1,6 +1,6 @@
 /* ----- Store currency ----- */
 const currencyCode = window.Dotshop.currency;
-const customerLocale = Dotshop.customer_locale;
+const customerLocale = window.Dotshop.customer_locale;
 const usePrecision = shouldUsePrecision();
 /* ------------------ */
 /* ----- navbar ----- */
