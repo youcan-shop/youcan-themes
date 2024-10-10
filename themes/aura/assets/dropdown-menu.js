@@ -1,11 +1,11 @@
-let isOpened = false;
+let isDropDownOpened = false;
 
 /**
  * @param {HTMLElement} element
  */
 function showDropDownMenu(element) {
   element.classList.toggle('show');
-  isOpened = true;
+  isDropDownOpened = true;
 }
 
 /**
@@ -15,7 +15,7 @@ function showDropDownMenu(element) {
 function hideDropDownMenu(element, event)  {
   if (!event.target.matches('.dropbtn, .dropbtn *')) {
     element?.classList.remove('show');
-    isOpened = false;
+    isDropDownOpened = false;
   }
 }
 
@@ -48,7 +48,7 @@ function dropdownMenu() {
 
     selectInput.addEventListener('click', () => showDropDownMenu(dropdownContent));
     document.addEventListener('click', (event) => {
-      if(isOpened) {
+      if(isDropDownOpened) {
         hideDropDownMenu(dropdownContent, event);
       }
     });
