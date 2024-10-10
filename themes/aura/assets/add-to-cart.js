@@ -148,10 +148,9 @@ function cartTemplate(item) {
           ${CART_DRAWER_TRANSLATION.quantityVariant}: ${item.quantity} <br/>'${variationsCheck}
           </div>
           <div class="product-price">
-            <span class="compare-price">${item.productVariant.compare_at_price ? `${item.productVariant.compare_at_price} ${currencyCode}` : ''}</span>
+            <span class="compare-price">${item.productVariant.compare_at_price ? `${item.productVariant.compare_at_price}` : ''}</span>
             <div class="currency-wrapper">
               <span class="price">${item.productVariant.price}</span>
-              <span class="currency-code">${currencyCode}</span>
             </div>
           </div>
           </div>
@@ -201,6 +200,18 @@ async function updateCartDrawer() {
       const products = document.createElement('ul');
 
       for (const item of cartData.items) {
+        item.price = formatCurrency(item.price, currencyCode, customerLocale, usePrecision);
+        item.productVariant.price = formatCurrency(item.productVariant.price, currencyCode, customerLocale, usePrecision);
+        
+        if (item.productVariant.compare_at_price) {
+          item.productVariant.compare_at_price = formatCurrency(
+            item.productVariant.compare_at_price, 
+            currencyCode,
+            customerLocale,
+            usePrecision
+          );
+        }
+
         products.innerHTML += cartTemplate(item);
       }
 
@@ -216,13 +227,14 @@ async function updateCartDrawer() {
       cartDrawerContent.appendChild(p);
     }
 
+    cartData.sub_total = formatCurrency(cartData.sub_total, currencyCode, customerLocale, usePrecision);
+
     const footerContainerHTML = `
       <div class="footer">
         <div class="price-wrapper">
           <span class="total-price">${CART_DRAWER_TRANSLATION.totalAmount}</span>
           <div class="currency-wrapper">
-            <span class="currency-value">${cartData.sub_total.toFixed(2)}</span>
-            <span class="currency-code">${currencyCode}</span>
+            <span class="currency-value">${cartData.sub_total}</span>
           </div>
           <span class="spinner footer-spinner" style="display: none;"></span>
         </div>
