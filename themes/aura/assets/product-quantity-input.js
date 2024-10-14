@@ -24,8 +24,8 @@ function manipulateQuantity() {
     const currentValue = parseInt(quantityInput.value);
     const inventory = parseInt(inventoryInput.value);
 
-    if(Number.isFinite(inventory) && currentValue >= maxInventoryValue) {
-      return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + maxInventoryValue, 'warning');
+    if(Number.isFinite(inventory) && currentValue >= inventory) {
+      return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
     }
 
     quantityInput.value = currentValue + 1;
