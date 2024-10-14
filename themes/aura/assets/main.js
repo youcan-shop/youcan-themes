@@ -304,6 +304,15 @@ if (FORM.errors) {
   notify(renderTextContent(decodedText), 'error', 20000);
 }
 
+/**
+ * Formats a given amount into a currency string.
+ *
+ * @param {number} amount - The numerical value to be formatted.
+ * @param {string} currencySymbol - The symbol of the currency (e.g., $, €, £, USD, EUR, etc).
+ * @param {string} [locale='en-US'] - Optional. The locale string to format the currency (e.g., 'en-US', 'fr-FR').
+ * @param {boolean} [usePrecision=false] - Optional. Whether to include decimal precision.
+ * @returns {string} - The formatted currency string.
+ */
 function formatCurrency(amount, currencySymbol, locale = 'en-US', usePrecision = false) {
   const shouldUsePrecision = !(amount % 1 === 0) || usePrecision;
 
