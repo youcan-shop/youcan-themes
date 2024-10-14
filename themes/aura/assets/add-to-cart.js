@@ -148,7 +148,10 @@ function cartTemplate(item) {
           ${CART_DRAWER_TRANSLATION.quantityVariant}: ${item.quantity} <br/>'${variationsCheck}
           </div>
           <div class="product-price">
-            <span class="compare-price">${item.productVariant.compare_at_price ? `${item.productVariant.compare_at_price}` : ''}</span>
+          ${
+            item.productVariant.compare_at_price ? 
+            `<span class="compare-price">${item.productVariant.compare_at_price}</span>` : ''
+          }
             <div class="currency-wrapper">
               <span class="price">${item.productVariant.price}</span>
             </div>
