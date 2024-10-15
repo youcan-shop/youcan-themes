@@ -214,9 +214,8 @@ async function updateCartDrawer() {
       const products = document.createElement('ul');
 
       for (const item of cartData.items) {
-        const usePrecision = shouldUsePrecision(item.price);
-        item.price = formatCurrency(item.price, currencyCode, customerLocale, usePrecision);
-        item.productVariant.price = formatCurrency(item.productVariant.price, currencyCode, customerLocale, usePrecision);
+        item.price = formatCurrency(item.price, currencyCode, customerLocale);
+        item.productVariant.price = formatCurrency(item.productVariant.price, currencyCode, customerLocale);
 
         if (item.productVariant.compare_at_price) {
           const usePrecision = shouldUsePrecision(item.productVariant.compare_at_price);
@@ -224,7 +223,6 @@ async function updateCartDrawer() {
             item.productVariant.compare_at_price, 
             currencyCode,
             customerLocale,
-            usePrecision
           );
         }
 
@@ -243,8 +241,7 @@ async function updateCartDrawer() {
       cartDrawerContent.appendChild(p);
     }
 
-    const usePrecision = shouldUsePrecision(cartData.sub_total);
-    cartData.sub_total = formatCurrency(cartData.sub_total, currencyCode, customerLocale, usePrecision);
+    cartData.sub_total = formatCurrency(cartData.sub_total, currencyCode, customerLocale);
 
     const footerContainerHTML = `
       <div class="footer">
