@@ -331,9 +331,8 @@ function formatCurrency(amount, currencySymbol, locale = 'en-US', usePrecision =
 
   const parts = determineSymbolPositionFormatter.formatToParts(1); // format with 1 USD just to determine the position of the currency symbol
   const symbolIndex = parts.findIndex(part => part.type === 'currency');
-  const isSymbolOnLeft = symbolIndex === 0;
-
-  return isSymbolOnLeft
+  
+  return symbolIndex === 0
     ? `${currencySymbol} ${formattedValue}`
     : `${formattedValue} ${currencySymbol}`;
 }
