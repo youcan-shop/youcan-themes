@@ -209,7 +209,6 @@ async function updateCartDrawer() {
         
         if (item.productVariant.compare_at_price) {
           const usePrecision = shouldUsePrecision(item.productVariant.compare_at_price);
-
           item.productVariant.compare_at_price = formatCurrency(
             item.productVariant.compare_at_price, 
             currencyCode,
