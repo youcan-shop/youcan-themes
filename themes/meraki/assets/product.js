@@ -335,6 +335,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
     const productPrices = parentSection.querySelectorAll('.product-price');
     const showStickyCheckoutPrice = document.getElementById('sticky-price');
 
+    const usePrecision = shouldUsePrecision(price);
     const formattedPrice = formatCurrency(price, currencyCode, customerLocale, usePrecision);
 
     if (productPrices.length === 0) {
@@ -359,6 +360,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   const variantCompareAtPrices = parentSection.querySelectorAll('.compare-price');
 
   if (compareAtPrice) {
+    const usePrecision = shouldUsePrecision(compareAtPrice);
     const formattedCompareAtPrice = formatCurrency(compareAtPrice, currencyCode, customerLocale, usePrecision);
 
     variantCompareAtPrices.forEach(variantComparePrice => {
