@@ -341,7 +341,7 @@ function shouldUsePrecision(amount) {
   const { isMulticurrencyActive, usePrecision } = multicurrency_settings;
 
   if (!isMulticurrencyActive) {
-    return Number.isInteger(amount);
+    return !Number.isInteger(amount);
   }
 
   return isMulticurrencyActive && usePrecision;
