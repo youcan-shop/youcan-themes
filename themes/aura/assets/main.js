@@ -312,7 +312,8 @@ if (FORM.errors) {
  * @param {boolean} [usePrecision=false] - Optional. Whether to include decimal precision.
  * @returns {string} - The formatted currency string.
  */
-function formatCurrency(amount, currencySymbol, locale = 'en-US', usePrecision = false) {
+function formatCurrency(amount, currencySymbol, locale = 'en-US') {
+  const usePrecision = shouldUsePrecision(amount);
   const formatter = new Intl.NumberFormat(locale, {
     style: 'decimal',
     maximumFractionDigits: usePrecision ? 2 : 0,
