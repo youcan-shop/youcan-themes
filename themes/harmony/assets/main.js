@@ -1,7 +1,6 @@
 /* ----- Store currency ----- */
 const currencyCode = window.Dotshop.currency;
 const customerLocale = window.Dotshop.customer_locale;
-const usePrecision = shouldUsePrecision();
 /* ------------------ */
 /* ----- navbar ----- */
 /* ------------------ */
@@ -314,11 +313,10 @@ if (FORM.errors) {
  * @returns {string} - The formatted currency string.
  */
 function formatCurrency(amount, currencySymbol, locale = 'en-US', usePrecision = false) {
-  const shouldUsePrecision = !(amount % 1 === 0) || usePrecision;
-
   const formatter = new Intl.NumberFormat(locale, {
     style: 'decimal',
-    minimumFractionDigits: shouldUsePrecision ? 2 : 0,
+    maximumFractionDigits: usePrecision ? 2 : 0,
+    roundingMode: 'floor'
   });
 
   const formattedValue = formatter.format(amount);
@@ -337,9 +335,13 @@ function formatCurrency(amount, currencySymbol, locale = 'en-US', usePrecision =
     : `${formattedValue} ${currencySymbol}`;
 }
 
-function shouldUsePrecision() {
+function shouldUsePrecision(amount) {
   const { multicurrency_settings } = Dotshop.store;
   const { isMulticurrencyActive, usePrecision } = multicurrency_settings;
+
+  if (!isMulticurrencyActive) {
+    return !(amount % 1 === 0)
+  }
 
   return isMulticurrencyActive && usePrecision;
 }
