@@ -1,5 +1,6 @@
 /* ----- Store currency ----- */
 const currencyCode = window.Dotshop.currency;
+const customerLocale = window.Dotshop.customer_locale;
 /* ------------------ */
 /* ----- navbar ----- */
 /* ------------------ */
@@ -300,4 +301,48 @@ function renderTextContent(htmlContent) {
 if (FORM.errors) {
   let decodedText = decodeHtmlEntities(FORM.errors);
   notify(renderTextContent(decodedText), 'error', 20000);
+}
+
+/**
+ * Formats a given amount into a currency string.
+ *
+ * @param {number} amount - The numerical value to be formatted.
+ * @param {string} currencySymbol - The symbol of the currency (e.g., $, €, £, USD, EUR, etc).
+ * @param {string} [locale='en-US'] - Optional. The locale string to format the currency (e.g., 'en-US', 'fr-FR').
+ * @param {boolean} [usePrecision=false] - Optional. Whether to include decimal precision.
+ * @returns {string} - The formatted currency string.
+ */
+function formatCurrency(amount, currencySymbol, locale = 'en-US') {
+  const usePrecision = shouldUsePrecision(amount);
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'decimal',
+    maximumFractionDigits: usePrecision ? 2 : 0,
+    roundingMode: 'floor'
+  });
+
+  const formattedValue = formatter.format(amount);
+
+  const determineSymbolPositionFormatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'USD',
+    currencyDisplay: 'symbol',
+  });
+
+  const parts = determineSymbolPositionFormatter.formatToParts(1); // format with 1 USD just to determine the position of the currency symbol
+  const symbolIndex = parts.findIndex(part => part.type === 'currency');
+
+  return symbolIndex === 0
+    ? `${currencySymbol} ${formattedValue}`
+    : `${formattedValue} ${currencySymbol}`;
+}
+
+function shouldUsePrecision(amount) {
+  const { multicurrency_settings } = Dotshop.store;
+  const { isMulticurrencyActive, usePrecision } = multicurrency_settings;
+
+  if (!isMulticurrencyActive) {
+    return !Number.isInteger(amount);
+  }
+
+  return isMulticurrencyActive && usePrecision;
 }
