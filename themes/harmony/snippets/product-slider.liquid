@@ -48,8 +48,8 @@
             <a href='{{ block.settings.product.url }}' class='product-block'>
               <div class="product-slider">
                 <div class='product-thumbnail'>
-                  <img 
-                    loading='lazy' 
+                  <img
+                    loading='lazy'
                     src='{%- if block.settings.product.thumbnail -%} {{ block.settings.product.thumbnail }} {%- else -%} {{ 'default_product.jpeg' | asset_url }} {%- endif -%}'
                     alt='{{ block.settings.product.name }}'
                   >
@@ -70,7 +70,7 @@
                     {% endif %}
                   </div>
                   {% if settings.direct_add_to_cart and block.settings.product.variants.size <= 1 %}
-                    <button class="yc-btn-secondary--large" onclick="directAddToCart(event, '{{ block.settings.product.variants[0].id }}');">
+                    <button class="yc-btn-secondary--large" onclick="directAddToCart(event, '{{ block.settings.product.variants[0].id }}', {{ block.settings.product.variants[0].inventory }});">
                       {{ 'general.direct_add_to_cart' | t }}
                     </button>
                   {% else %}
