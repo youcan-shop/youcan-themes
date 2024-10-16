@@ -1,14 +1,3 @@
-/**
- * Set the currency symbol in the dom for each element
- */
-function setCurrencySymbol() {
-  const elements = document.querySelectorAll('.product-currency');
-
-  elements.forEach((element) => {
-    element.innerText = currencyCode;
-  })
-}
-
 const promo = document.forms['promo'];
 if (promo) {
   promo.addEventListener('submit', addPromo);
@@ -42,14 +31,14 @@ async function fetchCoupons() {
     let couponType
 
     if (totalPrice) {
-      totalPrice.innerText = coupons.total ? `${coupons.total} ${currencyCode}` : '';
+      totalPrice.innerText = coupons.total ? `${formatCurrency(coupons.total, currencyCode, customerLocale)}` : '';
     }
 
     if (coupons.coupon && coupons.discountedPrice) {
       couponType = coupons.coupon.type === 1 ? '%' : ` ${currencyCode}`;
       couponApplied.innerHTML = `<span>${CART_PAGE_CONTENT.coupon}: '${coupons.coupon.code}'  [${coupons.coupon.value}${couponType}] </span>
                                  <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>`;
-      discount.innerText = `- ${coupons.discountedPrice} ${currencyCode}`;
+      discount.innerText = formatCurrency(coupons.discountedPrice, currencyCode, customerLocale);
 
       const removeCouponElement = document.getElementById("remove-coupon");
       if (removeCouponElement) {
@@ -130,7 +119,7 @@ function updateTotalPrice() {
   const discountPrice = document.querySelector('.coupon-applied');
 
   if (totalPriceElement && !discountPrice) {
-    totalPriceElement.innerText = `${totalPrice} ${currencyCode}`;
+    totalPriceElement.innerText = formatCurrency(totalPrice, currencyCode, customerLocale);
   }
 
   if (discountPrice) {
@@ -139,7 +128,6 @@ function updateTotalPrice() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  setCurrencySymbol();
   updateTotalPrice();
   fetchCoupons();
 });
