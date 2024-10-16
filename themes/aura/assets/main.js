@@ -34,12 +34,22 @@ if (fixedNavbar && notice) {
 /* ----- spinner-loader ----- */
 /* -------------------------- */
 function load(el) {
-  const loader = document.querySelector(el);
-  if (loader) {
-    loader.classList.remove('hidden');
+  const element = document.querySelector(el);
+
+  if (!element) {
+    return;
   }
 
-  const nextEl = loader ? loader.nextElementSibling : null;
+  if (element) {
+    element.classList.remove('hidden');
+  }
+
+  if (element.parentElement.hasAttribute('data-type')) {
+    element.parentElement.setAttribute('data-type', 'loading');
+    element.parentElement.disabled = true;
+  }
+
+  const nextEl = element ? element.nextElementSibling : null;
 
   if (nextEl) {
     nextEl.classList.add('hidden');
@@ -47,12 +57,22 @@ function load(el) {
 }
 
 function stopLoad(el) {
-  const loader = document.querySelector(el);
-  if (loader) {
-    loader.classList.add('hidden');
+  const element = document.querySelector(el);
+
+  if (!element) {
+    return;
   }
 
-  const nextEl = loader ? loader.nextElementSibling : null;
+  if (element) {
+    element.classList.add('hidden');
+  }
+
+  if (element.parentElement.hasAttribute('data-type')) {
+    element.parentElement.setAttribute('data-type', '');
+    element.parentElement.disabled = false;
+  }
+
+  const nextEl = element ? element.nextElementSibling : null;
   if (nextEl) {
     nextEl.classList.remove('hidden');
   }
@@ -294,7 +314,7 @@ function decodeHtmlEntities(text) {
 function renderTextContent(htmlContent) {
   let tempElement = document.createElement('div');
   tempElement.innerHTML = htmlContent;
-  
+
   return tempElement.innerText || tempElement.textContent;
 }
 
@@ -345,4 +365,60 @@ function shouldUsePrecision(amount) {
   }
 
   return isMulticurrencyActive && usePrecision;
+}
+
+/**
+ * Restrict the input value based on the inventory number
+ *
+ * @param {HTMLInputElement} inputElement - The input element.
+ * @param {number} maxInventoryValue - The maximum allowable inventory value.
+ */
+function restrictInputValue(inputElement, maxInventoryValue) {
+
+  if (maxInventoryValue === null) {
+    return;
+  }
+
+  let currentValue = parseInt(inputElement.value);
+
+  if (currentValue < 1) {
+    inputElement.value = 1;
+  }
+
+  if (currentValue > maxInventoryValue) {
+    inputElement.value = maxInventoryValue;
+  }
+}
+
+/**
+ * Tracks the quantity of a specific variant in the cart and set it in the hidden quantity input.
+ *
+ * @param {string} selectedVariantId - The ID of the selected product variant.
+ */
+async function trackVariantQuantityOnCart(selectedVariantId) {
+  try {
+    load('#loading__cart');
+    const cart = await youcanjs.cart.fetch();
+
+    if (!cart) {
+      return;
+    }
+
+    if (cart.items.length === 0 || cart.items.data?.length === 0) {
+      return;
+    }
+
+    const cartItem = cart.items.find((item) => item.productVariant.id === selectedVariantId);
+    const cartQuantityInput = document.querySelector('#cartQuantity');
+
+    if (!cartItem || cartItem.productVariant.product.track_inventory === false) {
+      return;
+    }
+
+    cartQuantityInput.value = cartItem.quantity;
+  } catch(e) {
+    notify(e.message, 'error');
+  } finally {
+    stopLoad('#loading__cart');
+  }
 }
