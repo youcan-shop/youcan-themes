@@ -368,6 +368,29 @@ function shouldUsePrecision(amount) {
 }
 
 /**
+ * Restrict the input value based on the inventory number
+ *
+ * @param {HTMLInputElement} inputElement - The input element.
+ * @param {number} maxInventoryValue - The maximum allowable inventory value.
+ */
+function restrictInputValue(inputElement, maxInventoryValue) {
+
+  if (maxInventoryValue === null) {
+    return;
+  }
+
+  let currentValue = parseInt(inputElement.value);
+
+  if (currentValue < 1) {
+    inputElement.value = 1;
+  }
+
+  if (currentValue > maxInventoryValue) {
+    inputElement.value = maxInventoryValue;
+  }
+}
+
+/**
  * Tracks the quantity of a specific variant in the cart and set it in the hidden quantity input.
  *
  * @param {string} selectedVariantId - The ID of the selected product variant.
