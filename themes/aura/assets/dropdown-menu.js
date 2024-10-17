@@ -1,4 +1,5 @@
 let isDropDownOpened = false;
+
 /**
  * @param {HTMLElement} element
  */
