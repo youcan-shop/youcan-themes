@@ -101,14 +101,16 @@ const CartUI = {
       .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}')`);
   },
 
-  updateCartItemCount(count) {
-    const cartItemsCount = document.getElementById('cart-items-count');
-    if (cartItemsCount) {
-      cartItemsCount.textContent = count;
+  updateCartBadge(count) {
+    const cartItemsBadge = document.getElementById('cart-items-badge');
+
+    if (cartItemsBadge) {
+      cartItemsBadge.textContent = count;
     }
   },
 
   removeCartItemFromUI(cartItemId) {
+    // Remove items from both the table and the subtotal box
     document.getElementById(cartItemId)?.remove();
     document.getElementById(`cart-item-${cartItemId}`)?.remove();
   },
@@ -118,9 +120,9 @@ const CartUI = {
     const cartTable = document.querySelector('.cart-table');
     const emptyCart = document.querySelector('.empty-cart');
 
-    if (cartItemsBadge) cartItemsBadge.innerText = '0';
-    if (cartTable) cartTable.remove();
-    if (emptyCart) emptyCart.classList.remove('hidden');
+    cartItemsBadge && (cartItemsBadge.innerText = '0');
+    cartTable?.remove();
+    emptyCart?.classList.remove('hidden');
   }
 };
 
@@ -161,9 +163,9 @@ document.addEventListener('click', async (e) => {
 
 // Update quantity
 async function updateQuantity(cartItemId, productVariantId, quantity) {
-
   if (quantity < 1) {
     return;
+    // TODO: A better UX would be to prompt the seller to remove the item from cart
   }
 
   load(`#loading__${cartItemId}`);
@@ -186,8 +188,9 @@ async function removeItem(cartItemId, productVariantId) {
   load(`#loading__${cartItemId}`);
   try {
     const updatedCart = await CartService.removeItem(cartItemId, productVariantId);
+
     CartUI.removeCartItemFromUI(cartItemId);
-    CartUI.updateCartItemCount(updatedCart.count);
+    CartUI.updateCartBadge(updatedCart.count);
     
     if (updatedCart.items.length === 0) {
       CartUI.handleEmptyCart();
