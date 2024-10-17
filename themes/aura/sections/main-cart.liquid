@@ -104,19 +104,23 @@
               </form>
             {% endif %}
             {%- if cart and cart.items %}
+            <template id="summary-item-template">
+              <div class='flex justify-between text-sm box'>
+                <div class='item-name capitalize'></div>
+                <div>
+                  <span class="item-price"></span>
+                </div>
+              </div>
+            </template>
             <div class="price-wrapper">
               <div class='flex flex-col gap-1 price-box'>
                 {%- for item in cart.items %}
                   <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
-                    <div class='capitalize'>{{ item.name }}</div>
-                      <div class="hidden">
-                        {%- render 'quantity-input', item: item -%}
-                        <div class='product-price'>{{ item.price }}</div>
-                      </div>
-                      <div>
-                        <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
-                      </div>
+                    <div class='item-name capitalize'>{{ item.name }}</div>
+                    <div>
+                      <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
                     </div>
+                  </div>
                 {%- endfor %}
               </div>
             {%- endif %}
