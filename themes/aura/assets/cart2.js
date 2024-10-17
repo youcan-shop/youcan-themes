@@ -217,7 +217,6 @@ document.addEventListener('click', async (e) => {
   }
 });
 
-// Fetch and update cart on page load
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const cart = await CartService.fetchCart();
