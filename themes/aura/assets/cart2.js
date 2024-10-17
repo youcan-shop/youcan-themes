@@ -1,4 +1,4 @@
-// CartService handles all business logic related to the cart
+// Business logic
 const CartService = {
   async fetchCart() {
     try {
@@ -45,10 +45,29 @@ const CartService = {
   }
 };
 
-// CartUI handles all DOM manipulation and updates
+// UI logic
 const CartUI = {
-  updateTotalPrice(total) {
-    const totalPriceElement = document.querySelector('.item-total-price');
+  updateTotalPrice(total, items) {
+    const [itemTemplate, priceBox, totalPriceElement] = document.querySelectorAll('#summary-item-template, .price-box, .item-total-price');
+
+    const fragment = document.createDocumentFragment();
+
+    items.forEach((item) => {
+      const summaryItem = itemTemplate.content.cloneNode(true).firstElementChild;
+      summaryItem.id = `cart-item-${ item.id }`;
+      
+      const name = item.productVariant.product.name
+      const subtotal = formatCurrency(item.price * item.quantity, currencyCode, customerLocale);
+
+      const [itemName, itemPrice] = summaryItem.querySelectorAll('.item-name, .item-price');
+      [itemName.textContent, itemPrice.textContent] = [name, subtotal];
+
+      fragment.appendChild(summaryItem);
+    });
+
+    priceBox.innerHTML = '';
+    priceBox.appendChild(fragment);
+
     if (totalPriceElement) {
       totalPriceElement.innerText = formatCurrency(total, currencyCode, customerLocale);
     }
@@ -126,42 +145,7 @@ const CartUI = {
   }
 };
 
-// Event Listeners and Logic Delegation
-
-// Apply coupon event
-document.forms['promo']?.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const coupon = e.target['coupon'].value;
-  load('#loading__coupon');
-
-  try {
-    const updatedCart = await CartService.applyCoupon(coupon);
-    CartUI.updateCoupon(updatedCart.coupon, updatedCart.discountedPrice, currencyCode, customerLocale);
-    CartUI.updateTotalPrice(updatedCart.total, currencyCode, customerLocale);
-  } catch (e) {
-    notify(e.message, 'error');
-  } finally {
-    stopLoad('#loading__coupon');
-  }
-});
-
-// Remove coupon event
-document.addEventListener('click', async (e) => {
-  if (e.target.id === 'remove-coupon') {
-    load('#loading__coupon');
-    try {
-      const updatedCart = await CartService.removeCoupons();
-      CartUI.updateCoupon(null, null, currencyCode, customerLocale);
-      CartUI.updateTotalPrice(updatedCart.total, currencyCode, customerLocale);
-    } catch (e) {
-      notify(e.message, 'error');
-    } finally {
-      stopLoad('#loading__coupon');
-    }
-  }
-});
-
-// Update quantity
+// Events
 async function updateQuantity(cartItemId, productVariantId, quantity) {
   if (quantity < 1) {
     return;
@@ -183,7 +167,6 @@ async function updateQuantity(cartItemId, productVariantId, quantity) {
   }
 }
 
-// Remove item from cart
 async function removeItem(cartItemId, productVariantId) {
   load(`#loading__${cartItemId}`);
   try {
@@ -191,6 +174,7 @@ async function removeItem(cartItemId, productVariantId) {
 
     CartUI.removeCartItemFromUI(cartItemId);
     CartUI.updateCartBadge(updatedCart.count);
+    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
     
     if (updatedCart.items.length === 0) {
       CartUI.handleEmptyCart();
@@ -202,12 +186,43 @@ async function removeItem(cartItemId, productVariantId) {
   }
 }
 
+document.forms['promo']?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const coupon = e.target['coupon'].value;
+  load('#loading__coupon');
+
+  try {
+    const updatedCart = await CartService.applyCoupon(coupon);
+    CartUI.updateCoupon(updatedCart.coupon, updatedCart.discountedPrice);
+    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+  } catch (e) {
+    notify(e.message, 'error');
+  } finally {
+    stopLoad('#loading__coupon');
+  }
+});
+
+document.addEventListener('click', async (e) => {
+  if (e.target.id === 'remove-coupon') {
+    load('#loading__coupon');
+    try {
+      const updatedCart = await CartService.removeCoupons();
+      CartUI.updateCoupon(null, null);
+      CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+    } catch (e) {
+      notify(e.message, 'error');
+    } finally {
+      stopLoad('#loading__coupon');
+    }
+  }
+});
+
 // Fetch and update cart on page load
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const cart = await CartService.fetchCart();
-    CartUI.updateTotalPrice(cart.total, currencyCode, customerLocale);
-    CartUI.updateCoupon(cart.coupon, cart.discountedPrice, currencyCode, customerLocale);
+    CartUI.updateTotalPrice(cart.total, cart.items);
+    CartUI.updateCoupon(cart.coupon, cart.discountedPrice);
   } catch (e) {
     notify(e.message, 'error');
   }
