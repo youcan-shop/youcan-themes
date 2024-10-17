@@ -367,7 +367,6 @@ function shouldUsePrecision(amount) {
   return isMulticurrencyActive && usePrecision;
 }
 
-
 /**
  * Restrict the input value based on the inventory number
  *
