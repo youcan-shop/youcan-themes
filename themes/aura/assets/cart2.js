@@ -7,7 +7,6 @@ const CartService = {
       throw new Error('Error fetching cart: ' + e.message);
     }
   },
-  
   async applyCoupon(coupon) {
     try {
       await youcanjs.checkout.applyCoupon(coupon);
@@ -16,7 +15,6 @@ const CartService = {
       throw new Error('Error applying coupon: ' + e.message);
     }
   },
-  
   async removeCoupons() {
     try {
       await youcanjs.checkout.removeCoupons();
@@ -25,7 +23,6 @@ const CartService = {
       throw new Error('Error removing coupon: ' + e.message);
     }
   },
-  
   async updateItemQuantity(cartItemId, productVariantId, quantity) {
     try {
       const updatedCart = await youcanjs.cart.updateItem({ cartItemId, productVariantId, quantity });
@@ -34,7 +31,6 @@ const CartService = {
       throw new Error('Error updating item quantity: ' + e.message);
     }
   },
-
   async removeItem(cartItemId, productVariantId) {
     try {
       await youcanjs.cart.removeItem({ cartItemId, productVariantId });
@@ -72,7 +68,6 @@ const CartUI = {
       totalPriceElement.innerText = formatCurrency(total, currencyCode, customerLocale);
     }
   },
-
   updateCoupon(coupon, discount) {
     const discountText = document.querySelector('.discount-text');
     const couponsEnabled = document.querySelector('.coupon-applied');
@@ -92,7 +87,6 @@ const CartUI = {
       }
     }
   },
-
   updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal) {
     const itemRow = document.getElementById(cartItemId);
     const [input, totalPrice] = itemRow.querySelectorAll(`input[id="${productVariantId}"], .total-price`);
@@ -110,7 +104,6 @@ const CartUI = {
     input.value = quantity;
     totalPrice.innerHTML = formatCurrency(itemSubtotal, currencyCode, customerLocale);
   },
-
   setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity) {
     decrease
     .querySelector('button')
@@ -119,7 +112,6 @@ const CartUI = {
       .querySelector('button')
       .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}')`);
   },
-
   updateCartBadge(count) {
     const cartItemsBadge = document.getElementById('cart-items-badge');
 
@@ -127,13 +119,11 @@ const CartUI = {
       cartItemsBadge.textContent = count;
     }
   },
-
   removeCartItemFromUI(cartItemId) {
     // Remove items from both the table and the subtotal box
     document.getElementById(cartItemId)?.remove();
     document.getElementById(`cart-item-${cartItemId}`)?.remove();
   },
-
   handleEmptyCart() {
     const cartItemsBadge = document.getElementById('cart-items-badge');
     const cartTable = document.querySelector('.cart-table');
