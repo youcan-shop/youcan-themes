@@ -399,6 +399,8 @@ function restrictInputValue(inputElement, maxInventoryValue) {
 async function trackVariantQuantityOnCart(selectedVariantId) {
   try {
     load('#loading__cart');
+    const cartQuantityInput = document.querySelector('#cartQuantity');
+    cartQuantityInput.value = 0;
     const cart = await youcanjs.cart.fetch();
 
     if (!cart) {
@@ -410,7 +412,6 @@ async function trackVariantQuantityOnCart(selectedVariantId) {
     }
 
     const cartItem = cart.items.find((item) => item.productVariant.id === selectedVariantId);
-    const cartQuantityInput = document.querySelector('#cartQuantity');
 
     if (!cartItem || cartItem.productVariant.product.track_inventory === false) {
       return;

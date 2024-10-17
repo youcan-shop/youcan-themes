@@ -64,9 +64,11 @@ function attachRemoveItemListeners() {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
       const productVariantId = event.target.getAttribute('data-product-variant-id');
 
-      await removeCartItem(cartItemId, productVariantId);
-      await updateCartDrawer();
-      updateCartCount(-1, true);
+      if(cartItemId && productVariantId) {
+        await removeCartItem(cartItemId, productVariantId);
+        await updateCartDrawer();
+        updateCartCount(-1, true);
+      }
     })
   );
 }
@@ -303,7 +305,7 @@ function showSpinner(spinnerElement) {
 }
 
 function hideSpinner(spinnerElement) {
-  const spinnerAction = spinnerElement.previousElementSibling;
+  const spinnerAction = spinnerElement?.previousElementSibling;
   toggleVisibility(spinnerElement, spinnerAction);
 }
 
@@ -368,15 +370,15 @@ function preventCartDrawerOpening(templateName) {
   window.location.reload();
 }
 
-async function directAddToCart(event, productId, inventory) {
+async function directAddToCart(event, productId, inventory, isTrackingInventory) {
   event.preventDefault();
 
   await trackVariantQuantityOnCart(productId);
-
   const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
+  const isTrackingInventoryAvailable = Boolean(isTrackingInventory) &&  Number.isFinite(inventory);
   const newQuantity = 1;
 
-  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
+  if (isTrackingInventoryAvailable && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
