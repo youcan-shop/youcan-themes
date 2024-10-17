@@ -64,9 +64,11 @@ function attachRemoveItemListeners() {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
       const productVariantId = event.target.getAttribute('data-product-variant-id');
 
-      await removeCartItem(cartItemId, productVariantId);
-      await updateCartDrawer();
-      updateCartCount(-1, true);
+      if(cartItemId && productVariantId) {
+        await removeCartItem(cartItemId, productVariantId);
+        await updateCartDrawer();
+        updateCartCount(-1, true);
+      }
     })
   );
 }
@@ -169,7 +171,7 @@ function cartTemplate(item) {
           </div>
           <div class="product-price">
           ${
-            item.productVariant.compare_at_price ? 
+            item.productVariant.compare_at_price ?
             `<span class="compare-price">${item.productVariant.compare_at_price}</span>` : ''
           }
             <div class="currency-wrapper">
@@ -225,10 +227,10 @@ async function updateCartDrawer() {
       for (const item of cartData.items) {
         item.price = formatCurrency(item.price, currencyCode, customerLocale);
         item.productVariant.price = formatCurrency(item.productVariant.price, currencyCode, customerLocale);
-        
+
         if (item.productVariant.compare_at_price) {
           item.productVariant.compare_at_price = formatCurrency(
-            item.productVariant.compare_at_price, 
+            item.productVariant.compare_at_price,
             currencyCode,
             customerLocale,
           );
@@ -356,13 +358,14 @@ function preventCartDrawerOpening(templateName) {
   window.location.reload();
 }
 
-async function directAddToCart(productId, inventory) {
+async function directAddToCart(productId, inventory, isTrackingInventory) {
   await trackVariantQuantityOnCart(productId);
 
   const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
+  const isTrackingInventoryAvailable = Boolean(isTrackingInventory) && Number.isFinite(inventory);
   const newQuantity = 1;
 
-  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
+  if (isTrackingInventoryAvailable && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
