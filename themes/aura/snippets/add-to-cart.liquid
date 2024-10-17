@@ -10,16 +10,10 @@
     font-weight: 600;
     color: {{ text_color.hex }} !important;
   }
-
-  .yc-{{ uniq }}-add-to-cart .yc-btn:disabled {
-    background: #bdc3c7 !important;
-    color: #ffffff !important;
-    cursor: not-allowed;
-  }
 {%- endstyle -%}
 
 <div class='yc-{{ uniq }}-add-to-cart{% if is_sticky %} is_sticky{% endif %}'>
-  <button class='yc-btn' {% if is_placeholder %} disabled {% endif %} onclick='addToCart("{{ snippetId }}")'>
+  <button class='yc-btn add-to-cart-button' data-type="" {% if is_placeholder %} disabled {% endif %} onclick='addToCart("{{ snippetId }}")'>
     <span class='spinner hidden' id='loading__cart'></span>
     <span>{{ text }}</span>
   </button>
