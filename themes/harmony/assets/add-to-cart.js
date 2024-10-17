@@ -305,7 +305,7 @@ function showSpinner(spinnerElement) {
 }
 
 function hideSpinner(spinnerElement) {
-  const spinnerAction = spinnerElement?.previousElementSibling;
+  const spinnerAction = spinnerElement.previousElementSibling;
   toggleVisibility(spinnerElement, spinnerAction);
 }
 
