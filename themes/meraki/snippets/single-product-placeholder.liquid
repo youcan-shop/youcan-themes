@@ -45,8 +45,10 @@
           {%- when 'express_checkout' -%}
             {% render 'express-checkout', checkout: checkout, is_sticky: block.settings.is_sticky, settings: block.settings, is_placeholder: is_placeholder %}
             {% if block.settings.is_sticky %}
-            {% render 'sticky-checkout', settings: block.settings %}
-            <button class="yc-btn is_sticky {% if is_placeholder %} sticky-btn-placehodler {% endif %} font-bold express-checkout-button">{{ block.settings.express_checkout_cta }}</button>
+              {% render 'sticky-checkout', settings: block.settings %}
+              <button class="yc-btn is_sticky font-bold express-checkout-button" {% if is_placeholder %} disabled {% endif %}>
+                {{ block.settings.express_checkout_cta }}
+              </button>
             {% endif %}
         {%- endcase -%}
     {%- endfor -%}
