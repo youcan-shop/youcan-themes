@@ -87,7 +87,7 @@ const CartUI = {
       }
     }
   },
-  updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal) {
+  updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal, inventory) {
     const itemRow = document.getElementById(cartItemId);
     const [input, totalPrice] = itemRow.querySelectorAll(`input[id="${productVariantId}"], .total-price`);
     const decrease = input.previousElementSibling;
@@ -98,22 +98,24 @@ const CartUI = {
       decrease,
       cartItemId,
       productVariantId,
-      quantity
+      quantity,
+      inventory
     );
     
     input.value = quantity;
     totalPrice.innerHTML = formatCurrency(itemSubtotal, currencyCode, customerLocale);
   },
-  setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity) {
+  setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity, inventory) {
     decrease
     .querySelector('button')
-    .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}')`);
+    .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}', '${inventory}')`);
     increase
       .querySelector('button')
-      .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}')`);
+      .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}', '${inventory}')`);
   },
   updateCartBadge(count) {
-    const cartItemsBadge = document.getElementById('cart-items-badge');
+    const [cartItemsBadge, cartItemCount] = document.querySelectorAll('#cart-items-badge, #cart-items-count');
+    cartItemCount.innerText = `(${count} ${CART_DRAWER_TRANSLATION.itemsName})`
 
     if (cartItemsBadge) {
       cartItemsBadge.textContent = count;
@@ -136,19 +138,25 @@ const CartUI = {
 };
 
 // Events
-async function updateQuantity(cartItemId, productVariantId, quantity) {
-  if (quantity < 1) {
-    return;
+async function updateQuantity(cartItemId, productVariantId, quantity, inventory) {
+  let [parsedQuantity, parsedInventory] = [Number(quantity), Number(inventory)];
+
+  if (parsedQuantity < 1) {
     // TODO: A better UX would be to prompt the seller to remove the item from cart
+    return;
+  }
+
+  if (Number.isFinite(parsedInventory) && parsedQuantity > parsedInventory) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
   load(`#loading__${cartItemId}`);
   try {
-    const updatedCart = await CartService.updateItemQuantity(cartItemId, productVariantId, quantity);
+    const updatedCart = await CartService.updateItemQuantity(cartItemId, productVariantId, parsedQuantity);
     const cartItem = updatedCart.items.find(item => item.id === cartItemId);
     const itemSubtotal = cartItem.price * cartItem.quantity;
 
-    CartUI.updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal);
+    CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal, inventory);
     CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
   } catch (e) {
     notify(e.message, 'error');
