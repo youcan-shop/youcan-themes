@@ -1,9 +1,10 @@
 async function addToCart(snippetId) {
   const parentSection = document.querySelector(`#s-${snippetId}`);
   const variantId = parentSection.querySelector(`#variantId`)?.value || undefined;
-  const quantity = parentSection.querySelector(`#quantity`)?.value || 1;
-  const inventory = parentSection.querySelector(`#_inventory`)?.value || null;
+  const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
+  const inventory = parseInt(parentSection.querySelector(`#_inventory`)?.value) || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
+  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
 
   if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
@@ -13,8 +14,12 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.quantity_smaller_than_zero, 'error');
   }
 
-  if (inventory == 0) {
+  if (inventory === 0) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
+  }
+
+  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + quantity) > inventory) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
   try {
@@ -27,6 +32,8 @@ async function addToCart(snippetId) {
       attachedImage: uploadedImageLink,
       quantity,
     });
+
+    await trackVariantQuantityOnCart(variantId);
 
     if (response.error) throw new Error(response.error);
 
@@ -57,9 +64,11 @@ function attachRemoveItemListeners() {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
       const productVariantId = event.target.getAttribute('data-product-variant-id');
 
-      await removeCartItem(cartItemId, productVariantId);
-      await updateCartDrawer();
-      updateCartCount(-1, true);
+      if(cartItemId && productVariantId) {
+        await removeCartItem(cartItemId, productVariantId);
+        await updateCartDrawer();
+        updateCartCount(-1, true);
+      }
     })
   );
 }
@@ -74,6 +83,8 @@ async function removeCartItem(cartItemId, productVariantId) {
       cartItemId,
       productVariantId,
     });
+
+    await trackVariantQuantityOnCart(productVariantId);
   } catch (error) {
     notify(error.message, 'error');
   } finally {
@@ -97,6 +108,7 @@ async function updateCartItem(cartItemId, productVariantId, quantity) {
       quantity,
     });
     await updateCartDrawer();
+    await trackVariantQuantityOnCart(productVariantId);
   } catch (error) {
     notify(error.message, 'error');
   } finally {
@@ -105,7 +117,14 @@ async function updateCartItem(cartItemId, productVariantId, quantity) {
   }
 }
 
-function increaseCartQuantity(cartItemId, productVariantId) {
+function increaseCartQuantity(cartItemId, productVariantId, inventory) {
+  const input = document.querySelector(`#quantity-${cartItemId}`);
+  const currentQuantity = parseInt(input.value);
+
+  if (inventory && (currentQuantity >= inventory)) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
+  }
+
   updateCartQuantity(cartItemId, productVariantId, 1);
 }
 
@@ -115,8 +134,10 @@ function decreaseCartQuantity(cartItemId, productVariantId) {
 
 function updateCartQuantity(cartItemId, productVariantId, delta) {
   const input = document.querySelector(`#quantity-${cartItemId}`);
+
   if (input) {
     const newQuantity = parseInt(input.value) + delta;
+
     if (newQuantity >= 1) {
       input.value = newQuantity;
       updateCartItem(cartItemId, productVariantId, newQuantity);
@@ -133,6 +154,7 @@ function cartTemplate(item) {
     }
   }
   const variationsString = variationsArray.join('<br/>');
+  const variantInventory = item.productVariant.product.track_inventory ? item.productVariant.inventory : null;
 
   let variationsCheck = ''
   if (variationsString === 'default: default') {
@@ -161,7 +183,7 @@ function cartTemplate(item) {
         <div class="left-items">
           <div class="product-price">
             ${
-              item.productVariant.compare_at_price ? 
+              item.productVariant.compare_at_price ?
               `<span class="compare-price">${item.productVariant.compare_at_price}</span>` : ''
             }
             <div class="currency-wrapper">
@@ -174,9 +196,9 @@ function cartTemplate(item) {
           <div class="spinner" data-spinner-id="${item.id}" style="display: none;"></div>
           <!--
             <div class="quantity-control">
-              <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}')">+</button>
-              <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)">
-              <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}')">-</button>
+              <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}', '${variantInventory}')">+</button>
+              <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)" oninput="restrictInputValue(event.target, ${variantInventory})">
+              <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}', '${variantInventory}')">-</button>
             </div>
           -->
         </div>
@@ -220,7 +242,7 @@ async function updateCartDrawer() {
         if (item.productVariant.compare_at_price) {
           const usePrecision = shouldUsePrecision(item.productVariant.compare_at_price);
           item.productVariant.compare_at_price = formatCurrency(
-            item.productVariant.compare_at_price, 
+            item.productVariant.compare_at_price,
             currencyCode,
             customerLocale,
           );
@@ -348,13 +370,22 @@ function preventCartDrawerOpening(templateName) {
   window.location.reload();
 }
 
-async function directAddToCart(event, productId) {
+async function directAddToCart(event, productId, inventory, isTrackingInventory) {
   event.preventDefault();
+
+  await trackVariantQuantityOnCart(productId);
+  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
+  const isTrackingInventoryAvailable = Boolean(isTrackingInventory) &&  Number.isFinite(inventory);
+  const newQuantity = 1;
+
+  if (isTrackingInventoryAvailable && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
+  }
 
   try {
     const response = await youcanjs.cart.addItem({
       productVariantId: productId,
-      quantity: 1
+      quantity: newQuantity
     });
 
     if (response.error) throw new Error(response.error);

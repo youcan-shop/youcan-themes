@@ -171,48 +171,70 @@ function setVariant(parentSection, id) {
 }
 
 /**
- * Sets inventory of product variant.
- * And disable add to cart button when inventory is not sufficient.
+ * Disable action buttons (express checkout button / add to cart button) if stock is out.
+ *
+ * @param {HTMLElement} el
+ * @param {Boolean} isStockOut
+ */
+function disableActionButtons(el, isStockOut) {
+  const elements = document.querySelectorAll(el);
+
+  if(!elements.length) {
+    return;
+  }
+
+  elements.forEach((element) => {
+    if (!element.disabled && element.getAttribute('data-text') === null) {
+      element.setAttribute('data-text', element.innerHTML);
+    }
+
+    element.disabled = isStockOut;
+
+    if (isStockOut) {
+      element.innerHTML = TRANSLATED_TEXT.empty_inventory;
+    } else {
+      element.innerHTML = element.getAttribute('data-text');
+    }
+  });
+}
+
+/**
+ * Force reset the quantity input if the variant is changed.
+ *
+ * @param {HTMLElement} parentSection
+ */
+function forceResetQuantityInput(parentSection) {
+  const quantityInput = parentSection.querySelector('.quantity-input');
+
+  quantityInput.value = 1;
+}
+
+/**
+ * Sets inventory of product variant and disable action buttons if the inventory is not sufficient (out of stock).
  *
  * @param {HTMLElement} parentSection
  * @param {Number} inventory
  */
 function setInventory(parentSection, inventory) {
   const inventoryInput = parentSection.querySelector('#_inventory');
+  const isStockOut = globalProduct.isTrackingInventory && inventory === 0;
 
   inventoryInput.value = globalProduct.isTrackingInventory ? inventory : null;
-
-  /** @type {HTMLButtonElement} addToCartButton */
-  const addToCartButton = parentSection.querySelector('.yc-btn');
-
-  if (!addToCartButton) {
-    return;
-  }
-
-  if (!addToCartButton.disabled && addToCartButton.getAttribute('data-text') === null) {
-    addToCartButton.setAttribute('data-text', addToCartButton.innerHTML);
-  }
-
-  const isAddToCartDisabled = globalProduct.isTrackingInventory && inventory === 0;
-
-  addToCartButton.disabled = isAddToCartDisabled;
-
-  if (isAddToCartDisabled) {
-    addToCartButton.innerHTML = TRANSLATED_TEXT.empty_inventory;
-  } else {
-    addToCartButton.innerHTML = addToCartButton.getAttribute('data-text');
-  }
+  disableActionButtons('.add-to-cart-button', isStockOut);
+  disableActionButtons('.express-checkout-button', isStockOut);
+  forceResetQuantityInput(parentSection);
 }
 
 /**
  * Sets default options for a product
  * @param {HTMLElement} parentSection
  */
-function selectDefaultOptions(parentSection) {
+async function selectDefaultOptions(parentSection) {
   const options = parentSection.querySelectorAll('.product-options > div');
 
   if (!options || !options.length) {
     setInventory(parentSection, defaultVariant?.inventory);
+    await trackVariantQuantityOnCart(defaultVariant?.id);
 
     return setVariant(parentSection, defaultVariant?.id);
   }
@@ -577,7 +599,7 @@ function goToCheckoutStep(close = false) {
 function setup() {
   const singleProductSections = document.querySelectorAll('.yc-single-product');
 
-  if (!singleProductSections) return;
+  if (!singleProductSections || typeof defaultVariant === 'undefined' ) return;
 
   singleProductSections.forEach((section) => {
     const productDetails = section.querySelector('.product-options');
@@ -591,7 +613,7 @@ function setup() {
     );
 
     if (productDetails) {
-      const observer = new MutationObserver(() => {
+      const observer = new MutationObserver(async () => {
         const selectedVariant = getSelectedVariant(section);
         const variantIdInput = section.querySelector('#variantId');
         variantIdInput.value = selectedVariant.id;
@@ -604,6 +626,7 @@ function setup() {
         );
 
         setInventory(section, selectedVariant.inventory);
+        await trackVariantQuantityOnCart(selectedVariant.id);
       });
 
       observer.observe(productDetails, {
