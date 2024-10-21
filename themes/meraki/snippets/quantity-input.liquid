@@ -1,18 +1,19 @@
 <div class='quantity-wrapper'>
   <div class='decrease'>
-    <button onclick="decreaseQuantity('{{ item.id }}', '{{ item.product_variant_id }}', '{{ item.quantity | minus: 1 }}')">
+    <button onclick="decreaseQuantity('{{ item.id }}', '{{ item.product_variant_id }}', '{{ item.quantity | minus: 1 }}', {{ item.inventory }})">
       -
     </button>
   </div>
   <input
-    onchange="updateOnchange('{{ item.id }}', '{{ item.product_variant_id }}')"
+    onchange="updateOnchange('{{ item.id }}', '{{ item.product_variant_id }}', {{ item.inventory }})"
+    oninput="restrictInputValue(event.target, {{ item.inventory }})"
     type='text'
     value='{{ item.quantity }}'
     id='{{ item.product_variant_id }}'
     aria-label="quantity"
   >
   <div class='increase'>
-    <button onclick="increaseQuantity('{{ item.id }}', '{{ item.product_variant_id }}', '{{ item.quantity | plus: 1 }}')">
+    <button onclick="increaseQuantity('{{ item.id }}', '{{ item.product_variant_id }}', '{{ item.quantity }}', {{ item.inventory }})">
       +
     </button>
   </div>
