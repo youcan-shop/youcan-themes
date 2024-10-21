@@ -16,8 +16,7 @@
 
   {% endif %}
 
-  .custom-checkout-{{ checkout_id }},
-  .express-checkout-fields {
+  .custom-checkout-{{ checkout_id }} {
     border: 1px solid {{ settings.form_border_colour.hex }};
   }
 
@@ -25,8 +24,8 @@
     grid-gap: {{ settings.inputs_gap }}px;
   }
 
-  .custom-checkout-{{ checkout_id }} input, 
-  .custom-checkout-{{ checkout_id }} textarea, 
+  .custom-checkout-{{ checkout_id }} input,
+  .custom-checkout-{{ checkout_id }} textarea,
   .custom-checkout-{{ checkout_id }} select {
     padding: 0 {{ settings.input_padding }}px;
     border-radius: {{ settings.input_border_radius }}px;
@@ -41,7 +40,7 @@
     {% endif %}
 
     {% if settings.input_border_color %}
-    border: 1px solid {{ settings.form_border_colour.hex }};
+    border: 1px solid {{ settings.input_border_color.hex }};
     {% endif %}
   }
 
@@ -78,7 +77,9 @@
   {% endif %}
 
   .express-checkout-button:disabled {
-    opacity: 0.5;
+    background: #bdc3c7 !important;
+    font-weight: bold;
+    color: #ffffff !important;
     cursor: not-allowed;
   }
 {% endstyle %}
@@ -112,19 +113,19 @@
               {% endfor %}
             </select>
           {% when 'textarea' %}
-            <textarea 
+            <textarea
               name='{{ field_name }}'
-              id='{{ field.name }}' 
-              class='w-full' 
-              placeholder='{{ field.placeholder }}' 
+              id='{{ field.name }}'
+              class='w-full'
+              placeholder='{{ field.placeholder }}'
               required='{{ field.required }}' min></textarea>
           {% else %}
-            <input 
+            <input
               name='{{ field_name }}'
-              type='{{ field.type }}' 
-              id='{{ field.name }}' 
-              class='w-full' 
-              placeholder='{{ field.placeholder }}' 
+              type='{{ field.type }}'
+              id='{{ field.name }}'
+              class='w-full'
+              placeholder='{{ field.placeholder }}'
               required='{{ field.required }}'>
         {% endcase %}
         <div

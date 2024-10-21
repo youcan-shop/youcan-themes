@@ -31,7 +31,6 @@ async function placeOrder() {
           const formField = form.querySelector(`[name="${fieldName}"]`);
           const errorEl = form.querySelector(`.validation-error[data-error="${fieldName}"]`);
           if (formField) {
-            console.log(formField);
             formField.classList.add('error');
           }
 
