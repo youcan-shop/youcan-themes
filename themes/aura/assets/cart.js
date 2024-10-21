@@ -1,224 +1,181 @@
-const promo = document.forms['promo'];
-if (promo) {
-  promo.addEventListener('submit', addPromo);
-}
-
-async function addPromo(e) {
-  e.preventDefault();
-  const coupon = promo['coupon'].value;
-  load('#loading__coupon');
-  try {
-    await youcanjs.checkout.applyCoupon(coupon);
-
-    await fetchCart();
-
-    notify(`${CART_PAGE_CONTENT.coupon_applied}`, 'success');
-  } catch (e) {
-    notify(e.message, 'error');
-  } finally {
-    stopLoad('#loading__coupon');
+// Business logic
+const CartService = {
+  async fetchCart() {
+    try {
+      return await youcanjs.cart.fetch();
+    } catch (e) {
+      throw new Error('Error fetching cart: ' + e.message);
+    }
+  },
+  async applyCoupon(coupon) {
+    try {
+      await youcanjs.checkout.applyCoupon(coupon);
+      return this.fetchCart();
+    } catch (e) {
+      throw new Error('Error applying coupon: ' + e.message);
+    }
+  },
+  async removeCoupons() {
+    try {
+      await youcanjs.checkout.removeCoupons();
+      return this.fetchCart();
+    } catch (e) {
+      throw new Error('Error removing coupon: ' + e.message);
+    }
+  },
+  async updateItemQuantity(cartItemId, productVariantId, quantity) {
+    try {
+      const updatedCart = await youcanjs.cart.updateItem({ cartItemId, productVariantId, quantity });
+      return updatedCart;
+    } catch (e) {
+      throw new Error('Error updating item quantity: ' + e.message);
+    }
+  },
+  async removeItem(cartItemId, productVariantId) {
+    try {
+      await youcanjs.cart.removeItem({ cartItemId, productVariantId });
+      return this.fetchCart();
+    } catch (e) {
+      throw new Error('Error removing item: ' + e.message);
+    }
   }
-}
+};
 
-async function fetchCart() {
-/**
-  * fetches cart
-  * grabs a bunch of elements:
-    * discount-price
-    * discount-text
-    * coupon-applied
-    * item-total-price
-  * Updates total price with formatCurrency()
-  * Update coupon if enabled
-  *
-  * NOTES:
-  * No separation of concern, we fetch and update UI
-  * It doesn't update the
-  *
-*/
-  try {
-    const cart = await youcanjs.cart.fetch();
+// UI logic
+const CartUI = {
+  updateTotalPrice(total, items) {
+    const [itemTemplate, priceBox, totalPriceElement] = document.querySelectorAll('#summary-item-template, .price-box, .item-total-price');
 
-    const discount = document.querySelector('.discount-price');
+    const fragment = document.createDocumentFragment();
+
+    items.forEach((item) => {
+      const summaryItem = itemTemplate.content.cloneNode(true).firstElementChild;
+      summaryItem.id = `cart-item-${ item.id }`;
+
+      const name = item.productVariant.product.name
+      const subtotal = formatCurrency(item.price * item.quantity, currencyCode, customerLocale);
+
+      const [itemName, itemPrice] = summaryItem.querySelectorAll('.item-name, .item-price');
+      [itemName.textContent, itemPrice.textContent] = [name, subtotal];
+
+      fragment.appendChild(summaryItem);
+    });
+
+    priceBox.innerHTML = '';
+    priceBox.appendChild(fragment);
+
+    if (totalPriceElement) {
+      totalPriceElement.innerText = formatCurrency(total, currencyCode, customerLocale);
+    }
+  },
+  updateCoupon(coupon, discount) {
     const discountText = document.querySelector('.discount-text');
     const couponsEnabled = document.querySelector('.coupon-applied');
-    const totalPrice = document.querySelector('.item-total-price');
-    let couponType
-
-    if (totalPrice) {
-      totalPrice.innerText = cart.total ? `${formatCurrency(cart.total, currencyCode, customerLocale)}` : '';
-    }
 
     if (couponsEnabled) {
-      if (cart.coupon && cart.discountedPrice) {
+      if (coupon && discount) {
         couponsEnabled.innerHTML = `
-        <span>${CART_PAGE_CONTENT.coupon}: '${cart.coupon.code}'  [${cart.coupon.value}%] </span>
-        <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>
+          <span>Coupon '${coupon.code}' [${coupon.value}%]</span>
+          <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>
         `;
-
-        discount.innerText = formatCurrency(cart.discountedPrice, currencyCode, customerLocale);
-
-        const removeCouponElement = document.getElementById("remove-coupon");
-        if (removeCouponElement) {
-          removeCouponElement.addEventListener('click', removeCoupons);
-        }
-
+        document.querySelector('.discount-price').innerText = formatCurrency(discount, currencyCode, customerLocale);
         discountText.classList.remove('hidden');
       } else {
         couponsEnabled.innerHTML = '';
-
-        if (couponsEnabled) {
-          couponsEnabled.innerHTML = '';
-        }
-
-        if (discount) {
-          discount.innerText = '';
-        }
-
-        if (discountText) {
-          discountText.classList.add('hidden');
-        }
+        document.querySelector('.discount-price').innerText = '';
+        discountText.classList.add('hidden');
       }
     }
-  } catch (e) {
-    notify(e.message, 'error');
-  }
-}
+  },
+  updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal, inventory) {
+    const itemRow = document.getElementById(cartItemId);
+    const [input, totalPrice] = itemRow.querySelectorAll(`input[id="${productVariantId}"], .total-price`);
+    const decrease = input.previousElementSibling;
+    const increase = input.nextElementSibling;
 
-async function removeCoupons(e) {
-  e.preventDefault();
-  load('#loading__coupon');
-   try {
-    await youcanjs.checkout.removeCoupons();
+    this.setQuantityButtonsHandlers(
+      increase,
+      decrease,
+      cartItemId,
+      productVariantId,
+      quantity,
+      inventory
+    );
 
-    await fetchCart();
-
-    notify(`${CART_PAGE_CONTENT.coupon_removed}`, 'success');
-  } catch (e) {
-    notify(e.message, 'error');
-  } finally {
-    stopLoad('#loading__coupon');
-  }
-}
-
-function updateCartItemTotal(itemElementId, quantity, totalPriceSelector, cartItemId, productVariantId, itemSubtotal) {
-  const inputHolder = document.getElementById(itemElementId);
-  const input = inputHolder.querySelector(`input[id="${productVariantId}"]`);
-  input.value = quantity;
-  const decrease = input.previousElementSibling;
-  const increase = input.nextElementSibling;
-  const totalPrice = inputHolder.querySelector(totalPriceSelector);
-
-  decrease
+    input.value = quantity;
+    totalPrice.innerHTML = formatCurrency(itemSubtotal, currencyCode, customerLocale);
+  },
+  setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity, inventory) {
+    decrease
     .querySelector('button')
-    .setAttribute('onclick', `decreaseQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}')`);
-  increase
-    .querySelector('button')
-    .setAttribute('onclick', `increaseQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}')`);
+    .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}', '${inventory}')`);
+    increase
+      .querySelector('button')
+      .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}', '${inventory}')`);
+  },
+  updateCartBadge(count) {
+    const [cartItemsBadge, cartItemCount] = document.querySelectorAll('#cart-items-badge, #cart-items-count');
+    cartItemCount.innerText = `(${count} ${CART_DRAWER_TRANSLATION.itemsName})`
 
-  totalPrice.innerText = !isNaN(quantity) ? formatCurrency(itemSubtotal, currencyCode, customerLocale) : 0;
-}
+    if (cartItemsBadge) {
+      cartItemsBadge.textContent = count;
+    }
+  },
+  removeCartItemFromUI(cartItemId) {
+    // Remove items from both the table and the subtotal box
+    document.getElementById(cartItemId)?.remove();
+    document.getElementById(`cart-item-${cartItemId}`)?.remove();
+  },
+  handleEmptyCart() {
+    const cartItemsBadge = document.getElementById('cart-items-badge');
+    const cartTable = document.querySelector('.cart-table');
+    const emptyCart = document.querySelector('.empty-cart');
 
-function updateTotalPrice(cartTotal = '', items) {
-  const itemPrices = document.querySelectorAll('.item-price');
+    cartItemsBadge && (cartItemsBadge.innerText = '0');
+    cartTable?.remove();
+    emptyCart?.classList.remove('hidden');
+  }
+};
 
-  itemPrices.forEach((itemPrice, index) => {
-    const cartItem = items[index];
-    const itemSubtotal = cartItem.price * cartItem.quantity;
+// Events
+async function updateQuantity(cartItemId, productVariantId, quantity, inventory) {
+  let [parsedQuantity, parsedInventory] = [Number(quantity), Number(inventory)];
 
-    itemPrice.innerText = formatCurrency(itemSubtotal, currencyCode, customerLocale);
-  })
-
-  const totalPriceElement = document.querySelector('.item-total-price');
-  const discountPrice = document.querySelector('.coupon-applied');
-
-  if (totalPriceElement && !discountPrice) {
-    totalPriceElement.innerText = cartTotal;
+  if (parsedQuantity < 1) {
+    // TODO: A better UX would be to prompt the seller to remove the item from cart
+    return;
   }
 
-  if (discountPrice) {
-    fetchCart();
+  if (Number.isFinite(parsedInventory) && parsedQuantity > parsedInventory) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
-}
 
-async function updateQuantity(cartItemId, productVariantId, quantity) {
   load(`#loading__${cartItemId}`);
   try {
-    const updatedCart = await youcanjs.cart.updateItem({ cartItemId, productVariantId, quantity });
-    const cartItem = updatedCart.items?.find(item => item.id === cartItemId);
-    const itemSubtotal = cartItem.quantity * cartItem.price;
-    const cartTotal = formatCurrency(updatedCart.total, currencyCode, customerLocale);
+    const updatedCart = await CartService.updateItemQuantity(cartItemId, productVariantId, parsedQuantity);
+    const cartItem = updatedCart.items.find(item => item.id === cartItemId);
+    const itemSubtotal = cartItem.price * cartItem.quantity;
 
-    updateCartItemTotal(cartItemId, quantity, '.total-price', cartItemId, productVariantId, itemSubtotal);
-    updateTotalPrice(cartTotal, updatedCart.items);
+    CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal, inventory);
+    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
   } catch (e) {
     notify(e.message, 'error');
   } finally {
     stopLoad(`#loading__${cartItemId}`);
-  }
-}
-
-async function updateOnchange(cartItemId, productVariantId) {
-  const inputHolder = document.getElementById(cartItemId);
-  const input = inputHolder.querySelector(`input[id="${productVariantId}"]`);
-  const quantity = input.value;
-
-  await updateQuantity(cartItemId, productVariantId, quantity);
-}
-
-async function decreaseQuantity(cartItemId, productVariantId, quantity) {
-  if (Number(quantity) < 1) {
-    return;
-  }
-  await updateQuantity(cartItemId, productVariantId, quantity);
-}
-
-async function increaseQuantity(cartItemId, productVariantId, quantity) {
-  await updateQuantity(cartItemId, productVariantId, quantity);
-}
-
-function updateCartItemCount(count) {
-  const cartItemsCount = document.getElementById('cart-items-count');
-  if (cartItemsCount) {
-    cartItemsCount.textContent = count;
   }
 }
 
 async function removeItem(cartItemId, productVariantId) {
   load(`#loading__${cartItemId}`);
   try {
-    await youcanjs.cart.removeItem({ cartItemId, productVariantId });
-    document.getElementById(cartItemId).remove();
-    document.getElementById(`cart-item-${cartItemId}`).remove();
+    const updatedCart = await CartService.removeItem(cartItemId, productVariantId);
 
-    const updatedCart = await youcanjs.cart.fetch();
-    updateCartItemCount(updatedCart.count);
+    CartUI.removeCartItemFromUI(cartItemId);
+    CartUI.updateCartBadge(updatedCart.count);
+    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
 
-    updateTotalPrice();
-    await updateCartDrawer();
-
-    const cartItemsBadge = document.getElementById('cart-items-badge');
-
-    const cartItems = document.querySelectorAll('.cart__item');
-
-    if (cartItemsBadge) {
-      cartItemsBadge.innerText = parseInt(cartItemsBadge.innerText) - 1;
-    }
-
-    if (cartItems.length === 0) {
-      if (cartItemsBadge) {
-      }
-      cartItemsBadge.innerText = 0;
-      const cartTable = document.querySelector('.cart-table')
-      const emptyCart = document.querySelector('.empty-cart');
-
-      if (cartTable) {
-        cartTable.remove();
-      }
-
-      if (emptyCart) {
-        emptyCart.classList.remove('hidden');
-      }
+    if (updatedCart.items.length === 0) {
+      CartUI.handleEmptyCart();
     }
   } catch (e) {
     notify(e.message, 'error');
@@ -227,6 +184,43 @@ async function removeItem(cartItemId, productVariantId) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  fetchCart();
+document.forms['promo']?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const coupon = e.target['coupon'].value;
+  load('#loading__coupon');
+
+  try {
+    const updatedCart = await CartService.applyCoupon(coupon);
+    CartUI.updateCoupon(updatedCart.coupon, updatedCart.discountedPrice);
+    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+  } catch (e) {
+    notify(e.message, 'error');
+  } finally {
+    stopLoad('#loading__coupon');
+  }
+});
+
+document.addEventListener('click', async (e) => {
+  if (e.target.id === 'remove-coupon') {
+    load('#loading__coupon');
+    try {
+      const updatedCart = await CartService.removeCoupons();
+      CartUI.updateCoupon(null, null);
+      CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+    } catch (e) {
+      notify(e.message, 'error');
+    } finally {
+      stopLoad('#loading__coupon');
+    }
+  }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const cart = await CartService.fetchCart();
+    CartUI.updateTotalPrice(cart.total, cart.items);
+    CartUI.updateCoupon(cart.coupon, cart.discountedPrice);
+  } catch (e) {
+    notify(e.message, 'error');
+  }
 });
