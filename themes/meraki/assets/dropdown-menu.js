@@ -1,8 +1,10 @@
+let isDropDownOpened = false;
 /**
  * @param {HTMLElement} element
  */
 function showDropDownMenu(element) {
   element.classList.toggle('show');
+  isDropDownOpened = true;
 }
 
 /**
@@ -12,6 +14,7 @@ function showDropDownMenu(element) {
 function hideDropDownMenu(element, event)  {
   if (!event.target.matches('.dropbtn, .dropbtn *')) {
     element?.classList.remove('show');
+    isDropDownOpened = false;
   }
 }
 
@@ -43,7 +46,11 @@ function dropdownMenu() {
     const dropdownContent = dropDownInput.querySelector('.dropdown-content');
 
     selectInput.addEventListener('click', () => showDropDownMenu(dropdownContent));
-    window.addEventListener('click', (event) => hideDropDownMenu(dropdownContent, event));
+    document.addEventListener('click', (event) => {
+      if(isDropDownOpened) {
+        hideDropDownMenu(dropdownContent, event);
+      }
+    });
 
     const selectOptions = dropdownContent.querySelectorAll('li');
 
@@ -62,5 +69,4 @@ function dropdownMenu() {
     });
   });
 }
-
 dropdownMenu();

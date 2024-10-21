@@ -1,9 +1,10 @@
 async function addToCart(snippetId) {
   const parentSection = document.querySelector(`#s-${snippetId}`);
   const variantId = parentSection.querySelector(`#variantId`)?.value || undefined;
-  const quantity = parentSection.querySelector(`#quantity`)?.value || 1;
-  const inventory = parentSection.querySelector(`#_inventory`)?.value || null;
+  const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
+  const inventory = parseInt(parentSection.querySelector(`#_inventory`)?.value) || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
+  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
 
   if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
@@ -13,8 +14,12 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.quantity_smaller_than_zero, 'error');
   }
 
-  if (inventory == 0) {
+  if (inventory === 0) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
+  }
+
+  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + quantity) > inventory) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
   }
 
   try {
@@ -27,6 +32,8 @@ async function addToCart(snippetId) {
       attachedImage: uploadedImageLink,
       quantity,
     });
+
+    await trackVariantQuantityOnCart(variantId);
 
     if (response.error) throw new Error(response.error);
 
@@ -57,9 +64,11 @@ function attachRemoveItemListeners() {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
       const productVariantId = event.target.getAttribute('data-product-variant-id');
 
-      await removeCartItem(cartItemId, productVariantId);
-      await updateCartDrawer();
-      updateCartCount(-1, true);
+      if(cartItemId && productVariantId) {
+        await removeCartItem(cartItemId, productVariantId);
+        await updateCartDrawer();
+        updateCartCount(-1, true);
+      }
     })
   );
 }
@@ -74,6 +83,8 @@ async function removeCartItem(cartItemId, productVariantId) {
       cartItemId,
       productVariantId,
     });
+
+    await trackVariantQuantityOnCart(productVariantId);
   } catch (error) {
     notify(error.message, 'error');
   } finally {
@@ -106,7 +117,7 @@ function cartTemplate(item) {
           </div>
           <div class="product-price">
             ${
-              item.productVariant.compare_at_price ? 
+              item.productVariant.compare_at_price ?
               `<span class="compare-price">${item.productVariant.compare_at_price}</span>` : ''
             }
             <div class="currency-wrapper">
@@ -157,7 +168,7 @@ async function updateCartDrawer() {
 
         if (item.productVariant.compare_at_price) {
           item.productVariant.compare_at_price = formatCurrency(
-            item.productVariant.compare_at_price, 
+            item.productVariant.compare_at_price,
             currencyCode,
             customerLocale,
           );
