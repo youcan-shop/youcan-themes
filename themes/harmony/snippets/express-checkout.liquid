@@ -14,7 +14,6 @@
   {% endif %}
 
   .custom-checkout-{{ checkout_id }},
-  .express-checkout-fields,
   .sticky-form-wrapper {
     border: 1px solid {{ settings.form_border_colour.hex }};
   }
@@ -24,8 +23,8 @@
     grid-gap: {{ settings.inputs_gap }}px;
   }
 
-  .custom-checkout-{{ checkout_id }} input, 
-  .custom-checkout-{{ checkout_id }} textarea, 
+  .custom-checkout-{{ checkout_id }} input,
+  .custom-checkout-{{ checkout_id }} textarea,
   .custom-checkout-{{ checkout_id }} select {
     padding: {{ settings.input_padding }}px;
     border-radius: {{ settings.input_border_radius }}px;
@@ -73,7 +72,7 @@
     padding: calc({{ settings.input_padding }}px - 4px);
   }
 
-  .express-checkout-placeholder .express-checkout-button {
+  .express-checkout-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
@@ -109,19 +108,19 @@
               {% endfor %}
             </select>
           {% when 'textarea' %}
-            <textarea 
+            <textarea
               name='{{ field_name }}'
-              id='{{ field.name }}' 
-              class='w-full' 
-              placeholder='{{ field.placeholder }}' 
+              id='{{ field.name }}'
+              class='w-full'
+              placeholder='{{ field.placeholder }}'
               required='{{ field.required }}' min></textarea>
           {% else %}
-            <input 
+            <input
               name='{{ field_name }}'
-              type='{{ field.type }}' 
-              id='{{ field.name }}' 
-              class='w-full' 
-              placeholder='{{ field.placeholder }}' 
+              type='{{ field.type }}'
+              id='{{ field.name }}'
+              class='w-full'
+              placeholder='{{ field.placeholder }}'
               required='{{ field.required }}'>
         {% endcase %}
         <div
