@@ -31,17 +31,19 @@
       class='spinner hidden'
       id='loading__cart'
     ></span>
-    <span>
-      {{ text }}
-    </span>
+    {% if skip_cart %}
+      <span>{{ 'snippets.product_preview.cta_button' | t }}</span>
+    {% else %}
+      <span>
+        {{ text }}
+      </span>
+    {% endif %}
   </button>
 </div>
 
 {% javascript %}
-
   const TRANSLATED_TEXT = {
     empty_inventory: "{{ 'errors.empty_inventory' | t }}"
   }
-
-  const IS_CART_SKIPED = "{{ skip_cart }}";
+  const IS_CART_SKIPED = Boolean("{{ skip_cart }}");
 {% endjavascript %}
