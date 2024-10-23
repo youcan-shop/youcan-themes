@@ -30,18 +30,20 @@
       class='spinner hidden'
       id='loading__cart'
     ></span>
-    <span class="btn-content">
-      {% render 'icon', name: 'bag' %}
-      {{ block_settings.text_content }}
-    </span>
+    {% if skip_cart %}
+      <span>{{ 'snippets.product_preview.cta_button' | t }}</span>
+    {% else %}
+      <span class="btn-content">
+        {% render 'icon', name: 'bag' %}
+        {{ block_settings.text_content }}
+      </span>
+    {% endif %}
   </button>
 </div>
 
 {% javascript %}
-
   const TRANSLATED_TEXT = {
     empty_inventory: "{{ 'errors.empty_inventory' | t }}"
   }
-
-  const IS_CART_SKIPED = "{{ block_settings.skip_cart }}";
+  const IS_CART_SKIPED = Boolean("{{ skip_cart }}");
 {% endjavascript %}
