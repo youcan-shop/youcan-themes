@@ -35,7 +35,7 @@
 </a>
 
 <div class="product-link-mobile">
-  {% if settings.direct_add_to_cart and item.variants.size <= 1 %}
+  {% if settings.direct_add_to_cart and item.variants.size <= 1 and item.skip_to_checkout == false %}
     <button class="yc-btn" onclick="directAddToCart(event, '{{ item.variants[0].id }}', {{ item.variants[0].inventory }}, {{ item.isTrackingInventory }})">
       {{ 'general.direct_add_to_cart' | t }}
     </button>
