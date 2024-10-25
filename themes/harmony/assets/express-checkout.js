@@ -14,6 +14,14 @@ async function placeOrder() {
 
     const response = await youcanjs.checkout.placeExpressCheckoutOrder({ productVariantId, quantity, fields });
 
+    if (response.data.status >= 400) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = response.data.message;
+
+      const errorMessage = tempDiv.innerText || tempDiv.textContent;
+      throw new Error(errorMessage);
+    }
+
     response
       .onSuccess((data, redirectToThankyouPage) => {
         redirectToThankyouPage();
