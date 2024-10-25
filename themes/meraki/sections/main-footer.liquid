@@ -24,16 +24,16 @@
   <div class="columns container">
     {%- if section.settings.footer_logo.src -%}
       <div class='footer-logo column'>
-        <img 
+        <img
           loading='lazy' src='{{ section.settings.footer_logo.src }}' alt='logo'
           width="85" height="23"
         >
       </div>
     {% else %}
       <div class='footer-logo column'>
-        <img 
+        <img
           loading='lazy' src='{{ 'default-black-logo.webp' | asset_url }}' alt='logo'
-          width="85" height="23"  
+          width="85" height="23"
         >
       </div>
     {%- endif -%}
@@ -41,11 +41,11 @@
       {%- if section.settings.social_media_exist %}
         {%- for block in section.blocks -%}
           {%- if block.settings.social_media_icon_image.src -%}
-            <a class='link' href="{{ block.settings.social_media_url }}" target="_blank">
+            <a class='link' href="{{ block.settings.social_media_url }}" target="_blank" {{ block.youcan_attributes }}>
               <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links' style="width: 100%; height: 100%;">
             </a>
             {% else %}
-            <a class='link' href="{{ block.settings.social_media_url }}" target="_blank">
+            <a class='link' href="{{ block.settings.social_media_url }}" target="_blank" {{ block.youcan_attributes }}>
               <img loading='lazy' src='{{ 'default_product.jpeg' | asset_url }}' alt='image placeholder' style="width: 100%; height: 100%;">
             </a>
           {%- endif -%}

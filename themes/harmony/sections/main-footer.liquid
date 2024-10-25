@@ -26,14 +26,14 @@
     <div class="columns container">
       <div class="column logo">
         {% if section.settings.footer_logo.src %}
-          <img 
+          <img
             src="{{ section.settings.footer_logo.src }}"
             alt="{{ store.name }}"
             width="110" height="70"
             >
         {% else %}
-          <img 
-            src="{{ 'default-white-logo.webp' | asset_url }}" 
+          <img
+            src="{{ 'default-white-logo.webp' | asset_url }}"
             alt="{{ store.name }}"
             width="110" height="70"
             >
@@ -57,11 +57,11 @@
         <div class="column social-media">
           {%- for block in section.blocks -%}
             {%- if block.settings.social_media_icon_image.src -%}
-              <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">
+              <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank" {{ block.youcan_attributes }}>
                 <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links'>
               </a>
               {% else %}
-              <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">
+              <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank" {{ block.youcan_attributes }}>
                 <img loading='lazy' src='{{ 'default_product.jpeg' | asset_url }}' alt='image placeholder'>
               </a>
             {%- endif -%}
