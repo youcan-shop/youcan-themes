@@ -465,7 +465,7 @@ async function fetchReviewsForProduct(productId, closetParent, averageRating) {
   const generalReviewsWrappers = document.querySelectorAll(`${closetParent} .yc-general-review-wrapper`);
   const reviewButton = document.querySelector('#addReviewBtn');
 
-  if (!productId || !generalReviewsContainers.length || !generalReviewsWrappers.length) {
+  if (!generalReviewsContainers.length || !generalReviewsWrappers.length) {
     return;
   }
 
