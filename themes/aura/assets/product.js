@@ -191,7 +191,7 @@ function disableActionButtons(el, isStockOut) {
     element.disabled = isStockOut;
 
     if (isStockOut) {
-      element.innerHTML = TRANSLATED_TEXT.empty_inventory;
+      element.innerHTML = ADD_TO_CART_EXPECTED_ERRORS.empty_inventory;
     } else {
       element.innerHTML = element.getAttribute('data-text');
     }
@@ -206,7 +206,9 @@ function disableActionButtons(el, isStockOut) {
 function forceResetQuantityInput(parentSection) {
   const quantityInput = parentSection.querySelector('.quantity-input');
 
-  quantityInput.value = 1;
+  if(quantityInput) {
+    quantityInput.value = 1;
+  }
 }
 
 /**
@@ -354,7 +356,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
   if (price) {
     const productPrices = parentSection.querySelectorAll('.product-price');
     const showStickyCheckoutPrice = document.getElementById('sticky-price');
-    
+
     const formattedPrice = formatCurrency(price, currencyCode, customerLocale);
 
     if (productPrices.length === 0) {
@@ -378,7 +380,7 @@ function updateProductDetails(parentSection, image, price, compareAtPrice) {
 
   if (compareAtPrice) {
     const formattedCompareAtPrice = formatCurrency(compareAtPrice, currencyCode, customerLocale);
-    
+
     variantCompareAtPrices.forEach(variantComparePrice => {
       variantComparePrice.innerHTML = `<del>${formattedCompareAtPrice}</del>`;
     });
