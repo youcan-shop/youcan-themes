@@ -423,3 +423,44 @@ async function trackVariantQuantityOnCart(selectedVariantId) {
     stopLoad('#loading__cart');
   }
 }
+
+/**
+ * Fetching the total number of reviews for a specific product and displaying the average rating
+ *
+ * @param {string} productId - The product id.
+ * @param {HTMLElement} closetParent - the colsest parent of the element.
+ * @param {number} averageRating - the rating number of the product.
+ */
+async function fetchReviewsForProduct(productId, closetParent, averageRating) {
+  const generalReviewsContainers = document.querySelectorAll(`${closetParent} .yc-general-review`);
+  const generalReviewsWrappers = document.querySelectorAll(`${closetParent} .yc-general-review-wrapper`);
+  const reviewButton = document.querySelector('#addReviewBtn');
+
+  if (!generalReviewsContainers.length || !generalReviewsWrappers.length) {
+    return;
+  }
+
+  const noDataSetter = () => {
+    generalReviewsContainers.forEach(container => container.remove());
+  };
+
+  try {
+    const totalReviews = await youcanjs.product.fetchReviews(productId).data();
+
+    generalReviewsContainers.forEach(container => container.style.display = 'block');
+    generalReviewsWrappers.forEach(wrapper => wrapper.innerHTML = `
+      <li class='rating-stars'>
+        <div class="yc-reviews-stars" style="--rating: ${averageRating};" aria-label="Rating of this product is ${averageRating} out of 5" role="img"></div>
+      </li>
+      <li class='general-count'>
+        (${totalReviews?.length} ${ratings})
+      </li>
+    `);
+
+    if(reviewButton) {
+      reviewButton.style.display = 'block';
+    }
+  } catch (error) {
+    noDataSetter();
+  }
+};
