@@ -191,7 +191,7 @@ function disableActionButtons(el, isStockOut) {
     element.disabled = isStockOut;
 
     if (isStockOut) {
-      element.innerHTML = TRANSLATED_TEXT.empty_inventory;
+      element.innerHTML = ADD_TO_CART_EXPECTED_ERRORS.empty_inventory;
     } else {
       element.innerHTML = element.getAttribute('data-text');
     }
@@ -206,7 +206,9 @@ function disableActionButtons(el, isStockOut) {
 function forceResetQuantityInput(parentSection) {
   const quantityInput = parentSection.querySelector('.quantity-input');
 
-  quantityInput.value = 1;
+  if(quantityInput) {
+    quantityInput.value = 1;
+  }
 }
 
 /**
