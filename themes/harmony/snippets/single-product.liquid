@@ -81,7 +81,7 @@
             {% render 'express-checkout', checkout: checkout, is_sticky: block.settings.is_sticky, settings: block.settings %}
             {% if block.settings.is_sticky %}
             {% render 'sticky-checkout', settings: block.settings %}
-            <button class="is_sticky express-checkout-button" onclick="triggerCheckout(`s-{{ snippetId }}`)">{{ block.settings.express_checkout_cta }}</button>
+            <button class="is_sticky express-checkout-button" onclick="triggerCheckout(`s-{{ snippetId }}`)">{{ block.settings.express_checkout_cta | default: 'snippets.express_checkout.cta' | t }}</button>
             {% endif %}
         {%- endcase -%}
       </div>

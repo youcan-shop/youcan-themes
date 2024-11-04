@@ -15,7 +15,7 @@
 <section class='section-featured-collections-{{ id }} yc-featured-collections container'>
   <div class="yc-featured-container">
     <h1 class='yc-section-title'>
-      {{ section.settings.title }}
+      {{ section.settings.title | default: "featured_collections.title" | t }}
     </h1>
   </div>
   <div class='collections-list'>
@@ -33,8 +33,7 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Title",
-      "default": "تصنيفات رائجة"
+      "label": "Title"
     },
     {
       "type": "select",
