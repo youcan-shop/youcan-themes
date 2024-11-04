@@ -18,7 +18,7 @@
     <div class='content container '>
       {%- if section.settings.notice_bar_logo.src -%} <img src='{{ section.settings.notice_bar_logo.src }}' alt='Notice logo'>{%- endif -%}
       <div class="notice-content">
-        {{ section.settings.notice_bar_content }}
+        {{ section.settings.notice_bar_content | default: 'notice_bar.title' | t }}
       </div>
     </div>
   </div>
@@ -38,8 +38,7 @@
     {
       "type": "richtext",
       "id": "notice_bar_content",
-      "label": "Content",
-      "default": "Special offer: free delivery, pay on delivery, faster and order now"
+      "label": "Content"
     },
     {
       "type": "image_picker",
