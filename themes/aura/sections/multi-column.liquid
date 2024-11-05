@@ -103,16 +103,16 @@
 
 <div class='multi-column-{{ id }}'>
   <div class="container">
-    <h3 class='yc-section-title'>{{ section.settings.title }}</h3>
+    <h3 class='yc-section-title'>{{ section.settings.title | default: 'multi_column.title' | t }}</h3>
     <div class='multi-column-blocks'>
       {% for block in section.blocks %}
         {% assign block_setting = block.settings %}
         <div class='column-block' {{ block.youcan_attributes }}>
           {% if block_setting.image %}
             <div class="column-image-wrapper">
-              <img 
-                class='column-image' 
-                src='{{ block_setting.image.src }}' 
+              <img
+                class='column-image'
+                src='{{ block_setting.image.src }}'
                 loading='lazy'
                 alt='{{ block_setting.heading }}'
               >
@@ -122,12 +122,8 @@
               {% render 'multi-column-svg', svg_index: forloop.index %}
             </div>
           {% endif %}
-          {% if block_setting.heading %}
-            <h4 class='column-title'>{{ block_setting.heading }}</h4>
-          {% endif %}
-          {% if block_setting.description %}
-            <div class='column-description'>{{ block_setting.description }}</div>
-          {% endif %}
+            <h4 class='column-title'>{{ block_setting.heading | default: 'multi_column.title' | t }}</h4>
+            <div class='column-description'>{{ block_setting.description | default: 'multi_column.description' | t }}</div>
         </div>
       {% endfor %}
     </div>
@@ -211,7 +207,8 @@
           "label": "Right",
           "value": "right"
         }
-      ]
+      ],
+      "default": "center"
     },
     {
       "type": "range",
