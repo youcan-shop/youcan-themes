@@ -55,6 +55,9 @@ async function placeOrder() {
       })
       .onSkipPaymentStep((data, redirectToPaymentPage) => {
         redirectToPaymentPage();
+      })
+      .catch((data) => {
+        notify(data.detail, 'error');
       });
   } catch (e) {
     notify(e.message, 'error');
