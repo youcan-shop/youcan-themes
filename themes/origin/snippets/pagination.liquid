@@ -1,0 +1,84 @@
+{% comment %}
+  Renders a set of links for paginated results. Must be used within paginate tags.
+
+  Usage:
+  {% paginate results by 2 %}
+    {% render 'pagination', paginate: paginate, anchor: '#yourID' %}
+    {% render 'pagination', has_more: has_more, next_page: next_page, previous_page: previous_page, current: current, last: last, anchor: '#yourID' %}
+  {% endpaginate %}
+
+  Accepts:
+  - paginate: {Object}
+  - anchor: {String} (optional) This can be added so that on page reload it takes you to wherever you've placed your anchor tag.
+{% endcomment %}
+
+{{ 'component-pagination.css' | asset_url | stylesheet_tag }}
+
+{%- if last > 1 -%}
+  <div class="pagination-wrapper">
+    <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+      <ul class="pagination__list list-unstyled" role="list">
+        {%- if previous_page -%}
+          <li>
+            <a
+              href="{{ previous_page }}{{ anchor }}"
+              class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+              aria-label="{{ 'general.pagination.previous' | t }}"
+            >
+              {% render 'icon-caret' %}
+            </a>
+          </li>
+        {%- endif -%}
+
+        {%- assign start = current | minus: 2 -%}
+        {%- assign end = current | plus: 2 -%}
+
+        {% if start < 1 %}
+          {% assign end = end | plus: (1 - start) %}
+          {% assign start = 1 %}
+        {% endif %}
+    
+        {% if end > last %}
+          {% assign start = start | minus: (end - last) %}
+          {% assign end = last %}
+        {% endif %}
+
+        {%- for index in (start..end) -%}
+          <li>
+            {%- if index != current -%}
+              <a
+                href="/tofixme/{{ anchor }}"
+                class="pagination__item link"
+                aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+              >
+                {{- index -}}
+              </a>
+            {%- else -%}
+              <a
+                role="link"
+                aria-disabled="true"
+                class="pagination__item pagination__item--current light"
+                aria-current="page"
+                aria-label="{{ 'general.pagination.page' | t: number: index }}"
+              >
+                {{- index -}}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+
+        {%- if next_page -%}
+          <li>
+            <a
+              href="{{ next_page }}{{ anchor }}"
+              class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
+              aria-label="{{ 'general.pagination.next' | t }}"
+            >
+              {%- render 'icon-caret' -%}
+            </a>
+          </li>
+        {%- endif -%}
+      </ul>
+    </nav>
+  </div>
+{%- endif -%}

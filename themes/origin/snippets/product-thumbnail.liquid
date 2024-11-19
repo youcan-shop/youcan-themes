@@ -1,0 +1,74 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{% comment %}
+    Renders a product thumbnail with a modal-opener
+
+    Accepts:
+    - media: {String} Product Media image link
+    - media_id: {String} Product Media Id
+    - media_count: {Number} Number of media objects
+    - position: {String} Position of the media. Used for accessible label.
+    - desktop_layout: {String} Layout of the media for desktop.
+    - mobile_layout: {String} Layout of the media for mobile.
+    - loop: {Boolean} Enable video looping (optional)
+    - modal_id: {String} The product modal that will be shown by clicking the thumbnail
+    - xr_button: {Boolean} Renders the "View in your space" button (shopify-xr-button) if the media is a 3D Model
+    - constrain_to_viewport: {Boolean} Force media height to fit within viewport
+    - media_fit: {String} Method ("contain" or "cover") to fit image into container
+    - media_width: {Float} The width percentage that the media column occupies on desktop.
+    - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+
+    Usage:
+    {% render 'product-thumbnail',
+      media: media,
+      position: forloop.index,
+      loop: section.settings.enable_video_looping,
+      modal_id: section.id
+    %}
+{% endcomment %}
+
+{%- unless lazy_load == false -%}
+  {%- assign lazy = 'lazy' -%}
+{%- endunless -%}
+
+{%- assign desktop_columns = 1 -%}
+{%- if desktop_layout == 'columns' and media_count > 1 -%}
+  {%- assign desktop_columns = 2 -%}
+{%- endif -%}
+
+{%- assign mobile_columns = 1 -%}
+{%- if mobile_layout == 'columns' and media_count > 1 -%}
+  {%- assign mobile_columns = 2 -%}
+{%- endif -%}
+
+{%- assign image_class = 'image-magnify-' | append: section.settings.image_zoom -%}
+
+
+{%- capture sizes -%}
+  (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | times: media_width | divided_by: desktop_columns | round }}px, (min-width: 990px) calc({{ media_width | times: 100 | divided_by: desktop_columns }}vw - 10rem), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw / {{ mobile_columns }} - 4rem)
+{%- endcapture -%}
+
+<div
+  class="product-media-container media-type-{{ media.media_type }} media-fit-{{ media_fit }} global-media-settings gradient{% if constrain_to_viewport %} constrain-height{% endif %}"
+  style="--ratio: {{ 1.0 }}; --preview-ratio: {{ 1.0 }};"
+>
+  <noscript>
+    <div class="product__media media">
+      <img src="{{- media -}}" loading="lazy" sizes="{{- sizes -}}" widths="246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946"/>
+    </div>
+  </noscript>
+
+  <modal-opener class="product__modal-opener product__modal-opener--image no-js-hidden" data-modal="#ProductModal-{{ modal_id }}">
+    <span class="product__media-icon motion-reduce quick-add-hidden product__media-icon--{{ section.settings.image_zoom }}" aria-hidden="true">
+      {%- render 'icon-zoom' -%}
+    </span>
+    {%- render 'loading-spinner' -%}
+    <div class="product__media media media--transparent">
+      <img src="{{- media -}}" class="{{- image_class -}}" loading="lazy" sizes="{{- sizes -}}" widths="246, 493, 600, 713, 823, 990, 1100, 1206, 1346, 1426, 1646, 1946"/>
+    </div>
+    <button class="product__media-toggle quick-add-hidden product__media-zoom-{{ section.settings.image_zoom }}" type="button" aria-haspopup="dialog" data-media-id="{{- media_id -}}">
+      <span class="visually-hidden">
+        {{ 'products.product.media.open_media' | t: index: position }}
+      </span>
+    </button>
+  </modal-opener>
+</div>

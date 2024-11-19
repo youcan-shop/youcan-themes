@@ -1,0 +1,25 @@
+{{ '_cod_express-checkout.css' | asset_url | stylesheet_tag }}
+
+<div id="yc-sticky-checkout" class="yc-sticky-checkout">
+  <div class="step_2" id="checkout_step_2">
+    <div class="step-2-wrapper">
+      <button class="close-icon" onclick="goToCheckoutStep(true)">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <section class="sticky-desktop-wrapper">
+        <div class="variant-card-2">
+          {% render '_cod_product-card' %}
+        </div>
+        <div class="checkout-form"></div>
+      </section>
+    </div>
+    <div class="cta-bottom-wrapper">
+      <button
+        type='submit'
+        class='yc-btn w-full express-checkout-button'
+        onclick='placeOrder(this)'>
+        <span class='spinner hidden' id='loading__checkout'></span>
+        <span>{{ settings.express_checkout_cta }}</span>
+      </button>
+    </div>
+</div>
