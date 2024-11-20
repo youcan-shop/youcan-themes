@@ -40,22 +40,24 @@
           <th class="total">{{ 'thankyou.details.sub_total' | t }}</th>
         </tr>
       </thead>
-      {% for item in order.order_variants %}
-        <tr>
-          <td class="product-name">
-            <a href="/products/{{- item.slug -}}" target="_blank">{{- item.name -}}</a>
-          </td>
-          <td>
-            <span>{{- item.price | money -}}</span>
-          </td>
-          <td>
-            <span>{{- item.quantity -}}</span>
-          </td>
-          <td class="total">
-            <span>{{- item.price * item.quantity | money -}}</span>
-          </td>
-        </tr>
-      {% endfor %}
+      <tbody>
+        {% for item in order.order_variants %}
+          <tr>
+            <td class="product-name">
+              <a href="/products/{{- item.slug -}}" target="_blank">{{- item.name -}}</a>
+            </td>
+            <td>
+              <span>{{- item.price | money -}}</span>
+            </td>
+            <td>
+              <span>{{- item.quantity -}}</span>
+            </td>
+            <td class="total">
+              <span>{{- item.price * item.quantity | money -}}</span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
   <div class="order-details">
