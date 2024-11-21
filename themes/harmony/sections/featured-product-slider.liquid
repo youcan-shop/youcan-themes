@@ -65,7 +65,7 @@
 
 <section class="yc-featured-products featured-products-wrapper-{{id}}">
   <h1 class='yc-section-title'>
-    {{ section.settings.title }}
+    {{ section.settings.title | default: 'product_slider.title' | t }}
   </h1>
   <div class="section-featured-products-{{ id }}">
     <div class='container'>
@@ -149,8 +149,7 @@
       {
         "type": "text",
         "id": "title",
-        "label": "Title",
-        "default": "عروض محدودة"
+        "label": "Title"
       },
       {
         "type": "range",
@@ -231,8 +230,7 @@
       }, {
         "label": "Message",
         "id": "countdown_message",
-        "type": "richtext",
-        "default": "ينتهي في :"
+        "type": "richtext"
       }, {
         "label": "Year",
         "id": "countdown_year",

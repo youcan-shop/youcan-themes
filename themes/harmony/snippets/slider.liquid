@@ -64,8 +64,8 @@
           {{ block.youcan_attributes }}
         >
           {%- if block.settings.caption %}
-            <div 
-              class='content' 
+            <div
+              class='content'
               style="--alignment: {{ block.settings.content_alignment }}"
             >
               <div class='caption w-full'>{{ block.settings.caption }}</div>
@@ -75,7 +75,7 @@
                     href='{{ block.settings.product.url }}'
                     class='yc-btn slide-content-box-button btn-{{ forloop.index }}'
                   >
-                    {{ block.settings.button_text }}
+                    {{ block.settings.button_text | default: 'general.buy_now' | t }}
                   </a>
                 </div>
               {% endif %}
