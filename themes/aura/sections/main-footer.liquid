@@ -16,7 +16,6 @@
     {%- endif -%}
     display: {{ section.settings.toggle_footer ? 'none' : 'block' }};
   }
-
 {% endstyle %}
 
 {% if section.settings.toggle_footer != true %}
@@ -41,16 +40,14 @@
       {%- endfor -%}
     </div>
     <div class="container">
-      {%- assign cleaned_tag = section.settings.copyright | strip_html | strip -%}
-      {%- if section.settings.social_media_exist or cleaned_tag != '' %}
+      {%- if section.settings.social_media_exist %}
         <div class="footer-space"></div>
       {%- endif -%}
       <div class="copyright-wrapper" {{ block.youcan_attributes }}>
-        {%- if cleaned_tag != '' %}
-          <div class="copyright-title">
-            {{ section.settings.copyright }}
-          </div>
-        {%- endif %}
+        <div class="copyright-title">
+          {% assign currentYear = default: 'now' | date: '%Y' %}
+          {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: "%", currentYear }}
+        </div>
         <div class="spacer"></div>
         {%- if section.settings.social_media_exist -%}
           {%- for block in section.blocks -%}
@@ -107,8 +104,7 @@
     {
       "type": "richtext",
       "id": "copyright",
-      "label": "Copyright text",
-      "default": "All rights reserved"
+      "label": "Copyright text"
     },
     {
       "type": "color",

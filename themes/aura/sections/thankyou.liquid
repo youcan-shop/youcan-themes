@@ -22,10 +22,15 @@
           <ion-icon name="checkmark-circle-outline" class="icon"></ion-icon>
         {%- endif -%}
         <div class="heading">
-          <div class='title'>{{ section.settings.title }} <div class='subtitle'>{{ section.settings.subtitle }}</div></div>
+          <div class='title'>
+            {{ section.settings.title | default: 'thankyou.default_title' | t }}
+            <div class='subtitle'>
+              {{ section.settings.subtitle | default: 'thankyou.default_subtitle' | t }}
+            </div>
+          </div>
         </div>
         <div class='description'>
-          {{ section.settings.description }}
+          {{ section.settings.description | default: 'thankyou.default_description' | t }}
         </div>
       </div>
     </div>
