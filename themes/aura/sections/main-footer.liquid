@@ -45,7 +45,8 @@
       {%- endif -%}
       <div class="copyright-wrapper" {{ block.youcan_attributes }}>
         <div class="copyright-title">
-          {{ section.settings.copyright | default: 'footer.copyright.title' | t }}
+          {% assign currentYear = default: 'now' | date: '%Y' %}
+          {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: "%", currentYear }}
         </div>
         <div class="spacer"></div>
         {%- if section.settings.social_media_exist -%}
