@@ -53,7 +53,7 @@
 
 <section class='section-featured-products-{{ id }} yc-featured-products container'>
   <h2 class='yc-section-title'>
-    {{ section.settings.title }}
+    {{ section.settings.title | default: 'featured_products.title' | t }}
   </h2>
   <div class='product-list product-container-{{ id }}'>
     {% for block in section.blocks %}
@@ -80,8 +80,7 @@
     {
       "type": "text",
       "id": "title",
-      "label": "Title",
-      "default": "المنتجات الأكتر مبيعاً"
+      "label": "Title"
     },
     {
       "type": "select",

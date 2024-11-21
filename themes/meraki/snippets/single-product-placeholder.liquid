@@ -47,7 +47,7 @@
             {% if block.settings.is_sticky %}
               {% render 'sticky-checkout', settings: block.settings %}
               <button class="yc-btn is_sticky font-bold express-checkout-button" {% if is_placeholder %} disabled {% endif %}>
-                {{ block.settings.express_checkout_cta }}
+                {{ block.settings.express_checkout_cta | default: 'general.buy_now' | t }}
               </button>
             {% endif %}
         {%- endcase -%}

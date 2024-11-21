@@ -24,16 +24,16 @@
   <div class="columns container">
     {%- if section.settings.footer_logo.src -%}
       <div class='footer-logo column'>
-        <img 
+        <img
           loading='lazy' src='{{ section.settings.footer_logo.src }}' alt='logo'
           width="85" height="23"
         >
       </div>
     {% else %}
       <div class='footer-logo column'>
-        <img 
+        <img
           loading='lazy' src='{{ 'default-black-logo.webp' | asset_url }}' alt='logo'
-          width="85" height="23"  
+          width="85" height="23"
         >
       </div>
     {%- endif -%}
@@ -73,7 +73,8 @@
     <div class="container">
       <div class="copyright-wrapper" {{ block.youcan_attributes }}>
         <div class="copyright-title">
-          {{ section.settings.copyright }}
+          {% assign currentYear = default: 'now' | date: '%Y' %}
+          {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: "%", currentYear }}
         </div>
       </div>
     </div>
@@ -123,8 +124,7 @@
     {
       "type": "richtext",
       "id": "copyright",
-      "label": "Copyright text",
-      "default": "All rights reserved"
+      "label": "Copyright text"
     },
     {
       "type": "color",
