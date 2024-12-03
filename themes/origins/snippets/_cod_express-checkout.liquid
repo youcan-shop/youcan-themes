@@ -1,0 +1,120 @@
+{{ '_cod_express-checkout.css' | asset_url | stylesheet_tag }}
+
+{% assign checkout_id = 100 | rand: 2000 %}
+
+{% style %}
+  {% if is_sticky %}
+    body {
+      padding-bottom: 80px;
+    }
+
+    #express-checkout-form {
+      display: none;
+    }
+
+  {% endif %}
+
+  .custom-checkout-{{ checkout_id }},
+  .express-checkout-fields {
+    border-color: {{ settings.form_border_colour.hex }};
+  }
+
+  .custom-checkout-{{ checkout_id }} .express-checkout-fields  {
+    grid-gap: {{ settings.inputs_gap }}px;
+  }
+
+  .custom-checkout-{{ checkout_id }} input {
+    padding: {{ settings.input_padding }}px;
+    border-radius: {{ settings.input_border_radius }}px;
+    font-size: {{ settings.input_text_size }}px !important;
+
+    {% if settings.input_background_color %}
+    background-color: {{ settings.input_background_color.hex }};
+    {% endif %}
+
+    {% if settings.input_text_color %}
+    color: {{ settings.input_text_color.hex }};
+    {% endif %}
+
+    {% if settings.input_border_color %}
+    border-color: {{ settings.input_border_color.hex }};
+    {% endif %}
+  }
+
+  .express-checkout-button {
+    padding: {{ settings.button_padding }}px;
+    border-radius: {{ settings.button_border_radius }}px;
+    font-size: {{ settings.button_text_size }}px;
+
+    {% if settings.button_background_color %}
+    background-color: {{ settings.button_background_color.hex }} !important;
+    {% endif %}
+  }
+
+  .express-checkout-button span {
+    font-weight: bold;
+  }
+
+  {% if settings.button_text_color %}
+  .custom-checkout-{{ checkout_id }} button span {
+    color: {{ settings.button_text_color.hex }} !important;
+  }
+  {% endif %}
+
+  {% if settings.input_placeholder_color %}
+  .custom-checkout-{{ checkout_id }} input::placeholder {
+    color: {{ settings.input_placeholder_color.hex }};
+  }
+  {% endif %}
+{% endstyle %}
+
+<form
+  id='express-checkout-form'
+  class='custom-checkout-{{ checkout_id }}'
+  onsubmit="return false;"
+>
+  <div class='express-checkout-fields'>
+    <div class='express-checkout-title'>{{ settings.form_title }}</div>
+    {%- for field in checkout.fields %}
+      <div class='express-checkout-field'>
+        <input
+          type='{{ field.type }}'
+          class='w-full'
+          id='{{ field.name }}'
+          {% if field.custom %}
+            name='extra_fields[{{ field.name }}]'
+          {% else %}
+            name='{{ field.name }}'
+          {% endif %}
+          placeholder='{{ field.placeholder }}'
+          {% if field.required %}
+            required
+          {% endif %}
+        >
+        <div
+          class='validation-error'
+          {% if field.custom %}
+            data-error='extra_fields.{{ field.name }}'
+          {% else %}
+            data-error='{{ field.name }}'
+          {% endif %}
+        ></div>
+      </div>
+    {%- endfor %}
+    {% if is_sticky == false %}
+      <button
+        type='submit'
+        class='yc-btn w-full express-checkout-button'
+        onclick='placeOrder(this)'
+      >
+        <span
+          class='spinner hidden'
+          id='loading__checkout'
+        ></span>
+        <span>{{ settings.express_checkout_cta }}</span>
+      </button>
+      {% endif %}
+  </div>
+</form>
+
+{{ '_cod_express-checkout.js' | asset_url | script_tag_deferred }}

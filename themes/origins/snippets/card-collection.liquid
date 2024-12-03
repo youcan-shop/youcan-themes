@@ -1,0 +1,151 @@
+{% comment %}
+  Renders a collection card
+
+  Accepts:
+  - card_collection: {Object} Collection Liquid object
+  - media_aspect_ratio: {String} Size of the product image card. Values are "square" and "portrait". Default is "square" (optional)
+  - columns: {Number}
+  - extend_height: {Boolean} Card height extends to available container space. Default: false (optional)
+  - wrapper_class: {String} Wrapper class for card (optional)
+  - placeholder_image: {String} Placeholder image when collection is empty (optional)
+
+  Usage:
+  {% render 'card-collection' %}
+{% endcomment %}
+
+{%- assign ratio = 1 -%}
+{%- assign card_collection_url = _base_collection_url | append: card_collection.slug -%}
+
+{%- if card_collection.image and media_aspect_ratio == 'portrait' -%}
+  {%- assign ratio = 0.8 -%}
+{%- else -%}
+  {%- if card_collection.image and media_aspect_ratio == 'adapt' -%}
+    {% comment %} This should be relative to the image, but since we don't have that then... {% endcomment %}
+    {%- assign ratio = 1 -%}
+  {%- endif -%}
+{%- endif -%}
+{%- if ratio == 0 or ratio == null -%}
+  {%- assign ratio = 1 -%}
+{%- endif -%}
+
+{%- assign card_color_scheme = 'background-1' -%}
+{%- assign card_style = settings.card_style -%}
+{%- wrapper_class == null or wrapper_class == 'none' -%}
+  {% comment %} {%- assign card_color_scheme = 'background-1' -%} {% endcomment %}
+  {%- assign card_style = settings.collection_card_style -%}
+{%- endif -%}
+
+<div class="card-wrapper animate-arrow {% if wrapper_class and wrapper_class != 'none' %}{{ wrapper_class }}{% else %}collection-card-wrapper{% endif %}">
+  <div
+    class="
+      card
+      card--{{ card_style }}
+      {% if card_collection.image %} card--media{% else %} card--text{% endif %}
+      {% if card_style == 'card' %} color-{{ card_color_scheme }} gradient{% endif %}
+      {% if extend_height %} card--extend-height{% endif %}
+      {% if card_collection.image == nil and card_style == 'card' %} ratio{% endif %}
+    "
+    style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+  >
+    <div
+      class="card__inner {% if card_style == 'standard' %}color-{{ card_color_scheme }} gradient{% endif %}{% if card_collection.image or card_style == 'standard' %} ratio{% endif %}"
+      style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
+    >
+      {%- if card_collection.image -%}
+        <div class="card__media">
+          <div class="media media--transparent media--hover-effect">
+            <img
+              src="{{ card_collection.image }}"
+              sizes="
+                (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+                (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+                calc(100vw - 3rem)
+              "
+              alt=""
+              loading="lazy"
+              class="motion-reduce"
+            >
+          </div>
+        </div>
+      {%- endif -%}
+      {%- if card_collection == blank -%}
+        <div class="card__media">
+          {%- render '_placeholder_svg_tag', name: 'image', wrapper_class: 'placeholder-svg' -%}
+        </div>
+      {%- else -%}
+        <div class="card__content">
+          <div class="card__information">
+            <h3 class="card__heading">
+              <a
+                {% if card_collection == blank %}
+                  role="link" aria-disabled="true"
+                {% else %}
+                  href="{{ card_collection_url }}"
+                {% endif %}
+                class="full-unstyled-link"
+              >
+                {%- if card_collection.name != blank -%}
+                  {{- card_collection.name | escape -}}
+                {%- else -%}
+                  {{ 'onboarding.collection_title' | t }}
+                {%- endif -%}
+                {%- if card_collection.description == blank -%}
+                  <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+                {%- endif %}
+              </a>
+            </h3>
+            {%- if card_collection.description != blank -%}
+              <p class="card__caption">
+                {{- card_collection.description | strip_html | truncatewords: 12 -}}
+                <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span>
+              </p>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+    {%- if card_collection != blank and card_style == 'card' or card_collection.image -%}
+      <div class="card__content">
+        <div class="card__information">
+          <h3 class="card__heading">
+            <a
+              {% if card_collection == blank %}
+                role="link" aria-disabled="true"
+              {% else %}
+                href="{{ card_collection_url }}"
+              {% endif %}
+              class="full-unstyled-link"
+            >
+              {%- if card_collection.name != blank -%}
+                {{- card_collection.name | escape -}}
+              {%- else -%}
+                {{ 'onboarding.collection_title' | t }}
+              {%- endif -%}
+              {%- if card_collection.image or card_collection.description == blank -%}
+                <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+              {%- endif %}
+            </a>
+          </h3>
+          {%- if card_collection.image == null and card_collection.description != blank -%}
+            <p class="card__caption">
+              {{- card_collection.description | strip_html | truncatewords: 12 -}}
+              <span class="icon-wrap">&nbsp;{% render 'icon-arrow' %}</span>
+            </p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if card_collection == blank -%}
+      <div class="card__content">
+        <div class="card__information">
+          <h3 class="card__heading card__heading--placeholder">
+            <a role="link" aria-disabled="true" class="full-unstyled-link">
+              {{ 'onboarding.collection_title' | t }}
+              <span class="icon-wrap">{% render 'icon-arrow' %}</span>
+            </a>
+          </h3>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

@@ -1,0 +1,26 @@
+{%- assign og_title = page_title | default: store.name -%}
+{%- assign og_url = canonical_url | default: _absolute_store_domain -%}
+{%- assign og_type = 'website' -%}
+{%- assign og_description = page_description | default: store.name -%}
+
+{%- if template.name == 'product' -%}
+  {% assign og_type = 'product' %}
+{%- endif -%}
+
+<meta property="og:site_name" content="{{ store.name }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description | escape }}">
+
+{%- if template.name == 'product' -%}
+  <meta property="og:price:amount" content="{{ product.price }}">
+  <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
+{%- endif -%}
+
+{%- if settings.social_twitter_link != blank -%}
+  <meta name="twitter:site" content="{{ settings.social_twitter_link | split: 'twitter.com/' | last | prepend: '@' }}">
+{%- endif -%}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">

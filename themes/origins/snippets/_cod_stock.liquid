@@ -1,0 +1,38 @@
+{% if stock_items_left == nil and total_stock_items != nil  %}
+  {%  assign stock_items_left = total_stock_items %}
+ {% endif %}
+ 
+ {%- if stock_items_left >= 0 or total_stock_items >= 0 -%}
+   {{ '_cod_stock.css' | asset_url | stylesheet_tag }}
+ 
+   <div class='stock-wrapper'>
+     <div class='stock-title-container'>
+       <span class='stock-icon'>📦</span>
+       <p class='stock-title'>
+         {{ stock_title }}:&nbsp;
+         <span id='current-stock'></span>
+       </p>
+     </div>
+     <div class='progress-bar'>
+       <div
+         id='stock-progress'
+         class='progress'
+       ></div>
+     </div>
+   </div>
+ 
+   <script>
+     let stockLeft = {{ stock_items_left }}
+     const totalInStock = {{ total_stock_items }}
+   </script>
+ 
+   {{ '_cod_stock.js' | asset_url | script_tag_deferred }}
+ {%- else %}
+   <p>
+     ERROR: Please set the required properties for the stock: &nbsp;
+     <code>stock_items_left</code>
+     |
+     <code>total_stock_items</code>
+   </p>
+ {% endif %}
+ 
