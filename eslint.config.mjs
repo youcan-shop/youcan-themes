@@ -10,6 +10,8 @@ const config = [
   {
     rules: {
       ...prettier.rules,
+      semi: "error",
+      "no-unused-vars": "warn",
     },
   },
 ];
