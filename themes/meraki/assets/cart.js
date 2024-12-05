@@ -39,15 +39,18 @@ async function fetchCoupons() {
     const discountText = document.querySelector('.discount-text');
     const couponApplied = document.querySelector('.coupon-applied');
     const totalPrice = document.querySelector('.item-total-price');
+    let couponType
 
     if (totalPrice) {
       totalPrice.innerText = coupons.total ? `${coupons.total} ${currencyCode}` : '';
     }
 
     if (coupons.coupon && coupons.discountedPrice) {
-      couponApplied.innerHTML = `<span>${CART_PAGE_CONTENT.coupon}: '${coupons.coupon.code}'  [${coupons.coupon.value}%] </span>
+      couponType = coupons.coupon.type === 1 ? '%' : ` ${currencyCode}`;
+
+      couponApplied.innerHTML = `<span>${CART_PAGE_CONTENT.coupon}: '${coupons.coupon.code}'  [${coupons.coupon.value}${couponType}] </span>
                                  <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>`;
-      discount.innerText = coupons.discountedPrice + ' ' + currencyCode;
+      discount.innerText = `- ${coupons.discountedPrice} ${currencyCode}`;
 
       const removeCouponElement = document.getElementById("remove-coupon");
       if (removeCouponElement) {
