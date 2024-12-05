@@ -47,7 +47,7 @@
         {%- for block in section.blocks -%}
           {%- case block.type %}
             {%- when 'logo' %}
-              <div class='logo'>
+              <div class='logo' {{ block.youcan_attributes }}>
                 <a href='/' aria-label='home'>
                   <img
                     src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-white-logo.webp' | asset_url }} {%- endif -%}'
@@ -57,7 +57,7 @@
                 </a>
               </div>
             {%- when 'menu' %}
-              <div
+              <div {{ block.youcan_attributes }}
                 class='menu'
                 style='
                   --background-color: {{ block.settings.navbar_menu_background_color.hex }};
@@ -86,7 +86,7 @@
                 </ul>
               </div>
             {%- when 'search_and_cart' %}
-              <div class='corner'>
+              <div class='corner' {{ block.youcan_attributes }}>
                 <button
                   class='search'
                   onclick='openSearch()'
