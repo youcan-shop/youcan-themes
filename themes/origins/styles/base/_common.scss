@@ -1,0 +1,72 @@
+// BUTTON
+button, .yc-btn {
+  padding: 12px 25px;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  border-radius: var(--radius-md);
+  &.primary {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+  }
+  &.secondary {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-gray-300);
+  }
+  &.outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-gray-300);
+  }
+  &.destructive {
+    background-color: var(--color-error-500);
+    color: var(--color-secondary);
+  }
+  &.link, &.ghost {
+    background-color: transparent;
+  }
+  &.icon {
+    padding: 12px;
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-gray-300);
+  }
+  &.with-icon {
+    padding: 12px 20px;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  &:hover:is(.primary, .destructive, .loading, .with-icon) {
+    opacity: 0.8;
+  }
+  &:hover:is(.secondary, .outline, .ghost, .icon) {
+    background-color: var(--color-gray-50);
+  }
+  &:hover:is(.link) {
+    text-decoration: underline;
+  }
+}
+
+// INPUT
+select,
+textarea,
+input:not([type=checkbox]):not([type=radio]) {
+  padding: 12px 15px;
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  width: -webkit-fill-available;
+  box-shadow: var(--shadow-dark-sm);
+  &:focus {
+    box-shadow: var(--shadow-dark-focus-sm);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

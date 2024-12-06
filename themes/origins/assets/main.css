@@ -1,29 +1,124 @@
-:root {
-  --yc-primary: #b83375;
-  --yc-neutral: #333333;
-  --yc-white: #ffffff;
+*{
+  margin:0;
+  padding:0;
+  line-height:150%;
+  font-family:var(--font-family);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  font-weight: normal;
+html{
+  scroll-behavior:smooth;
 }
 
-body {
-  min-height: 100vh;
-  color: var(--yc-neutral);
-  background: var(--yc-white);
-  transition: color 0.5s, background-color 0.5s;
-  line-height: 1.6;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body{
+  background-color:var(--color-secondary);
+  color:var(--color-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+  font-weight:normal;
+}
+
+a,
+button{
+  -webkit-text-decoration:none;
+  text-decoration:none;
+  font-size:var(--text-md);
+  cursor:pointer;
+  border:none;
+  outline:none;
+  color:var(--color-primary);
+  transition:var(--transition-duration);
+}
+
+select,
+textarea,
+input:not([type=checkbox]):not([type=radio]){
+  border:none;
+  outline:none;
+}
+
+ul[role=list],
+ol[role=list]{
+  list-style:none;
+}
+
+button, .yc-btn{
+  padding:12px 25px;
+  display:flex;
+  align-items:center;
+  gap:var(--gap-md);
+  border-radius:var(--radius-md);
+}
+button.primary, .yc-btn.primary{
+  background-color:var(--color-primary);
+  color:var(--color-secondary);
+}
+button.secondary, .yc-btn.secondary{
+  background-color:transparent;
+  color:var(--color-primary);
+  border:1px solid var(--color-gray-300);
+}
+button.outline, .yc-btn.outline{
+  background-color:transparent;
+  color:var(--color-primary);
+  border:1px solid var(--color-gray-300);
+}
+button.destructive, .yc-btn.destructive{
+  background-color:var(--color-error-500);
+  color:var(--color-secondary);
+}
+button.link, button.ghost, .yc-btn.link, .yc-btn.ghost{
+  background-color:transparent;
+}
+button.icon, .yc-btn.icon{
+  padding:12px;
+  background-color:transparent;
+  color:var(--color-primary);
+  border:1px solid var(--color-gray-300);
+}
+button.with-icon, .yc-btn.with-icon{
+  padding:12px 20px;
+  background-color:var(--color-primary);
+  color:var(--color-secondary);
+}
+button:disabled, .yc-btn:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+button.primary:hover, button.destructive:hover, button.loading:hover, button.with-icon:hover, .yc-btn.primary:hover, .yc-btn.destructive:hover, .yc-btn.loading:hover, .yc-btn.with-icon:hover{
+  opacity:0.8;
+}
+button.secondary:hover, button.outline:hover, button.ghost:hover, button.icon:hover, .yc-btn.secondary:hover, .yc-btn.outline:hover, .yc-btn.ghost:hover, .yc-btn.icon:hover{
+  background-color:var(--color-gray-50);
+}
+button.link:hover, .yc-btn.link:hover{
+  -webkit-text-decoration:underline;
+  text-decoration:underline;
+}
+
+select,
+textarea,
+input:not([type=checkbox]):not([type=radio]){
+  padding:12px 15px;
+  background-color:var(--color-secondary);
+  color:var(--color-primary);
+  border-radius:var(--radius-md);
+  width:-webkit-fill-available;
+  box-shadow:var(--shadow-dark-sm);
+}
+select:focus,
+textarea:focus,
+input:not([type=checkbox]):not([type=radio]):focus{
+  box-shadow:var(--shadow-dark-focus-sm);
+}
+select:disabled,
+textarea:disabled,
+input:not([type=checkbox]):not([type=radio]):disabled{
+  opacity:0.6;
+  cursor:not-allowed;
 }
