@@ -3,8 +3,7 @@ yc-header {
   align-items: center;
   justify-content: space-between;
   padding: 1em 10%;
-  background-color: var(--color-secondary);
-  border-bottom: 1px solid var(--color-gray-50);
+  background-color: var(--header-bg-color);
   // LOGO
   .logo {
     img {
@@ -17,6 +16,9 @@ yc-header {
     display: flex;
     align-items: center;
     gap: var(--gap-xl);
+    li a {
+      color: var(--header-text-color);
+    }
   }
   // ACTIONS
   .actions {
@@ -26,6 +28,7 @@ yc-header {
     .cart-btn {
       gap: 1.5em;
       position: relative;
+      color: var(--header-text-color);
       .total-amount {
         font-size: var(--text-xs);
         font-weight: 550;
@@ -43,8 +46,8 @@ yc-header {
         padding: 5px 8px;
         font-size: 10px;
         clip-path: circle();
-        color: var(--color-secondary);
-        background-color: var(--color-primary);
+        color: var(--header-bg-color);
+        background-color: var(--header-text-color);
         top: -8px;
         left: -8px;
       }
@@ -58,5 +61,14 @@ yc-header {
         }
       }
     }
+    .search-btn {
+      color: var(--header-text-color);
+    }
+  }
+  &[data-bottom-border="true"] {
+    border-bottom: 1px solid var(--header-border-color);
+  }
+  &[data-sticky="true"] {
+    // TODO: ...
   }
 }
