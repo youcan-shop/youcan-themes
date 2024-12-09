@@ -1,0 +1,62 @@
+yc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1em 10%;
+  background-color: var(--color-secondary);
+  border-bottom: 1px solid var(--color-gray-50);
+  // LOGO
+  .logo {
+    img {
+      width: 60px;
+      object-fit: cover;
+    }
+  }
+  // LINKS
+  .links {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xl);
+  }
+  // ACTIONS
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-lg);
+    .cart-btn {
+      gap: 1.5em;
+      position: relative;
+      .total-amount {
+        font-size: var(--text-xs);
+        font-weight: 550;
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: 1px;
+        background-color: var(--color-gray-300);
+        left: 40px;
+      }
+      .total-items {
+        position: absolute;
+        padding: 5px 8px;
+        font-size: 10px;
+        clip-path: circle();
+        color: var(--color-secondary);
+        background-color: var(--color-primary);
+        top: -8px;
+        left: -8px;
+      }
+      &:dir(rtl) {
+        &::before {
+          right: 40px;
+        }
+        .total-items {
+          left: initial;
+          right: -8px;
+        }
+      }
+    }
+  }
+}
