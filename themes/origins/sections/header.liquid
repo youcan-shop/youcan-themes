@@ -1,7 +1,16 @@
 {{ 'layout-header.css' | asset_url | stylesheet_tag }}
 {{ 'layout-header.js' | asset_url | script_tag_deferred }}
 
-<yc-header>
+{% style %}
+  :root {
+    --header-height: 300px;
+    --header-bg-color: var(--color-secondary);
+    --header-text-color: var(--color-primary);
+    --header-border-color: var(--color-gray-50);
+  }
+{% endstyle %}
+
+<yc-header data-bottom-border="true" data-sticky="false">
   <ul role="list" class="links">
     <li><a href="#">Home</a></li>
     <li><a href="#">Man</a></li>
