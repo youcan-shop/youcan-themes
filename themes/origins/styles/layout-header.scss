@@ -1,18 +1,17 @@
 yc-header {
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: space-between;
+  grid-template-columns: repeat(3, 1fr);
   padding: 1em 10%;
   height: var(--header-height);
   background-color: var(--header-bg-color);
-  // LOGO
   .logo {
+    text-align: center;
     img {
       width: 60px;
       object-fit: cover;
     }
   }
-  // LINKS
   .links {
     display: flex;
     align-items: center;
@@ -21,10 +20,10 @@ yc-header {
       color: var(--header-text-color);
     }
   }
-  // ACTIONS
   .actions {
     display: flex;
     align-items: center;
+    justify-content: end;
     gap: var(--gap-lg);
     .cart-btn {
       gap: 1.5em;
@@ -40,7 +39,7 @@ yc-header {
         height: 100%;
         width: 1px;
         background-color: var(--color-gray-300);
-        left: 40px;
+        inset-inline-start: 40px;
       }
       .total-items {
         position: absolute;
@@ -49,17 +48,8 @@ yc-header {
         clip-path: circle();
         color: var(--header-bg-color);
         background-color: var(--header-text-color);
-        top: -8px;
-        left: -8px;
-      }
-      &:dir(rtl) {
-        &::before {
-          right: 40px;
-        }
-        .total-items {
-          left: initial;
-          right: -8px;
-        }
+        inset-block-start: -8px;
+        inset-inline-start: -8px;
       }
     }
     .search-btn {

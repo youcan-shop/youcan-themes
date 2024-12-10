@@ -1,10 +1,13 @@
 yc-header{
-  display:flex;
+  display:grid;
   align-items:center;
-  justify-content:space-between;
+  grid-template-columns:repeat(3, 1fr);
   padding:1em 10%;
   height:var(--header-height);
   background-color:var(--header-bg-color);
+}
+yc-header .logo{
+  text-align:center;
 }
 yc-header .logo img{
   width:60px;
@@ -22,6 +25,7 @@ yc-header .links li a{
 yc-header .actions{
   display:flex;
   align-items:center;
+  justify-content:end;
   gap:var(--gap-lg);
 }
 yc-header .actions .cart-btn{
@@ -39,7 +43,7 @@ yc-header .actions .cart-btn::before{
   height:100%;
   width:1px;
   background-color:var(--color-gray-300);
-  left:40px;
+  inset-inline-start:40px;
 }
 yc-header .actions .cart-btn .total-items{
   position:absolute;
@@ -48,16 +52,8 @@ yc-header .actions .cart-btn .total-items{
   clip-path:circle();
   color:var(--header-bg-color);
   background-color:var(--header-text-color);
-  top:-8px;
-  left:-8px;
-}
-[dir="rtl"] yc-header .actions .cart-btn::before{
-  right:40px;
-}
-[dir="rtl"] yc-header .actions .cart-btn .total-items{
-  left:auto;
-  left:initial;
-  right:-8px;
+  inset-block-start:-8px;
+  inset-inline-start:-8px;
 }
 yc-header .actions .search-btn{
   color:var(--header-text-color);
