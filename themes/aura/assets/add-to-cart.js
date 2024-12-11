@@ -151,6 +151,9 @@ function cartTemplate(item) {
         ${imageUrl && `<img src="${imageUrl}" alt="${item.productVariant.product.name}" />`}
         <div class="item-details">
           <p class="product-name">${item.productVariant.product.name}</p>
+          <div class="variants">
+            ${variationsCheck}
+          </div>
           <div class="product-price">
           ${
             item.productVariant.compare_at_price ?
