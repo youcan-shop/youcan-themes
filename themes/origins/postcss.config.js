@@ -5,7 +5,9 @@ export default {
   plugins: [
     postcssPresetEnv({
       'nesting-rules': true,
-      features: {},
+      features: {
+        'logical-properties-and-values': false
+      },
     }),
     postcssDiscardComments({
       removeAll: true,
