@@ -27,6 +27,7 @@ yc-header {
     gap: var(--gap-lg);
     .cart-btn {
       gap: 1.5em;
+      width: max-content;
       position: relative;
       color: var(--header-text-color);
       .total-amount {
@@ -54,6 +55,38 @@ yc-header {
     }
     .search-btn {
       color: var(--header-text-color);
+      .icon {
+        display: none;
+      }
+    }
+    .search-bar {
+      position: relative;
+      transition: var(--transition-duration);
+      input {
+        width: 250px;
+        padding-inline-start: 40px;
+        transition: var(--transition-duration);
+      }
+      .icon {
+        top: 28%;
+        inset-inline-start: 12px;
+        color: var(--gray-500);
+        position: absolute;
+      }
+      &[data-hidden$="true"] {
+        visibility: hidden;
+        opacity: 0;
+        input,
+        .icon {
+          width: 0px;
+        }
+        & ~ .search-btn .icon:first-child {
+          display: block;
+        }
+      }
+      &[data-hidden$="false"] ~ .search-btn .icon:last-child {
+        display: block;
+      }
     }
   }
   &[data-bottom-border="true"] {
