@@ -1,3 +1,5 @@
+@import "mixins/breakpoints";
+
 :root {
   --drawer-width: 500px;
 }
@@ -42,15 +44,19 @@ yc-drawer {
       visibility: visible;
     }
   }
-}
 
-@media (min-width: 1180px) {
-  yc-drawer#menu {
+  &#menu {
     display: none;
   }
 }
 
-@media (max-width: 766px) {
+@include breakpoint("lg") {
+  yc-drawer#menu {
+    display: initial;
+  }
+}
+
+@include breakpoint("md") {
   :root {
     --drawer-width: 85%;
   }
