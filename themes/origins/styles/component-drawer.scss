@@ -32,7 +32,7 @@ yc-drawer {
 
   &[data-hidden$="false"] {
     &[data-direction$="rtl"] .drawer-box {
-      inset-inline-start: var(--drawer-width);
+      inset-inline-start: calc(100% - var(--drawer-width));
     }
     .drawer-box {
       inset-inline-start: 0%;
@@ -44,8 +44,20 @@ yc-drawer {
   }
 }
 
+@media (min-width: 1180px) {
+  yc-drawer#menu {
+    display: none;
+  }
+}
+
 @media (max-width: 766px) {
   :root {
     --drawer-width: 85%;
+  }
+  yc-drawer#cart {
+    .cart-btn .total-amount,
+    .cart-btn::before {
+      display: none;
+    }
   }
 }

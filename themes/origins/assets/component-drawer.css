@@ -33,8 +33,8 @@ yc-drawer[data-direction$=rtl] .drawer-box{
   border-radius:var(--radius-md) 0 0 var(--radius-md);
 }
 yc-drawer[data-hidden$=false][data-direction$=rtl] .drawer-box{
-  inset-inline-start:500px;
-  inset-inline-start:var(--drawer-width);
+  inset-inline-start:calc(100% - 500px);
+  inset-inline-start:calc(100% - var(--drawer-width));
 }
 yc-drawer[data-hidden$=false] .drawer-box{
   inset-inline-start:0%;
@@ -44,8 +44,17 @@ yc-drawer[data-hidden$=false] .drawer-overlay{
   visibility:visible;
 }
 
+@media (min-width: 1180px){
+  yc-drawer#menu{
+    display:none;
+  }
+}
 @media (max-width: 766px){
   :root{
     --drawer-width:85%;
+  }
+  yc-drawer#cart .cart-btn .total-amount,
+  yc-drawer#cart .cart-btn::before{
+    display:none;
   }
 }
