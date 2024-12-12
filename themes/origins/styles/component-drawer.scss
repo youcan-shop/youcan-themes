@@ -1,6 +1,7 @@
 @import "mixins/breakpoints";
 
 :root {
+  --float: 1em;
   --drawer-width: 500px;
 }
 yc-drawer {
@@ -8,12 +9,12 @@ yc-drawer {
     position: fixed;
     z-index: 100;
     inset: 0;
+    margin: 0.5em;
     width: var(--drawer-width);
-    height: 100%;
-    inset-inline-start: calc(var(--drawer-width) * -1);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    inset-inline-start: calc(var(--drawer-width) * -1 - var(--float));
+    border-radius: var(--radius-md);
     background-color: var(--color-secondary);
-    transition: var(--transition-duration);
+    transition: var(--transition-duration-normal);
   }
   .drawer-overlay {
     position: fixed;
@@ -25,16 +26,15 @@ yc-drawer {
     visibility: hidden;
     backdrop-filter: var(--modal-blur);
     background-color: var(--modal-background);
-    transition: var(--transition-duration);
+    transition: var(--transition-duration-normal);
   }
   &[data-direction$="rtl"] .drawer-box {
     inset-inline-start: 100%;
-    border-radius: var(--radius-md) 0 0 var(--radius-md);
   }
 
   &[data-hidden$="false"] {
     &[data-direction$="rtl"] .drawer-box {
-      inset-inline-start: calc(100% - var(--drawer-width));
+      inset-inline-start: calc(100% - var(--drawer-width) - var(--float));
     }
     .drawer-box {
       inset-inline-start: 0%;

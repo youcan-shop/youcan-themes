@@ -1,4 +1,5 @@
 :root{
+  --float:1em;
   --drawer-width:500px;
 }
 
@@ -6,14 +7,14 @@ yc-drawer .drawer-box{
   position:fixed;
   z-index:100;
   inset:0;
+  margin:0.5em;
   width:500px;
   width:var(--drawer-width);
-  height:100%;
-  inset-inline-start:calc(500px * -1);
-  inset-inline-start:calc(var(--drawer-width) * -1);
-  border-radius:0 var(--radius-md) var(--radius-md) 0;
+  inset-inline-start:calc(500px * -1 - 1em);
+  inset-inline-start:calc(var(--drawer-width) * -1 - var(--float));
+  border-radius:var(--radius-md);
   background-color:var(--color-secondary);
-  transition:var(--transition-duration);
+  transition:var(--transition-duration-normal);
 }
 yc-drawer .drawer-overlay{
   position:fixed;
@@ -26,15 +27,14 @@ yc-drawer .drawer-overlay{
   -webkit-backdrop-filter:var(--modal-blur);
           backdrop-filter:var(--modal-blur);
   background-color:var(--modal-background);
-  transition:var(--transition-duration);
+  transition:var(--transition-duration-normal);
 }
 yc-drawer[data-direction$=rtl] .drawer-box{
   inset-inline-start:100%;
-  border-radius:var(--radius-md) 0 0 var(--radius-md);
 }
 yc-drawer[data-hidden$=false][data-direction$=rtl] .drawer-box{
-  inset-inline-start:calc(100% - 500px);
-  inset-inline-start:calc(100% - var(--drawer-width));
+  inset-inline-start:calc(100% - 500px - 1em);
+  inset-inline-start:calc(100% - var(--drawer-width) - var(--float));
 }
 yc-drawer[data-hidden$=false] .drawer-box{
   inset-inline-start:0%;
