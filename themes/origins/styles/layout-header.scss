@@ -1,3 +1,5 @@
+@import "mixins/breakpoints";
+
 yc-header {
   display: grid;
   align-items: center;
@@ -61,11 +63,10 @@ yc-header {
     }
     .search-bar {
       position: relative;
-      transition: var(--transition-duration);
       input {
         width: 250px;
         padding-inline-start: 40px;
-        transition: var(--transition-duration);
+        transition: var(--transition-duration-slow);
       }
       .icon {
         inset-block-start: 28%;
@@ -94,5 +95,21 @@ yc-header {
   }
   &[data-sticky="true"] {
     // TODO: ...
+  }
+}
+
+@include breakpoint("lg") {
+  yc-header {
+    .links,
+    .actions .search-bar,
+    .actions .search-btn {
+      display: none;
+    }
+  }
+}
+
+@include breakpoint("md") {
+  yc-header {
+    padding: 1em;
   }
 }

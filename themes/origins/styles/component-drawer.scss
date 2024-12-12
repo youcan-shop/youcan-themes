@@ -1,0 +1,69 @@
+@import "mixins/breakpoints";
+
+:root {
+  --offset: 1em;
+  --drawer-width: 500px;
+}
+yc-drawer {
+  .drawer-box {
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    margin: 0.5em;
+    width: var(--drawer-width);
+    inset-inline-start: calc(var(--drawer-width) * -1 - var(--offset));
+    border-radius: var(--radius-md);
+    background-color: var(--color-secondary);
+    transition: var(--transition-duration-normal);
+  }
+  .drawer-overlay {
+    position: fixed;
+    z-index: 99;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    backdrop-filter: var(--modal-blur);
+    background-color: var(--modal-background);
+    transition: var(--transition-duration-normal);
+  }
+  &[data-direction$="rtl"] .drawer-box {
+    inset-inline-start: 100%;
+  }
+
+  &[data-hidden$="false"] {
+    &[data-direction$="rtl"] .drawer-box {
+      inset-inline-start: calc(100% - var(--drawer-width) - var(--offset));
+    }
+    .drawer-box {
+      inset-inline-start: 0%;
+    }
+    .drawer-overlay {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  &#menu {
+    display: none;
+  }
+}
+
+@include breakpoint("lg") {
+  yc-drawer#menu {
+    display: initial;
+  }
+}
+
+@include breakpoint("md") {
+  :root {
+    --drawer-width: 85%;
+  }
+  yc-drawer#cart {
+    .cart-btn .total-amount,
+    .cart-btn::before {
+      display: none;
+    }
+  }
+}

@@ -1,3 +1,5 @@
+{{ 'component-drawer.css' | asset_url | stylesheet_tag }}
+{{ 'component-drawer.js' | asset_url | script_tag_deferred }}
 {{ 'layout-header.css' | asset_url | stylesheet_tag }}
 {{ 'layout-header.js' | asset_url | script_tag_deferred }}
 
@@ -11,6 +13,7 @@
 {% endstyle %}
 
 <yc-header data-bottom-border="true" data-sticky="false">
+  {% render 'header-menu-drawer' %}
   <ul role="list" class="links">
     <li><a href="#">Home</a></li>
     <li><a href="#">Man</a></li>
@@ -31,11 +34,7 @@
       {% render 'yc-icon', name: 'search' %}
       {% render 'yc-icon', name: 'x-mark' %}
     </button>
-    <button class="cart-btn icon" aria-label="cart">
-      <span class="total-items">2</span>
-      {% render 'yc-icon', name: 'cart' %}
-      <span class="total-amount">0 MAD</span>
-    </button>
+    {% render 'header-cart-drawer' %}
   </div>
 </yc-header>
 
