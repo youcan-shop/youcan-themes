@@ -51,7 +51,7 @@ async function addToCart(snippetId) {
   }
 }
 
-function attachRemoveItemListeners() {
+async function attachRemoveItemListeners() {
   document.querySelectorAll('.remove-item-btn').forEach((btn) =>
     btn.addEventListener('click', async (event) => {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
@@ -80,7 +80,7 @@ async function removeCartItem(cartItemId, productVariantId) {
     notify(error.message, 'error');
   } finally {
     hideSpinner(spinner);
-    updateCartDrawer();
+    await updateCartDrawer();
   }
 }
 
@@ -227,7 +227,7 @@ async function updateCartDrawer() {
       cartDrawerContent.appendChild(products);
 
       // Attach event listeners to the newly added remove buttons
-      attachRemoveItemListeners();
+      await attachRemoveItemListeners();
 
     } else {
       const p = document.createElement('p');
