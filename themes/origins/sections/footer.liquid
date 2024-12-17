@@ -14,12 +14,16 @@
     <div class="content">
       <div class="store-brand">
         <a href="#">
-          <img
-            src="{{ section.settings.footer_logo.src | default: 'default-logo.webp' | asset_url }}"
-            alt="{{ store.name }}"
-            height="60"
-            width="60"
-          >
+          {% if section.settings.footer_logo.src %}
+            <img
+              src="{{ section.settings.footer_logo.src  }}"
+              alt="{{ store.name }}"
+              height="60"
+              width="60"
+            >
+          {% else %}
+            <span class="brand-name">{{ store.name }}</span>
+          {% endif %}
         </a>
       </div>
       <div class="links-box">
