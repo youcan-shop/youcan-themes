@@ -119,8 +119,18 @@
       }
 
       .discount-price {
+        display: inline-flex;
+        gap: 4px;
         font-size: 15px;
         font-weight: 500;
+
+        &::before {
+          content: "-";
+        }
+      }
+
+      [dir='rtl'] & .discount-price {
+        flex-direction: row-reverse;
       }
 
       .coupon-applied {
@@ -298,8 +308,8 @@
     .close-btn {
       button {
         position: absolute;
-        left: 0;
-        top: 0;
+        inset-block-start: 0;
+        inset-inline-end: 0;
         margin: 10px;
       }
     }

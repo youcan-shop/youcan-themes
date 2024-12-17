@@ -4,7 +4,7 @@ const CartService = {
     try {
       return await youcanjs.cart.fetch();
     } catch (e) {
-      throw new Error('Error fetching cart: ' + e.message);
+      throw new Error(e.message);
     }
   },
   async applyCoupon(coupon) {
@@ -12,7 +12,7 @@ const CartService = {
       await youcanjs.checkout.applyCoupon(coupon);
       return this.fetchCart();
     } catch (e) {
-      throw new Error('Error applying coupon: ' + e.message);
+      throw new Error(e.message);
     }
   },
   async removeCoupons() {
@@ -20,7 +20,7 @@ const CartService = {
       await youcanjs.checkout.removeCoupons();
       return this.fetchCart();
     } catch (e) {
-      throw new Error('Error removing coupon: ' + e.message);
+      throw new Error(e.message);
     }
   },
   async updateItemQuantity(cartItemId, productVariantId, quantity) {
@@ -28,7 +28,7 @@ const CartService = {
       const updatedCart = await youcanjs.cart.updateItem({ cartItemId, productVariantId, quantity });
       return updatedCart;
     } catch (e) {
-      throw new Error('Error updating item quantity: ' + e.message);
+      throw new Error(e.message);
     }
   },
   async removeItem(cartItemId, productVariantId) {
@@ -36,7 +36,7 @@ const CartService = {
       await youcanjs.cart.removeItem({ cartItemId, productVariantId });
       return this.fetchCart();
     } catch (e) {
-      throw new Error('Error removing item: ' + e.message);
+      throw new Error(e.message);
     }
   }
 };
@@ -71,11 +71,20 @@ const CartUI = {
   updateCoupon(coupon, discount) {
     const discountText = document.querySelector('.discount-text');
     const couponsEnabled = document.querySelector('.coupon-applied');
+    let couponType
 
     if (couponsEnabled) {
       if (coupon && discount) {
+        const percentageDiscount = `${coupon.value}%`;
+        const fixedDiscount = formatCurrency(coupon.value, currencyCode, customerLocale);
+        couponType = coupon.type === 1 ? percentageDiscount : fixedDiscount;
+
         couponsEnabled.innerHTML = `
-          <span>Coupon '${coupon.code}' [${coupon.value}%]</span>
+          <div>
+            <span>${CART_PAGE_CONTENT.coupon}</span>
+            <span>'${coupon.code}'</span>
+            <span>[${couponType}]</span>
+          </div>
           <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>
         `;
         document.querySelector('.discount-price').innerText = formatCurrency(discount, currencyCode, customerLocale);
