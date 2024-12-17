@@ -1,42 +1,52 @@
 {{ 'layout-footer.css' | asset_url | stylesheet_tag }}
 
 {% assign currentYear = default: 'now' | date: '%Y' %}
+{% style %}
+  footer {
+    --footer-text-color: {{ section.settings.footer_text_color.hex }};
+    --footer-top-border-color: {{ section.settings.top_border_color.hex }};
+    --footer-bg-color: {{ section.settings.footer_background_color.hex}};
+  }
+{% endstyle %}
 
-<div class="content">
-  <div class="store-brand">
-    <a href="#">
-      <img
-        src="{{ section.settings.footer_logo.src | default: 'default-logo.webp' | asset_url }}"
-        alt="{{ store.name }}"
-        height="60"
-        width="60"
-      >
-    </a>
-  </div>
-  <div class="links-box">
-    {%- for linklist in link-lists -%}
-      {%- if linklist.links | count > 0  and linklist != main-link-list -%}
-        <div class="navigation">
-          <p>{{ linklist.title }}</p>
-          <div class="links">
-            {%- for item in linklist.links -%}
-              <a href="{{ item.url }}">{{ item.title }}</a>
-            {%- endfor -%}
-          </div>
-        </div>
-      {%- endif -%}
-    {%- endfor -%}
-  </div>
-</div>
-<div class="copyright">
-  {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: '%', currentYear }}
-</div>
+{% if section.settings.toggle_footer == true %}
+  <footer>
+    <div class="content">
+      <div class="store-brand">
+        <a href="#">
+          <img
+            src="{{ section.settings.footer_logo.src | default: 'default-logo.webp' | asset_url }}"
+            alt="{{ store.name }}"
+            height="60"
+            width="60"
+          >
+        </a>
+      </div>
+      <div class="links-box">
+        {%- for linklist in link-lists -%}
+          {%- if linklist.links | count > 0  and linklist != main-link-list -%}
+            <div class="navigation">
+              <p>{{ linklist.title }}</p>
+              <div class="links">
+                {%- for item in linklist.links -%}
+                  <a href="{{ item.url }}">{{ item.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <div class="copyright">
+      {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: '%', currentYear }}
+    </div>
+  </footer>
+{% endif %}
 
 {% schema %}
 {
   "label": "Footer",
   "limit": 1,
-  "tag": "footer",
   "settings": [
     {
       "type": "paragraph",
