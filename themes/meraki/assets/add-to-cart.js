@@ -4,7 +4,6 @@ async function addToCart(snippetId) {
   const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
   const inventory = parseInt(parentSection.querySelector(`#_inventory`)?.value) || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
-  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
 
   if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
@@ -18,22 +17,16 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
   }
 
-  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + quantity) > inventory) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
-  }
-
   try {
     requestAnimationFrame(() => {
       load('#loading__cart');
-    })
+    });
 
     const response = await youcanjs.cart.addItem({
       productVariantId: variantId,
       attachedImage: uploadedImageLink,
       quantity,
     });
-
-    await trackVariantQuantityOnCart(variantId);
 
     if (response.error) throw new Error(response.error);
 
@@ -58,7 +51,7 @@ async function addToCart(snippetId) {
   }
 }
 
-function attachRemoveItemListeners() {
+async function attachRemoveItemListeners() {
   document.querySelectorAll('.remove-item-btn').forEach((btn) =>
     btn.addEventListener('click', async (event) => {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
@@ -84,12 +77,11 @@ async function removeCartItem(cartItemId, productVariantId) {
       productVariantId,
     });
 
-    await trackVariantQuantityOnCart(productVariantId);
   } catch (error) {
     notify(error.message, 'error');
   } finally {
     hideSpinner(spinner);
-    updateCartDrawer();
+    await updateCartDrawer();
   }
 }
 
@@ -113,7 +105,7 @@ function cartTemplate(item) {
         <div class="item-details">
           <p class="product-name">${item.productVariant.product.name}</p>
           <div class="variants">
-          ${CART_DRAWER_TRANSLATION.quantityVariant}:${item.quantity} &nbsp;${variationsCheck}
+          ${CART_DRAWER_TRANSLATION.quantityVariant}:&nbsp;${item.quantity} &nbsp;${variationsCheck}
           </div>
           <div class="product-price">
             ${
@@ -296,22 +288,13 @@ function preventCartDrawerOpening(templateName) {
   window.location.reload();
 }
 
-async function directAddToCart(event, productId, inventory, isTrackingInventory) {
+async function directAddToCart(event, productId) {
   event.preventDefault();
-
-  await trackVariantQuantityOnCart(productId);
-  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
-  const isTrackingInventoryAvailable = Boolean(isTrackingInventory) &&  Number.isFinite(inventory);
-  const newQuantity = 1;
-
-  if (isTrackingInventoryAvailable && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
-  }
 
   try {
     const response = await youcanjs.cart.addItem({
       productVariantId: productId,
-      quantity: newQuantity
+      quantity: 1
     });
 
     if (response.error) throw new Error(response.error);
