@@ -87,7 +87,7 @@ const CartUI = {
       }
     }
   },
-  updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal, inventory) {
+  updateCartItem(cartItemId, productVariantId, quantity, itemSubtotal) {
     const itemRow = document.getElementById(cartItemId);
     const [input, totalPrice] = itemRow.querySelectorAll(`input[id="${productVariantId}"], .total-price`);
     const decrease = input.previousElementSibling;
@@ -98,20 +98,19 @@ const CartUI = {
       decrease,
       cartItemId,
       productVariantId,
-      quantity,
-      inventory
+      quantity
     );
 
     input.value = quantity;
     totalPrice.innerHTML = formatCurrency(itemSubtotal, currencyCode, customerLocale);
   },
-  setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity, inventory) {
+  setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity) {
     decrease
     .querySelector('button')
-    .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}', '${inventory}')`);
+    .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) - 1}')`);
     increase
       .querySelector('button')
-      .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}', '${inventory}')`);
+      .setAttribute('onclick', `updateQuantity('${cartItemId}', '${productVariantId}', '${Number(quantity) + 1}')`);
   },
   updateCartBadge(count) {
     const [cartItemsBadge, cartItemCount] = document.querySelectorAll('#cart-items-badge, #cart-items-count');
@@ -138,17 +137,8 @@ const CartUI = {
 };
 
 // Events
-async function updateQuantity(cartItemId, productVariantId, quantity, inventory) {
-  let [parsedQuantity, parsedInventory] = [Number(quantity), Number(inventory)];
-
-  if (parsedQuantity < 1) {
-    // TODO: A better UX would be to prompt the seller to remove the item from cart
-    return;
-  }
-
-  if (Number.isFinite(parsedInventory) && parsedQuantity > parsedInventory) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
-  }
+async function updateQuantity(cartItemId, productVariantId, quantity) {
+  let parsedQuantity = Number(quantity);
 
   load(`#loading__${cartItemId}`);
   try {
@@ -156,7 +146,7 @@ async function updateQuantity(cartItemId, productVariantId, quantity, inventory)
     const cartItem = updatedCart.items.find(item => item.id === cartItemId);
     const itemSubtotal = cartItem.price * cartItem.quantity;
 
-    CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal, inventory);
+    CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal);
     CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
   } catch (e) {
     notify(e.message, 'error');
