@@ -1,5 +1,7 @@
 {{ 'layout-footer.css' | asset_url | stylesheet_tag }}
 
+{% assign currentYear = default: 'now' | date: '%Y' %}
+
 <div class="content">
   <div class="store-brand">
     <a href="#">
@@ -26,7 +28,9 @@
     {%- endfor -%}
   </div>
 </div>
-<div class="copyright">Powered by YouCan</div>
+<div class="copyright">
+  {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: '%', currentYear }}
+</div>
 
 {% schema %}
 {
