@@ -4,7 +4,6 @@ async function addToCart(snippetId) {
   const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
   const inventory = parseInt(parentSection.querySelector(`#_inventory`)?.value) || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
-  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
 
   if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
@@ -18,22 +17,16 @@ async function addToCart(snippetId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.empty_inventory, 'error');
   }
 
-  if (Number.isFinite(inventory) && ((variantQuantityInCart ?? 0) + quantity) > inventory) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
-  }
-
   try {
     requestAnimationFrame(() => {
       load('#loading__cart');
-    })
+    });
 
     const response = await youcanjs.cart.addItem({
       productVariantId: variantId,
       attachedImage: uploadedImageLink,
       quantity,
     });
-
-    await trackVariantQuantityOnCart(variantId);
 
     if (response.error) throw new Error(response.error);
 
@@ -58,7 +51,7 @@ async function addToCart(snippetId) {
   }
 }
 
-function attachRemoveItemListeners() {
+async function attachRemoveItemListeners() {
   document.querySelectorAll('.remove-item-btn').forEach((btn) =>
     btn.addEventListener('click', async (event) => {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
@@ -83,19 +76,18 @@ async function removeCartItem(cartItemId, productVariantId) {
       cartItemId,
       productVariantId,
     });
-
-    await trackVariantQuantityOnCart(productVariantId);
   } catch (error) {
     notify(error.message, 'error');
   } finally {
     hideSpinner(spinner);
-    updateCartDrawer();
+    await updateCartDrawer();
   }
 }
 
 async function updateCartItem(cartItemId, productVariantId, quantity) {
   const footerSpinner = document.querySelector('.footer-spinner');
   const cartQuantityBtns = document.querySelectorAll('.cart-quantity-btn');
+  const input = document.querySelector(`#quantity-${cartItemId}`);
 
   showSpinner(footerSpinner);
 
@@ -108,7 +100,8 @@ async function updateCartItem(cartItemId, productVariantId, quantity) {
       quantity,
     });
     await updateCartDrawer();
-    await trackVariantQuantityOnCart(productVariantId);
+
+    input.value = quantity;
   } catch (error) {
     notify(error.message, 'error');
   } finally {
@@ -117,14 +110,7 @@ async function updateCartItem(cartItemId, productVariantId, quantity) {
   }
 }
 
-function increaseCartQuantity(cartItemId, productVariantId, inventory) {
-  const input = document.querySelector(`#quantity-${cartItemId}`);
-  const currentQuantity = parseInt(input.value);
-
-  if (inventory && (currentQuantity >= inventory)) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
-  }
-
+function increaseCartQuantity(cartItemId, productVariantId) {
   updateCartQuantity(cartItemId, productVariantId, 1);
 }
 
@@ -139,7 +125,6 @@ function updateCartQuantity(cartItemId, productVariantId, delta) {
     const newQuantity = parseInt(input.value) + delta;
 
     if (newQuantity >= 1) {
-      input.value = newQuantity;
       updateCartItem(cartItemId, productVariantId, newQuantity);
     }
   }
@@ -166,6 +151,9 @@ function cartTemplate(item) {
         ${imageUrl && `<img src="${imageUrl}" alt="${item.productVariant.product.name}" />`}
         <div class="item-details">
           <p class="product-name">${item.productVariant.product.name}</p>
+          <div class="variants">
+            ${variationsCheck}
+          </div>
           <div class="product-price">
           ${
             item.productVariant.compare_at_price ?
@@ -183,9 +171,9 @@ function cartTemplate(item) {
           </button>
           <div class="spinner" data-spinner-id="${item.id}" style="display: none;"></div>
           <div class="quantity-control">
-            <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}', '${variantInventory}')">+</button>
+            <button class="increase-btn cart-quantity-btn" onclick="increaseCartQuantity('${item.id}', '${item.productVariant.id}')">+</button>
             <input type="number" id="quantity-${item.id}" value="${item.quantity}" min="1" onchange="updateCartItem('${item.id}', '${item.productVariant.id}', this.value)" oninput="restrictInputValue(event.target, ${variantInventory})">
-            <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}', '${variantInventory}')">-</button>
+            <button class="decrease-btn cart-quantity-btn" onclick="decreaseCartQuantity('${item.id}', '${item.productVariant.id}')">-</button>
           </div>
         </div>
       </div>
@@ -239,7 +227,7 @@ async function updateCartDrawer() {
       cartDrawerContent.appendChild(products);
 
       // Attach event listeners to the newly added remove buttons
-      attachRemoveItemListeners();
+      await attachRemoveItemListeners();
 
     } else {
       const p = document.createElement('p');
@@ -355,21 +343,11 @@ function preventCartDrawerOpening(templateName) {
   window.location.reload();
 }
 
-async function directAddToCart(productId, inventory, isTrackingInventory) {
-  await trackVariantQuantityOnCart(productId);
-
-  const variantQuantityInCart = parseInt(document.querySelector('#cartQuantity')?.value) || null;
-  const isTrackingInventoryAvailable = Boolean(isTrackingInventory) && Number.isFinite(inventory);
-  const newQuantity = 1;
-
-  if (isTrackingInventoryAvailable && ((variantQuantityInCart ?? 0) + newQuantity) > inventory) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.max_quantity + inventory, 'warning');
-  }
-
+async function directAddToCart(productId) {
   try {
     const response = await youcanjs.cart.addItem({
       productVariantId: productId,
-      quantity: newQuantity
+      quantity: 1
     });
 
     if (response.error) throw new Error(response.error);
