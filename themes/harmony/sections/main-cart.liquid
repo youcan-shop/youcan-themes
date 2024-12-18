@@ -43,8 +43,7 @@
                   <div class="product-title">{{ item.name }}</div>
                   <div class="product-variant">
                     <div class="hidden">
-                      <span class='product-price'> {{ item.price }}</span>
-                      <span class='product-currency'></span>
+                      <span class='product-price'> {{ item.price | money }}</span>
                     </div>
                     {% for variant in item.variations %}
                       {% if variant[0] != 'default' or variant[1] != 'default' %}
@@ -65,13 +64,12 @@
                     <span class='spinner h-7 w-7'></span>
                   </div>
                   <div class="total-price-wrapper">
-                    <span class="total-price">{{ item.price | times: item.quantity }}</span>
-                    <span class="product-currency"></span>
+                    <span class="total-price">{{ item.price | times: item.quantity | money }}</span>
                   </div>
                 </div>
                 <div class="cell adjust-space close-btn">
-                  <button 
-                    onclick="removeItem('{{ item.id }}', '{{ item.product_variant_id }}')" 
+                  <button
+                    onclick="removeItem('{{ item.id }}', '{{ item.product_variant_id }}')"
                     class='yc-btn-close'
                     aria-label="close cart"
                   >
@@ -115,18 +113,21 @@
             </form>
           {% endif %}
           {%- if cart and cart.items %}
+          <template id="summary-item-template">
+            <div class='flex justify-between text-sm box'>
+              <div class='item-name capitalize'></div>
+              <div>
+                <span class="item-price"></span>
+              </div>
+            </div>
+          </template>
           <div class="price-wrapper">
             <div class='flex flex-col gap-3 price-box'>
               {%- for item in cart.items %}
                 <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
-                  <div class='capitalize'>{{ item.name }}</div>
-                  <div class="hidden">
-                    {%- render 'quantity-input', item: item -%}
-                    <div class='product-price'>{{ item.price }}</div>
-                  </div>
+                  <div class='item-name capitalize'>{{ item.name }}</div>
                   <div>
-                    <span class="item-price">{{ item.price | times: item.quantity }}</span>
-                    <span class="product-currency"></span>
+                    <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
                   </div>
                 </div>
               {%- endfor %}
