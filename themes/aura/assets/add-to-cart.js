@@ -199,7 +199,7 @@ async function updateCartDrawer() {
 
     const headerContainer = `
       <div class="header">
-        <h2 class="cart">${CART_DRAWER_TRANSLATION.cartName}<span> ${cartData.count} ${CART_DRAWER_TRANSLATION.itemsName}</span></h2>
+        <h2 class="cart">${CART_DRAWER_TRANSLATION.cartName}<span> ${cartData.count} ${CART_DRAWER_TRANSLATION.itemsCount}</span></h2>
       </div>
     `;
 
