@@ -365,8 +365,9 @@ function formatCurrency(amount, currencySymbol, locale = 'en-US') {
   const usePrecision = shouldUsePrecision(amount);
   const formatter = new Intl.NumberFormat(locale, {
     style: 'decimal',
+    roundingMode: 'floor',
     maximumFractionDigits: usePrecision ? 2 : 0,
-    roundingMode: 'floor'
+    minimumFractionDigits: usePrecision ? 2 : 0,
   });
 
   const formattedValue = formatter.format(amount);
