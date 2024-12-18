@@ -135,8 +135,18 @@
       }
 
       .discount-price {
+        display: inline-flex;
+        gap: 4px;
         font-size: 15px;
         font-weight: 500;
+
+        &::before {
+          content: "-";
+        }
+      }
+
+      [dir='rtl'] & .discount-price {
+        flex-direction: row-reverse;
       }
 
       .coupon-applied {
@@ -155,7 +165,7 @@
         cursor: pointer;
         font-size: 18px;
       }
-      
+
       @media screen and (max-width: 768px) {
         width: 100%;
         margin: 32px auto;
