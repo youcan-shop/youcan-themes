@@ -69,7 +69,7 @@ const CartUI = {
     }
   },
   updateCoupon(coupon, discount) {
-    const discountText = document.querySelector('.discount-text');
+    const discountWrapper = document.querySelector('.discount-wrapper');
     const couponsEnabled = document.querySelector('.coupon-applied');
     let couponType
 
@@ -80,7 +80,7 @@ const CartUI = {
         couponType = coupon.type === 1 ? percentageDiscount : fixedDiscount;
 
         couponsEnabled.innerHTML = `
-          <div>
+          <div class="flex gap-1">
             <span>${CART_PAGE_CONTENT.coupon}</span>
             <span>'${coupon.code}'</span>
             <span>[${couponType}]</span>
@@ -88,11 +88,11 @@ const CartUI = {
           <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>
         `;
         document.querySelector('.discount-price').innerText = formatCurrency(discount, currencyCode, customerLocale);
-        discountText.classList.remove('hidden');
+        discountWrapper.classList.remove('hidden');
       } else {
         couponsEnabled.innerHTML = '';
         document.querySelector('.discount-price').innerText = '';
-        discountText.classList.add('hidden');
+        discountWrapper.classList.add('hidden');
       }
     }
   },
