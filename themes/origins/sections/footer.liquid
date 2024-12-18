@@ -25,6 +25,21 @@
             <span class="brand-name">{{ store.name }}</span>
           {% endif %}
         </a>
+        {% if section.settings.show_social_links %}
+          <ul role="list" class="social-links">
+            {% for link in store.brand.social_links %}
+              {% assign platform = link[0] %}
+              {% assign url = link[1] %}
+              {% if url != null %}
+                <li>
+                  <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
+                    {% render 'social-icon', name: platform %}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
       </div>
       <div class="links-box">
         {%- for linklist in link-lists -%}
@@ -40,6 +55,22 @@
           {%- endif -%}
         {%- endfor -%}
       </div>
+
+      {% if section.settings.show_social_links %}
+        <ul role="list" class="social-links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
+            {% if url != null %}
+              <li>
+                <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
+                  {% render 'social-icon', name: platform %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
     </div>
     <div class="copyright">
       {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: '%', currentYear }}
@@ -64,8 +95,8 @@
     },
     {
       "type": "checkbox",
-      "id": "social_media_exist",
-      "label": "Social media",
+      "id": "show_social_links",
+      "label": "Social Links",
       "default": true
     },
     {
