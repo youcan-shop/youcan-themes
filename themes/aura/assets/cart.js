@@ -25,6 +25,10 @@ const CartService = {
   },
   async updateItemQuantity(cartItemId, productVariantId, quantity) {
     try {
+      if (quantity < 1) {
+        return;
+      }
+
       const updatedCart = await youcanjs.cart.updateItem({ cartItemId, productVariantId, quantity });
       return updatedCart;
     } catch (e) {
@@ -123,7 +127,7 @@ const CartUI = {
   },
   updateCartBadge(count) {
     const [cartItemsBadge, cartItemCount] = document.querySelectorAll('#cart-items-badge, #cart-items-count');
-    cartItemCount.innerText = `(${count} ${CART_DRAWER_TRANSLATION.itemsName})`
+    cartItemCount.innerText = `(${count} ${CART_DRAWER_TRANSLATION.itemsCount})`
 
     if (cartItemsBadge) {
       cartItemsBadge.textContent = count;
@@ -152,11 +156,14 @@ async function updateQuantity(cartItemId, productVariantId, quantity) {
   load(`#loading__${cartItemId}`);
   try {
     const updatedCart = await CartService.updateItemQuantity(cartItemId, productVariantId, parsedQuantity);
-    const cartItem = updatedCart.items.find(item => item.id === cartItemId);
-    const itemSubtotal = cartItem.price * cartItem.quantity;
 
-    CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal);
-    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+    if (updatedCart) {
+      const cartItem = updatedCart.items.find(item => item.id === cartItemId);
+      const itemSubtotal = cartItem.price * cartItem.quantity;
+
+      CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal);
+      CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+    }
   } catch (e) {
     notify(e.message, 'error');
   } finally {
