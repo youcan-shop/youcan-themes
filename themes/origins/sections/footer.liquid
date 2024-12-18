@@ -1,48 +1,100 @@
 {{ 'layout-footer.css' | asset_url | stylesheet_tag }}
 
-<div class="content">
-  <div class="store-brand">
-    <a href="#">
-      <img src="{{ 'default-logo.webp' | asset_url }}" alt="my store" height="60" width="60">
-    </a>
-  </div>
-  <div class="links-box">
-    <div class="navigation">
-      <p>Terms and conditions</p>
-      <div class="links">
-        <a href="/">Terms &amp; Conditions</a>
-        <a href="/">Return Policy</a>
-        <a href="/">Privacy Policy</a>
+{% assign currentYear = default: 'now' | date: '%Y' %}
+{% style %}
+  footer {
+    --footer-text-color: {{ section.settings.footer_text_color.hex }};
+    --footer-border-color: {{ section.settings.vertical_border_color.hex }};
+    --footer-bg-color: {{ section.settings.footer_background_color.hex}};
+  }
+{% endstyle %}
+
+{% if section.settings.toggle_footer == true %}
+  <footer>
+    <div class="content">
+      <div class="store-brand">
+        <a href="#">
+          {% if section.settings.footer_logo.src %}
+            <img
+              src="{{ section.settings.footer_logo.src  }}"
+              alt="{{ store.name }}"
+              height="60"
+              width="60"
+            >
+          {% else %}
+            <span class="brand-name">{{ store.name }}</span>
+          {% endif %}
+        </a>
+      </div>
+      <div class="links-box">
+        {%- for linklist in link-lists -%}
+          {%- if linklist.links | count > 0  and linklist != main-link-list -%}
+            <div class="navigation">
+              <p>{{ linklist.title }}</p>
+              <div class="links">
+                {%- for item in linklist.links -%}
+                  <a href="{{ item.url }}">{{ item.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
       </div>
     </div>
-    <div class="navigation">
-      <p>About the store</p>
-      <div class="links">
-        <a href="/">About us</a>
-        <a href="/">How to pay</a>
-        <a href="/">Shipping &amp; Delivery</a>
-      </div>
+    <div class="copyright">
+      {{ section.settings.copyright | default: 'footer.copyright.title' | t | replace: '%', currentYear }}
     </div>
-    <div class="navigation">
-      <p>Contact</p>
-      <div class="links">
-        <a href="/">Contact us</a>
-        <a href="/">FAQ</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="copyright">Powered by YouCan</div>
+  </footer>
+{% endif %}
 
 {% schema %}
 {
   "label": "Footer",
-  "tag": "footer",
-  "max_blocks": 3,
+  "limit": 1,
   "settings": [
     {
-      "type": "header",
-      "content": "Color"
+      "type": "paragraph",
+      "content": "The Footer links can be managed from your [menu settings](https:\/\/seller-area.youcan.shop\/admin\/menus)"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_footer",
+      "label": "Show footer",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "social_media_exist",
+      "label": "Social media",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "color",
+      "id": "footer_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "footer_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "vertical_border_color",
+      "label": "Border color",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "richtext",
+      "id": "copyright",
+      "label": "Copyright text"
     }
   ]
 }
