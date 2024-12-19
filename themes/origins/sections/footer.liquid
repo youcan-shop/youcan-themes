@@ -9,6 +9,15 @@
   }
 {% endstyle %}
 
+{% assign has_social_links = false %}
+
+{% for platform in store.brand.social_links %}
+  {% if platform[1] != null %}
+    {% assign has_social_links = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
 {% if section.settings.toggle_footer == true %}
   <footer>
     <div class="content">
@@ -28,19 +37,21 @@
           {% endif %}
         </a>
         {% if section.settings.show_social_links %}
-          <ul role="list" class="social-links">
-            {% for link in store.brand.social_links %}
-              {% assign platform = link[0] %}
-              {% assign url = link[1] %}
-              {% if url != null %}
-                <li>
-                  <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
-                    {% render 'social-icon', name: platform %}
-                  </a>
-                </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+          {% if has_social_links != false %}
+            <ul role="list" class="social-links">
+              {% for link in store.brand.social_links %}
+                {% assign platform = link[0] %}
+                {% assign url = link[1] %}
+                {% if url != null %}
+                  <li>
+                    <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
+                      {% render 'social-icon', name: platform %}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
         {% endif %}
       </div>
       <div class="links-box">
@@ -58,19 +69,21 @@
         {%- endfor -%}
       </div>
       {% if section.settings.show_social_links %}
-        <ul role="list" class="social-links">
-          {% for link in store.brand.social_links %}
-            {% assign platform = link[0] %}
-            {% assign url = link[1] %}
-            {% if url != null %}
-              <li>
-                <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
-                  {% render 'social-icon', name: platform %}
-                </a>
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
+        {% if has_social_links != false %}
+          <ul role="list" class="social-links">
+            {% for link in store.brand.social_links %}
+              {% assign platform = link[0] %}
+              {% assign url = link[1] %}
+              {% if url != null %}
+                <li>
+                  <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
+                    {% render 'social-icon', name: platform %}
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
       {% endif %}
     </div>
     <div class="copyright">
