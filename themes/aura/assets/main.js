@@ -125,6 +125,7 @@ function notify(msg, type = 'success', timeout = 3000) {
 
   alertWrapper.timeoutId = setTimeout(() => {
     alertWrapper.classList.remove('show');
+    alertWrapper.classList.remove(type);
   }, timeout);
 }
 
