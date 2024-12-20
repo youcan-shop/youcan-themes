@@ -1,0 +1,55 @@
+{% style %}
+  .announcement-bar {
+    --announcement-barforeground-color: {{ section.settings.announcement_bar_text_color.red }}, {{ section.settings.announcement_bar_text_color.green }}, {{ section.settings.announcement_bar_text_color.blue }};
+    --announcement-barbackground-color:{{ section.settings.announcement_bar_background_color.red }}, {{ section.settings.announcement_bar_background_color.green }}, {{ section.settings.announcement_bar_background_color.blue }};
+  }
+{% endstyle %}
+
+{{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
+
+<div class="announcement-bar" role="region" aria-label="Announcement bar">
+  <div class="announcement">
+    {% if section.settings.url == null %}
+      <p class="message">
+        {{ section.settings.content | default: 'Welcome to our store!' }}
+      </p>
+    {% else %}
+      <a href="{{ section.settings.content }}" class="message">
+        {{ section.settings.content | default: 'Welcome to our store!' }}
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Announcement bar",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement-message",
+      "label": "Text",
+      "placeholder": "Welcome to our store!"
+    },
+    {
+      "type": "url",
+      "id": "announcement-link",
+      "label": "Link",
+      "placeholder": "Paste a link"
+    },
+    {
+      "type": "color",
+      "id": "announcement_bar_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "announcement_bar_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    }
+  ]
+}
+{% endschema %}
