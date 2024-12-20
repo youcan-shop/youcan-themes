@@ -1,11 +1,5 @@
 class Slider extends HTMLElement {
-  static observedAttributes = [
-    "autoplay",
-    "interval",
-    "responsive",
-    "breakpoint-md",
-    "breakpoint-lg",
-  ];
+  static observedAttributes = ["autoplay", "interval", "responsive"];
 
   constructor() {
     super();
