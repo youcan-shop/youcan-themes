@@ -1,32 +1,40 @@
-{% style %}
-  #youcan-section--announcement-bar {
-    --announcement-bar-foreground-color: {{ section.settings.announcement_bar_text_color.red }}, {{ section.settings.announcement_bar_text_color.green }}, {{ section.settings.announcement_bar_text_color.blue }};
-    --announcement-bar-background-color:{{ section.settings.announcement_bar_background_color.red }}, {{ section.settings.announcement_bar_background_color.green }}, {{ section.settings.announcement_bar_background_color.blue }};
-    --announcement_bar_order: {% if section.settings.position == 'above' %} 0 {% else %} 1 {% endif %};
+{% if section.settings.is_visible %}
+  {% style %}
+    #youcan-section--announcement-bar {
+      --announcement-bar-foreground-color: {{ section.settings.announcement_bar_text_color.red }}, {{ section.settings.announcement_bar_text_color.green }}, {{ section.settings.announcement_bar_text_color.blue }};
+      --announcement-bar-background-color:{{ section.settings.announcement_bar_background_color.red }}, {{ section.settings.announcement_bar_background_color.green }}, {{ section.settings.announcement_bar_background_color.blue }};
+      --announcement_bar_order: {% if section.settings.position == 'above' %} 0 {% else %} 1 {% endif %};
 
-    order: var(--announcement_bar_order);
-  }
-{% endstyle %}
+      order: var(--announcement_bar_order);
+    }
+  {% endstyle %}
 
-{{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
+  {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
 
-<div class="announcement">
-  {% if section.settings.announcement_link != '' %}
-    <a href="{{ section.settings.announcement_link }}" class="link">
-  {% endif %}
-  <p class="message">
-    {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
-  </p>
-  {% if section.settings.announcement_link != '' %}
-    </a>
-  {% endif %}
-</div>
+  <div class="announcement">
+    {% if section.settings.announcement_link != '' %}
+      <a href="{{ section.settings.announcement_link }}" class="link">
+    {% endif %}
+    <p class="message">
+      {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
+    </p>
+    {% if section.settings.announcement_link != '' %}
+      </a>
+    {% endif %}
+  </div>
+{% endif %}
 
 {% schema %}
 {
   "label": "Announcement bar",
   "limit": 1,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "is_visible",
+      "label": "Show bar",
+      "default": true
+    },
     {
       "type": "select",
       "id": "position",
