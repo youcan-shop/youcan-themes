@@ -1,11 +1,12 @@
 yc-slider{
-  display:grid;
+  display:flex;
+  gap:var(--gap-lg);
   position:relative;
-  margin:2em 10%;
-  height:calc(var(--slider-height) * 1px);
+  flex-direction:column;
 }
 yc-slider .slider-area{
   display:flex;
+  height:calc(var(--slider-height) * 1px);
 }
 yc-slider .slider-area .slider-box{
   touch-action:pan-y;
@@ -19,34 +20,106 @@ yc-slider .slider-area .slider-box{
 yc-slider .slider-area .slider-box .slider-inner{
   height:100%;
   display:flex;
+  align-items:center;
   gap:calc(var(--slider-gap) * 1px);
   transition:transform cubic-bezier(0.25, 1, 0.5, 1);
   transition-duration:calc(var(--slider-speed) * 1ms);
 }
-yc-slider .slider-area .slider-box .slider-inner .slider-item{
-  -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item{
+  height:100%;
+  position:relative;
+  pointer-events:none;
   min-width:calc(100% / var(--slider-per-page) - var(--slider-gap) * 1px + var(--slider-gap) / var(--slider-per-page) * 1px);
 }
-yc-slider .slider-arrows{
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item > :where(img, div){
+  height:100%;
+  -o-object-fit:cover;
+     object-fit:cover;
+}
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content{
+  inset:0;
+  padding:1.5em;
   position:absolute;
+  pointer-events:auto;
   display:flex;
-  align-items:center;
   gap:var(--gap-lg);
+  text-align:center;
+  align-items:center;
+  flex-direction:column;
+  justify-content:center;
+  width:calc(100% - 3em);
+  height:calc(100% - 3em);
+  -webkit-backdrop-filter:var(--modal-blur);
+          backdrop-filter:var(--modal-blur);
+  background-color:var(--modal-background);
+}
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .content{
+  text-wrap:balance;
+  font-size:var(--text-3xl);
+  text-transform:capitalize;
+  color:var(--color-secondary);
+}
+@media (max-width: 768px){
+  yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .content{
+    font-size:var(--text-2xl);
+  }
+}
+yc-slider yc-slider-arrows{
+  display:flex;
+}
+yc-slider yc-slider-arrows .slider-arrows{
+  display:flex;
+  gap:var(--gap-lg);
+  align-items:center;
+}
+yc-slider yc-slider-arrows .slider-arrows button{
+  padding:8px 15px;
+  border-radius:var(--radius-sm);
+  background-color:var(--color-secondary);
+}
+[dir="rtl"] yc-slider yc-slider-arrows .slider-arrows button .icon{
+  rotate:180deg;
+}
+yc-slider yc-slider-arrows[data-position$=center]{
+  justify-content:center;
+}
+yc-slider yc-slider-arrows[data-position$=left]{
+  justify-content:start;
+}
+yc-slider yc-slider-arrows[data-position$=right]{
+  justify-content:end;
+}
+yc-slider[data-radius$=true] yc-slider-item > :where(img, div, yc-slider-content){
+  border-radius:var(--radius-lg);
+}
+yc-slider[data-type$=full] yc-slider-arrows{
   position:absolute;
-  inset-block-end:1em;
-  translate:-50% -50%;
+  inset-block-end:1.5em;
+}
+yc-slider[data-type$=full] yc-slider-arrows[data-position$=center]{
+  translate:-50% 0;
   inset-inline-start:50%;
 }
-yc-slider .slider-arrows button{
-  padding:8px 15px;
-  color:var(--color-primary);
-  background-color:var(--color-secondary);
-  border-radius:var(--radius-sm);
+yc-slider[data-type$=full] yc-slider-arrows[data-position$=left]{
+  inset-inline-start:1.5em;
+}
+yc-slider[data-type$=full] yc-slider-arrows[data-position$=right]{
+  inset-inline-end:1.5em;
+}
+yc-slider[data-type$=full] yc-slider-arrows button{
+  border:none;
   box-shadow:inset rgba(50, 50, 93, 0.1) 0px 2px 5px -1px, rgba(0, 0, 0, 0.2) 0px 1px 3px -1px;
 }
-yc-slider .slider-arrows button:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
+@media (max-width: 1024px){
+  yc-slider[responsive] yc-slider-item{
+    --slider-per-page:var(--slider-breakpoint-lg);
+  }
+}
+@media (max-width: 768px){
+  yc-slider[responsive] yc-slider-item{
+    --slider-per-page:var(--slider-breakpoint-md);
+  }
+}
+yc-slider:not([arrows]) yc-slider-arrows{
+  display:none;
 }

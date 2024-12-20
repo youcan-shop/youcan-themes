@@ -1,10 +1,13 @@
+@import "mixins/breakpoints";
+
 yc-slider {
-  display: grid;
+  display: flex;
+  gap: var(--gap-lg);
   position: relative;
-  margin: 2em 10%;
-  height: calc(var(--slider-height) * 1px);
+  flex-direction: column;
   .slider-area {
     display: flex;
+    height: calc(var(--slider-height) * 1px);
     .slider-box {
       touch-action: pan-y;
       user-select: none;
@@ -14,40 +17,114 @@ yc-slider {
       .slider-inner {
         height: 100%;
         display: flex;
+        align-items: center;
         gap: calc(var(--slider-gap) * 1px);
         transition: transform cubic-bezier(0.25, 1, 0.5, 1);
         transition-duration: calc(var(--slider-speed) * 1ms);
-        .slider-item {
-          user-select: none;
+        yc-slider-item {
+          height: 100%;
+          position: relative;
+          pointer-events: none;
           min-width: calc(
             100% / var(--slider-per-page) - (var(--slider-gap) * 1px) +
               (var(--slider-gap) / var(--slider-per-page) * 1px)
           );
+          & > :where(img, div) {
+            height: 100%;
+            object-fit: cover;
+          }
+          yc-slider-content {
+            inset: 0;
+            padding: 1.5em;
+            position: absolute;
+            pointer-events: auto;
+            display: flex;
+            gap: var(--gap-lg);
+            text-align: center;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: calc(100% - 3em);
+            height: calc(100% - 3em);
+            backdrop-filter: var(--modal-blur);
+            background-color: var(--modal-background);
+            .content {
+              text-wrap: balance;
+              font-size: var(--text-3xl);
+              text-transform: capitalize;
+              color: var(--color-secondary);
+              @include breakpoint("md") {
+                font-size: var(--text-2xl);
+              }
+            }
+          }
         }
       }
     }
   }
-  .slider-arrows {
-    position: absolute;
+  yc-slider-arrows {
     display: flex;
-    align-items: center;
-    gap: var(--gap-lg);
+    .slider-arrows {
+      display: flex;
+      gap: var(--gap-lg);
+      align-items: center;
+      button {
+        padding: 8px 15px;
+        border-radius: var(--radius-sm);
+        background-color: var(--color-secondary);
+        &:dir(rtl) .icon {
+          rotate: 180deg;
+        }
+      }
+    }
+    &[data-position$="center"] {
+      justify-content: center;
+    }
+    &[data-position$="left"] {
+      justify-content: start;
+    }
+    &[data-position$="right"] {
+      justify-content: end;
+    }
+  }
+
+  &[data-radius$="true"] {
+    yc-slider-item > :where(img, div, yc-slider-content) {
+      border-radius: var(--radius-lg);
+    }
+  }
+
+  &[data-type$="full"] yc-slider-arrows {
     position: absolute;
-    inset-block-end: 1em;
-    translate: -50% -50%;
-    inset-inline-start: 50%;
+    inset-block-end: 1.5em;
+    &[data-position$="center"] {
+      translate: -50% 0;
+      inset-inline-start: 50%;
+    }
+    &[data-position$="left"] {
+      inset-inline-start: 1.5em;
+    }
+    &[data-position$="right"] {
+      inset-inline-end: 1.5em;
+    }
     button {
-      padding: 8px 15px;
-      color: var(--color-primary);
-      background-color: var(--color-secondary);
-      border-radius: var(--radius-sm);
+      border: none;
       box-shadow:
         inset rgba(50, 50, 93, 0.1) 0px 2px 5px -1px,
         rgba(0, 0, 0, 0.2) 0px 1px 3px -1px;
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
     }
+  }
+
+  &[responsive] yc-slider-item {
+    @include breakpoint("lg") {
+      --slider-per-page: var(--slider-breakpoint-lg);
+    }
+    @include breakpoint("md") {
+      --slider-per-page: var(--slider-breakpoint-md);
+    }
+  }
+
+  &:not([arrows]) yc-slider-arrows {
+    display: none;
   }
 }
