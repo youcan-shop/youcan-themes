@@ -1,0 +1,53 @@
+{{ 'component-drawer.css' | asset_url | stylesheet_tag }}
+{{ 'component-drawer.js' | asset_url | script_tag_deferred }}
+{{ 'layout-header.css' | asset_url | stylesheet_tag }}
+{{ 'layout-header.js' | asset_url | script_tag_deferred }}
+
+{% style %}
+  :root {
+    --header-height: auto;
+    --header-bg-color: var(--color-secondary);
+    --header-text-color: var(--color-primary);
+    --header-border-color: var(--color-gray-50);
+  }
+{% endstyle %}
+
+<yc-header data-bottom-border="true" data-sticky="false">
+  {% render 'header-menu-drawer' %}
+  <ul role="list" class="links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Man</a></li>
+    <li><a href="#">Woman</a></li>
+    <li><a href="#">Kids</a></li>
+  </ul>
+  <div class="logo">
+    <a href="#">
+      <img src="{{ 'default-logo.webp' | asset_url }}" alt="my store" height="60" width="60">
+    </a>
+  </div>
+  <div class="actions">
+    <form action="/search" class="search-bar" data-hidden="true" data-search-field>
+      {% render 'yc-icon', name: 'search' %}
+      <input type="search" placeholder="Search..." name="products">
+    </form>
+    <button class="search-btn icon" aria-label="search" data-search-action>
+      {% render 'yc-icon', name: 'search' %}
+      {% render 'yc-icon', name: 'x-mark' %}
+    </button>
+    {% render 'header-cart-drawer' %}
+  </div>
+</yc-header>
+
+{% schema %}
+{
+  "label": "Header",
+  "tag": "header",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Color"
+    }
+  ]
+}
+{% endschema %}
