@@ -9,13 +9,13 @@
 
 <div class="announcement-bar" role="region" aria-label="Announcement bar">
   <div class="announcement">
-    {% if section.settings.url == null %}
-      <p class="message">
-        {{ section.settings.content | default: 'Welcome to our store!' }}
-      </p>
-    {% else %}
-      <a href="{{ section.settings.content }}" class="message">
-        {{ section.settings.content | default: 'Welcome to our store!' }}
+    {% if section.settings.announcement_link != '' %}
+      <a href="{{ section.settings.announcement_link }}" class="link">
+    {% endif %}
+    <p class="message">
+      {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
+    </p>
+    {% if section.settings.announcement_link != '' %}
       </a>
     {% endif %}
   </div>
@@ -28,13 +28,13 @@
   "settings": [
     {
       "type": "text",
-      "id": "announcement-message",
+      "id": "announcement_message",
       "label": "Text",
       "placeholder": "Welcome to our store!"
     },
     {
       "type": "url",
-      "id": "announcement-link",
+      "id": "announcement_link",
       "label": "Link",
       "placeholder": "Paste a link"
     },
