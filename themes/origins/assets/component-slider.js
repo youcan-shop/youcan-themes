@@ -1,5 +1,11 @@
 class Slider extends HTMLElement {
-  static observedAttributes = ["autoplay", "interval", "pause-on-hover"];
+  static observedAttributes = [
+    "autoplay",
+    "interval",
+    "responsive",
+    "breakpoint-md",
+    "breakpoint-lg",
+  ];
 
   constructor() {
     super();
@@ -15,39 +21,48 @@ class Slider extends HTMLElement {
     this.interval = null;
     this.isSwiping = false;
     this.isBoundaryAllowed = true;
-
-    this.TOTAL = this.slider.children.length;
-    this.GAP = this._getStyle("slider-gap", 0);
-    this.SPEED = this._getStyle("slider-speed", 600);
-    this.PER_PAGE = this._getStyle("slider-per-page", 1);
-    this.INTERVAL_DURATION =
-      parseInt(this.getAttribute("interval"), 10) || 3000;
+    this.isRTL = document.dir === "rtl";
 
     this.SWIPE_EVENTS = {
       onSwipe: ["touchmove", "mousemove"],
       startSwipe: ["touchstart", "mousedown"],
       endSwipe: ["touchend", "mouseup", "mouseleave"],
     };
+
+    this.BREAKPOINTS = {
+      default: "(min-width: 1024px)",
+      lg: "(min-width: 768px) and (max-width: 1024px)",
+      md: "(max-width: 768px)",
+    };
+
+    this.TOTAL = this.slider.children.length;
+    this.GAP = this._getStyle("slider-gap", 0);
+    this.PER_PAGE = this.breakpoints().initial();
+    this.SPEED = this._getStyle("slider-speed", 600);
+    this.INTERVAL_DURATION = parseInt(this.getAttribute("interval")) || 3000;
   }
 
   connectedCallback() {
     this._render();
   }
 
-  _getStyle(variable, default_value) {
+  _getStyle(v, default_v) {
     return (
-      parseInt(getComputedStyle(this).getPropertyValue(`--${variable}`), 10) ||
-      default_value
+      parseInt(getComputedStyle(this).getPropertyValue(`--${v}`)) || default_v
     );
   }
 
   _render() {
+    this.swipe();
+
     this.hasAttribute("auto-play") && this.autoPlay();
 
-    this.leftArrow.addEventListener("click", () => this.setIndex(-1));
-    this.rightArrow.addEventListener("click", () => this.setIndex(1));
+    this.hasAttribute("responsive") && this.breakpoints().listener();
 
-    this.swipeHandler();
+    if (this.hasAttribute("arrows")) {
+      this.leftArrow.addEventListener("click", () => this.setIndex(-1));
+      this.rightArrow.addEventListener("click", () => this.setIndex(1));
+    }
   }
 
   canGoPrevious() {
@@ -65,7 +80,7 @@ class Slider extends HTMLElement {
     }, this.INTERVAL_DURATION);
   }
 
-  swipeHandler() {
+  swipe() {
     Object.entries(this.SWIPE_EVENTS).forEach(([action, types]) => {
       types.forEach((type) => {
         this.sliderBox.addEventListener(
@@ -94,8 +109,8 @@ class Slider extends HTMLElement {
     const deltaX = this.currentX - this.startX;
 
     if (
-      (!this.canGoPrevious() && deltaX > 0) ||
-      (!this.canGoNext() && deltaX < 0)
+      (!this.canGoPrevious() && (this.isRTL ? -deltaX : deltaX) > 0) ||
+      (!this.canGoNext() && (this.isRTL ? -deltaX : deltaX) < 0)
     ) {
       this.isBoundaryAllowed = false;
       this.move(deltaX / 4);
@@ -108,9 +123,9 @@ class Slider extends HTMLElement {
   endSwipe() {
     if (!this.isSwiping) return;
 
-    const deltaX = this.currentX - this.startX;
+    const deltaX = (this.currentX - this.startX) * (this.isRTL ? -1 : 1);
     const itemWidth = this.sliderBox.offsetWidth / this.PER_PAGE;
-    const threshold = itemWidth / 4;
+    const threshold = this.PER_PAGE === 1 ? 120 : itemWidth / 3;
     const isValidSwipe = this.isBoundaryAllowed && Math.abs(deltaX) > threshold;
 
     isValidSwipe ? this.setIndex(deltaX > 0 ? -1 : 1) : this.move();
@@ -119,11 +134,57 @@ class Slider extends HTMLElement {
     this.setTransitionDuration(this.SPEED);
   }
 
+  breakpoints() {
+    const initial = () => {
+      let perPage = this._getStyle("slider-per-page");
+
+      if (this.hasAttribute("responsive")) {
+        Object.entries(this.BREAKPOINTS).forEach(([key, query]) => {
+          if (matchMedia(query).matches) {
+            perPage = this._getStyle(
+              key === "default"
+                ? "slider-per-page"
+                : `slider-breakpoint-${key}`,
+            );
+          }
+        });
+      }
+
+      return perPage;
+    };
+
+    const listener = () => {
+      Object.values(this.BREAKPOINTS).forEach((query) =>
+        matchMedia(query).addEventListener(
+          "change",
+          (e) =>
+            e.matches &&
+            this.setPerPage(
+              Object.keys(this.BREAKPOINTS).find(
+                (key) => this.BREAKPOINTS[key] === query,
+              ),
+            ),
+        ),
+      );
+    };
+
+    return { initial, listener };
+  }
+
   move(offset = 0) {
-    const translateX = `calc(-${(100 / this.PER_PAGE) * this.index}% - ${
+    const dir = this.isRTL ? "+" : "-";
+
+    const translateX = `calc(${dir}${(100 / this.PER_PAGE) * this.index}% ${dir} ${
       (this.GAP / this.PER_PAGE) * this.index
     }px + ${offset}px)`;
+
     this.slider.style.transform = `translateX(${translateX})`;
+  }
+
+  reset(new_index = this.index) {
+    this.index = new_index;
+    this.move();
+    this.setArrows();
   }
 
   setSwiping(state) {
@@ -131,9 +192,18 @@ class Slider extends HTMLElement {
   }
 
   setArrows() {
+    if (!this.hasAttribute("arrows")) return;
+
     this.rightArrow.disabled = !this.canGoNext();
     this.leftArrow.disabled = !this.canGoPrevious();
   }
+
+  setPerPage = (key) => {
+    this.PER_PAGE = this._getStyle(
+      key === "default" ? "slider-per-page" : `slider-breakpoint-${key}`,
+    );
+    this.reset(0);
+  };
 
   setTransitionDuration(duration) {
     this.slider.style.transitionDuration = `${duration}ms`;
@@ -144,8 +214,7 @@ class Slider extends HTMLElement {
     this.index = Math.max(0, Math.min(this.TOTAL - 1, this.index + direction));
 
     if (this.index !== previousIndex) {
-      this.move();
-      this.setArrows();
+      this.reset();
     }
   }
 }
