@@ -9,14 +9,8 @@
           <h2>{{ 'cart.title' | t }}</h2>
           <p class='mt-1'>
             <span id="cart-items-count">
-              {{ cart.items | size }}
+              {{ 'cart.items_count' | t }}: {{ cart.items | size }}
             </span>
-            {% if cart.items.size > 1 %}
-              {{ 'cart.items_count' | t }}
-            {% else %}
-              {{ 'cart.item_count' | t }}
-            {% endif %}
-            {{ 'cart.in_your_cart' | t }}
           </p>
         </div>
       </div>
@@ -43,8 +37,7 @@
                   <div class="product-title">{{ item.name }}</div>
                   <div class="product-variant">
                     <div class="hidden">
-                      <span class='product-price'> {{ item.price }}</span>
-                      <span class='product-currency'></span>
+                      <span class='product-price'> {{ item.price | money }}</span>
                     </div>
                     {% for variant in item.variations %}
                       {% if variant[0] != 'default' or variant[1] != 'default' %}
@@ -65,13 +58,12 @@
                     <span class='spinner h-7 w-7'></span>
                   </div>
                   <div class="total-price-wrapper">
-                    <span class="total-price">{{ item.price | times: item.quantity }}</span>
-                    <span class="product-currency"></span>
+                    <span class="total-price">{{ item.price | times: item.quantity | money }}</span>
                   </div>
                 </div>
                 <div class="cell adjust-space close-btn">
-                  <button 
-                    onclick="removeItem('{{ item.id }}', '{{ item.product_variant_id }}')" 
+                  <button
+                    onclick="removeItem('{{ item.id }}', '{{ item.product_variant_id }}')"
                     class='yc-btn-close'
                     aria-label="close cart"
                   >
@@ -115,28 +107,33 @@
             </form>
           {% endif %}
           {%- if cart and cart.items %}
+          <template id="summary-item-template">
+            <div class='flex justify-between text-sm box'>
+              <div class='item-name capitalize'></div>
+              <div>
+                <span class="item-price"></span>
+              </div>
+            </div>
+          </template>
           <div class="price-wrapper">
-            <div class='flex flex-col gap-3 price-box'>
-              {%- for item in cart.items %}
-                <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
-                  <div class='capitalize'>{{ item.name }}</div>
-                  <div class="hidden">
-                    {%- render 'quantity-input', item: item -%}
-                    <div class='product-price'>{{ item.price }}</div>
+            <div class='flex flex-col gap-3'>
+              <div class="price-box">
+                {%- for item in cart.items %}
+                  <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
+                    <div class='item-name capitalize'>{{ item.name }}</div>
+                    <div>
+                      <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
+                    </div>
                   </div>
-                  <div>
-                    <span class="item-price">{{ item.price | times: item.quantity }}</span>
-                    <span class="product-currency"></span>
-                  </div>
-                </div>
-              {%- endfor %}
+                {%- endfor %}
+              </div>
               {%- if cart and cart.available_shipping_options %}
               <div class="shipping-wrapper">
                 {%- for option in cart.available_shipping_options -%}
                   <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
                     <div class='capitalize'>{{ option.name }}</div>
                     <div>
-                      <span class="item-price">{{ option.price }}</span>
+                      <span class="item-price">{{ option.price | money }}</span>
                       <span class="product-currency"></span>
                     </div>
                   </div>
@@ -146,9 +143,11 @@
             </div>
           {%- endif %}
           <div class='border-t mt-5'>
-            <div class='flex text-sm justify-between mt-5'>
-              <span class="discount-text hidden">{{ 'cart.summary.discount' | t }}</span>
-              <span class="discount-price"></span>
+            <div class="discount-wrapper hidden">
+              <div class='flex text-sm justify-between mt-5'>
+                <span class="discount-text">{{ 'cart.summary.discount' | t }}</span>
+                <span class="discount-price"></span>
+              </div>
             </div>
             <div class='flex text-sm justify-between mt-5'>
               <span class="total">{{ 'cart.summary.total' | t }}</span>
