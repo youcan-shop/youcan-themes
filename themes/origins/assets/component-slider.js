@@ -55,7 +55,7 @@ class Slider extends HTMLElement {
   _render() {
     this.swipe();
 
-    this.hasAttribute("auto-play") && this.autoPlay();
+    this.hasAttribute("autoplay") && this.autoPlay();
 
     this.hasAttribute("responsive") && this.breakpoints().listener();
 
