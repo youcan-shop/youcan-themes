@@ -1,24 +1,25 @@
 {% style %}
-  .announcement-bar {
+  #youcan-section--announcement-bar {
     --announcement-bar-foreground-color: {{ section.settings.announcement_bar_text_color.red }}, {{ section.settings.announcement_bar_text_color.green }}, {{ section.settings.announcement_bar_text_color.blue }};
     --announcement-bar-background-color:{{ section.settings.announcement_bar_background_color.red }}, {{ section.settings.announcement_bar_background_color.green }}, {{ section.settings.announcement_bar_background_color.blue }};
+    --announcement_bar_order: {% if section.settings.position == 'above' %} 0 {% else %} 1 {% endif %};
+
+    order: var(--announcement_bar_order);
   }
 {% endstyle %}
 
 {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
 
-<div class="announcement-bar" role="region" aria-label="Announcement bar">
-  <div class="announcement">
-    {% if section.settings.announcement_link != '' %}
-      <a href="{{ section.settings.announcement_link }}" class="link">
-    {% endif %}
-    <p class="message">
-      {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
-    </p>
-    {% if section.settings.announcement_link != '' %}
-      </a>
-    {% endif %}
-  </div>
+<div class="announcement">
+  {% if section.settings.announcement_link != '' %}
+    <a href="{{ section.settings.announcement_link }}" class="link">
+  {% endif %}
+  <p class="message">
+    {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
+  </p>
+  {% if section.settings.announcement_link != '' %}
+    </a>
+  {% endif %}
 </div>
 
 {% schema %}
@@ -26,6 +27,22 @@
   "label": "Announcement bar",
   "limit": 1,
   "settings": [
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "above",
+          "label": "Above Header"
+        },
+        {
+          "value": "below",
+          "label": "Below Header"
+        }
+      ],
+      "default": "above"
+    },
     {
       "type": "text",
       "id": "announcement_message",
