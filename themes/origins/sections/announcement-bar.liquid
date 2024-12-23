@@ -1,13 +1,13 @@
 {% if section.settings.is_visible %}
+  {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
+
   {% style %}
     #youcan-section--announcement-bar {
       --announcement-bar-foreground-color: {{ section.settings.announcement_bar_text_color.red }}, {{ section.settings.announcement_bar_text_color.green }}, {{ section.settings.announcement_bar_text_color.blue }};
       --announcement-bar-background-color:{{ section.settings.announcement_bar_background_color.red }}, {{ section.settings.announcement_bar_background_color.green }}, {{ section.settings.announcement_bar_background_color.blue }};
-      --announcement_bar_order: {% if section.settings.position == 'above' %} 0 {% else %} 1 {% endif %};
+      --announcement_bar_order: {{ section.settings.position }};
     }
   {% endstyle %}
-
-  {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
 
   <div class="announcement">
     {% if section.settings.announcement_link != '' and section.settings.announcement_link != null %}
@@ -39,15 +39,15 @@
       "label": "Position",
       "options": [
         {
-          "value": "above",
+          "value": "0",
           "label": "Above Header"
         },
         {
-          "value": "below",
+          "value": "1",
           "label": "Below Header"
         }
       ],
-      "default": "above"
+      "default": "0"
     },
     {
       "type": "text",
