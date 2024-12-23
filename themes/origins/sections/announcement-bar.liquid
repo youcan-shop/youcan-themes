@@ -10,13 +10,13 @@
   {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
 
   <div class="announcement">
-    {% if section.settings.announcement_link != '' %}
+    {% if section.settings.announcement_link != '' and section.settings.announcement_link != null %}
       <a href="{{ section.settings.announcement_link }}" class="link">
     {% endif %}
     <p class="message">
       {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
     </p>
-    {% if section.settings.announcement_link != '' %}
+    {% if section.settings.announcement_link != '' and section.settings.announcement_link != null %}
       </a>
     {% endif %}
   </div>
