@@ -1,0 +1,40 @@
+<yc-slider
+  arrows
+  data-type="full"
+  style="
+    --slider-gap: 0;
+    --slider-speed: 600;
+    --slider-height: 600;
+    --slider-per-page: 1;
+  "
+>
+  <div class="slider-area">
+    <div class="slider-box" data-slider-box>
+      <div class="slider-inner" data-slider>
+        {% for item in link-lists %}
+          <yc-slider-item>
+            <img src="{{ 'default-test.webp' | asset_url }}" alt="rabi3a" height="100%" width="100%">
+            <yc-slider-content>
+              <p class="content">Our Group, entities, brands and its vision</p>
+              <a href="#" class="yc-btn with-icon">
+                Discover more
+                {% render 'yc-icon', name: 'arrow-right-up' %}
+              </a>
+            </yc-slider-content>
+          </yc-slider-item>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <yc-slider-arrows data-position="right">
+    <div class="slider-arrows">
+      <button class="icon" data-arrow="left" aria-label="previous" disabled>
+        {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+      </button>
+      <button class="icon" data-arrow="right" aria-label="next">
+        {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+      </button>
+    </div>
+  </yc-slider-arrows>
+</yc-slider>
