@@ -56,7 +56,9 @@ async function placeOrder() {
         redirectToPaymentPage();
       })
       .catch((data) => {
-        notify(data.detail, 'error');
+        if (data?.meta?.step === undefined) {
+          notify(data.detail, 'error');
+        }
       });
   } catch (e) {
     notify(e.message, 'error');
