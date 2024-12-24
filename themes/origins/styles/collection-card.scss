@@ -1,0 +1,51 @@
+@import "mixins/breakpoints";
+
+.collection-card {
+  overflow: hidden;
+  position: relative;
+  border-radius: var(--radius-md);
+
+  .collection-cover {
+    height: 400px;
+    transition: var(--transition-duration-slow);
+    @include breakpoint("xl") {
+      height: 350px;
+    }
+
+    img {
+      object-fit: cover;
+      border-radius: var(--radius-md);
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: var(--radius-md);
+      background-color: var(--modal-background);
+      transition: var(--transition-duration-normal);
+    }
+  }
+
+  .collection-name {
+    position: absolute;
+    padding: 12px 20px;
+    inset-block-end: 1em;
+    inset-inline-start: 1em;
+    color: var(--color-secondary);
+    background-color: #ffffff15;
+    border-radius: var(--radius-md);
+    backdrop-filter: var(--modal-blur);
+  }
+
+  &:hover {
+    .collection-cover {
+      scale: 1.03;
+      &::before {
+        opacity: 1;
+      }
+    }
+  }
+}
