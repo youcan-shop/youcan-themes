@@ -1,3 +1,20 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - product: {Object} Product Liquid object (optional)
+  - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+  - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
+
+  Usage:
+  {% render 'card-product', show_vendor: section.settings.show_vendor %}
+{% endcomment %}
+
+{% render 'cart-drawer-item-skeleton' %}
+{% render 'cart-item-skeleton' %}
+{% render 'single-product-skeleton' %}
+{% render 'single-product-skeleton' %}
+
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 
 {% style %}
@@ -8,7 +25,13 @@
 
 <div class="product-card {{ settings.product_card_style }}">
   <a href="#" class="img-link" aria-label="PRODUCT NAME">
-    <img src="{{ 'hoodie.webp' | asset_url }}" alt="Product Name">
+    <img
+      src="{{ 'hoodie.webp' | asset_url }}"
+      alt="Product Name"
+      {% unless lazy_load == false %}
+        loading="lazy"
+      {% endunless %}
+    >
   </a>
   <div class="info">
     <a href="#" class="link title">Sneaker</a>
