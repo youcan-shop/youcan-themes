@@ -1,12 +1,12 @@
 .product-card {
-  border-radius: var(--border-radius);
+  border-radius: var(--product-card-border-radius);
   transition: all var(--transition-duration-normal);
   position: relative;
 
   .badge {
     position: absolute;
     inset-block-start: 0.8em;
-    background-color: var(--badge-background-color);
+    background-color: var(--badge-bg-color);
     color: var(--badge-text-color);
     border-radius: 100px;
     padding: 0.2em 0.6em;
@@ -22,16 +22,16 @@
   }
 
   img {
-    height: var(--img-height);
+    height: var(--product-img-height);
     width: 100%;
     object-fit: cover;
-    border-radius: var(--border-radius);
+    border-radius: var(--product-card-border-radius);
   }
 
   .info {
     display: grid;
     gap: var(--gap-xs);
-    border-radius: var(--border-radius);
+    border-radius: var(--product-card-border-radius);
     background-color: var(--color-base-white);
     padding: 1.25em;
 
@@ -66,8 +66,8 @@
     }
   }
 
-  &.standard {
-    --img-height: 350px;
+  &[data-style$="standard"] {
+    --product-img-height: 350px;
     box-shadow: var(--shadow-dark-sm);
 
     .img-link {
@@ -76,18 +76,18 @@
 
     .img-link,
     img {
-      height: var(--img-height);
+      height: var(--product-img-height);
     }
 
     img {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
+      border-end-end-radius: 0;
+      border-end-start-radius: 0;
     }
 
     .info {
       position: static;
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
+      border-start-end-radius: 0;
+      border-start-start-radius: 0;
     }
 
     &:hover {
@@ -97,8 +97,8 @@
     }
   }
 
-  &.compact {
-    --img-height: 400px;
+  &[data-style$="compact"] {
+    --product-img-height: 400px;
 
     cursor: pointer;
 
@@ -125,7 +125,7 @@
 
     .img-link,
     img {
-      height: var(--img-height);
+      height: var(--product-img-height);
     }
 
     .info {

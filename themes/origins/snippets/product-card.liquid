@@ -12,22 +12,11 @@
 
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 
-{% style %}
-  .product-card {
-    --border-radius: {{ settings.product_card_border_radius }}px;
-    --badge-text-color: {{ settings.badge_text_color.hex }};
-    --badge-background-color: {{ settings.badge_background_color.hex }};
-  }
-{% endstyle %}
-
-<div class="product-card {{ settings.product_card_style }}">
+<div class="product-card" data-style="{{ settings.product_card_style }}">
   <a href="#" class="img-link" aria-label="PRODUCT NAME">
     <img
       src="{{ 'hoodie.webp' | asset_url }}"
       alt="Product Name"
-      {% unless lazy_load == false %}
-        loading="lazy"
-      {% endunless %}
       height="100%"
       width="100%"
     >
@@ -36,9 +25,7 @@
     <span>New</span>
   </div>
   <div class="info">
-    <a href="#" class="link title"
-      >SneakerSneakerSneakerSneakerSneakerSneakerSneakerSneakerSneakerSneakerSneakerSneaker</a
-    >
+    <a href="#" class="link title">Sneaker</a>
     <div class="price">
       <span class="current">459 MAD</span>
       <span class="compare-at">799 MAD</span>
