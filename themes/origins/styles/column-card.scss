@@ -1,0 +1,51 @@
+.column-card {
+  display: grid;
+  text-align: center;
+  gap: var(--gap-lg);
+
+  &[data-position$="left"] {
+    text-align: start;
+  }
+  &[data-position$="center"] {
+    text-align: center;
+  }
+  &[data-position$="right"] {
+    text-align: end;
+  }
+
+  .column-img {
+    img {
+      &[data-ratio$="full"] {
+        width: 100%;
+      }
+      &[data-ratio$="medium"] {
+        width: 50%;
+      }
+      &[data-ratio$="small"] {
+        width: 33%;
+      }
+
+      &[data-shape$="contain"] {
+        object-fit: contain;
+      }
+      &[data-shape$="square"] {
+        object-fit: cover;
+      }
+      &[data-shape$="circle"] {
+        clip-path: circle();
+      }
+    }
+  }
+  .column-info {
+    display: grid;
+    gap: var(--gap-sm);
+
+    .column-title {
+      font-size: var(--text-lg);
+    }
+    
+    .column-subtitle {
+      font-size: var(--text-md);
+    }
+  }
+}
