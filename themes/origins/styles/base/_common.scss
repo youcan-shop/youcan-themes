@@ -6,6 +6,7 @@ button,
   padding: 12px 25px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--gap-md);
   border-radius: var(--radius-md);
   &.primary {
@@ -64,13 +65,25 @@ button,
     color: var(--color-gray-500);
     background-color: var(--color-gray-50);
   }
+  &:hover:is(.secondary) {
+    background-color: var(--color-base-black);
+    color: var(--color-base-white);
+    border-color: var(--color-base-black);
+  }
   &:hover:is(.primary, .destructive, .loading, .with-icon) {
     opacity: 0.8;
   }
-  &:hover:is(.secondary, .outline, .ghost, .icon) {
+  &:hover:is(.outline, .ghost, .icon) {
     background-color: var(--color-gray-50);
   }
   &:hover:is(.link) {
+    text-decoration: underline;
+  }
+}
+
+// LINKS
+.link {
+  &:hover {
     text-decoration: underline;
   }
 }
