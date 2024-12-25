@@ -22,18 +22,18 @@
   <footer>
     <div class="content">
       <div class="store-brand">
-        {% if section.settings.footer_logo.src %}
-          <a href="/" aria-label="home">
+        <a href="/" aria-label="home">
+          {% if section.settings.footer_logo.src %}
             <img
-              src="{{ section.settings.footer_logo.src  }}"
+              src="{{ section.settings.footer_logo.src }}"
               alt="{{ store.name }}"
               height="60"
               width="60"
             >
-          </a>
-        {% else %}
-          <a href="/" class="brand-name">{{ store.name }}</a>
-        {% endif %}
+          {% else %}
+            {{ store.name }}
+          {% endif %}
+        </a>
         {% if section.settings.show_social_links %}
           {% if has_social_links != false %}
             <ul role="list" class="social-links">
