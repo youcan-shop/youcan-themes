@@ -30,7 +30,7 @@
 
   .info {
     display: grid;
-    gap: 3px;
+    gap: var(--gap-xs);
     border-radius: var(--border-radius);
     background-color: var(--color-base-white);
     padding: 1.25em;
@@ -46,11 +46,11 @@
     .price {
       display: flex;
       align-items: center;
-      gap: 0.5em;
+      gap: var(--gap-md);
       font-size: var(--text-md);
 
       .current {
-        font-size: 16px;
+        font-size: var(--text-lg);
         font-weight: 550;
       }
 
@@ -62,7 +62,7 @@
     }
 
     .yc-btn.secondary {
-      margin-top: 0.5em;
+      margin-block-start: 0.5em;
     }
   }
 
@@ -108,9 +108,8 @@
       width: 100%;
       height: 100%;
       border-radius: var(--radius-lg);
-      -webkit-backdrop-filter: blur(2px);
-      backdrop-filter: blur(2px);
-      background-color: #0000001a;
+      backdrop-filter: var(--overlay-blur);
+      background-color: var(--overlay-background);
       opacity: 0;
       transition: var(--transition-duration-normal);
       pointer-events: none;
@@ -131,7 +130,7 @@
 
     .info {
       position: absolute;
-      bottom: 0;
+      inset-block-end: 0;
       margin: 1em;
       padding: 1em;
       width: stretch;
