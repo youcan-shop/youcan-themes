@@ -109,13 +109,13 @@ input:not([type="checkbox"]):not([type="radio"]) {
 }
 
 // SECTION
-.section-core {
+yc-section {
   display: grid;
   gap: var(--gap-3xl);
-  padding: 0 10%;
+  padding-inline: 10%;
   padding-block-start: var(--space-top);
   padding-block-end: var(--space-bottom);
-  .section-head {
+  yc-section-head {
     display: grid;
     gap: var(--gap-md);
     &[data-position$="left"] {
@@ -127,10 +127,7 @@ input:not([type="checkbox"]):not([type="radio"]) {
     &[data-position$="center"] {
       text-align: center;
     }
-    .title {
-      font-size: var(--text-3xl);
-    }
-    .description {
+    p {
       text-wrap: balance;
       font-size: var(--text-md);
       color: var(---color-gray-500);
@@ -139,14 +136,10 @@ input:not([type="checkbox"]):not([type="radio"]) {
 }
 
 @include breakpoint("md") {
-  .section-core {
-    padding-inline-end: 1em;
-    padding-inline-start: 1em;
-    .section-head {
-      .title {
-        font-size: var(--text-2xl);
-      }
-      .description {
+  yc-section {
+    padding-inline: 1em;
+    yc-section-head {
+      p {
         font-size: var(--text-sm);
       }
     }
