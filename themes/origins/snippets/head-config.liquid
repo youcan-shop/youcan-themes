@@ -16,11 +16,36 @@
     --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
 
     /* Colors */
-    --color-primary: #121212;
-    --color-secondary: #fff;
+    --color-background:
+      {{ settings.background_color.red }},
+      {{ settings.background_color.green }},
+      {{ settings.background_color.blue }};
+    --color-foreground:
+      {{ settings.text_color.red }},
+      {{ settings.text_color.green }},
+      {{ settings.text_color.blue }};
+    --color-button:
+      {{ settings.button_background_color.red }},
+      {{ settings.button_background_color.green }},
+      {{ settings.button_background_color.blue }};
+    --color-button-text:
+      {{ settings.button_text_color.red }},
+      {{ settings.button_text_color.green }},
+      {{ settings.button_text_color.blue }};
+    --color-secondary-button:
+      {{ settings.background_color.red }},
+      {{ settings.background_color.green }},
+      {{ settings.background_color.blue }};
+    --color-secondary-button-text:
+      {{ settings.button_text_color.red }},
+      {{ settings.button_text_color.green }},
+      {{ settings.button_text_color.blue }};
 
-    --color-base-white: #fff;
-    --color-base-black: #121212;
+    --color-primary: #121212; // replace with --color-foreground
+    --color-secondary: #fff; // replace with --color-background
+
+    --color-base-white: #fff; // remove and use --color-background in all references
+    --color-base-black: #121212; // remove and use --color-foreground in all references
 
     --color-gray-50: #f3f3f3;
     --color-gray-300: #dcdcdc;
