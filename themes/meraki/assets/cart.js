@@ -223,8 +223,14 @@ document.addEventListener('click', async (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     const cart = await CartService.fetchCart();
-    CartUI.updateTotalPrice(cart.total, cart.items);
-    CartUI.updateCoupon(cart.coupon, cart.discountedPrice);
+
+    if (cart.items.length > 0) {
+      CartUI.updateTotalPrice(cart.total, cart.items);
+    }
+
+    if (cart.coupon && cart.discountedPrice) {
+      CartUI.updateCoupon(cart.coupon, cart.discountedPrice);
+    }
   } catch (e) {
     notify(e.message, 'error');
   }
