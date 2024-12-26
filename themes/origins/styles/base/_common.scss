@@ -10,30 +10,17 @@ button,
   gap: var(--gap-md);
   border-radius: var(--radius-md);
   &.primary {
-    background-color: var(--color-primary);
-    color: var(--color-secondary);
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
   }
   &.secondary {
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 1px solid var(--color-gray-300);
-  }
-  &.tertiary {
-    &.icon-only {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0.75em;
-    }
-  }
-  &.outline {
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 1px solid var(--color-gray-300);
+    background-color: var(--color-secondary-button);
+    color: rgb(var(--color-secondary-button-text));
+    border: 1px solid rgba(var(--color-secondary-button-text), 0.15);
   }
   &.destructive {
     background-color: var(--color-error-500);
-    color: var(--color-secondary);
+    color: var(--color-base-white);
   }
   &.link {
     padding: unset;
@@ -44,9 +31,9 @@ button,
   }
   &.icon {
     padding: 12px;
-    color: var(--color-primary);
+    color: rgb(var(--color-button));
     background-color: transparent;
-    border: 1px solid var(--color-gray-300);
+    border: 1px solid rgba(var(--color-secondary-button-text), 0.15);
     &[data-size$="sm"] {
       padding: 8px;
     }
@@ -54,23 +41,16 @@ button,
       padding: 13px;
     }
   }
-  &.with-icon {
-    padding: 12px 20px;
-    background-color: var(--color-primary);
-    color: var(--color-secondary);
-  }
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    color: var(--color-gray-500);
-    background-color: var(--color-gray-50);
   }
-  &:hover:is(.secondary) {
-    background-color: var(--color-base-black);
-    color: var(--color-base-white);
-    border-color: var(--color-base-black);
+  &:hover:not(:disabled):is(.secondary) {
+    background-color: rgb(var(--color-secondary-button-text));
+    color: rgb(var(--color-secondary-button));
+    border-color: rgb(var(--color-secondary-button-text));
   }
-  &:hover:is(.primary, .destructive, .loading, .with-icon) {
+  &:hover:not(:disabled):is(.primary, .destructive, .loading, .with-icon) {
     opacity: 0.8;
   }
   &:hover:is(.outline, .ghost, .icon) {
