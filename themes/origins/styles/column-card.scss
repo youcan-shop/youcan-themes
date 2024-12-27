@@ -1,0 +1,59 @@
+.column-card {
+  display: grid;
+  text-align: center;
+  gap: var(--gap-xl);
+
+  &[data-position$="left"] {
+    text-align: start;
+  }
+
+  &[data-position$="center"] {
+    text-align: center;
+  }
+
+  &[data-position$="right"] {
+    text-align: end;
+  }
+
+  .column-img {
+
+    img {
+      &[data-width$="full"] {
+        width: 100%;
+      }
+
+      &[data-width$="medium"] {
+        width: 50%;
+      }
+
+      &[data-width$="small"] {
+        width: 33%;
+      }
+
+      &[data-ratio$="square"] {
+        aspect-ratio: 1;
+        object-fit: cover;
+      }
+
+      &[data-ratio$="circle"] {
+        aspect-ratio: 1;
+        object-fit: cover;
+        clip-path: circle();
+      }
+    }
+  }
+  
+  .column-info {
+    display: grid;
+    gap: var(--gap-sm);
+
+    .column-title {
+      font-size: var(--text-lg);
+    }
+
+    .column-subtitle {
+      font-size: var(--text-md);
+      color: var(--color-gray-500);
+    }
+  }
+}
