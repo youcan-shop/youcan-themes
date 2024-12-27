@@ -1,7 +1,7 @@
 .column-card {
   display: grid;
   text-align: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
 
   &[data-position$="left"] {
     text-align: start;
@@ -15,25 +15,24 @@
 
   .column-img {
     img {
-      &[data-ratio$="full"] {
+      &[data-width$="full"] {
         width: 100%;
       }
-      &[data-ratio$="medium"] {
+      &[data-width$="medium"] {
         width: 50%;
       }
-      &[data-ratio$="small"] {
+      &[data-width$="small"] {
         width: 33%;
       }
 
-      &[data-shape$="contain"] {
-        object-fit: contain;
-      }
-      &[data-shape$="square"] {
+      &[data-ratio$="square"] {
+        aspect-ratio: 1;
         object-fit: cover;
       }
-      &[data-shape$="circle"] {
+      &[data-ratio$="circle"] {
+        aspect-ratio: 1;
+        object-fit: cover;
         clip-path: circle();
-        object-fit: cover;
       }
     }
   }
