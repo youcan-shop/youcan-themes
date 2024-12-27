@@ -6,7 +6,7 @@
       <div class="header-block">
         <div class="header-bar">
           <h2>{{ 'cart.title' | t }}</h2>
-          <span class='cart-badge'>
+          <span class='cart-badge' id="cart-items-count">
             {{ cart.items | size }}
           </span>
         </div>
@@ -42,8 +42,7 @@
                   {% endif %}
                 {% endfor %}
                 <div class="hidden">
-                  <span class='product-price'> {{ item.price }}</span>
-                  <span class='product-currency'></span>
+                  <span class='product-price'> {{ item.price | money }}</span>
                 </div>
               </div>
               <div class='quantity-x-price-container'>
@@ -53,8 +52,7 @@
                     <span class='spinner h-7 w-7'></span>
                   </div>
                   <div class="subtotal-price">
-                    <span class="total-price">{{ item.price | times: item.quantity }}</span>
-                    <span class="product-currency"></span>
+                    <span class="total-price">{{ item.price | times: item.quantity | money }}</span>
                   </div>
                 </div>
               </div>
@@ -97,17 +95,20 @@
             </form>
           {% endif %}
           {%- if cart and cart.items %}
-            <div class="price-wrapper">
+            <template id="summary-item-template">
+              <div class='summary-item'>
+                <p class='item-name capitalize'></p>
+                <div class="summary-item-price">
+                  <span class="item-price"></span>
+                </div>
+              </div>
+            </template>
+            <div class="price-box">
               {%- for item in cart.items %}
                 <div class='summary-item' id='cart-item-{{ item.id }}'>
-                  <p class='capitalize name'>{{ item.name }}</p>
-                  <div class="hidden">
-                    {%- render 'quantity-input', item: item -%}
-                    <div class='product-price'>{{ item.price }}</div>
-                  </div>
+                  <p class='item-name capitalize'>{{ item.name }}</p>
                   <div class="summary-item-price">
-                    <span class="item-price">{{ item.price | times: item.quantity }}</span>
-                    <span class="product-currency"></span>
+                    <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
                   </div>
                 </div>
               {%- endfor %}
@@ -117,7 +118,7 @@
             <div class="shipping-wrapper">
               {%- for option in cart.available_shipping_options -%}
                 <div class='summary-item' id='cart-item-{{ item.id }}'>
-                  <div class='capitalize name'>{{ option.name }}</div>
+                  <div class='capitalize item-name'>{{ option.name }}</div>
                   <div class="summary-item-price">
                     <span class="item-price">{{ option.price }}</span>
                     <span class="product-currency"></span>
@@ -128,9 +129,11 @@
             {%- endif %}
           <div class="border-divider"></div>
           <div class='total-price-wrapper'>
-            <div class='coupon-container'>
-              <span class="discount-text hidden">{{ 'cart.summary.discount' | t }}</span>
-              <span class="discount-price"></span>
+            <div class="discount-wrapper hidden">
+              <div class='coupon-container'>
+                <span class="discount-text">{{ 'cart.summary.discount' | t }}</span>
+                <span class="discount-price"></span>
+              </div>
             </div>
             <div class='total-items'>
               <span class="total">{{ 'cart.summary.total' | t }}</span>

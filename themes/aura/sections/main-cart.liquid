@@ -6,7 +6,7 @@
   <div class="header-block">
     <div class="header-bar">
       <h2>{{ 'cart.title' | t }}</h2>
-      <p class='mt-1'>
+      <p class='mt-1' id="cart-items-count">
         ({{ cart.items | size }}
         {{ 'cart.items_count' | t }})
       </p>
@@ -42,8 +42,7 @@
               {% endif %}
             {% endfor %}
             <div>
-              <span class='product-price'> {{ item.price }}</span>
-              <span class='product-currency'></span>
+              <span class='product-price'> {{ item.price |  money }}</span>
             </div>
           </div>
         </div>
@@ -58,8 +57,7 @@
             <span class='spinner h-7 w-7'></span>
           </div>
           <div class="total-price-wrapper">
-            <span class="total-price">{{ item.price | times: item.quantity }}</span>
-            <span class="product-currency"></span>
+            <span class="total-price">{{ item.price | times: item.quantity | money }}</span>
           </div>
         </div>
         <div class="cell adjust-space close-btn">
@@ -106,27 +104,32 @@
               </form>
             {% endif %}
             {%- if cart and cart.items %}
+            <template id="summary-item-template">
+              <div class='flex justify-between text-sm box'>
+                <div class='item-name capitalize'></div>
+                <div>
+                  <span class="item-price"></span>
+                </div>
+              </div>
+            </template>
             <div class="price-wrapper">
               <div class='flex flex-col gap-1 price-box'>
                 {%- for item in cart.items %}
                   <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
-                    <div class='capitalize'>{{ item.name }}</div>
-                      <div class="hidden">
-                        {%- render 'quantity-input', item: item -%}
-                        <div class='product-price'>{{ item.price }}</div>
-                      </div>
-                      <div>
-                        <span class="item-price">{{ item.price | times: item.quantity }}</span>
-                        <span class="product-currency"></span>
-                      </div>
+                    <div class='item-name capitalize'>{{ item.name }}</div>
+                    <div>
+                      <span class="item-price">{{ item.price | times: item.quantity | money }}</span>
                     </div>
+                  </div>
                 {%- endfor %}
               </div>
             {%- endif %}
             <div class='border-t mt-5'>
-              <div class='flex text-sm justify-between mt-5'>
-                <span class="discount-text hidden">{{ 'cart.summary.discount' | t }}</span>
-                <span class="discount-price"></span>
+              <div class="discount-wrapper hidden">
+                <div class='flex text-sm justify-between mt-5'>
+                  <span class="discount-text">{{ 'cart.summary.discount' | t }}</span>
+                  <span class="discount-price"></span>
+                </div>
               </div>
               <div class='flex text-sm justify-between mt-5'>
                 <span class="total">{{ 'cart.summary.total' | t }}</span>

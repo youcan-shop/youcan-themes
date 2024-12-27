@@ -88,22 +88,51 @@ function stopLoad(el) {
 /* ----- alert ----- */
 /* ----------------- */
 function notify(msg, type = 'success', timeout = 3000) {
-  const alert = document.querySelector('.yc-alert');
-  if (!alert) return;
+  const alertWrapper = document.querySelector('.yc-alert');
 
-  const icons = alert.querySelectorAll('.icon');
-  if (!icons || !icons.length) return;
+  if (!alertWrapper) return;
 
-  const alertClassList = alert.classList.value;
+  if (alertWrapper.timeoutId) {
+    clearTimeout(alertWrapper.timeoutId); // Clear any existing timeout associated with this alert
+  }
 
-  icons.forEach((icon) => icon.style.display = 'none');
-  alert.querySelector(`.icon-${type}`).style.display = 'block';
-  alert.querySelector('.alert-msg').innerText = msg;
+  if (alertWrapper.children.length > 0) {
+    [...alertWrapper.classList].forEach(className => {
+      if (className !== 'yc-alert') {
+        alertWrapper.classList.remove(className); // Remove all classes except 'yc-alert'
+      }
+    });
+  }
 
-  alert.classList.add(type);
-  alert.classList.add('show');
+  const alertTypes = {
+    success: {
+      icon: 'checkmark-circle-outline',
+      class: 'icon-success'
+    },
+    error: {
+      icon: 'alert-circle-outline',
+      class: 'icon-error'
+    },
+    warning: {
+      icon: 'warning-outline',
+      class: 'icon-warning'
+    }
+  };
 
-  setTimeout(() => alert.setAttribute('class', alertClassList), timeout);
+  alertWrapper.classList.add(type);
+  alertWrapper.classList.add('show');
+  alertWrapper.innerHTML = `
+    <ion-icon
+      name='${alertTypes[type].icon}'
+      class='text-xl ${alertTypes[type].class} icon'
+    ></ion-icon>
+    <span class='alert-msg text-white'>${msg}</span>
+  `;
+
+  alertWrapper.timeoutId = setTimeout(() => {
+    alertWrapper.classList.remove('show');
+    alertWrapper.classList.remove(type);
+  }, timeout);
 }
 
 /* ------------------- */
@@ -365,8 +394,9 @@ function formatCurrency(amount, currencySymbol, locale = 'en-US') {
   const usePrecision = shouldUsePrecision(amount);
   const formatter = new Intl.NumberFormat(locale, {
     style: 'decimal',
+    roundingMode: 'floor',
     maximumFractionDigits: usePrecision ? 2 : 0,
-    roundingMode: 'floor'
+    minimumFractionDigits: usePrecision ? 2 : 0,
   });
 
   const formattedValue = formatter.format(amount);
@@ -416,40 +446,6 @@ function restrictInputValue(inputElement, maxInventoryValue) {
 
   if (currentValue > maxInventoryValue) {
     inputElement.value = maxInventoryValue;
-  }
-}
-
-/**
- * Tracks the quantity of a specific variant in the cart and set it in the hidden quantity input.
- *
- * @param {string} selectedVariantId - The ID of the selected product variant.
- */
-async function trackVariantQuantityOnCart(selectedVariantId) {
-  try {
-    load('#loading__cart');
-    const cartQuantityInput = document.querySelector('#cartQuantity');
-    cartQuantityInput.value = 0;
-    const cart = await youcanjs.cart.fetch();
-
-    if (!cart) {
-      return;
-    }
-
-    if (cart.items.length === 0 || cart.items.data?.length === 0) {
-      return;
-    }
-
-    const cartItem = cart.items.find((item) => item.productVariant.id === selectedVariantId);
-
-    if (!cartItem || cartItem.productVariant.product.track_inventory === false) {
-      return;
-    }
-
-    cartQuantityInput.value = cartItem.quantity;
-  } catch(e) {
-    notify(e.message, 'error');
-  } finally {
-    stopLoad('#loading__cart');
   }
 }
 

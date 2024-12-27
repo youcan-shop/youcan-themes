@@ -36,6 +36,10 @@
         }
       }
 
+      #cart-items-count {
+        text-transform: lowercase;
+      }
+
       .checkout_cta {
         max-width: 100%;
         width: 437px;
@@ -79,7 +83,7 @@
         padding: 0px 18px 18px;
 
         .capitalize {
-          width: 80%;
+          flex: 1;
         }
 
         .item-price {
@@ -115,8 +119,18 @@
       }
 
       .discount-price {
+        display: inline-flex;
+        gap: 4px;
         font-size: 15px;
         font-weight: 500;
+
+        &::before {
+          content: "-";
+        }
+
+        &:dir(rtl) {
+          flex-direction: row-reverse;
+        }
       }
 
       .coupon-applied {
@@ -294,8 +308,8 @@
     .close-btn {
       button {
         position: absolute;
-        left: 0;
-        top: 0;
+        inset-block-start: 0;
+        inset-inline-end: 0;
         margin: 10px;
       }
     }
