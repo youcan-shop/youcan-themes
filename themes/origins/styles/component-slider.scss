@@ -46,7 +46,6 @@ yc-slider {
             pointer-events: auto;
             display: flex;
             gap: var(--gap-lg);
-            text-align: center;
             align-items: center;
             flex-direction: column;
             justify-content: center;
@@ -54,6 +53,18 @@ yc-slider {
             height: calc(100% - 3em);
             backdrop-filter: var(--modal-blur);
             background-color: var(--overlay-background);
+
+            &[data-alignment$="left"] {
+              align-items: flex-start;
+            }
+
+            &[data-alignment$="right"] {
+              align-items: flex-end;
+            }
+
+            &[data-alignment$="center"] {
+              align-items: center;
+            }
 
             .content {
               text-wrap: balance;

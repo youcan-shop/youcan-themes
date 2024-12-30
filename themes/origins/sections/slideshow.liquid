@@ -1,17 +1,21 @@
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 {{ 'component-slider.js' | asset_url | script_tag_deferred }}
 
-<yc-section>
+<yc-section data-full>
   <yc-slider
-    autoplay
     responsive
-    arrows
-    interval="3000"
+    {% if section.settings.autoplay %}
+      autoplay
+    {% endif %}
+    {% if section.settings.show_arrows %}
+      arrows
+    {% endif %}
+    interval="{{ section.settings.duration | times: 1000 }}"
     data-type="full"
     style="
       --slider-gap: 0;
       --slider-speed: 600;
-      --slider-height: 600;
+      --slider-height: {{ section.settings.height }};
       --slider-per-page: 1;
     "
   >
@@ -21,7 +25,7 @@
           {% for item in link-lists %}
             <yc-slider-item>
               <img src="{{ 'default-test.webp' | asset_url }}" alt="rabi3a" height="100%" width="100%">
-              <yc-slider-content>
+              <yc-slider-content data-alignment="{{ section.settings.content_alignment }}">
                 <p class="content">Our Group, entities, brands and its vision</p>
                 <a href="#" class="yc-btn with-icon">
                   Discover more
@@ -34,9 +38,9 @@
       </div>
     </div>
 
-    <yc-slider-arrows data-position="right">
+    <yc-slider-arrows data-position="{{ section.settings.arrow_position }}">
       <div class="slider-arrows">
-        <button class="icon" data-arrow="left" aria-label="previous" disabled>
+        <button class="icon" data-arrow="left" aria-label="previous">
           {% render 'yc-icon', name: 'arrow-left', size: 15 %}
         </button>
         <button class="icon" data-arrow="right" aria-label="next">
