@@ -11,8 +11,12 @@
 >
   {% if section.settings.title or section.settings.description %}
     <yc-section-head data-position="{{ section.settings.position }}">
-      <h2>{{ section.settings.title }}</h2>
-      <p>{{ section.settings.description }}</p>
+      {% if section.settings.title %}
+        <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.description %}
+        <p>{{ section.settings.description }}</p>
+      {% endif %}
     </yc-section-head>
   {% endif %}
 
