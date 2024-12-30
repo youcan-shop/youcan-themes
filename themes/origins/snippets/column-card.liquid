@@ -1,18 +1,19 @@
-{{ 'column-card.css' | asset_url | stylesheet_tag }}
+{% assign column = block.settings %}
+{% assign setting = section.settings %}
 
-<div class="column-card" data-position="left">
+<div class="column-card" data-position="{{ setting.position }}">
   <div class="column-img">
     <img
       width="100%"
       height="100%"
-      data-width="{{ width }}"
-      data-ratio="{{ ratio }}"
-      alt="column title"
-      src="{{ 'default-test.webp' |  asset_url }}"
+      alt="{{ column.title }}"
+      src="{{ column.image.src }}"
+      data-width="{{ setting.image_width }}"
+      data-ratio="{{ setting.image_ratio }}"
     >
   </div>
   <div class="column-info">
-    <h4 class="column-title">Planet friendly</h4>
-    <p class="column-subtitle">Sustainable fabrics made with care.</p>
+    <span class="column-title h4">{{ column.title }}</span>
+    <p class="column-subtitle">{{ column.subtitle }}</p>
   </div>
 </div>

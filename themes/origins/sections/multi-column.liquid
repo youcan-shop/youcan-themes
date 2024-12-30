@@ -1,0 +1,166 @@
+{{ 'column-card.css' | asset_url | stylesheet_tag }}
+{{ 'multi-column.css' | asset_url | stylesheet_tag }}
+
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color.hex }};
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+  "
+>
+  {% if section.settings.title or section.settings.description %}
+    <yc-section-head data-position="{{ section.settings.position }}">
+      {% if section.settings.title %}
+        <h2>{{ section.settings.title }}</h2>
+      {% endif %}
+      {% if section.settings.description %}
+        <p>{{ section.settings.description }}</p>
+      {% endif %}
+    </yc-section-head>
+  {% endif %}
+
+  <div class="columns" style="--column-length: {{ section.blocks.size }}">
+    {% for block in section.blocks %}
+      {% render 'column-card' %}
+    {% endfor %}
+  </div>
+</yc-section>
+
+{% schema %}
+{
+  "label": "Multi column",
+  "blocks": [
+    {
+      "type": "column",
+      "label": "Column",
+      "limit": 6,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Title",
+          "default": "Column title"
+        },
+        {
+          "id": "subtitle",
+          "type": "textarea",
+          "label": "Subtitle",
+          "default": "Column subtitle"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "My title"
+    },
+    {
+      "id": "description",
+      "type": "textarea",
+      "label": "Description",
+      "default": "My subtitle"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "id": "position",
+      "type": "select",
+      "label": "Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "id": "image_width",
+      "type": "select",
+      "label": "Image width",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "id": "image_ratio",
+      "type": "select",
+      "label": "Image ratio",
+      "options": [
+        {
+          "value": "contain",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "circle",
+          "label": "Circle"
+        }
+      ],
+      "default": "circle"
+    }
+  ]
+}
+{% endschema %}
