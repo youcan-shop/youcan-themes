@@ -1,22 +1,41 @@
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 {{ 'component-slider.js' | asset_url | script_tag_deferred }}
 
-<yc-section data-full>
+{% assign slideshow = section.settings %}
+
+<yc-section
+  {% if slideshow.type == 'full' %}
+    data-full
+  {% endif %}
+  style="
+    --section-space-top: {{ slideshow.space_top }}px;
+    --section-space-bottom: {{ slideshow.space_bottom }}px;
+  "
+>
   <yc-slider
-    responsive
-    {% if section.settings.autoplay %}
+    {% if slideshow.autoplay %}
       autoplay
     {% endif %}
-    {% if section.settings.show_arrows %}
+    {% if slideshow.show_arrows %}
       arrows
     {% endif %}
-    interval="{{ section.settings.duration | times: 1000 }}"
+    {% if slideshow.type != 'full' %}
+      data-radius="true"
+    {% endif %}
+    interval="{{ slideshow.duration | times: 1000 }}"
     data-type="full"
     style="
       --slider-gap: 0;
       --slider-speed: 600;
       --slider-per-page: 1;
-      --slider-height: {{ section.settings.height }};
+      --slider-height: {{ slideshow.height }};
+
+      --section-content-color: {{ slideshow.content_color.hex }};
+      --section-button-background: {{ slideshow.button_background.hex }};
+      --section-button-foreground: {{ slideshow.button_foreground.hex }};
+      --section-overlay-background: {{ slideshow.overlay_background.red }}, {{ slideshow.overlay_background.green }}, {{ slideshow.overlay_background.blue }};
+      --section-arrows-foreground: {{ slideshow.arrows_foreground.hex }};
+      --section-arrows-background: {{ slideshow.arrows_background.red }}, {{ slideshow.arrows_background.green }}, {{ slideshow.arrows_background.blue }};
     "
   >
     <div class="slider-area">
@@ -30,7 +49,7 @@
     </div>
 
     {% if section.blocks.size > 1 %}
-      <yc-slider-arrows data-position="{{ section.settings.arrow_position }}">
+      <yc-slider-arrows data-position="{{ slideshow.arrow_position }}">
         <div class="slider-arrows">
           <button class="icon" data-arrow="left" aria-label="previous">
             {% render 'yc-icon', name: 'arrow-left', size: 15 %}
@@ -108,6 +127,26 @@
       "default": "full"
     },
     {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
       "type": "header",
       "content": "Content"
     },
@@ -177,19 +216,19 @@
           "label": "Right"
         }
       ],
-      "default": "right"
+      "default": "center"
     },
     {
       "type": "color",
-      "id": "arrow_foreground",
-      "label": "Arrows text",
-      "default": "#000"
+      "id": "arrows_foreground",
+      "label": "Arrows color",
+      "default": "#121212"
     },
     {
       "type": "color",
-      "id": "arrow_background",
+      "id": "arrows_background",
       "label": "Arrows background",
-      "default": "#000"
+      "default": "#ffffff"
     }
   ],
   "blocks": [
