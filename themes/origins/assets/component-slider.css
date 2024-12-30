@@ -48,9 +48,9 @@ yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-conten
   justify-content:center;
   width:calc(100% - 3em);
   height:calc(100% - 3em);
-  -webkit-backdrop-filter:var(--modal-blur);
-          backdrop-filter:var(--modal-blur);
-  background-color:var(--overlay-background);
+  -webkit-backdrop-filter:var(--overlay-blur);
+          backdrop-filter:var(--overlay-blur);
+  background-color:rgba(var(--section-overlay-background), 0.2);
 }
 yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content[data-alignment$=left]{
   align-items:flex-start;
@@ -61,16 +61,31 @@ yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-conten
 yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content[data-alignment$=center]{
   align-items:center;
 }
-yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .content{
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .heading,
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .subheading{
   text-wrap:balance;
-  font-size:var(--text-3xl);
   text-transform:capitalize;
-  color:var(--color-secondary);
+  color:var(--section-content-color);
+}
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .heading{
+  font-size:var(--text-3xl);
 }
 @media (max-width: 768px){
-  yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .content{
+  yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .heading{
     font-size:var(--text-2xl);
   }
+}
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .subheading{
+  font-size:var(--text-lg);
+}
+@media (max-width: 768px){
+  yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .subheading{
+    font-size:var(--text-md);
+  }
+}
+yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content .yc-btn{
+  background-color:var(--section-button-background);
+  color:var(--section-button-foreground);
 }
 yc-slider yc-slider-arrows{
   display:flex;

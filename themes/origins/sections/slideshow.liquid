@@ -15,24 +15,15 @@
     style="
       --slider-gap: 0;
       --slider-speed: 600;
-      --slider-height: {{ section.settings.height }};
       --slider-per-page: 1;
+      --slider-height: {{ section.settings.height }};
     "
   >
     <div class="slider-area">
       <div class="slider-box" data-slider-box>
         <div class="slider-inner" data-slider>
-          {% for item in link-lists %}
-            <yc-slider-item>
-              <img src="{{ 'default-test.webp' | asset_url }}" alt="rabi3a" height="100%" width="100%">
-              <yc-slider-content data-alignment="{{ section.settings.content_alignment }}">
-                <p class="content">Our Group, entities, brands and its vision</p>
-                <a href="#" class="yc-btn with-icon">
-                  Discover more
-                  {% render 'yc-icon', name: 'arrow-right-up' %}
-                </a>
-              </yc-slider-content>
-            </yc-slider-item>
+          {% for block in section.blocks %}
+            {% render 'slideshow-slide' %}
           {% endfor %}
         </div>
       </div>
@@ -75,12 +66,6 @@
         }
       ],
       "default": "560"
-    },
-    {
-      "type": "checkbox",
-      "id": "loop",
-      "label": "Loop",
-      "default": true
     },
     {
       "type": "checkbox",
@@ -148,25 +133,25 @@
       "type": "color",
       "id": "content_color",
       "label": "Content Color",
-      "default": "#000"
+      "default": "#ffffff"
     },
     {
       "type": "color",
-      "id": "overlay_color",
+      "id": "overlay_background",
       "label": "Overlay color",
       "default": "#000"
     },
     {
       "type": "color",
-      "id": "action_background",
-      "label": "Action background",
-      "default": "#000"
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#121212"
     },
     {
       "type": "color",
-      "id": "action_foreground",
-      "label": "Action text",
-      "default": "#000"
+      "id": "button_foreground",
+      "label": "Button text",
+      "default": "#ffffff"
     },
     {
       "type": "header",
@@ -203,6 +188,44 @@
       "id": "arrow_background",
       "label": "Arrows background",
       "default": "#000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "label": "Slide",
+      "limit": 4,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "heading",
+          "type": "text",
+          "label": "Heading",
+          "default": "Image Slide"
+        },
+        {
+          "id": "subheading",
+          "type": "text",
+          "label": "Subheading",
+          "default": "An image is worth a thousand words"
+        },
+        {
+          "id": "button_text",
+          "type": "text",
+          "label": "Button text",
+          "default": ""
+        },
+        {
+          "id": "button_url",
+          "type": "text",
+          "label": "Button link",
+          "default": ""
+        }
+      ]
     }
   ]
 }

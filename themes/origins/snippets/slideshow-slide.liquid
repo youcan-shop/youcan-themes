@@ -1,0 +1,27 @@
+{% assign slide = block.settings %}
+{% assign slideshow = section.settings %}
+
+<yc-slider-item
+  style="
+    --section-overlay-color: red;
+    --section-content-color: {{ slideshow.content_color.hex }};
+    --section-button-background: {{ slideshow.button_background.hex }};
+    --section-button-foreground: {{ slideshow.button_foreground.hex }};
+    --section-overlay-background: {{ slideshow.overlay_background.red }}, {{ slideshow.overlay_background.green }}, {{ slideshow.overlay_background.blue }};
+  "
+>
+  <img src="{{ slide.image.src }}" alt="{{ slide.title }}" height="100%" width="100%">
+  <yc-slider-content data-alignment="{{ slideshow.content_alignment }}">
+    {% if slide.heading %}
+      <p class="heading">{{ slide.heading }}</p>
+    {% endif %}
+    {% if slide.subheading %}
+      <p class="subheading">{{ slide.subheading }}</p>
+    {% endif %}
+    {% if slide.button_text %}
+      <a href="{{ slide.button_link }}" class="yc-btn">
+        {{ slide.button_text }}
+      </a>
+    {% endif %}
+  </yc-slider-content>
+</yc-slider-item>

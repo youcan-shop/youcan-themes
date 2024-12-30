@@ -51,8 +51,8 @@ yc-slider {
             justify-content: center;
             width: calc(100% - 3em);
             height: calc(100% - 3em);
-            backdrop-filter: var(--modal-blur);
-            background-color: var(--overlay-background);
+            backdrop-filter: var(--overlay-blur);
+            background-color: rgba(var(--section-overlay-background), 0.2);
 
             &[data-alignment$="left"] {
               align-items: flex-start;
@@ -66,14 +66,30 @@ yc-slider {
               align-items: center;
             }
 
-            .content {
+            .heading,
+            .subheading {
               text-wrap: balance;
-              font-size: var(--text-3xl);
               text-transform: capitalize;
-              color: var(--color-secondary);
+              color: var(--section-content-color);
+            }
+
+            .heading {
+              font-size: var(--text-3xl);
               @include breakpoint("md") {
                 font-size: var(--text-2xl);
               }
+            }
+
+            .subheading {
+              font-size: var(--text-lg);
+              @include breakpoint("md") {
+                font-size: var(--text-md);
+              }
+            }
+
+            .yc-btn {
+              background-color: var(--section-button-background);
+              color: var(--section-button-foreground);
             }
           }
         }
