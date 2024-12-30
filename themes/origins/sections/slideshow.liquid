@@ -1,7 +1,7 @@
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 {{ 'component-slider.js' | asset_url | script_tag_deferred }}
 
-<yc-section data-full>
+<yc-section>
   <yc-slider
     responsive
     {% if section.settings.autoplay %}
@@ -29,16 +29,18 @@
       </div>
     </div>
 
-    <yc-slider-arrows data-position="{{ section.settings.arrow_position }}">
-      <div class="slider-arrows">
-        <button class="icon" data-arrow="left" aria-label="previous">
-          {% render 'yc-icon', name: 'arrow-left', size: 15 %}
-        </button>
-        <button class="icon" data-arrow="right" aria-label="next">
-          {% render 'yc-icon', name: 'arrow-right', size: 15 %}
-        </button>
-      </div>
-    </yc-slider-arrows>
+    {% if section.blocks.size > 1 %}
+      <yc-slider-arrows data-position="{{ section.settings.arrow_position }}">
+        <div class="slider-arrows">
+          <button class="icon" data-arrow="left" aria-label="previous">
+            {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+          </button>
+          <button class="icon" data-arrow="right" aria-label="next">
+            {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+          </button>
+        </div>
+      </yc-slider-arrows>
+    {% endif %}
   </yc-slider>
 </yc-section>
 
@@ -71,7 +73,7 @@
       "type": "checkbox",
       "id": "autoplay",
       "label": "Autoplay",
-      "default": true
+      "default": false
     },
     {
       "type": "checkbox",
