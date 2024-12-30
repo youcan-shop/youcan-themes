@@ -1,0 +1,205 @@
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.js' | asset_url | script_tag_deferred }}
+
+<yc-section>
+  <yc-slider
+    autoplay
+    responsive
+    arrows
+    interval="3000"
+    data-type="full"
+    style="
+      --slider-gap: 0;
+      --slider-speed: 600;
+      --slider-height: 600;
+      --slider-per-page: 1;
+    "
+  >
+    <div class="slider-area">
+      <div class="slider-box" data-slider-box>
+        <div class="slider-inner" data-slider>
+          {% for item in link-lists %}
+            <yc-slider-item>
+              <img src="{{ 'default-test.webp' | asset_url }}" alt="rabi3a" height="100%" width="100%">
+              <yc-slider-content>
+                <p class="content">Our Group, entities, brands and its vision</p>
+                <a href="#" class="yc-btn with-icon">
+                  Discover more
+                  {% render 'yc-icon', name: 'arrow-right-up' %}
+                </a>
+              </yc-slider-content>
+            </yc-slider-item>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <yc-slider-arrows data-position="right">
+      <div class="slider-arrows">
+        <button class="icon" data-arrow="left" aria-label="previous" disabled>
+          {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+        </button>
+        <button class="icon" data-arrow="right" aria-label="next">
+          {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+        </button>
+      </div>
+    </yc-slider-arrows>
+  </yc-slider>
+</yc-section>
+
+{%- schema -%}
+{
+  "label": "Slideshow",
+  "templates": ["index", "page"],
+  "settings": [
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        {
+          "value": "420",
+          "label": "Small"
+        },
+        {
+          "value": "560",
+          "label": "Medium"
+        },
+        {
+          "value": "720",
+          "label": "Large"
+        }
+      ],
+      "default": "560"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "min": 3,
+      "max": 9,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slides every",
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "label": "Type",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full"
+        },
+        {
+          "value": "fit",
+          "label": "Fit"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Content Color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "action_background",
+      "label": "Action background",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "action_foreground",
+      "label": "Action text",
+      "default": "#000"
+    },
+    {
+      "type": "header",
+      "content": "Arrows"
+    },
+    {
+      "type": "select",
+      "id": "arrow_position",
+      "label": "Arrow position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "color",
+      "id": "arrow_foreground",
+      "label": "Arrows text",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_background",
+      "label": "Arrows background",
+      "default": "#000"
+    }
+  ]
+}
+{%- endschema -%}
