@@ -8,7 +8,11 @@ yc-slider {
 
   .slider-area {
     display: flex;
-    height: calc(var(--slider-height) * 1px);
+    height: var(--slider-height);
+
+    @include breakpoint("sm") {
+      height: 60vh;
+    }
 
     .slider-box {
       touch-action: pan-y;
@@ -46,23 +50,62 @@ yc-slider {
             pointer-events: auto;
             display: flex;
             gap: var(--gap-lg);
-            text-align: center;
             align-items: center;
             flex-direction: column;
             justify-content: center;
             width: calc(100% - 3em);
             height: calc(100% - 3em);
-            backdrop-filter: var(--modal-blur);
+            backdrop-filter: var(--overlay-blur);
             background-color: var(--overlay-background);
 
-            .content {
+            &[data-alignment$="left"] {
+              align-items: flex-start;
+
+              p {
+                text-align: start;
+              }
+            }
+
+            &[data-alignment$="right"] {
+              align-items: flex-end;
+
+              p {
+                text-align: end;
+              }
+            }
+
+            &[data-alignment$="center"] {
+              align-items: center;
+
+              p {
+                text-align: center;
+              }
+            }
+
+            .heading,
+            .subheading {
               text-wrap: balance;
+              color: var(--section-content-color);
+            }
+
+            .heading {
               font-size: var(--text-3xl);
               text-transform: capitalize;
-              color: var(--color-secondary);
               @include breakpoint("md") {
                 font-size: var(--text-2xl);
               }
+            }
+
+            .subheading {
+              font-size: var(--text-lg);
+              @include breakpoint("md") {
+                font-size: var(--text-md);
+              }
+            }
+
+            .yc-btn {
+              background-color: var(--section-button-background);
+              color: var(--section-button-foreground);
             }
           }
         }
@@ -81,7 +124,16 @@ yc-slider {
       button {
         padding: 8px 15px;
         border-radius: var(--radius-sm);
-        background-color: var(--color-secondary);
+        background-color: rgb(var(--section-arrows-background));
+        color: var(--section-arrows-foreground);
+
+        &.icon:hover {
+          background-color: color-mix(
+            in srgb,
+            var(--overlay-background) 10%,
+            rgb(var(--section-arrows-background))
+          );
+        }
 
         &:dir(rtl) .icon {
           rotate: 180deg;
