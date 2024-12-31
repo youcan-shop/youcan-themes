@@ -3,7 +3,15 @@
 .products-by-collection {
   .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--product-columns), 1fr);
     gap: var(--gap-lg);
+  }
+}
+
+@include breakpoint("lg") {
+  .products-by-collection {
+    .grid {
+      grid-template-columns: 1fr;
+    }
   }
 }

@@ -1,11 +1,16 @@
 {{ 'products-by-collection.css' | asset_url | stylesheet_tag }}
 
+{%- assign collection = section.settings.collection -%}
+{%- assign number_of_products = section.settings.max_products -%}
+
 <yc-section
   style="
     --section-space-top: {{ section.settings.space_top }}px;
     --section-space-bottom: {{ section.settings.space_bottom }}px;
     --section-bg-color: {{ section.settings.background_color.hex }};
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+
+    --product-columns: {{ section.settings.product_columns }};
   "
 >
   {% if section.settings.title or section.settings.description %}
@@ -26,11 +31,11 @@
       else: render grid
     {% endcomment %}
     <div class="grid">
-      {% render 'product-card' %}
-      {% render 'product-card' %}
-      {% render 'product-card' %}
-      {% render 'product-card' %}
-      {% render 'product-card' %}
+      {%- paginate collection.products by number_of_products id category_id: collection.id %}
+        {%- for item in items -%}
+          {%- render 'product-card', product: item -%}
+        {%- endfor -%}
+      {%- endpaginate %}
     </div>
   </div>
 </yc-section>
@@ -39,6 +44,11 @@
 {
   "label": "Products by Collection",
   "settings": [
+    {
+      "type": "category",
+      "id": "collection",
+      "label": "Collection"
+    },
     {
       "id": "title",
       "type": "text",
@@ -82,6 +92,26 @@
       "type": "color",
       "label": "Background color",
       "default": "#FFFFFFFF"
+    },
+    {
+      "id": "max_products",
+      "type": "range",
+      "label": "Maximum products to show",
+      "min": 2,
+      "max": 25,
+      "step": 1,
+      "unit": "",
+      "default": 4
+    },
+    {
+      "id": "product_columns",
+      "type": "range",
+      "label": "Number of columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "",
+      "default": 3
     },
     {
       "type": "header",
