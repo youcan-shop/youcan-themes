@@ -7,7 +7,18 @@
   <div class="drawer-container">
     <div class="drawer-box menu-drawer">
       <div class="menu-head">
-        <img src="{{ 'default-logo.webp' | asset_url }}" alt="my store" width="60" height="60">
+        <a href="/" aria-label="home">
+          {% if section.settings.header_logo.src %}
+            <img
+              src="{{ section.settings.header_logo.src }}"
+              alt="{{ store.name }}"
+              height="60"
+              width="60"
+            >
+          {% else %}
+            {{ store.name }}
+          {% endif %}
+        </a>
         <button class="close-btn icon" data-size="sm" aria-label="close" data-toggle>
           {% render 'yc-icon' | name: 'x-mark' %}
         </button>

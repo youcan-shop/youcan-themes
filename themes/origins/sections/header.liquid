@@ -5,49 +5,110 @@
 
 {% style %}
   :root {
-    --header-height: auto;
-    --header-bg-color: var(--color-secondary);
-    --header-text-color: rgb(var(--color-primary));
-    --header-button-outline-color: rgba(var(--color-primary), 0.15);
-    --header-border-color: rgba(var(--color-primary), 0.07);
+    --header-bg-color: {{ section.settings.header_background_color.hex }};
+    --header-text-color: {{ section.settings.header_text_color.red }}, {{ section.settings.header_text_color.green }}, {{ section.settings.header_text_color.blue }};
   }
 {% endstyle %}
 
 <yc-header data-bottom-border="true" data-sticky="false">
-  {% render 'header-menu-drawer' %}
-  <ul role="list" class="links">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Man</a></li>
-    <li><a href="#">Woman</a></li>
-    <li><a href="#">Kids</a></li>
-  </ul>
-  <div class="logo">
-    <a href="#">
-      <img src="{{ 'default-logo.webp' | asset_url }}" alt="my store" height="60" width="60">
-    </a>
-  </div>
-  <div class="actions">
-    <form action="/search" class="search-bar" data-hidden="true" data-search-field>
-      {% render 'yc-icon', name: 'search' %}
-      <input type="search" placeholder="Search..." name="products">
-    </form>
-    <button class="search-btn icon" aria-label="search" data-search-action>
-      {% render 'yc-icon', name: 'search' %}
-      {% render 'yc-icon', name: 'x-mark' %}
-    </button>
-    {% render 'header-cart-drawer' %}
-  </div>
+  {%- for block in section.blocks -%}
+    {%- case block.type %}
+      {% when 'header_menu' %}
+        <div class="links" data-block>
+          <ul role="list">
+            <li><a class="yc-btn link" href="#">Home</a></li>
+            <li><a class="yc-btn link" href="#">Man</a></li>
+            <li><a class="yc-btn link" href="#">Woman</a></li>
+            <li><a class="yc-btn link" href="#">Kids</a></li>
+          </ul>
+          {% render 'header-menu-drawer' %}
+        </div>
+      {% when 'header_logo' %}
+        <div class="logo" data-block>
+          <a href="/" aria-label="home">
+            {% if section.settings.header_logo.src %}
+              <img
+                src="{{ section.settings.header_logo.src }}"
+                alt="{{ store.name }}"
+                height="60"
+                width="60"
+              >
+            {% else %}
+              {{ store.name }}
+            {% endif %}
+          </a>
+        </div>
+      {% when 'header_action' %}
+        <div class="actions" data-block>
+          <form action="/search" class="search-bar" data-hidden="true" data-search-field>
+            {% render 'yc-icon', name: 'search' %}
+            <input type="search" placeholder="Search..." name="products">
+          </form>
+          <button class="search-btn icon" aria-label="search" data-search-action>
+            {% render 'yc-icon', name: 'search' %}
+            {% render 'yc-icon', name: 'x-mark' %}
+          </button>
+          {% render 'header-cart-drawer' %}
+        </div>
+    {%- endcase %}
+  {% endfor %}
 </yc-header>
 
 {% schema %}
 {
   "label": "Header",
   "tag": "header",
-  "max_blocks": 3,
+  "limit": 1,
+  "blocks": [
+    {
+      "limit": 1,
+      "label": "Menu",
+      "type": "header_menu"
+    },
+    {
+      "limit": 1,
+      "label": "Logo",
+      "type": "header_logo"
+    },
+    {
+      "limit": 1,
+      "label": "Actions",
+      "type": "header_action"
+    }
+  ],
   "settings": [
     {
-      "type": "header",
-      "content": "Color"
+      "type": "paragraph",
+      "content": "Header links can be managed from your [menu settings](https:\/\/seller-area.youcan.shop\/admin\/menus)"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_sticky",
+      "label": "Sticky mode",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "header_border",
+      "label": "Bottom border",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "header_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "header_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
     }
   ]
 }
