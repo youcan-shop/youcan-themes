@@ -14,18 +14,36 @@ button,
     color: rgb(var(--color-button-text));
   }
   &.secondary {
-    background-color: rgb(var(--color-secondary-button));
     color: rgb(var(--color-secondary-button-text));
-    border: 1px solid var(--color-secondary-button-outline);
+    background-color: rgb(var(--color-secondary-button));
+    border: 1px solid color-mix(in srgb, currentColor 30%, transparent);
   }
   &.destructive {
-    background-color: var(--color-error-500);
     color: var(--color-base-white);
+    background-color: var(--color-error-500);
   }
   &.link {
     padding: unset;
+    position: relative;
+    color: rgb(var(--color-button-text));
+    &::before {
+      content: "";
+      opacity: 0;
+      height: 100%;
+      width: 0%;
+      top: 50%;
+      left: -12px;
+      padding: 5px 0;
+      translate: 0 -50%;
+      position: absolute;
+      border-radius: var(--radius-sm);
+      transition: var(--transition-duration-normal);
+      background-color: color-mix(in srgb, currentColor 5%, transparent);
+    }
   }
-  &.link,
+  &.tertiary {
+    padding: 0.75em;
+  }
   &.ghost {
     background-color: transparent;
   }
@@ -33,7 +51,7 @@ button,
     padding: 12px;
     color: rgb(var(--color-button));
     background-color: transparent;
-    border: 1px solid rgba(var(--color-button-text), 0.15);
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
     &[data-size$="sm"] {
       padding: 8px;
     }
@@ -45,41 +63,42 @@ button,
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  &:hover:is(.link)::before {
+    opacity: 1;
+    width: 100%;
+    padding: 5px 12px;
+  }
+  &:hover:is(.ghost, .icon) {
+    background-color: color-mix(in srgb, currentColor 5%, transparent);
+  }
   &:hover:not(:disabled):is(.secondary) {
-    background-color: rgb(var(--color-secondary-button-text));
     color: rgb(var(--color-secondary-button));
     border-color: rgb(var(--color-secondary-button-text));
+    background-color: rgb(var(--color-secondary-button-text));
   }
   &:hover:not(:disabled):is(.primary, .destructive, .loading, .with-icon) {
     opacity: 0.8;
   }
-  &:hover:is(.ghost, .icon) {
-    background-color: var(--color-gray-50);
-  }
-  &:hover:is(.link) {
-    text-decoration: underline;
-  }
 }
 
 // LINKS
-.link {
-  &:hover {
-    text-decoration: underline;
-  }
+a.link:not(.yc-btn) {
+  text-decoration: underline;
 }
 
 // INPUT
 select,
 textarea,
 input:not([type="checkbox"]):not([type="radio"]) {
+  width: 100%;
   padding: 12px 15px;
-  background-color: var(--color-secondary);
-  color: rgb(var(--color-primary));
+  background-color: transparent;
   border-radius: var(--radius-md);
-  width: -webkit-fill-available;
-  box-shadow: var(--shadow-dark-sm);
+  color: rgb(var(--color-primary));
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
   &:focus {
-    box-shadow: var(--shadow-dark-focus-sm);
+    border: 1px solid currentColor;
   }
   &:disabled {
     opacity: 0.6;
