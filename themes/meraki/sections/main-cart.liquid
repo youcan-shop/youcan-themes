@@ -114,21 +114,16 @@
               {%- endfor %}
             </div>
           {%- endif %}
-          {%- if cart and cart.available_shipping_options %}
-            <div class="shipping-wrapper">
-              {%- for option in cart.available_shipping_options -%}
-                <div class='summary-item' id='cart-item-{{ item.id }}'>
-                  <div class='capitalize item-name'>{{ option.name }}</div>
-                  <div class="summary-item-price">
-                    <span class="item-price">{{ option.price }}</span>
-                    <span class="product-currency"></span>
-                  </div>
-                </div>
-              {%- endfor %}
-            </div>
-            {%- endif %}
           <div class="border-divider"></div>
           <div class='total-price-wrapper'>
+            {%- if cart and cart.available_shipping_options %}
+              <div class="shipping-wrapper">
+                <div class='flex text-sm justify-between mt-5'>
+                  <div class='shipping-text'>{{ 'cart.summary.shipping' | t }}</div>
+                  <span>{{ 'cart.summary.shipping_not_calculated' | t }}</span>
+                </div>
+              </div>
+            {%- endif %}
             <div class="discount-wrapper hidden">
               <div class='coupon-container'>
                 <span class="discount-text">{{ 'cart.summary.discount' | t }}</span>
