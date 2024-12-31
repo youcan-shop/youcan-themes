@@ -3,9 +3,8 @@
 {% assign currentYear = default: 'now' | date: '%Y' %}
 {% style %}
   footer {
-    --footer-text-color: {{ section.settings.footer_text_color.hex }};
-    --footer-border-color: {{ section.settings.vertical_border_color.hex }};
     --footer-bg-color: {{ section.settings.footer_background_color.hex}};
+    --footer-text-color: {{ section.settings.footer_text_color.red }}, {{ section.settings.footer_text_color.green }}, {{ section.settings.footer_text_color.blue }};
   }
 {% endstyle %}
 
@@ -42,7 +41,7 @@
                 {% assign url = link[1] %}
                 {% if url != null %}
                   <li>
-                    <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
+                    <a class="yc-btn tertiary" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
                       {% render 'social-icon', name: platform %}
                     </a>
                   </li>
@@ -59,7 +58,7 @@
               <p>{{ linklist.title }}</p>
               <div class="links">
                 {%- for item in linklist.links -%}
-                  <a href="{{ item.url }}">{{ item.title }}</a>
+                  <a href="{{ item.url }}" class="yc-btn link">{{ item.title }}</a>
                 {%- endfor -%}
               </div>
             </div>
@@ -74,7 +73,7 @@
               {% assign url = link[1] %}
               {% if url != null %}
                 <li>
-                  <a class="yc-btn tertiary icon-only" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
+                  <a class="yc-btn tertiary" target="_blank" href="{{ url }}" aria-label="{{ platform }}">
                     {% render 'social-icon', name: platform %}
                   </a>
                 </li>
@@ -131,12 +130,6 @@
       "id": "footer_text_color",
       "label": "Text color",
       "default": "#121212"
-    },
-    {
-      "type": "color",
-      "id": "vertical_border_color",
-      "label": "Border color",
-      "default": "#f3f3f3"
     },
     {
       "type": "richtext",
