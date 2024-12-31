@@ -125,6 +125,14 @@
               </div>
             {%- endif %}
             <div class='border-t mt-5'>
+              {%- if cart and cart.available_shipping_options %}
+                <div class="shipping-wrapper">
+                  <div class='flex text-sm justify-between mt-5'>
+                    <div class='shipping-text'>{{ 'cart.summary.shipping' | t }}</div>
+                    <span>{{ 'cart.summary.shipping_not_calculated' | t }}</span>
+                  </div>
+                </div>
+              {%- endif %}
               <div class="discount-wrapper hidden">
                 <div class='flex text-sm justify-between mt-5'>
                   <span class="discount-text">{{ 'cart.summary.discount' | t }}</span>
