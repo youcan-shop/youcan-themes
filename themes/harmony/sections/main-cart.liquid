@@ -127,22 +127,17 @@
                   </div>
                 {%- endfor %}
               </div>
-              {%- if cart and cart.available_shipping_options %}
-              <div class="shipping-wrapper">
-                {%- for option in cart.available_shipping_options -%}
-                  <div class='flex justify-between text-sm box' id='cart-item-{{ item.id }}'>
-                    <div class='capitalize'>{{ option.name }}</div>
-                    <div>
-                      <span class="item-price">{{ option.price | money }}</span>
-                      <span class="product-currency"></span>
-                    </div>
-                  </div>
-                {%- endfor %}
-              </div>
-              {%- endif %}
             </div>
           {%- endif %}
           <div class='border-t mt-5'>
+            {%- if cart and cart.available_shipping_options %}
+              <div class="shipping-wrapper">
+                <div class='flex text-sm justify-between mt-5'>
+                  <div class='shipping-text'>{{ 'cart.summary.shipping' | t }}</div>
+                  <span>{{ 'cart.summary.shipping_not_calculated' | t }}</span>
+                </div>
+              </div>
+            {%- endif %}
             <div class="discount-wrapper hidden">
               <div class='flex text-sm justify-between mt-5'>
                 <span class="discount-text">{{ 'cart.summary.discount' | t }}</span>
