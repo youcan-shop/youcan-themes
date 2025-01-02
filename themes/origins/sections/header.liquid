@@ -10,16 +10,22 @@
   }
 {% endstyle %}
 
-<yc-header data-bottom-border="true" data-sticky="false">
+<yc-header
+  data-sticky="{{ section.settings.header_sticky }}"
+  data-bottom-border="{{ section.settings.header_border }}"
+>
   {%- for block in section.blocks -%}
     {%- case block.type %}
       {% when 'header_menu' %}
         <div class="links" data-block>
           <ul role="list">
-            <li><a class="yc-btn link" href="#">Home</a></li>
-            <li><a class="yc-btn link" href="#">Man</a></li>
-            <li><a class="yc-btn link" href="#">Woman</a></li>
-            <li><a class="yc-btn link" href="#">Kids</a></li>
+            {% for link in main-link-list.links %}
+              <li>
+                <a class="yc-btn link" href="{{ link.url }}">
+                  {{ link.title }}
+                </a>
+              </li>
+            {% endfor %}
           </ul>
           {% render 'header-menu-drawer' %}
         </div>
