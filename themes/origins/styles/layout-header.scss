@@ -1,46 +1,60 @@
 @import "mixins/breakpoints";
 
 yc-header {
+  padding: 1em 10%;
   display: grid;
   align-items: center;
   grid-template-columns: repeat(3, 1fr);
-  padding: 1em 10%;
-  height: var(--header-height);
+  color: rgb(var(--header-text-color));
   background-color: var(--header-bg-color);
 
-  .logo {
-    text-align: center;
-    img {
-      width: 60px;
-      object-fit: cover;
+  & > [data-block] {
+    display: flex;
+    align-items: center;
+
+    &:nth-last-child(2) {
+      justify-content: center;
+    }
+    &:last-child {
+      justify-content: flex-end;
     }
   }
 
-  .links {
+  .logo {
+    a {
+      display: inline-flex;
+      text-transform: uppercase;
+      color: rgb(var(--header-text-color));
+    }
+
+    img {
+      width: 60px;
+      object-fit: contain;
+    }
+  }
+
+  .links ul {
     display: flex;
     align-items: center;
     gap: var(--gap-xl);
-    li a {
-      color: var(--header-text-color);
+
+    li a.link {
+      color: rgb(var(--header-text-color));
     }
   }
 
   .actions {
-    display: flex;
-    align-items: center;
-    justify-content: end;
     gap: var(--gap-lg);
 
     .cart-btn,
     .search-btn {
-      border-color: var(--header-button-outline-color);
+      color: rgb(var(--header-text-color));
     }
 
     .cart-btn {
       gap: 1.5em;
       width: max-content;
       position: relative;
-      color: var(--header-text-color);
 
       .total-amount {
         font-size: var(--text-xs);
@@ -52,7 +66,7 @@ yc-header {
         position: absolute;
         height: 100%;
         width: 1px;
-        background-color: var(--header-button-outline-color);
+        background-color: rgba(var(--header-text-color), 20%);
         inset-inline-start: 40px;
       }
 
@@ -62,15 +76,13 @@ yc-header {
         font-size: 10px;
         clip-path: circle();
         color: var(--header-bg-color);
-        background-color: var(--header-text-color);
+        background-color: rgb(var(--header-text-color));
         inset-block-start: -8px;
         inset-inline-start: -8px;
       }
     }
 
     .search-btn {
-      color: var(--header-text-color);
-
       .icon {
         display: none;
       }
@@ -82,14 +94,15 @@ yc-header {
       input {
         width: 250px;
         padding-inline-start: 40px;
+        color: rgb(var(--header-text-color));
         transition: var(--transition-duration-slow);
       }
 
       .icon {
+        position: absolute;
         inset-block-start: 28%;
         inset-inline-start: 12px;
-        color: var(--color-gray-500);
-        position: absolute;
+        color: rgb(var(--header-text-color));
       }
 
       &[data-hidden$="true"] {
@@ -99,6 +112,10 @@ yc-header {
         input,
         .icon {
           width: 0px;
+        }
+
+        input {
+          padding-inline: 0px;
         }
 
         & ~ .search-btn .icon:first-child {
@@ -112,18 +129,20 @@ yc-header {
     }
   }
 
-  &[data-bottom-border="true"] {
-    border-bottom: 1px solid var(--header-border-color);
+  &[data-bottom-border] {
+    border-block-end: 1px solid rgba(var(--header-text-color), 8%);
   }
+}
 
-  &[data-sticky="true"] {
-    // TODO: ...
-  }
+#youcan-section--header:has(yc-header[data-sticky]) {
+  top: 0;
+  z-index: 2;
+  position: sticky;
 }
 
 @include breakpoint("lg") {
   yc-header {
-    .links,
+    .links ul,
     .actions .search-bar,
     .actions .search-btn {
       display: none;

@@ -7,7 +7,18 @@
   <div class="drawer-container">
     <div class="drawer-box menu-drawer">
       <div class="menu-head">
-        <img src="{{ 'default-logo.webp' | asset_url }}" alt="my store" width="60" height="60">
+        <a href="/" aria-label="home">
+          {% if section.settings.header_logo.src %}
+            <img
+              src="{{ section.settings.header_logo.src }}"
+              alt="{{ store.name }}"
+              height="60"
+              width="60"
+            >
+          {% else %}
+            {{ store.name }}
+          {% endif %}
+        </a>
         <button class="close-btn icon" data-size="sm" aria-label="close" data-toggle>
           {% render 'yc-icon' | name: 'x-mark' %}
         </button>
@@ -20,18 +31,14 @@
           </button>
         </form>
         <ul role="list" class="navigation">
-          <li>
-            <a href="#">Home {% render 'yc-icon' | name: 'caret-right' %}</a>
-          </li>
-          <li>
-            <a href="#">Man {% render 'yc-icon' | name: 'caret-right' %}</a>
-          </li>
-          <li>
-            <a href="#">Woman {% render 'yc-icon' | name: 'caret-right' %}</a>
-          </li>
-          <li>
-            <a href="#">Kids {% render 'yc-icon' | name: 'caret-right' %}</a>
-          </li>
+          {% for link in main-link-list.links %}
+            <li>
+              <a href="{{ link.url }}">
+                {{ link.title }}
+                {% render 'yc-icon' | name: 'caret-right' %}
+              </a>
+            </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
