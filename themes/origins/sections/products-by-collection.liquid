@@ -27,32 +27,69 @@
     </yc-section-head>
   {% endif %}
   <div class="products-by-collection">
-    {% comment %}
-      If type is slider: Render slider
-    {% endcomment %}
-    {% comment %}
-      else: render grid
-    {% endcomment %}
-    <ul class="grid">
-      {%- paginate collection.products by number_of_products id category_id: collection.id %}
-        {%- for item in items -%}
-          <li>
-            {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
-          </li>
-        {%- endfor -%}
-      {%- endpaginate %}
-      {% if section.settings.show_view_more == true %}
-        <div class="show-more">
-          <a
-            href="/collections/{{ collection.slug }}"
-            class="yc-btn secondary"
-            aria-label="{{ 'general.show_more_button' | t }}"
-          >
-            {{ 'general.show_more_button' | t }}
-          </a>
+    {% if section.settings.view_style == 'grid' %}
+      <ul class="grid">
+        {%- paginate collection.products by number_of_products id category_id: collection.id %}
+          {%- for item in items -%}
+            <li>
+              {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
+            </li>
+          {%- endfor -%}
+        {%- endpaginate %}
+        {% if section.settings.show_view_more == true %}
+          <div class="show-more">
+            <a
+              href="/collections/{{ collection.slug }}"
+              class="yc-btn secondary"
+              aria-label="{{ 'general.show_more_button' | t }}"
+            >
+              {{ 'general.show_more_button' | t }}
+            </a>
+          </div>
+        {% endif %}
+      </ul>
+    {% else %}
+      <yc-slider
+        responsive
+        arrows
+        data-type="fit"
+        style="
+          --slider-gap: 30;
+          --slider-speed: 600;
+          --slider-height: auto;
+          --slider-per-page: {{ section.settings.product_columns }};
+        "
+        aria-role="region"
+        aria-roledescription="Carousel"
+      >
+        <div class="slider-area">
+          <div class="slider-box" data-slider-box>
+            <ul class="slider-inner" data-slider>
+              {%- paginate collection.products by number_of_products id category_id: collection.id %}
+                {%- for item in items -%}
+                  <yc-slider-item>
+                    <li>
+                      {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
+                    </li>
+                  </yc-slider-item>
+                {%- endfor -%}
+              {%- endpaginate %}
+            </ul>
+          </div>
         </div>
-      {% endif %}
-    </ul>
+
+        <yc-slider-arrows data-position="{{ slideshow.arrow_position }}">
+          <div class="slider-arrows">
+            <button class="icon" data-arrow="left" aria-label="previous" disabled>
+              {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+            </button>
+            <button class="icon" data-arrow="right" aria-label="next">
+              {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+            </button>
+          </div>
+        </yc-slider-arrows>
+      </yc-slider>
+    {% endif %}
   </div>
 </yc-section>
 
@@ -96,6 +133,22 @@
         }
       ],
       "default": "center"
+    },
+    {
+      "id": "view_style",
+      "type": "select",
+      "label": "View Style",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "slides",
+          "label": "Slides"
+        }
+      ],
+      "default": "grid"
     },
     {
       "id": "text_color",
