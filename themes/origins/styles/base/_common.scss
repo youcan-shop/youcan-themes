@@ -9,23 +9,28 @@ button,
   justify-content: center;
   gap: var(--gap-md);
   border-radius: var(--radius-md);
+
   &.primary {
     background-color: rgb(var(--color-button));
     color: rgb(var(--color-button-text));
   }
+
   &.secondary {
     color: rgb(var(--color-secondary-button-text));
     background-color: rgb(var(--color-secondary-button));
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
   }
+
   &.destructive {
     color: var(--color-base-white);
     background-color: var(--color-error-500);
   }
+
   &.link {
     padding: unset;
     position: relative;
     color: rgb(var(--color-button-text));
+
     &::before {
       content: "";
       opacity: 0;
@@ -41,24 +46,30 @@ button,
       background-color: color-mix(in srgb, currentColor 5%, transparent);
     }
   }
+
   &.tertiary {
     padding: 0.75em;
   }
+
   &.ghost {
     background-color: transparent;
   }
+
   &.icon {
     padding: 12px;
     color: rgb(var(--color-button));
     background-color: transparent;
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+
     &[data-size$="sm"] {
       padding: 8px;
     }
+
     &[data-size$="lg"] {
       padding: 13px;
     }
   }
+
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -69,14 +80,17 @@ button,
     width: 100%;
     padding: 5px 12px;
   }
+
   &:hover:is(.ghost, .icon) {
     background-color: color-mix(in srgb, currentColor 5%, transparent);
   }
+
   &:hover:not(:disabled):is(.secondary) {
     color: rgb(var(--color-secondary-button));
     border-color: rgb(var(--color-secondary-button-text));
     background-color: rgb(var(--color-secondary-button-text));
   }
+
   &:hover:not(:disabled):is(.primary, .destructive, .loading, .with-icon) {
     opacity: 0.8;
   }
@@ -101,9 +115,11 @@ input:not([type="checkbox"]):not([type="radio"]) {
   &::placeholder {
     color: color-mix(in srgb, currentColor 60%, transparent);
   }
+
   &:focus {
     border: 1px solid currentColor;
   }
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
