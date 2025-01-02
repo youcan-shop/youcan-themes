@@ -11,6 +11,8 @@
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
 
     --product-columns: {{ section.settings.product_columns }};
+    --product-card-background: var(--section-bg-color);
+    --product-card-foreground: var(--section-text-color);
   "
 >
   {% if section.settings.title or section.settings.description %}
@@ -33,9 +35,16 @@
     <div class="grid">
       {%- paginate collection.products by number_of_products id category_id: collection.id %}
         {%- for item in items -%}
-          {%- render 'product-card', product: item -%}
+          {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
         {%- endfor -%}
       {%- endpaginate %}
+      {% if section.settings.show_view_more == true %}
+        <div class="show-more">
+          <a href="/collections/{{ collection.slug }}" class="yc-btn secondary">
+            {{ 'general.show_more_button' | t }}
+          </a>
+        </div>
+      {% endif %}
     </div>
   </div>
 </yc-section>
@@ -112,6 +121,18 @@
       "step": 1,
       "unit": "",
       "default": 3
+    },
+    {
+      "id": "show_view_more",
+      "type": "checkbox",
+      "label": "Show link to collection",
+      "default": true
+    },
+    {
+      "id": "quick_add_enabled",
+      "type": "checkbox",
+      "label": "Enable quick add button",
+      "default": false
     },
     {
       "type": "header",

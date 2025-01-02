@@ -5,8 +5,8 @@
   - product: {Object} Product Liquid object
   - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
   - show_badge (optional)
-  - show_compare_at_price (optional)
-  _ badge_text (optional)
+  - badge_text (optional)
+  - quick_add (optional)
 
   Usage:
   {% render 'card-product', lazy_load: true %}
@@ -35,14 +35,15 @@
     </a>
     <div class="price">
       <span class="current">{{ product.price | default: 0 | money }}</span>
-      {% if show_compare_at_price and compare_at_price != null %}
+      {% if product.compare_at_price != null %}
         <span class="compare-at">
           {{ product.compare_at_price | default: 0 | money }}
         </span>
       {% endif %}
     </div>
     {% unless settings.product_card_style == 'compact' %}
-      <button class="yc-btn secondary">
+      {% comment %} TODO: Add quick add and normal add to cart logic {% endcomment %}
+      <button class="yc-btn buy">
         {{ 'general.buy_now' | t }}
       </button>
     {% endunless %}
