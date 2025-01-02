@@ -11,8 +11,12 @@
 {% endstyle %}
 
 <yc-header
-  data-sticky="{{ section.settings.header_sticky }}"
-  data-bottom-border="{{ section.settings.header_border }}"
+  {% if section.settings.header_sticky %}
+    data-sticky
+  {% endif %}
+  {% if section.settings.header_border %}
+    data-bottom-border
+  {% endif %}
 >
   {%- for block in section.blocks -%}
     {%- case block.type %}
