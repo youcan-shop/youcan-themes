@@ -26,18 +26,24 @@
     width: 100%;
     object-fit: cover;
     border-radius: var(--product-card-border-radius);
+    pointer-events: none;
   }
 
   .info {
+    padding: 1.25em;
     display: grid;
     gap: var(--gap-xs);
     border-radius: var(--product-card-border-radius);
     background-color: var(--product-card-background);
-    padding: 1.25em;
     color: rgb(var(--product-card-foreground));
 
+    .title,
+    .price {
+      justify-self: var(--product-card-text-alignment);
+    }
+
     .title {
-      width: 100%;
+      width: fit-content;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -69,7 +75,8 @@
       color: currentColor;
 
       &:hover {
-        background-color: rgba(var(--product-card-foreground), 0.06);
+        color: var(--product-card-background);
+        background-color: rgb(var(--product-card-foreground));
       }
     }
   }

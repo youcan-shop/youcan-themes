@@ -14,14 +14,20 @@
 
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 
+{% style %}
+  .product-card {
+    --product-card-text-alignment: {{ settings.product_card_text_alignment }};
+  }
+{% endstyle %}
+
 <div class="product-card" data-style="{{ settings.product_card_style }}">
   <a href="{{ product.url }}" class="img-link" aria-label="{{ product.name }}">
     <img
       loading="lazy"
-      src="{{ product.thumbnail }}"
-      alt="{{ product.name }}"
       height="100%"
       width="100%"
+      src="{{ product.thumbnail }}"
+      alt="{{ product.name }}"
     >
   </a>
   {% if show_badge and badge_text %}
