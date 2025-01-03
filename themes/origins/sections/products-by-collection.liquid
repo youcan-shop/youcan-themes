@@ -9,6 +9,8 @@
     --section-space-bottom: {{ section.settings.space_bottom }}px;
     --section-bg-color: {{ section.settings.background_color.hex }};
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+    --section-arrows-foreground: rgb(var(--section-text-color));
+    --section-arrows-background: var(--section-bg-color);
 
     --product-columns: {{ section.settings.product_columns }};
     --product-card-background: var(--section-bg-color);
@@ -41,9 +43,9 @@
             <a
               href="/collections/{{ collection.slug }}"
               class="yc-btn secondary"
-              aria-label="{{ 'general.show_more_button' | t }}"
+              aria-label="{{ 'general.show_all_button' | t }}"
             >
-              {{ 'general.show_more_button' | t }}
+              {{ 'general.show_all_button' | t }}
             </a>
           </div>
         {% endif %}
@@ -77,16 +79,29 @@
             </ul>
           </div>
         </div>
-        <yc-slider-arrows data-position="right">
-          <div class="slider-arrows">
-            <button class="icon" data-arrow="left" aria-label="previous" disabled>
-              {% render 'yc-icon', name: 'arrow-left', size: 15 %}
-            </button>
-            <button class="icon" data-arrow="right" aria-label="next">
-              {% render 'yc-icon', name: 'arrow-right', size: 15 %}
-            </button>
-          </div>
-        </yc-slider-arrows>
+        <yc-slider-footer>
+          {% if section.settings.show_view_more == true %}
+            <div class="show-more">
+              <a
+                href="/collections/{{ collection.slug }}"
+                class="yc-btn secondary"
+                aria-label="{{ 'general.show_all_button' | t }}"
+              >
+                {{ 'general.show_all_button' | t }}
+              </a>
+            </div>
+          {% endif %}
+          <yc-slider-arrows data-position="right">
+            <div class="slider-arrows">
+              <button class="icon" data-arrow="left" aria-label="previous" disabled>
+                {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+              </button>
+              <button class="icon" data-arrow="right" aria-label="next">
+                {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+              </button>
+            </div>
+          </yc-slider-arrows>
+        </yc-slider-footer>
       </yc-slider>
     {% endif %}
   </div>
