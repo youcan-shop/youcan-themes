@@ -99,6 +99,14 @@ yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-conten
   background-color:var(--section-button-background);
   color:var(--section-button-foreground);
 }
+yc-slider yc-slider-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+yc-slider yc-slider-footer yc-slider-arrows{
+  margin-inline-start:auto;
+}
 yc-slider yc-slider-arrows{
   display:flex;
 }
@@ -110,11 +118,11 @@ yc-slider yc-slider-arrows .slider-arrows{
 yc-slider yc-slider-arrows .slider-arrows button{
   padding:8px 15px;
   border-radius:var(--radius-sm);
-  background-color:rgb(var(--section-arrows-background));
+  background-color:var(--section-arrows-background);
   color:var(--section-arrows-foreground);
 }
 yc-slider yc-slider-arrows .slider-arrows button.icon:hover{
-  background-color:color-mix(in srgb, var(--overlay-background) 10%, rgb(var(--section-arrows-background)));
+  background-color:color-mix(in srgb, var(--section-arrows-foreground) 10%, var(--section-arrows-background));
 }
 [dir="rtl"] yc-slider yc-slider-arrows .slider-arrows button .icon{
   rotate:180deg;
@@ -151,6 +159,11 @@ yc-slider[data-type$=full] yc-slider-arrows[data-position$=right]{
 yc-slider[data-type$=full] yc-slider-arrows button{
   border:none;
   box-shadow:inset rgba(50, 50, 93, 0.1) 0px 2px 5px -1px, rgba(0, 0, 0, 0.2) 0px 1px 3px -1px;
+}
+@media (max-width: 1280px){
+  yc-slider[responsive] yc-slider-item{
+    --slider-per-page:var(--slider-max-items-xl);
+  }
 }
 @media (max-width: 1024px){
   yc-slider[responsive] yc-slider-item{

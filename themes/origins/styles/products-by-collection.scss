@@ -1,0 +1,42 @@
+@import "mixins/breakpoints";
+
+.products-by-collection {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(var(--product-columns), 1fr);
+    gap: var(--gap-lg);
+  }
+
+  .show-more {
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .yc-btn {
+      padding: 8px 15px;
+      width: fit-content;
+      color: currentColor;
+      border: var(--product-card-border);
+      background-color: var(--product-card-background);
+
+      &:hover {
+        color: currentColor;
+        border-color: var(--product-card-border-color);
+        background-color: color-mix(
+          in srgb,
+          var(--section-arrows-foreground) 10%,
+          var(--section-arrows-background)
+        );
+      }
+    }
+  }
+}
+
+@include breakpoint("lg") {
+  .products-by-collection {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -26,21 +26,28 @@
     width: 100%;
     object-fit: cover;
     border-radius: var(--product-card-border-radius);
+    pointer-events: none;
   }
 
   .info {
+    padding: 1.25em;
     display: grid;
     gap: var(--gap-xs);
     border-radius: var(--product-card-border-radius);
-    background-color: var(--color-base-white);
-    padding: 1.25em;
+    background-color: var(--product-card-background);
+    color: rgb(var(--product-card-foreground));
+
+    .title,
+    .price {
+      justify-self: var(--product-card-text-alignment);
+    }
 
     .title {
-      width: 100%;
+      width: fit-content;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: var(--color-gray-500);
+      color: currentColor;
     }
 
     .price {
@@ -55,23 +62,32 @@
       }
 
       .compare-at {
-        color: var(--color-gray-500);
+        color: currentColor;
         font-weight: 400;
         text-decoration: line-through;
       }
     }
 
-    .yc-btn.secondary {
+    .yc-btn {
       margin-block-start: 0.5em;
+      border: var(--product-card-border);
+      background-color: var(--product-card-background);
+
+      &:hover {
+        color: var(--product-card-background);
+        background-color: rgb(var(--product-card-foreground));
+      }
     }
   }
 
   &[data-style$="standard"] {
     --product-img-height: 350px;
-    box-shadow: var(--shadow-dark-sm);
+
+    border: var(--product-card-border);
 
     .img-link {
       display: block;
+      border-bottom: var(--product-card-border);
     }
 
     .img-link,
@@ -89,12 +105,6 @@
       border-start-end-radius: 0;
       border-start-start-radius: 0;
     }
-
-    &:hover {
-      box-shadow:
-        #00000008 0 3px 14px,
-        #0003 0 0 0 1px;
-    }
   }
 
   &[data-style$="compact"] {
@@ -107,7 +117,7 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      border-radius: var(--radius-lg);
+      border-radius: var(--product-card-border-radius);
       backdrop-filter: var(--overlay-blur);
       background-color: var(--overlay-background);
       opacity: 0;

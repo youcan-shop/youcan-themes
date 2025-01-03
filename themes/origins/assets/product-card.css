@@ -24,21 +24,28 @@
   -o-object-fit:cover;
      object-fit:cover;
   border-radius:var(--product-card-border-radius);
+  pointer-events:none;
 }
 .product-card .info{
+  padding:1.25em;
   display:grid;
   grid-gap:var(--gap-xs);
   gap:var(--gap-xs);
   border-radius:var(--product-card-border-radius);
-  background-color:var(--color-base-white);
-  padding:1.25em;
+  background-color:var(--product-card-background);
+  color:rgb(var(--product-card-foreground));
+}
+.product-card .info .title,
+.product-card .info .price{
+  justify-self:var(--product-card-text-alignment);
 }
 .product-card .info .title{
-  width:100%;
+  width:-moz-fit-content;
+  width:fit-content;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  color:var(--color-gray-500);
+  color:currentColor;
 }
 .product-card .info .price{
   display:flex;
@@ -51,20 +58,27 @@
   font-weight:550;
 }
 .product-card .info .price .compare-at{
-  color:var(--color-gray-500);
+  color:currentColor;
   font-weight:400;
   -webkit-text-decoration:line-through;
   text-decoration:line-through;
 }
-.product-card .info .yc-btn.secondary{
+.product-card .info .yc-btn{
   margin-block-start:0.5em;
+  border:var(--product-card-border);
+  background-color:var(--product-card-background);
+}
+.product-card .info .yc-btn:hover{
+  color:var(--product-card-background);
+  background-color:rgb(var(--product-card-foreground));
 }
 .product-card[data-style$=standard]{
   --product-img-height:350px;
-  box-shadow:var(--shadow-dark-sm);
+  border:var(--product-card-border);
 }
 .product-card[data-style$=standard] .img-link{
   display:block;
+  border-bottom:var(--product-card-border);
 }
 .product-card[data-style$=standard] .img-link,
 .product-card[data-style$=standard] img{
@@ -79,9 +93,6 @@
   border-start-end-radius:0;
   border-start-start-radius:0;
 }
-.product-card[data-style$=standard]:hover{
-  box-shadow:rgba(0, 0, 0, 0.031372549) 0 3px 14px, rgba(0, 0, 0, 0.2) 0 0 0 1px;
-}
 .product-card[data-style$=compact]{
   --product-img-height:400px;
   cursor:pointer;
@@ -91,7 +102,7 @@
   position:absolute;
   width:100%;
   height:100%;
-  border-radius:var(--radius-lg);
+  border-radius:var(--product-card-border-radius);
   -webkit-backdrop-filter:var(--overlay-blur);
           backdrop-filter:var(--overlay-blur);
   background-color:var(--overlay-background);
