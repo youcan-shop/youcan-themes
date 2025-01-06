@@ -20,13 +20,19 @@
 
 <div class="product-card" data-style="{{ settings.product_card_style }}">
   <a href="{{ product.url }}" class="img-link" aria-label="{{ product.name }}">
-    <img
-      loading="lazy"
-      height="100%"
-      width="100%"
-      src="{{ product.thumbnail }}"
-      alt="{{ product.name }}"
-    >
+    {% if product.thumbnail %}
+      <img
+        loading="lazy"
+        height="100%"
+        width="100%"
+        src="{{ product.thumbnail }}"
+        alt="{{ product.name }}"
+      >
+    {% else %}
+      <div class="placeholder">
+        {% render 'yc-placeholder', name: 'product' %}
+      </div>
+    {% endif %}
   </a>
   {% if show_badge and badge_text %}
     <div class="badge" data-position="{{ settings.badge_position }}">
