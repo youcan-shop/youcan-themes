@@ -1,11 +1,24 @@
+/*
+  Usage:
+  There are some css variables that should be defined in the product-card's parent, these variables are:
+  --product-columns
+  --product-card-background
+  --product-card-foreground
+  --product-card-border-color
+  --product-card-border
+  --product-card-text-alignment
+*/
+
 .product-card {
+  --product-content-inset: 1em;
+
   border-radius: var(--product-card-border-radius);
   transition: all var(--transition-duration-normal);
   position: relative;
 
   .badge {
     position: absolute;
-    inset-block-start: 0.8em;
+    inset-block-start: var(--product-content-inset);
     background-color: var(--badge-bg-color);
     color: var(--badge-text-color);
     border-radius: 100px;
@@ -13,20 +26,47 @@
     font-size: var(--text-xs);
 
     &[data-position$="left"] {
-      inset-inline-start: 0.8em;
+      inset-inline-start: var(--product-content-inset);
     }
 
     &[data-position$="right"] {
-      inset-inline-end: 0.8em;
+      inset-inline-end: var(--product-content-inset);
+    }
+
+    span {
+      max-width: 32ch;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
-  img {
-    height: var(--product-img-height);
-    width: 100%;
-    object-fit: cover;
-    border-radius: var(--product-card-border-radius);
-    pointer-events: none;
+  .img-link {
+    overflow: hidden;
+
+    img {
+      height: var(--product-img-height);
+      width: 100%;
+      object-fit: cover;
+      border-radius: var(--product-card-border-radius);
+      pointer-events: none;
+    }
+
+    .placeholder {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(var(--product-card-foreground), 0.05);
+      border-radius: var(--product-card-border-radius);
+      overflow: hidden;
+
+      svg {
+        color: rgba(var(--product-card-foreground), 0.6);
+      }
+    }
   }
 
   .info {
@@ -44,6 +84,7 @@
 
     .title {
       width: fit-content;
+      max-width: 100%;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -95,7 +136,8 @@
       height: var(--product-img-height);
     }
 
-    img {
+    img,
+    .placeholder {
       border-end-end-radius: 0;
       border-end-start-radius: 0;
     }
@@ -141,8 +183,8 @@
     .info {
       position: absolute;
       inset-block-end: 0;
-      margin: 1em;
-      padding: 1em;
+      margin: var(--product-content-inset);
+      padding: var(--product-content-inset);
       width: stretch;
     }
   }
