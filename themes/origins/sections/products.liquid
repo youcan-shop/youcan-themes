@@ -32,7 +32,7 @@
       <ul class="products-grid">
         {% for block in section.blocks %}
           <li>
-            {%- render 'product-card',
+            {%- render 'product',
               product: block.settings.item,
               quick_add: section.settings.quick_add_enabled,
               badge_text: block.settings.badge_text
@@ -60,7 +60,7 @@
               {% for block in section.blocks %}
                 <li>
                   <yc-slider-item>
-                    {%- render 'product-card',
+                    {%- render 'product',
                       product: block.settings.item,
                       quick_add: section.settings.quick_add_enabled,
                       badge_text: block.settings.badge_text
@@ -208,6 +208,10 @@
           "type": "text",
           "label": "Badge text",
           "default": ""
+        },
+        {
+          "type": "paragraph",
+          "content": "You can customize the badge colors from the global settings"
         }
       ]
     }
