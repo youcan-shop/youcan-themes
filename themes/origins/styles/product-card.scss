@@ -10,13 +10,15 @@
 */
 
 .product-card {
+  --product-content-inset: 1em;
+
   border-radius: var(--product-card-border-radius);
   transition: all var(--transition-duration-normal);
   position: relative;
 
   .badge {
     position: absolute;
-    inset-block-start: 0.8em;
+    inset-block-start: var(--product-content-inset);
     background-color: var(--badge-bg-color);
     color: var(--badge-text-color);
     border-radius: 100px;
@@ -24,11 +26,11 @@
     font-size: var(--text-xs);
 
     &[data-position$="left"] {
-      inset-inline-start: 0.8em;
+      inset-inline-start: var(--product-content-inset);
     }
 
     &[data-position$="right"] {
-      inset-inline-end: 0.8em;
+      inset-inline-end: var(--product-content-inset);
     }
 
     span {
@@ -181,8 +183,8 @@
     .info {
       position: absolute;
       inset-block-end: 0;
-      margin: 1em;
-      padding: 1em;
+      margin: var(--product-content-inset);
+      padding: var(--product-content-inset);
       width: stretch;
     }
   }
