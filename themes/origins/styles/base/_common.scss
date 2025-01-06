@@ -164,17 +164,6 @@ yc-section {
   }
 }
 
-@include breakpoint("md") {
-  yc-section {
-    padding-inline: 1em;
-    yc-section-head {
-      p {
-        font-size: var(--text-sm);
-      }
-    }
-  }
-}
-
 .products-grid {
   /*
     Usage:
@@ -184,4 +173,21 @@ yc-section {
   display: grid;
   grid-template-columns: repeat(var(--product-columns, 3), 1fr);
   gap: var(--gap-lg);
+}
+
+@include breakpoint("lg") {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include breakpoint("md") {
+  yc-section {
+    padding-inline: 1em;
+    yc-section-head {
+      p {
+        font-size: var(--text-sm);
+      }
+    }
+  }
 }
