@@ -31,7 +31,11 @@
       <ul class="products-grid">
         {% for block in section.blocks %}
           <li>
-            {%- render 'product', product: block, quick_add: section.settings.quick_add_enabled -%}
+            {%- render 'product',
+              product: block,
+              quick_add: section.settings.quick_add_enabled,
+              badge_text: block.settings.badge_text
+            -%}
           </li>
         {%- endfor -%}
       </ul>
