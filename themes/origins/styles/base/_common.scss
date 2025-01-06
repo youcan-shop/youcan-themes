@@ -175,13 +175,25 @@ yc-section {
   gap: var(--gap-lg);
 }
 
+@include breakpoint("xl") {
+  .products-grid {
+    &:has(> :nth-child(4)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
 @include breakpoint("lg") {
   .products-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }
 
 @include breakpoint("md") {
+  .products-grid {
+    grid-template-columns: 1fr !important;
+  }
+
   yc-section {
     padding-inline: 1em;
     yc-section-head {
