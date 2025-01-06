@@ -2,10 +2,8 @@ class Modal extends HTMLElement {
   constructor() {
     super();
 
-    this.startY = 0;
-    this.currentY = 0;
     this.isDragging = false;
-
+    this.startY = this.currentY = 0;
     this.state = this.dataset.hidden === "true";
     this.modal = this.querySelector("[data-modal]");
 
@@ -23,95 +21,84 @@ class Modal extends HTMLElement {
   }
 
   _render() {
-    this.useDrag();
-    this.useActions();
-
-    addEventListener("resize", () => this.initialPosition());
+    this.dragHandler();
+    this.toggleHandler();
+    window.addEventListener("resize", () => this.updatePosition());
   }
 
-  useActions() {
-    const toggles = this.querySelectorAll("[data-toggle]");
-
-    if (toggles.length) {
-      toggles.forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-          this.setState();
-          this.setScroll();
-          this.initialPosition();
-        });
-      });
-    }
+  toggleHandler() {
+    this.querySelectorAll("[data-toggle]").forEach((toggle) =>
+      toggle.addEventListener("click", () => {
+        this.toggleState();
+        this.updatePosition();
+      }),
+    );
   }
 
-  useDrag() {
-    Object.entries(this.DRAG_EVENTS).forEach(([action, types]) => {
-      types.forEach((type) => {
-        this.addEventListener(
-          type,
-          (event) => {
-            if (typeof this[action] === "function") this[action](event);
-          },
-          { passive: ["touchstart", "touchmove"].includes(type) },
-        );
-      });
-    });
+  dragHandler() {
+    Object.entries(this.DRAG_EVENTS).forEach(([action, types]) =>
+      types.forEach((type) =>
+        this.addEventListener(type, (event) => this[action]?.(event), {
+          passive: ["touchstart", "touchmove"].includes(type),
+        }),
+      ),
+    );
   }
 
   startDrag(event) {
-    if (this.state || innerWidth > this.MOBILE_SCREEN) return;
+    if (this.state || window.innerWidth > this.MOBILE_SCREEN) return;
 
     this.isDragging = true;
-    this.startY = event.touches ? event.touches[0].clientY : event.clientY;
-    this.currentY = this.startY;
-
-    this.setTransitionDuration(0);
+    this.startY = this.currentY = this.getEventY(event);
+    this.setTransition(0);
   }
 
   onDrag(event) {
-    if (!this.isDragging || innerWidth > this.MOBILE_SCREEN) return;
+    if (!this.isDragging || window.innerWidth > this.MOBILE_SCREEN) return;
 
-    this.currentY = event.touches ? event.touches[0].clientY : event.clientY;
-    const deltaY = this.currentY - this.startY;
-
+    const deltaY = (this.currentY = this.getEventY(event)) - this.startY;
     if (deltaY > 0) this.setPosition(`0% ${deltaY}px`);
   }
 
   endDrag() {
-    if (!this.isDragging || innerWidth > this.MOBILE_SCREEN) return;
+    if (!this.isDragging || window.innerWidth > this.MOBILE_SCREEN) return;
 
     const deltaY = this.currentY - this.startY;
-    const threshold = (this.modal.offsetHeight * 15) / 100;
+    const threshold = this.modal.offsetHeight * 0.15;
 
-    if (deltaY > threshold) {
-      this.setState(true);
-      this.setScroll();
-      this.setPosition("0% 100%");
-    } else {
-      this.setPosition("0%");
-    }
-
-    this.reset();
-    this.setTransitionDuration(this.SPEED);
+    deltaY > threshold ? this.close() : this.open();
+    this.resetDrag();
+    this.setTransition(this.SPEED);
   }
 
-  reset() {
-    this.startY = 0;
-    this.currentY = 0;
-    this.isDragging = false;
+  resetDrag() {
+    this.isDragging = this.startY = this.currentY = 0;
   }
 
-  setState(new_state = !this.state) {
-    this.state = new_state;
-    this.dataset.hidden = this.state;
+  getEventY(event) {
+    return event.touches ? event.touches[0].clientY : event.clientY;
   }
 
-  setScroll() {
-    this.state
-      ? document.body.removeAttribute("data-scroll-locked")
-      : document.body.setAttribute("data-scroll-locked", "");
+  close() {
+    this.setState(true);
+    this.setPosition("0% 100%");
   }
 
-  setTransitionDuration(duration) {
+  open() {
+    this.setPosition("0%");
+  }
+
+  toggleState() {
+    this.setState(!this.state);
+  }
+
+  setState(hidden) {
+    this.state = hidden;
+    this.dataset.hidden = hidden;
+    document.body.toggleAttribute("data-scroll-locked", !hidden);
+  }
+
+  setTransition(duration) {
     this.modal.style.transitionDuration = `${duration}ms`;
   }
 
@@ -119,10 +106,17 @@ class Modal extends HTMLElement {
     this.modal.style.translate = position;
   }
 
-  initialPosition() {
-    innerWidth <= this.MOBILE_SCREEN
-      ? this.setPosition(this.state ? "0% 100%" : "0%")
-      : this.setPosition(this.state ? "-50% -40%" : "-50% -50%");
+  updatePosition() {
+    const positions = {
+      mobile: { open: "0%", closed: "0% 100%" },
+      desktop: { open: "-50% -50%", closed: "-50% -40%" },
+    };
+
+    const isMobile = window.innerWidth <= this.MOBILE_SCREEN;
+    const key = isMobile ? "mobile" : "desktop";
+    const state = this.state ? "closed" : "open";
+
+    this.setPosition(positions[key][state]);
   }
 }
 
