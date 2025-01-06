@@ -1,0 +1,68 @@
+@import "mixins/breakpoints";
+
+yc-modal {
+  @media (min-width: 768px) {
+    .modal-box {
+      width: 500px;
+      z-index: 100;
+      position: fixed;
+      inset: 50% 0 0 50%;
+      translate: -50% -50%;
+      border-radius: var(--radius-md);
+      background-color: var(--color-base-white);
+      transition: var(--transition-duration-slow)
+        cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    &[data-hidden="true"] .modal-box {
+      opacity: 0;
+      visibility: hidden;
+      translate: -50% -40%;
+    }
+  }
+
+  @include breakpoint("md") {
+    .modal-box {
+      width: 100%;
+      height: 500px;
+      // height: fit-content;
+      z-index: 100;
+      translate: 0%;
+      position: fixed;
+      inset-block-end: 0;
+      inset-inline-start: 0;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      background-color: var(--color-base-white);
+      transition: var(--transition-duration-normal);
+      &::before {
+        content: "";
+        width: 48px;
+        height: 6px;
+        position: absolute;
+        border-radius: 100px;
+        left: 50%;
+        inset-block-start: 4%;
+        translate: -50% -50%;
+        background-color: color-mix(in srgb, currentColor 10%, transparent);
+      }
+    }
+
+    &[data-hidden="true"] .modal-box {
+      translate: 0% 100%;
+    }
+  }
+
+  .modal-overlay {
+    inset: 0;
+    z-index: 99;
+    position: fixed;
+    backdrop-filter: var(--overlay-blur);
+    background-color: var(--overlay-background);
+    transition: var(--transition-duration-normal);
+  }
+
+  &[data-hidden="true"] .modal-overlay {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
