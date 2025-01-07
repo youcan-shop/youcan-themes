@@ -6,6 +6,10 @@
   --items-columns
   --collection-card-background
   --collection-card-foreground
+
+  These properties are set by the global collection card settings in head-config.liquid:
+  --collection-card-border-radius
+  --collection-card-text-alignment
 */
 
 .collection-card {
@@ -38,14 +42,19 @@
     }
   }
 
-  .collection-name {
+  .info {
+    display: flex;
+    justify-content: var(--collection-card-text-alignment);
     position: absolute;
-    padding: 12px 20px;
     inset-block-end: 1em;
-    inset-inline-start: 1em;
-    color: rgb(var(--collection-card-foreground));
-    background-color: var(--collection-card-background);
-    border-radius: var(--collection-card-border-radius);
+    inset-inline: 1em;
+
+    .collection-name {
+      padding: 12px 20px;
+      color: rgb(var(--collection-card-foreground));
+      background-color: var(--collection-card-background);
+      border-radius: var(--collection-card-border-radius);
+    }
   }
 
   &:hover {
