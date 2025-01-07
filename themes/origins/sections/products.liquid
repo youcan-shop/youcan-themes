@@ -9,12 +9,12 @@
     --section-arrows-foreground: rgb(var(--section-text-color));
     --section-arrows-background: var(--section-bg-color);
 
-    --product-columns: {{ section.settings.product_columns }};
     --product-card-background: var(--section-bg-color);
     --product-card-foreground: var(--section-text-color);
     --product-card-border-color: rgba(var(--product-card-foreground), 0.15);
     --product-card-border: 1px solid var(--product-card-border-color);
-    --product-card-text-alignment: {{ settings.product_card_text_alignment }};
+
+    --items-columns: {{ section.settings.product_columns }};
   "
 >
   {% if section.settings.title or section.settings.description %}
@@ -29,7 +29,7 @@
   {% endif %}
   <div class="products">
     {% if section.settings.view_style == 'grid' %}
-      <ul class="products-grid">
+      <ul class="items-grid">
         {% for block in section.blocks %}
           <li>
             {%- render 'product-card',

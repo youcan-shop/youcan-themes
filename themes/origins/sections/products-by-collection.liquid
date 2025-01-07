@@ -13,7 +13,7 @@
     --section-arrows-foreground: rgb(var(--section-text-color));
     --section-arrows-background: var(--section-bg-color);
 
-    --product-columns: {{ section.settings.product_columns }};
+    --items-columns: {{ section.settings.product_columns }};
     --product-card-background: var(--section-bg-color);
     --product-card-foreground: var(--section-text-color);
     --product-card-border-color: rgba(var(--product-card-foreground), 0.15);
@@ -32,7 +32,7 @@
   {% endif %}
   <div class="products-by-collection">
     {% if section.settings.view_style == 'grid' %}
-      <ul class="products-grid">
+      <ul class="items-grid">
         {%- paginate collection.products by number_of_products id category_id: collection.id %}
           {%- for item in items -%}
             <li>
