@@ -3,8 +3,6 @@
 
   Accepts:
   - product: {Object} Product Liquid object
-  - placeholder_image: {String} The placeholder image to use when no product exists. Default: 'product-apparel-2' (optional)
-  - show_badge (optional)
   - badge_text (optional)
   - quick_add (optional)
 
@@ -12,23 +10,23 @@
   {% render 'card-product', lazy_load: true %}
 {% endcomment %}
 
-{% style %}
-  .product-card {
-    --product-card-text-alignment: {{ settings.product_card_text_alignment }};
-  }
-{% endstyle %}
-
 <div class="product-card" data-style="{{ settings.product_card_style }}">
   <a href="{{ product.url }}" class="img-link" aria-label="{{ product.name }}">
-    <img
-      loading="lazy"
-      height="100%"
-      width="100%"
-      src="{{ product.thumbnail }}"
-      alt="{{ product.name }}"
-    >
+    {% if product.thumbnail %}
+      <img
+        loading="lazy"
+        height="100%"
+        width="100%"
+        src="{{ product.thumbnail }}"
+        alt="{{ product.name }}"
+      >
+    {% else %}
+      <div class="card-placeholder">
+        {% render 'yc-placeholder', name: 'product' %}
+      </div>
+    {% endif %}
   </a>
-  {% if show_badge and badge_text %}
+  {% if badge_text %}
     <div class="badge" data-position="{{ settings.badge_position }}">
       <span>{{ badge_text }}</span>
     </div>

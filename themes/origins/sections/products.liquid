@@ -1,8 +1,4 @@
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
-{{ 'products-by-collection.css' | asset_url | stylesheet_tag }}
-
-{%- assign collection = section.settings.collection -%}
-{%- assign number_of_products = section.settings.max_products -%}
 
 <yc-section
   style="
@@ -13,11 +9,12 @@
     --section-arrows-foreground: rgb(var(--section-text-color));
     --section-arrows-background: var(--section-bg-color);
 
-    --items-columns: {{ section.settings.product_columns }};
     --product-card-background: var(--section-bg-color);
     --product-card-foreground: var(--section-text-color);
     --product-card-border-color: rgba(var(--product-card-foreground), 0.15);
     --product-card-border: 1px solid var(--product-card-border-color);
+
+    --items-columns: {{ section.settings.product_columns }};
   "
 >
   {% if section.settings.title or section.settings.description %}
@@ -30,27 +27,18 @@
       {% endif %}
     </yc-section-head>
   {% endif %}
-  <div class="products-by-collection">
+  <div class="products">
     {% if section.settings.view_style == 'grid' %}
       <ul class="items-grid">
-        {%- paginate collection.products by number_of_products id category_id: collection.id %}
-          {%- for item in items -%}
-            <li>
-              {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
-            </li>
-          {%- endfor -%}
-        {%- endpaginate %}
-        {% if section.settings.show_view_more == true %}
-          <div class="show-more">
-            <a
-              href="/collections/{{ collection.slug }}"
-              class="yc-btn secondary"
-              aria-label="{{ 'general.show_all_button' | t }}"
-            >
-              {{ 'general.show_all_button' | t }}
-            </a>
-          </div>
-        {% endif %}
+        {% for block in section.blocks %}
+          <li>
+            {%- render 'product-card',
+              product: block.settings.item,
+              quick_add: section.settings.quick_add_enabled,
+              badge_text: block.settings.badge_text
+            -%}
+          </li>
+        {%- endfor -%}
       </ul>
     {% else %}
       <yc-slider
@@ -69,30 +57,21 @@
         <div class="slider-area">
           <div class="slider-box" data-slider-box>
             <ul class="slider-inner" data-slider>
-              {%- paginate collection.products by number_of_products id category_id: collection.id %}
-                {%- for item in items -%}
+              {% for block in section.blocks %}
+                <li>
                   <yc-slider-item>
-                    <li>
-                      {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
-                    </li>
+                    {%- render 'product-card',
+                      product: block.settings.item,
+                      quick_add: section.settings.quick_add_enabled,
+                      badge_text: block.settings.badge_text
+                    -%}
                   </yc-slider-item>
-                {%- endfor -%}
-              {%- endpaginate %}
+                </li>
+              {%- endfor -%}
             </ul>
           </div>
         </div>
         <yc-slider-footer>
-          {% if section.settings.show_view_more == true %}
-            <div class="show-more">
-              <a
-                href="/collections/{{ collection.slug }}"
-                class="yc-btn secondary"
-                aria-label="{{ 'general.show_all_button' | t }}"
-              >
-                {{ 'general.show_all_button' | t }}
-              </a>
-            </div>
-          {% endif %}
           <yc-slider-arrows data-position="right">
             <div class="slider-arrows">
               <button class="icon" data-arrow="left" aria-label="previous" disabled>
@@ -109,26 +88,21 @@
   </div>
 </yc-section>
 
-{% schema %}
+{%- schema -%}
 {
-  "label": "Products by Collection",
+  "label": "Products",
   "settings": [
-    {
-      "type": "category",
-      "id": "collection",
-      "label": "Collection"
-    },
     {
       "id": "title",
       "type": "text",
       "label": "Title",
-      "default": "Products by Collection"
+      "default": "Featured Products"
     },
     {
       "id": "description",
       "type": "textarea",
       "label": "Description",
-      "default": "List out products from a collection of your choosing"
+      "default": "Products that take the spotlight"
     },
     {
       "id": "position",
@@ -179,16 +153,6 @@
       "default": "#FFFFFFFF"
     },
     {
-      "id": "max_products",
-      "type": "range",
-      "label": "Maximum products to show",
-      "min": 2,
-      "max": 25,
-      "step": 1,
-      "unit": "",
-      "default": 4
-    },
-    {
       "id": "product_columns",
       "type": "range",
       "label": "Number of columns on desktop",
@@ -197,12 +161,6 @@
       "step": 1,
       "unit": "",
       "default": 3
-    },
-    {
-      "id": "show_view_more",
-      "type": "checkbox",
-      "label": "Show link to collection",
-      "default": true
     },
     {
       "id": "quick_add_enabled",
@@ -234,6 +192,29 @@
       "unit": "px",
       "default": 100
     }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "label": "Product",
+      "settings": [
+        {
+          "id": "item",
+          "type": "product",
+          "label": "Product"
+        },
+        {
+          "id": "badge_text",
+          "type": "text",
+          "label": "Badge text",
+          "default": ""
+        },
+        {
+          "type": "paragraph",
+          "content": "You can customize the badge colors from the global settings"
+        }
+      ]
+    }
   ]
 }
-{% endschema %}
+{%- endschema -%}

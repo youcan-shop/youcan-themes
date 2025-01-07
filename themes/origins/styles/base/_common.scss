@@ -164,7 +164,36 @@ yc-section {
   }
 }
 
+.items-grid {
+  /*
+    Usage:
+    This rule depends on --items-columns which is not defined here and should always be defined in the parent of items-grid
+  */
+
+  display: grid;
+  grid-template-columns: repeat(var(--items-columns, 3), 1fr);
+  gap: var(--gap-lg);
+}
+
+@include breakpoint("xl") {
+  .items-grid {
+    &:has(> :nth-child(4)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@include breakpoint("lg") {
+  .items-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 @include breakpoint("md") {
+  .items-grid {
+    grid-template-columns: 1fr !important;
+  }
+
   yc-section {
     padding-inline: 1em;
     yc-section-head {
@@ -172,5 +201,30 @@ yc-section {
         font-size: var(--text-sm);
       }
     }
+  }
+}
+
+// Modal
+.overlay {
+  inset: 0;
+  z-index: 99;
+  position: fixed;
+  backdrop-filter: var(--overlay-blur);
+  background-color: var(--overlay-background);
+  transition: var(--transition-duration-normal);
+}
+
+.card-placeholder {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: currentColor;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+
+  svg {
+    color: rgba(var(--collection-card-foreground), 0.3);
   }
 }
