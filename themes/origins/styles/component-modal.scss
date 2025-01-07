@@ -1,0 +1,65 @@
+@import "mixins/breakpoints";
+
+yc-modal {
+  .modal-box {
+    z-index: 100;
+    position: fixed;
+    height: fit-content;
+    background-color: var(--color-base-white);
+  }
+
+  @media (min-width: 768px) {
+    .modal-box {
+      width: 500px;
+      inset: 50% 0 0 50%;
+      translate: -50% -50%;
+      border-radius: var(--radius-md);
+      transition: var(--transition-duration-slow)
+        cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+  }
+
+  @include breakpoint("md") {
+    .modal-box {
+      width: 100%;
+      translate: 0%;
+      inset-block-end: 0;
+      inset-inline-start: 0;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      transition: var(--transition-duration-normal);
+
+      &::before {
+        content: "";
+        width: 48px;
+        height: 6px;
+        position: absolute;
+        border-radius: 100px;
+        translate: -50% -50%;
+        left: 50%;
+        inset-block-start: 1em;
+        background-color: color-mix(in srgb, currentColor 10%, transparent);
+      }
+    }
+  }
+
+  &[data-hidden="true"] {
+    .modal-overlay {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    @include breakpoint("md") {
+      .modal-box {
+        translate: 0% 100%;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .modal-box {
+        opacity: 0;
+        visibility: hidden;
+        translate: -50% -40%;
+      }
+    }
+  }
+}
