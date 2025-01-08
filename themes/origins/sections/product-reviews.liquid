@@ -1,5 +1,4 @@
 {{ 'review-card.css' | asset_url | stylesheet_tag }}
-{{ 'product-reviews.css' | asset_url | stylesheet_tag }}
 
 <yc-section
   style="
@@ -7,6 +6,8 @@
     --section-space-bottom: {{ section.settings.space_bottom }}px;
     --section-bg-color: {{ section.settings.background_color.hex }};
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+
+    --items-columns: 4;
   "
 >
   {% if section.settings.title or section.settings.description %}
@@ -19,11 +20,12 @@
       {% endif %}
     </yc-section-head>
   {% endif %}
-
-  <div class="product-reviews" style="--products-length: 4">
-    {% for block in (1..4) %}
-      {% render 'review-card' %}
-    {% endfor %}
+  <div class="product-reviews">
+    <ul class="items-grid">
+      {% for block in (1..4) %}
+        <li>{% render 'review-card' %}</li>
+      {% endfor %}
+    </ul>
   </div>
 </yc-section>
 
@@ -31,6 +33,11 @@
 {
   "label": "Product reviews",
   "settings": [
+    {
+      "id": "product",
+      "type": "product",
+      "label": "Product"
+    },
     {
       "id": "title",
       "type": "text",
