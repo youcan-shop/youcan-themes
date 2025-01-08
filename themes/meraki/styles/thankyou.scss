@@ -144,6 +144,7 @@ body {
         .data-item {
           display: flex;
           justify-content: space-between;
+          align-items: center;
 
           & > :first-child {
             font-size: 12px;
@@ -159,16 +160,30 @@ body {
           }
 
           .coupon-wrapper {
-            display: inherit;
+            display: flex;
             gap: 5px;
 
-            .coupon-value {
-              display: inherit;
+            & * {
+              font-size: 14px;
+              font-weight: 700;
+              line-height: 140%;
+            }
 
-              .minus {
-                [dir='ltr'] & {
-                  order: -1;
-                }
+            .coupon-data {
+              display: inherit;
+              gap: inherit;
+            }
+
+            .coupon-discount {
+              display: inline-flex;
+              gap: 4px;
+
+              &::before {
+                content: "-";
+              }
+
+              &:dir(rtl) {
+                flex-direction: row-reverse;
               }
             }
           }
