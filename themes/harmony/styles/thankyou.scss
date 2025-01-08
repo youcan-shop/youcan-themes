@@ -204,16 +204,29 @@
           }
 
           .coupon-wrapper {
-            display: inherit;
+            display: flex;
             gap: 5px;
 
-            .coupon-value {
+            .coupon-data {
               display: inherit;
+              gap: inherit;
 
-              .minus {
-                [dir='ltr'] & {
-                  order: -1;
-                }
+              & * {
+                font-size: 14px;
+                font-weight: 400;
+              }
+            }
+
+            .coupon-discount {
+              display: inline-flex;
+              gap: 4px;
+
+              &::before {
+                content: "-";
+              }
+
+              &:dir(rtl) {
+                flex-direction: row-reverse;
               }
             }
           }
