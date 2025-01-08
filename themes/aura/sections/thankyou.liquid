@@ -82,17 +82,14 @@
           {{- 'thankyou.details.coupon' | t -}}
         </div>
         <div class="data-item">
-          <div class="coupon-value">
-            <span>{{- order.coupon.deducted_amount | money -}}</span>
-            <span class="minus">-</span>
-          </div>
-          <span>
-            {%- if order.coupon.is_percentage -%}
-              ({{- order.coupon.value -}}%)
-            {%- else -%}
-              ({{- order.coupon.value | money -}})
-            {%- endif -%}
-          </span>
+          {%- if order.coupon.is_percentage -%}
+            <div class="coupon-data">
+              <span class="coupon-discount">{{- order.coupon.deducted_amount | money -}}</span>
+              <span>({{- order.coupon.value -}}%)</span>
+            </div>
+          {%- else -%}
+            <span class="coupon-discount">{{- order.coupon.value | money -}}</span>
+          {%- endif -%}
         </div>
       </div>
     {%- endif -%}

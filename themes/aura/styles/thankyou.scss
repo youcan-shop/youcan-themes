@@ -93,19 +93,27 @@
         }
       }
 
-      .coupon-head {
-        .data-item {
+      .coupon-head .data-item {
+        .coupon-data {
           display: flex;
           gap: 5px;
 
-          .coupon-value {
-            display: inherit;
+          & * {
+            font-size: 14px;
+            font-weight: bold;
+          }
+        }
 
-            .minus {
-              [dir='ltr'] & {
-                order: -1;
-              }
-            }
+        .coupon-discount {
+          display: inline-flex;
+          gap: 4px;
+
+          &::before {
+            content: "-";
+          }
+
+          &:dir(rtl) {
+            flex-direction: row-reverse;
           }
         }
       }
