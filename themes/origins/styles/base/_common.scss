@@ -175,38 +175,6 @@ yc-section {
   gap: var(--gap-lg);
 }
 
-@include breakpoint("xl") {
-  .items-grid {
-    &:has(> :nth-child(4)) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-}
-
-@include breakpoint("lg") {
-  .items-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .featured-product {
-    grid-template-columns: 1fr;
-  }
-}
-
-@include breakpoint("md") {
-  .items-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  yc-section {
-    padding-inline: 1em;
-    yc-section-head {
-      p {
-        font-size: var(--text-sm);
-      }
-    }
-  }
-}
-
 // Modal
 .overlay {
   inset: 0;
@@ -237,4 +205,37 @@ yc-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--gap-3xl);
+}
+
+// Breakpoints
+@include breakpoint("xl") {
+  .items-grid {
+    &:has(> :nth-child(4)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@include breakpoint("lg") {
+  .items-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .single-product {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include breakpoint("md") {
+  .items-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  yc-section {
+    padding-inline: 1em;
+    yc-section-head {
+      p {
+        font-size: var(--text-sm);
+      }
+    }
+  }
 }
