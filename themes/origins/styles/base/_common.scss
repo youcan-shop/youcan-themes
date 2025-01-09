@@ -131,8 +131,8 @@ yc-section {
   display: grid;
   gap: var(--gap-3xl);
   padding-inline: 10%;
-  color: rgb(var(--section-text-color));
-  background-color: var(--section-bg-color);
+  color: rgb(var(--section-text-color, var(--color-base-black)));
+  background-color: var(--section-bg-color, var(--color-base-white));
   padding-block-start: var(--section-space-top);
   padding-block-end: var(--section-space-bottom);
 
@@ -187,6 +187,9 @@ yc-section {
   .items-grid {
     grid-template-columns: 1fr !important;
   }
+  .featured-product {
+    grid-template-columns: 1fr;
+  }
 }
 
 @include breakpoint("md") {
@@ -227,4 +230,11 @@ yc-section {
   svg {
     color: rgba(var(--collection-card-foreground), 0.3);
   }
+}
+
+.single-product {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-3xl);
 }
