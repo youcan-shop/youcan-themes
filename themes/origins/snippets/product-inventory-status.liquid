@@ -1,16 +1,13 @@
-{% style %}
-  .single-product {
-    {% if count == 0 %}
-      --inventory-status-color: var(--color-gray-300);
-    {% elsif count > threshold %}
-      --inventory-status-color: var(--color-success-500);
-    {% else %}
-      --inventory-status-color: var(--color-warning-50);
-    {% endif %}
-  }
-{% endstyle %}
-
-<div class="inventory">
+<div
+  class="inventory"
+  {% if count == 0 %}
+    data-inventory-out-of-stock
+  {% elsif count > threshold %}
+    data-inventory-in-stock
+  {% else %}
+    data-inventory-low-stock
+  {% endif %}
+>
   {% render 'yc-icon', name: 'status', size: 28 %}
   {% if count == 0 %}
     {{ 'product.inventory_out_of_stock' | t }}
