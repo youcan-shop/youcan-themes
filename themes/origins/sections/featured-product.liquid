@@ -1,0 +1,50 @@
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+  "
+>
+  <div class="single-product">
+    <div class="media" style="background-color: var(--color-gray-50); height: 200px">MEDIA 🏗️</div>
+    <div class="info" style="background-color: var(--color-gray-50); height: 200px">INFO 🏗️</div>
+  </div>
+</yc-section>
+
+{% schema %}
+{
+  "label": "Featured Product",
+  "settings": [
+    {
+      "id": "item",
+      "type": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    }
+  ],
+  "blocks": []
+}
+{% endschema %}
