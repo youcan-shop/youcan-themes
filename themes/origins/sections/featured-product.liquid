@@ -19,8 +19,12 @@
             {% render 'product-description', description: product.description %}
           {% when 'rating' %}
             {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
-          {% when 'stock' %}
-            {% render 'product-stock', stock: product.inventory %}
+          {% when 'inventory_status' %}
+            {% render 'product-inventory-status',
+              count: product.variants[0].inventory,
+              threshold: block.settings.threshold,
+              show_count: block.settings.show_count
+            %}
         {% endcase %}
       {% endfor %}
     </div>
@@ -63,6 +67,29 @@
   ],
   "blocks": [
     {
+      "type": "inventory_status",
+      "label": "Inventory Status",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "threshold",
+          "type": "range",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 10,
+          "unit": "",
+          "label": "Low inventory threshold"
+        },
+        {
+          "id": "show_count",
+          "type": "checkbox",
+          "default": true,
+          "label": "Show inventory count"
+        }
+      ]
+    },
+    {
       "type": "title",
       "label": "Title",
       "limit": 1,
@@ -75,20 +102,14 @@
       "settings": []
     },
     {
-      "type": "description",
-      "label": "Description",
-      "limit": 1,
-      "settings": []
-    },
-    {
       "type": "rating",
       "label": "Rating",
       "limit": 1,
       "settings": []
     },
     {
-      "type": "stock",
-      "label": "Stock",
+      "type": "description",
+      "label": "Description",
       "limit": 1,
       "settings": []
     }

@@ -1,0 +1,16 @@
+{% style %}
+  .single-product {
+    {% if count == 0 %}
+      --inventory-status-color: var(--color-gray-300);
+    {% elsif count > threshold %}
+      --inventory-status-color: var(--color-success-500);
+    {% else %}
+      --inventory-status-color: var(--color-warning-50);
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="inventory">
+  {% render 'yc-icon', name: 'status', size: 28 %}
+  Stock {{ count }} / {{ threshold }}
+</div>
