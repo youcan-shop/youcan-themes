@@ -1,0 +1,53 @@
+{% comment %}
+  Renders a product card
+
+  Accepts:
+  - product: {Object} Product Liquid object
+  - badge_text (optional)
+  - quick_add (optional)
+
+  Usage:
+  {% render 'card-product', lazy_load: true %}
+{% endcomment %}
+
+<div class="product-card" data-style="{{ settings.product_card_style }}">
+  <a href="{{ product.url }}" class="img-link" aria-label="{{ product.name }}">
+    {% if product.thumbnail %}
+      <img
+        loading="lazy"
+        height="100%"
+        width="100%"
+        src="{{ product.thumbnail }}"
+        alt="{{ product.name }}"
+      >
+    {% else %}
+      <div class="card-placeholder">
+        {% render 'yc-placeholder', name: 'product' %}
+      </div>
+    {% endif %}
+  </a>
+  {% if badge_text %}
+    <div class="badge" data-position="{{ settings.badge_position }}">
+      <span>{{ badge_text }}</span>
+    </div>
+  {% endif %}
+  <div class="info">
+    <a href="{{ product.url }}" class="link title">
+      {{ product.name | default: 'Product Name' }}
+    </a>
+    <div class="price">
+      <span class="current">{{ product.price | default: 0 | money }}</span>
+      {% if product.compare_at_price != null %}
+        <span class="compare-at">
+          {{ product.compare_at_price | default: 0 | money }}
+        </span>
+      {% endif %}
+    </div>
+    {% unless settings.product_card_style == 'compact' %}
+      {% comment %} TODO: Add quick add and normal add to cart logic {% endcomment %}
+      <button class="yc-btn secondary">
+        {{ 'general.buy_now' | t }}
+      </button>
+    {% endunless %}
+  </div>
+</div>

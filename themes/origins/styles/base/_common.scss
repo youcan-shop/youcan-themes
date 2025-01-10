@@ -1,0 +1,313 @@
+@import "../mixins/breakpoints";
+
+// BUTTON
+button,
+.yc-btn {
+  padding: 12px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-md);
+  border-radius: var(--radius-md);
+
+  &.primary {
+    background-color: rgb(var(--color-button));
+    color: rgb(var(--color-button-text));
+  }
+
+  &.secondary {
+    color: currentColor;
+    background-color: transparent;
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+
+  &.destructive {
+    color: var(--color-base-white);
+    background-color: var(--color-error-500);
+  }
+
+  &.link {
+    padding: unset;
+    position: relative;
+    color: rgb(var(--color-button-text));
+
+    &::before {
+      content: "";
+      opacity: 0;
+      height: 100%;
+      width: 0%;
+      top: 50%;
+      left: -12px;
+      padding: 5px 0;
+      translate: 0 -50%;
+      position: absolute;
+      border-radius: var(--radius-sm);
+      transition: var(--transition-duration-normal);
+      background-color: color-mix(in srgb, currentColor 5%, transparent);
+    }
+  }
+
+  &.tertiary {
+    padding: 0.75em;
+  }
+
+  &.ghost {
+    background-color: transparent;
+  }
+
+  &.icon {
+    padding: 12px;
+    color: rgb(var(--color-button));
+    background-color: transparent;
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+
+    &[data-size$="sm"] {
+      padding: 8px;
+    }
+
+    &[data-size$="lg"] {
+      padding: 13px;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover:is(.link)::before {
+    opacity: 1;
+    width: 100%;
+    padding: 5px 12px;
+  }
+
+  &:hover:is(.ghost, .icon) {
+    background-color: color-mix(in srgb, currentColor 5%, transparent);
+  }
+
+  &:hover:not(:disabled):is(.secondary) {
+    color: rgb(var(--color-secondary-button));
+    border-color: rgb(var(--color-secondary-button-text));
+    background-color: rgb(var(--color-secondary-button-text));
+  }
+
+  &:hover:not(:disabled):is(.primary, .destructive, .loading, .with-icon) {
+    opacity: 0.8;
+  }
+}
+
+// LINKS
+a.link:not(.yc-btn):hover {
+  text-decoration: underline;
+}
+
+// INPUT
+select,
+textarea,
+input:not([type="checkbox"]):not([type="radio"]) {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: transparent;
+  border-radius: var(--radius-md);
+  color: rgb(var(--color-primary));
+  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+
+  &::placeholder {
+    color: color-mix(in srgb, currentColor 60%, transparent);
+  }
+
+  &:focus {
+    border: 1px solid currentColor;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// SECTION
+yc-section {
+  display: grid;
+  gap: var(--gap-3xl);
+  padding-inline: 10%;
+  color: rgb(var(--section-text-color, var(--color-base-black)));
+  background-color: var(--section-bg-color, var(--color-base-white));
+  padding-block-start: var(--section-space-top);
+  padding-block-end: var(--section-space-bottom);
+
+  &[data-full] {
+    padding-inline: 0;
+  }
+
+  yc-section-head {
+    display: grid;
+    gap: var(--gap-md);
+
+    &[data-position$="left"] {
+      text-align: start;
+    }
+
+    &[data-position$="right"] {
+      text-align: end;
+    }
+
+    &[data-position$="center"] {
+      text-align: center;
+    }
+
+    p {
+      text-wrap: balance;
+      font-size: var(--text-md);
+      color: rgba(var(--section-text-color), 0.7);
+    }
+  }
+}
+
+.items-grid {
+  /*
+    Usage:
+    This rule depends on --items-columns which is not defined here and should always be defined in the parent of items-grid
+  */
+
+  display: grid;
+  grid-template-columns: repeat(var(--items-columns, 3), 1fr);
+  gap: var(--gap-lg);
+}
+
+// Modal
+.overlay {
+  inset: 0;
+  z-index: 99;
+  position: fixed;
+  backdrop-filter: var(--overlay-blur);
+  background-color: var(--overlay-background);
+  transition: var(--transition-duration-normal);
+}
+
+.card-placeholder {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: currentColor;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+
+  svg {
+    color: rgba(var(--collection-card-foreground), 0.3);
+  }
+}
+
+.single-product {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--gap-3xl);
+
+  .media {
+    background-color: rgb(var(--color-gray-50));
+  }
+
+  .info {
+    display: grid;
+    gap: var(--gap-md);
+
+    .price {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-md);
+
+      .current {
+        font-weight: 550;
+      }
+
+      .compare-at {
+        color: color-mix(in srgb, currentColor 70%, transparent);
+        text-decoration: line-through;
+      }
+    }
+
+    .description {
+      .card-placeholder {
+        font-size: var(--text-md);
+      }
+    }
+
+    .inventory {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-2xs);
+
+      &[data-inventory-out-of-stock] {
+        .icon {
+          color: var(--color-gray-300);
+        }
+      }
+
+      &[data-inventory-in-stock] {
+        .icon {
+          color: var(--color-success-500);
+        }
+      }
+
+      &[data-inventory-low-stock] {
+        .icon {
+          color: var(--color-warning-500);
+        }
+      }
+    }
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: var(--text-md);
+  color: color-mix(in srgb, currentColor 70%, transparent);
+
+  .stars {
+    display: inline-flex;
+    gap: var(--gap-2xs);
+    color: var(--color-yellow-500);
+  }
+
+  .average {
+    line-height: 1.2;
+  }
+}
+
+// Breakpoints
+@include breakpoint("xl") {
+  .items-grid {
+    &:has(> :nth-child(4)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@include breakpoint("lg") {
+  .items-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .single-product {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include breakpoint("md") {
+  .items-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  yc-section {
+    padding-inline: 1em;
+    yc-section-head {
+      p {
+        font-size: var(--text-sm);
+      }
+    }
+  }
+}
