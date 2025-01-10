@@ -205,6 +205,78 @@ yc-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--gap-3xl);
+
+  .media {
+    background-color: rgb(var(--color-gray-50));
+  }
+
+  .info {
+    display: grid;
+    gap: var(--gap-md);
+
+    .price {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-md);
+
+      .current {
+        font-weight: 550;
+      }
+
+      .compare-at {
+        color: color-mix(in srgb, currentColor 70%, transparent);
+        text-decoration: line-through;
+      }
+    }
+
+    .description {
+      .card-placeholder {
+        font-size: var(--text-md);
+      }
+    }
+
+    .inventory {
+      display: flex;
+      align-items: center;
+      gap: var(--gap-2xs);
+
+      &[data-inventory-out-of-stock] {
+        .icon {
+          color: var(--color-gray-300);
+        }
+      }
+
+      &[data-inventory-in-stock] {
+        .icon {
+          color: var(--color-success-500);
+        }
+      }
+
+      &[data-inventory-low-stock] {
+        .icon {
+          color: var(--color-warning-500);
+        }
+      }
+    }
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: var(--text-md);
+  color: color-mix(in srgb, currentColor 70%, transparent);
+
+  .stars {
+    display: inline-flex;
+    gap: var(--gap-2xs);
+    color: var(--color-yellow-500);
+  }
+
+  .average {
+    line-height: 1.2;
+  }
 }
 
 // Breakpoints

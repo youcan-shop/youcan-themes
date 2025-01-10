@@ -1,13 +1,33 @@
+{% assign product = section.settings.item %}
+
 <yc-section
   style="
     --section-space-top: {{ section.settings.space_top }}px;
     --section-space-bottom: {{ section.settings.space_bottom }}px;
-    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
   "
 >
   <div class="single-product">
     <div class="media" style="background-color: var(--color-gray-50); height: 200px">MEDIA 🏗️</div>
-    <div class="info" style="background-color: var(--color-gray-50); height: 200px">INFO 🏗️</div>
+    <div class="info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {% when 'title' %}
+            {% render 'product-title', title: product.name %}
+          {% when 'price' %}
+            {% render 'product-price', price: product.price, compare_at_price: product.compare_at_price %}
+          {% when 'description' %}
+            {% render 'product-description', description: product.description %}
+          {% when 'rating' %}
+            {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
+          {% when 'inventory_status' %}
+            {% render 'product-inventory-status',
+              count: product.variants[0].inventory,
+              threshold: block.settings.threshold,
+              show_count: block.settings.show_count
+            %}
+        {% endcase %}
+      {% endfor %}
+    </div>
   </div>
 </yc-section>
 
@@ -45,6 +65,54 @@
       "default": 100
     }
   ],
-  "blocks": []
+  "blocks": [
+    {
+      "type": "inventory_status",
+      "label": "Inventory Status",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "threshold",
+          "type": "range",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 10,
+          "unit": "",
+          "label": "Low inventory threshold"
+        },
+        {
+          "id": "show_count",
+          "type": "checkbox",
+          "default": true,
+          "label": "Show inventory count"
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "label": "Title",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "price",
+      "label": "Price",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "rating",
+      "label": "Rating",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "description",
+      "label": "Description",
+      "limit": 1,
+      "settings": []
+    }
+  ]
 }
 {% endschema %}

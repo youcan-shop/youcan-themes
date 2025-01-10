@@ -1,0 +1,27 @@
+<div
+  class="inventory"
+  {% if count == 0 %}
+    data-inventory-out-of-stock
+  {% elsif count > threshold %}
+    data-inventory-in-stock
+  {% else %}
+    data-inventory-low-stock
+  {% endif %}
+>
+  {% render 'yc-icon', name: 'status', size: 28 %}
+  {% if count == 0 %}
+    {{ 'product.inventory_out_of_stock' | t }}
+  {% elsif count > threshold %}
+    {% if show_count %}
+      {{ 'product.inventory_in_stock_show_count' | t | replace: '%', count }}
+    {% else %}
+      {{ 'product.inventory_in_stock' | t }}
+    {% endif %}
+  {% else %}
+    {% if show_count %}
+      {{ 'product.inventory_low_stock_show_count' | t | replace: '%', count }}
+    {% else %}
+      {{ 'product.inventory_low_stock' | t }}
+    {% endif %}
+  {% endif %}
+</div>
