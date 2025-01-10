@@ -1,4 +1,7 @@
+{{ 'component-product-media.js' | asset_url | script_tag_deferred }}
+
 {% assign product = section.settings.item %}
+{% assign product_image = product.images[0] %}
 
 <yc-section
   style="
@@ -9,36 +12,39 @@
   "
 >
   <div class="single-product">
-    <div class="media">
+    <yc-product-media role="region" aria-label="Product images">
+      {% comment %} {% dump (product) %} {% endcomment %}
       <div class="main-image">
-        <div class="placeholder">
-          {% render 'yc-placeholder', name: 'product' %}
+        {% if product_image %}
+          <img src="{{ product_image }}" alt="{{ product.name }}" height="100%" width="100%" data-main-image>
+        {% else %}
+          <div class="placeholder">
+            {% render 'yc-placeholder', name: 'product' %}
+          </div>
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="gallery" data-gallery>
+          {% for image in product.images %}
+            {% assign index = forloop.index %}
+            <label class="image" for="{{ index }}">
+              <input
+                type="radio"
+                name="selected_image"
+                id="{{ index }}"
+                hidden
+                aria-label="{{ product.name }} - {{ index }}"
+                {% if index == 1 %}
+                  checked
+                {% endif %}
+              >
+              <img src="{{ image }}" alt="" height="100%" width="100%">
+            </label>
+          {% endfor %}
         </div>
-      </div>
-      <div class="gallery">
-        <label class="image" for="1">
-          <input type="radio" name="selected_image" id="1" hidden>
-          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
-        </label>
-        <label class="image" for="2">
-          <input type="radio" name="selected_image" id="2" hidden>
-          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
-        </label>
-        <label class="image" for="3">
-          <input type="radio" name="selected_image" id="3" hidden>
-          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
-        </label>
-        <label class="image" for="4">
-          <input type="radio" name="selected_image" id="4" hidden>
-          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
-        </label>
-        <label class="image" for="5">
-          <input type="radio" name="selected_image" id="5" hidden>
-          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
-        </label>
-      </div>
-    </div>
-    <div class="info">
+      {% endif %}
+    </yc-product-media>
+    <div class="info" role="complementary" aria-label="Product information">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {% when 'title' %}

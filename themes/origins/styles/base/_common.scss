@@ -206,14 +206,15 @@ yc-section {
   grid-template-columns: repeat(2, 1fr);
   gap: var(--gap-3xl);
 
-  .media {
+  yc-product-media {
     --main-image-height: 550px;
 
     height: fit-content;
     display: grid;
     gap: var(--gap-sm);
     position: sticky;
-    top: var(--gap-lg);
+    inset-block-start: var(--gap-lg);
+    user-select: none;
 
     .main-image {
       height: var(--main-image-height);
@@ -353,6 +354,12 @@ yc-section {
       grid-template-columns: repeat(2, 1fr);
     }
   }
+
+  .single-product {
+    yc-product-media {
+      --main-image-height: 450px;
+    }
+  }
 }
 
 @include breakpoint("lg") {
@@ -362,7 +369,7 @@ yc-section {
   .single-product {
     grid-template-columns: 1fr;
 
-    .media {
+    yc-product-media {
       position: static;
     }
   }
