@@ -4,10 +4,40 @@
   style="
     --section-space-top: {{ section.settings.space_top }}px;
     --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --media-main-image-border-radius: {{ settings.product_card_border_radius }}px;
+    --media-gallery-border-radius: calc(var(--media-main-image-border-radius) - 6px);
   "
 >
   <div class="single-product">
-    <div class="media" style="background-color: var(--color-gray-50); height: 200px">MEDIA 🏗️</div>
+    <div class="media">
+      <div class="main-image">
+        <div class="placeholder">
+          {% render 'yc-placeholder', name: 'product' %}
+        </div>
+      </div>
+      <div class="gallery">
+        <label class="image" for="1">
+          <input type="radio" name="selected_image" id="1" hidden>
+          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
+        </label>
+        <label class="image" for="2">
+          <input type="radio" name="selected_image" id="2" hidden>
+          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
+        </label>
+        <label class="image" for="3">
+          <input type="radio" name="selected_image" id="3" hidden>
+          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
+        </label>
+        <label class="image" for="4">
+          <input type="radio" name="selected_image" id="4" hidden>
+          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
+        </label>
+        <label class="image" for="5">
+          <input type="radio" name="selected_image" id="5" hidden>
+          <img src="{{ 'default-test.webp' | asset_url }}" alt="" height="100%" width="100%">
+        </label>
+      </div>
+    </div>
     <div class="info">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
