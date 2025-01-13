@@ -119,10 +119,6 @@ class Toast {
 const toast = new Toast();
 ["error", "info", "success", "warning"].forEach((type, index) =>
   setTimeout(() => {
-    toast.create(
-      "You can customize the type of toast you want to render",
-      type,
-      5000,
-    );
+    toast.create("Event has been created", type, 5000);
   }, 500 * index),
 );
