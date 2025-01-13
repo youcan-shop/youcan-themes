@@ -15,6 +15,13 @@
   <div class="single-product">
     <yc-product-media role="region" aria-label="Product images">
       <div class="main-image">
+        {% if product.images.size > 1 %}
+          <div class="count">
+            <span data-current-image>1</span>
+            <span>/</span>
+            <span>{{ product.images.size }}</span>
+          </div>
+        {% endif %}
         {% if product_image %}
           <img src="{{ product_image }}" alt="{{ product.name }}" height="100%" width="100%" data-main-image>
         {% else %}
@@ -25,23 +32,81 @@
       </div>
       {% if product.images.size > 1 %}
         <div class="gallery" data-gallery>
-          {% for image in product.images %}
-            {% assign index = forloop.index %}
-            <label class="image" for="{{ index }}">
-              <input
-                type="radio"
-                name="selected_image"
-                id="{{ index }}"
-                hidden
-                aria-label="{{ product.name }} - {{ index }}"
-                {% if index == 1 %}
-                  checked
-                {% endif %}
-              >
-              <img src="{{ image }}" alt="" height="100%" width="100%">
-            </label>
-          {% endfor %}
+          <yc-slider
+            responsive
+            arrows
+            data-type="fit"
+            style="
+              --slider-gap: 8;
+              --slider-speed: 600;
+              --slider-height: auto;
+              --slider-per-page: 5;
+              --slider-max-items-lg: 5;
+              --slider-max-items-md: 4;
+            "
+            aria-role="region"
+            aria-roledescription="Carousel"
+          >
+            <div class="slider-area">
+              <div class="slider-box" data-slider-box>
+                <div class="slider-inner" data-slider>
+                  {% for image in product.images %}
+                    <yc-slider-item>
+                      {% assign index = forloop.index %}
+                      <label class="image" for="{{ index }}">
+                        <input
+                          type="radio"
+                          name="selected_image"
+                          id="{{ index }}"
+                          value="{{ index }}"
+                          hidden
+                          aria-label="{{ product.name }} - {{ index }}"
+                          {% if index == 1 %}
+                            checked
+                          {% endif %}
+                        >
+                        <img src="{{ image }}" alt="" height="100%" width="100%">
+                      </label>
+                    </yc-slider-item>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            <yc-slider-arrows data-position="right">
+              <div class="slider-arrows">
+                <button class="icon" data-arrow="left" aria-label="previous" disabled>
+                  {% render 'yc-icon', name: 'chevron-left', size: 15 %}
+                </button>
+                <button class="icon" data-arrow="right" aria-label="next">
+                  {% render 'yc-icon', name: 'chevron-right', size: 15 %}
+                </button>
+              </div>
+            </yc-slider-arrows>
+          </yc-slider>
         </div>
+        {% comment %}
+          <div class="gallery-box">
+            <div class="gallery" data-gallery>
+              {% for image in product.images %}
+                {% assign index = forloop.index %}
+                <label class="image" for="{{ index }}">
+                  <input
+                    type="radio"
+                    name="selected_image"
+                    id="{{ index }}"
+                    value="{{ index }}"
+                    hidden
+                    aria-label="{{ product.name }} - {{ index }}"
+                    {% if index == 1 %}
+                      checked
+                    {% endif %}
+                  >
+                  <img src="{{ image }}" alt="" height="100%" width="100%">
+                </label>
+              {% endfor %}
+            </div>
+          </div>
+        {% endcomment %}
       {% endif %}
     </yc-product-media>
     <div class="info" role="complementary" aria-label="Product information">

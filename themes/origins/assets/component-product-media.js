@@ -5,6 +5,7 @@ class ProductMedia extends HTMLElement {
     this.selectedImage = null;
     this.mainImage = this.querySelector("[data-main-image]");
     this.gallery = this.querySelector("[data-gallery]");
+    this.currentImage = this.querySelector("[data-current-image]");
   }
 
   connectedCallback() {
@@ -12,13 +13,17 @@ class ProductMedia extends HTMLElement {
   }
 
   _render() {
-    this.gallery.addEventListener("click", (event) => {
-      const { target } = event;
-      if (target.tagName === "INPUT") {
-        const imageSrc = target.nextElementSibling.src;
-        this.mainImage.src = imageSrc;
-      }
-    });
+    if (this.gallery) {
+      this.gallery.addEventListener("click", (event) => {
+        const target = event.target;
+
+        if (target.tagName === "INPUT") {
+          const imageSrc = target.nextElementSibling.src;
+          this.mainImage.src = imageSrc;
+          this.currentImage.textContent = target.value;
+        }
+      });
+    }
   }
 }
 
