@@ -1,0 +1,19 @@
+{% comment %}
+  Renders a toggle group (Product variant)
+
+  Accepts:
+  - options: {Array} variant options
+  - name: {String} input name
+
+  Usage:
+  {% render 'variant-toggle', name: 'size', options: [] %}
+{% endcomment %}
+
+<div class="variant-container toggle">
+  {% for opt in options %}
+    <label for="{{ opt.title }}" class="toggle-item yc-btn icon">
+      {{ opt.title }}
+      <input type="radio" name="{{ name }}" id="{{ opt.title }}">
+    </label>
+  {% endfor %}
+</div>
