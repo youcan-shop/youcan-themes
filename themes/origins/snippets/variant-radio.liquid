@@ -1,0 +1,19 @@
+{% comment %}
+  Renders a radio group (Product variant)
+
+  Accepts:
+  - options: {Array} variant options
+  - name: {String} input name
+
+  Usage:
+  {% render 'variant-radio', name: 'fit', options: [] %}
+{% endcomment %}
+
+<div class="variant-container radio">
+  {% for opt in options %}
+    <div class="variant-item radio-item">
+      <input type="radio" name="{{ name }}" id="{{ opt.title }}">
+      <label for="{{ opt.title }}">{{ opt.title }}</label>
+    </div>
+  {% endfor %}
+</div>
