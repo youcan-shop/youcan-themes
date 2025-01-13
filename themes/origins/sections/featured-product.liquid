@@ -42,7 +42,7 @@
               --slider-height: auto;
               --slider-per-page: 5;
               --slider-max-items-lg: 5;
-              --slider-max-items-md: 4;
+              --slider-max-items-md: 5;
             "
             aria-role="region"
             aria-roledescription="Carousel"
@@ -72,16 +72,18 @@
                 </div>
               </div>
             </div>
-            <yc-slider-arrows data-position="right">
-              <div class="slider-arrows">
-                <button class="icon" data-arrow="left" aria-label="previous" disabled>
-                  {% render 'yc-icon', name: 'chevron-left', size: 15 %}
-                </button>
-                <button class="icon" data-arrow="right" aria-label="next">
-                  {% render 'yc-icon', name: 'chevron-right', size: 15 %}
-                </button>
-              </div>
-            </yc-slider-arrows>
+            {% if product.images.size > 5 %}
+              <yc-slider-arrows data-position="right">
+                <div class="slider-arrows">
+                  <button class="icon" data-arrow="left" aria-label="previous" disabled>
+                    {% render 'yc-icon', name: 'chevron-left', size: 15 %}
+                  </button>
+                  <button class="icon" data-arrow="right" aria-label="next">
+                    {% render 'yc-icon', name: 'chevron-right', size: 15 %}
+                  </button>
+                </div>
+              </yc-slider-arrows>
+            {% endif %}
           </yc-slider>
         </div>
         {% comment %}
