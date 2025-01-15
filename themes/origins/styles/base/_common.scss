@@ -262,8 +262,9 @@ yc-section {
 
     .accordion {
       border: 1px solid var(--color-gray-50);
-      border-radius: var(--radius-md);
+      border-radius: var(--accordion-border-radius, --radius-md);
       height: fit-content;
+      color: rgb(var(--accordion-foreground));
 
       summary {
         display: flex;
@@ -287,7 +288,7 @@ yc-section {
       .content {
         font-size: var(--text-md);
         padding: 12px 15px;
-        color: var(--color-gray-500);
+        color: color-mix(in srgb, currentColor 70%, transparent);
       }
 
       &[open] {
