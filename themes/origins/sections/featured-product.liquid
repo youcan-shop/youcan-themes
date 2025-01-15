@@ -25,12 +25,10 @@
               threshold: block.settings.threshold,
               show_count: block.settings.show_count
             %}
+          {% when 'accordion' %}
+            {% render 'accordion', title: block.settings.title, content: block.settings.content %}
         {% endcase %}
       {% endfor %}
-      {% render 'accordion' %}
-      {% render 'accordion' %}
-      {% render 'accordion' %}
-      {% render 'accordion' %}
     </div>
   </div>
 </yc-section>
@@ -116,6 +114,24 @@
       "label": "Description",
       "limit": 1,
       "settings": []
+    },
+    {
+      "type": "accordion",
+      "label": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "placeholder": "Title"
+        },
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "placeholder": "Content"
+        }
+      ]
     }
   ]
 }
