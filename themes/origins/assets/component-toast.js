@@ -114,11 +114,3 @@ class Toast {
     });
   }
 }
-
-// TODO: just for testing - to remove!
-const toast = new Toast();
-["error", "info", "success", "warning"].forEach((type, index) =>
-  setTimeout(() => {
-    toast.create("Event has been created", type, 5000);
-  }, 500 * index),
-);
