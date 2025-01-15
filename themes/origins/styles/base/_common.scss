@@ -211,7 +211,8 @@ yc-section {
   }
 
   .info {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: var(--gap-md);
 
     .price {
@@ -255,6 +256,45 @@ yc-section {
       &[data-inventory-low-stock] {
         .icon {
           color: var(--color-warning-500);
+        }
+      }
+    }
+
+    .accordion {
+      border: 1px solid var(--color-gray-50);
+      border-radius: var(--radius-md);
+      height: fit-content;
+
+      summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        cursor: pointer;
+
+        .title {
+          font-size: var(--text-lg);
+          font-weight: 500;
+          flex: 1;
+          user-select: none;
+        }
+
+        .icon {
+          transition: var(--transition-duration-normal);
+        }
+      }
+
+      .content {
+        font-size: var(--text-md);
+        padding: 12px 15px;
+        color: var(--color-gray-500);
+      }
+
+      &[open] {
+        summary {
+          .icon {
+            rotate: 180deg;
+          }
         }
       }
     }
