@@ -25,8 +25,15 @@
         d="M9.75 5.75a2.25 2.25 0 0 1 4.5 0v1h.431q.565 0 1.069.002V5.75a3.75 3.75 0 1 0-7.5 0v1.002q.504-.003 1.069-.002h.431z"
       />
     {% elsif icon == 'search' %}
-      <path fill="currentColor" d="M20.313 11.157a9.157 9.157 0 1 1-18.313 0a9.157 9.157 0 0 1 18.313 0" opacity="0.5" />
-        <path fill="currentColor" fill-rule="evenodd" d="M18.839 18.839a.723.723 0 0 1 1.022 0l1.928 1.927a.723.723 0 0 1-1.023 1.023L18.84 19.86a.723.723 0 0 1 0-1.022" clip-rule="evenodd" />
+      <defs>
+        <mask id="solarMinimalisticMagniferLineDuotone0">
+          <g fill="none" stroke-width="1.5">
+            <circle cx="11.5" cy="11.5" r="9.5" stroke="#808080" />
+            <path stroke="white" stroke-linecap="round" d="m20 20l2 2" />
+          </g>
+        </mask>
+      </defs>
+      <path fill="currentColor" d="M0 0h24v24H0z" mask="url(#solarMinimalisticMagniferLineDuotone0)" />
     {% elsif icon == 'collections' %}
       <path
         fill="currentColor"
@@ -48,7 +55,7 @@
   </svg>
   <div class="info">
     {% if heading %}
-      <p class="heading h4">{{ heading }}</p>
+      <p class="heading h5">{{ heading }}</p>
     {% endif %}
     {% if subheading %}
       <p class="subheading">{{ subheading }}</p>
