@@ -28,10 +28,12 @@
           {% when 'countdown_timer' %}
             {% render 'countdown-timer',
               title: block.settings.title,
-              days: block.settings.days,
-              hours: block.settings.hours,
-              minutes: block.settings.minutes,
-              seconds: block.settings.seconds
+              year: block.settings.year,
+              month: block.settings.month,
+              day: block.settings.day,
+              hour: block.settings.hour,
+              minute: block.settings.minutes,
+              second: block.settings.seconds
             %}
         {% endcase %}
       {% endfor %}
@@ -145,44 +147,48 @@
           "default": "#121212"
         },
         {
-          "id": "days",
-          "type": "range",
-          "label": "Days",
-          "min": 0,
-          "max": 99,
-          "step": 1,
-          "unit": "",
+          "type": "header",
+          "content": "Countdown End Date"
+        },
+        {
+          "type": "paragraph",
+          "content": "Set the date to when the timer should count down to."
+        },
+        {
+          "label": "Year",
+          "id": "year",
+          "type": "number",
+          "default": 2025
+        },
+        {
+          "label": "Month",
+          "id": "month",
+          "type": "number",
+          "default": 12
+        },
+        {
+          "label": "Day",
+          "id": "day",
+          "type": "number",
+          "default": 31
+        },
+        {
+          "label": "Hour",
+          "id": "hour",
+          "type": "number",
           "default": 0
         },
         {
-          "id": "hours",
-          "type": "range",
-          "label": "Hours",
-          "min": 0,
-          "max": 23,
-          "step": 1,
-          "unit": "",
-          "default": 23
+          "label": "Minute",
+          "id": "minute",
+          "type": "number",
+          "default": 0
         },
         {
-          "id": "minutes",
-          "type": "range",
-          "label": "Minutes",
-          "min": 0,
-          "max": 59,
-          "step": 1,
-          "unit": "",
-          "default": 59
-        },
-        {
-          "id": "seconds",
-          "type": "range",
-          "label": "Seconds",
-          "min": 0,
-          "max": 59,
-          "step": 1,
-          "unit": "",
-          "default": 59
+          "label": "Second",
+          "id": "second",
+          "type": "number",
+          "default": 0
         }
       ]
     }

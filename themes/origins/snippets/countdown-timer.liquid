@@ -2,9 +2,11 @@
 {{ 'component-countdown-timer.js' | asset_url | script_tag_deferred }}
 
 <yc-countdown-timer
+  data-date="{{ year }}-{{ month }}-{{ day }}"
+  data-time="{{ hour }}:{{ minute }}:{{ second }}"
   style="
-    --timer-background:
-    --timer-foreground:
+    --timer-background:;
+    --timer-foreground:;
   "
 >
   {% if title %}
@@ -14,19 +16,19 @@
   {% endif %}
   <div class="time">
     <div class="timeslot">
-      <span id="days">{{ days }}</span>
+      <span id="days" data-value="{{ days }}"></span>
       <span>{{ 'general.countdown.days' | t }}</span>
     </div>
     <div class="timeslot">
-      <span id="hours">{{ hours }}</span>
+      <span id="hours" data-value="{{ hours }}"></span>
       <span>{{ 'general.countdown.hours' | t }}</span>
     </div>
     <div class="timeslot">
-      <span id="minutes">{{ minutes }}</span>
+      <span id="minutes" data-value="{{ minutes }}"></span>
       <span>{{ 'general.countdown.minutes' | t }}</span>
     </div>
     <div class="timeslot">
-      <span id="seconds">{{ seconds }}</span>
+      <span id="seconds" data-value="{{ seconds }}"></span>
       <span>{{ 'general.countdown.seconds' | t }}</span>
     </div>
   </div>
