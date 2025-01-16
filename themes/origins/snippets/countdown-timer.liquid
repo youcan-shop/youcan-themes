@@ -1,1 +1,33 @@
-<h1>Countdown {{ days }} | {{ hours }} | {{ minutes }} | {{ seconds }}</h1>
+{{ 'component-countdown-timer.css' | asset_url | stylesheet_tag }}
+{{ 'component-countdown-timer.js' | asset_url | script_tag_deferred }}
+
+<yc-countdown-timer
+  style="
+    --timer-background:
+    --timer-foreground:
+  "
+>
+  {% if title %}
+    <div class="title">
+      <p>{{ title }}</p>
+    </div>
+  {% endif %}
+  <div class="time">
+    <div class="timeslot">
+      <span id="days">{{ days }}</span>
+      <span>{{ 'general.countdown.days' | t }}</span>
+    </div>
+    <div class="timeslot">
+      <span id="hours">{{ hours }}</span>
+      <span>{{ 'general.countdown.hours' | t }}</span>
+    </div>
+    <div class="timeslot">
+      <span id="minutes">{{ minutes }}</span>
+      <span>{{ 'general.countdown.minutes' | t }}</span>
+    </div>
+    <div class="timeslot">
+      <span id="seconds">{{ seconds }}</span>
+      <span>{{ 'general.countdown.seconds' | t }}</span>
+    </div>
+  </div>
+</yc-countdown-timer>
