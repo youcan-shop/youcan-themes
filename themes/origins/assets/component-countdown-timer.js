@@ -37,6 +37,7 @@ if (!customElements.get("yc-countdown-timer")) {
 
       if ((!endDateTime) instanceof Date || isNaN(endDateTime)) {
         this._updateUI(0, 0, 0, 0);
+
         return;
       }
 
@@ -61,6 +62,7 @@ if (!customElements.get("yc-countdown-timer")) {
       if (difference <= 0) {
         clearInterval(this.interval);
         this._updateUI(0, 0, 0, 0);
+
         return;
       }
 
