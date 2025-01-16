@@ -25,6 +25,13 @@
               threshold: block.settings.threshold,
               show_count: block.settings.show_count
             %}
+          {% when 'countdown_timer' %}
+            {% render 'countdown-timer',
+              days: block.settings.days,
+              hours: block.settings.hours,
+              minutes: block.settings.minutes,
+              seconds: block.settings.seconds
+            %}
         {% endcase %}
       {% endfor %}
     </div>
@@ -112,6 +119,71 @@
       "label": "Description",
       "limit": 1,
       "settings": []
+    },
+    {
+      "type": "countdown_timer",
+      "label": "Countdown Timer",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "placeholder": "Time is running out"
+        },
+        {
+          "id": "background_color",
+          "type": "color",
+          "label": "Background color",
+          "default": "#ffffff"
+        },
+        {
+          "id": "foreground_color",
+          "type": "color",
+          "label": "Foreground color",
+          "default": "#121212"
+        },
+        {
+          "id": "days",
+          "type": "range",
+          "label": "Days",
+          "min": 0,
+          "max": 99,
+          "step": 1,
+          "unit": "",
+          "default": 0
+        },
+        {
+          "id": "hours",
+          "type": "range",
+          "label": "Hours",
+          "min": 0,
+          "max": 23,
+          "step": 1,
+          "unit": "",
+          "default": 23
+        },
+        {
+          "id": "minutes",
+          "type": "range",
+          "label": "Minutes",
+          "min": 0,
+          "max": 59,
+          "step": 1,
+          "unit": "",
+          "default": 59
+        },
+        {
+          "id": "seconds",
+          "type": "range",
+          "label": "Seconds",
+          "min": 0,
+          "max": 59,
+          "step": 1,
+          "unit": "",
+          "default": 59
+        }
+      ]
     }
   ]
 }
