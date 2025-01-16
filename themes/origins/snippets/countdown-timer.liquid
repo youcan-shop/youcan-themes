@@ -1,6 +1,29 @@
 {{ 'component-countdown-timer.css' | asset_url | stylesheet_tag }}
 {{ 'component-countdown-timer.js' | asset_url | script_tag_deferred }}
 
+{% assign endDateTime = year
+  | append: '-'
+  | append: month
+  | append: '-'
+  | append: day
+  | append: 'T'
+  | append: hour
+  | append: ':'
+  | append: minute
+  | append: ':'
+  | append: second
+%}
+{% assign nowDateTime = 'now' | date: '%Y-%m-%dT%H:%M:%S' %}
+{% assign timeDiff = endDateTime | date: '%s' | minus: nowDateTime | date: '%s' %}
+
+{% assign secondsTotal = timeDiff | times: 1 %}
+{% assign days = secondsTotal | divided_by: 86400 %}
+{% assign secondsRemaining = secondsTotal | modulo: 86400 %}
+{% assign hours = secondsRemaining | divided_by: 3600 %}
+{% assign secondsRemaining = secondsRemaining | modulo: 3600 %}
+{% assign minutes = secondsRemaining | divided_by: 60 %}
+{% assign seconds = secondsRemaining | modulo: 60 %}
+
 <yc-countdown-timer
   data-date="{{ year }}-{{ month }}-{{ day }}"
   data-time="{{ hour }}:{{ minute }}:{{ second }}"
@@ -16,19 +39,19 @@
   {% endif %}
   <div class="time">
     <div class="timeslot">
-      <span id="days" data-value="{{ days }}"></span>
+      <span id="days" data-value="{{ days }}">--</span>
       <span>{{ 'general.countdown.days' | t }}</span>
     </div>
     <div class="timeslot">
-      <span id="hours" data-value="{{ hours }}"></span>
+      <span id="hours" data-value="{{ hours }}">--</span>
       <span>{{ 'general.countdown.hours' | t }}</span>
     </div>
     <div class="timeslot">
-      <span id="minutes" data-value="{{ minutes }}"></span>
+      <span id="minutes" data-value="{{ minutes }}">--</span>
       <span>{{ 'general.countdown.minutes' | t }}</span>
     </div>
     <div class="timeslot">
-      <span id="seconds" data-value="{{ seconds }}"></span>
+      <span id="seconds" data-value="{{ seconds }}">--</span>
       <span>{{ 'general.countdown.seconds' | t }}</span>
     </div>
   </div>
