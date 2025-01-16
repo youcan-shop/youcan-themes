@@ -41,7 +41,7 @@ if (!customElements.get("yc-countdown-timer")) {
       }
 
       this.interval = setInterval(() => {
-        this._countdownFrom(endDateTime);
+        this._countDownFrom(endDateTime);
       }, 1000);
     }
 
@@ -55,7 +55,7 @@ if (!customElements.get("yc-countdown-timer")) {
       return { paddedDate, paddedTime };
     }
 
-    _countdownFrom(datetime) {
+    _countDownFrom(datetime) {
       const difference = datetime - new Date();
 
       if (difference <= 0) {
