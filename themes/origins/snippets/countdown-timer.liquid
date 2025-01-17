@@ -1,0 +1,35 @@
+{{ 'component-countdown-timer.css' | asset_url | stylesheet_tag }}
+{{ 'component-countdown-timer.js' | asset_url | script_tag_deferred }}
+
+<yc-countdown-timer
+  date="{{ year }}-{{ month }}-{{ day }}"
+  time="{{ hour }}:{{ minute }}:{{ second }}"
+  style="
+    --timer-background: {{ block.settings.background_color.hex }};
+    --timer-foreground: {{ block.settings.foreground_color.red }}, {{ block.settings.foreground_color.green }}, {{ block.settings.foreground_color.blue }};
+  "
+>
+  {% if title %}
+    <div class="title">
+      <p>{{ title }}</p>
+    </div>
+  {% endif %}
+  <div class="time">
+    <div class="timeslot">
+      <span data-days="{{ days }}">--</span>
+      <span>{{ 'general.countdown.days' | t }}</span>
+    </div>
+    <div class="timeslot">
+      <span data-hours="{{ hours }}">--</span>
+      <span>{{ 'general.countdown.hours' | t }}</span>
+    </div>
+    <div class="timeslot">
+      <span data-minutes="{{ minutes }}">--</span>
+      <span>{{ 'general.countdown.minutes' | t }}</span>
+    </div>
+    <div class="timeslot">
+      <span data-seconds="{{ seconds }}">--</span>
+      <span>{{ 'general.countdown.seconds' | t }}</span>
+    </div>
+  </div>
+</yc-countdown-timer>

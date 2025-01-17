@@ -1,0 +1,41 @@
+yc-countdown-timer {
+  --timer-border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
+  display: grid;
+  border-radius: var(--radius-md);
+  font-size: var(--text-md);
+  height: fit-content;
+  color: rgb(var(--timer-foreground));
+  border: var(--timer-border);
+  background-color: var(--timer-background);
+
+  .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    padding: 1.5em;
+    border-block-end: var(--timer-border);
+  }
+
+  .time {
+    padding: 1em 1.5em;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    .timeslot {
+      display: grid;
+      text-align: center;
+      justify-content: center;
+      border-inline-end: var(--timer-border);
+
+      &:last-child {
+        border-inline-end: none;
+      }
+
+      & > span:first-child {
+        font-weight: 550;
+      }
+    }
+  }
+}
