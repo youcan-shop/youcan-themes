@@ -361,8 +361,8 @@ yc-section yc-section-head p{
   background-color:rgb(var(--color-gray-50));
 }
 .single-product .info{
-  display:grid;
-  grid-gap:var(--gap-md);
+  display:flex;
+  flex-direction:column;
   gap:var(--gap-md);
 }
 .single-product .info .price{
@@ -394,6 +394,39 @@ yc-section yc-section-head p{
 }
 .single-product .info .inventory[data-inventory-low-stock] .icon{
   color:var(--color-warning-500);
+}
+.single-product .info .accordion{
+  border:1px solid var(--color-gray-50);
+  border-radius:var(--accordion-border-radius, var(--radius-md));
+  height:-moz-fit-content;
+  height:fit-content;
+  color:rgb(var(--accordion-foreground));
+}
+.single-product .info .accordion summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 15px;
+  cursor:pointer;
+}
+.single-product .info .accordion summary .title{
+  font-size:var(--text-md);
+  font-weight:500;
+  flex:1;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+          user-select:none;
+}
+.single-product .info .accordion summary .icon{
+  transition:var(--transition-duration-normal);
+}
+.single-product .info .accordion .content{
+  font-size:var(--text-md);
+  padding:12px 15px;
+  color:color-mix(in srgb, currentColor 70%, transparent);
+}
+.single-product .info .accordion[open] summary .icon{
+  rotate:180deg;
 }
 
 .rating{
