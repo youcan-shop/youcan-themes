@@ -1,5 +1,6 @@
 if (!customElements.get("yc-countdown-timer")) {
   class CountdownTimer extends HTMLElement {
+    static observedAttributes = ["date", "time"];
     static MS_PER_SECOND = 1000;
     static MS_PER_MINUTE = 60 * CountdownTimer.MS_PER_SECOND;
     static MS_PER_HOUR = 60 * CountdownTimer.MS_PER_MINUTE;
@@ -27,7 +28,8 @@ if (!customElements.get("yc-countdown-timer")) {
     }
 
     _render() {
-      const { date, time } = this.dataset;
+      const date = this.getAttribute("date");
+      const time = this.getAttribute("time");
       const { paddedDate, paddedTime } = this.getPaddedDateTimeString(
         date,
         time,
