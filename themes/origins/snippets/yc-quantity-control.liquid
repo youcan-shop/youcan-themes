@@ -1,0 +1,31 @@
+{% comment %}
+  Quantity input
+
+  Accepts:
+  - size: (optional) 'sm' or 'lg'
+
+  Usage:
+  {% render 'yc-quantity-input' variant: variant %}
+{% endcomment %}
+
+<yc-quantity-control class="quantity cart-quantity">
+  <button
+    class="yc-btn icon"
+    name="minus"
+    data-size="{{ button_size | default: 'md' }}"
+    type="button"
+    aria-label="decrease"
+  >
+    {% render 'yc-icon', name: 'minus' %}
+  </button>
+  <span data-quantity>1</span>
+  <button
+    class="yc-btn icon"
+    name="plus"
+    data-size="{{ button_size | default: 'md' }}"
+    type="button"
+    aria-label="increase"
+  >
+    {% render 'yc-icon', name: 'plus' %}
+  </button>
+</yc-quantity-control>
