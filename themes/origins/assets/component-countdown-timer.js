@@ -50,10 +50,10 @@ if (!customElements.get("yc-countdown-timer")) {
 
     getPaddedDateTimeString(date, time) {
       const [year, month, day] = date.split("-");
-      const paddedDate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const paddedDate = `${year}-${this.numberToPaddedString(month)}-${this.numberToPaddedString(day)}`;
 
       const [hours, minutes, seconds] = time.split(":");
-      const paddedTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      const paddedTime = `${this.numberToPaddedString(hours)}:${this.numberToPaddedString(minutes)}:${this.numberToPaddedString(seconds)}`;
 
       return { paddedDate, paddedTime };
     }
@@ -85,10 +85,14 @@ if (!customElements.get("yc-countdown-timer")) {
     }
 
     updateUI(days, hours, minutes, seconds) {
-      this.days.textContent = String(days).padStart(2, "0");
-      this.hours.textContent = String(hours).padStart(2, "0");
-      this.minutes.textContent = String(minutes).padStart(2, "0");
-      this.seconds.textContent = String(seconds).padStart(2, "0");
+      this.days.textContent = this.numberToPaddedString(days);
+      this.hours.textContent = this.numberToPaddedString(hours);
+      this.minutes.textContent = this.numberToPaddedString(minutes);
+      this.seconds.textContent = this.numberToPaddedString(seconds);
+    }
+
+    numberToPaddedString(value) {
+      return String(value).padStart(2, "0");
     }
   }
 
