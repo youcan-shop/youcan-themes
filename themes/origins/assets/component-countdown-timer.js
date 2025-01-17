@@ -8,7 +8,7 @@ if (!customElements.get("yc-countdown-timer")) {
     constructor() {
       super();
       const [days, hours, minutes, seconds] = this.querySelectorAll(
-        "#days, #hours, #minutes, #seconds",
+        "[data-days], [data-hours], [data-minutes], [data-seconds]",
       );
       this.days = days;
       this.hours = hours;
