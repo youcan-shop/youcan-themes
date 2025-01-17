@@ -4,22 +4,19 @@ if (!customElements.get("yc-quantity-control")) {
       super();
 
       this.quantity = this.querySelector("[data-quantity]");
-      this.querySelectorAll("button").forEach((button) =>
-        button.addEventListener("click", this._onButtonClick.bind(this)),
-      );
     }
 
     connectedCallback() {
-      this._updateMinusButton();
+      this._render();
     }
 
-    _onButtonClick(event) {
+    onButtonClick(event) {
       event.preventDefault();
       const previousValue = parseInt(this.quantity.textContent, 10);
 
       if (isNaN(previousValue)) {
         this.quantity.textContent = 1;
-        this._updateMinusButton();
+        this.updateMinusButton();
 
         return;
       }
@@ -39,13 +36,20 @@ if (!customElements.get("yc-quantity-control")) {
         this.quantity.textContent = String(previousValue - 1);
       }
 
-      this._updateMinusButton();
+      this.updateMinusButton();
     }
 
-    _updateMinusButton() {
+    updateMinusButton() {
       const quantity = this.quantity.textContent;
       const buttonMinus = this.querySelector('button[name="minus"]');
       buttonMinus.toggleAttribute("disabled", quantity <= 1);
+    }
+
+    _render() {
+      this.querySelectorAll("button").forEach((button) =>
+        button.addEventListener("click", this.onButtonClick.bind(this)),
+      );
+      this.updateMinusButton();
     }
   }
 
