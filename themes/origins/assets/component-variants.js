@@ -60,11 +60,11 @@ class Variant extends HTMLElement {
 
     const toKB = (size) => `${Math.ceil(size / 1024)} KB`;
 
-    const createPreview = () => {
+    const createPreview = (file, image_src) => {
       info.insertAdjacentHTML(
         "afterbegin",
         `<div class="preview" data-preview>
-          <img src="${reader.result}" width="50" height="50" />
+          <img src="${image_src}" width="50" height="50" />
           <div class="info">
             <span class="name">${file.name}</span>
             <span class="size">${toKB(file.size)}</span>
@@ -73,10 +73,10 @@ class Variant extends HTMLElement {
       );
     };
 
-    const setPreview = () => {
-      preview.querySelector("img").src = reader.result;
-      preview.querySelector(".name").textContent = file.name;
-      preview.querySelector(".size").textContent = toKB(file.size);
+    const setPreview = (file, image_src, element) => {
+      element.querySelector("img").src = image_src;
+      element.querySelector(".name").textContent = file.name;
+      element.querySelector(".size").textContent = toKB(file.size);
     };
 
     const removePreview = () => {
@@ -91,9 +91,12 @@ class Variant extends HTMLElement {
       const reader = new FileReader();
 
       reader.onload = () => {
+        const base64 = reader.result;
         const preview = info.querySelector("[data-preview]");
 
-        !preview ? createPreview() : setPreview();
+        !preview
+          ? createPreview(file, base64)
+          : setPreview(file, base64, preview);
         unset.addEventListener("click", removePreview);
       };
 
