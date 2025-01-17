@@ -28,7 +28,7 @@ if (!customElements.get("yc-countdown-timer")) {
 
     _render() {
       const { date, time } = this.dataset;
-      const { paddedDate, paddedTime } = this._getPaddedDateTimeString(
+      const { paddedDate, paddedTime } = this.getPaddedDateTimeString(
         date,
         time,
       );
@@ -36,17 +36,17 @@ if (!customElements.get("yc-countdown-timer")) {
       const endDateTime = new Date(`${paddedDate}T${paddedTime}`);
 
       if ((!endDateTime) instanceof Date || isNaN(endDateTime)) {
-        this._updateUI(0, 0, 0, 0);
+        this.updateUI(0, 0, 0, 0);
 
         return;
       }
 
       this.interval = setInterval(() => {
-        this._countDownFrom(endDateTime);
+        this.countDownFrom(endDateTime);
       }, 1000);
     }
 
-    _getPaddedDateTimeString(date, time) {
+    getPaddedDateTimeString(date, time) {
       const [year, month, day] = date.split("-");
       const paddedDate = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 
@@ -56,12 +56,12 @@ if (!customElements.get("yc-countdown-timer")) {
       return { paddedDate, paddedTime };
     }
 
-    _countDownFrom(datetime) {
+    countDownFrom(datetime) {
       const difference = datetime - new Date();
 
       if (difference <= 0) {
         clearInterval(this.interval);
-        this._updateUI(0, 0, 0, 0);
+        this.updateUI(0, 0, 0, 0);
 
         return;
       }
@@ -79,10 +79,10 @@ if (!customElements.get("yc-countdown-timer")) {
 
       const seconds = Math.floor(remaining / CountdownTimer.MS_PER_SECOND);
 
-      this._updateUI(days, hours, minutes, seconds);
+      this.updateUI(days, hours, minutes, seconds);
     }
 
-    _updateUI(days, hours, minutes, seconds) {
+    updateUI(days, hours, minutes, seconds) {
       this.days.textContent = String(days).padStart(2, "0");
       this.hours.textContent = String(hours).padStart(2, "0");
       this.minutes.textContent = String(minutes).padStart(2, "0");
