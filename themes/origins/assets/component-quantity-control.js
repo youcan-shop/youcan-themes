@@ -3,7 +3,7 @@ if (!customElements.get("yc-quantity-control")) {
     constructor() {
       super();
 
-      this.quantity = this.querySelector("#quantity");
+      this.quantity = this.querySelector("[data-quantity]");
       this.querySelectorAll("button").forEach((button) =>
         button.addEventListener("click", this._onButtonClick.bind(this)),
       );
