@@ -12,6 +12,8 @@
 
     --media-main-image-border-radius: {{ settings.product_card_border_radius }}px;
     --media-gallery-border-radius: calc(var(--media-main-image-border-radius) - 6px);
+    --accordion-foreground: {{ settings.accordion_text_color.red }}, {{ settings.accordion_text_color.green }}, {{ settings.accordion_text_color.blue }};
+    --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
   <div class="single-product">
@@ -108,6 +110,18 @@
               threshold: block.settings.threshold,
               show_count: block.settings.show_count
             %}
+          {% when 'countdown_timer' %}
+            {% render 'countdown-timer',
+              title: block.settings.title,
+              year: block.settings.year,
+              month: block.settings.month,
+              day: block.settings.day,
+              hour: block.settings.hour,
+              minute: block.settings.minutes,
+              second: block.settings.seconds
+            %}
+          {% when 'accordion' %}
+            {% render 'accordion', title: block.settings.title, content: block.settings.content %}
         {% endcase %}
       {% endfor %}
     </div>
@@ -195,6 +209,93 @@
       "label": "Description",
       "limit": 1,
       "settings": []
+    },
+    {
+      "type": "countdown_timer",
+      "label": "Countdown Timer",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "placeholder": "Time is running out"
+        },
+        {
+          "id": "background_color",
+          "type": "color",
+          "label": "Background color",
+          "default": "#ffffff"
+        },
+        {
+          "id": "foreground_color",
+          "type": "color",
+          "label": "Text color",
+          "default": "#535151"
+        },
+        {
+          "type": "header",
+          "content": "Countdown End Date"
+        },
+        {
+          "type": "paragraph",
+          "content": "Set the date to when the timer should count down to."
+        },
+        {
+          "label": "Year",
+          "id": "year",
+          "type": "number",
+          "default": 2025
+        },
+        {
+          "label": "Month",
+          "id": "month",
+          "type": "number",
+          "default": 12
+        },
+        {
+          "label": "Day",
+          "id": "day",
+          "type": "number",
+          "default": 31
+        },
+        {
+          "label": "Hour",
+          "id": "hour",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "label": "Minute",
+          "id": "minute",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "label": "Second",
+          "id": "second",
+          "type": "number",
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "label": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "placeholder": "Title"
+        },
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "placeholder": "Content"
+        }
+      ]
     }
   ]
 }

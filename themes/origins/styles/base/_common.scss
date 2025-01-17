@@ -62,6 +62,10 @@ button,
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 
     &[data-size$="sm"] {
+      padding: 12px;
+    }
+
+    &[data-size$="sm"] {
       padding: 8px;
     }
 
@@ -301,8 +305,8 @@ yc-section {
   }
 
   .info {
-    height: fit-content;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: var(--gap-md);
 
     .price {
@@ -349,6 +353,46 @@ yc-section {
         }
       }
     }
+
+    .accordion {
+      border: 1px solid var(--color-gray-50);
+      border-radius: var(--accordion-border-radius, var(--radius-md));
+      height: fit-content;
+      color: rgb(var(--accordion-foreground));
+
+      summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        cursor: pointer;
+
+        .title {
+          font-size: var(--text-md);
+          font-weight: 500;
+          flex: 1;
+          user-select: none;
+        }
+
+        .icon {
+          transition: var(--transition-duration-normal);
+        }
+      }
+
+      .content {
+        font-size: var(--text-md);
+        padding: 12px 15px;
+        color: color-mix(in srgb, currentColor 70%, transparent);
+      }
+
+      &[open] {
+        summary {
+          .icon {
+            rotate: 180deg;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -367,6 +411,56 @@ yc-section {
 
   .average {
     line-height: 1.2;
+  }
+}
+
+// Empty State
+.empty-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 640px;
+}
+
+.empty {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-lg);
+  text-align: center;
+
+  .icon {
+    color: color-mix(in srgb, currentColor 15%, transparent);
+  }
+
+  .title {
+    font-weight: 550;
+  }
+
+  .subheading {
+    color: color-mix(in srgb, currentColor 70%, transparent);
+  }
+}
+
+yc-quantity-control {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  width: fit-content;
+
+  button {
+    svg {
+      pointer-events: none;
+    }
+  }
+
+  span {
+    display: inline-block;
+    min-width: 24px;
+    text-align: center;
   }
 }
 

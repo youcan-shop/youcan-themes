@@ -187,6 +187,10 @@ button.icon,
 }
 button.icon[data-size$=sm],
 .yc-btn.icon[data-size$=sm]{
+  padding:12px;
+}
+button.icon[data-size$=sm],
+.yc-btn.icon[data-size$=sm]{
   padding:8px;
 }
 button.icon[data-size$=lg],
@@ -443,10 +447,15 @@ yc-section yc-section-head p{
      object-fit:cover;
 }
 .single-product .info{
+<<<<<<< HEAD
   height:-moz-fit-content;
   height:fit-content;
   display:grid;
   grid-gap:var(--gap-md);
+=======
+  display:flex;
+  flex-direction:column;
+>>>>>>> rabi3a
   gap:var(--gap-md);
 }
 .single-product .info .price{
@@ -479,6 +488,39 @@ yc-section yc-section-head p{
 .single-product .info .inventory[data-inventory-low-stock] .icon{
   color:var(--color-warning-500);
 }
+.single-product .info .accordion{
+  border:1px solid var(--color-gray-50);
+  border-radius:var(--accordion-border-radius, var(--radius-md));
+  height:-moz-fit-content;
+  height:fit-content;
+  color:rgb(var(--accordion-foreground));
+}
+.single-product .info .accordion summary{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 15px;
+  cursor:pointer;
+}
+.single-product .info .accordion summary .title{
+  font-size:var(--text-md);
+  font-weight:500;
+  flex:1;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+          user-select:none;
+}
+.single-product .info .accordion summary .icon{
+  transition:var(--transition-duration-normal);
+}
+.single-product .info .accordion .content{
+  font-size:var(--text-md);
+  padding:12px 15px;
+  color:color-mix(in srgb, currentColor 70%, transparent);
+}
+.single-product .info .accordion[open] summary .icon{
+  rotate:180deg;
+}
 
 .rating{
   display:flex;
@@ -494,6 +536,49 @@ yc-section yc-section-head p{
 }
 .rating .average{
   line-height:1.2;
+}
+
+.empty-page{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:640px;
+}
+
+.empty{
+  height:100%;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:var(--gap-lg);
+  text-align:center;
+}
+.empty .icon{
+  color:color-mix(in srgb, currentColor 15%, transparent);
+}
+.empty .title{
+  font-weight:550;
+}
+.empty .subheading{
+  color:color-mix(in srgb, currentColor 70%, transparent);
+}
+
+yc-quantity-control{
+  display:flex;
+  align-items:center;
+  gap:var(--gap-md);
+  width:-moz-fit-content;
+  width:fit-content;
+}
+yc-quantity-control button svg{
+  pointer-events:none;
+}
+yc-quantity-control span{
+  display:inline-block;
+  min-width:24px;
+  text-align:center;
 }
 
 @media (max-width: 1280px){
