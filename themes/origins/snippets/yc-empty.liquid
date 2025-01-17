@@ -1,0 +1,56 @@
+{% comment %}
+  Renders an empty state illustration with a heading and subheading
+
+  Accepts:
+  - icon: Icon name
+  - Heading: (optional) Heading text
+  - quick_add (optional) subheading text
+
+  Usage:
+  {% render 'yc-empty', icon: 'cart', heading: 'Your cart is empty' %}
+{% endcomment %}
+
+<div class="empty">
+  <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" viewBox="0 0 24 24">
+    {% if icon == 'cart' %}
+      <path fill="currentColor" fill-rule="evenodd" d="M1.289 2.763a.75.75 0 0 1 .948-.475l.265.089l.04.013c.626.209 1.155.385 1.572.579c.442.206.826.46 1.117.865c.291.403.412.848.467 1.333c.052.456.052 1.014.052 1.674V9.5c0 1.435.002 2.437.103 3.192c.099.734.28 1.122.556 1.399c.277.277.666.457 1.4.556c.755.101 1.756.103 3.191.103h7a.75.75 0 0 1 0 1.5h-7.055c-1.367 0-2.47 0-3.337-.116c-.9-.122-1.658-.38-2.26-.982s-.86-1.36-.981-2.26c-.117-.867-.117-1.97-.117-3.337V6.883c0-.713 0-1.185-.042-1.546c-.04-.342-.107-.506-.194-.626c-.086-.12-.221-.237-.533-.382c-.33-.153-.777-.304-1.453-.53l-.265-.087a.75.75 0 0 1-.474-.95" clip-rule="evenodd" />
+        <path fill="currentColor" d="M5.745 6q.006.39.005.841V9.5c0 1.435.002 2.437.103 3.192q.023.165.05.308h10.12c.959 0 1.438 0 1.814-.248s.565-.688.942-1.57l.43-1c.809-1.89 1.213-2.834.769-3.508S18.506 6 16.45 6z" opacity="0.5" />
+        <path fill="currentColor" d="M7.25 9A.75.75 0 0 1 8 8.25h3a.75.75 0 0 1 0 1.5H8A.75.75 0 0 1 7.25 9m.25 9a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3M18 19.5a1.5 1.5 0 1 0-3 0a1.5 1.5 0 0 0 3 0" />
+    {% elsif icon == 'search' %}
+      <defs>
+        <mask id="solarMinimalisticMagniferLineDuotone0">
+          <g fill="none" stroke-width="1.5">
+            <circle cx="11.5" cy="11.5" r="9.5" stroke="#808080" />
+            <path stroke="white" stroke-linecap="round" d="m20 20l2 2" />
+          </g>
+        </mask>
+      </defs>
+      <path fill="currentColor" d="M0 0h24v24H0z" mask="url(#solarMinimalisticMagniferLineDuotone0)" />
+    {% elsif icon == 'collections' %}
+      <path
+        fill="currentColor"
+        fill-rule="evenodd"
+        d="M8.672 7.542h6.656c3.374 0 5.062 0 6.01.987s.724 2.511.278 5.56l-.422 2.892c-.35 2.391-.525 3.587-1.422 4.303s-2.22.716-4.867.716h-5.81c-2.646 0-3.97 0-4.867-.716s-1.072-1.912-1.422-4.303l-.422-2.892c-.447-3.049-.67-4.573.278-5.56s2.636-.987 6.01-.987M8 18c0-.414.373-.75.833-.75h6.334c.46 0 .833.336.833.75s-.373.75-.833.75H8.833c-.46 0-.833-.336-.833-.75"
+        clip-rule="evenodd"
+      />
+      <path
+        fill="currentColor"
+        d="M8.51 2h6.98c.233 0 .41 0 .567.015c1.108.109 2.014.775 2.399 1.672H5.544c.385-.897 1.292-1.563 2.4-1.672C8.099 2 8.278 2 8.51 2"
+        opacity="0.3"
+      />
+      <path
+        fill="currentColor"
+        d="M6.31 4.723c-1.39 0-2.53.84-2.91 1.953l-.024.07a8 8 0 0 1 1.232-.253c1.08-.138 2.446-.138 4.032-.138h6.892c1.586 0 2.952 0 4.032.138c.42.054.834.133 1.232.253l-.023-.07c-.38-1.114-1.52-1.953-2.911-1.953z"
+        opacity="0.6"
+      />
+    {% endif %}
+  </svg>
+  <div class="info">
+    {% if heading %}
+      <p class="heading h5">{{ heading }}</p>
+    {% endif %}
+    {% if subheading %}
+      <p class="subheading">{{ subheading }}</p>
+    {% endif %}
+  </div>
+</div>
