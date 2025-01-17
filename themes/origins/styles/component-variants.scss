@@ -225,6 +225,7 @@ yc-variant {
       gap: var(--gap-md);
       width: 100%;
       padding: 4px;
+      z-index: 2;
       position: absolute;
       inset-block-start: calc(100% + 0.5em);
       border-radius: var(--radius-md);
@@ -283,6 +284,95 @@ yc-variant {
         &:hover {
           background-color: color-mix(in srgb, currentColor 5%, transparent);
         }
+      }
+    }
+  }
+
+  &[name="upload-image"] {
+    display: grid;
+    gap: var(--gap-md);
+
+    .upload-preview {
+      display: flex;
+      gap: var(--gap-md);
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 3em 1em;
+      border-radius: var(--radius-md);
+      background-color: color-mix(in srgb, currentColor 2%, transparent);
+      border: 2px dotted color-mix(in srgb, currentColor 10%, transparent);
+      transition: var(--transition-duration-normal);
+
+      svg {
+        color: color-mix(in srgb, currentColor 60%, transparent);
+      }
+
+      img {
+        position: absolute;
+        object-fit: contain;
+        translate: -50% -50%;
+        inset: 50% 0 0 50%;
+      }
+
+      &:hover {
+        border-color: color-mix(in srgb, currentColor 20%, transparent);
+        background-color: color-mix(in srgb, currentColor 5%, transparent);
+      }
+    }
+
+    .upload-info {
+      display: flex;
+      gap: var(--gap-md);
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7em;
+      border-radius: var(--radius-md);
+      border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+      transition: var(--transition-duration-normal);
+
+      &:not(:has(img)) {
+        opacity: 0;
+        z-index: -1;
+        visibility: hidden;
+        margin-block-start: -7em;
+      }
+
+      .preview {
+        display: flex;
+        align-items: center;
+        gap: var(--gap-lg);
+
+        img {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+          border-radius: calc(var(--radius-md) - 4px);
+        }
+
+        .info {
+          display: grid;
+          gap: var(--gap-sm);
+
+          .name {
+            font-size: var(--text-md);
+            max-width: 100%;
+            overflow: hidden;
+            width: fit-content;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+
+          .size {
+            opacity: 0.6;
+            font-size: var(--text-sm);
+          }
+        }
+      }
+
+      .actions button {
+        color: var(--variant-text-color);
       }
     }
   }

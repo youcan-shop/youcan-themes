@@ -180,6 +180,7 @@ yc-variant[name=dropdown] .dropdown-options{
   gap:var(--gap-md);
   width:100%;
   padding:4px;
+  z-index:2;
   position:absolute;
   inset-block-start:calc(100% + 0.5em);
   border-radius:var(--radius-md);
@@ -230,4 +231,85 @@ yc-variant[name=dropdown] .dropdown-options .option:has(input:disabled){
 }
 yc-variant[name=dropdown] .dropdown-options .option:hover{
   background-color:color-mix(in srgb, currentColor 5%, transparent);
+}
+yc-variant[name=upload-image]{
+  display:grid;
+  grid-gap:var(--gap-md);
+  gap:var(--gap-md);
+}
+yc-variant[name=upload-image] .upload-preview{
+  display:flex;
+  gap:var(--gap-md);
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  position:relative;
+  padding:3em 1em;
+  border-radius:var(--radius-md);
+  background-color:color-mix(in srgb, currentColor 2%, transparent);
+  border:2px dotted color-mix(in srgb, currentColor 10%, transparent);
+  transition:var(--transition-duration-normal);
+}
+yc-variant[name=upload-image] .upload-preview svg{
+  color:color-mix(in srgb, currentColor 60%, transparent);
+}
+yc-variant[name=upload-image] .upload-preview img{
+  position:absolute;
+  -o-object-fit:contain;
+     object-fit:contain;
+  translate:-50% -50%;
+  inset:50% 0 0 50%;
+}
+yc-variant[name=upload-image] .upload-preview:hover{
+  border-color:color-mix(in srgb, currentColor 20%, transparent);
+  background-color:color-mix(in srgb, currentColor 5%, transparent);
+}
+yc-variant[name=upload-image] .upload-info{
+  display:flex;
+  gap:var(--gap-md);
+  align-items:center;
+  justify-content:space-between;
+  padding:0.7em;
+  border-radius:var(--radius-md);
+  border:1px solid color-mix(in srgb, currentColor 10%, transparent);
+  transition:var(--transition-duration-normal);
+}
+yc-variant[name=upload-image] .upload-info:not(:has(img)){
+  opacity:0;
+  z-index:-1;
+  visibility:hidden;
+  margin-block-start:-7em;
+}
+yc-variant[name=upload-image] .upload-info .preview{
+  display:flex;
+  align-items:center;
+  gap:var(--gap-lg);
+}
+yc-variant[name=upload-image] .upload-info .preview img{
+  width:50px;
+  height:50px;
+  -o-object-fit:cover;
+     object-fit:cover;
+  border-radius:calc(var(--radius-md) - 4px);
+}
+yc-variant[name=upload-image] .upload-info .preview .info{
+  display:grid;
+  grid-gap:var(--gap-sm);
+  gap:var(--gap-sm);
+}
+yc-variant[name=upload-image] .upload-info .preview .info .name{
+  font-size:var(--text-md);
+  max-width:100%;
+  overflow:hidden;
+  width:-moz-fit-content;
+  width:fit-content;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+yc-variant[name=upload-image] .upload-info .preview .info .size{
+  opacity:0.6;
+  font-size:var(--text-sm);
+}
+yc-variant[name=upload-image] .upload-info .actions button{
+  color:var(--variant-text-color);
 }
