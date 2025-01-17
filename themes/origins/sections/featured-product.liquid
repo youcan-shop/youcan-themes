@@ -4,6 +4,9 @@
   style="
     --section-space-top: {{ section.settings.space_top }}px;
     --section-space-bottom: {{ section.settings.space_bottom }}px;
+
+    --accordion-foreground: {{ settings.accordion_text_color.red }}, {{ settings.accordion_text_color.green }}, {{ settings.accordion_text_color.blue }};
+    --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
   <div class="single-product">
@@ -35,6 +38,8 @@
               minute: block.settings.minutes,
               second: block.settings.seconds
             %}
+          {% when 'accordion' %}
+            {% render 'accordion', title: block.settings.title, content: block.settings.content %}
         {% endcase %}
       {% endfor %}
     </div>
@@ -189,6 +194,24 @@
           "id": "second",
           "type": "number",
           "default": 0
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "label": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "placeholder": "Title"
+        },
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "placeholder": "Content"
         }
       ]
     }
