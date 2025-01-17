@@ -1,0 +1,27 @@
+{% comment %}
+  Renders a dropdown select (Product variant)
+
+  Accepts:
+  - options: {Array} variant options
+  - name: {String} input name
+
+  Usage:
+  {% render 'variant-dropdown', name: 'pattern', options: [], placeholder: 'Select' %}
+{% endcomment %}
+
+<yc-variant name="dropdown">
+  <button class="dropdown-trigger icon" role="combobox" data-trigger>
+    <span data-placeholder>
+      {{ placeholder | default: 'Select' }}
+    </span>
+    {% render 'yc-icon', name: 'chevron-down', size: 15 %}
+  </button>
+  <div class="dropdown-options" data-hidden="true" data-content>
+    {% for opt in options %}
+      <label for="{{ opt }}" class="option" data-option>
+        <span>{{ opt }}</span>
+        <input type="radio" name="patter" id="{{ opt }}" hidden>
+      </label>
+    {% endfor %}
+  </div>
+</yc-variant>

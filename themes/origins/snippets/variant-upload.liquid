@@ -1,0 +1,35 @@
+{% comment %}
+  Renders an upload image (Product variant)
+
+  Accepts:
+  - name: {String} input name
+  - options: {Array} input placeholder
+
+  Usage:
+  {% render 'variant-upload', name: 'file', placeholder: "Click to choose a file" %}
+{% endcomment %}
+
+<yc-variant name="upload-image">
+  <label class="upload-preview">
+    <div class="media">
+      {% render 'yc-placeholder', name: 'upload' %}
+    </div>
+    <span class="placeholder h6">
+      {{ placeholder | default: 'Click to choose a file' }}
+    </span>
+    <input
+      accept="image/png, image/gif, image/jpeg, image/webp, image/avif"
+      name="{{ name }}"
+      id="{{ name }}"
+      type="file"
+      hidden
+    >
+  </label>
+  <div class="upload-info" data-info>
+    <div class="actions">
+      <button class="icon" data-size="sm" data-unset>
+        {% render 'yc-icon', name: 'x-mark' %}
+      </button>
+    </div>
+  </div>
+</yc-variant>

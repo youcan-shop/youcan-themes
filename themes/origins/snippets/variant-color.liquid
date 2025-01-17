@@ -1,18 +1,17 @@
 {% comment %}
-  Renders a toggle group (Product variant)
+  Renders a color buttons group (Product variant)
 
   Accepts:
   - options: {Array} variant options
   - name: {String} input name
 
   Usage:
-  {% render 'variant-toggle', name: 'size', options: [] %}
+  {% render 'variant-color', name: 'color', options: [] %}
 {% endcomment %}
 
-<yc-variant name="toggle">
+<yc-variant name="color">
   {% for opt in options %}
-    <label for="{{ opt }}" class="variant-item toggle-item yc-btn icon">
-      {{ opt }}
+    <label for="{{ opt }}" class="variant-item color-item yc-btn icon" style="--variant-color: #669BBC">
       <input type="radio" name="{{ name }}" id="{{ opt }}">
     </label>
   {% endfor %}
