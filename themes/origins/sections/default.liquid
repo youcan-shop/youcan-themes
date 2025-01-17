@@ -1,19 +1,11 @@
-{{ 'component-toast.css' | asset_url | stylesheet_tag }}
-{{ 'component-toast.js' | asset_url | script_tag_deferred }}
+{{ 'component-quantity-input.js' | asset_url | script_tag_deferred }}
 
 {% comment %}
   TO REMOVE ❌
   TODO: This section is just a placeholder for the theme pages, as the template schema requires at least one section
 {% endcomment %}
 <yc-section>
-  <script defer>
-    const toast = new Toast();
-  </script>
-
-  <button onclick="toast.create('Give me a toast', 'success')">Success</button>
-  <button onclick="toast.create('Give me a toast', 'info')">Info</button>
-  <button onclick="toast.create('Give me a toast', 'warning')">Warning</button>
-  <button onclick="toast.create('Give me a toast', 'error')">Error</button>
+  {% render 'yc-quantity-input' %}
 </yc-section>
 
 {% schema %}
