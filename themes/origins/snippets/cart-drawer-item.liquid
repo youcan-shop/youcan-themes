@@ -1,27 +1,18 @@
 <div class="item">
   <div class="image">
-    <img
-      loading="lazy"
-      height="100%"
-      width="100%"
-      src="https://cdn.youcan.shop/stores/52a53607402bdd1dcc16c6624056ab2c/products/PrUQgMBwCrPIuBN9lyHQEKU8f1iZTVdAm8LuQiTY_md.jpg"
-      alt="{{ product.name }}"
-    >
-    {% comment %}
-      {% if product.thumbnail %}
-        <img
-          loading="lazy"
-          height="100%"
-          width="100%"
-          src="{{ product.thumbnail }}"
-          alt="{{ product.name }}"
-        >
-      {% else %}
-        <div class="card-placeholder">
-          {% render 'yc-placeholder', name: 'product', size: '48' %}
-        </div>
-      {% endif %}
-    {% endcomment %}
+    {% if product.thumbnail %}
+      <img
+        loading="lazy"
+        height="100%"
+        width="100%"
+        src="{{ product.thumbnail }}"
+        alt="{{ product.name }}"
+      >
+    {% else %}
+      <div class="card-placeholder">
+        {% render 'yc-placeholder', name: 'product', size: '48' %}
+      </div>
+    {% endif %}
   </div>
   <div class="info">
     <div class="heading">
@@ -32,7 +23,7 @@
     </div>
     <div class="actions">
       {% render 'yc-quantity-control', button_size: 'sm' %}
-      <button class="yc-btn icon delete" data-size="sm">
+      <button class="yc-btn icon delete" data-size="sm" aria-label="Delete">
         {% render 'yc-icon', name: 'trash' %}
       </button>
     </div>
