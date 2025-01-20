@@ -69,26 +69,23 @@
           <li class="data-item">
             <span>{{- 'thankyou.details.coupon' | t -}}</span>
             <div class="coupon-wrapper">
-              <div class="coupon-value">
-                <span>{{- order.coupon.deducted_amount | money -}}</span>
-                <span class="minus">-</span>
-              </div>
-              <span>
-                {%- if order.coupon.is_percentage -%}
-                  ({{- order.coupon.value -}}%)
-                {%- else -%}
-                  ({{- order.coupon.value | money -}})
-                {%- endif -%}
-              </span>
+              {%- if order.coupon.is_percentage -%}
+                <div class="coupon-data">
+                  <span class="coupon-discount">{{- order.coupon.deducted_amount | money -}}</span>
+                  <span>({{- order.coupon.value -}}%)</span>
+                </div>
+              {%- else -%}
+                <span class="coupon-discount">{{- order.coupon.value | money -}}</span>
+              {%- endif -%}
             </div>
           </li>
         {%- endif -%}
         <li class="data-item">
           <span>{{ 'thankyou.details.shipping_cost' | t }}</span>
           {% if order.shippingCost == 0 %}
-            {{ 'thankyou.details.free_shipping' | t }}
+            <span>{{ 'thankyou.details.free_shipping' | t }}</span>
           {% else %}
-            {{ order.shippingCost | money }}
+            <span> {{ order.shippingCost | money }}</span>
           {% endif %}
         </li>
         {%- if store.vat > 0 -%}
