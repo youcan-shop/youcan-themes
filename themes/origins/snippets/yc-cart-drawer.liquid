@@ -11,7 +11,7 @@
     <div class="drawer-box">
       <div class="cart-drawer">
         <div class="header">
-          <div class="">
+          <div class="title">
             {% render 'yc-icon' | name: 'cart' %}
             <span>My cart</span>
           </div>
@@ -19,7 +19,40 @@
             {% render 'yc-icon' | name: 'x-mark' %}
           </button>
         </div>
-        <yc-cart-drawer-items> List items </yc-cart-drawer-items>
+        <yc-cart-drawer-items>
+          <div class="item">
+            <div class="image">
+              {% comment %}
+                {% if product.thumbnail %}
+                  <img
+                    loading="lazy"
+                    height="100%"
+                    width="100%"
+                    src="{{ product.thumbnail }}"
+                    alt="{{ product.name }}"
+                  >
+                {% else %}
+                {% endif %}
+              {% endcomment %}
+              <div class="card-placeholder">
+                {% render 'yc-placeholder', name: 'product', size: '48' %}
+              </div>
+            </div>
+            <div class="info">
+              <span>Product Name</span>
+              <span data-price>999 MAD</span>
+            </div>
+            <div class="actions">
+              {% render 'yc-quantity-control', button_size: 'sm' %}
+              <button class="yc-btn icon" data-size="sm">
+                {% render 'yc-icon', name: 'trash' %}
+              </button>
+            </div>
+            {% comment %} image {% endcomment %}
+            {% comment %} info (name, variant, and price) {% endcomment %}
+            {% comment %} actions (qty and delete) {% endcomment %}
+          </div>
+        </yc-cart-drawer-items>
         <div class="footer">
           <div class="totals">
             <span>Total</span>
