@@ -4,7 +4,6 @@ class CartDrawer extends HTMLElement {
   }
 
   _render() {
-    console.log("hi");
     return 0;
   }
 }
