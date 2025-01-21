@@ -8,11 +8,6 @@ yc-slider .slider-area{
   display:flex;
   height:var(--slider-height);
 }
-@media (max-width: 640px){
-  yc-slider .slider-area{
-    height:60vh;
-  }
-}
 yc-slider .slider-area .slider-box{
   touch-action:pan-y;
   -webkit-user-select:none;
@@ -33,7 +28,6 @@ yc-slider .slider-area .slider-box .slider-inner{
 yc-slider .slider-area .slider-box .slider-inner yc-slider-item{
   height:100%;
   position:relative;
-  pointer-events:none;
   min-width:calc(100% / var(--slider-per-page) - var(--slider-gap) * 1px + var(--slider-gap) / var(--slider-per-page) * 1px);
 }
 yc-slider .slider-area .slider-box .slider-inner yc-slider-item > :where(img, div){
@@ -51,8 +45,8 @@ yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-conten
   align-items:center;
   flex-direction:column;
   justify-content:center;
-  width:calc(100% - 3em);
-  height:calc(100% - 3em);
+  width:100%;
+  height:100%;
   background-color:var(--overlay-background);
 }
 yc-slider .slider-area .slider-box .slider-inner yc-slider-item yc-slider-content[data-alignment$=left]{
@@ -159,11 +153,6 @@ yc-slider[data-type$=full] yc-slider-arrows[data-position$=right]{
 yc-slider[data-type$=full] yc-slider-arrows button{
   border:none;
   box-shadow:inset rgba(50, 50, 93, 0.1) 0px 2px 5px -1px, rgba(0, 0, 0, 0.2) 0px 1px 3px -1px;
-}
-@media (max-width: 1280px){
-  yc-slider[responsive] yc-slider-item{
-    --slider-per-page:var(--slider-max-items-xl);
-  }
 }
 @media (max-width: 1024px){
   yc-slider[responsive] yc-slider-item{

@@ -1,17 +1,99 @@
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-media.js' | asset_url | script_tag_deferred }}
+{{ 'component-slider.js' | asset_url | script_tag_deferred }}
+
 {% assign product = section.settings.item %}
+{% assign product_image = product.images[0] %}
 
 <yc-section
   style="
     --section-space-top: {{ section.settings.space_top }}px;
     --section-space-bottom: {{ section.settings.space_bottom }}px;
 
+    --media-main-image-border-radius: {{ settings.product_card_border_radius }}px;
+    --media-gallery-border-radius: calc(var(--media-main-image-border-radius) - 6px);
     --accordion-foreground: {{ settings.accordion_text_color.red }}, {{ settings.accordion_text_color.green }}, {{ settings.accordion_text_color.blue }};
     --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
   <div class="single-product">
-    <div class="media" style="background-color: var(--color-gray-50); height: 200px">MEDIA 🏗️</div>
-    <div class="info">
+    <yc-product-media role="region" aria-label="Product images">
+      <div class="main-image">
+        {% if product.images.size > 1 %}
+          <div class="count">
+            <span data-current-image>1</span>
+            <span>/</span>
+            <span>{{ product.images.size }}</span>
+          </div>
+        {% endif %}
+        {% if product_image %}
+          <img src="{{ product_image }}" alt="{{ product.name }}" height="100%" width="100%" data-main-image>
+        {% else %}
+          <div class="placeholder">
+            {% render 'yc-placeholder', name: 'product' %}
+          </div>
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="gallery" data-gallery>
+          <yc-slider
+            responsive
+            arrows
+            data-type="fit"
+            style="
+              --slider-gap: 8;
+              --slider-speed: 600;
+              --slider-height: auto;
+              --slider-per-page: 5;
+
+              --slider-max-items-lg: 4;
+              --slider-max-items-md: 5;
+            "
+            aria-role="region"
+            aria-roledescription="Carousel"
+          >
+            <div class="slider-area">
+              <div class="slider-box" data-slider-box>
+                <div class="slider-inner" data-slider>
+                  {% for image in product.images %}
+                    <yc-slider-item>
+                      {% assign index = forloop.index %}
+                      <label class="image" for="{{ index }}">
+                        <input
+                          type="radio"
+                          name="selected_image"
+                          id="{{ index }}"
+                          value="{{ index }}"
+                          hidden
+                          aria-label="{{ product.name }} - {{ index }}"
+                          {% if index == 1 %}
+                            checked
+                          {% endif %}
+                        >
+                        <img src="{{ image }}" alt="" height="100%" width="100%">
+                      </label>
+                    </yc-slider-item>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% if product.images.size > 5 %}
+              <yc-slider-arrows data-position="right">
+                <div class="slider-arrows">
+                  <button class="icon" data-arrow="left" aria-label="previous" disabled>
+                    {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+                  </button>
+                  <button class="icon" data-arrow="right" aria-label="next">
+                    {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+                  </button>
+                </div>
+              </yc-slider-arrows>
+            {% endif %}
+          </yc-slider>
+        </div>
+      {% endif %}
+    </yc-product-media>
+    <div class="info" role="complementary" aria-label="Product information">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {% when 'title' %}
