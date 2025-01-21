@@ -1,11 +1,38 @@
 {{ 'component-quantity-control.js' | asset_url | script_tag_deferred }}
 
+{{ 'component-variants.css' | asset_url | stylesheet_tag }}
+{{ 'component-variants.js' | asset_url | script_tag_deferred }}
+
 {% comment %}
   TO REMOVE ❌
   TODO: This section is just a placeholder for the theme pages, as the template schema requires at least one section
 {% endcomment %}
-<yc-section style="padding: 5%; display: flex; justify-content: center; align-items: center;">
-  {% render 'yc-quantity-control', button_size: 'md' %}
+<yc-section
+  style="
+    --section-space-top: 100px;
+    --section-space-bottom: 100px;
+    --section-text-color: 18, 18, 18;
+    --section-bg-color: #FFFFFFFF;
+  "
+>
+  <div style="display: grid; gap: 2em; width: 400px;">
+    {% assign toggle_options = 'XL,L,M,S' | split: ',' %}
+    {% render 'variant-toggle', name: 'size', options: toggle_options %}
+
+    {% assign color_options = 'Red,Green,Blue,Yellow,Black,White' | split: ',' %}
+    {% render 'variant-color', name: 'color', options: color_options %}
+
+    {% assign radio_options = 'Tight,Slim,Regular,Relaxed' | split: ',' %}
+    {% render 'variant-radio', name: 'fit', options: radio_options %}
+
+    {% assign image_options = '1,2,3,4' | split: ',' %}
+    {% render 'variant-image', name: 'image', options: image_options %}
+
+    {% assign dropdown_options = 'Solid,Striped,Plaid,Floral' | split: ',' %}
+    {% render 'variant-dropdown', name: 'pattern', options: dropdown_options, placeholder: 'Select a pattern' %}
+
+    {% render 'variant-upload', name: 'my-file', placeholder: 'Click here to choose a file' %}
+  </div>
 </yc-section>
 
 {% schema %}

@@ -1,0 +1,24 @@
+{% comment %}
+  Renders a image buttons group (Product variant)
+
+  Accepts:
+  - options: {Array} variant options
+  - name: {String} input name
+
+  Usage:
+  {% render 'variant-image', name: 'image', options: [] %}
+{% endcomment %}
+
+<yc-variant name="image">
+  {% for option in options %}
+    <label class="variant-item image-item yc-btn icon" for="{{ option }}">
+      <img
+        src="{{ "hoodie.webp" | asset_url }}"
+        alt="{{ option }}"
+        height="70"
+        width="70"
+      >
+      <input type="radio" name="{{ name }}" id="{{ option }}">
+    </label>
+  {% endfor %}
+</yc-variant>
