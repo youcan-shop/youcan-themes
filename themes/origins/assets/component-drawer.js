@@ -9,6 +9,7 @@ class Drawer extends HTMLElement {
       action.addEventListener("click", () => {
         const isHidden = this.dataset.hidden === "true";
         this.dataset.hidden = !isHidden;
+        document.body.toggleAttribute("data-scroll-locked", isHidden);
       });
     });
   }
