@@ -1,4 +1,5 @@
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{{ 'featured-product.css' | asset_url | stylesheet_tag }}
 {{ 'component-product-media.js' | asset_url | script_tag_deferred }}
 {{ 'component-slider.js' | asset_url | script_tag_deferred }}
 
@@ -93,7 +94,7 @@
         </div>
       {% endif %}
     </yc-product-media>
-    <div class="info" role="complementary" aria-label="Product information">
+    <yc-product-info role="complementary" aria-label="Product information">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {% when 'title' %}
@@ -126,7 +127,7 @@
             {% render 'product-buy-button' %}
         {% endcase %}
       {% endfor %}
-    </div>
+    </yc-product-info>
   </div>
 </yc-section>
 
