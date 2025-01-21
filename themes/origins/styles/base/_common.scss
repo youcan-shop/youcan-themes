@@ -264,43 +264,47 @@ yc-section {
       .slider-inner {
         padding: 0.25em;
 
-        .image {
-          scroll-snap-align: start;
-          cursor: pointer;
-          display: inline-block;
-          width: 100%;
-          border: var(--image-border);
-          border-radius: var(--media-gallery-border-radius);
-          overflow: hidden;
-          position: relative;
-          transition: var(--transition-duration-normal);
+        yc-slider-item {
+          max-width: 100px;
 
-          &::before {
-            content: "";
-            position: absolute;
+          .image {
+            scroll-snap-align: start;
+            cursor: pointer;
+            display: inline-block;
             width: 100%;
-            height: 100%;
-            opacity: 0;
-            border-radius: calc(var(--media-gallery-border-radius) - 1px);
-            backdrop-filter: var(--media-blur);
-            background-color: var(--media-background);
+            border: var(--image-border);
+            border-radius: var(--media-gallery-border-radius);
+            overflow: hidden;
+            position: relative;
             transition: var(--transition-duration-normal);
-          }
-
-          &:hover::before {
-            opacity: 1;
-          }
-
-          &:has(input:checked) {
-            box-shadow: var(--shadow-dark-focus-sm);
 
             &::before {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              opacity: 0;
+              border-radius: calc(var(--media-gallery-border-radius) - 1px);
+              backdrop-filter: var(--media-blur);
+              background-color: var(--media-background);
+              transition: var(--transition-duration-normal);
+            }
+
+            &:hover::before {
               opacity: 1;
             }
-          }
 
-          img {
-            object-fit: cover;
+            &:has(input:checked) {
+              box-shadow: var(--shadow-dark-focus-sm);
+
+              &::before {
+                opacity: 1;
+              }
+            }
+
+            img {
+              object-fit: cover;
+            }
           }
         }
       }
