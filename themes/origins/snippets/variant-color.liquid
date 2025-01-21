@@ -1,0 +1,18 @@
+{% comment %}
+  Renders a color buttons group (Product variant)
+
+  Accepts:
+  - options: {Array} variant options
+  - name: {String} input name
+
+  Usage:
+  {% render 'variant-color', name: 'color', options: [] %}
+{% endcomment %}
+
+<yc-variant name="color">
+  {% for option in options %}
+    <label for="{{ option }}" class="variant-item color-item yc-btn icon" style="--variant-color: {{ option }}">
+      <input type="radio" name="{{ name }}" id="{{ option }}">
+    </label>
+  {% endfor %}
+</yc-variant>

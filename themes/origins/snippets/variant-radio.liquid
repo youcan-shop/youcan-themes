@@ -1,0 +1,19 @@
+{% comment %}
+  Renders a radio group (Product variant)
+
+  Accepts:
+  - options: {Array} variant options
+  - name: {String} input name
+
+  Usage:
+  {% render 'variant-radio', name: 'fit', options: [] %}
+{% endcomment %}
+
+<yc-variant name="radio">
+  {% for option in options %}
+    <div class="variant-item radio-item">
+      <input type="radio" name="{{ name }}" id="{{ option }}">
+      <label for="{{ option }}">{{ option }}</label>
+    </div>
+  {% endfor %}
+</yc-variant>
