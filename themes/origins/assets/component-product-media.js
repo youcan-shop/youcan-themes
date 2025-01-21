@@ -2,7 +2,6 @@ class ProductMedia extends HTMLElement {
   constructor() {
     super();
 
-    this.selectedImage = null;
     this.mainImage = this.querySelector("[data-main-image]");
     this.gallery = this.querySelector("[data-gallery]");
     this.currentImage = this.querySelector("[data-current-image]");
