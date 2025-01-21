@@ -1,0 +1,80 @@
+@import "mixins/breakpoints";
+
+yc-section {
+  --cart-border: 1px solid var(--color-gray-300);
+
+  .cart {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: var(--gap-xl);
+    grid-row-gap: var(--gap-xl);
+
+    .content {
+      border-radius: var(--radius-md);
+      padding: 1em;
+      height: 300px;
+      grid-area: 1 / 1 / 2 / 9;
+      border: var(--cart-border);
+    }
+
+    .summary {
+      padding: 1em;
+      height: fit-content;
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-sm);
+      background-color: var(--color-gray-50);
+      border-radius: var(--radius-md);
+      grid-area: 1 / 9 / 2 / 13;
+
+      h2 {
+        padding-block-end: 0.5em;
+      }
+
+      .coupon {
+        display: flex;
+        gap: var(--gap-sm);
+
+        input,
+        button {
+          background-color: white;
+        }
+      }
+
+      .subtotal {
+        padding-block: 1em;
+
+        .item,
+        .total {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: var(--gap-md);
+          padding: var(--gap-md);
+        }
+
+        .total {
+          border-block-start: var(--cart-border);
+          padding-block-end: 0;
+        }
+
+        .total > [data-cart-total] {
+          font-weight: 550;
+        }
+      }
+    }
+  }
+}
+
+@include breakpoint("xl") {
+  yc-section {
+    .cart {
+      grid-template-columns: 1fr;
+
+      .content,
+      .summary {
+        grid-area: unset;
+      }
+    }
+  }
+}
