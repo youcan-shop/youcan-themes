@@ -25,11 +25,12 @@
     <div class="summary">
       <h2 class="h4">{{ 'cart.page.summary.title' | t }}</h2>
       <div class="box">
-        {% comment %} <h2 class="h6">{{ 'cart.page.summary.title' | t }}</h2> {% endcomment %}
-        <div class="coupon">
-          <input type="text" placeholder="{{ 'cart.page.coupon.placeholder' | t }}">
-          <button class="yc-btn secondary">{{ 'cart.page.coupon.apply' | t }}</button>
-        </div>
+        {% if section.settings.show_coupon %}
+          <div class="coupon">
+            <input type="text" placeholder="{{ 'cart.page.coupon.placeholder' | t }}">
+            <button class="yc-btn secondary">{{ 'cart.page.coupon.apply' | t }}</button>
+          </div>
+        {% endif %}
         <div class="subtotal">
           <div class="item">
             <span>{{ 'cart.page.summary.subtotal' | t }}</span>
@@ -50,22 +51,6 @@
       </div>
     </div>
   </div>
-  {% comment %}
-    {% if cart and cart.items %}
-      {% comment %}
-        {% comment %}CART  {% endcomment %}
-      {% endcomment %}
-    {% else %}
-      <div class="empty-page">
-        {% assign title = 'cart.empty.title' | t %}
-        {% assign description = 'cart.empty.description' | t %}
-
-        {% render 'yc-empty', icon: 'cart', heading: title, subheading: description %}
-      </div>
-    {% endif %}
-    {% comment %}
-    {% endcomment %}
-  {% endcomment %}
 </yc-section>
 
 {%- schema -%}
@@ -74,6 +59,12 @@
   "templates": ["cart"],
   "limit": 1,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_coupon",
+      "label": "Show coupon",
+      "default": true
+    },
     {
       "type": "color",
       "id": "background_color",
