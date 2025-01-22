@@ -3,7 +3,6 @@ class Select extends HTMLElement {
 
   constructor() {
     super();
-
     this.state = false;
     this.trigger = this.querySelector("yc-select-trigger");
     this.content = this.querySelector("yc-select-content");
@@ -11,14 +10,51 @@ class Select extends HTMLElement {
   }
 
   connectedCallback() {
-    this._render();
+    this.setup();
+    this.listeners();
+    this.search && this.enableSearch();
   }
 
-  _render() {
-    this.setup();
-    this.control();
+  setup() {
+    const items = this.content.querySelectorAll("yc-select-item");
+
+    items.forEach((item) => {
+      const { value } = item.attributes;
+      const label = item.textContent.trim();
+      const disabled = item.hasAttribute("disabled");
+      item.outerHTML = `
+        <label>
+          ${label}
+          <input type="radio" name="${this.getAttribute("name")}" value="${value?.value}" 
+            ${disabled ? "disabled" : ""} hidden>
+        </label>`;
+    });
+  }
+
+  listeners() {
     this.onSelect();
-    this.search && this.onSearch();
+    this.onTrigger();
+    this.onClickOutSide();
+  }
+
+  enableSearch() {
+    const placeholder = this.search.getAttribute("placeholder");
+    const noResultsMsg = this.search.getAttribute("no-results");
+    const searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.name = "search";
+    searchInput.placeholder = placeholder;
+
+    this.search.replaceWith(searchInput);
+    this.search = searchInput;
+
+    const options = [...this.content.querySelectorAll("label")];
+    this.onSearch(options, noResultsMsg);
+  }
+
+  toggleState(visible) {
+    this.state = visible;
+    this.content.dataset.visible = visible;
   }
 
   onSelect() {
@@ -27,83 +63,43 @@ class Select extends HTMLElement {
     options.forEach((opt) =>
       opt.addEventListener("change", () => {
         this.trigger.textContent = opt.textContent;
+        this.toggleState(false);
       }),
     );
   }
 
-  onSearch() {
-    const placeholder = this.search.getAttribute("placeholder");
-    const noResults = this.search.getAttribute("no-results");
-
-    const template = document.createElement("template");
-    template.innerHTML = `<input type="text" name="search" placeholder="${placeholder}" />`;
-
-    const searchInput = template.content.firstElementChild.cloneNode(true);
-    this.search.replaceWith(searchInput);
-
-    const options = this.content.querySelectorAll("label");
-
-    searchInput.addEventListener("input", (e) => {
-      const isValid = (option) =>
-        option.textContent.toLowerCase().includes(e.target.value.toLowerCase());
-
-      Array.from(options).forEach((opt) => {
-        opt.toggleAttribute("hidden-item", !isValid(opt));
-      });
-
-      Array.from(options).filter((opt) => isValid(opt)).length
-        ? this.content.removeAttribute("data-no-results")
-        : this.content.setAttribute("data-no-results", noResults);
-    });
-  }
-
-  control() {
-    const setState = (visible) => {
-      this.state = visible;
-      this.content.dataset.visible = visible;
-      document.body.toggleAttribute("data-scroll-locked", visible);
-    };
-
-    const clickOutside = (e) =>
-      !e.composedPath().includes(this.trigger) && setState(false);
-
-    const toggle = () => {
+  onTrigger() {
+    this.trigger.addEventListener("click", () => {
       this.content.toggleAttribute(
         "is-above",
         innerHeight - this.trigger.getBoundingClientRect().bottom <
           this.content.offsetHeight,
       );
-
-      setState(!this.state);
-    };
-
-    this.trigger.addEventListener("click", toggle);
-    document.addEventListener("click", clickOutside);
+      this.toggleState(!this.state);
+    });
   }
 
-  setup() {
-    const items = this.content.querySelectorAll("yc-select-item");
+  onClickOutSide() {
+    document.addEventListener("click", (e) => {
+      const isTrigger = e.composedPath().includes(this.trigger);
+      const isSearch = e.target.tagName === "INPUT";
 
-    items.forEach((item) => {
-      const label = item.textContent;
-      const value = item.getAttribute("value");
-      const disabled = item.hasAttribute("disabled");
+      if (!isTrigger && !isSearch) this.toggleState(false);
+    });
+  }
 
-      const template = document.createElement("template");
-      template.innerHTML = `
-        <label for="${value}">
-          ${label}
-          <input 
-            hidden
-            ${disabled && "disabled"}
-            name="${this.getAttribute("name")}"
-            type="radio" id="${value}" value="${value}" 
-          >
-        </label>
-      `;
+  onSearch(options, no_results_message) {
+    this.search.addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase();
+      let hasMatch = false;
 
-      const option = template.content.firstElementChild.cloneNode(true);
-      item.replaceWith(option);
+      options.forEach((opt) => {
+        const isMatch = opt.textContent.toLowerCase().includes(query);
+        opt.hidden = !isMatch;
+        hasMatch ||= isMatch;
+      });
+
+      this.content.dataset.noResults = hasMatch ? "" : no_results_message;
     });
   }
 }
