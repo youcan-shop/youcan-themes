@@ -11,6 +11,7 @@ yc-select {
   yc-select-trigger {
     width: 100%;
     cursor: pointer;
+    user-select: none;
     font-size: var(--text-sm);
     padding: 8px 12px !important;
     justify-content: space-between !important;
@@ -76,10 +77,6 @@ yc-select {
       border-radius: var(--radius-md);
       transition: var(--transition-duration-normal);
 
-      &[hidden-item] {
-        display: none;
-      }
-
       &:first-child {
         margin-block-start: 4px;
       }
@@ -118,12 +115,16 @@ yc-select {
       }
     }
 
+    &:has(label[hidden]) {
+      padding-block-end: 4px;
+    }
+
     &:has(label:nth-of-type(n + 6)) {
       max-height: 260px;
       overflow-y: scroll;
     }
 
-    &[data-no-results] {
+    &[data-no-results]:not([data-no-results=""]) {
       &::after {
         content: attr(data-no-results);
         padding: 3em 4px;

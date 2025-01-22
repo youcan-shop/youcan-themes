@@ -10,6 +10,9 @@ yc-select{
 yc-select yc-select-trigger{
   width:100%;
   cursor:pointer;
+  -webkit-user-select:none;
+     -moz-user-select:none;
+          user-select:none;
   font-size:var(--text-sm);
   padding:8px 12px !important;
   justify-content:space-between !important;
@@ -69,9 +72,6 @@ yc-select yc-select-content label{
   border-radius:var(--radius-md);
   transition:var(--transition-duration-normal);
 }
-yc-select yc-select-content label[hidden-item]{
-  display:none;
-}
 yc-select yc-select-content label:first-child{
   margin-block-start:4px;
 }
@@ -102,11 +102,14 @@ yc-select yc-select-content label:has(input:disabled){
 yc-select yc-select-content label:hover{
   background-color:color-mix(in srgb, currentColor 5%, transparent);
 }
+yc-select yc-select-content:has(label[hidden]){
+  padding-block-end:4px;
+}
 yc-select yc-select-content:has(label:nth-of-type(n + 6)){
   max-height:260px;
   overflow-y:scroll;
 }
-yc-select yc-select-content[data-no-results]::after{
+yc-select yc-select-content[data-no-results]:not([data-no-results=""])::after{
   content:attr(data-no-results);
   padding:3em 4px;
   text-align:center;
