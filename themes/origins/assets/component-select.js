@@ -5,6 +5,7 @@ class Select extends HTMLElement {
     super();
     this.state = false;
     this.trigger = this.querySelector("yc-select-trigger");
+    this.placeholder = this.trigger.querySelector("yc-select-value");
     this.content = this.querySelector("yc-select-content");
     this.search = this.querySelector("yc-select-search");
   }
@@ -24,7 +25,7 @@ class Select extends HTMLElement {
       const disabled = item.hasAttribute("disabled");
       item.outerHTML = `
         <label>
-          ${label}
+          <span>${label}</span>
           <input type="radio" name="${this.getAttribute("name")}" value="${value?.value}" 
             ${disabled ? "disabled" : ""} hidden>
         </label>`;
@@ -62,7 +63,7 @@ class Select extends HTMLElement {
 
     options.forEach((opt) =>
       opt.addEventListener("change", () => {
-        this.trigger.textContent = opt.textContent;
+        this.placeholder.textContent = opt.textContent.trim();
         this.toggleState(false);
       }),
     );
