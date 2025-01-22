@@ -1,0 +1,40 @@
+<div class="item">
+  <div class="info">
+    <div class="image">
+      {% if product.thumbnail %}
+        <img
+          loading="lazy"
+          height="100%"
+          width="100%"
+          src="{{ product.thumbnail }}"
+          alt="{{ product.name }}"
+        >
+      {% else %}
+        <div class="card-placeholder">
+          {% render 'yc-placeholder', name: 'product', size: '48' %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="heading">
+      <a href="{{ product.url }}" class="link" title="{{ product.name }}">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium, accusamus incidunt dignissimos similique
+        numquam error hic temporibus? Esse quisquam dignissimos libero, unde quo quae sapiente praesentium ab
+        repudiandae at labore.
+        {% comment %} {{ product.name | default: 'Product Name' }} {% endcomment %}
+      </a>
+      {% if product.variants %}
+        <p class="variant">
+          {% comment %} TODO: List variants separated by '/' {% endcomment %}
+        </p>
+      {% endif %}
+      <span data-base-price>{{ product.price | default: 0 | money }}</span>
+    </div>
+  </div>
+  <div class="controls">
+    {% render 'yc-quantity-control', button_size: 'sm' %}
+    <span data-subtotal>{{ 0 | money }}</span>
+    <button class="yc-btn icon delete" data-size="sm" aria-label="Delete">
+      {% render 'yc-icon', name: 'trash' %}
+    </button>
+  </div>
+</div>

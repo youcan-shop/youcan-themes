@@ -1,72 +1,180 @@
 @import "mixins/breakpoints";
 
 yc-section {
-  --cart-border: 1px solid var(--color-gray-300);
+  gap: var(--gap-xl);
+  --cart-border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
 
   .cart {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-column-gap: var(--gap-xl);
-    grid-row-gap: var(--gap-xl);
+    grid-row-gap: var(--gap-2xl);
+    position: relative;
 
-    .content {
-      border-radius: var(--radius-md);
-      padding: 1em;
-      height: 300px;
-      grid-area: 1 / 1 / 2 / 9;
-      border: var(--cart-border);
-    }
-
+    .content,
     .summary {
-      padding: 1em;
-      height: fit-content;
       display: flex;
       flex-direction: column;
-      gap: var(--gap-sm);
-      background-color: var(--color-gray-50);
-      border-radius: var(--radius-md);
-      grid-area: 1 / 9 / 2 / 13;
+      gap: var(--gap-xl);
+    }
 
-      h2 {
-        padding-block-end: 0.5em;
-      }
+    .content {
+      grid-area: 1 / 1 / 2 / 9;
 
-      .coupon {
-        display: flex;
-        gap: var(--gap-sm);
+      .list {
+        border-radius: var(--radius-md);
+        padding-inline: 1.5em;
+        border: var(--cart-border);
 
-        input,
-        button {
-          background-color: white;
-        }
-      }
-
-      .subtotal {
-        padding-block: 1em;
-
-        .item,
-        .total {
+        .item {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: var(--gap-md);
-          padding: var(--gap-md);
+          gap: var(--gap-lg);
+          padding-block: 1.5em;
+          border-block-end: var(--cart-border);
+
+          .info {
+            display: flex;
+            gap: var(--gap-xl);
+
+            .image {
+              height: 100px;
+              width: 100px;
+              min-width: 100px;
+
+              .card-placeholder {
+                width: 100%;
+                height: 100%;
+                background-color: rgba(var(--section-text-color), 0.05);
+
+                svg {
+                  color: rgba(var(--section-text-color), 0.3);
+                }
+              }
+            }
+
+            .heading {
+              display: flex;
+              flex-direction: column;
+              gap: var(--gap-sm);
+
+              .link {
+                font-size: var(--text-lg);
+                color: currentColor;
+                display: -webkit-box;
+                line-clamp: 2;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+              }
+
+              .variant {
+                font-size: var(--text-xs);
+                color: color-mix(in srgb, currentColor 80%, transparent);
+              }
+
+              & > [data-base-price] {
+                color: color-mix(in srgb, currentColor 80%, transparent);
+              }
+            }
+          }
+
+          .controls {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-3xl);
+
+            & > [data-subtotal] {
+              font-weight: 550;
+            }
+
+            .delete {
+              border: none;
+              background-color: color-mix(
+                in srgb,
+                currentColor 5%,
+                transparent
+              );
+
+              &:hover {
+                color: var(--color-error-500);
+                background-color: var(--color-error-50);
+              }
+            }
+          }
         }
 
-        .total {
-          border-block-start: var(--cart-border);
-          padding-block-end: 0;
+        & > *:last-child {
+          .item {
+            border-block-end: none;
+          }
+        }
+      }
+    }
+
+    .summary {
+      grid-area: 1 / 9 / 2 / 13;
+
+      .box {
+        position: sticky;
+        inset-block-start: 20px;
+        padding: 1em;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap-sm);
+        background-color: color-mix(in srgb, currentColor 2%, transparent);
+        border: var(--cart-border);
+        border-radius: var(--radius-md);
+
+        h2 {
+          padding-block-end: 0.5em;
         }
 
-        .total > [data-cart-total] {
-          font-weight: 550;
+        .coupon {
+          display: flex;
+          gap: var(--gap-sm);
+
+          input,
+          button {
+            background-color: white;
+          }
+        }
+
+        .subtotal {
+          padding-block-start: 1em;
+
+          .item,
+          .total {
+            font-size: var(--text-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--gap-md);
+            padding-block: var(--gap-md);
+          }
+
+          .total-box {
+            display: flex;
+            flex-direction: column;
+            border-block-start: var(--cart-border);
+
+            .total {
+              padding-block-end: 1em;
+            }
+
+            .total > [data-cart-total] {
+              font-weight: 550;
+            }
+          }
         }
       }
     }
   }
 }
 
-@include breakpoint("xl") {
+@include breakpoint("lg") {
   yc-section {
     .cart {
       grid-template-columns: 1fr;
@@ -74,7 +182,72 @@ yc-section {
       .content,
       .summary {
         grid-area: unset;
+
+        .box {
+          inset-block-start: 0;
+          position: relative;
+        }
       }
+
+      .summary {
+        .box {
+          .subtotal {
+            .total-box {
+              padding: 1em 10%;
+              position: fixed;
+              inset-inline: 0;
+              inset-block-end: 0;
+              z-index: 1;
+              background-color: var(--section-bg-color);
+              box-shadow: var(--shadow-dark-sm);
+              border-block-start: none;
+
+              .total {
+                padding-block-start: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include breakpoint("md") {
+  yc-section {
+    .cart {
+      .list {
+        .item {
+          flex-direction: column;
+
+          .controls {
+            width: 100%;
+            gap: var(--gap-xl) !important;
+
+            .delete {
+              margin-inline-start: auto;
+            }
+          }
+        }
+      }
+
+      .summary {
+        .box {
+          .subtotal {
+            .total-box {
+              padding: 1em;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+body:has(yc-header[data-sticky]) {
+  .cart {
+    .summary {
+      inset-block-start: 100px;
     }
   }
 }
