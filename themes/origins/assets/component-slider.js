@@ -51,7 +51,7 @@ if (!customElements.get("yc-slider")) {
     _render() {
       this.swipe();
 
-      this.autoPlay();
+      this.hasAttribute("autoplay") && this.autoPlay();
 
       this.hasAttribute("responsive") && this.breakpoints().listener();
 
