@@ -192,9 +192,7 @@ if (!customElements.get("yc-slider")) {
       this.index = new_index;
       this.move();
 
-      if (this.isArrowsVisible) {
-        this.setArrows();
-      }
+      this.isArrowsVisible && this.setArrows();
     }
 
     setSwiping(state) {
