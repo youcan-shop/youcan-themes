@@ -55,8 +55,10 @@ if (!customElements.get("yc-slider")) {
       this.hasAttribute("responsive") && this.breakpoints().listener();
 
       if (this.hasAttribute("arrows")) {
-        this.leftArrow.addEventListener("click", () => this.setIndex(-1));
-        this.rightArrow.addEventListener("click", () => this.setIndex(1));
+        this.leftArrow &&
+          this.leftArrow.addEventListener("click", () => this.setIndex(-1));
+        this.rightArrow &&
+          this.rightArrow.addEventListener("click", () => this.setIndex(1));
       }
 
       if (this.hasAttribute("autoplay")) {
