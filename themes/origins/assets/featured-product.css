@@ -171,11 +171,21 @@
   gap:var(--gap-lg);
   margin-block-start:1em;
 }
+.single-product yc-product-info .buy-button .buy-area{
+  display:grid;
+  grid-gap:var(--gap-lg);
+  gap:var(--gap-lg);
+}
 .single-product yc-product-info .buy-button .events{
   display:flex;
   gap:var(--gap-md);
+  background-color:var(--section-bg-color, var(--color-base-white));
 }
-.single-product yc-product-info .buy-button .events button[data-trigger]{
+.single-product yc-product-info .buy-button .events[data-sticky]{
+  display:none;
+}
+.single-product yc-product-info .buy-button .events button[data-toggle],
+.single-product yc-product-info .buy-button .events button[data-submit]{
   width:100%;
 }
 .single-product yc-product-info .buy-button .express-checkout{
@@ -266,5 +276,46 @@
   }
   .single-product yc-product-media .gallery .slider-inner .image{
     height:70px !important;
+  }
+  .single-product yc-product-info .buy-button .buy-area{
+    gap:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout{
+    border:none;
+    border-radius:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .header{
+    text-align:center;
+    padding-inline:1em;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .fields{
+    padding-inline:1em;
+    border-block-start:none;
+    grid-template-columns:1fr;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .fields:last-child{
+    padding-block-end:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .fields::before{
+    border-start-end-radius:var(--radius-sm);
+  }
+  .single-product yc-product-info .buy-button .buy-area .events{
+    z-index:2;
+    padding:1em;
+    position:sticky;
+    inset-block-end:0;
+  }
+  .single-product yc-product-info .buy-button .events[data-sticky]{
+    z-index:2;
+    margin:1em;
+    padding:1em;
+    display:flex;
+    position:fixed;
+    inset-block-end:0;
+    inset-inline-start:0;
+    width:calc(100% - 2em);
+    border-radius:var(--radius-md);
+    background-color:var(--section-bg-color, var(--color-base-white));
+    border:1px solid color-mix(in srgb, currentColor 10%, transparent);
   }
 }

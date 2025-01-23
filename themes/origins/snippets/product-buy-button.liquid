@@ -1,24 +1,5 @@
 <div class="buy-button">
-  <div class="express-checkout">
-    <div class="header">Fill out this form, and we'll contact you soon</div>
-    <div class="fields" data-title="Customer information">
-      <div class="field">
-        <label for="first-name">First name</label>
-        <input type="text" name="first-name" placeholder="Type your first name.." required>
-      </div>
-      <div class="field">
-        <label for="last-name">Last name</label>
-        <input type="text" name="last-name" placeholder="Type your last name.." required>
-      </div>
-      <div class="field">
-        <label for="phone-number">Phone number</label>
-        <input type="tel" name="phone-number" placeholder="Type your phone number.." required>
-      </div>
-      <div class="field">
-        <label for="address">Address</label>
-        <input type="text" name="address" placeholder="Type your address.." required>
-      </div>
-    </div>
+  {% comment %}
     <div class="fields" data-title="Shipping address">
       <div class="field">
         <label for="country">Country</label>
@@ -53,9 +34,82 @@
         <input type="text" name="zip-code" placeholder="Type your zip code.." required>
       </div>
     </div>
-  </div>
-  <div class="events">
-    {% render 'yc-quantity-control' %}
-    <button class="primary" data-trigger>Add to cart</button>
-  </div>
+  {% endcomment %}
+  {% comment %}
+    <div class="events">
+      {% render 'yc-quantity-control' %}
+      <button class="primary" data-trigger>Add to cart</button>
+    </div>
+  {% endcomment %}
+
+  <yc-modal data-hidden="true" as-drawer>
+    <div class="events" data-sticky>
+      {% render 'yc-quantity-control' %}
+      <button class="primary" data-toggle="">Buy now</button>
+    </div>
+
+    <div class="modal-container">
+      <div class="modal-box buy-area" data-modal>
+        <div class="express-checkout">
+          <div class="header">Fill out this form, and we'll contact you soon</div>
+          <div class="fields" data-title="Customer information">
+            <div class="field">
+              <label for="first-name">First name</label>
+              <input type="text" name="first-name" placeholder="Type your first name.." required>
+            </div>
+            <div class="field">
+              <label for="last-name">Last name</label>
+              <input type="text" name="last-name" placeholder="Type your last name.." required>
+            </div>
+            <div class="field">
+              <label for="phone-number">Phone number</label>
+              <input type="tel" name="phone-number" placeholder="Type your phone number.." required>
+            </div>
+            <div class="field">
+              <label for="address">Address</label>
+              <input type="text" name="address" placeholder="Type your address.." required>
+            </div>
+          </div>
+          <div class="fields" data-title="Shipping address">
+            <div class="field">
+              <label for="country">Country</label>
+              <yc-select name="country">
+                <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
+                  <yc-select-value>Select your country</yc-select-value>
+                </yc-select-trigger>
+                <yc-select-content>
+                  <yc-select-item value="morocco">Morocco</yc-select-item>
+                  <yc-select-item value="egypt">Egypt</yc-select-item>
+                  <yc-select-item value="france">France</yc-select-item>
+                  <yc-select-item value="saudi-arabia">Saudi Arabia</yc-select-item>
+                </yc-select-content>
+              </yc-select>
+            </div>
+            <div class="field">
+              <label for="city">City</label>
+              <yc-select name="city">
+                <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
+                  <yc-select-value>Select your city</yc-select-value>
+                </yc-select-trigger>
+                <yc-select-content>
+                  <yc-select-item value="casablanca">Casablanca</yc-select-item>
+                  <yc-select-item value="rabat">Rabat</yc-select-item>
+                  <yc-select-item value="safi">Safi</yc-select-item>
+                  <yc-select-item value="marrakech">Marrakech</yc-select-item>
+                </yc-select-content>
+              </yc-select>
+            </div>
+            <div class="field">
+              <label for="phone">Zip code</label>
+              <input type="text" name="zip-code" placeholder="Type your zip code.." required>
+            </div>
+          </div>
+        </div>
+        <div class="events">
+          <button class="primary" data-submit>Place order</button>
+        </div>
+      </div>
+      <div class="modal-overlay overlay" data-toggle></div>
+    </div>
+  </yc-modal>
 </div>

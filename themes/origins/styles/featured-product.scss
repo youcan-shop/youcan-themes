@@ -204,11 +204,22 @@
       gap: var(--gap-lg);
       margin-block-start: 1em;
 
+      .buy-area {
+        display: grid;
+        gap: var(--gap-lg);
+      }
+
       .events {
         display: flex;
         gap: var(--gap-md);
+        background-color: var(--section-bg-color, var(--color-base-white));
 
-        button[data-trigger] {
+        &[data-sticky] {
+          display: none;
+        }
+
+        button[data-toggle],
+        button[data-submit] {
           width: 100%;
         }
       }
@@ -320,6 +331,57 @@
     yc-product-media {
       .gallery .slider-inner .image {
         height: 70px !important;
+      }
+    }
+
+    yc-product-info .buy-button {
+      .buy-area {
+        gap: 0;
+
+        .express-checkout {
+          border: none;
+          border-radius: 0;
+
+          .header {
+            text-align: center;
+            padding-inline: 1em;
+          }
+
+          .fields {
+            padding-inline: 1em;
+            border-block-start: none;
+            grid-template-columns: 1fr;
+
+            &:last-child {
+              padding-block-end: 0;
+            }
+
+            &::before {
+              border-start-end-radius: var(--radius-sm);
+            }
+          }
+        }
+
+        .events {
+          z-index: 2;
+          padding: 1em;
+          position: sticky;
+          inset-block-end: 0;
+        }
+      }
+
+      .events[data-sticky] {
+        z-index: 2;
+        margin: 1em;
+        padding: 1em;
+        display: flex;
+        position: fixed;
+        inset-block-end: 0;
+        inset-inline-start: 0;
+        width: calc(100% - 2em);
+        border-radius: var(--radius-md);
+        background-color: var(--section-bg-color, var(--color-base-white));
+        border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
       }
     }
   }
