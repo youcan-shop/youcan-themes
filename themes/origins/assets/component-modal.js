@@ -1,4 +1,6 @@
 class Modal extends HTMLElement {
+  static observedAttributes = ["as-drawer"];
+
   constructor() {
     super();
 
@@ -116,7 +118,9 @@ class Modal extends HTMLElement {
     const key = isMobile ? "mobile" : "desktop";
     const state = this.state ? "closed" : "open";
 
-    this.setPosition(positions[key][state]);
+    this.setPosition(
+      !isMobile && this.hasAttribute("as-drawer") ? 0 : positions[key][state],
+    );
   }
 }
 
