@@ -2,6 +2,7 @@
   Renders a dropdown select (Product variant)
 
   Accepts:
+  - placeholder: {String} input placeholder
   - options: {Array} variant options
   - name: {String} input name
 
@@ -10,18 +11,16 @@
 {% endcomment %}
 
 <yc-variant name="dropdown">
-  <button class="dropdown-trigger icon" role="combobox" data-trigger>
-    <span data-placeholder>
-      {{ placeholder | default: 'Select' }}
-    </span>
-    {% render 'yc-icon', name: 'chevron-down', size: 15 %}
-  </button>
-  <div class="dropdown-options" data-hidden="true" data-content>
-    {% for option in options %}
-      <label for="{{ option }}" class="option" data-option>
-        <span>{{ option }}</span>
-        <input type="radio" name="patter" id="{{ option }}" hidden>
-      </label>
-    {% endfor %}
-  </div>
+  <yc-select name="{{ name }}">
+    <yc-select-trigger class="yc-btn icon" role="combobox">
+      <yc-select-value>{{ placeholder | default: 'Select' }}</yc-select-value>
+    </yc-select-trigger>
+    <yc-select-content>
+      {% for option in options %}
+        <yc-select-item value="{{ option }}">
+          {{ option }}
+        </yc-select-item>
+      {% endfor %}
+    </yc-select-content>
+  </yc-select>
 </yc-variant>

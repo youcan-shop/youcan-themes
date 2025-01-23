@@ -160,96 +160,13 @@ yc-variant[name=image] .image-item:has(input:disabled)::before{
 yc-variant[name=image] .image-item:hover img{
   opacity:0.8;
 }
-yc-variant[name=dropdown]{
-  position:relative;
-}
-yc-variant[name=dropdown] .dropdown-trigger{
+yc-variant[name=upload-image] yc-upload{
   width:100%;
-  padding:8px 12px;
-  font-size:var(--text-sm);
-  justify-content:space-between;
-  color:var(--variant-text-color);
-}
-yc-variant[name=dropdown] .dropdown-trigger span[data-placeholder]{
-  overflow:hidden;
-  width:-moz-fit-content;
-  width:fit-content;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-}
-yc-variant[name=dropdown] .dropdown-trigger svg{
-  transition:var(--transition-duration-normal);
-}
-yc-variant[name=dropdown] .dropdown-trigger:has(~ .dropdown-options[data-hidden=false]) svg{
-  rotate:180deg;
-}
-yc-variant[name=dropdown] .dropdown-options{
-  display:grid;
-  grid-gap:var(--gap-md);
-  gap:var(--gap-md);
-  width:100%;
-  padding:4px;
-  z-index:2;
-  position:absolute;
-  inset-block-start:calc(100% + 0.5em);
-  border-radius:var(--radius-md);
-  background-color:var(--variant-bg-color);
-  transition:var(--transition-duration-normal);
-  border:1px solid color-mix(in srgb, currentColor 20%, transparent);
-}
-yc-variant[name=dropdown] .dropdown-options[data-hidden=true]{
-  opacity:0;
-  filter:blur(2px);
-  visibility:hidden;
-  translate:0 -0.5em;
-}
-yc-variant[name=dropdown] .dropdown-options[data-hidden=true][is-above]{
-  translate:0 0.5em;
-}
-yc-variant[name=dropdown] .dropdown-options[is-above]{
-  inset-block-start:auto;
-  inset-block-end:calc(100% + 0.5em);
-}
-yc-variant[name=dropdown] .dropdown-options .option{
-  padding:8px 12px;
-  position:relative;
-  font-size:var(--text-sm);
-  border-radius:var(--radius-md);
-  transition:var(--transition-duration-normal);
-}
-yc-variant[name=dropdown] .dropdown-options .option::before{
-  content:var(--label);
-}
-yc-variant[name=dropdown] .dropdown-options .option::after{
-  width:10px;
-  height:5px;
-  rotate:315deg;
-  position:absolute;
-  translate:-50% -50%;
-  inset-inline-end:4px;
-  inset-block-start:50%;
-  border:solid currentColor;
-  border-width:0 0 1.5px 1.5px;
-}
-[dir="rtl"] yc-variant[name=dropdown] .dropdown-options .option::after{
-  inset-inline-end:16px;
-}
-yc-variant[name=dropdown] .dropdown-options .option:has(input:checked)::after{
-  content:"";
-}
-yc-variant[name=dropdown] .dropdown-options .option:has(input:disabled){
-  opacity:0.5;
-  pointer-events:none;
-}
-yc-variant[name=dropdown] .dropdown-options .option:hover{
-  background-color:color-mix(in srgb, currentColor 5%, transparent);
-}
-yc-variant[name=upload-image]{
   display:grid;
   grid-gap:var(--gap-md);
   gap:var(--gap-md);
 }
-yc-variant[name=upload-image] .upload-preview{
+yc-variant[name=upload-image] yc-upload .upload-preview{
   display:flex;
   gap:var(--gap-md);
   flex-direction:column;
@@ -263,21 +180,21 @@ yc-variant[name=upload-image] .upload-preview{
   border:2px dotted color-mix(in srgb, currentColor 10%, transparent);
   transition:var(--transition-duration-normal);
 }
-yc-variant[name=upload-image] .upload-preview svg{
+yc-variant[name=upload-image] yc-upload .upload-preview svg{
   color:color-mix(in srgb, currentColor 60%, transparent);
 }
-yc-variant[name=upload-image] .upload-preview img{
+yc-variant[name=upload-image] yc-upload .upload-preview img{
   position:absolute;
   -o-object-fit:contain;
      object-fit:contain;
   translate:-50% -50%;
   inset:50% 0 0 50%;
 }
-yc-variant[name=upload-image] .upload-preview:hover{
+yc-variant[name=upload-image] yc-upload .upload-preview:hover{
   border-color:color-mix(in srgb, currentColor 20%, transparent);
   background-color:color-mix(in srgb, currentColor 5%, transparent);
 }
-yc-variant[name=upload-image] .upload-info{
+yc-variant[name=upload-image] yc-upload .upload-info{
   display:flex;
   gap:var(--gap-md);
   align-items:center;
@@ -287,30 +204,30 @@ yc-variant[name=upload-image] .upload-info{
   border:1px solid color-mix(in srgb, currentColor 10%, transparent);
   transition:var(--transition-duration-normal);
 }
-yc-variant[name=upload-image] .upload-info:not(:has(img)){
+yc-variant[name=upload-image] yc-upload .upload-info:not(:has(img)){
   opacity:0;
   z-index:-1;
   visibility:hidden;
   margin-block-start:-7em;
 }
-yc-variant[name=upload-image] .upload-info .preview{
+yc-variant[name=upload-image] yc-upload .upload-info .preview{
   display:flex;
   align-items:center;
   gap:var(--gap-lg);
 }
-yc-variant[name=upload-image] .upload-info .preview img{
+yc-variant[name=upload-image] yc-upload .upload-info .preview img{
   width:50px;
   height:50px;
   -o-object-fit:cover;
      object-fit:cover;
   border-radius:calc(var(--radius-md) - 4px);
 }
-yc-variant[name=upload-image] .upload-info .preview .info{
+yc-variant[name=upload-image] yc-upload .upload-info .preview .info{
   display:grid;
   grid-gap:var(--gap-sm);
   gap:var(--gap-sm);
 }
-yc-variant[name=upload-image] .upload-info .preview .info .name{
+yc-variant[name=upload-image] yc-upload .upload-info .preview .info .name{
   font-size:var(--text-md);
   max-width:100%;
   overflow:hidden;
@@ -319,10 +236,10 @@ yc-variant[name=upload-image] .upload-info .preview .info .name{
   white-space:nowrap;
   text-overflow:ellipsis;
 }
-yc-variant[name=upload-image] .upload-info .preview .info .size{
+yc-variant[name=upload-image] yc-upload .upload-info .preview .info .size{
   opacity:0.6;
   font-size:var(--text-sm);
 }
-yc-variant[name=upload-image] .upload-info .actions button{
+yc-variant[name=upload-image] yc-upload .upload-info .actions button{
   color:var(--variant-text-color);
 }
