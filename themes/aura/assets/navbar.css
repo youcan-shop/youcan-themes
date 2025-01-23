@@ -179,12 +179,15 @@
   transition-property:opacity, transform;
   transform:translateX(150vw);
   position:fixed;
-  right:0;
+  inset-inline-start:0;
   top:0;
   height:100vh;
   width:18rem;
   opacity:0;
   z-index:1001;
+}
+[dir="ltr"] .navigation-drawer{
+  transform:translateX(-150vw);
 }
 .navigation-drawer .logo{
   padding:20px 16px;
@@ -221,7 +224,7 @@
 }
 .navigation-drawer .close-drawer-btn{
   position:absolute;
-  inset-inline-start:0;
+  inset-inline-end:0;
   cursor:pointer;
   width:40px;
   height:40px;
@@ -231,6 +234,9 @@
   align-items:center;
   justify-content:center;
   transform:translate(-40px, 12px);
+}
+[dir="ltr"] .navigation-drawer .close-drawer-btn{
+  transform:translate(40px, 12px) scaleX(-1);
 }
 .navigation-drawer .close-drawer-btn .close-svg{
   color:#C8C8C8;
