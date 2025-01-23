@@ -198,6 +198,98 @@
         }
       }
     }
+
+    .buy-button {
+      display: grid;
+      gap: var(--gap-lg);
+      margin-block-start: 1em;
+
+      .events {
+        display: flex;
+        gap: var(--gap-md);
+
+        button[data-trigger] {
+          width: 100%;
+        }
+      }
+
+      .express-checkout {
+        display: grid;
+        border-radius: var(--radius-md);
+        border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
+        .header {
+          display: grid;
+          gap: var(--gap-sm);
+          font-size: var(--text-md);
+          padding: 1.5em;
+        }
+
+        .fields {
+          display: grid;
+          gap: var(--gap-lg);
+          align-items: baseline;
+          grid-template-columns: repeat(2, 1fr);
+          padding: 1.5em;
+          position: relative;
+          padding-block-start: 3.5em;
+          border-block-start: 1px solid
+            color-mix(in srgb, currentColor 10%, transparent);
+
+          &::before {
+            content: attr(data-title);
+            inset: 0;
+            position: absolute;
+            width: fit-content;
+            height: fit-content;
+            padding: 0.3em 1.5em;
+            font-size: var(--text-sm);
+            border-end-end-radius: var(--radius-sm);
+            color: color-mix(in srgb, currentColor 80%, transparent);
+            background-color: color-mix(in srgb, currentColor 5%, transparent);
+          }
+
+          .field {
+            display: grid;
+            gap: var(--gap-sm);
+
+            &:last-child:nth-child(odd) {
+              grid-column: 1 / -1;
+            }
+
+            label {
+              font-size: var(--text-sm);
+              color: color-mix(in srgb, currentColor 80%, transparent);
+            }
+
+            yc-select-trigger {
+              padding: 12px 15px;
+            }
+
+            input {
+              color: currentColor;
+            }
+
+            &:has(input:required) label::after {
+              content: " *";
+              color: var(--color-error-500);
+            }
+
+            &[error-message] {
+              &::after {
+                content: attr(error-message);
+                font-size: var(--text-sm);
+                color: var(--color-error-500);
+              }
+
+              input {
+                border-color: var(--color-error-500);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
