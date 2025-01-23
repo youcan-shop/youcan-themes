@@ -11,46 +11,7 @@ class Variant extends HTMLElement {
   }
 
   _render() {
-    this.VARIANT_NAME === "dropdown" && this.dropdown();
     this.VARIANT_NAME === "upload-image" && this.uploadImage();
-  }
-
-  dropdown() {
-    const trigger = this.querySelector("[data-trigger]");
-    const content = this.querySelector("[data-content]");
-    const options = content.querySelectorAll("[data-option]");
-    const placeholder = trigger.querySelector("[data-placeholder]");
-    let state = content.dataset.hidden === "true";
-
-    const setPlaceholder = (option) => {
-      placeholder.textContent = option.querySelector("span").textContent;
-    };
-
-    const setState = (hidden) => {
-      state = hidden;
-      content.dataset.hidden = hidden;
-      document.body.toggleAttribute("data-scroll-locked", !hidden);
-    };
-
-    const clickOutside = (e) =>
-      !e.composedPath().includes(trigger) && setState(true);
-
-    const toggle = () => {
-      content.toggleAttribute(
-        "is-above",
-        innerHeight - trigger.getBoundingClientRect().bottom <
-          content.offsetHeight,
-      );
-
-      setState(!state);
-    };
-
-    trigger.addEventListener("click", toggle);
-    document.addEventListener("click", clickOutside);
-
-    options.forEach((opt) =>
-      opt.addEventListener("change", () => setPlaceholder(opt)),
-    );
   }
 
   uploadImage() {
