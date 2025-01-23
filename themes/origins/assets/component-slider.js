@@ -50,13 +50,23 @@ if (!customElements.get("yc-slider")) {
     _render() {
       this.swipe();
 
-      this.hasAttribute("autoplay") && this.autoPlay();
+      this.autoPlay();
 
       this.hasAttribute("responsive") && this.breakpoints().listener();
 
       if (this.hasAttribute("arrows")) {
         this.leftArrow.addEventListener("click", () => this.setIndex(-1));
         this.rightArrow.addEventListener("click", () => this.setIndex(1));
+      }
+
+      if (this.hasAttribute("autoplay")) {
+        this.addEventListener("mouseenter", () => {
+          clearInterval(this.interval);
+        });
+
+        this.addEventListener("mouseleave", () => {
+          this.autoPlay();
+        });
       }
     }
 
