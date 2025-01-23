@@ -17,6 +17,7 @@ if (!customElements.get("yc-slider")) {
       this.isSwiping = false;
       this.isBoundaryAllowed = true;
       this.isRTL = document.dir === "rtl";
+      this.isArrowsVisible = this.leftArrow && this.rightArrow;
 
       this.SWIPE_EVENTS = {
         onSwipe: ["touchmove", "mousemove"],
@@ -54,9 +55,19 @@ if (!customElements.get("yc-slider")) {
 
       this.hasAttribute("responsive") && this.breakpoints().listener();
 
-      if (this.hasAttribute("arrows")) {
+      if (this.isArrowsVisible && this.hasAttribute("arrows")) {
         this.leftArrow.addEventListener("click", () => this.setIndex(-1));
         this.rightArrow.addEventListener("click", () => this.setIndex(1));
+      }
+
+      if (this.hasAttribute("autoplay")) {
+        this.addEventListener("mouseenter", () => {
+          clearInterval(this.interval);
+        });
+
+        this.addEventListener("mouseleave", () => {
+          this.autoPlay();
+        });
       }
     }
 
@@ -180,7 +191,8 @@ if (!customElements.get("yc-slider")) {
     reset(new_index = this.index) {
       this.index = new_index;
       this.move();
-      this.setArrows();
+
+      this.isArrowsVisible && this.setArrows();
     }
 
     setSwiping(state) {
