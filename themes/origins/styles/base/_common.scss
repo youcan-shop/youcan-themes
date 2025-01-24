@@ -479,6 +479,27 @@ yc-quantity-control {
   }
 }
 
+// Breadcrumb
+.breadcrumb {
+  ol {
+    display: flex;
+    gap: var(--gap-md);
+    align-items: center;
+    flex-wrap: wrap;
+
+    li {
+      a {
+        color: color-mix(in srgb, currentColor 40%, transparent);
+
+        &[aria-current] {
+          color: currentColor;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
 // Breakpoints
 @include breakpoint("xl") {
   .items-grid {
