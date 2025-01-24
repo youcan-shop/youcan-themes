@@ -188,6 +188,9 @@
 .single-product yc-product-info .buy-button .events button[data-submit]{
   width:100%;
 }
+.single-product yc-product-info .buy-button .events button[data-submit]::before{
+  content:attr(data-desktop);
+}
 .single-product yc-product-info .buy-button .express-checkout{
   display:grid;
   border-radius:var(--radius-md);
@@ -305,10 +308,16 @@
     position:sticky;
     inset-block-end:0;
   }
+  .single-product yc-product-info .buy-button .buy-area .events yc-quantity-control{
+    display:none;
+  }
+  .single-product yc-product-info .buy-button .buy-area .events button[data-submit]::before{
+    content:attr(data-mobile);
+  }
   .single-product yc-product-info .buy-button .events[data-sticky]{
     z-index:2;
     margin:1em;
-    padding:1em;
+    padding:0.5em;
     display:flex;
     position:fixed;
     inset-block-end:0;
@@ -317,5 +326,9 @@
     border-radius:var(--radius-md);
     background-color:var(--section-bg-color, var(--color-base-white));
     border:1px solid color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .single-product yc-product-info .buy-button .events[data-sticky] button.primary,
+  .single-product yc-product-info .buy-button .events[data-sticky] yc-quantity-control button.yc-btn.icon{
+    padding:10px;
   }
 }

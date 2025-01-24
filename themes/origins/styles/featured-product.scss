@@ -222,6 +222,10 @@
         button[data-submit] {
           width: 100%;
         }
+
+        button[data-submit]::before {
+          content: attr(data-desktop);
+        }
       }
 
       .express-checkout {
@@ -367,13 +371,21 @@
           padding: 1em;
           position: sticky;
           inset-block-end: 0;
+
+          yc-quantity-control {
+            display: none;
+          }
+
+          button[data-submit]::before {
+            content: attr(data-mobile);
+          }
         }
       }
 
       .events[data-sticky] {
         z-index: 2;
         margin: 1em;
-        padding: 1em;
+        padding: 0.5em;
         display: flex;
         position: fixed;
         inset-block-end: 0;
@@ -382,6 +394,11 @@
         border-radius: var(--radius-md);
         background-color: var(--section-bg-color, var(--color-base-white));
         border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
+        button.primary,
+        yc-quantity-control button.yc-btn.icon {
+          padding: 10px;
+        }
       }
     }
   }
