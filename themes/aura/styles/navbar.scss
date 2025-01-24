@@ -208,12 +208,16 @@
   transition-property: opacity, transform;
   transform: translateX(150vw);
   position: fixed;
-  right: 0;
+  inset-inline-start: 0;
   top: 0;
   height: 100vh;
   width: 18rem;
   opacity: 0;
   z-index: 1001;
+
+  &:dir(ltr) {
+    transform: translateX(-150vw);
+  }
 
   *:not(span) {
     @extend .items-configs;
@@ -259,7 +263,7 @@
 
   .close-drawer-btn {
     position: absolute;
-    inset-inline-start: 0;
+    inset-inline-end: 0;
     cursor: pointer;
     width: 40px;
     height: 40px;
@@ -269,6 +273,10 @@
     align-items: center;
     justify-content: center;
     transform: translate(-40px, 12px);
+
+    &:dir(ltr) {
+      transform: translate(40px, 12px) scaleX(-1);
+    }
 
     .close-svg {
       color: #C8C8C8;
@@ -284,7 +292,11 @@
       border: 1px solid #E4E4E4;
       border-radius: 4px;
       color: #A8A8A8;
-      padding: 20px;
+      padding: 4px 8px 4px 30px !important;
+
+      &:dir(ltr) {
+        padding: 4px 30px 4px 8px !important;
+      }
 
       &:focus {
         border: 1px solid #000000;
@@ -295,6 +307,10 @@
     .search-icon {
       position: absolute;
       transform: translate(30px, -7px);
+
+      &:dir(ltr) {
+        transform: translate(-30px, -7px) scaleX(-1);
+      }
     }
   }
 }
