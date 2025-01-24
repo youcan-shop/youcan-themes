@@ -5,7 +5,7 @@ yc-modal {
     z-index: 100;
     position: fixed;
     height: fit-content;
-    background-color: var(--color-base-white);
+    background-color: var(--section-bg-color, var(--color-base-white));
   }
 
   &[as-drawer] {
@@ -73,12 +73,14 @@ yc-modal {
     }
   }
 
-  &[data-hidden="true"] {
+  &[data-hidden="false"] {
     .modal-overlay {
-      opacity: 0;
-      visibility: hidden;
+      opacity: 1;
+      visibility: visible;
     }
+  }
 
+  &[data-hidden="true"] {
     @include breakpoint("md") {
       .modal-box {
         visibility: hidden;

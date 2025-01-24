@@ -3,7 +3,7 @@ yc-modal .modal-box{
   position:fixed;
   height:-moz-fit-content;
   height:fit-content;
-  background-color:var(--color-base-white);
+  background-color:var(--section-bg-color, var(--color-base-white));
 }
 @media (min-width: 768px){
   yc-modal[as-drawer] .modal-box{
@@ -55,9 +55,9 @@ yc-modal .modal-box{
     background-color:color-mix(in srgb, currentColor 10%, transparent);
   }
 }
-yc-modal[data-hidden=true] .modal-overlay{
-  opacity:0;
-  visibility:hidden;
+yc-modal[data-hidden=false] .modal-overlay{
+  opacity:1;
+  visibility:visible;
 }
 @media (max-width: 768px){
   yc-modal[data-hidden=true] .modal-box{

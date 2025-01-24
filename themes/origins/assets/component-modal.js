@@ -97,7 +97,6 @@ class Modal extends HTMLElement {
   setState(hidden) {
     this.state = hidden;
     this.dataset.hidden = hidden;
-    document.body.toggleAttribute("data-scroll-locked", !hidden);
   }
 
   setTransition(duration) {
@@ -118,9 +117,12 @@ class Modal extends HTMLElement {
     const key = isMobile ? "mobile" : "desktop";
     const state = this.state ? "closed" : "open";
 
-    this.setPosition(
-      !isMobile && this.hasAttribute("as-drawer") ? 0 : positions[key][state],
-    );
+    if (!isMobile && this.hasAttribute("as-drawer")) {
+      this.setPosition(0);
+      this.setState(true);
+    } else {
+      this.setPosition(positions[key][state]);
+    }
   }
 }
 
