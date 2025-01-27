@@ -66,7 +66,7 @@ class Modal extends HTMLElement {
     if (!this.isDragging || window.innerWidth > this.MOBILE_SCREEN) return;
 
     const deltaY = this.currentY - this.startY;
-    const threshold = this.modal.offsetHeight * 0.15;
+    const threshold = this.modal.offsetHeight * 0.4;
 
     deltaY > threshold ? this.close() : this.open();
     this.resetDrag();
