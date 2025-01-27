@@ -2,13 +2,17 @@
   <yc-modal data-hidden="true" as-drawer>
     <div class="events" data-sticky>
       {% render 'yc-quantity-control' %}
-      <button class="primary" data-toggle>Buy now</button>
+      <button class="primary" data-toggle>
+        {{ 'product.buy_button.buy_now' | t }}
+      </button>
     </div>
 
     <div class="modal-container">
       <div class="modal-box buy-area" data-modal>
         <div class="express-checkout">
-          <div class="header">Fill out this form, and we'll contact you soon</div>
+          <div class="header">
+            {{ 'product.buy_button.express_checkout.title' | t }}
+          </div>
           <div class="fields" data-title="Customer information">
             <div class="field">
               <label for="first-name">First name</label>
@@ -30,7 +34,12 @@
         </div>
         <div class="events">
           {% render 'yc-quantity-control' %}
-          <button data-submit class="primary" data-mobile="Place order" data-desktop="Buy now"></button>
+          <button
+            data-submit
+            class="primary"
+            data-desktop="{{ 'product.buy_button.buy_now' | t }}"
+            data-mobile="{{ 'product.buy_button.express_checkout.place_order' | t }}"
+          ></button>
         </div>
       </div>
       <div class="modal-overlay overlay" data-toggle></div>
