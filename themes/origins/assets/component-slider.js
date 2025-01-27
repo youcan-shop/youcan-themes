@@ -1,6 +1,11 @@
 if (!customElements.get("yc-slider")) {
   class Slider extends HTMLElement {
-    static observedAttributes = ["autoplay", "interval", "responsive"];
+    static observedAttributes = [
+      "autoplay",
+      "interval",
+      "responsive",
+      "per-move",
+    ];
 
     constructor() {
       super();
@@ -219,10 +224,24 @@ if (!customElements.get("yc-slider")) {
 
     setIndex(direction) {
       const previousIndex = this.index;
-      this.index = Math.max(
-        0,
-        Math.min(this.TOTAL - 1, this.index + direction),
-      );
+
+      if (
+        this.getAttribute("per-move") === "page" &&
+        matchMedia(this.BREAKPOINTS.md).matches
+      ) {
+        this.index = Math.max(
+          0,
+          Math.min(
+            this.TOTAL - this.PER_PAGE,
+            this.index + direction * this.PER_PAGE,
+          ),
+        );
+      } else {
+        this.index = Math.max(
+          0,
+          Math.min(this.TOTAL - 1, this.index + direction),
+        );
+      }
 
       if (this.index !== previousIndex) {
         this.reset();
