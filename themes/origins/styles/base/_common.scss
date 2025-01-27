@@ -479,6 +479,41 @@ yc-quantity-control {
   }
 }
 
+// Breadcrumb
+.breadcrumb {
+  ol {
+    display: flex;
+    gap: var(--gap-md);
+    align-items: center;
+    flex-wrap: wrap;
+
+    li {
+      --faded-link-color: color-mix(in srgb, currentColor 70%, transparent);
+
+      display: flex;
+      align-items: center;
+      gap: var(--gap-md);
+
+      svg {
+        color: var(--faded-link-color);
+
+        &:dir(rtl) {
+          rotate: -180deg;
+        }
+      }
+
+      a {
+        color: var(--faded-link-color);
+
+        &[aria-current] {
+          color: currentColor;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
+
 // Breakpoints
 @include breakpoint("xl") {
   .items-grid {
