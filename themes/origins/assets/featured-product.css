@@ -171,12 +171,27 @@
   gap:var(--gap-lg);
   margin-block-start:1em;
 }
-.single-product yc-product-info .buy-button .events{
+.single-product yc-product-info .buy-button .buy-area{
+  display:grid;
+  grid-gap:var(--gap-lg);
+  gap:var(--gap-lg);
+}
+.single-product yc-product-info .buy-button .actions{
   display:flex;
   gap:var(--gap-md);
+  background-color:var(--section-bg-color, var(--color-base-white));
 }
-.single-product yc-product-info .buy-button .events button[data-trigger]{
+.single-product yc-product-info .buy-button .actions[data-sticky]{
+  display:none;
+}
+.single-product yc-product-info .buy-button .actions button[data-toggle],
+.single-product yc-product-info .buy-button .actions button[data-submit]{
   width:100%;
+  color:var(--section-bg-color, var(--color-base-white));
+  background-color:rgb(var(--section-text-color, var(--color-base-black)));
+}
+.single-product yc-product-info .buy-button .actions button[data-submit]::before{
+  content:attr(data-desktop);
 }
 .single-product yc-product-info .buy-button .express-checkout{
   display:grid;
@@ -189,28 +204,46 @@
   gap:var(--gap-sm);
   font-size:var(--text-md);
   padding:1.5em;
-  border-block-end:1px solid color-mix(in srgb, currentColor 10%, transparent);
-}
-.single-product yc-product-info .buy-button .express-checkout .header .subtitle{
-  font-size:var(--text-sm);
-  color:color-mix(in srgb, currentColor 80%, transparent);
 }
 .single-product yc-product-info .buy-button .express-checkout .fields{
-  padding:1.5em;
   display:grid;
   grid-gap:var(--gap-lg);
   gap:var(--gap-lg);
   align-items:baseline;
   grid-template-columns:repeat(2, 1fr);
+  padding:1.5em;
+  position:relative;
+  padding-block-start:3.5em;
+  border-block-start:1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
+.single-product yc-product-info .buy-button .express-checkout .fields::before{
+  content:attr(data-title);
+  inset:0;
+  position:absolute;
+  width:-moz-fit-content;
+  width:fit-content;
+  height:-moz-fit-content;
+  height:fit-content;
+  padding:0.3em 1.5em;
+  font-size:var(--text-sm);
+  border-end-end-radius:var(--radius-sm);
+  color:color-mix(in srgb, currentColor 80%, transparent);
+  background-color:color-mix(in srgb, currentColor 5%, transparent);
 }
 .single-product yc-product-info .buy-button .express-checkout .fields .field{
   display:grid;
   grid-gap:var(--gap-sm);
   gap:var(--gap-sm);
 }
+.single-product yc-product-info .buy-button .express-checkout .fields .field:last-child:nth-child(odd){
+  grid-column:1/-1;
+}
 .single-product yc-product-info .buy-button .express-checkout .fields .field label{
   font-size:var(--text-sm);
   color:color-mix(in srgb, currentColor 80%, transparent);
+}
+.single-product yc-product-info .buy-button .express-checkout .fields .field yc-select-trigger{
+  padding:12px 15px;
 }
 .single-product yc-product-info .buy-button .express-checkout .fields .field input{
   color:currentColor;
@@ -248,5 +281,56 @@
   }
   .single-product yc-product-media .gallery .slider-inner .image{
     height:70px !important;
+  }
+  .single-product yc-product-info .buy-button .buy-area{
+    gap:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout{
+    border:none;
+    border-radius:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .header{
+    text-align:center;
+    padding-inline:1em;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .fields{
+    padding-inline:1em;
+    border-block-start:none;
+    grid-template-columns:1fr;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .fields:last-child{
+    padding-block-end:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .express-checkout .fields::before{
+    border-start-end-radius:var(--radius-sm);
+  }
+  .single-product yc-product-info .buy-button .buy-area .actions{
+    z-index:2;
+    padding:1em;
+    position:sticky;
+    inset-block-end:0;
+  }
+  .single-product yc-product-info .buy-button .buy-area .actions yc-quantity-control{
+    display:none;
+  }
+  .single-product yc-product-info .buy-button .buy-area .actions button[data-submit]::before{
+    content:attr(data-mobile);
+  }
+  .single-product yc-product-info .buy-button .actions[data-sticky]{
+    z-index:2;
+    margin:1em;
+    padding:0.5em;
+    display:flex;
+    position:fixed;
+    inset-block-end:0;
+    inset-inline-start:0;
+    width:calc(100% - 2em);
+    border-radius:var(--radius-md);
+    background-color:var(--section-bg-color, var(--color-base-white));
+    border:1px solid color-mix(in srgb, currentColor 10%, transparent);
+  }
+  .single-product yc-product-info .buy-button .actions[data-sticky] button.primary,
+  .single-product yc-product-info .buy-button .actions[data-sticky] yc-quantity-control button.yc-btn.icon{
+    padding:10px;
   }
 }

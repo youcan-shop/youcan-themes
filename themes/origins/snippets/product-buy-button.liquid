@@ -1,0 +1,47 @@
+<div class="buy-button">
+  <yc-modal data-hidden="true" as-drawer>
+    <div class="actions">
+      {% render 'yc-quantity-control' %}
+      <button class="primary" data-toggle>
+        {{ 'product.buy_button.buy_now' | t }}
+      </button>
+    </div>
+    <div class="modal-container">
+      <div class="modal-box buy-area" data-modal>
+        <div class="express-checkout">
+          <div class="header">
+            {{ 'product.buy_button.express_checkout.title' | t }}
+          </div>
+          <div class="fields" data-title="Customer information">
+            <div class="field">
+              <label for="first-name">First name</label>
+              <input type="text" name="first-name" placeholder="Type your first name.." required>
+            </div>
+            <div class="field">
+              <label for="last-name">Last name</label>
+              <input type="text" name="last-name" placeholder="Type your last name.." required>
+            </div>
+            <div class="field">
+              <label for="phone-number">Phone number</label>
+              <input type="tel" name="phone-number" placeholder="Type your phone number.." required>
+            </div>
+            <div class="field">
+              <label for="address">Address</label>
+              <input type="text" name="address" placeholder="Type your address.." required>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          {% render 'yc-quantity-control' %}
+          <button
+            data-submit
+            class="primary"
+            data-desktop="{{ 'product.buy_button.buy_now' | t }}"
+            data-mobile="{{ 'product.buy_button.express_checkout.place_order' | t }}"
+          ></button>
+        </div>
+      </div>
+      <div class="modal-overlay overlay" data-toggle></div>
+    </div>
+  </yc-modal>
+</div>

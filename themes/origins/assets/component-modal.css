@@ -3,10 +3,16 @@ yc-modal .modal-box{
   position:fixed;
   height:-moz-fit-content;
   height:fit-content;
-  background-color:var(--color-base-white);
+  background-color:var(--section-bg-color, var(--color-base-white));
 }
 @media (min-width: 768px){
-  yc-modal .modal-box{
+  yc-modal[as-drawer] .modal-box{
+    z-index:auto;
+    position:relative;
+  }
+}
+@media (min-width: 768px){
+  yc-modal:not([as-drawer]) .modal-box{
     width:500px;
     inset:50% 0 0 50%;
     translate:-50% -50%;
@@ -22,22 +28,36 @@ yc-modal .modal-box{
     inset-inline-start:0;
     border-radius:var(--radius-md) var(--radius-md) 0 0;
     transition:var(--transition-duration-normal);
+    max-height:90%;
+    overflow-y:scroll;
   }
   yc-modal .modal-box::before{
     content:"";
+    width:100%;
+    height:30px;
+    display:block;
+    position:sticky;
+    z-index:2;
+    inset-block-start:0;
+    color:var(--section-bg-color, var(--color-base-white));
+    background-image:linear-gradient(to top, transparent 0%, color-mix(in srgb, currentColor 5%, transparent) 10%, currentColor 100%);
+  }
+  yc-modal .modal-box::after{
+    content:"";
     width:48px;
-    height:6px;
-    position:absolute;
+    height:4px;
+    left:50%;
+    z-index:3;
+    position:sticky;
     border-radius:100px;
     translate:-50% -50%;
-    left:50%;
-    inset-block-start:1em;
+    inset-block-end:calc(100% - 1em);
     background-color:color-mix(in srgb, currentColor 10%, transparent);
   }
 }
-yc-modal[data-hidden=true] .modal-overlay{
-  opacity:0;
-  visibility:hidden;
+yc-modal[data-hidden=false] .modal-overlay{
+  opacity:1;
+  visibility:visible;
 }
 @media (max-width: 768px){
   yc-modal[data-hidden=true] .modal-box{
@@ -46,7 +66,7 @@ yc-modal[data-hidden=true] .modal-overlay{
   }
 }
 @media (min-width: 768px){
-  yc-modal[data-hidden=true] .modal-box{
+  yc-modal[data-hidden=true]:not([as-drawer]) .modal-box{
     opacity:0;
     visibility:hidden;
     translate:-50% -40%;

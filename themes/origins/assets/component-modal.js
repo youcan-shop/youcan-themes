@@ -1,4 +1,6 @@
 class Modal extends HTMLElement {
+  static observedAttributes = ["as-drawer"];
+
   constructor() {
     super();
 
@@ -64,7 +66,7 @@ class Modal extends HTMLElement {
     if (!this.isDragging || window.innerWidth > this.MOBILE_SCREEN) return;
 
     const deltaY = this.currentY - this.startY;
-    const threshold = this.modal.offsetHeight * 0.15;
+    const threshold = this.modal.offsetHeight * 0.4;
 
     deltaY > threshold ? this.close() : this.open();
     this.resetDrag();
@@ -95,7 +97,6 @@ class Modal extends HTMLElement {
   setState(hidden) {
     this.state = hidden;
     this.dataset.hidden = hidden;
-    document.body.toggleAttribute("data-scroll-locked", !hidden);
   }
 
   setTransition(duration) {
@@ -116,7 +117,12 @@ class Modal extends HTMLElement {
     const key = isMobile ? "mobile" : "desktop";
     const state = this.state ? "closed" : "open";
 
-    this.setPosition(positions[key][state]);
+    if (!isMobile && this.hasAttribute("as-drawer")) {
+      this.setPosition(0);
+      this.setState(true);
+    } else {
+      this.setPosition(positions[key][state]);
+    }
   }
 }
 
