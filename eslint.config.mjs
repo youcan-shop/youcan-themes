@@ -4,7 +4,6 @@ import shopifyEslintPlugin from "@shopify/eslint-plugin";
 import prettier from "eslint-config-prettier";
 
 const config = [
-  { globals: { youcanjs: "readonly" } },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...shopifyEslintPlugin.configs.esnext,
@@ -13,6 +12,15 @@ const config = [
       ...prettier.rules,
       semi: "error",
       "no-unused-vars": "warn",
+    },
+  },
+  {
+    globals: {
+      youcanjs: "readonly",
+      publish: "readonly",
+      subscribe: "readonly",
+      PUB_SUB_EVENTS: "readonly",
+      toast: "readonly",
     },
   },
 ];
