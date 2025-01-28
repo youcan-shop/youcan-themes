@@ -34,7 +34,19 @@
           {% endfor %}
         </div>
       </div>
-      <div class="filter"></div>
+      <div class="filter">
+        <label for="all" class="yc-btn icon">
+          <input type="radio" name="rating-type" id="all" checked hidden>
+          All
+        </label>
+        {% for type in (1..5) %}
+          <label for="{{ type }}" class="yc-btn icon">
+            {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+            <input type="radio" name="rating-type" id="{{ type }}" hidden>
+            {{ type }}
+          </label>
+        {% endfor %}
+      </div>
     </div>
     <div class="reviews-area"></div>
   </div>
