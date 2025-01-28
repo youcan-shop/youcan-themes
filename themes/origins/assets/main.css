@@ -123,6 +123,10 @@ ol{
   list-style:none;
 }
 
+.hidden{
+  display:none !important;
+}
+
 button,
 .yc-btn{
   padding:12px 25px;
@@ -202,6 +206,10 @@ button.icon[data-size$=sm] svg,
 button.icon[data-size$=lg],
 .yc-btn.icon[data-size$=lg]{
   padding:13px;
+}
+button[data-loading] span,
+.yc-btn[data-loading] span{
+  color:transparent;
 }
 button:disabled,
 .yc-btn:disabled{
@@ -441,6 +449,37 @@ yc-quantity-control span{
 .breadcrumb ol li a[aria-current]{
   color:currentColor;
   pointer-events:none;
+}
+
+.loading-spinner{
+  position:absolute;
+}
+.loading-spinner .spinner{
+  transform-origin:center;
+  animation:spinner_outer 2s linear infinite;
+}
+.loading-spinner .spinner circle{
+  stroke-linecap:round;
+  animation:spinner_inner 1.5s ease-in-out infinite;
+}
+@keyframes spinner_outer{
+  100%{
+    transform:rotate(360deg);
+  }
+}
+@keyframes spinner_inner{
+  0%{
+    stroke-dasharray:0 150;
+    stroke-dashoffset:0;
+  }
+  47.5%{
+    stroke-dasharray:42 150;
+    stroke-dashoffset:-16;
+  }
+  95%, 100%{
+    stroke-dasharray:42 150;
+    stroke-dashoffset:-59;
+  }
 }
 
 @media (max-width: 1280px){
