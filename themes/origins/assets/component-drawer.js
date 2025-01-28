@@ -6,12 +6,27 @@ class Drawer extends HTMLElement {
 
   connectedCallback() {
     this.drawerActions.forEach((action) => {
-      action.addEventListener("click", () => {
-        const isHidden = this.dataset.hidden === "true";
-        this.dataset.hidden = !isHidden;
-        document.body.toggleAttribute("data-scroll-locked", isHidden);
-      });
+      action.addEventListener("click", this.toggle.bind(this));
     });
+  }
+
+  toggle() {
+    const isHidden = this.dataset.hidden === "true";
+    if (isHidden) {
+      this.open();
+    } else {
+      this.close();
+    }
+  }
+
+  open() {
+    this.dataset.hidden = "false";
+    document.body.setAttribute("data-scroll-locked", "true");
+  }
+
+  close() {
+    this.dataset.hidden = "true";
+    document.body.removeAttribute("data-scroll-locked");
   }
 }
 

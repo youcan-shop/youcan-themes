@@ -3,7 +3,9 @@
 
 <yc-drawer id="cart" data-hidden="true" data-direction="rtl">
   <button class="cart-btn icon" aria-label="cart" data-toggle>
-    <span class="total-items">2</span>
+    <span class="total-items {% if cart.items.size == 0%} hidden {% endif %}" data-cart-bubble>
+      {{- cart.items.size -}}
+    </span>
     {% render 'yc-icon', name: 'cart' %}
     <span class="total-amount">0 MAD</span>
   </button>
