@@ -2,7 +2,7 @@ class CartDrawer extends HTMLElement {
   constructor() {
     super();
     this.cartBubble = document.querySelector(
-      "yc-drawer#cart [data-cart-bubble]",
+      "yc-drawer#cart [data-cart-badge]",
     );
   }
 
@@ -14,12 +14,8 @@ class CartDrawer extends HTMLElement {
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { count } = payload.cartData;
       this.updateCartCount(count);
+      // TODO: Update cart drawer list
     });
-  }
-
-  updateCart() {
-    this.updateCartCount();
-    // TODO: Update items list
   }
 
   updateCartCount(count) {
