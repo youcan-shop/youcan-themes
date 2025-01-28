@@ -1,3 +1,74 @@
 .product-reviews {
-  background-color: red;
+  display: grid;
+  gap: var(--gap-md);
+
+  .rating-area {
+    display: grid;
+    gap: var(--gap-md);
+    width: 50%;
+
+    .total {
+      display: flex;
+      gap: var(--gap-lg);
+      align-items: center;
+
+      .count {
+        .stars {
+          display: flex;
+          align-items: center;
+          color: var(--color-yellow-500);
+        }
+
+        span {
+          display: block;
+          width: max-content;
+          font-size: var(--text-md);
+          color: rgba(var(--section-text-color), 70%);
+        }
+      }
+
+      .graph {
+        width: 100%;
+        display: flex;
+        gap: var(--gap-sm);
+        flex-direction: column-reverse;
+
+        .bar {
+          display: flex;
+          align-items: center;
+          gap: var(--gap-md);
+          position: relative;
+
+          svg {
+            color: var(--color-yellow-500);
+          }
+
+          span {
+            width: 12px;
+            text-align: center;
+            font-size: var(--text-sm);
+          }
+
+          .process {
+            height: 3px;
+            width: 100%;
+            display: block;
+            position: relative;
+            border-radius: var(--radius-md);
+            background-color: rgba(var(--section-text-color), 8%);
+
+            &::before {
+              content: "";
+              inset: 0;
+              width: calc(var(--rating-count) * 10%);
+              height: 3px;
+              position: absolute;
+              border-radius: var(--radius-md);
+              background-color: rgb(var(--section-text-color));
+            }
+          }
+        }
+      }
+    }
+  }
 }

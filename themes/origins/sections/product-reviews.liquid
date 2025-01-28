@@ -8,7 +8,36 @@
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
   "
 >
-  <div class="product-reviews">Reviews</div>
+  <div class="product-reviews">
+    <div class="rating-area">
+      <div class="total">
+        <h1 class="average">4.8</h1>
+        <div class="count">
+          <div class="stars">
+            {% for star in (1..5) %}
+              {% if star <= 4 %}
+                {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+              {% else %}
+                {% render 'yc-icon', name: 'star', size: 15 %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span>134 reviews</span>
+        </div>
+        <div class="graph">
+          {% for bar in (1..5) %}
+            <div class="bar">
+              {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+              <span>{{ bar }}</span>
+              <div class="process" style="--rating-count: {{ bar }}"></div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="filter"></div>
+    </div>
+    <div class="reviews-area"></div>
+  </div>
 </yc-section>
 
 {% schema %}
