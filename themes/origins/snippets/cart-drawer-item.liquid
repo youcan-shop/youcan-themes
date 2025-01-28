@@ -1,11 +1,11 @@
 <div class="item">
   <div class="image">
-    {% if product.thumbnail %}
+    {% if product.image %}
       <img
         loading="lazy"
         height="100%"
         width="100%"
-        src="{{ product.thumbnail }}"
+        src="{{ product.image }}"
         alt="{{ product.name }}"
       >
     {% else %}
@@ -16,10 +16,10 @@
   </div>
   <div class="info">
     <div class="heading">
-      <a href="{{ product.url }}" class="link" title="{{ product.name }}">
+      <a href="/products/#" class="link" title="{{ product.name }}">
         {{ product.name | default: 'Product Name' }}
       </a>
-      {% if product.variants %}
+      {% if product.variations.size > 1 %}
         <p class="variant">
           {% comment %} TODO: List variants separated by '/' {% endcomment %}
         </p>
@@ -27,7 +27,7 @@
       <span data-price>{{ product.price | default: 0 | money }}</span>
     </div>
     <div class="actions">
-      {% render 'yc-quantity-control', button_size: 'sm' %}
+      {% render 'yc-quantity-control', button_size: 'sm', variant: product %}
       <button class="yc-btn icon delete" data-size="sm" aria-label="Delete">
         {% render 'yc-icon', name: 'trash' %}
       </button>
