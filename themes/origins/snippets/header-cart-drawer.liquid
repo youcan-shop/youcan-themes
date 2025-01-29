@@ -1,17 +1,22 @@
 {{ 'header-cart-drawer.css' | asset_url | stylesheet_tag }}
 {{ 'component-cart-drawer-items.js' | asset_url | script_tag_deferred }}
 
+{% assign cart_size = cart.items.size %}
+
 <yc-drawer id="cart" data-hidden="true" data-direction="rtl">
   <button class="cart-btn icon" aria-label="cart" data-toggle>
-    <span class="total-items {% if cart.items.size == 0%} hidden {% endif %}" data-cart-badge>
-      {{- cart.items.size -}}
+    <span
+      class="total-items {% unless cart_size > 0 %} hidden {% endunless %}"
+      data-cart-badge
+    >
+      {{- cart_size -}}
     </span>
     {% render 'yc-icon', name: 'cart' %}
     <span class="total-amount">0 MAD</span>
   </button>
   <div class="drawer-container">
     <div class="drawer-box">
-      <div class="cart-drawer">
+      <div class="cart-drawer {% unless cart_size != null %}is-empty{% endunless %}">
         <div class="header">
           <div class="title">
             {% render 'yc-icon' | name: 'cart' %}
@@ -36,9 +41,8 @@
             <button class="yc-btn secondary" data-toggle>{{ 'cart.drawer.actions.continue_shopping' | t }}</button>
           </div>
         </div>
-        {% comment %} TODO: If no cart items: render yc-empty {% endcomment %}
-        {% comment %} {% render 'yc-empty', icon: 'cart', heading: 'Your cart is empty' %} {% endcomment %}
-        {% comment %} TODO: Else render drawer items {% endcomment %}
+        {% assign placeholder_title = 'cart.empty.title' | t %}
+        {% render 'yc-empty', icon: 'cart', heading: placeholder_title %}
       </div>
     </div>
     <div class="drawer-overlay overlay" data-toggle></div>

@@ -21,7 +21,10 @@
       </a>
       {% if product.variations.size > 1 %}
         <p class="variant">
-          {% comment %} TODO: List variants separated by '/' {% endcomment %}
+          {% for variant in product.variations %}
+            <span>{{- variant[1] -}}</span>
+            <span>/</span>
+          {% endfor %}
         </p>
       {% endif %}
       <span data-price>{{ product.price | default: 0 | money }}</span>
