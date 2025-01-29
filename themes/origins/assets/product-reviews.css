@@ -1,7 +1,7 @@
 .product-reviews{
   display:grid;
-  grid-gap:var(--gap-md);
-  gap:var(--gap-md);
+  grid-gap:var(--gap-xl);
+  gap:var(--gap-xl);
 }
 .product-reviews .rating-area{
   display:grid;
@@ -11,15 +11,20 @@
 }
 .product-reviews .rating-area .total{
   display:flex;
-  gap:var(--gap-lg);
+  gap:var(--gap-2xl);
   align-items:center;
 }
-.product-reviews .rating-area .total .count .stars{
+.product-reviews .rating-area .total .visual .count{
+  display:grid;
+  grid-gap:var(--gap-sm);
+  gap:var(--gap-sm);
+}
+.product-reviews .rating-area .total .visual .count .stars{
   display:flex;
   align-items:center;
   color:var(--color-yellow-500);
 }
-.product-reviews .rating-area .total .count span{
+.product-reviews .rating-area .total .visual .count span{
   display:block;
   width:-moz-max-content;
   width:max-content;
@@ -81,4 +86,134 @@
   color:var(--section-bg-color);
   border-color:rgb(var(--section-text-color));
   background-color:rgb(var(--section-text-color));
+}
+.product-reviews .reviews-area{
+  align-items:baseline;
+}
+.product-reviews .reviews-area .review-card{
+  padding:1.5em;
+  display:grid;
+  grid-gap:var(--gap-lg);
+  gap:var(--gap-lg);
+  border-radius:var(--radius-md);
+  border:1px solid rgba(var(--section-text-color), 8%);
+}
+.product-reviews .reviews-area .review-card .info{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.product-reviews .reviews-area .review-card .info .author{
+  display:grid;
+  grid-gap:var(--gap-xs);
+  gap:var(--gap-xs);
+}
+.product-reviews .reviews-area .review-card .info .author .name{
+  font-size:var(--text-md);
+}
+.product-reviews .reviews-area .review-card .info .author .date{
+  font-size:var(--text-sm);
+  color:rgba(var(--section-text-color), 70%);
+}
+.product-reviews .reviews-area .review-card .info .rate{
+  display:flex;
+  gap:var(--gap-sm);
+  align-items:center;
+  font-size:var(--text-sm);
+}
+.product-reviews .reviews-area .review-card .info .rate svg{
+  color:var(--color-yellow-500);
+}
+.product-reviews .reviews-area .review-card .content{
+  display:grid;
+  grid-gap:var(--gap-lg);
+  gap:var(--gap-lg);
+}
+.product-reviews .reviews-area .review-card .content p{
+  font-size:var(--text-sm);
+  color:rgba(var(--section-text-color), 70%);
+}
+.product-reviews .reviews-area .review-card .content .images{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--gap-md);
+  padding-block-start:var(--gap-lg);
+  border-block-start:1px solid rgba(var(--section-text-color), 8%);
+}
+.product-reviews .reviews-area .review-card .content .images button[data-image]{
+  padding:2px;
+}
+.product-reviews .reviews-area .review-card .content .images button[data-image]:nth-child(n+4){
+  display:none;
+}
+.product-reviews .reviews-area .review-card .content .images button[data-image] img{
+  width:50px;
+  height:50px;
+  -o-object-fit:cover;
+     object-fit:cover;
+  border-radius:var(--radius-sm);
+  transition:var(--transition-duration-normal);
+}
+.product-reviews .reviews-area .review-card .content .images button[data-image]:hover img{
+  filter:blur(1px);
+}
+.product-reviews .reviews-area .review-card .content .images label{
+  width:56px;
+  height:56px;
+  cursor:pointer;
+  font-size:var(--text-sm);
+}
+.product-reviews .reviews-area .review-card .content .images:has(label input:checked) label{
+  display:none;
+}
+.product-reviews .reviews-area .review-card .content .images:has(label input:checked) button[data-image]:nth-child(n+4){
+  display:flex;
+}
+.product-reviews .reviews-area .review-card .content .image-preview{
+  padding:1em;
+  display:grid;
+  grid-gap:var(--gap-xl);
+  gap:var(--gap-xl);
+}
+.product-reviews .reviews-area .review-card .content .image-preview button.icon{
+  z-index:2;
+  padding:8px;
+  position:absolute;
+  inset-inline-end:2em;
+  inset-block-start:2em;
+  background-color:var(--section-bg-color);
+}
+.product-reviews .reviews-area .review-card .content .image-preview .preview-core{
+  height:400px;
+  position:relative;
+}
+.product-reviews .reviews-area .review-card .content .image-preview .preview-core img{
+  width:100%;
+  -o-object-fit:cover;
+     object-fit:cover;
+  border-radius:var(--radius-sm);
+}
+
+@media (max-width: 1024px){
+  .product-reviews .rating-area{
+    width:100%;
+  }
+}
+@media (max-width: 768px){
+  .product-reviews .rating-area .total{
+    display:grid;
+  }
+  .product-reviews .rating-area .total .visual{
+    display:flex;
+    gap:var(--gap-md);
+    align-items:center;
+    justify-content:center;
+  }
+  .product-reviews .review-card .content .image-preview{
+    padding-block-start:0 !important;
+  }
+  .product-reviews .review-card .content .image-preview button.icon{
+    display:none;
+  }
 }

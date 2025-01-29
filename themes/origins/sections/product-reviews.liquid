@@ -11,18 +11,20 @@
   <div class="product-reviews">
     <div class="rating-area">
       <div class="total">
-        <h1 class="average">4.8</h1>
-        <div class="count">
-          <div class="stars">
-            {% for star in (1..5) %}
-              {% if star <= 4 %}
-                {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
-              {% else %}
-                {% render 'yc-icon', name: 'star', size: 15 %}
-              {% endif %}
-            {% endfor %}
+        <div class="visual">
+          <h1 class="average">4.8</h1>
+          <div class="count">
+            <div class="stars">
+              {% for star in (1..5) %}
+                {% if star <= 4 %}
+                  {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+                {% else %}
+                  {% render 'yc-icon', name: 'star', size: 15 %}
+                {% endif %}
+              {% endfor %}
+            </div>
+            <span>134 reviews</span>
           </div>
-          <span>134 reviews</span>
         </div>
         <div class="graph">
           {% for bar in (1..5) %}
@@ -48,13 +50,72 @@
         {% endfor %}
       </div>
     </div>
-    <div class="reviews-area"></div>
+    <div class="items-grid reviews-area">
+      {% for item in (1..6) %}
+        <div class="review-card">
+          <div class="info">
+            <div class="author">
+              <p class="name">Kamal Alawi</p>
+              <span class="date">2 weeks ago</span>
+            </div>
+            <div class="rate">
+              {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+              5
+            </div>
+          </div>
+          <div class="content">
+            <p>
+              Really cool design and the patches make it stand out. It’s a bit oversized, but that’s the vibe I wanted!
+            </p>
+            {% if item < 4 %}
+              <yc-modal data-hidden="true">
+                <div class="images">
+                  {% for img in (1..6) %}
+                    <button class="icon" data-image data-toggle>
+                      <img
+                        src="https://static.zara.net/assets/public/0dc2/096d/a65442ac8e65/1b701456e047/04416303700-e1/04416303700-e1.jpg?ts=1730641874520&w=530"
+                        height="100%"
+                        width="100%"
+                        alt="product"
+                      >
+                    </button>
+                  {% endfor %}
+                  <label class="yc-btn icon">
+                    <input type="checkbox" name="show-more" hidden>
+                    +3
+                  </label>
+                </div>
+
+                <div class="modal-container">
+                  <div class="modal-box" data-modal>
+                    <div class="image-preview">
+                      <button class="icon" data-size="sm" data-toggle>
+                        {% render 'yc-icon', name: 'x-mark' %}
+                      </button>
+                      <div class="preview-core">
+                        <img
+                          src="https://static.zara.net/assets/public/0dc2/096d/a65442ac8e65/1b701456e047/04416303700-e1/04416303700-e1.jpg?ts=1730641874520&w=530"
+                          height="100%"
+                          width="100%"
+                          alt="product"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-overlay overlay" data-toggle></div>
+                </div>
+              </yc-modal>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 </yc-section>
 
 {% schema %}
 {
-  "label": "Product reviews",
+  "label": "Product Reviews",
   "settings": [
     {
       "id": "title",
