@@ -51,7 +51,7 @@ class CartDrawer extends HTMLElement {
         );
 
       // IMAGE
-      if (item.productVariant.product.thumbnail) {
+      if (item.productVariant.product.images.length > 0) {
         const img = image.querySelector("img");
         img.src = item.productVariant.product.thumbnail;
         img.alt = item.productVariant.product.name;
@@ -64,24 +64,28 @@ class CartDrawer extends HTMLElement {
       title.textContent = item.productVariant.product.name;
 
       // VARIANT
-      const variationValues = Object.values(item.productVariant.variations);
-      const variantFragment = new DocumentFragment();
+      const variationKeys = Object.keys(item.productVariant.variations);
 
-      variationValues.forEach((variation, index) => {
-        const valueSpan = document.createElement("span");
-        valueSpan.textContent = variation;
-        variantFragment.append(valueSpan);
+      if (!(variationKeys.length == 1 && variationKeys[0] === "default")) {
+        const variationValues = Object.values(item.productVariant.variations);
+        const variantFragment = new DocumentFragment();
 
-        if (index < variationValues.length - 1) {
-          const separatorSpan = document.createElement("span");
-          separatorSpan.textContent = " / ";
-          variantFragment.append(separatorSpan);
-        }
-      });
+        variationValues.forEach((variation, index) => {
+          const valueSpan = document.createElement("span");
+          valueSpan.textContent = variation;
+          variantFragment.append(valueSpan);
 
-      variant.classList.remove("hidden");
-      variant.innerHTML = "";
-      variant.append(variantFragment);
+          if (index < variationValues.length - 1) {
+            const separatorSpan = document.createElement("span");
+            separatorSpan.textContent = " / ";
+            variantFragment.append(separatorSpan);
+          }
+        });
+
+        variant.classList.remove("hidden");
+        variant.innerHTML = "";
+        variant.append(variantFragment);
+      }
 
       // QTY
       quantity.textContent = item.quantity;

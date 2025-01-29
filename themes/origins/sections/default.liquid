@@ -7,7 +7,7 @@
 
 <script>
   async function removeFromCart() {
-    const cart = JSON.parse({{ cart | json }});
+    const cart = {% if cart %}JSON.parse({{ cart | json }}){% else %}{}{% endif %};
     console.log(cart);
     const cartItem = cart.items[0];
     const cartItemId = cartItem.id;
