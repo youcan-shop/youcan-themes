@@ -40,63 +40,96 @@ class CartDrawer extends HTMLElement {
 
   updateCartList(items) {
     const fragment = new DocumentFragment();
-    const tempalte = this.cart.querySelector("#cart-item-template");
+    const template = this.cart.querySelector("#cart-item-template");
 
     items.map((item) => {
-      const cartItem = tempalte.content.cloneNode(true);
-      const [image, title, variant, price, quantity] =
-        cartItem.querySelectorAll(
-          ".image, a, .variant, [data-price], [data-quantity]",
-        );
-
-      // IMAGE
-      if (item.productVariant.product.images.length > 0) {
-        const img = image.querySelector("img");
-        img.src = item.productVariant.product.thumbnail;
-        img.alt = item.productVariant.product.name;
-        img.classList.remove("hidden");
-      } else {
-        image.querySelector(".card-placeholder").classList.remove("hidden");
-      }
-
-      // TITLE
-      title.textContent = item.productVariant.product.name;
-
-      // VARIANT
-      const variationKeys = Object.keys(item.productVariant.variations);
-
-      if (!(variationKeys.length == 1 && variationKeys[0] === "default")) {
-        const variationValues = Object.values(item.productVariant.variations);
-        const variantFragment = new DocumentFragment();
-
-        variationValues.forEach((variation, index) => {
-          const valueSpan = document.createElement("span");
-          valueSpan.textContent = variation;
-          variantFragment.append(valueSpan);
-
-          if (index < variationValues.length - 1) {
-            const separatorSpan = document.createElement("span");
-            separatorSpan.textContent = " / ";
-            variantFragment.append(separatorSpan);
-          }
-        });
-
-        variant.classList.remove("hidden");
-        variant.innerHTML = "";
-        variant.append(variantFragment);
-      }
-
-      // QTY
-      quantity.textContent = formatNumber(item.quantity);
-
-      // PRICE
-      price.textContent = formatCurrency(item.price);
-
+      const cartItem = this.createCartItem(template, item);
       fragment.append(cartItem);
     });
 
-    this.cart.querySelector(".cart-drawer").classList.remove("is-empty");
+    this.updateDrawerState();
+    this.replaceContent(fragment);
+  }
 
+  createCartItem(template, item) {
+    const cartItem = template.content.cloneNode(true);
+    const elements = this.getCartItemElements(cartItem);
+
+    this.updateItemImage(elements.image, item.productVariant.product);
+    this.updateItemTitle(elements.title, item.productVariant.product);
+    this.updateItemVariant(elements.variant, item.productVariant.variations);
+    this.updateItemQuantity(elements.quantity, item.quantity);
+    this.updateItemPrice(elements.price, item.price);
+
+    return cartItem;
+  }
+
+  getCartItemElements(cartItem) {
+    const [image, title, variant, price, quantity] = cartItem.querySelectorAll(
+      ".image, a, .variant, [data-price], [data-quantity]",
+    );
+    return { image, title, variant, price, quantity };
+  }
+
+  updateItemImage(imageContainer, product) {
+    if (product.images.length > 0) {
+      const img = imageContainer.querySelector("img");
+      img.src = product.thumbnail;
+      img.alt = product.name;
+      img.classList.remove("hidden");
+    } else {
+      imageContainer
+        .querySelector(".card-placeholder")
+        .classList.remove("hidden");
+    }
+  }
+
+  updateItemTitle(titleElement, product) {
+    titleElement.textContent = product.name;
+  }
+
+  updateItemVariant(variantElement, variations) {
+    const variationKeys = Object.keys(variations);
+    if (variationKeys.length === 1 && variationKeys[0] === "default") return;
+
+    const variantFragment = this.createVariantFragment(variations);
+    variantElement.classList.remove("hidden");
+    variantElement.innerHTML = "";
+    variantElement.append(variantFragment);
+  }
+
+  createVariantFragment(variations) {
+    const fragment = new DocumentFragment();
+    const values = Object.values(variations);
+
+    values.forEach((variation, index) => {
+      const valueSpan = document.createElement("span");
+      valueSpan.textContent = variation;
+      fragment.append(valueSpan);
+
+      if (index < values.length - 1) {
+        const separatorSpan = document.createElement("span");
+        separatorSpan.textContent = " / ";
+        fragment.append(separatorSpan);
+      }
+    });
+
+    return fragment;
+  }
+
+  updateItemQuantity(quantityElement, quantity) {
+    quantityElement.textContent = formatNumber(quantity);
+  }
+
+  updateItemPrice(priceElement, price) {
+    priceElement.textContent = formatCurrency(price);
+  }
+
+  updateDrawerState() {
+    this.cart.querySelector(".cart-drawer").classList.remove("is-empty");
+  }
+
+  replaceContent(fragment) {
     this.innerHTML = "";
     this.append(fragment);
   }
