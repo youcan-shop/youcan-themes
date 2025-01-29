@@ -22,8 +22,7 @@ class CartDrawer extends HTMLElement {
 
   updateCartSubTotal(subtotal) {
     this.subTotals.forEach((node) => {
-      // TODO: Format subtotal
-      node.textContent = subtotal;
+      node.textContent = formatCurrency(subtotal);
     });
   }
 
@@ -88,10 +87,10 @@ class CartDrawer extends HTMLElement {
       }
 
       // QTY
-      quantity.textContent = item.quantity;
+      quantity.textContent = formatNumber(item.quantity);
 
       // PRICE
-      price.textContent = item.price;
+      price.textContent = formatCurrency(item.price);
 
       fragment.append(cartItem);
     });
