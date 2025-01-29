@@ -23,12 +23,16 @@ if (!customElements.get("yc-select")) {
       items.forEach((item) => {
         const { value } = item.attributes;
         const label = item.textContent.trim();
+        const checked = item.hasAttribute("checked");
         const disabled = item.hasAttribute("disabled");
+        
+        if (checked) this.placeholder.textContent = label;
+
         item.outerHTML = `
           <label>
             <span>${label}</span>
             <input type="radio" name="${this.getAttribute("name")}" value="${value?.value}" 
-              ${disabled ? "disabled" : ""} hidden>
+              ${disabled ? "disabled" : ""} ${checked ? "checked" : ""} hidden>
           </label>`;
       });
     }
