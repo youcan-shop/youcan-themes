@@ -12,7 +12,7 @@
       {{- cart_size -}}
     </span>
     {% render 'yc-icon', name: 'cart' %}
-    <span class="total-amount">0 MAD</span>
+    <span class="total-amount">{{ cart.sub_total | money }}</span>
   </button>
   <div class="drawer-container">
     <div class="drawer-box">
@@ -27,6 +27,9 @@
           </button>
         </div>
         <yc-cart-drawer-items>
+          <template id="cart-item-template">
+            {% render 'cart-drawer-item' %}
+          </template>
           {% for item in cart.items %}
             {% render 'cart-drawer-item', product: item %}
           {% endfor %}
@@ -34,7 +37,7 @@
         <div class="footer">
           <div class="totals">
             <span>{{ 'cart.drawer.total' | t }}</span>
-            <span data-total>200MAD</span>
+            <span data-total>{{ cart.sub_total | money }}</span>
           </div>
           <div class="actions">
             <a href="/cart" class="yc-btn primary">{{ 'cart.drawer.actions.check_out' | t }}</a>

@@ -4,7 +4,21 @@
   TO REMOVE ❌
   TODO: This section is just a placeholder for the theme pages, as the template schema requires at least one section
 {% endcomment %}
+
+<script>
+  async function removeFromCart() {
+    const cart = JSON.parse({{ cart | json }});
+    console.log(cart);
+    const cartItem = cart.items[0];
+    const cartItemId = cartItem.id;
+    const productVariantId = cartItem.product_variant_id;
+    const response = await youcanjs.cart.removeItem({ cartItemId, productVariantId });
+    console.log(response);
+  }
+</script>
+
 <yc-section style="display: grid; gap: 1.5em;">
+  {% dump cart.items %}
   {% assign nav_links_string = '/, Home | /collections, Collections| /product-a, Product A' %}
 
   {% render 'breadcrumb', nav_links_string: nav_links_string %}
@@ -47,6 +61,9 @@
           </button>
         </form>
       </product-form>
+      <button onclick="removeFromCart()">
+        {% render 'yc-icon', name: 'trash' %}
+      </button>
       {% comment %} Render product-form {% endcomment %}
     {% else %}
       <span>Please go to theme editor > default > select a product</span>
