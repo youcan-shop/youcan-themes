@@ -2,6 +2,7 @@
   class="collection-card"
   aria-label="{{ collection.name }}"
   href="/collections/{{ collection.slug }}"
+  style="--collection-height: {{ height |  default: 400 }}"
 >
   <div class="cover">
     {% if collection.image %}
@@ -18,7 +19,12 @@
       </div>
     {% endif %}
   </div>
-  <div class="info">
+  <div
+    class="info"
+    {% if height %}
+      data-small
+    {% endif %}
+  >
     <span class="name">{{ collection.name | default: 'Collection Name' }}</span>
   </div>
 </a>

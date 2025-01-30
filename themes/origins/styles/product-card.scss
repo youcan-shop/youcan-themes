@@ -2,10 +2,6 @@
   Usage:
   There are some css variables that should be defined in the product-card's parent, these variables are:
   --items-columns
-  --product-card-background
-  --product-card-foreground
-  --product-card-border-color
-  --product-card-border
   
   These properties are set by the global product card settings in head-config.liquid:
   --product-card-border-radius
@@ -14,6 +10,10 @@
 
 .product-card {
   --product-content-inset: 1em;
+  --product-card-background: var(--section-bg-color, var(--color-base-white));
+  --product-card-foreground: var(--section-text-color, var(--color-base-black));
+  --product-card-border-color: rgba(var(--product-card-foreground), 0.15);
+  --product-card-border: 1px solid var(--product-card-border-color);
 
   border-radius: var(--product-card-border-radius);
   transition: all var(--transition-duration-normal);
