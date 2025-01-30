@@ -52,11 +52,11 @@ if (!customElements.get("product-form")) {
       if (isLoading) {
         this.submitButton.setAttribute("data-loading", true);
         this.submitButton.setAttribute("disabled", true);
-        this.querySelector(".loading-spinner").classList.remove("hidden");
+        this.querySelector("[data-loading-spinner]").classList.remove("hidden");
       } else {
         this.submitButton.removeAttribute("data-loading");
         this.submitButton.removeAttribute("disabled");
-        this.querySelector(".loading-spinner").classList.add("hidden");
+        this.querySelector("[data-loading-spinner]").classList.add("hidden");
       }
     }
 
