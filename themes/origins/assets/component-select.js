@@ -13,7 +13,7 @@ if (!customElements.get("yc-select")) {
 
     connectedCallback() {
       this.setup();
-      this.listeners();
+      this.attachListeners();
       this.search && this.enableSearch();
     }
 
@@ -37,7 +37,7 @@ if (!customElements.get("yc-select")) {
       });
     }
 
-    listeners() {
+    attachListeners() {
       this.onSelect();
       this.onTrigger();
       this.onClickOutSide();
