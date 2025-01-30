@@ -1,18 +1,93 @@
-<section>
-  {% comment %} TODO: Add collections listing markup {% endcomment %}
-  <div class="empty-page">
-    {% assign title = 'collections.empty.title' | t %}
-    {% assign description = 'collections.empty.description' | t %}
+{{ 'collection-card.css' | asset_url | stylesheet_tag }}
 
-    {% render 'yc-empty', icon: 'collections', heading: title, subheading: description %}
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color.hex }};
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+
+    --collection-card-background: var(--section-bg-color);
+    --collection-card-foreground: var(--section-text-color);
+
+    --items-columns: {{ section.settings.collection_columns }};
+  "
+>
+  {% assign nav_links_string = '/, Home | /collections, Collections' %}
+  {% render 'breadcrumb', nav_links_string: nav_links_string %}
+  <div class="all-collections">
+    {%- paginate collections by 8 cod %}
+      {% if items.size > 0 %}
+        <ul class="items-grid">
+          {% for collection in items %}
+            <li>
+              {%- render 'collection-card', collection: collection -%}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="empty-page">
+          {% assign title = 'collections.empty.title' | t %}
+          {% assign description = 'collections.empty.description' | t %}
+
+          {% render 'yc-empty', icon: 'collections', heading: title, subheading: description %}
+        </div>
+      {% endif %}
+    {% endpaginate %}
   </div>
-</section>
-
+</yc-section>
 {%- schema -%}
 {
   "label": "All collections",
   "templates": ["list-collections"],
   "limit": 1,
-  "settings": []
+  "settings": [
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "id": "collection_columns",
+      "type": "range",
+      "label": "Number of columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    }
+  ]
 }
 {%- endschema -%}
