@@ -1,0 +1,46 @@
+@import "mixins/breakpoints";
+
+.single-collection {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(var(--section-text-color), 8%);
+
+  .collections-area {
+    padding: 1.5em;
+    border-block-end: 1px solid rgba(var(--section-text-color), 8%);
+  }
+
+  .filter-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5em;
+
+    @include breakpoint("sm") {
+      gap: var(--gap-lg);
+      flex-direction: column;
+    }
+
+    .label {
+      display: flex;
+      gap: var(--gap-xs);
+      align-items: center;
+      font-size: var(--text-md);
+      color: rgba(var(--section-text-color), 70%);
+    }
+
+    .sort-box {
+      display: flex;
+      gap: var(--gap-lg);
+      align-items: center;
+
+      yc-select {
+        width: 200px;
+      }
+    }
+  }
+
+  .products-area {
+    padding: 1.5em;
+    border-block-start: 1px solid rgba(var(--section-text-color), 8%);
+  }
+}
