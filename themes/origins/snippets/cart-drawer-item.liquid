@@ -1,5 +1,5 @@
 <div class="item">
-  <div class="image">
+  <div class="image" data-cart-item-image>
     <img
       loading="lazy"
       height="100%"
@@ -8,16 +8,16 @@
       alt="{{ product.name }}"
       class="{% unless product.image %} hidden {% endunless %}"
     >
-    <div class="card-placeholder {% if product.image %} hidden {% endif %}">
+    <div class="card-placeholder {% if product.image %} hidden {% endif %}" data-cart-item-image-placeholder>
       {% render 'yc-placeholder', name: 'product', size: '48' %}
     </div>
   </div>
   <div class="info">
     <div class="heading">
-      <a href="/products/#" class="link" title="{{ product.name }}">
+      <a href="/products/#" class="link" title="{{ product.name }}" data-cart-item-title>
         {{ product.name | default: 'Product Name' }}
       </a>
-      <p class="variant {% unless product.variations.size > 1 %} hidden {% endunless %}">
+      <p class="variant {% unless product.variations.size > 1 %} hidden {% endunless %}" data-cart-item-variant>
         {% for variant in product.variations %}
           <span>{{- variant[1] -}}</span>
           {% unless forloop.index == product.variations.size - 1 %}

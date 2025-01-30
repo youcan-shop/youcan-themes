@@ -66,7 +66,7 @@ class CartDrawer extends HTMLElement {
 
   getCartItemElements(cartItem) {
     const [image, title, variant, price, quantity] = cartItem.querySelectorAll(
-      ".image, a, .variant, [data-price], [data-quantity]",
+      "[data-cart-item-image], [data-cart-item-title], [data-cart-item-variant], [data-price], [data-quantity]",
     );
     return { image, title, variant, price, quantity };
   }
@@ -79,7 +79,7 @@ class CartDrawer extends HTMLElement {
       img.classList.remove("hidden");
     } else {
       imageContainer
-        .querySelector(".card-placeholder")
+        .querySelector("[data-cart-item-image-placeholder]")
         .classList.remove("hidden");
     }
   }
@@ -126,7 +126,7 @@ class CartDrawer extends HTMLElement {
   }
 
   updateDrawerState() {
-    this.cart.querySelector(".cart-drawer").classList.remove("is-empty");
+    this.cart.querySelector("[data-cart]").classList.remove("is-empty");
   }
 
   replaceContent(fragment) {
