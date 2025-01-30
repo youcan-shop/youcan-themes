@@ -22,8 +22,8 @@ function shouldUsePrecision(amount) {
   return isMulticurrencyActive && usePrecision;
 }
 
-function formatNumber(amount) {
-  const usePrecision = shouldUsePrecision(amount);
+function formatNumber(amount, withPercision = false) {
+  const usePrecision = withPercision && shouldUsePrecision(amount);
   const formatter = new Intl.NumberFormat(CUSTOMER_LOCALE, {
     style: "decimal",
     roundingMode: "floor",
@@ -35,7 +35,7 @@ function formatNumber(amount) {
 }
 
 function formatCurrency(amount) {
-  const formattedValue = formatNumber(amount);
+  const formattedValue = formatNumber(amount, true);
 
   const determineSymbolPositionFormatter = new Intl.NumberFormat(
     CUSTOMER_LOCALE,
