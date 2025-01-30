@@ -19,10 +19,11 @@
   border-radius: var(--collection-card-border-radius);
 
   .cover {
-    height: 400px;
+    height: calc(var(--collection-height) * 1px);
     transition: var(--transition-duration-slow);
+
     @include breakpoint("xl") {
-      height: 350px;
+      height: calc((var(--collection-height) - 50) * 1px);
     }
 
     img {
@@ -63,6 +64,11 @@
       color: rgb(var(--collection-card-foreground));
       background-color: var(--collection-card-background);
       border-radius: var(--collection-card-border-radius);
+    }
+
+    &[data-small] .name {
+      padding: 7px 14px;
+      font-size: var(--text-sm);
     }
   }
 
