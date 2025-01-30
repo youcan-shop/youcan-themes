@@ -1,0 +1,283 @@
+@import "mixins/breakpoints";
+
+.product-reviews {
+  display: grid;
+  gap: var(--gap-xl);
+
+  .rating-area {
+    display: grid;
+    gap: var(--gap-xl);
+    width: 50%;
+
+    .total {
+      display: flex;
+      gap: var(--gap-2xl);
+      align-items: center;
+
+      .visual {
+        .average {
+          text-align: center;
+        }
+
+        .count {
+          display: flex;
+          gap: var(--gap-sm);
+          flex-direction: column;
+
+          .stars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-yellow-500);
+          }
+
+          span {
+            display: block;
+            text-align: center;
+            width: max-content;
+            font-size: var(--text-md);
+            color: rgba(var(--section-text-color), 70%);
+          }
+        }
+      }
+
+      .graph {
+        width: 100%;
+        display: flex;
+        gap: var(--gap-sm);
+        flex-direction: column-reverse;
+
+        .bar {
+          display: flex;
+          align-items: center;
+          gap: var(--gap-md);
+          position: relative;
+
+          svg {
+            color: var(--color-yellow-500);
+          }
+
+          span {
+            width: 12px;
+            text-align: center;
+            font-size: var(--text-sm);
+
+            &:last-child {
+              min-width: 25px;
+              font-size: var(--text-xs);
+              color: rgba(var(--section-text-color), 70%);
+            }
+          }
+
+          .process {
+            height: 3px;
+            width: 100%;
+            display: block;
+            position: relative;
+            border-radius: var(--radius-md);
+            background-color: rgba(var(--section-text-color), 8%);
+
+            &::before {
+              content: "";
+              inset: 0;
+              width: calc(var(--rating-count) * 10%);
+              height: 3px;
+              position: absolute;
+              border-radius: var(--radius-md);
+              background-color: rgb(var(--section-text-color));
+            }
+          }
+        }
+      }
+    }
+
+    .filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gap-md);
+      align-items: center;
+
+      label {
+        cursor: pointer;
+        padding: 6px 12px;
+        font-size: var(--text-sm);
+
+        svg {
+          color: var(--color-yellow-500);
+        }
+
+        &:has(input:checked) {
+          color: var(--section-bg-color);
+          border-color: rgb(var(--section-text-color));
+          background-color: rgb(var(--section-text-color));
+        }
+      }
+    }
+  }
+
+  .reviews-area {
+    align-items: baseline;
+
+    .review-card {
+      padding: 1.5em;
+      display: grid;
+      gap: var(--gap-lg);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(var(--section-text-color), 8%);
+
+      .info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .author {
+          display: grid;
+          gap: var(--gap-xs);
+
+          .name {
+            font-size: var(--text-md);
+          }
+
+          .date {
+            font-size: var(--text-sm);
+            color: rgba(var(--section-text-color), 70%);
+          }
+        }
+
+        .rate {
+          display: flex;
+          align-items: center;
+          font-size: var(--text-sm);
+
+          svg {
+            color: var(--color-yellow-500);
+          }
+        }
+      }
+
+      .content {
+        display: grid;
+        gap: var(--gap-lg);
+
+        p {
+          font-size: var(--text-sm);
+          color: rgba(var(--section-text-color), 70%);
+        }
+
+        .images {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: var(--gap-md);
+          padding-block-start: var(--gap-lg);
+          border-block-start: 1px solid rgba(var(--section-text-color), 8%);
+
+          button[data-image] {
+            padding: 2px;
+
+            &:nth-child(n + 4) {
+              display: none;
+            }
+
+            img {
+              width: 50px;
+              height: 50px;
+              object-fit: cover;
+              border-radius: var(--radius-sm);
+              transition: var(--transition-duration-normal);
+            }
+
+            &:hover img {
+              filter: blur(1px);
+            }
+          }
+
+          label {
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            font-size: var(--text-sm);
+          }
+
+          &:has(label input:checked) {
+            label {
+              display: none;
+            }
+
+            button[data-image]:nth-child(n + 4) {
+              display: flex;
+            }
+          }
+        }
+
+        .image-preview {
+          padding: 1em;
+          display: grid;
+          gap: var(--gap-xl);
+
+          button.icon {
+            z-index: 2;
+            padding: 8px;
+            position: absolute;
+            inset-inline-end: 2em;
+            inset-block-start: 2em;
+            background-color: var(--section-bg-color);
+          }
+
+          .preview-core {
+            height: 400px;
+            position: relative;
+
+            img {
+              width: 100%;
+              object-fit: cover;
+              border-radius: var(--radius-sm);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@include breakpoint("lg") {
+  .product-reviews {
+    .rating-area {
+      width: 100%;
+    }
+  }
+}
+
+@include breakpoint("md") {
+  .product-reviews {
+    .rating-area {
+      .total {
+        display: grid;
+
+        .visual {
+          display: flex;
+          gap: var(--gap-md);
+          align-items: center;
+          justify-content: center;
+
+          .count {
+            .stars {
+              justify-content: start;
+            }
+          }
+        }
+      }
+    }
+    .review-card {
+      .content {
+        .image-preview {
+          padding-block-start: 0 !important;
+
+          button.icon {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
