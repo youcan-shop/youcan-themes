@@ -1,0 +1,142 @@
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+{{ 'collection-card.css' | asset_url | stylesheet_tag }}
+{{ 'single-collection.css' | asset_url | stylesheet_tag }}
+
+{{ 'component-select.css' | asset_url | stylesheet_tag }}
+{{ 'component-select.js' | asset_url | script_tag_deferred }}
+
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color.hex }};
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+
+    --collection-card-background: var(--section-bg-color);
+    --collection-card-foreground: var(--section-text-color);
+
+    --items-columns: {{ section.settings.collection_columns }};
+  "
+>
+  {% capture nav_links_string %}
+    /, Home | /collections, Collections | {{ category.slug }}, {{ category.name }}
+  {% endcapture %}
+  {% render 'breadcrumb', nav_links_string: nav_links_string %}
+
+  <div class="single-collection">
+    {% if subCategories.size > 0 %}
+      <div class="collections-area">
+        <ul class="items-grid">
+          {% for collection in subCategories %}
+            <li>
+              {%- render 'collection-card', collection: collection, height: 200 -%}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="filter-area">
+      {%- paginate collection.products by 8 cod, category_id: category.id %}
+        <h1 class="title h2">
+          {{ category.name }}
+          <span class="h6">[{{ items.size }}]</span>
+        </h1>
+      {%- endpaginate -%}
+      <div class="sort-box">
+        <span class="label">
+          {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
+          Sort by:
+        </span>
+        <yc-select name="sort">
+          <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
+            <yc-select-value>Please select a value</yc-select-value>
+          </yc-select-trigger>
+          <yc-select-content>
+            <yc-select-item value="a-z" checked>A-Z</yc-select-item>
+            <yc-select-item value="z-a"><a href="/">Z-A</a></yc-select-item>
+            <yc-select-item value="oldest">Oldest</yc-select-item>
+            <yc-select-item value="newest">Newest</yc-select-item>
+            <yc-select-item value="low">Price: Low to high</yc-select-item>
+            <yc-select-item value="high">Price: High to low</yc-select-item>
+          </yc-select-content>
+        </yc-select>
+      </div>
+    </div>
+    <div class="products-area">
+      {%- paginate collection.products by 8 cod, category_id: category.id %}
+        {% if items.size > 0 %}
+          <ul class="items-grid">
+            {% for product in items %}
+              <li>
+                {%- render 'product-card', product: product -%}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <div class="empty-page">
+            {% assign title = 'single-collection.empty.title' | t %}
+            {% assign description = 'single-collection.empty.description' | t %}
+
+            {% render 'yc-empty', icon: 'products', heading: title, subheading: description %}
+          </div>
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</yc-section>
+{%- schema -%}
+{
+  "label": "Single collection",
+  "templates": ["single-collections"],
+  "limit": 1,
+  "settings": [
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "id": "collection_columns",
+      "type": "range",
+      "label": "Number of columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    }
+  ]
+}
+{%- endschema -%}
