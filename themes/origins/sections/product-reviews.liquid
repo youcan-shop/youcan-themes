@@ -23,7 +23,7 @@
                 {% endif %}
               {% endfor %}
             </div>
-            <span>134 reviews</span>
+            <span>25 reviews</span>
           </div>
         </div>
         <div class="graph">
@@ -32,6 +32,7 @@
               {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
               <span>{{ bar }}</span>
               <div class="process" style="--rating-count: {{ bar }}"></div>
+              <span>{{ bar }}0%</span>
             </div>
           {% endfor %}
         </div>
@@ -59,8 +60,13 @@
               <span class="date">2 weeks ago</span>
             </div>
             <div class="rate">
-              {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
-              5
+              {% for star in (1..5) %}
+                {% if star <= 4 %}
+                  {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+                {% else %}
+                  {% render 'yc-icon', name: 'star', size: 15 %}
+                {% endif %}
+              {% endfor %}
             </div>
           </div>
           <div class="content">
@@ -117,18 +123,6 @@
 {
   "label": "Product Reviews",
   "settings": [
-    {
-      "id": "title",
-      "type": "text",
-      "label": "Title",
-      "default": "My title"
-    },
-    {
-      "id": "description",
-      "type": "textarea",
-      "label": "Description",
-      "default": "My subtitle"
-    },
     {
       "id": "text_color",
       "type": "color",

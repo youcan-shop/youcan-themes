@@ -15,18 +15,25 @@
       align-items: center;
 
       .visual {
+        .average {
+          text-align: center;
+        }
+
         .count {
-          display: grid;
+          display: flex;
           gap: var(--gap-sm);
+          flex-direction: column;
 
           .stars {
             display: flex;
             align-items: center;
+            justify-content: center;
             color: var(--color-yellow-500);
           }
 
           span {
             display: block;
+            text-align: center;
             width: max-content;
             font-size: var(--text-md);
             color: rgba(var(--section-text-color), 70%);
@@ -54,6 +61,12 @@
             width: 12px;
             text-align: center;
             font-size: var(--text-sm);
+
+            &:last-child {
+              min-width: 25px;
+              font-size: var(--text-xs);
+              color: rgba(var(--section-text-color), 70%);
+            }
           }
 
           .process {
@@ -133,7 +146,6 @@
 
         .rate {
           display: flex;
-          gap: var(--gap-sm);
           align-items: center;
           font-size: var(--text-sm);
 
@@ -238,21 +250,33 @@
 
 @include breakpoint("md") {
   .product-reviews {
-    .rating-area .total {
-      display: grid;
+    .rating-area {
+      .total {
+        display: grid;
 
-      .visual {
-        display: flex;
-        gap: var(--gap-md);
-        align-items: center;
-        justify-content: center;
+        .visual {
+          display: flex;
+          gap: var(--gap-md);
+          align-items: center;
+          justify-content: center;
+
+          .count {
+            .stars {
+              justify-content: start;
+            }
+          }
+        }
       }
     }
-    .review-card .content .image-preview {
-      padding-block-start: 0 !important;
+    .review-card {
+      .content {
+        .image-preview {
+          padding-block-start: 0 !important;
 
-      button.icon {
-        display: none;
+          button.icon {
+            display: none;
+          }
+        }
       }
     }
   }
