@@ -15,6 +15,10 @@ class CartDrawer extends HTMLElement {
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { count, sub_total, items } = payload.cartData;
 
+      if (payload.source === "product-form") {
+        this.cart.open();
+      }
+
       this.updateCartBubble(count, sub_total);
       this.updateCartList(items);
     });

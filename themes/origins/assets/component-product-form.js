@@ -5,7 +5,6 @@ if (!customElements.get("product-form")) {
 
       this.form = this.querySelector("form");
       this.submitButton = this.querySelector('[type="submit"]');
-      this.cart = document.querySelector("yc-drawer#cart");
     }
 
     connectedCallback() {
@@ -33,8 +32,6 @@ if (!customElements.get("product-form")) {
             productVariantId,
             cartData: response,
           });
-
-          this.cart.open();
         }
       } catch (error) {
         console.error(error);
