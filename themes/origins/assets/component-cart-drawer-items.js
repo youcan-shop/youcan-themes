@@ -31,7 +31,7 @@ class CartDrawer extends HTMLElement {
   updateCartCount(count) {
     if (this.cartBubble) {
       this.cartBubble.textContent = count;
-      this.cartBubble.classList.toggle("hidden", count === 0);
+      this.cartBubble.toggleAttribute("hidden", count === 0);
     }
   }
 
@@ -42,7 +42,7 @@ class CartDrawer extends HTMLElement {
 
   updateCartList(items) {
     const fragment = new DocumentFragment();
-    const template = this.cart.querySelector("#cart-item-template");
+    const template = this.cart.querySelector("[data-cart-item-template]");
 
     items.map((item) => {
       const cartItem = this.createCartItem(template, item);
@@ -67,9 +67,8 @@ class CartDrawer extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity] = cartItem.querySelectorAll(
-      "[data-cart-item-image], [data-cart-item-title], [data-cart-item-variant], [data-price], [data-quantity]",
-    );
+    const [image, title, variant, price, quantity] =
+      cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity };
   }
 
@@ -78,11 +77,11 @@ class CartDrawer extends HTMLElement {
       const img = imageContainer.querySelector("img");
       img.src = product.thumbnail;
       img.alt = product.name;
-      img.classList.remove("hidden");
+      img.removeAttribute("hidden");
     } else {
       imageContainer
         .querySelector("[data-cart-item-image-placeholder]")
-        .classList.remove("hidden");
+        .removeAttribute("hidden");
     }
   }
 
@@ -95,9 +94,8 @@ class CartDrawer extends HTMLElement {
     if (variationKeys.length === 1 && variationKeys[0] === "default") return;
 
     const variantFragment = this.createVariantFragment(variations);
-    variantElement.classList.remove("hidden");
-    variantElement.innerHTML = "";
-    variantElement.append(variantFragment);
+    variantElement.removeAttribute("hidden");
+    variantElement.replaceChildren(variantFragment);
   }
 
   createVariantFragment(variations) {
@@ -128,12 +126,11 @@ class CartDrawer extends HTMLElement {
   }
 
   updateDrawerState() {
-    this.cart.querySelector("[data-cart]").classList.remove("is-empty");
+    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty");
   }
 
   replaceContent(fragment) {
-    this.innerHTML = "";
-    this.append(fragment);
+    this.replaceChildren(fragment);
   }
 }
 

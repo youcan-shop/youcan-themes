@@ -36,30 +36,20 @@
         <span>1st Variant ID:</span>
         <span>{{ product.variants[0].id }}</span>
       </p>
-      <product-form>
-        <form>
-          <input
-            type="hidden"
-            name="productVariantId"
-            value="{{ product.variants[0].id  }}"
-          >
-          <input
-            type="hidden"
-            name="quantity"
-            value="1"
-          >
-          <button
-            type="submit"
-            name="add"
-            class="primary"
-          >
-            <span>
-              {{ 'general.add_to_cart' | t }}
-            </span>
-            {%- render 'loading-spinner' -%}
-          </button>
-        </form>
-      </product-form>
+      <yc-product-form
+        variant-id="{{ product.variants[0].id  }}"
+        quantity="1"
+      >
+        <button
+          data-buy-button
+          name="add"
+          class="primary"
+        >
+          <span>
+            {{ 'general.add_to_cart' | t }}
+          </span>
+        </button>
+      </yc-product-form>
       <button onclick="removeFromCart()">
         {% render 'yc-icon', name: 'trash' %}
       </button>

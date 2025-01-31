@@ -123,10 +123,6 @@ ol{
   list-style:none;
 }
 
-.hidden{
-  display:none !important;
-}
-
 button,
 .yc-btn{
   padding:12px 25px;
@@ -210,6 +206,22 @@ button.icon[data-size$=lg],
 button[data-loading] span,
 .yc-btn[data-loading] span{
   color:transparent;
+}
+button[data-loading]::before,
+.yc-btn[data-loading]::before{
+  content:"";
+  width:18px;
+  height:18px;
+  position:absolute;
+  border:1.5px solid currentColor;
+  border-bottom-color:transparent;
+  border-radius:var(--radius-circle);
+  animation:rotation 1s linear infinite;
+}
+@keyframes rotation{
+  100%{
+    transform:rotate(360deg);
+  }
 }
 button:disabled,
 .yc-btn:disabled{
@@ -449,37 +461,6 @@ yc-quantity-control span{
 .breadcrumb ol li a[aria-current]{
   color:currentColor;
   pointer-events:none;
-}
-
-.loading-spinner{
-  position:absolute;
-}
-.loading-spinner .spinner{
-  transform-origin:center;
-  animation:spinner_outer 2s linear infinite;
-}
-.loading-spinner .spinner circle{
-  stroke-linecap:round;
-  animation:spinner_inner 1.5s ease-in-out infinite;
-}
-@keyframes spinner_outer{
-  100%{
-    transform:rotate(360deg);
-  }
-}
-@keyframes spinner_inner{
-  0%{
-    stroke-dasharray:0 150;
-    stroke-dashoffset:0;
-  }
-  47.5%{
-    stroke-dasharray:42 150;
-    stroke-dashoffset:-16;
-  }
-  95%, 100%{
-    stroke-dasharray:42 150;
-    stroke-dashoffset:-59;
-  }
 }
 
 @media (max-width: 1280px){

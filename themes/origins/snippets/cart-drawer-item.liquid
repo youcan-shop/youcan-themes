@@ -1,23 +1,31 @@
 <div class="item">
-  <div class="image" data-cart-item-image>
+  <div class="image" data-cart-item="image">
     <img
       loading="lazy"
       height="100%"
       width="100%"
       src="{{ product.image }}"
       alt="{{ product.name }}"
-      class="{% unless product.image %} hidden {% endunless %}"
+      {% unless product.image %}
+        hidden
+      {% endunless %}
     >
-    <div class="card-placeholder {% if product.image %} hidden {% endif %}" data-cart-item-image-placeholder>
+    <div
+      class="card-placeholder"
+      {% if product.image %}
+        hidden
+      {% endif %}
+      data-cart-item-image-placeholder
+    >
       {% render 'yc-placeholder', name: 'product', size: '48' %}
     </div>
   </div>
   <div class="info">
     <div class="heading">
-      <a href="/products/#" class="link" title="{{ product.name }}" data-cart-item-title>
+      <a href="/products/#" class="link" title="{{ product.name }}" data-cart-item="title">
         {{ product.name | default: 'Product Name' }}
       </a>
-      <p class="variant {% unless product.variations.size > 1 %} hidden {% endunless %}" data-cart-item-variant>
+      <p class="variant {% unless product.variations.size > 1 %} hidden {% endunless %}" data-cart-item="variant">
         {% for variant in product.variations %}
           <span>{{- variant[1] -}}</span>
           {% unless forloop.index == product.variations.size - 1 %}
@@ -25,7 +33,7 @@
           {% endunless %}
         {% endfor %}
       </p>
-      <span data-price>{{ product.price | default: 0 | money }}</span>
+      <span data-cart-item="price">{{ product.price | default: 0 | money }}</span>
     </div>
     <div class="actions">
       {% render 'yc-quantity-control', button_size: 'sm', variant: product %}

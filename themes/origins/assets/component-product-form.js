@@ -1,24 +1,28 @@
-if (!customElements.get("product-form")) {
+if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
+    static observedAttributes = ["variant-id", "quantity"];
+
     constructor() {
       super();
 
-      this.form = this.querySelector("form");
-      this.submitButton = this.querySelector('[type="submit"]');
+      this.buyButton = this.querySelector("[data-buy-button]");
     }
 
     connectedCallback() {
       this._render();
     }
 
-    async onSubmitHandler(event) {
+    _render() {
+      this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
+    }
+
+    async onBuyClicked(event) {
       event.preventDefault();
 
       this.setIsBuyButtonLoading(true);
 
-      const formData = new FormData(this.form);
-      const productVariantId = formData.get("productVariantId");
-      const quantity = formData.get("quantity") || 1;
+      const productVariantId = this.getAttribute("variant-id");
+      const quantity = this.getAttribute("quantity") || 1;
 
       try {
         const response = await youcanjs.cart.addItem({
@@ -49,21 +53,9 @@ if (!customElements.get("product-form")) {
     }
 
     setIsBuyButtonLoading(isLoading = true) {
-      if (isLoading) {
-        this.submitButton.setAttribute("data-loading", true);
-        this.submitButton.setAttribute("disabled", true);
-        this.querySelector("[data-loading-spinner]").classList.remove("hidden");
-      } else {
-        this.submitButton.removeAttribute("data-loading");
-        this.submitButton.removeAttribute("disabled");
-        this.querySelector("[data-loading-spinner]").classList.add("hidden");
-      }
-    }
-
-    _render() {
-      this.form.addEventListener("submit", this.onSubmitHandler.bind(this));
+      this.buyButton.toggleAttribute("data-loading", isLoading);
     }
   }
 
-  customElements.define("product-form", ProductForm);
+  customElements.define("yc-product-form", ProductForm);
 }

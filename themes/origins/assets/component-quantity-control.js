@@ -3,7 +3,7 @@ if (!customElements.get("yc-quantity-control")) {
     constructor() {
       super();
 
-      this.quantity = this.querySelector("[data-quantity]");
+      this.quantity = this.querySelector("[data-cart-item='quantity']");
     }
 
     connectedCallback() {

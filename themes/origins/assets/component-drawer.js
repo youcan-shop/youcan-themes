@@ -10,7 +10,7 @@ class Drawer extends HTMLElement {
     });
   }
 
-  toggle() {
+  toggle(state) {
     const isHidden = this.dataset.hidden === "true";
     if (isHidden) {
       this.open();
