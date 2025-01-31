@@ -1,6 +1,6 @@
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 {{ 'collection-card.css' | asset_url | stylesheet_tag }}
-{{ 'single-collection.css' | asset_url | stylesheet_tag }}
+{{ 'product-listing.css' | asset_url | stylesheet_tag }}
 
 {{ 'component-select.css' | asset_url | stylesheet_tag }}
 {{ 'component-select.js' | asset_url | script_tag_deferred }}
@@ -23,48 +23,57 @@
   {% endcapture %}
   {% render 'breadcrumb', nav_links_string: nav_links_string %}
 
-  <div class="single-collection">
-    {% if subCategories.size > 0 %}
-      <div class="collections-area">
-        <ul class="items-grid">
-          {% for collection in subCategories %}
-            <li>
-              {%- render 'collection-card', collection: collection, height: 200 -%}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    <div class="filter-area">
-      {%- paginate collection.products by 8 cod, category_id: category.id %}
+  {%- paginate collection.products by 8 cod, category_id: category.id %}
+    <div class="product-listing">
+      {% if subCategories.size > 0 %}
+        <div class="collections-area">
+          <ul class="items-grid">
+            {% for collection in subCategories %}
+              <li>
+                {%- render 'collection-card', collection: collection, height: 200 -%}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <div class="filter-area">
         <h1 class="title h2">
           {{ category.name }}
           <span class="h6">[{{ items.size }}]</span>
         </h1>
-      {%- endpaginate -%}
-      <div class="sort-box">
-        <span class="label">
-          {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
-          Sort by:
-        </span>
-        <yc-select name="sort">
-          <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
-            <yc-select-value>Please select a value</yc-select-value>
-          </yc-select-trigger>
-          <yc-select-content>
-            <yc-select-item value="a-z" checked>A-Z</yc-select-item>
-            <yc-select-item value="z-a"><a href="/">Z-A</a></yc-select-item>
-            <yc-select-item value="oldest">Oldest</yc-select-item>
-            <yc-select-item value="newest">Newest</yc-select-item>
-            <yc-select-item value="low">Price: Low to high</yc-select-item>
-            <yc-select-item value="high">Price: High to low</yc-select-item>
-          </yc-select-content>
-        </yc-select>
+        <div class="sort-box">
+          <span class="label">
+            {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
+            {{ 'general.sort.label' | t }}:
+          </span>
+          <yc-select name="sort">
+            <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
+              <yc-select-value>{{ 'general.sort.placehlder' | t }}</yc-select-value>
+            </yc-select-trigger>
+            <yc-select-content>
+              <yc-select-item value="a-z" checked>
+                {{ 'general.sort.alphabetical_asc' | t }}
+              </yc-select-item>
+              <yc-select-item value="z-a">
+                {{ 'general.sort.alphabetical_desc' | t }}
+              </yc-select-item>
+              <yc-select-item value="oldest">
+                {{ 'general.sort.oldest' | t }}
+              </yc-select-item>
+              <yc-select-item value="newest">
+                {{ 'general.sort.newest' | t }}
+              </yc-select-item>
+              <yc-select-item value="low">
+                {{ 'general.sort.price_low_high' | t }}
+              </yc-select-item>
+              <yc-select-item value="high">
+                {{ 'general.sort.price_high_low' | t }}
+              </yc-select-item>
+            </yc-select-content>
+          </yc-select>
+        </div>
       </div>
-    </div>
-    <div class="products-area">
-      {%- paginate collection.products by 8 cod, category_id: category.id %}
+      <div class="products-area">
         {% if items.size > 0 %}
           <ul class="items-grid">
             {% for product in items %}
@@ -81,9 +90,9 @@
             {% render 'yc-empty', icon: 'products', heading: title, subheading: description %}
           </div>
         {% endif %}
-      {% endpaginate %}
+      </div>
     </div>
-  </div>
+  {%- endpaginate -%}
 </yc-section>
 {%- schema -%}
 {
