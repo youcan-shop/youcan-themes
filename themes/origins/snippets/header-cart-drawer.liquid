@@ -1,15 +1,36 @@
 {{ 'header-cart-drawer.css' | asset_url | stylesheet_tag }}
 {{ 'component-cart-drawer-items.js' | asset_url | script_tag_deferred }}
+{{ 'component-quantity-control.js' | asset_url | script_tag_deferred }}
+
+{% assign cart_size = cart.items.size %}
 
 <yc-drawer id="cart" data-hidden="true" data-direction="rtl">
+  <template data-cart-item-template>
+    {% render 'cart-drawer-item' %}
+  </template>
   <button class="cart-btn icon" aria-label="cart" data-toggle>
-    <span class="total-items">2</span>
+    <span
+      class="total-items"
+      data-cart-badge
+      {% unless cart_size > 0 %}
+        hidden
+      {% endunless %}
+    >
+      {{- cart_size -}}
+    </span>
     {% render 'yc-icon', name: 'cart' %}
-    <span class="total-amount">0 MAD</span>
+    <span class="total-amount" data-total>{{ cart.sub_total | default: 0 | money }}</span>
   </button>
   <div class="drawer-container">
     <div class="drawer-box">
-      <div class="cart-drawer">
+      <div
+        class="cart-drawer"
+        {% unless cart_size > 0 %}
+          data-is-empty
+        {% endunless %}
+
+        data-cart
+      >
         <div class="header">
           <div class="title">
             {% render 'yc-icon' | name: 'cart' %}
@@ -20,28 +41,22 @@
           </button>
         </div>
         <yc-cart-drawer-items>
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
-          {% render 'cart-drawer-item' %}
+          {% for item in cart.items %}
+            {% render 'cart-drawer-item', product: item %}
+          {% endfor %}
         </yc-cart-drawer-items>
         <div class="footer">
           <div class="totals">
             <span>{{ 'cart.drawer.total' | t }}</span>
-            <span data-total>200MAD</span>
+            <span data-total>{{ cart.sub_total | default: 0 | money }}</span>
           </div>
           <div class="actions">
             <a href="/cart" class="yc-btn primary">{{ 'cart.drawer.actions.check_out' | t }}</a>
             <button class="yc-btn secondary" data-toggle>{{ 'cart.drawer.actions.continue_shopping' | t }}</button>
           </div>
         </div>
-        {% comment %} TODO: If no cart items: render yc-empty {% endcomment %}
-        {% comment %} {% render 'yc-empty', icon: 'cart', heading: 'Your cart is empty' %} {% endcomment %}
-        {% comment %} TODO: Else render drawer items {% endcomment %}
+        {% assign placeholder_title = 'cart.empty.title' | t %}
+        {% render 'yc-empty', icon: 'cart', heading: placeholder_title %}
       </div>
     </div>
     <div class="drawer-overlay overlay" data-toggle></div>

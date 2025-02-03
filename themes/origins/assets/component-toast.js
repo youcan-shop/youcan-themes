@@ -28,7 +28,7 @@ class Toast {
     this.container.addEventListener("mouseleave", () => this.restartTimers());
   }
 
-  create(message = "Hello world", type = "info", duration = this.DURATION) {
+  show(message = "Hello world", type = "info", duration = this.DURATION) {
     const template = document.createElement("template");
 
     template.innerHTML = `
