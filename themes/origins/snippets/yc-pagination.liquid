@@ -1,7 +1,11 @@
 {% assign start = current | minus: 2 %}
 {% assign end = current | plus: 2 %}
 
-{% assign page_params = '/search?q=' | append: terms | append: '&page%5Bcod%5D=%p' %}
+{% assign page_params = '/search?' %}
+{% unless terms == null or terms == '' %}
+  {% assign page_params = page_params | append: 'q=' | append: terms | append: '&' %}
+{% endunless %}
+{% assign page_params = page_params | append: 'page%5Bcod%5D=%p' %}
 
 {% if last > 1 %}
   <yc-pagination>
