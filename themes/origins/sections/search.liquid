@@ -21,7 +21,13 @@
   {%- paginate search.products by 8 cod %}
     <div class="product-listing">
       <div class="filter-area">
-        <h1 class="h4">Result</h1>
+        <h1 class="title h2" data-search-title>
+          <span class="eyebrow">Result for</span>
+          <div class="content">
+            "{{ terms | escape }}"
+            <span class="h6" data-count>[{{ items.size }}]</span>
+          </div>
+        </h1>
         <div class="sort-box">
           <span class="label">
             {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
