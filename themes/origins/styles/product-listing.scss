@@ -1,6 +1,6 @@
 @import "mixins/breakpoints";
 
-.single-collection {
+.product-listing {
   border-radius: var(--radius-md);
   border: 1px solid rgba(var(--section-text-color), 8%);
 
@@ -25,10 +25,26 @@
       gap: var(--gap-sm);
       align-items: baseline;
 
-      span {
+      [data-count] {
         position: relative;
         inset-block-start: -3px;
         color: rgba(var(--section-text-color), 70%);
+      }
+
+      &:has(.eyebrow) {
+        flex-direction: column;
+        gap: 0;
+
+        .eyebrow {
+          font-size: var(--text-sm);
+          opacity: 0.8;
+        }
+
+        .content {
+          display: flex;
+          gap: var(--gap-sm);
+          align-items: baseline;
+        }
       }
     }
 
