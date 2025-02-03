@@ -203,6 +203,26 @@ button.icon[data-size$=lg],
 .yc-btn.icon[data-size$=lg]{
   padding:13px;
 }
+button[data-loading] span,
+.yc-btn[data-loading] span{
+  color:transparent;
+}
+button[data-loading]::before,
+.yc-btn[data-loading]::before{
+  content:"";
+  width:18px;
+  height:18px;
+  position:absolute;
+  border:1.5px solid currentColor;
+  border-bottom-color:transparent;
+  border-radius:var(--radius-circle);
+  animation:rotation 1s linear infinite;
+}
+@keyframes rotation{
+  100%{
+    transform:rotate(360deg);
+  }
+}
 button:disabled,
 .yc-btn:disabled{
   opacity:0.5;

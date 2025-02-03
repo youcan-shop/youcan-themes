@@ -1,34 +1,43 @@
 <div class="item">
-  <div class="image">
-    {% if product.thumbnail %}
-      <img
-        loading="lazy"
-        height="100%"
-        width="100%"
-        src="{{ product.thumbnail }}"
-        alt="{{ product.name }}"
-      >
-    {% else %}
-      <div class="card-placeholder">
-        {% render 'yc-placeholder', name: 'product', size: '48' %}
-      </div>
-    {% endif %}
+  <div class="image" data-cart-item="image">
+    <img
+      loading="lazy"
+      height="100%"
+      width="100%"
+      src="{{ product.image }}"
+      alt="{{ product.name }}"
+      {% unless product.image %}
+        hidden
+      {% endunless %}
+    >
+    <div
+      class="card-placeholder"
+      {% if product.image %}
+        hidden
+      {% endif %}
+      data-cart-item-image-placeholder
+    >
+      {% render 'yc-placeholder', name: 'product', size: '48' %}
+    </div>
   </div>
   <div class="info">
     <div class="heading">
-      <a href="{{ product.url }}" class="link" title="{{ product.name }}">
+      <a href="/products/#" class="link" title="{{ product.name }}" data-cart-item="title">
         {{ product.name | default: 'Product Name' }}
       </a>
-      {% if product.variants %}
-        <p class="variant">
-          {% comment %} TODO: List variants separated by '/' {% endcomment %}
-        </p>
-      {% endif %}
-      <span data-price>{{ product.price | default: 0 | money }}</span>
+      <p class="variant {% unless product.variations.size > 1 %} hidden {% endunless %}" data-cart-item="variant">
+        {% for variant in product.variations %}
+          <span>{{- variant[1] -}}</span>
+          {% unless forloop.index == product.variations.size - 1 %}
+            <span>/</span>
+          {% endunless %}
+        {% endfor %}
+      </p>
+      <span data-cart-item="price">{{ product.price | default: 0 | money }}</span>
     </div>
     <div class="actions">
-      {% render 'yc-quantity-control', button_size: 'sm' %}
-      <button class="yc-btn icon delete" data-size="sm" aria-label="Delete">
+      {% render 'yc-quantity-control', button_size: 'sm', variant: product %}
+      <button class="yc-btn icon" data-delete data-size="sm" aria-label="Delete">
         {% render 'yc-icon', name: 'trash' %}
       </button>
     </div>

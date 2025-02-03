@@ -1,72 +1,62 @@
-{{ 'component-quantity-control.js' | asset_url | script_tag_deferred }}
-
-{{ 'component-variants.css' | asset_url | stylesheet_tag }}
-{{ 'component-upload.js' | asset_url | script_tag_deferred }}
-
-{{ 'component-select.css' | asset_url | stylesheet_tag }}
-{{ 'component-select.js' | asset_url | script_tag_deferred }}
-
-{{ 'component-modal.css' | asset_url | stylesheet_tag }}
-{{ 'component-modal.js' | asset_url | script_tag_deferred }}
+{{ 'component-product-form.js' | asset_url | script_tag_deferred }}
 
 {% comment %}
   TO REMOVE ❌
   TODO: This section is just a placeholder for the theme pages, as the template schema requires at least one section
 {% endcomment %}
+
+<script>
+  async function removeFromCart() {
+    const cart = {% if cart %}JSON.parse({{ cart | json }}){% else %}{}{% endif %};
+    console.log(cart);
+    const cartItem = cart.items[0];
+    const cartItemId = cartItem.id;
+    const productVariantId = cartItem.product_variant_id;
+    const response = await youcanjs.cart.removeItem({ cartItemId, productVariantId });
+    console.log(response);
+  }
+</script>
+
 <yc-section style="display: grid; gap: 1.5em;">
   {% assign nav_links_string = '/, Home | /collections, Collections| /product-a, Product A' %}
 
   {% render 'breadcrumb', nav_links_string: nav_links_string %}
 
-  <div style="width: 300px;">
-    <yc-select name="county">
-      <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
-        <yc-select-value>Please select a value</yc-select-value>
-      </yc-select-trigger>
-      <yc-select-content>
-        <yc-select-search placeholder="Search country.." no-results="No country found."></yc-select-search>
-        <yc-select-item value="usa">United States</yc-select-item>
-        <yc-select-item value="canada">Canada</yc-select-item>
-        <yc-select-item value="mexico">Mexico</yc-select-item>
-        <yc-select-item value="brazil">Brazil</yc-select-item>
-        <yc-select-item value="argentina">Argentina</yc-select-item>
-        <yc-select-item value="uk">United Kingdom</yc-select-item>
-        <yc-select-item value="germany">Germany</yc-select-item>
-        <yc-select-item value="france">France</yc-select-item>
-        <yc-select-item value="italy">Italy</yc-select-item>
-        <yc-select-item value="japan">Japan</yc-select-item>
-        <yc-select-item value="australia">Australia</yc-select-item>
-        <yc-select-item value="india">India</yc-select-item>
-      </yc-select-content>
-    </yc-select>
-  </div>
-</yc-section>
+  <div>
+    <h1>Youcan-js Core Playground</h1>
+    <h2>Add to Cart</h2>
+    {% assign product = section.settings.product %}
 
-<yc-section
-  style="
-    --section-space-top: 100px;
-    --section-space-bottom: 100px;
-    --section-text-color: 18, 18, 18;
-    --section-bg-color: #FFFFFFFF;
-  "
->
-  <div style="display: grid; gap: 2em;">
-    {% assign toggle_options = 'XL,L,M,S' | split: ',' %}
-    {% render 'variant-toggle', name: 'size', options: toggle_options %}
-
-    {% assign color_options = 'Red,Green,Blue,Yellow,Black,White' | split: ',' %}
-    {% render 'variant-color', name: 'color', options: color_options %}
-
-    {% assign radio_options = 'Tight,Slim,Regular,Relaxed' | split: ',' %}
-    {% render 'variant-radio', name: 'fit', options: radio_options %}
-
-    {% assign image_options = '1,2,3,4' | split: ',' %}
-    {% render 'variant-image', name: 'image', options: image_options %}
-
-    {% assign dropdown_options = 'Solid,Striped,Plaid,Floral' | split: ',' %}
-    {% render 'variant-dropdown', name: 'pattern', options: dropdown_options, placeholder: 'Select a pattern' %}
-
-    {% render 'variant-upload', name: 'my-file', placeholder: 'Click here to choose a file' %}
+    {% if product %}
+      <p>
+        <span>Product ID:</span>
+        <span>{{ product.id }}</span>
+      </p>
+      <p>
+        <span>1st Variant ID:</span>
+        <span>{{ product.variants[0].id }}</span>
+      </p>
+      <yc-product-form
+        variant-id="{{ product.variants[0].id  }}"
+        quantity="1"
+      >
+        <button
+          data-buy-button
+          name="add"
+          class="primary"
+        >
+          <span>
+            {{ 'general.add_to_cart' | t }}
+          </span>
+        </button>
+      </yc-product-form>
+      <button onclick="removeFromCart()">
+        {% render 'yc-icon', name: 'trash' %}
+      </button>
+      {% comment %} Render product-form {% endcomment %}
+    {% else %}
+      <span>Please go to theme editor > default > select a product</span>
+    {% endif %}
   </div>
 </yc-section>
 
@@ -76,10 +66,9 @@
   "tag": "div",
   "settings": [
     {
-      "type": "checkbox",
-      "id": "menu",
-      "default": true,
-      "label": "Menu"
+      "id": "product",
+      "type": "product",
+      "label": "Product"
     }
   ]
 }
