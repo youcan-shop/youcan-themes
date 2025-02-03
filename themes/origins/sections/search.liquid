@@ -12,55 +12,59 @@
     --section-bg-color: {{ section.settings.background_color.hex }};
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
 
-    --collection-card-background: var(--section-bg-color);
-    --collection-card-foreground: var(--section-text-color);
-
     --items-columns: {{ section.settings.product_columns }};
   "
 >
   {%- paginate search.products by 8 cod %}
     <div class="product-listing">
       <div class="filter-area">
-        <h1 class="title h2" data-search-title>
-          <span class="eyebrow">{{ 'search.heading' | t }}</span>
-          <div class="content">
-            "{{ terms | escape }}"
+        <h1 class="title h2">
+          {% if terms == null or terms == '' %}
+            {{ 'search.all_products' | t }}
             <span class="h6" data-count>[{{ total }}]</span>
-          </div>
+          {% else %}
+            <span class="eyebrow">{{ 'search.heading' | t }}</span>
+            <div class="content">
+              "{{ terms | escape }}"
+              <span class="h6" data-count>[{{ total }}]</span>
+            </div>
+          {% endif %}
         </h1>
-        <div class="sort-box">
-          <span class="label">
-            {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
-            {{ 'general.sort.label' | t }}:
-          </span>
-          <yc-select name="sort">
-            <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
-              <yc-select-value>
-                {{ 'general.sort.placehlder' | t }}
-              </yc-select-value>
-            </yc-select-trigger>
-            <yc-select-content>
-              <yc-select-item value="a-z" checked>
-                {{ 'general.sort.alphabetical_asc' | t }}
-              </yc-select-item>
-              <yc-select-item value="z-a">
-                {{ 'general.sort.alphabetical_desc' | t }}
-              </yc-select-item>
-              <yc-select-item value="oldest">
-                {{ 'general.sort.oldest' | t }}
-              </yc-select-item>
-              <yc-select-item value="newest">
-                {{ 'general.sort.newest' | t }}
-              </yc-select-item>
-              <yc-select-item value="low">
-                {{ 'general.sort.price_low_high' | t }}
-              </yc-select-item>
-              <yc-select-item value="high">
-                {{ 'general.sort.price_high_low' | t }}
-              </yc-select-item>
-            </yc-select-content>
-          </yc-select>
-        </div>
+        {% if items.size > 0 %}
+          <div class="sort-box">
+            <span class="label">
+              {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
+              {{ 'general.sort.label' | t }}:
+            </span>
+            <yc-select name="sort">
+              <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
+                <yc-select-value>
+                  {{ 'general.sort.placehlder' | t }}
+                </yc-select-value>
+              </yc-select-trigger>
+              <yc-select-content>
+                <yc-select-item value="a-z" checked>
+                  {{ 'general.sort.alphabetical_asc' | t }}
+                </yc-select-item>
+                <yc-select-item value="z-a">
+                  {{ 'general.sort.alphabetical_desc' | t }}
+                </yc-select-item>
+                <yc-select-item value="oldest">
+                  {{ 'general.sort.oldest' | t }}
+                </yc-select-item>
+                <yc-select-item value="newest">
+                  {{ 'general.sort.newest' | t }}
+                </yc-select-item>
+                <yc-select-item value="low">
+                  {{ 'general.sort.price_low_high' | t }}
+                </yc-select-item>
+                <yc-select-item value="high">
+                  {{ 'general.sort.price_high_low' | t }}
+                </yc-select-item>
+              </yc-select-content>
+            </yc-select>
+          </div>
+        {% endif %}
       </div>
       <div class="products-area">
         {% if items.size > 0 %}
