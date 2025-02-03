@@ -1,3 +1,17 @@
+{% comment %}
+  Renders a set of pagination controls '<' '1' '2' '..' 'n' '>'
+
+  Accepts:
+  next_page_url: The next page's URL,
+  previous_page_url: The previous page's URL,
+  current: The index of the currently viewed page (e.g 1, 2, 3),
+  last: The index of the last available page (e.g 4, 5, 6),
+  terms: (optional) Search term(s)
+
+  Usage:
+  {% render 'yc-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+{% endcomment %}
+
 {% assign start = current | minus: 2 %}
 {% assign end = current | plus: 2 %}
 
@@ -10,7 +24,7 @@
 {% if last > 1 %}
   <yc-pagination>
     <a
-      href="{{ previous_page }}"
+      href="{{ previous_page_url }}"
       class="yc-btn icon"
       {% if current == 1 %}
         data-disabled
@@ -66,7 +80,7 @@
 
     <a
       class="yc-btn icon"
-      href="{{ next_page }}"
+      href="{{ next_page_url }}"
       {% if current >= last %}
         data-disabled
       {% endif %}
