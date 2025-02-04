@@ -1,11 +1,11 @@
 {% comment %}
-  Renders a filter component (search | collection products)
+  Renders a sort component (search | collection products)
 
   Accepts:
   - url: The collection/search URL with sorting params
 
   Usage:
-  {% render 'yc-filter', url: "{your_store}.youcan.store?sort_field=price&sort_order=asc" %}
+  {% render 'yc-sort', url: "{your_store}.youcan.store?sort_field=price&sort_order=asc" %}
 {% endcomment %}
 
 {% assign sort_field = '' %}
@@ -36,14 +36,14 @@
 {% assign options = labels | split: ',' %}
 
 <yc-modal as-drawer>
-  <div class="filter-trigger">
+  <div class="sort-trigger">
     <label for="trigger" class="yc-btn icon" data-trigger>
-      {% render 'yc-icon', name: 'filter' %}
+      {% render 'yc-icon', name: 'sort' %}
     </label>
   </div>
 
   <yc-modal-content>
-    <yc-filter>
+    <yc-sort>
       <label for="trigger" class="yc-btn icon">
         {% assign placeholder = 'general.sort.placeholder' | t %}
         {% for opt in options %}
@@ -57,13 +57,13 @@
         {% endfor %}
 
         {{ placeholder }}
-        <input type="checkbox" name="filter" id="trigger" hidden>
+        <input type="checkbox" name="sort" id="trigger" hidden>
       </label>
 
-      <yc-filter-content>
-        <yc-filter-header>
+      <yc-sort-content>
+        <yc-sort-header>
           <span> {{ 'general.sort.label' | t }}: </span>
-        </yc-filter-header>
+        </yc-sort-header>
         {% for opt in options %}
           {% assign index = forloop.index %}
           {% assign field = keys[index] %}
@@ -78,7 +78,7 @@
             <span>{{ opt }}</span>
           </a>
         {% endfor %}
-      </yc-filter-content>
-    </yc-filter>
+      </yc-sort-content>
+    </yc-sort>
   </yc-modal-content>
 </yc-modal>
