@@ -62,6 +62,13 @@ class CartDrawer extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
+    this.updateItemAttributes(
+      elements.quantity,
+      item.id,
+      item.productVariant.id,
+      item.productVariant.inventory,
+      item.quantity,
+    );
 
     return cartItem;
   }
@@ -118,7 +125,7 @@ class CartDrawer extends HTMLElement {
   }
 
   updateItemQuantity(quantityElement, quantity) {
-    quantityElement.textContent = formatNumber(quantity);
+    quantityElement.textContent = quantity;
   }
 
   updateItemPrice(priceElement, price) {
@@ -127,6 +134,19 @@ class CartDrawer extends HTMLElement {
 
   updateDrawerState() {
     this.cart.querySelector("[data-cart]").removeAttribute("data-is-empty");
+  }
+
+  updateItemAttributes(
+    quantityElement,
+    cartItemId,
+    productVariantId,
+    inventory,
+    quantity,
+  ) {
+    quantityElement.setAttribute("data-item", cartItemId);
+    quantityElement.setAttribute("data-product-variant", productVariantId);
+    quantityElement.setAttribute("data-inventory", inventory);
+    quantityElement.setAttribute("data-quantity", quantity);
   }
 
   replaceContent(fragment) {

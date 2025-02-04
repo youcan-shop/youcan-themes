@@ -25,7 +25,13 @@
       <a href="/products/#" class="link" title="{{ product.name }}" data-cart-item="title">
         {{ product.name | default: 'Product Name' }}
       </a>
-      <p class="variant {% unless product.variations.size > 1 %} hidden {% endunless %}" data-cart-item="variant">
+      <p
+        class="variant"
+        data-cart-item="variant"
+        {% unless product.variations.size > 1 %}
+          hidden
+        {% endunless %}
+      >
         {% for variant in product.variations %}
           <span>{{- variant[1] -}}</span>
           {% unless forloop.index == product.variations.size - 1 %}

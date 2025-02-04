@@ -25,18 +25,16 @@ if (!customElements.get("yc-product-form")) {
       const quantity = this.getAttribute("quantity") || 1;
 
       try {
-        const response = await youcanjs.cart.addItem({
+        const newCart = await youcanjs.cart.addItem({
           productVariantId,
           quantity,
         });
 
-        if (response) {
-          publish(PUB_SUB_EVENTS.cartUpdate, {
-            source: "product-form",
-            productVariantId,
-            cartData: response,
-          });
-        }
+        publish(PUB_SUB_EVENTS.cartUpdate, {
+          source: "product-form",
+          productVariantId,
+          cartData: newCart,
+        });
       } catch (error) {
         console.error(error);
 
@@ -54,6 +52,7 @@ if (!customElements.get("yc-product-form")) {
 
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
+      this.buyButton.toggleAttribute("disabled", isLoading);
     }
   }
 

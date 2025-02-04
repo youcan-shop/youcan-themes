@@ -19,7 +19,20 @@
   >
     {% render 'yc-icon', name: 'minus' %}
   </button>
-  <span data-cart-item="quantity">{{ variant.quantity }}</span>
+  {% comment %} {% dump variant %} {% endcomment %}
+  <p>
+    <span
+      data-cart-item="quantity"
+      data-item="{{ variant.id }}"
+      data-product-variant="{{ variant.product_variant_id }}"
+      {% if variant.inventory != null %}
+        data-inventory="{{ variant.inventory }}"
+      {% endif %}
+      data-quantity="{{ variant.quantity }}"
+    >
+      {{- variant.quantity -}}
+    </span>
+  </p>
   <button
     class="yc-btn icon"
     name="plus"
