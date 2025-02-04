@@ -1,0 +1,87 @@
+{% comment %}
+  Renders a filter component (search | collection products)
+
+  Accepts:
+  - url: The collection/search URL with sorting params
+
+  Usage:
+  {% render 'yc-filter', url: "{your_store}.youcan.store?sort_field=price&sort_order=asc" %}
+{% endcomment %}
+
+{% assign sort_field = '' %}
+{% assign sort_order = '' -%}
+{% assign query_params = url | split: '?' | last | split: '&' %}
+
+{% for param in query_params %}
+  {% if param contains 'sort_field=' %}
+    {% assign sort_field = param | split: '=' | last %}
+  {% elsif param contains 'sort_order=' %}
+    {% assign sort_order = param | split: '=' | last %}
+  {% endif %}
+{% endfor %}
+
+{% assign alphabetical_asc = 'general.sort.alphabetical_asc' | t %}
+{% assign alphabetical_desc = 'general.sort.alphabetical_desc' | t %}
+{% assign oldest = 'general.sort.oldest' | t %}
+{% assign newest = 'general.sort.newest' | t %}
+{% assign price_low_high = 'general.sort.price_low_high' | t %}
+{% assign price_high_low = 'general.sort.price_high_low' | t %}
+
+{% capture labels %}
+  {{ alphabetical_asc }}, {{ alphabetical_desc }}, {{ oldest }}, {{ newest }}, {{ price_low_high }}, {{ price_high_low }}
+{% endcapture -%}
+
+{% assign keys = ',name,name,created_at,created_at,price,price' | split: ',' %}
+{% assign values = 'desc,asc' | split: ',' %}
+{% assign options = labels | split: ',' %}
+
+<yc-modal as-drawer>
+  <div class="filter-trigger">
+    <label for="trigger" class="yc-btn icon" data-trigger>
+      {% render 'yc-icon', name: 'filter' %}
+    </label>
+  </div>
+
+  <yc-modal-content>
+    <yc-filter>
+      <label for="trigger" class="yc-btn icon">
+        {% assign placeholder = 'general.sort.placeholder' | t %}
+        {% for opt in options %}
+          {% assign index = forloop.index %}
+          {% assign field = keys[index] %}
+          {% assign order = index | modulo: 2 == 0 %}
+
+          {% if field == sort_field and values[order] == sort_order %}
+            {% assign placeholder = opt %}
+          {% endif %}
+        {% endfor %}
+
+        {{ placeholder }}
+        <input type="checkbox" name="filter" id="trigger" hidden>
+      </label>
+
+      <yc-filter-content>
+        <yc-filter-header>
+          <span>
+            {% render 'yc-icon', name: 'filter' %}
+            {{ 'general.sort.label' | t }}:
+          </span>
+        </yc-filter-header>
+        {% for opt in options %}
+          {% assign index = forloop.index %}
+          {% assign field = keys[index] %}
+          {% assign order = index | modulo: 2 == 0 %}
+
+          <a
+            {% if field == sort_field and values[order] == sort_order %}
+              data-checked
+            {% endif %}
+            href="?sort_field={{ field }}&sort_order={{ values[order] }}"
+          >
+            <span>{{ opt }}</span>
+          </a>
+        {% endfor %}
+      </yc-filter-content>
+    </yc-filter>
+  </yc-modal-content>
+</yc-modal>
