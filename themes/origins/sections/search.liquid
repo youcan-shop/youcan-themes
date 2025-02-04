@@ -15,7 +15,7 @@
     --items-columns: {{ section.settings.product_columns }};
   "
 >
-  {%- paginate search.products by 8 cod %}
+  {%- paginate search.products by 24 cod %}
     <div class="product-listing">
       <div class="filter-area">
         <h1 class="title h3">
@@ -75,6 +75,13 @@
               </li>
             {% endfor %}
           </ul>
+          {% render 'yc-pagination',
+            next_page_url: next_page,
+            previous_page_url: previous_page,
+            current: current,
+            last: last,
+            terms: terms
+          %}
         {% else %}
           <div class="empty-page">
             {% assign title = 'single-collection.empty.title' | t %}
