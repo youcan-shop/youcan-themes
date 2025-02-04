@@ -67,5 +67,36 @@
   .products-area {
     padding: 1.5em;
     border-block-start: 1px solid rgba(var(--section-text-color), 8%);
+
+    yc-pagination {
+      padding-block-start: 1.5em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--gap-md);
+
+      a {
+        --size: 45px;
+
+        height: var(--size);
+        width: var(--size);
+        border-color: transparent;
+
+        &[data-previous],
+        &[data-next] {
+          width: fit-content;
+
+          &:dir(rtl) {
+            .icon {
+              rotate: 180deg;
+            }
+          }
+        }
+
+        &[data-active] {
+          border-color: color-mix(in srgb, currentColor 20%, transparent);
+        }
+      }
+    }
   }
 }

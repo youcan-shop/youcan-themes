@@ -1,0 +1,93 @@
+{% comment %}
+  Renders a set of pagination controls '<' '1' '2' '..' 'n' '>'
+
+  Accepts:
+  next_page_url: The next page's URL,
+  previous_page_url: The previous page's URL,
+  current: The index of the currently viewed page (e.g 1, 2, 3),
+  last: The index of the last available page (e.g 4, 5, 6),
+  terms: (optional) Search term(s)
+
+  Usage:
+  {% render 'yc-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+{% endcomment %}
+
+{% assign start = current | minus: 2 %}
+{% assign end = current | plus: 2 %}
+
+{% assign page_params = '/search?' %}
+{% unless terms == null or terms == '' %}
+  {% assign page_params = page_params | append: 'q=' | append: terms | append: '&' %}
+{% endunless %}
+{% assign page_params = page_params | append: 'page%5Bcod%5D=%p' %}
+
+{% if last > 1 %}
+  <yc-pagination>
+    <a
+      href="{{ previous_page_url }}"
+      class="yc-btn icon"
+      {% if current == 1 %}
+        data-disabled
+      {% endif %}
+      data-previous
+    >
+      {% render 'yc-icon', name: 'chevron-left' %}
+      {{ 'pagination.previous' | t }}
+    </a>
+
+    {% if start < 1 %}
+      {% assign end = end | plus: (1 - start) %}
+      {% assign start = 1 %}
+    {% endif %}
+
+    {% if end > last %}
+      {% assign start = start | minus: (end - last) %}
+      {% assign end = last %}
+    {% endif %}
+
+    {% if start > 1 %}
+      {% assign page_link = page_params | replace: '%p', 1 %}
+
+      <a href="{{ page_link }}" class="yc-btn icon">1</a>
+      {% if start > 2 %}
+        {% render 'yc-icon', name: 'ellipsis-horizontal' %}
+      {% endif %}
+    {% endif %}
+
+    {% for index in (start..end) %}
+      {% assign page_link = page_params | replace: '%p', index %}
+
+      <a
+        class="yc-btn icon"
+        {% if index == current %}
+          data-active
+        {% endif %}
+        href="{{ page_link }}"
+      >
+        {{ index }}
+      </a>
+    {% endfor %}
+
+    {% if end < last %}
+      {% if end < last - 1 %}
+        {% render 'yc-icon', name: 'ellipsis-horizontal' %}
+      {% endif %}
+
+      {% assign page_link = page_params | replace: '%p', last %}
+
+      <a href="{{ page_link }}" class="yc-btn icon">{{ last }}</a>
+    {% endif %}
+
+    <a
+      class="yc-btn icon"
+      href="{{ next_page_url }}"
+      {% if current >= last %}
+        data-disabled
+      {% endif %}
+      data-next
+    >
+      {{ 'pagination.next' | t }}
+      {% render 'yc-icon', name: 'chevron-right' %}
+    </a>
+  </yc-pagination>
+{% endif %}
