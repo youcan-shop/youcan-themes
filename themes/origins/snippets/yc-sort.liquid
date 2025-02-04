@@ -68,12 +68,16 @@
           {% assign index = forloop.index %}
           {% assign field = keys[index] %}
           {% assign order = index | modulo: 2 == 0 %}
+          {% assign href = '?sort_field=' | append: field | append: '&sort_order=' | append: values[order] %}
+          {% unless terms == null or terms == '' %}
+            {% assign href = href | append: '&q=' | append: terms %}
+          {% endunless %}
 
           <a
             {% if field == sort_field and values[order] == sort_order %}
               data-checked
             {% endif %}
-            href="?sort_field={{ field }}&sort_order={{ values[order] }}"
+            href="{{ href }}"
           >
             <span>{{ opt }}</span>
           </a>
