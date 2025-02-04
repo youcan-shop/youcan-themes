@@ -50,11 +50,11 @@ if (!customElements.get("yc-quantity-control")) {
           cartData: newCart,
         });
       } catch (error) {
-        console.error(error);
+        console.error("reeeee", error);
 
         publish(PUB_SUB_EVENTS.cartError, {
           source: "quantity-control",
-          productVariantId,
+          productVariantId: this.productVariantValue,
           error: error,
         });
 
