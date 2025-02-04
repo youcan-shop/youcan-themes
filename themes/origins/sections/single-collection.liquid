@@ -22,14 +22,17 @@
   {% endcapture %}
   {% render 'breadcrumb', nav_links_string: nav_links_string %}
 
-  {%- paginate collection.products by 24 cod, category_id: category.id %}
+  {%- paginate collection.products by 1 cod, category_id: category.id %}
     <div class="product-listing">
       {% if subCategories.size > 0 %}
         <div class="collections-area">
           <ul class="items-grid">
             {% for collection in subCategories %}
               <li>
-                {%- render 'collection-card', collection: collection, height: 200 -%}
+                {%- render 'collection-card',
+                  collection: collection,
+                  height: 200
+                -%}
               </li>
             {% endfor %}
           </ul>
@@ -41,9 +44,7 @@
           <span class="h6" data-count>[{{ total }}]</span>
         </h1>
         <div class="sort-box">
-          <span class="label">
-            {{ 'general.sort.label' | t }}:
-          </span>
+          <span class="label"> {{ 'general.sort.label' | t }}: </span>
           {% render 'yc-sort', url: previous_page %}
         </div>
       </div>
@@ -60,14 +61,19 @@
             next_page_url: next_page,
             previous_page_url: previous_page,
             current: current,
-            last: last
+            last: last,
+            base: category.slug
           %}
         {% else %}
           <div class="empty-page">
             {% assign title = 'single-collection.empty.title' | t %}
             {% assign description = 'single-collection.empty.description' | t %}
 
-            {% render 'yc-empty', icon: 'products', heading: title, subheading: description %}
+            {% render 'yc-empty',
+              icon: 'products',
+              heading: title,
+              subheading: description
+            %}
           </div>
         {% endif %}
       </div>
