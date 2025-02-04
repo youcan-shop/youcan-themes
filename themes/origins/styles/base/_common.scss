@@ -213,7 +213,8 @@ yc-section {
 }
 
 // Modal
-.overlay {
+.overlay,
+yc-overlay {
   inset: 0;
   z-index: 99;
   position: fixed;
@@ -222,6 +223,11 @@ yc-section {
   backdrop-filter: var(--overlay-blur);
   background-color: var(--overlay-background);
   transition: var(--transition-duration-normal);
+
+  &[data-active] {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 // Placeholder

@@ -1,9 +1,10 @@
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 {{ 'collection-card.css' | asset_url | stylesheet_tag }}
 {{ 'product-listing.css' | asset_url | stylesheet_tag }}
+{{ 'component-sort.css' | asset_url | stylesheet_tag }}
 
-{{ 'component-select.css' | asset_url | stylesheet_tag }}
-{{ 'component-select.js' | asset_url | script_tag_deferred }}
+{{ 'component-modal.css' | asset_url | stylesheet_tag }}
+{{ 'component-modal.js' | asset_url | script_tag_deferred }}
 
 <yc-section
   style="
@@ -33,36 +34,9 @@
         {% if items.size > 0 %}
           <div class="sort-box">
             <span class="label">
-              {% render 'yc-icon', name: 'arrows-up-down', size: 15 %}
               {{ 'general.sort.label' | t }}:
             </span>
-            <yc-select name="sort">
-              <yc-select-trigger class="yc-btn icon" aria-label="select trigger">
-                <yc-select-value>
-                  {{ 'general.sort.placehlder' | t }}
-                </yc-select-value>
-              </yc-select-trigger>
-              <yc-select-content>
-                <yc-select-item value="a-z" checked>
-                  {{ 'general.sort.alphabetical_asc' | t }}
-                </yc-select-item>
-                <yc-select-item value="z-a">
-                  {{ 'general.sort.alphabetical_desc' | t }}
-                </yc-select-item>
-                <yc-select-item value="oldest">
-                  {{ 'general.sort.oldest' | t }}
-                </yc-select-item>
-                <yc-select-item value="newest">
-                  {{ 'general.sort.newest' | t }}
-                </yc-select-item>
-                <yc-select-item value="low">
-                  {{ 'general.sort.price_low_high' | t }}
-                </yc-select-item>
-                <yc-select-item value="high">
-                  {{ 'general.sort.price_high_low' | t }}
-                </yc-select-item>
-              </yc-select-content>
-            </yc-select>
+            {% render 'yc-sort', url: previous_page %}
           </div>
         {% endif %}
       </div>
