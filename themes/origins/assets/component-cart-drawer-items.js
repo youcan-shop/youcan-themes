@@ -80,7 +80,7 @@ class CartDrawer extends HTMLElement {
   }
 
   updateItemImage(imageContainer, product) {
-    if (product.thumbnail) {
+    if (product.images.length > 0) {
       const img = imageContainer.querySelector("img");
       img.src = product.thumbnail;
       img.alt = product.name;
