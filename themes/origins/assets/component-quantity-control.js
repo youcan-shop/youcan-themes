@@ -50,7 +50,7 @@ if (!customElements.get("yc-quantity-control")) {
           cartData: newCart,
         });
       } catch (error) {
-        console.error("reeeee", error);
+        console.error(error);
 
         publish(PUB_SUB_EVENTS.cartError, {
           source: "quantity-control",
