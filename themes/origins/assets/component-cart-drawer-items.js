@@ -126,7 +126,7 @@ class CartDrawer extends HTMLElement {
   }
 
   updateDrawerState() {
-    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty");
+    this.cart.querySelector("[data-cart]").removeAttribute("data-is-empty");
   }
 
   replaceContent(fragment) {
