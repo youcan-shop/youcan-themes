@@ -84,7 +84,7 @@ class Modal extends HTMLElement {
   }
 
   close() {
-    this.setState(false);
+    this.setIsVisible(false);
     this.setPosition("0% 100%");
   }
 
@@ -93,10 +93,10 @@ class Modal extends HTMLElement {
   }
 
   toggleState() {
-    this.setState(!this.state);
+    this.setIsVisible(!this.state);
   }
 
-  setState(isVisible) {
+  setIsVisible(isVisible) {
     this.state = isVisible;
     this.modal.toggleAttribute("data-visible", isVisible);
     this.overlay.toggleAttribute("data-active", isVisible);
@@ -122,7 +122,7 @@ class Modal extends HTMLElement {
 
     if (!isMobile && this.hasAttribute("as-drawer")) {
       this.setPosition(0);
-      this.setState(false);
+      this.setIsVisible(false);
     } else {
       this.setPosition(positions[key][state]);
     }
