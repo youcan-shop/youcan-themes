@@ -6,8 +6,9 @@ class Modal extends HTMLElement {
 
     this.isDragging = false;
     this.startY = this.currentY = 0;
-    this.state = this.dataset.hidden === "true";
-    this.modal = this.querySelector("[data-modal]");
+    this.overlay = document.querySelector("yc-overlay");
+    this.modal = this.querySelector("yc-modal-content");
+    this.state = this.modal.hasAttribute("[data-visible]");
 
     this.SPEED = 300;
     this.MOBILE_SCREEN = 768;
@@ -24,16 +25,17 @@ class Modal extends HTMLElement {
 
   _render() {
     this.dragHandler();
-    this.toggleHandler();
+    this.triggerHandler();
     window.addEventListener("resize", () => this.updatePosition());
   }
 
-  toggleHandler() {
-    this.querySelectorAll("[data-toggle]").forEach((toggle) =>
-      toggle.addEventListener("click", () => {
-        this.toggleState();
-        this.updatePosition();
-      }),
+  triggerHandler() {
+    [...this.querySelectorAll("[data-trigger]"), this.overlay].forEach(
+      (trigger) =>
+        trigger.addEventListener("click", () => {
+          this.toggleState();
+          this.updatePosition();
+        }),
     );
   }
 
@@ -48,7 +50,7 @@ class Modal extends HTMLElement {
   }
 
   startDrag(event) {
-    if (this.state || window.innerWidth > this.MOBILE_SCREEN) return;
+    if (!this.state || window.innerWidth > this.MOBILE_SCREEN) return;
 
     this.isDragging = true;
     this.startY = this.currentY = this.getEventY(event);
@@ -82,7 +84,7 @@ class Modal extends HTMLElement {
   }
 
   close() {
-    this.setState(true);
+    this.setIsVisible(false);
     this.setPosition("0% 100%");
   }
 
@@ -91,12 +93,13 @@ class Modal extends HTMLElement {
   }
 
   toggleState() {
-    this.setState(!this.state);
+    this.setIsVisible(!this.state);
   }
 
-  setState(hidden) {
-    this.state = hidden;
-    this.dataset.hidden = hidden;
+  setIsVisible(isVisible) {
+    this.state = isVisible;
+    this.modal.toggleAttribute("data-visible", isVisible);
+    this.overlay.toggleAttribute("data-active", isVisible);
   }
 
   setTransition(duration) {
@@ -115,11 +118,11 @@ class Modal extends HTMLElement {
 
     const isMobile = window.innerWidth <= this.MOBILE_SCREEN;
     const key = isMobile ? "mobile" : "desktop";
-    const state = this.state ? "closed" : "open";
+    const state = !this.state ? "closed" : "open";
 
     if (!isMobile && this.hasAttribute("as-drawer")) {
       this.setPosition(0);
-      this.setState(true);
+      this.setIsVisible(false);
     } else {
       this.setPosition(positions[key][state]);
     }
