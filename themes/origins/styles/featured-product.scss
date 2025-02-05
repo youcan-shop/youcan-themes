@@ -160,10 +160,10 @@
     }
 
     .accordion {
-      border: 1px solid var(--color-gray-50);
+      border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
       border-radius: var(--accordion-border-radius, var(--radius-md));
       height: fit-content;
-      color: rgb(var(--accordion-foreground));
+      color: currentColor;
 
       summary {
         display: flex;
@@ -222,9 +222,7 @@
         button[data-submit] {
           width: 100%;
           color: var(--section-bg-color, var(--color-base-white));
-          background-color: rgb(
-            var(--section-text-color, var(--color-base-black))
-          );
+          background-color: rgb(var(--section-text-color, var(--color-base-black)));
         }
 
         button[data-submit]::before {
@@ -252,8 +250,7 @@
           padding: 1.5em;
           position: relative;
           padding-block-start: 3.5em;
-          border-block-start: 1px solid
-            color-mix(in srgb, currentColor 10%, transparent);
+          border-block-start: 1px solid color-mix(in srgb, currentColor 10%, transparent);
 
           &::before {
             content: attr(data-title);

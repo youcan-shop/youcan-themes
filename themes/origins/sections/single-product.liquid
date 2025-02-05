@@ -3,7 +3,6 @@
 {{ 'component-product-media.js' | asset_url | script_tag_deferred }}
 {{ 'component-slider.js' | asset_url | script_tag_deferred }}
 
-{% assign product = section.settings.item %}
 {% assign product_image = product.images[0] %}
 
 <yc-section
@@ -142,15 +141,12 @@
   </div>
 </yc-section>
 
-{% schema %}
+{%- schema -%}
 {
-  "label": "Featured Product",
+  "label": "Single product",
+  "templates": ["single-product"],
+  "limit": 1,
   "settings": [
-    {
-      "id": "item",
-      "type": "product",
-      "label": "Product"
-    },
     {
       "id": "text_color",
       "type": "color",
@@ -164,6 +160,16 @@
       "default": "#FFFFFFFF"
     },
     {
+      "id": "product_columns",
+      "type": "range",
+      "label": "Number of columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "",
+      "default": 4
+    },
+    {
       "type": "header",
       "content": "Section Spacing"
     },
@@ -175,7 +181,7 @@
       "max": 200,
       "step": 10,
       "unit": "px",
-      "default": 100
+      "default": 50
     },
     {
       "id": "space_bottom",
@@ -185,7 +191,7 @@
       "max": 200,
       "step": 10,
       "unit": "px",
-      "default": 100
+      "default": 50
     }
   ],
   "blocks": [
@@ -331,4 +337,4 @@
     }
   ]
 }
-{% endschema %}
+{%- endschema -%}
