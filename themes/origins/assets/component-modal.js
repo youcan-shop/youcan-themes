@@ -33,7 +33,9 @@ class Modal extends HTMLElement {
     [...this.querySelectorAll("[data-trigger]"), this.overlay].forEach(
       (trigger) =>
         trigger.addEventListener("click", () => {
-          this.toggleState();
+          this.setIsVisible(
+            trigger.tagName === "YC-OVERLAY" ? false : !this.state,
+          );
           this.updatePosition();
         }),
     );
@@ -68,7 +70,7 @@ class Modal extends HTMLElement {
     if (!this.isDragging || window.innerWidth > this.MOBILE_SCREEN) return;
 
     const deltaY = this.currentY - this.startY;
-    const threshold = this.modal.offsetHeight * 0.4;
+    const threshold = this.modal.clientHeight * 0.2;
 
     deltaY > threshold ? this.close() : this.open();
     this.resetDrag();
@@ -90,10 +92,6 @@ class Modal extends HTMLElement {
 
   open() {
     this.setPosition("0%");
-  }
-
-  toggleState() {
-    this.setIsVisible(!this.state);
   }
 
   setIsVisible(isVisible) {
@@ -122,7 +120,6 @@ class Modal extends HTMLElement {
 
     if (!isMobile && this.hasAttribute("as-drawer")) {
       this.setPosition(0);
-      this.setIsVisible(false);
     } else {
       this.setPosition(positions[key][state]);
     }
