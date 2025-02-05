@@ -207,6 +207,99 @@
       .buy-area {
         display: grid;
         gap: var(--gap-lg);
+
+        .express-checkout {
+          display: grid;
+          border-radius: var(--radius-md);
+          border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
+          .header {
+            display: grid;
+            gap: var(--gap-sm);
+            font-size: var(--text-md);
+            padding: 1.5em;
+          }
+
+          .fields {
+            display: grid;
+            gap: var(--gap-lg);
+            align-items: baseline;
+            grid-template-columns: repeat(2, 1fr);
+            padding: 1.5em;
+            position: relative;
+            padding-block-start: 3.5em;
+            border-block-start: 1px solid
+              color-mix(in srgb, currentColor 10%, transparent);
+
+            &::before {
+              content: attr(data-title);
+              inset: 0;
+              position: absolute;
+              width: fit-content;
+              height: fit-content;
+              padding: 0.3em 1.5em;
+              font-size: var(--text-sm);
+              border-end-end-radius: var(--radius-sm);
+              color: color-mix(in srgb, currentColor 80%, transparent);
+              background-color: color-mix(
+                in srgb,
+                currentColor 5%,
+                transparent
+              );
+            }
+
+            .field {
+              display: grid;
+              gap: var(--gap-sm);
+
+              &:last-child:nth-child(odd) {
+                grid-column: 1 / -1;
+              }
+
+              label {
+                font-size: var(--text-sm);
+                color: color-mix(in srgb, currentColor 80%, transparent);
+              }
+
+              yc-select-trigger {
+                padding: 12px 15px;
+              }
+
+              input {
+                color: currentColor;
+              }
+
+              &:has(input:required) label::after {
+                content: " *";
+                color: var(--color-error-500);
+              }
+
+              &[error-message] {
+                &::after {
+                  content: attr(error-message);
+                  font-size: var(--text-sm);
+                  color: var(--color-error-500);
+                }
+
+                input {
+                  border-color: var(--color-error-500);
+                }
+              }
+            }
+          }
+        }
+
+        .place-order {
+          z-index: 2;
+          display: none;
+          position: sticky;
+          inset-block-end: 0;
+          padding: 0.5em 1em;
+
+          button {
+            width: 100%;
+          }
+        }
       }
 
       .actions {
@@ -214,98 +307,12 @@
         gap: var(--gap-md);
         background-color: var(--section-bg-color, var(--color-base-white));
 
-        &[data-sticky] {
-          display: none;
-        }
-
-        button[data-toggle],
-        button[data-submit] {
+        button[data-trigger] {
           width: 100%;
-          color: var(--section-bg-color, var(--color-base-white));
           background-color: rgb(
             var(--section-text-color, var(--color-base-black))
           );
-        }
-
-        button[data-submit]::before {
-          content: attr(data-desktop);
-        }
-      }
-
-      .express-checkout {
-        display: grid;
-        border-radius: var(--radius-md);
-        border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
-
-        .header {
-          display: grid;
-          gap: var(--gap-sm);
-          font-size: var(--text-md);
-          padding: 1.5em;
-        }
-
-        .fields {
-          display: grid;
-          gap: var(--gap-lg);
-          align-items: baseline;
-          grid-template-columns: repeat(2, 1fr);
-          padding: 1.5em;
-          position: relative;
-          padding-block-start: 3.5em;
-          border-block-start: 1px solid
-            color-mix(in srgb, currentColor 10%, transparent);
-
-          &::before {
-            content: attr(data-title);
-            inset: 0;
-            position: absolute;
-            width: fit-content;
-            height: fit-content;
-            padding: 0.3em 1.5em;
-            font-size: var(--text-sm);
-            border-end-end-radius: var(--radius-sm);
-            color: color-mix(in srgb, currentColor 80%, transparent);
-            background-color: color-mix(in srgb, currentColor 5%, transparent);
-          }
-
-          .field {
-            display: grid;
-            gap: var(--gap-sm);
-
-            &:last-child:nth-child(odd) {
-              grid-column: 1 / -1;
-            }
-
-            label {
-              font-size: var(--text-sm);
-              color: color-mix(in srgb, currentColor 80%, transparent);
-            }
-
-            yc-select-trigger {
-              padding: 12px 15px;
-            }
-
-            input {
-              color: currentColor;
-            }
-
-            &:has(input:required) label::after {
-              content: " *";
-              color: var(--color-error-500);
-            }
-
-            &[error-message] {
-              &::after {
-                content: attr(error-message);
-                font-size: var(--text-sm);
-                color: var(--color-error-500);
-              }
-
-              input {
-                border-color: var(--color-error-500);
-              }
-            }
-          }
+          color: var(--section-bg-color, var(--color-base-white));
         }
       }
     }
@@ -344,8 +351,6 @@
 
     yc-product-info .buy-button {
       .buy-area {
-        gap: 0;
-
         .express-checkout {
           border: none;
           border-radius: 0;
@@ -370,19 +375,8 @@
           }
         }
 
-        .actions {
-          z-index: 2;
-          padding: 1em;
-          position: sticky;
-          inset-block-end: 0;
-
-          yc-quantity-control {
-            display: none;
-          }
-
-          button[data-submit]::before {
-            content: attr(data-mobile);
-          }
+        .place-order {
+          display: flex;
         }
       }
 

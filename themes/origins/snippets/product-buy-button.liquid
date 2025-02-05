@@ -1,13 +1,7 @@
 <div class="buy-button">
-  <yc-modal data-hidden="true" as-drawer>
-    <div class="actions">
-      {% render 'yc-quantity-control' %}
-      <button class="primary" data-toggle>
-        {{ 'product.buy_button.buy_now' | t }}
-      </button>
-    </div>
-    <div class="modal-container">
-      <div class="modal-box buy-area" data-modal>
+  <yc-modal as-drawer>
+    <yc-modal-content>
+      <div class="buy-area">
         <div class="express-checkout">
           <div class="header">
             {{ 'product.buy_button.express_checkout.title' | t }}
@@ -31,17 +25,19 @@
             </div>
           </div>
         </div>
-        <div class="actions">
-          {% render 'yc-quantity-control' %}
-          <button
-            data-submit
-            class="primary"
-            data-desktop="{{ 'product.buy_button.buy_now' | t }}"
-            data-mobile="{{ 'product.buy_button.express_checkout.place_order' | t }}"
-          ></button>
+        <div class="place-order">
+          <button class="primary">
+            {{ 'product.buy_button.express_checkout.place_order' | t }}
+          </button>
         </div>
       </div>
-      <div class="modal-overlay overlay" data-toggle></div>
+    </yc-modal-content>
+
+    <div class="actions" data-sticky>
+      {% render 'yc-quantity-control' %}
+      <button class="primary" data-trigger>
+        {{ 'product.buy_button.buy_now' | t }}
+      </button>
     </div>
   </yc-modal>
 </div>
