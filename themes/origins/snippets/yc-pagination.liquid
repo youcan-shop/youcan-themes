@@ -15,7 +15,17 @@
 {% assign start = current | minus: 2 %}
 {% assign end = current | plus: 2 %}
 
-{% assign page_params = '/search?' %}
+{% if base != '' or base != null %}
+  {% assign page_params = '/collections/' | append: base | append: '?' %}
+{% else %}
+  {% assign page_params = '/search?' %}
+{% endif %}
+
+{% if sort_order and sort_field %}
+  {% assign page_params = page_params | append: 'sort_field=' | append: sort_field %}
+  {% assign page_params = page_params | append: '&sort_order=' | append: sort_order | append: '&' %}
+{% endif %}
+
 {% unless terms == null or terms == '' %}
   {% assign page_params = page_params | append: 'q=' | append: terms | append: '&' %}
 {% endunless %}
