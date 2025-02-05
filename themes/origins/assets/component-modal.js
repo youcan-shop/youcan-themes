@@ -120,6 +120,7 @@ class Modal extends HTMLElement {
 
     if (!isMobile && this.hasAttribute("as-drawer")) {
       this.setPosition(0);
+      this.setIsVisible(false);
     } else {
       this.setPosition(positions[key][state]);
     }
