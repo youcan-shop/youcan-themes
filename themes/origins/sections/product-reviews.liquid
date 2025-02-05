@@ -74,10 +74,10 @@
               Really cool design and the patches make it stand out. It’s a bit oversized, but that’s the vibe I wanted!
             </p>
             {% if item < 4 %}
-              <yc-modal data-hidden="true">
+              <yc-modal>
                 <div class="images">
                   {% for img in (1..6) %}
-                    <button class="icon" data-image data-toggle>
+                    <button class="icon" data-image data-trigger>
                       <img
                         src="https://static.zara.net/assets/public/0dc2/096d/a65442ac8e65/1b701456e047/04416303700-e1/04416303700-e1.jpg?ts=1730641874520&w=530"
                         height="100%"
@@ -92,24 +92,21 @@
                   </label>
                 </div>
 
-                <div class="modal-container">
-                  <div class="modal-box" data-modal>
-                    <div class="image-preview">
-                      <button class="icon" data-size="sm" data-toggle>
-                        {% render 'yc-icon', name: 'x-mark' %}
-                      </button>
-                      <div class="preview-core">
-                        <img
-                          src="https://static.zara.net/assets/public/0dc2/096d/a65442ac8e65/1b701456e047/04416303700-e1/04416303700-e1.jpg?ts=1730641874520&w=530"
-                          height="100%"
-                          width="100%"
-                          alt="product"
-                        >
-                      </div>
+                <yc-modal-content>
+                  <div class="image-preview">
+                    <button class="icon" data-size="sm" data-trigger>
+                      {% render 'yc-icon', name: 'x-mark' %}
+                    </button>
+                    <div class="preview-core">
+                      <img
+                        src="https://static.zara.net/assets/public/0dc2/096d/a65442ac8e65/1b701456e047/04416303700-e1/04416303700-e1.jpg?ts=1730641874520&w=530"
+                        height="100%"
+                        width="100%"
+                        alt="product"
+                      >
                     </div>
                   </div>
-                  <div class="modal-overlay overlay" data-toggle></div>
-                </div>
+                </yc-modal-content>
               </yc-modal>
             {% endif %}
           </div>
