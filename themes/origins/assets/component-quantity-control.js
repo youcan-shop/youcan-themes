@@ -4,52 +4,142 @@ if (!customElements.get("yc-quantity-control")) {
       super();
 
       this.quantity = this.querySelector("[data-cart-item='quantity']");
+      this.plusButton = this.querySelector('button[name="plus"]');
+      this.minusButton = this.querySelector('button[name="minus"]');
     }
 
     connectedCallback() {
       this._render();
     }
 
-    onButtonClick(event) {
-      event.preventDefault();
-      const previousValue = parseInt(this.quantity.textContent, 10);
-
-      if (isNaN(previousValue)) {
-        this.quantity.textContent = 1;
-        this.updateMinusButton();
-
-        return;
-      }
-
-      if (event.target.name === "plus") {
-        /**
-         * TODO:
-         * Check if variant inventory is active and variant inventory > quantity + 1
-         *  Yes?:
-         *    increase quantity
-         *  No?:
-         *    disable button
-         */
-        this.quantity.textContent = String(previousValue + 1);
-      }
-      if (event.target.name === "minus") {
-        this.quantity.textContent = String(previousValue - 1);
-      }
-
-      this.updateMinusButton();
-    }
-
-    updateMinusButton() {
-      const quantity = this.quantity.textContent;
-      const buttonMinus = this.querySelector('button[name="minus"]');
-      buttonMinus.toggleAttribute("disabled", quantity <= 1);
-    }
-
     _render() {
-      this.querySelectorAll("button").forEach((button) =>
-        button.addEventListener("click", this.onButtonClick.bind(this)),
-      );
-      this.updateMinusButton();
+      this.plusButton.addEventListener("click", this.onButtonClick.bind(this));
+      this.minusButton.addEventListener("click", this.onButtonClick.bind(this));
+      this.updateMinusButtonState();
+      this.updatePlusButtonState();
+    }
+
+    async onButtonClick(event) {
+      event.preventDefault();
+      this.isLoading = true;
+
+      try {
+        if (isNaN(this.quantityValue)) {
+          this.quantityValue = 1;
+          this.updateMinusButtonState();
+
+          return;
+        }
+
+        const buttonName = event.target.name;
+        const nextValue = this.calculateNextQuantity(buttonName);
+
+        if (nextValue === null) return;
+
+        this.updateButtonsForQuantity(buttonName, nextValue);
+
+        const newCart = await youcanjs.cart.updateItem({
+          cartItemId: this.cartItemValue,
+          productVariantId: this.productVariantValue,
+          quantity: nextValue,
+        });
+
+        publish(PUB_SUB_EVENTS.cartUpdate, {
+          source: "quantity-control",
+          productVariantId: this.productVariantValue,
+          cartData: newCart,
+        });
+      } catch (error) {
+        console.error(error);
+
+        publish(PUB_SUB_EVENTS.cartError, {
+          source: "quantity-control",
+          productVariantId: this.productVariantValue,
+          error: error,
+        });
+
+        toast.show(error.message, "error");
+      } finally {
+        this.isLoading = false;
+      }
+    }
+
+    updateMinusButtonState() {
+      this.minusButton.toggleAttribute("disabled", this.quantityValue <= 1);
+    }
+
+    updatePlusButtonState() {
+      this.plusButton.toggleAttribute("disabled", this.quantityValue === this.inventoryValue);
+    }
+
+    calculateNextQuantity(buttonName) {
+      if (buttonName === "plus") {
+        if (this.inventoryValue < this.quantityValue) {
+          const message = window.errorStrings.insufficient_inventory;
+          toast.show(message.replace("[inventory]", this.inventoryValue), "error");
+
+          return null;
+        }
+        return this.quantityValue + 1;
+      }
+
+      return this.quantityValue - 1;
+    }
+
+    updateButtonsForQuantity(buttonName, quantity) {
+      if (buttonName === "plus") {
+        this.plusButton.toggleAttribute("disabled", this.inventoryValue === quantity);
+      } else {
+        this.updateMinusButtonState();
+      }
+    }
+
+    async updateCartItem(quantity, cartItemId, productVariantId) {
+      const response = await youcanjs.cart.updateItem({
+        cartItemId,
+        productVariantId,
+        quantity,
+      });
+
+      publish(PUB_SUB_EVENTS.cartUpdate, {
+        source: "quantity-control",
+        productVariantId: this.productVariantValue,
+        cartData: response,
+      });
+    }
+
+    get cartItemValue() {
+      return this.quantity.dataset.item;
+    }
+
+    get productVariantValue() {
+      return this.quantity.dataset.productVariant;
+    }
+
+    get inventoryValue() {
+      return parseInt(this.quantity.dataset.inventory, 10);
+    }
+
+    get quantityValue() {
+      return parseInt(this.quantity.dataset.quantity, 10);
+    }
+
+    set quantityValue(value) {
+      const parsed = parseInt(value, 10);
+      if (isNaN(parsed)) {
+        throw new Error("Invalid quantity value");
+      }
+
+      this.quantity.textContent = String(value);
+    }
+
+    get isLoading() {
+      return this.quantity.dataset.loading;
+    }
+
+    set isLoading(isLoading) {
+      this.toggleAttribute("data-loading", isLoading);
+      this.quantity.toggleAttribute("data-loading", isLoading);
     }
   }
 
