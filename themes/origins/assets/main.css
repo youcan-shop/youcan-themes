@@ -19,6 +19,9 @@ body{
 body:has(* [data-visible=true]), body:has(* [data-hidden=false]){
   overflow:hidden;
 }
+body:has(yc-overlay[data-active]){
+  overflow:hidden;
+}
 body .main-container{
   order:3;
 }
@@ -202,6 +205,12 @@ button.icon[data-size$=sm] svg,
 button.icon[data-size$=lg],
 .yc-btn.icon[data-size$=lg]{
   padding:13px;
+}
+button[data-loading],
+.yc-btn[data-loading]{
+  opacity:0.5;
+  cursor:not-allowed;
+  pointer-events:none;
 }
 button[data-loading] span,
 .yc-btn[data-loading] span{
