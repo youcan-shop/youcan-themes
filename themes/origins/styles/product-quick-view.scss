@@ -54,24 +54,35 @@
             display: grid;
             gap: var(--gap-lg);
           }
+
+          .price-info {
+            display: flex;
+            align-items: center;
+            gap: var(--gap-md);
+
+            .current {
+              font-weight: 550;
+            }
+
+            .compare-at {
+              text-decoration: line-through;
+              color: color-mix(in srgb, currentColor 70%, transparent);
+            }
+          }
         }
 
-        .actions {
+        yc-product-form {
           display: flex;
           gap: var(--gap-md);
           align-items: center;
 
-          button[data-submit] {
+          button[data-buy-button] {
             width: 100%;
           }
         }
       }
 
       yc-product-media {
-        img {
-          user-select: none;
-        }
-
         .main-image {
           width: 100%;
           overflow: hidden;
@@ -81,7 +92,9 @@
           border: var(--product-image-border);
 
           img {
+            height: 100%;
             object-fit: cover;
+            user-select: none;
           }
 
           .placeholder {
