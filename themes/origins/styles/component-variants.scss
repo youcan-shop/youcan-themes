@@ -1,6 +1,6 @@
 yc-variant {
   --variant-bg-color: var(--section-bg-color, var(--color-base-white));
-  --variant-text-color: rgb(var(--section-text-color, var(--color-base-black)));
+  --variant-text-color: var(--section-text-color, var(--color-base-black));
 
   display: flex;
   flex-wrap: wrap;
@@ -48,19 +48,11 @@ yc-variant {
           height: 1px;
           rotate: -45deg;
           position: absolute;
-          background-color: color-mix(
-            in srgb,
-            var(--variant-text-color) 40%,
-            transparent
-          );
+          background-color: color-mix(in srgb, var(--variant-text-color) 40%, transparent);
         }
 
         &:has(input:checked)::before {
-          background-color: color-mix(
-            in srgb,
-            var(--variant-bg-color) 40%,
-            transparent
-          );
+          background-color: color-mix(in srgb, var(--variant-bg-color) 40%, transparent);
         }
       }
     }
@@ -76,8 +68,7 @@ yc-variant {
       background-color: currentColor;
       border-radius: var(--radius-circle);
       border: 1.5px solid var(--variant-bg-color);
-      outline: 1px solid
-        color-mix(in srgb, var(--variant-text-color) 20%, transparent);
+      outline: 1px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
 
       &:has(input:checked) {
         outline-color: var(--variant-text-color);
@@ -94,11 +85,7 @@ yc-variant {
           height: 1px;
           rotate: 135deg;
           position: absolute;
-          background-color: color-mix(
-            in srgb,
-            var(--variant-text-color) 80%,
-            transparent
-          );
+          background-color: color-mix(in srgb, var(--variant-text-color) 80%, transparent);
         }
       }
 
