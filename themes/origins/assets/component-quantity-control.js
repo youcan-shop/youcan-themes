@@ -69,18 +69,17 @@ if (!customElements.get("yc-quantity-control")) {
     }
 
     updatePlusButtonState() {
-      this.plusButton.toggleAttribute(
-        "disabled",
-        this.quantityValue === this.inventoryValue,
-      );
+      this.plusButton.toggleAttribute("disabled", this.quantityValue === this.inventoryValue);
     }
 
     calculateNextQuantity(buttonName) {
       if (buttonName === "plus") {
         if (this.inventoryValue < this.quantityValue) {
-          toast.show("Desired quantity not available", "error");
+          toast.show(window.errorStrings.replace("[quantity]", this.inventoryValue), "error");
+
           return null;
         }
+
         return this.quantityValue + 1;
       }
 
@@ -89,10 +88,7 @@ if (!customElements.get("yc-quantity-control")) {
 
     updateButtonsForQuantity(buttonName, quantity) {
       if (buttonName === "plus") {
-        this.plusButton.toggleAttribute(
-          "disabled",
-          this.inventoryValue === quantity,
-        );
+        this.plusButton.toggleAttribute("disabled", this.inventoryValue === quantity);
       } else {
         this.updateMinusButtonState();
       }
