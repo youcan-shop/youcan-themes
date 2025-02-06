@@ -44,12 +44,14 @@ class CartDrawer extends HTMLElement {
     const fragment = new DocumentFragment();
     const template = this.cart.querySelector("[data-cart-item-template]");
 
-    items.map((item) => {
-      const cartItem = this.createCartItem(template, item);
-      fragment.append(cartItem);
-    });
+    if (items.length) {
+      items.map((item) => {
+        const cartItem = this.createCartItem(template, item);
+        fragment.append(cartItem);
+      });
+    }
 
-    this.updateDrawerState();
+    this.setIsDrawerEmpty(!items.length);
     this.replaceContent(fragment);
   }
 
@@ -62,6 +64,7 @@ class CartDrawer extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
+    this.updateItemDeleteButtonAttributes(elements.deleteButton, item.id, item.productVariant.id);
 
     this.updateItemAttributes(
       elements.quantity,
@@ -75,8 +78,9 @@ class CartDrawer extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity] = cartItem.querySelectorAll("[data-cart-item]");
-    return { image, title, variant, price, quantity };
+    const [image, title, variant, price, quantity, deleteButton] =
+      cartItem.querySelectorAll("[data-cart-item]");
+    return { image, title, variant, price, quantity, deleteButton };
   }
 
   updateItemImage(imageContainer, product) {
@@ -135,8 +139,13 @@ class CartDrawer extends HTMLElement {
     priceElement.textContent = formatCurrency(price);
   }
 
-  updateDrawerState() {
-    this.cart.querySelector("[data-cart]").removeAttribute("data-is-empty");
+  updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
+    buttonElement.setAttribute("data-item", cartItemId);
+    buttonElement.setAttribute("data-product-variant", productVariantId);
+  }
+
+  setIsDrawerEmpty(isEmpty = false) {
+    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty", isEmpty);
   }
 
   updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
@@ -152,3 +161,65 @@ class CartDrawer extends HTMLElement {
 }
 
 customElements.define("yc-cart-drawer-items", CartDrawer);
+
+class CartRemoveButton extends HTMLElement {
+  constructor() {
+    super();
+
+    this.button = this.querySelector("button[data-delete]");
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    this.button.addEventListener("click", this.onRemoveItem.bind(this));
+  }
+
+  async onRemoveItem() {
+    this.isLoading = true;
+
+    try {
+      const productVariantId = this.productVariantValue;
+      const cartItemId = this.cartItemValue;
+
+      if (!productVariantId || !cartItemId) return;
+
+      const response = await youcanjs.cart.removeItem({
+        cartItemId,
+        productVariantId,
+      });
+
+      publish(PUB_SUB_EVENTS.cartUpdate, {
+        source: "delete-button",
+        productVariantId,
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  get cartItemValue() {
+    return this.button.dataset.item;
+  }
+
+  get productVariantValue() {
+    return this.button.dataset.productVariant;
+  }
+
+  get isLoading() {
+    return this.button.getAttribute("data-loading");
+  }
+
+  set isLoading(value) {
+    this.button.toggleAttribute("data-loading", value);
+  }
+}
+
+customElements.define("yc-cart-remove-button", CartRemoveButton);

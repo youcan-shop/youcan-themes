@@ -43,9 +43,19 @@
     </div>
     <div class="actions">
       {% render 'yc-quantity-control', button_size: 'sm', variant: product %}
-      <button class="yc-btn icon" data-delete data-size="sm" aria-label="Delete">
-        {% render 'yc-icon', name: 'trash' %}
-      </button>
+      <yc-cart-remove-button>
+        <button
+          class="yc-btn icon"
+          data-delete
+          data-size="sm"
+          aria-label="Delete"
+          data-item="{{ product.id }}"
+          data-product-variant="{{ product.product_variant_id }}"
+          data-cart-item="delete-button"
+        >
+          {% render 'yc-icon', name: 'trash' %}
+        </button>
+      </yc-cart-remove-button>
     </div>
   </div>
 </div>
