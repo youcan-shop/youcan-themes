@@ -52,7 +52,6 @@ if (!customElements.get("yc-product-form")) {
 
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
-      this.buyButton.toggleAttribute("disabled", isLoading);
     }
   }
 
