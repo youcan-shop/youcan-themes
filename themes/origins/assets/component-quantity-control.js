@@ -75,11 +75,11 @@ if (!customElements.get("yc-quantity-control")) {
     calculateNextQuantity(buttonName) {
       if (buttonName === "plus") {
         if (this.inventoryValue < this.quantityValue) {
-          toast.show(window.errorStrings.replace("[quantity]", this.inventoryValue), "error");
+          const message = window.errorStrings.insufficient_inventory;
+          toast.show(message.replace("[inventory]", this.inventoryValue), "error");
 
           return null;
         }
-
         return this.quantityValue + 1;
       }
 
