@@ -63,25 +63,35 @@ class CartDrawer extends HTMLElement {
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
 
+    this.updateItemAttributes(
+      elements.quantity,
+      item.id,
+      item.productVariant.id,
+      item.quantity,
+      item.productVariant.product.track_inventory && item.productVariant.inventory,
+    );
+
     return cartItem;
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity] =
-      cartItem.querySelectorAll("[data-cart-item]");
+    const [image, title, variant, price, quantity] = cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity };
   }
 
   updateItemImage(imageContainer, product) {
-    if (product.images.length > 0) {
-      const img = imageContainer.querySelector("img");
+    const img = imageContainer.querySelector("img");
+    const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
+    const shouldShowImage = product.images.length > 0;
+
+    if (shouldShowImage) {
       img.src = product.thumbnail;
       img.alt = product.name;
-      img.removeAttribute("hidden");
+      img.hidden = false;
+      placeholder.hidden = true;
     } else {
-      imageContainer
-        .querySelector("[data-cart-item-image-placeholder]")
-        .removeAttribute("hidden");
+      img.hidden = true;
+      placeholder.hidden = false;
     }
   }
 
@@ -118,7 +128,7 @@ class CartDrawer extends HTMLElement {
   }
 
   updateItemQuantity(quantityElement, quantity) {
-    quantityElement.textContent = formatNumber(quantity);
+    quantityElement.textContent = quantity;
   }
 
   updateItemPrice(priceElement, price) {
@@ -126,7 +136,14 @@ class CartDrawer extends HTMLElement {
   }
 
   updateDrawerState() {
-    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty");
+    this.cart.querySelector("[data-cart]").removeAttribute("data-is-empty");
+  }
+
+  updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
+    quantityElement.setAttribute("data-item", cartItemId);
+    quantityElement.setAttribute("data-product-variant", productVariantId);
+    quantityElement.setAttribute("data-quantity", quantity);
+    if (inventory) quantityElement.setAttribute("data-inventory", inventory);
   }
 
   replaceContent(fragment) {
