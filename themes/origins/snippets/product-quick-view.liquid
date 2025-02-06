@@ -1,6 +1,8 @@
 <div class="product-quick-view">
   <yc-modal style="--modal-width: 60%">
-    <button class="primary" data-trigger>Buy now</button>
+    <button class="secondary" data-trigger>
+      {{ 'general.buy_now' | t }}
+    </button>
 
     <yc-modal-content>
       <div class="view-box">
@@ -15,24 +17,32 @@
         <div class="content">
           <yc-product-media>
             <div class="main-image">
-              <img
-                src="https://cdn.youcan.shop/stores/8c0f76d0ef7e3d4694bc90e537d522d1/products/nt83N1Kwz9r1p4ZNJHwdsWmIKk0Lq8BqZhNsdHBQ_md.jpeg"
-                alt="{{ product.name }}"
-                height="100%"
-                width="100%"
-              >
-              <div class="placeholder">
-                {% render 'yc-placeholder', name: 'product' %}
-              </div>
+              {% if product.thumbnail %}
+                <img
+                  src="{{ product.thumbnail }}"
+                  alt="{{ product.name }}"
+                  loading="lazy"
+                  height="100%"
+                  width="100%"
+                >
+              {% else %}
+                <div class="card-placeholder">
+                  {% render 'yc-placeholder', name: 'product' %}
+                </div>
+              {% endif %}
             </div>
           </yc-product-media>
           <yc-product-info>
             <div class="core-info">
               {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
-              {% render 'product-price',
-                price: product.price,
-                compare_at_price: product.compare_at_price
-              %}
+              <div class="price-info">
+                <p class="current h2">{{ product.price | default: 0 | money }}</p>
+                {% if product.compare_at_price != null %}
+                  <p class="compare-at h3">
+                    {{ product.compare_at_price | default: 0 | money }}
+                  </p>
+                {% endif %}
+              </div>
               <div class="variants">
                 {% assign options = 'XL,L,M,S' | split: ',' %}
                 {% render 'variant-toggle', name: 'size', options: options %}
@@ -40,10 +50,17 @@
                 {% render 'variant-radio', name: 'sizi', options: options %}
               </div>
             </div>
-            <div class="actions">
+            <yc-product-form
+              quantity="1"
+              variant-id="{{ product.variants[0].id  }}"
+            >
               {% render 'yc-quantity-control' %}
-              <button class="primary" data-submit>Add to cart</button>
-            </div>
+              <button class="primary" data-buy-button>
+                <span>
+                  {{ 'general.add_to_cart' | t }}
+                </span>
+              </button>
+            </yc-product-form>
           </yc-product-info>
         </div>
       </div>

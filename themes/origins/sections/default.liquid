@@ -3,6 +3,11 @@
 {{ 'component-modal.css' | asset_url | stylesheet_tag }}
 {{ 'component-modal.js' | asset_url | script_tag_deferred }}
 
+{{ 'component-select.js' | asset_url | script_tag_deferred }}
+{{ 'component-select.css' | asset_url | stylesheet_tag }}
+{{ 'component-variants.css' | asset_url | stylesheet_tag }}
+{{ 'product-quick-view.css' | asset_url | stylesheet_tag }}
+
 {% comment %}
   TO REMOVE ❌
   TODO: This section is just a placeholder for the theme pages, as the template schema requires at least one section
@@ -19,6 +24,10 @@
     console.log(response);
   }
 </script>
+
+<yc-section style="--section-space-top: 100px; --section-space-bottom: 100px;">
+  {% render 'product-quick-view' %}
+</yc-section>
 
 <yc-section style="display: grid; gap: 1.5em;">
   {% assign nav_links_string = '/, Home | /collections, Collections| /product-a, Product A' %}
