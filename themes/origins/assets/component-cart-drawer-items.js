@@ -44,12 +44,14 @@ class CartDrawer extends HTMLElement {
     const fragment = new DocumentFragment();
     const template = this.cart.querySelector("[data-cart-item-template]");
 
-    items.map((item) => {
-      const cartItem = this.createCartItem(template, item);
-      fragment.append(cartItem);
-    });
+    if (items.length) {
+      items.map((item) => {
+        const cartItem = this.createCartItem(template, item);
+        fragment.append(cartItem);
+      });
+    }
 
-    this.updateDrawerState();
+    this.setIsDrawerEmpty(!items.length);
     this.replaceContent(fragment);
   }
 
@@ -76,8 +78,9 @@ class CartDrawer extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity] = cartItem.querySelectorAll("[data-cart-item]");
-    return { image, title, variant, price, quantity };
+    const [image, title, variant, price, quantity, deleteButton] =
+      cartItem.querySelectorAll("[data-cart-item]");
+    return { image, title, variant, price, quantity, deleteButton };
   }
 
   updateItemImage(imageContainer, product) {
@@ -141,8 +144,8 @@ class CartDrawer extends HTMLElement {
     buttonElement.setAttribute("data-product-variant", productVariantId);
   }
 
-  updateDrawerState() {
-    this.cart.querySelector("[data-cart]").removeAttribute("data-is-empty");
+  setIsDrawerEmpty(isEmpty = false) {
+    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty", isEmpty);
   }
 
   updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
