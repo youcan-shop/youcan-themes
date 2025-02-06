@@ -62,20 +62,20 @@ class CartDrawer extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
+
     this.updateItemAttributes(
       elements.quantity,
       item.id,
       item.productVariant.id,
-      item.productVariant.inventory,
       item.quantity,
+      item.productVariant.product.track_inventory && item.productVariant.inventory,
     );
 
     return cartItem;
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity] =
-      cartItem.querySelectorAll("[data-cart-item]");
+    const [image, title, variant, price, quantity] = cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity };
   }
 
@@ -86,9 +86,7 @@ class CartDrawer extends HTMLElement {
       img.alt = product.name;
       img.removeAttribute("hidden");
     } else {
-      imageContainer
-        .querySelector("[data-cart-item-image-placeholder]")
-        .removeAttribute("hidden");
+      imageContainer.querySelector("[data-cart-item-image-placeholder]").removeAttribute("hidden");
     }
   }
 
@@ -136,17 +134,11 @@ class CartDrawer extends HTMLElement {
     this.cart.querySelector("[data-cart]").removeAttribute("data-is-empty");
   }
 
-  updateItemAttributes(
-    quantityElement,
-    cartItemId,
-    productVariantId,
-    inventory,
-    quantity,
-  ) {
+  updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
     quantityElement.setAttribute("data-item", cartItemId);
     quantityElement.setAttribute("data-product-variant", productVariantId);
-    quantityElement.setAttribute("data-inventory", inventory);
     quantityElement.setAttribute("data-quantity", quantity);
+    if (inventory) quantityElement.setAttribute("data-inventory", inventory);
   }
 
   replaceContent(fragment) {
