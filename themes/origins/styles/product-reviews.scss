@@ -1,5 +1,21 @@
 @import "mixins/breakpoints";
 
+#youcan-section--product-reviews {
+  --section-border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+
+  &:not(:first-of-type) {
+    yc-section {
+      border-block-start: var(--section-border);
+    }
+  }
+
+  &:first-of-type {
+    yc-section {
+      border-block-end: var(--section-border);
+    }
+  }
+}
+
 .product-reviews {
   display: grid;
   gap: var(--gap-xl);

@@ -19,6 +19,9 @@ body{
 body:has(* [data-visible=true]), body:has(* [data-hidden=false]){
   overflow:hidden;
 }
+body:has(yc-overlay[data-active]){
+  overflow:hidden;
+}
 body .main-container{
   order:3;
 }
@@ -203,6 +206,12 @@ button.icon[data-size$=lg],
 .yc-btn.icon[data-size$=lg]{
   padding:13px;
 }
+button[data-loading],
+.yc-btn[data-loading]{
+  opacity:0.5;
+  cursor:not-allowed;
+  pointer-events:none;
+}
 button[data-loading] span,
 .yc-btn[data-loading] span{
   color:transparent;
@@ -216,12 +225,7 @@ button[data-loading]::before,
   border:1.5px solid currentColor;
   border-bottom-color:transparent;
   border-radius:var(--radius-circle);
-  animation:rotation 1s linear infinite;
-}
-@keyframes rotation{
-  100%{
-    transform:rotate(360deg);
-  }
+  animation:spin 1s linear infinite;
 }
 button:disabled, button[data-disabled],
 .yc-btn:disabled,
@@ -354,8 +358,7 @@ yc-section yc-section-head p{
   gap:var(--gap-lg);
 }
 
-.overlay,
-yc-overlay{
+.overlay{
   inset:0;
   z-index:99;
   position:fixed;
@@ -365,11 +368,6 @@ yc-overlay{
           backdrop-filter:var(--overlay-blur);
   background-color:var(--overlay-background);
   transition:var(--transition-duration-normal);
-}
-.overlay[data-active],
-yc-overlay[data-active]{
-  opacity:1;
-  visibility:visible;
 }
 
 .card-placeholder{
@@ -439,10 +437,28 @@ yc-quantity-control{
 yc-quantity-control button svg{
   pointer-events:none;
 }
-yc-quantity-control span{
-  display:inline-block;
+yc-quantity-control p{
+  display:flex;
+  justify-content:center;
+  align-items:center;
   min-width:24px;
   text-align:center;
+}
+yc-quantity-control p:has([data-loading]) span{
+  color:transparent;
+}
+yc-quantity-control p:has([data-loading])::before{
+  content:"";
+  width:18px;
+  height:18px;
+  position:absolute;
+  border:1.5px solid currentColor;
+  border-bottom-color:transparent;
+  border-radius:var(--radius-circle);
+  animation:spin 1s linear infinite;
+}
+yc-quantity-control[data-loading]{
+  pointer-events:none;
 }
 
 .breadcrumb ol{
@@ -498,5 +514,10 @@ yc-quantity-control span{
   }
   to{
     translate:0;
+  }
+}
+@keyframes spin{
+  100%{
+    transform:rotate(360deg);
   }
 }

@@ -81,6 +81,10 @@ button,
   }
 
   &[data-loading] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+
     span {
       color: transparent;
     }
@@ -93,13 +97,7 @@ button,
       border: 1.5px solid currentColor;
       border-bottom-color: transparent;
       border-radius: var(--radius-circle);
-      animation: rotation 1s linear infinite;
-
-      @keyframes rotation {
-        100% {
-          transform: rotate(360deg);
-        }
-      }
+      animation: spin 1s linear infinite;
     }
   }
 
@@ -139,9 +137,7 @@ a.link:not(.yc-btn):hover {
 // INPUT
 select,
 textarea,
-input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not(
-    [type="search"]
-  ) {
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="search"]) {
   width: 100%;
   padding: 12px 15px;
   background-color: transparent;
@@ -309,10 +305,33 @@ yc-quantity-control {
     }
   }
 
-  span {
-    display: inline-block;
+  p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-width: 24px;
     text-align: center;
+
+    &:has([data-loading]) {
+      span {
+        color: transparent;
+      }
+
+      &::before {
+        content: "";
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        border: 1.5px solid currentColor;
+        border-bottom-color: transparent;
+        border-radius: var(--radius-circle);
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  &[data-loading] {
+    pointer-events: none;
   }
 }
 
@@ -390,5 +409,11 @@ yc-quantity-control {
 
   to {
     translate: 0;
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }
