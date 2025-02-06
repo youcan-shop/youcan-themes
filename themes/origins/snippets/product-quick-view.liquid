@@ -1,1 +1,52 @@
-<div class="quick-view"></div>
+<div class="product-quick-view">
+  <yc-modal style="--modal-width: 60%">
+    <button class="primary" data-trigger>Buy now</button>
+
+    <yc-modal-content>
+      <div class="view-box">
+        <div class="head">
+          <button class="icon" data-trigger>
+            {% render 'yc-icon', name: 'chevron-left' %}
+          </button>
+          <div class="title">
+            <a href="#" class="link h4"> Boxy fit patch sweatshirt </a>
+          </div>
+        </div>
+        <div class="content">
+          <yc-product-media>
+            <div class="main-image">
+              <img
+                src="https://cdn.youcan.shop/stores/8c0f76d0ef7e3d4694bc90e537d522d1/products/nt83N1Kwz9r1p4ZNJHwdsWmIKk0Lq8BqZhNsdHBQ_md.jpeg"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+              >
+              <div class="placeholder">
+                {% render 'yc-placeholder', name: 'product' %}
+              </div>
+            </div>
+          </yc-product-media>
+          <yc-product-info>
+            <div class="core-info">
+              {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
+              {% render 'product-price',
+                price: product.price,
+                compare_at_price: product.compare_at_price
+              %}
+              <div class="variants">
+                {% assign options = 'XL,L,M,S' | split: ',' %}
+                {% render 'variant-toggle', name: 'size', options: options %}
+                {% render 'variant-dropdown', name: 'sizeo', options: options %}
+                {% render 'variant-radio', name: 'sizi', options: options %}
+              </div>
+            </div>
+            <div class="actions">
+              {% render 'yc-quantity-control' %}
+              <button class="primary" data-submit>Add to cart</button>
+            </div>
+          </yc-product-info>
+        </div>
+      </div>
+    </yc-modal-content>
+  </yc-modal>
+</div>
