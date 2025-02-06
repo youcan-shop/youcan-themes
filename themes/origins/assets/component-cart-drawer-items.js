@@ -80,13 +80,18 @@ class CartDrawer extends HTMLElement {
   }
 
   updateItemImage(imageContainer, product) {
-    if (product.images.length > 0) {
-      const img = imageContainer.querySelector("img");
+    const img = imageContainer.querySelector("img");
+    const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
+    const shouldShowImage = product.images.length > 0;
+
+    if (shouldShowImage) {
       img.src = product.thumbnail;
       img.alt = product.name;
-      img.removeAttribute("hidden");
+      img.hidden = false;
+      placeholder.hidden = true;
     } else {
-      imageContainer.querySelector("[data-cart-item-image-placeholder]").removeAttribute("hidden");
+      img.hidden = true;
+      placeholder.hidden = false;
     }
   }
 
