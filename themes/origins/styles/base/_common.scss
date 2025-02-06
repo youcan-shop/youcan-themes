@@ -93,7 +93,13 @@ button,
       border: 1.5px solid currentColor;
       border-bottom-color: transparent;
       border-radius: var(--radius-circle);
-      animation: spin 1s linear infinite;
+      animation: rotation 1s linear infinite;
+
+      @keyframes rotation {
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     }
   }
 
@@ -301,33 +307,10 @@ yc-quantity-control {
     }
   }
 
-  p {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  span {
+    display: inline-block;
     min-width: 24px;
     text-align: center;
-
-    &:has([data-loading]) {
-      span {
-        color: transparent;
-      }
-
-      &::before {
-        content: "";
-        width: 18px;
-        height: 18px;
-        position: absolute;
-        border: 1.5px solid currentColor;
-        border-bottom-color: transparent;
-        border-radius: var(--radius-circle);
-        animation: spin 1s linear infinite;
-      }
-    }
-  }
-
-  &[data-loading] {
-    pointer-events: none;
   }
 }
 
@@ -405,11 +388,5 @@ yc-quantity-control {
 
   to {
     translate: 0;
-  }
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
   }
 }

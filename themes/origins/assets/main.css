@@ -219,7 +219,12 @@ button[data-loading]::before,
   border:1.5px solid currentColor;
   border-bottom-color:transparent;
   border-radius:var(--radius-circle);
-  animation:spin 1s linear infinite;
+  animation:rotation 1s linear infinite;
+}
+@keyframes rotation{
+  100%{
+    transform:rotate(360deg);
+  }
 }
 button:disabled, button[data-disabled],
 .yc-btn:disabled,
@@ -437,28 +442,10 @@ yc-quantity-control{
 yc-quantity-control button svg{
   pointer-events:none;
 }
-yc-quantity-control p{
-  display:flex;
-  justify-content:center;
-  align-items:center;
+yc-quantity-control span{
+  display:inline-block;
   min-width:24px;
   text-align:center;
-}
-yc-quantity-control p:has([data-loading]) span{
-  color:transparent;
-}
-yc-quantity-control p:has([data-loading])::before{
-  content:"";
-  width:18px;
-  height:18px;
-  position:absolute;
-  border:1.5px solid currentColor;
-  border-bottom-color:transparent;
-  border-radius:var(--radius-circle);
-  animation:spin 1s linear infinite;
-}
-yc-quantity-control[data-loading]{
-  pointer-events:none;
 }
 
 .breadcrumb ol{
@@ -514,10 +501,5 @@ yc-quantity-control[data-loading]{
   }
   to{
     translate:0;
-  }
-}
-@keyframes spin{
-  100%{
-    transform:rotate(360deg);
   }
 }
