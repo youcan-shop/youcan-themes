@@ -30,14 +30,11 @@ class Modal extends HTMLElement {
   }
 
   triggerHandler() {
-    [...this.querySelectorAll("[data-trigger]"), this.overlay].forEach(
-      (trigger) =>
-        trigger.addEventListener("click", () => {
-          this.setIsVisible(
-            trigger.tagName === "YC-OVERLAY" ? false : !this.state,
-          );
-          this.updatePosition();
-        }),
+    [...this.querySelectorAll("[data-trigger]"), this.overlay].forEach((trigger) =>
+      trigger.addEventListener("click", () => {
+        this.setIsVisible(trigger.tagName === "YC-OVERLAY" ? false : !this.state);
+        this.updatePosition();
+      }),
     );
   }
 
@@ -120,7 +117,6 @@ class Modal extends HTMLElement {
 
     if (!isMobile && this.hasAttribute("as-drawer")) {
       this.setPosition(0);
-      this.setIsVisible(false);
     } else {
       this.setPosition(positions[key][state]);
     }
