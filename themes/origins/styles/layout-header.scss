@@ -4,7 +4,9 @@ yc-header {
   padding: 1em 10%;
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-areas: "left-icons heading icons";
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: var(--gap-lg);
   color: rgb(var(--header-text-color));
   background-color: var(--header-bg-color);
 
@@ -15,12 +17,57 @@ yc-header {
     &:nth-last-child(2) {
       justify-content: center;
     }
+
     &:last-child {
       justify-content: flex-end;
     }
   }
 
+  &[data-desktop-logo-position$="top-left"] {
+    grid-template-areas:
+      "heading actions"
+      "navigation navigation";
+    grid-template-columns: 1fr auto;
+
+    .links {
+      justify-content: flex-start;
+    }
+  }
+
+  &[data-desktop-logo-position$="middle-left"] {
+    grid-template-areas: "heading navigation actions";
+    grid-template-columns: 1fr auto 1fr;
+
+    .links {
+      ul {
+        justify-content: center;
+      }
+    }
+  }
+
+  &[data-desktop-logo-position$="top-center"] {
+    grid-template-areas:
+      "left-icons heading actions"
+      "navigation navigation navigation";
+
+    .logo,
+    .links {
+      justify-content: center;
+    }
+  }
+
+  &[data-desktop-logo-position$="middle-center"] {
+    grid-template-areas: "navigation heading actions";
+    grid-template-columns: 1fr auto 1fr;
+
+    .links {
+      justify-content: flex-start;
+    }
+  }
+
   .logo {
+    grid-area: heading;
+
     a {
       display: inline-flex;
       text-transform: uppercase;
@@ -33,17 +80,25 @@ yc-header {
     }
   }
 
-  .links ul {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xl);
+  .links {
+    grid-area: navigation;
 
-    li a.link {
-      color: rgb(var(--header-text-color));
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: var(--gap-xl);
+      row-gap: var(--gap-md);
+
+      li a.link {
+        width: max-content;
+        color: rgb(var(--header-text-color));
+      }
     }
   }
 
   .actions {
+    grid-area: actions;
     gap: var(--gap-lg);
 
     .cart-btn,
@@ -146,6 +201,20 @@ yc-header {
 
 @include breakpoint("lg") {
   yc-header {
+    grid-template-columns: 1fr auto 1fr !important;
+    grid-template-areas: "navigation heading actions" !important;
+
+    &[data-desktop-logo-position$="middle-left"],
+    &[data-desktop-logo-position$="top-center"] {
+      .links {
+        justify-content: flex-start;
+      }
+    }
+
+    &[data-mobile-logo-position$="left"] {
+      grid-template-columns: auto 2fr 1fr !important;
+    }
+
     .links ul,
     .actions .search-bar,
     .actions .search-btn {
