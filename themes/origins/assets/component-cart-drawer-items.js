@@ -14,14 +14,17 @@ class CartDrawer extends HTMLElement {
   _render() {
     const handleQuantityChange = debounce(async (event) => {
       const quantityControl = event.target;
-
-      this.setItemIsLoading(quantityControl, true);
-
       const {
         item: cartItemId,
         productVariant: productVariantId,
         quantity,
       } = quantityControl.dataset;
+
+      if (!(cartItemId && productVariantId && quantity)) {
+        return;
+      }
+
+      this.setItemIsLoading(quantityControl, true);
 
       try {
         const newCart = await youcanjs.cart.updateItem({
