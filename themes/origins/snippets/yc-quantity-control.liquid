@@ -17,6 +17,7 @@
     data-inventory="{{ variant.inventory }}"
   {% endif %}
   data-quantity="{{ variant.quantity }}"
+  data-cart-item="quantity"
 >
   <button
     class="yc-btn icon"
@@ -28,15 +29,7 @@
     {% render 'yc-icon', name: 'minus' %}
   </button>
   <p>
-    <span
-      data-cart-item="quantity"
-      data-item="{{ variant.id }}"
-      data-product-variant="{{ variant.product_variant_id }}"
-      {% if variant.inventory != null %}
-        data-inventory="{{ variant.inventory }}"
-      {% endif %}
-      data-quantity="{{ variant.quantity }}"
-    >
+    <span>
       {{- variant.quantity -}}
     </span>
   </p>

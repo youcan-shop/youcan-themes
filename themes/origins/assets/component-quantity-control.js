@@ -1,14 +1,9 @@
 if (!customElements.get("yc-quantity-control")) {
   class QuantityControl extends HTMLElement {
-    /**
-     * TODO:
-     * Remove fetch logic
-     * Handle only UI logic
-     */
     constructor() {
       super();
 
-      this.quantity = this.querySelector("[data-cart-item='quantity']");
+      this.quantity = this.querySelector("span");
       this.plusButton = this.querySelector('button[name="plus"]');
       this.minusButton = this.querySelector('button[name="minus"]');
       this.changeEvent = new Event("change", { bubbles: true });
