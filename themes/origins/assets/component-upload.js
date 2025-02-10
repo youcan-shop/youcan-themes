@@ -47,7 +47,7 @@ if (!customElements.get("yc-upload")) {
         "afterbegin",
         `<div class="preview" data-preview>
           <img src="${image_src}" width="50" height="50" />
-          <div class="info">
+          <div class="detail">
             <span class="name">${file.name}</span>
             <span class="size">${this.toKB(file.size)}</span>
           </div>
