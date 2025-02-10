@@ -1,11 +1,17 @@
 if (!customElements.get("yc-quantity-control")) {
   class QuantityControl extends HTMLElement {
+    /**
+     * TODO:
+     * Remove fetch logic
+     * Handle only UI logic
+     */
     constructor() {
       super();
 
       this.quantity = this.querySelector("[data-cart-item='quantity']");
       this.plusButton = this.querySelector('button[name="plus"]');
       this.minusButton = this.querySelector('button[name="minus"]');
+      this.changeEvent = new Event("change", { bubbles: true });
     }
 
     connectedCallback() {
@@ -15,14 +21,10 @@ if (!customElements.get("yc-quantity-control")) {
     _render() {
       this.plusButton.addEventListener("click", this.onButtonClick.bind(this));
       this.minusButton.addEventListener("click", this.onButtonClick.bind(this));
-      this.updateMinusButtonState();
-      this.updatePlusButtonState();
+      this.updateButtonsForQuantity(1);
     }
 
-    async onButtonClick(event) {
-      event.preventDefault();
-      this.isLoading = true;
-
+    onButtonClick(event) {
       try {
         if (isNaN(this.quantityValue)) {
           this.quantityValue = 1;
@@ -32,44 +34,32 @@ if (!customElements.get("yc-quantity-control")) {
         }
 
         const buttonName = event.target.name;
-        const nextValue = this.calculateNextQuantity(buttonName);
+        const nextQuantityValue = this.calculateNextQuantity(buttonName);
 
-        if (nextValue === null) return;
+        if (nextQuantityValue === null) return;
 
-        this.updateButtonsForQuantity(buttonName, nextValue);
+        this.quantityValue = nextQuantityValue;
 
-        const newCart = await youcanjs.cart.updateItem({
-          cartItemId: this.cartItemValue,
-          productVariantId: this.productVariantValue,
-          quantity: nextValue,
-        });
-
-        publish(PUB_SUB_EVENTS.cartUpdate, {
-          source: "quantity-control",
-          productVariantId: this.productVariantValue,
-          cartData: newCart,
-        });
+        this.updateButtonsForQuantity(nextQuantityValue);
+        this.dispatchEvent(this.changeEvent);
       } catch (error) {
         console.error(error);
 
         publish(PUB_SUB_EVENTS.cartError, {
           source: "quantity-control",
-          productVariantId: this.productVariantValue,
           error: error,
         });
 
         toast.show(error.message, "error");
-      } finally {
-        this.isLoading = false;
       }
     }
 
-    updateMinusButtonState() {
-      this.minusButton.toggleAttribute("disabled", this.quantityValue <= 1);
+    updateMinusButtonState(quantity) {
+      this.minusButton.toggleAttribute("disabled", quantity <= 1);
     }
 
-    updatePlusButtonState() {
-      this.plusButton.toggleAttribute("disabled", this.quantityValue === this.inventoryValue);
+    updatePlusButtonState(quantity) {
+      this.plusButton.toggleAttribute("disabled", quantity === this.inventoryValue);
     }
 
     calculateNextQuantity(buttonName) {
@@ -80,48 +70,24 @@ if (!customElements.get("yc-quantity-control")) {
 
           return null;
         }
+
         return this.quantityValue + 1;
       }
 
       return this.quantityValue - 1;
     }
 
-    updateButtonsForQuantity(buttonName, quantity) {
-      if (buttonName === "plus") {
-        this.plusButton.toggleAttribute("disabled", this.inventoryValue === quantity);
-      } else {
-        this.updateMinusButtonState();
-      }
-    }
-
-    async updateCartItem(quantity, cartItemId, productVariantId) {
-      const response = await youcanjs.cart.updateItem({
-        cartItemId,
-        productVariantId,
-        quantity,
-      });
-
-      publish(PUB_SUB_EVENTS.cartUpdate, {
-        source: "quantity-control",
-        productVariantId: this.productVariantValue,
-        cartData: response,
-      });
-    }
-
-    get cartItemValue() {
-      return this.quantity.dataset.item;
-    }
-
-    get productVariantValue() {
-      return this.quantity.dataset.productVariant;
+    updateButtonsForQuantity(quantity) {
+      this.updateMinusButtonState(quantity);
+      this.updatePlusButtonState(quantity);
     }
 
     get inventoryValue() {
-      return parseInt(this.quantity.dataset.inventory, 10);
+      return parseInt(this.dataset.inventory, 10);
     }
 
     get quantityValue() {
-      return parseInt(this.quantity.dataset.quantity, 10);
+      return parseInt(this.dataset.quantity, 10);
     }
 
     set quantityValue(value) {
@@ -130,16 +96,8 @@ if (!customElements.get("yc-quantity-control")) {
         throw new Error("Invalid quantity value");
       }
 
+      this.dataset.quantity = value;
       this.quantity.textContent = String(value);
-    }
-
-    get isLoading() {
-      return this.quantity.dataset.loading;
-    }
-
-    set isLoading(isLoading) {
-      this.toggleAttribute("data-loading", isLoading);
-      this.quantity.toggleAttribute("data-loading", isLoading);
     }
   }
 

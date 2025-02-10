@@ -9,7 +9,15 @@
   {% render 'yc-quantity-input' variant: variant %}
 {% endcomment %}
 
-<yc-quantity-control class="quantity cart-quantity">
+<yc-quantity-control
+  class="quantity cart-quantity"
+  data-item="{{ variant.id }}"
+  data-product-variant="{{ variant.product_variant_id }}"
+  {% if variant.inventory != null %}
+    data-inventory="{{ variant.inventory }}"
+  {% endif %}
+  data-quantity="{{ variant.quantity }}"
+>
   <button
     class="yc-btn icon"
     name="minus"
