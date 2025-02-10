@@ -9,14 +9,20 @@
   {% render 'yc-quantity-input' variant: variant %}
 {% endcomment %}
 
+{% assign quantity = 1 %}
+
+{% if variant.quantity != null %}
+  {% assign quantity = variant.quantity %}
+{% endif %}
+
 <yc-quantity-control
   class="quantity cart-quantity"
   data-item="{{ variant.id }}"
   data-product-variant="{{ variant.product_variant_id }}"
-  {% if variant.inventory != null %}
-    data-inventory="{{ variant.inventory }}"
+  {% if variant.isTrackingInventory %}
+    data-inventory="{{ variant.first_available_variant.inventory }}"
   {% endif %}
-  data-quantity="{{ variant.quantity }}"
+  data-quantity="{{ quantity }}"
   data-cart-item="quantity"
 >
   <button
@@ -30,7 +36,7 @@
   </button>
   <p>
     <span>
-      {{- variant.quantity -}}
+      {{- quantity -}}
     </span>
   </p>
   <button

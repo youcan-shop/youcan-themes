@@ -135,7 +135,10 @@
           {% when 'accordion' %}
             {% render 'accordion', title: block.settings.title, content: block.settings.content %}
           {% when 'buy_button' %}
-            {% render 'product-buy-button' %}
+            {% render 'product-buy-button',
+              product: product,
+              checkout_type: block.settings.checkout_type
+            %}
         {% endcase %}
       {% endfor %}
     </yc-product-info>
@@ -240,7 +243,24 @@
       "type": "buy_button",
       "label": "Buy button",
       "limit": 1,
-      "settings": []
+      "settings": [
+        {
+          "type": "select",
+          "id": "checkout_type",
+          "options": [
+            {
+              "value": "normal",
+              "label": "Normal (Cart)"
+            },
+            {
+              "value": "express",
+              "label": "Express checkout"
+            }
+          ],
+          "default": "normal",
+          "label": "Checkout Type"
+        }
+      ]
     },
     {
       "type": "countdown_timer",
