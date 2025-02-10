@@ -51,7 +51,6 @@ class CartDrawer extends HTMLElement {
       } finally {
         this.setItemIsLoading(quantityControl, false);
       }
-      this.updateQuantityForVariant(cartItemId, productVariantId, quantity);
     }, ON_CHANGE_DEBOUNCE_TIMER);
 
     this.addEventListener("change", handleQuantityChange.bind(this));
@@ -64,10 +63,6 @@ class CartDrawer extends HTMLElement {
       this.updateCartBubble(count, sub_total);
       this.updateCartList(items);
     });
-  }
-
-  async updateQuantityForVariant(cartItemId, productVariantId, quantity) {
-    // TODO: Set loading to true
   }
 
   updateCartSubTotal(subtotal) {
