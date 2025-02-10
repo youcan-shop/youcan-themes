@@ -17,51 +17,46 @@
   {% if section.settings.header_border %}
     data-bottom-border
   {% endif %}
+  data-desktop-logo-position="{{ section.settings.desktop_logo_position }}"
+  data-mobile-logo-position="{{ section.settings.mobile_logo_position }}"
 >
-  {%- for block in section.blocks -%}
-    {%- case block.type %}
-      {% when 'header_menu' %}
-        <div class="links" data-block>
-          <ul>
-            {% for link in main-link-list.links %}
-              <li>
-                <a class="yc-btn link" href="{{ link.url }}">
-                  {{ link.title }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-          {% render 'header-menu-drawer' %}
-        </div>
-      {% when 'header_logo' %}
-        <div class="logo" data-block>
-          <a href="/" aria-label="home">
-            {% if section.settings.header_logo.src %}
-              <img
-                src="{{ section.settings.header_logo.src }}"
-                alt="{{ store.name }}"
-                height="60"
-                width="60"
-              >
-            {% else %}
-              {{ store.name }}
-            {% endif %}
+  <div class="logo" data-block>
+    <a href="/" aria-label="home">
+      {% if section.settings.header_logo.src %}
+        <img
+          src="{{ section.settings.header_logo.src }}"
+          alt="{{ store.name }}"
+          height="60"
+          width="60"
+        >
+      {% else %}
+        {{ store.name }}
+      {% endif %}
+    </a>
+  </div>
+  <div class="links" data-block>
+    <ul>
+      {% for link in main-link-list.links %}
+        <li>
+          <a class="yc-btn link" href="{{ link.url }}">
+            {{ link.title }}
           </a>
-        </div>
-      {% when 'header_action' %}
-        <div class="actions" data-block>
-          <form action="/search" class="search-bar" data-hidden="true" data-search-field>
-            {% render 'yc-icon', name: 'search' %}
-            <input type="search" name="q" placeholder="Search..." name="products" required>
-          </form>
-          <button type="submit" class="search-btn icon" aria-label="search" data-search-action>
-            {% render 'yc-icon', name: 'search' %}
-            {% render 'yc-icon', name: 'x-mark' %}
-          </button>
-          {% render 'header-cart-drawer' %}
-        </div>
-    {%- endcase %}
-  {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+    {% render 'header-menu-drawer' %}
+  </div>
+  <div class="actions" data-block>
+    <form action="/search" class="search-bar" data-hidden="true" data-search-field>
+      {% render 'yc-icon', name: 'search' %}
+      <input type="search" name="q" placeholder="Search..." name="products" required>
+    </form>
+    <button type="submit" class="search-btn icon" aria-label="search" data-search-action>
+      {% render 'yc-icon', name: 'search' %}
+      {% render 'yc-icon', name: 'x-mark' %}
+    </button>
+    {% render 'header-cart-drawer' %}
+  </div>
 </yc-header>
 
 {% schema %}
@@ -69,27 +64,55 @@
   "label": "Header",
   "tag": "header",
   "limit": 1,
-  "blocks": [
-    {
-      "limit": 1,
-      "label": "Menu",
-      "type": "header_menu"
-    },
-    {
-      "limit": 1,
-      "label": "Logo",
-      "type": "header_logo"
-    },
-    {
-      "limit": 1,
-      "label": "Cart and Search",
-      "type": "header_action"
-    }
-  ],
   "settings": [
     {
       "type": "paragraph",
       "content": "Header links can be managed from your [menu settings](https:\/\/seller-area.youcan.shop\/admin\/menus)"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "select",
+      "id": "desktop_logo_position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "Top left"
+        },
+        {
+          "value": "top-center",
+          "label": "Top center"
+        },
+        {
+          "value": "middle-left",
+          "label": "Middle left"
+        },
+        {
+          "value": "middle-center",
+          "label": "Middle center"
+        }
+      ],
+      "default": "middle-left",
+      "label": "Desktop logo position"
+    },
+    {
+      "type": "select",
+      "id": "mobile_logo_position",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center",
+      "label": "Mobile logo position"
     },
     {
       "type": "checkbox",
@@ -102,11 +125,6 @@
       "id": "header_border",
       "label": "Bottom border",
       "default": true
-    },
-    {
-      "type": "image_picker",
-      "id": "header_logo",
-      "label": "Logo"
     },
     {
       "type": "color",
