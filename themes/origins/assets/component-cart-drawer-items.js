@@ -12,18 +12,42 @@ class CartDrawer extends HTMLElement {
   }
 
   _render() {
-    const handleQuantityChange = debounce((event) => {
-      // this.onChange(event);
-      // Grab the variant id
-      // Grab the quantity
-      // Set loading to true
-      // Send request
-      // If success dispatch event
-      // If fail show error in toast
-      // finally stop loading
+    const handleQuantityChange = debounce(async (event) => {
+      const quantityControl = event.target;
 
-      const { item: cartItemId, productVariant: productVariantId, quantity } = event.target.dataset;
+      this.setItemIsLoading(quantityControl, true);
 
+      const {
+        item: cartItemId,
+        productVariant: productVariantId,
+        quantity,
+      } = quantityControl.dataset;
+
+      try {
+        const newCart = await youcanjs.cart.updateItem({
+          cartItemId,
+          productVariantId,
+          quantity,
+        });
+
+        publish(PUB_SUB_EVENTS.cartUpdate, {
+          source: "quantity-control",
+          productVariantId: this.productVariantValue,
+          cartData: newCart,
+        });
+      } catch (error) {
+        console.error(error);
+
+        publish(PUB_SUB_EVENTS.cartError, {
+          source: "quantity-control",
+          productVariantId: this.productVariantValue,
+          error: error,
+        });
+
+        toast.show(error.message, "error");
+      } finally {
+        this.setItemIsLoading(quantityControl, false);
+      }
       this.updateQuantityForVariant(cartItemId, productVariantId, quantity);
     }, ON_CHANGE_DEBOUNCE_TIMER);
 
@@ -41,31 +65,6 @@ class CartDrawer extends HTMLElement {
 
   async updateQuantityForVariant(cartItemId, productVariantId, quantity) {
     // TODO: Set loading to true
-    try {
-      const newCart = await youcanjs.cart.updateItem({
-        cartItemId,
-        productVariantId,
-        quantity,
-      });
-
-      publish(PUB_SUB_EVENTS.cartUpdate, {
-        source: "quantity-control",
-        productVariantId: this.productVariantValue,
-        cartData: newCart,
-      });
-    } catch (error) {
-      console.error(error);
-
-      publish(PUB_SUB_EVENTS.cartError, {
-        source: "quantity-control",
-        productVariantId: this.productVariantValue,
-        error: error,
-      });
-
-      toast.show(error.message, "error");
-    } finally {
-      // TODO: Set loading to false
-    }
   }
 
   updateCartSubTotal(subtotal) {
@@ -203,6 +202,10 @@ class CartDrawer extends HTMLElement {
 
   replaceContent(fragment) {
     this.replaceChildren(fragment);
+  }
+
+  setItemIsLoading(element, isLoading) {
+    element.toggleAttribute("data-loading", isLoading);
   }
 }
 

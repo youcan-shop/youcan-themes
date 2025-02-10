@@ -16,7 +16,7 @@ if (!customElements.get("yc-quantity-control")) {
     _render() {
       this.plusButton.addEventListener("click", this.onButtonClick.bind(this));
       this.minusButton.addEventListener("click", this.onButtonClick.bind(this));
-      this.updateButtonsForQuantity(1);
+      this.updateButtonsForQuantity(this.quantityValue);
     }
 
     onButtonClick(event) {
