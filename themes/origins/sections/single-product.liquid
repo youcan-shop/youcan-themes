@@ -116,11 +116,13 @@
           {% when 'rating' %}
             {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
           {% when 'inventory_status' %}
-            {% render 'product-inventory-status',
-              count: product.variants[0].inventory,
-              threshold: block.settings.threshold,
-              show_count: block.settings.show_count
-            %}
+            {% if product.isTrackingInventory %}
+              {% render 'product-inventory-status',
+                count: product.variants[0].inventory,
+                threshold: block.settings.threshold,
+                show_count: block.settings.show_count
+              %}
+            {% endif %}
           {% when 'countdown_timer' %}
             {% render 'countdown-timer',
               title: block.settings.title,
