@@ -176,7 +176,7 @@ class CartDrawer extends HTMLElement {
   }
 
   updateItemQuantity(quantityElement, quantity) {
-    quantityElement.querySelector("span").textContent = quantity;
+    quantityElement.querySelector("[data-current-quantity]").textContent = quantity;
   }
 
   updateItemPrice(priceElement, price) {

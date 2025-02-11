@@ -3,7 +3,7 @@ if (!customElements.get("yc-quantity-control")) {
     constructor() {
       super();
 
-      this.quantity = this.querySelector("span");
+      this.quantity = this.querySelector("[data-current-quantity]");
       this.plusButton = this.querySelector('button[name="plus"]');
       this.minusButton = this.querySelector('button[name="minus"]');
       this.changeEvent = new Event("change", { bubbles: true });
