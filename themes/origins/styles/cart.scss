@@ -42,6 +42,8 @@ yc-section {
               height: 100px;
               width: 100px;
               min-width: 100px;
+              border-radius: var(--radius-md);
+              overflow: hidden;
 
               .card-placeholder {
                 width: 100%;
@@ -92,11 +94,7 @@ yc-section {
 
             .delete {
               border: none;
-              background-color: color-mix(
-                in srgb,
-                currentColor 5%,
-                transparent
-              );
+              background-color: color-mix(in srgb, currentColor 5%, transparent);
 
               &:hover {
                 color: var(--color-error-500);
@@ -196,6 +194,22 @@ yc-section {
             }
           }
         }
+      }
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      display: none;
+    }
+
+    &[data-is-empty] {
+      .content,
+      .summary {
+        display: none;
+      }
+
+      .empty {
+        display: flex;
       }
     }
   }
