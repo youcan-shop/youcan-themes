@@ -36,14 +36,14 @@
 {% assign options = labels | split: ',' %}
 
 <yc-modal as-drawer>
-  <div class="sort-trigger">
+  <div class="select-trigger">
     <label for="trigger" class="yc-btn icon" data-trigger>
       {% render 'yc-icon', name: 'sort' %}
     </label>
   </div>
 
   <yc-modal-content>
-    <yc-sort>
+    <yc-select>
       <label for="trigger" class="yc-btn icon">
         {% assign placeholder = 'general.sort.placeholder' | t %}
         {% for opt in options %}
@@ -60,15 +60,19 @@
         <input type="checkbox" name="sort" id="trigger" hidden>
       </label>
 
-      <yc-sort-content>
-        <yc-sort-header>
+      <yc-select-content>
+        <yc-select-header>
           <span> {{ 'general.sort.label' | t }}: </span>
-        </yc-sort-header>
+        </yc-select-header>
         {% for opt in options %}
           {% assign index = forloop.index %}
           {% assign field = keys[index] %}
           {% assign order = index | modulo: 2 == 0 %}
-          {% assign href = '?sort_field=' | append: field | append: '&sort_order=' | append: values[order] %}
+          {% assign href = '?sort_field='
+            | append: field
+            | append: '&sort_order='
+            | append: values[order]
+          %}
           {% unless terms == null or terms == '' %}
             {% assign href = href | append: '&q=' | append: terms %}
           {% endunless %}
@@ -82,7 +86,7 @@
             <span>{{ opt }}</span>
           </a>
         {% endfor %}
-      </yc-sort-content>
-    </yc-sort>
+      </yc-select-content>
+    </yc-select>
   </yc-modal-content>
 </yc-modal>
