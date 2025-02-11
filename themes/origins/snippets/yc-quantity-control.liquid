@@ -3,13 +3,28 @@
 
   Accepts:
   - button_size: (optional) 'sm', 'md' or 'lg'
-  - variant: Cart item liquid object
+  - product: Cart item liquid object
 
   Usage:
-  {% render 'yc-quantity-input' variant: variant %}
+  {% render 'yc-quantity-input' product: product %}
 {% endcomment %}
 
-<yc-quantity-control class="quantity cart-quantity">
+{% assign quantity = 1 %}
+
+{% if product.quantity != null %}
+  {% assign quantity = product.quantity %}
+{% endif %}
+
+<yc-quantity-control
+  class="quantity cart-quantity"
+  data-item="{{ product.id }}"
+  data-product-variant="{{ product.product_variant_id }}"
+  {% if product.isTrackingInventory %}
+    data-inventory="{{ product.first_available_variant.inventory }}"
+  {% endif %}
+  data-quantity="{{ quantity }}"
+  data-cart-item="quantity"
+>
   <button
     class="yc-btn icon"
     name="minus"
@@ -19,19 +34,11 @@
   >
     {% render 'yc-icon', name: 'minus' %}
   </button>
-  <p>
-    <span
-      data-cart-item="quantity"
-      data-item="{{ variant.id }}"
-      data-product-variant="{{ variant.product_variant_id }}"
-      {% if variant.inventory != null %}
-        data-inventory="{{ variant.inventory }}"
-      {% endif %}
-      data-quantity="{{ variant.quantity }}"
-    >
-      {{- variant.quantity -}}
+  <div class="current-quantity">
+    <span data-current-quantity>
+      {{- quantity -}}
     </span>
-  </p>
+  </div>
   <button
     class="yc-btn icon"
     name="plus"
