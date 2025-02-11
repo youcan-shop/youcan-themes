@@ -3,24 +3,24 @@
 
   Accepts:
   - button_size: (optional) 'sm', 'md' or 'lg'
-  - variant: Cart item liquid object
+  - product: Cart item liquid object
 
   Usage:
-  {% render 'yc-quantity-input' variant: variant %}
+  {% render 'yc-quantity-input' product: product %}
 {% endcomment %}
 
 {% assign quantity = 1 %}
 
-{% if variant.quantity != null %}
-  {% assign quantity = variant.quantity %}
+{% if product.quantity != null %}
+  {% assign quantity = product.quantity %}
 {% endif %}
 
 <yc-quantity-control
   class="quantity cart-quantity"
-  data-item="{{ variant.id }}"
-  data-product-variant="{{ variant.product_variant_id }}"
-  {% if variant.isTrackingInventory %}
-    data-inventory="{{ variant.first_available_variant.inventory }}"
+  data-item="{{ product.id }}"
+  data-product-variant="{{ product.product_variant_id }}"
+  {% if product.isTrackingInventory %}
+    data-inventory="{{ product.first_available_variant.inventory }}"
   {% endif %}
   data-quantity="{{ quantity }}"
   data-cart-item="quantity"

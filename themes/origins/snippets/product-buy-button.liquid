@@ -1,3 +1,14 @@
+{% comment %}
+  Renders either an 'express checkout' form or an 'add to cart' button
+
+  Accepts:
+  - product: Product variant
+  - checkout_type: 'express' || 'normal'
+
+  Usage:
+  {% render 'product-buy-button', product: product, checkout_type: block.settings.checkout_type %}
+{% endcomment %}
+
 <div class="buy-button">
   {% if checkout_type == 'express' %}
     <yc-modal as-drawer>
@@ -40,7 +51,7 @@
       </yc-modal-content>
 
       <div class="actions" data-sticky>
-        {% render 'yc-quantity-control', variant: product %}
+        {% render 'yc-quantity-control', product: product %}
         <button class="primary" data-trigger>
           {{ 'product.buy_button.buy_now' | t }}
         </button>
@@ -49,8 +60,8 @@
   {% else %}
     {% assign quantity = 1 %}
 
-    {% if variant.quantity != null %}
-      {% assign quantity = variant.quantity %}
+    {% if product.quantity != null %}
+      {% assign quantity = product.quantity %}
     {% endif %}
 
     <yc-product-form
@@ -59,7 +70,7 @@
       class="actions"
       data-sticky
     >
-      {% render 'yc-quantity-control', variant: product %}
+      {% render 'yc-quantity-control', product: product %}
       <button
         data-buy-button
         name="add"

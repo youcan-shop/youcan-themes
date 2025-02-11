@@ -12,45 +12,10 @@ class CartDrawer extends HTMLElement {
   }
 
   _render() {
-    const handleQuantityChange = debounce(async (event) => {
+    const handleQuantityChange = debounce((event) => {
       const quantityControl = event.target;
-      const {
-        item: cartItemId,
-        productVariant: productVariantId,
-        quantity,
-      } = quantityControl.dataset;
 
-      if (!(cartItemId && productVariantId && quantity)) {
-        return;
-      }
-
-      this.setItemIsLoading(quantityControl, true);
-
-      try {
-        const newCart = await youcanjs.cart.updateItem({
-          cartItemId,
-          productVariantId,
-          quantity,
-        });
-
-        publish(PUB_SUB_EVENTS.cartUpdate, {
-          source: "quantity-control",
-          productVariantId: this.productVariantValue,
-          cartData: newCart,
-        });
-      } catch (error) {
-        console.error(error);
-
-        publish(PUB_SUB_EVENTS.cartError, {
-          source: "quantity-control",
-          productVariantId: this.productVariantValue,
-          error: error,
-        });
-
-        toast.show(error.message, "error");
-      } finally {
-        this.setItemIsLoading(quantityControl, false);
-      }
+      this.handleQuantityChangeForQuantityElement(quantityControl);
     }, ON_CHANGE_DEBOUNCE_TIMER);
 
     this.addEventListener("change", handleQuantityChange.bind(this));
@@ -63,6 +28,42 @@ class CartDrawer extends HTMLElement {
       this.updateCartBubble(count, sub_total);
       this.updateCartList(items);
     });
+  }
+
+  async handleQuantityChangeForQuantityElement(element) {
+    const { item: cartItemId, productVariant: productVariantId, quantity } = element.dataset;
+
+    if (!(cartItemId && productVariantId && quantity)) {
+      return;
+    }
+
+    this.setItemIsLoading(element, true);
+
+    try {
+      const newCart = await youcanjs.cart.updateItem({
+        cartItemId,
+        productVariantId,
+        quantity,
+      });
+
+      publish(PUB_SUB_EVENTS.cartUpdate, {
+        source: "quantity-control",
+        productVariantId: this.productVariantValue,
+        cartData: newCart,
+      });
+    } catch (error) {
+      console.error(error);
+
+      publish(PUB_SUB_EVENTS.cartError, {
+        source: "quantity-control",
+        productVariantId: this.productVariantValue,
+        error: error,
+      });
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setItemIsLoading(element, false);
+    }
   }
 
   updateCartSubTotal(subtotal) {
