@@ -1,0 +1,183 @@
+{% if product.related_products %}
+  {{ 'product-card.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+
+  <yc-section
+    style="
+      --section-space-top: {{ section.settings.space_top }}px;
+      --section-space-bottom: {{ section.settings.space_bottom }}px;
+      --section-bg-color: {{ section.settings.background_color.hex }};
+      --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+      --section-arrows-foreground: rgb(var(--section-text-color));
+      --section-arrows-background: var(--section-bg-color);
+
+      --items-columns: {{ section.settings.product_columns }};
+    "
+  >
+    {% if section.settings.title or section.settings.description %}
+      <yc-section-head data-position="{{ section.settings.position }}">
+        {% if section.settings.title %}
+          <h2>{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.description %}
+          <p>{{ section.settings.description }}</p>
+        {% endif %}
+      </yc-section-head>
+    {% endif %}
+    <div class="products">
+      {% if section.settings.view_style == 'grid' %}
+        <ul class="items-grid">
+          {% for item in product.related_products %}
+            <li>
+              {%- render 'product-card', product: item -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {% else %}
+        <yc-slider
+          arrows
+          responsive
+          data-type="fit"
+          style="
+            --slider-gap: 30;
+            --slider-speed: 600;
+            --slider-height: auto;
+            --slider-per-page: {{ section.settings.product_columns }};
+          "
+          aria-role="region"
+          aria-roledescription="Carousel"
+        >
+          <div class="slider-area">
+            <div class="slider-box" data-slider-box>
+              <ul class="slider-inner" data-slider>
+                {% for item in product.related_products %}
+                  <li>
+                    <yc-slider-item>
+                      {%- render 'product-card', product: item -%}
+                    </yc-slider-item>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+          <yc-slider-footer>
+            <yc-slider-arrows data-position="right">
+              <div class="slider-arrows">
+                <button class="icon" data-arrow="left" aria-label="previous" disabled>
+                  {% render 'yc-icon', name: 'arrow-left', size: 15 %}
+                </button>
+                <button class="icon" data-arrow="right" aria-label="next">
+                  {% render 'yc-icon', name: 'arrow-right', size: 15 %}
+                </button>
+              </div>
+            </yc-slider-arrows>
+          </yc-slider-footer>
+        </yc-slider>
+      {% endif %}
+    </div>
+  </yc-section>
+{% endif %}
+
+{%- schema -%}
+{
+  "limit": 1,
+  "label": "Related Products",
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "Related Products"
+    },
+    {
+      "id": "description",
+      "type": "textarea",
+      "label": "Description",
+      "default": "Products that take the spotlight"
+    },
+    {
+      "id": "position",
+      "type": "select",
+      "label": "Header position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "id": "view_style",
+      "type": "select",
+      "label": "View Style",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "slides",
+          "label": "Slides"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "id": "product_columns",
+      "type": "range",
+      "label": "Number of columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 100
+    }
+  ]
+}
+{%- endschema -%}
