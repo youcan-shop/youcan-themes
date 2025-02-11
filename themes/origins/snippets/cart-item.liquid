@@ -1,27 +1,43 @@
 <div class="item">
   <div class="info">
     <div class="image">
-      {% if product.thumbnail %}
-        <img
-          loading="lazy"
-          height="100%"
-          width="100%"
-          src="{{ product.thumbnail }}"
-          alt="{{ product.name }}"
-        >
-      {% else %}
-        <div class="card-placeholder">
-          {% render 'yc-placeholder', name: 'product', size: '48' %}
-        </div>
-      {% endif %}
+      <img
+        loading="lazy"
+        height="100%"
+        width="100%"
+        src="{{ product.image }}"
+        alt="{{ product.name }}"
+        {% if product.image contains '/store-front/images/product-default' %}
+          hidden
+        {% endif %}
+      >
+      <div
+        class="card-placeholder"
+        {% if product.image %}
+          hidden
+        {% endif %}
+        data-cart-item-image-placeholder
+      >
+        {% render 'yc-placeholder', name: 'product', size: '48' %}
+      </div>
     </div>
     <div class="heading">
       <a href="{{ product.url }}" class="link" title="{{ product.name }}">
         {{ product.name | default: 'Product Name' }}
       </a>
-      <p class="variant">
-        XL / SM / RED
-        {% comment %} TODO: List variants separated by '/' {% endcomment %}
+      <p
+        class="variant"
+        data-cart-item="variant"
+        {% unless product.variations.size > 1 %}
+          hidden
+        {% endunless %}
+      >
+        {% for variant in product.variations %}
+          <span>{{- variant[1] -}}</span>
+          {% unless forloop.index == product.variations.size - 1 %}
+            <span>/</span>
+          {% endunless %}
+        {% endfor %}
       </p>
       {% if product.variants %}
       {% endif %}
@@ -31,8 +47,18 @@
   <div class="controls">
     {% render 'yc-quantity-control', button_size: 'sm' %}
     <span data-subtotal>{{ 0 | money }}</span>
-    <button class="yc-btn icon delete" data-size="sm" aria-label="Delete">
-      {% render 'yc-icon', name: 'trash' %}
-    </button>
+    <yc-cart-remove-button>
+      <button
+        class="yc-btn icon delete"
+        data-delete
+        data-size="sm"
+        aria-label="Delete"
+        data-item="{{ product.id }}"
+        data-product-variant="{{ product.product_variant_id }}"
+        data-cart-item="delete-button"
+      >
+        {% render 'yc-icon', name: 'trash' %}
+      </button>
+    </yc-cart-remove-button>
   </div>
 </div>
