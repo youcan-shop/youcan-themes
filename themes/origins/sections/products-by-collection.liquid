@@ -1,5 +1,6 @@
 {{ 'product-card.css' | asset_url | stylesheet_tag }}
 {{ 'products-by-collection.css' | asset_url | stylesheet_tag }}
+{{ 'component-product-form.js' | asset_url | script_tag_deferred }}
 
 {%- assign collection = section.settings.collection -%}
 {%- assign number_of_products = section.settings.max_products -%}
@@ -36,7 +37,10 @@
         {%- paginate collection.products by number_of_products id category_id: collection.id %}
           {%- for item in items -%}
             <li>
-              {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
+              {%- render 'product-card',
+                product: item,
+                quick_add: section.settings.quick_add_enabled
+              -%}
             </li>
           {%- endfor -%}
         {%- endpaginate %}
@@ -73,7 +77,10 @@
                 {%- for item in items -%}
                   <yc-slider-item>
                     <li>
-                      {%- render 'product-card', product: item, quick_add: section.settings.quick_add_enabled -%}
+                      {%- render 'product-card',
+                        product: item,
+                        quick_add: section.settings.quick_add_enabled
+                      -%}
                     </li>
                   </yc-slider-item>
                 {%- endfor -%}

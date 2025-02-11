@@ -18,7 +18,9 @@ if (!customElements.get("yc-product-form")) {
     }
 
     handleQuantityChange(event) {
-      if (event.target.tagName !== "YC-QUANTITY-CONTROL") return;
+      if (event.target.tagName !== "YC-QUANTITY-CONTROL") {
+        return;
+      }
 
       const { quantity } = event.target.dataset;
       this.quantityValue = quantity;
