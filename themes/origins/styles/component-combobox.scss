@@ -1,4 +1,4 @@
-yc-select {
+yc-combobox {
   --select-bg-color: var(--section-bg-color, var(--color-base-white));
   --select-text-color: rgb(var(--section-text-color, var(--color-base-black)));
 
@@ -8,7 +8,7 @@ yc-select {
   align-items: center;
   position: relative;
 
-  yc-select-trigger.yc-btn.icon {
+  yc-combobox-trigger.yc-btn.icon {
     width: 100%;
     cursor: pointer;
     user-select: none;
@@ -16,7 +16,7 @@ yc-select {
     padding: 8px 12px;
     justify-content: space-between;
 
-    yc-select-value {
+    yc-combobox-value {
       width: 90%;
       overflow: hidden;
       white-space: nowrap;
@@ -37,7 +37,7 @@ yc-select {
     }
   }
 
-  yc-select-content {
+  yc-combobox-content {
     display: grid;
     z-index: 2;
     width: 100%;
@@ -48,7 +48,7 @@ yc-select {
     transition: var(--transition-duration-normal);
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 
-    &:has(yc-select-item) {
+    &:has(yc-combobox-item) {
       display: none;
     }
 
@@ -76,8 +76,7 @@ yc-select {
       padding: 10px 12px;
       color: var(--select-text-color);
       background-color: var(--select-bg-color);
-      border-block-end: 1px solid
-        color-mix(in srgb, currentColor 8%, transparent) !important;
+      border-block-end: 1px solid color-mix(in srgb, currentColor 8%, transparent) !important;
     }
 
     label {
@@ -153,8 +152,7 @@ yc-select {
     }
   }
 
-  &:has(yc-select-content[data-visible="true"])
-    yc-select-trigger.yc-btn.icon::after {
+  &:has(yc-combobox-content[data-visible="true"]) yc-combobox-trigger.yc-btn.icon::after {
     rotate: -135deg;
     inset-block-start: 2px;
   }

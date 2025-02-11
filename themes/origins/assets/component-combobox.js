@@ -1,14 +1,14 @@
-if (!customElements.get("yc-select")) {
-  class Select extends HTMLElement {
+if (!customElements.get("yc-combobox")) {
+  class Combobox extends HTMLElement {
     static observedAttributes = ["name"];
 
     constructor() {
       super();
       this.state = false;
-      this.trigger = this.querySelector("yc-select-trigger");
-      this.placeholder = this.trigger.querySelector("yc-select-value");
-      this.content = this.querySelector("yc-select-content");
-      this.search = this.querySelector("yc-select-search");
+      this.trigger = this.querySelector("yc-combobox-trigger");
+      this.placeholder = this.trigger.querySelector("yc-combobox-value");
+      this.content = this.querySelector("yc-combobox-content");
+      this.search = this.querySelector("yc-combobox-search");
     }
 
     connectedCallback() {
@@ -18,14 +18,14 @@ if (!customElements.get("yc-select")) {
     }
 
     setup() {
-      const items = this.content.querySelectorAll("yc-select-item");
+      const items = this.content.querySelectorAll("yc-combobox-item");
 
       items.forEach((item) => {
         const { value } = item.attributes;
         const label = item.textContent.trim();
         const checked = item.hasAttribute("checked");
         const disabled = item.hasAttribute("disabled");
-        
+
         if (checked) this.placeholder.textContent = label;
 
         item.outerHTML = `
@@ -78,8 +78,7 @@ if (!customElements.get("yc-select")) {
       this.trigger.addEventListener("click", () => {
         this.content.toggleAttribute(
           "is-above",
-          innerHeight - this.trigger.getBoundingClientRect().bottom <
-            this.content.offsetHeight,
+          innerHeight - this.trigger.getBoundingClientRect().bottom < this.content.offsetHeight,
         );
         this.toggleState(!this.state);
       });
@@ -110,5 +109,5 @@ if (!customElements.get("yc-select")) {
     }
   }
 
-  customElements.define("yc-select", Select);
+  customElements.define("yc-combobox", Combobox);
 }
