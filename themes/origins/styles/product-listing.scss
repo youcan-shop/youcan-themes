@@ -72,7 +72,7 @@
       align-items: center;
       gap: var(--gap-md);
 
-      a {
+      > a {
         --size: 45px;
 
         height: var(--size);
@@ -92,6 +92,38 @@
 
         &[data-active] {
           border-color: color-mix(in srgb, currentColor 20%, transparent);
+        }
+      }
+
+      .pages-selector {
+        display: none;
+
+        .page-trigger {
+          height: 45px;
+        }
+      }
+    }
+  }
+}
+
+@include breakpoint("md") {
+  .product-listing {
+    .products-area {
+      yc-pagination {
+        justify-content: space-between;
+
+        > a,
+        > svg {
+          display: none;
+        }
+
+        > a:first-child,
+        > a:last-child {
+          display: flex;
+        }
+
+        .pages-selector {
+          display: block;
         }
       }
     }

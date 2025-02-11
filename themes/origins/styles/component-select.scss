@@ -1,8 +1,8 @@
 @import "mixins/breakpoints";
 
-yc-sort {
-  --sort-bg-color: var(--section-bg-color, var(--color-base-white));
-  --sort-text-color: rgb(var(--section-text-color, var(--color-base-black)));
+yc-select {
+  --select-bg-color: var(--section-bg-color, var(--color-base-white));
+  --select-text-color: rgb(var(--section-text-color, var(--color-base-black)));
 
   width: 200px;
   display: flex;
@@ -30,7 +30,7 @@ yc-sort {
         transition: var(--transition-duration-normal);
       }
 
-      &:has(:not(input:checked)) + yc-sort-content {
+      &:has(:not(input:checked)) + yc-select-content {
         opacity: 0;
         filter: blur(2px);
         visibility: hidden;
@@ -39,22 +39,21 @@ yc-sort {
     }
   }
 
-  yc-sort-content {
+  yc-select-content {
     display: grid;
     z-index: 2;
     width: 100%;
     position: absolute;
     inset-block-start: calc(100% + 0.5em);
     border-radius: var(--radius-md);
-    background-color: var(--sort-bg-color);
+    background-color: var(--select-bg-color);
     transition: var(--transition-duration-normal);
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 
-    yc-sort-header {
+    yc-select-header {
       display: none;
       padding-block: 0.5em 1.5em;
-      border-block-end: 1px solid
-        color-mix(in srgb, currentColor 8%, transparent);
+      border-block-end: 1px solid color-mix(in srgb, currentColor 8%, transparent);
 
       span {
         display: flex;
@@ -71,7 +70,7 @@ yc-sort {
       margin-inline: 4px;
       font-size: var(--text-sm);
       border-radius: var(--radius-md);
-      color: var(--sort-text-color);
+      color: var(--select-text-color);
       transition: var(--transition-duration-normal);
 
       span {
@@ -121,7 +120,7 @@ yc-sort {
   }
 }
 
-.sort-trigger {
+.select-trigger {
   label[data-trigger] {
     display: none;
     cursor: pointer;
@@ -130,24 +129,24 @@ yc-sort {
 }
 
 @include breakpoint("md") {
-  .sort-trigger {
+  .select-trigger {
     label[data-trigger] {
       display: flex;
     }
   }
 
-  yc-sort {
+  yc-select {
     width: 100%;
 
     label.yc-btn.icon {
       display: none;
     }
 
-    yc-sort-content {
+    yc-select-content {
       border: none;
       position: relative;
 
-      yc-sort-header {
+      yc-select-header {
         display: block;
       }
 
