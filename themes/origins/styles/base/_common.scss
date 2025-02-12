@@ -306,15 +306,19 @@ yc-quantity-control {
     }
   }
 
-  p {
+  .current-quantity {
     display: flex;
     justify-content: center;
     align-items: center;
     min-width: 24px;
     text-align: center;
+  }
 
-    &:has([data-loading]) {
-      span {
+  &[data-loading] {
+    pointer-events: none;
+
+    .current-quantity {
+      [data-current-quantity] {
         color: transparent;
       }
 
@@ -329,10 +333,6 @@ yc-quantity-control {
         animation: spin 1s linear infinite;
       }
     }
-  }
-
-  &[data-loading] {
-    pointer-events: none;
   }
 }
 

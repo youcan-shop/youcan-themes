@@ -14,6 +14,16 @@ if (!customElements.get("yc-product-form")) {
 
     _render() {
       this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
+      this.addEventListener("change", this.handleQuantityChange.bind(this));
+    }
+
+    handleQuantityChange(event) {
+      if (event.target.tagName !== "YC-QUANTITY-CONTROL") {
+        return;
+      }
+
+      const { quantity } = event.target.dataset;
+      this.quantityValue = quantity;
     }
 
     async onBuyClicked(event) {
@@ -21,8 +31,8 @@ if (!customElements.get("yc-product-form")) {
 
       this.setIsBuyButtonLoading(true);
 
-      const productVariantId = this.getAttribute("variant-id");
-      const quantity = this.getAttribute("quantity") || 1;
+      const productVariantId = this.productVariantId;
+      const quantity = this.quantityValue || 1;
 
       try {
         const newCart = await youcanjs.cart.addItem({
@@ -52,6 +62,23 @@ if (!customElements.get("yc-product-form")) {
 
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
+    }
+
+    get productVariantId() {
+      return this.getAttribute("variant-id");
+    }
+
+    get quantityValue() {
+      return parseInt(this.getAttribute("quantity"), 10);
+    }
+
+    set quantityValue(value) {
+      const parsed = parseInt(value, 10);
+      if (isNaN(parsed)) {
+        throw new Error("Invalid quantity value");
+      }
+
+      this.setAttribute("quantity", value);
     }
   }
 

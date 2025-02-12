@@ -445,17 +445,20 @@ yc-quantity-control{
 yc-quantity-control button svg{
   pointer-events:none;
 }
-yc-quantity-control p{
+yc-quantity-control .current-quantity{
   display:flex;
   justify-content:center;
   align-items:center;
   min-width:24px;
   text-align:center;
 }
-yc-quantity-control p:has([data-loading]) span{
+yc-quantity-control[data-loading]{
+  pointer-events:none;
+}
+yc-quantity-control[data-loading] .current-quantity [data-current-quantity]{
   color:transparent;
 }
-yc-quantity-control p:has([data-loading])::before{
+yc-quantity-control[data-loading] .current-quantity::before{
   content:"";
   width:18px;
   height:18px;
@@ -464,9 +467,6 @@ yc-quantity-control p:has([data-loading])::before{
   border-bottom-color:transparent;
   border-radius:var(--radius-circle);
   animation:spin 1s linear infinite;
-}
-yc-quantity-control[data-loading]{
-  pointer-events:none;
 }
 
 .breadcrumb ol{
