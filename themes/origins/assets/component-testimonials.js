@@ -11,26 +11,33 @@ class Testimonials extends HTMLElement {
   }
 
   connectedCallback() {
-    this.productId ? this._render() : (this.isEmpty(), this.skeleton.remove());
+    if (!this.productId) {
+      this.setIsEmpty();
+      this.skeleton.remove();
+
+      return;
+    }
+
+    this._render();
   }
 
   async _render() {
     try {
       const response = await youcanjs.product.fetchReviews(this.productId).data();
 
-      response.length ? this.setupItems(response) : this.isEmpty();
+      response.length ? this.setupItems(response) : this.setIsEmpty();
     } catch (error) {
       console.error(error);
 
-      this.isEmpty();
+      this.setIsEmpty();
       toast.show(error.message, "error");
     } finally {
       this.skeleton.remove();
     }
   }
 
-  isEmpty() {
-    this.empty.removeAttribute("hidden");
+  setIsEmpty() {
+    this.empty.toggleAttribute("hidden", false);
   }
 
   setupItems(items) {
