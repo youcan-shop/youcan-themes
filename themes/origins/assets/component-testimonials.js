@@ -37,7 +37,7 @@ class Testimonials extends HTMLElement {
   }
 
   setIsEmpty() {
-    this.empty.toggleAttribute("hidden", false);
+    this.empty.removeAttribute("hidden");
   }
 
   setupItems(items) {
