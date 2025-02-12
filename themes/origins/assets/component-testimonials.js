@@ -3,8 +3,11 @@ class Testimonials extends HTMLElement {
 
   constructor() {
     super();
-    this.skeleton = this.querySelector("[data-skeleton]");
+    this.PRODUCT_ID = this.getAttribute("product-id");
+
     this.container = this.querySelector("[data-container]");
+    this.skeleton = this.querySelector("[data-skeleton]");
+    this.empty = this.querySelector("[data-empty]");
   }
 
   connectedCallback() {
@@ -13,17 +16,21 @@ class Testimonials extends HTMLElement {
 
   async _render() {
     try {
-      const productId = this.getAttribute("product-id");
-      const response = await youcanjs.product.fetchReviews(productId).data();
+      const response = await youcanjs.product.fetchReviews(this.PRODUCT_ID).data();
 
-      response.length && this.setupItems(response);
+      response.length ? this.setupItems(response) : this.isEmpty();
     } catch (error) {
       console.error(error);
 
-      toast.show(error.message, "error");
+      this.isEmpty();
+      this.PRODUCT_ID && toast.show(error.message, "error");
     } finally {
       this.skeleton.remove();
     }
+  }
+
+  isEmpty() {
+    this.empty.removeAttribute("hidden");
   }
 
   setupItems(items) {
@@ -31,7 +38,8 @@ class Testimonials extends HTMLElement {
 
     if (ITEMS_WITH_CONTENT.length) {
       ITEMS_WITH_CONTENT.forEach((item) => this.createItem(item));
-      this.parentElement.style.setProperty("--items-columns", ITEMS_WITH_CONTENT.length);
+      ITEMS_WITH_CONTENT.length > 1 &&
+        this.parentElement.style.setProperty("--items-columns", ITEMS_WITH_CONTENT.length);
     }
     this.skeleton.remove();
   }
