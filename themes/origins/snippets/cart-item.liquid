@@ -1,6 +1,6 @@
 <div class="item">
   <div class="info">
-    <div class="image">
+    <div class="image" data-cart-item="image">
       <img
         loading="lazy"
         height="100%"
@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="heading">
-      <a href="{{ product.url }}" class="link" title="{{ product.name }}">
+      <a href="{{ product.url }}" class="link" title="{{ product.name }}" data-cart-item="title">
         {{ product.name | default: 'Product Name' }}
       </a>
       <p
@@ -41,12 +41,13 @@
       </p>
       {% if product.variants %}
       {% endif %}
-      <span data-base-price>{{ product.price | default: 0 | money }}</span>
+      <span data-base-price data-cart-item="price">{{ product.price | default: 0 | money }}</span>
     </div>
   </div>
   <div class="controls">
     {% render 'yc-quantity-control', button_size: 'sm' %}
-    <span data-subtotal>{{ 0 | money }}</span>
+    {% assign subtotal = product.quantity | times: product.price %}
+    <span data-subtotal data-cart-item="subtotal">{{ subtotal | money }}</span>
     <yc-cart-remove-button>
       <button
         class="yc-btn icon delete"

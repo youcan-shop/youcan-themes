@@ -1,5 +1,4 @@
 {{ 'cart.css' | asset_url | stylesheet_tag }}
-{{ 'component-quantity-control.js' | asset_url | script_tag_deferred }}
 
 {% assign cart_size = cart.items.size %}
 
@@ -16,14 +15,19 @@
     {% unless cart_size > 0 %}
       data-is-empty
     {% endunless %}
-    data-cart-page
+    data-cart
   >
+    <template data-cart-item-template>
+      {% render 'cart-item' %}
+    </template>
     <div class="content">
       <h1 class="title h4">{{ 'cart.page.title' | t }}</h1>
       <ul class="list">
-        {% for item in cart.items %}
-          <li>{% render 'cart-item', product: item %}</li>
-        {% endfor %}
+        <yc-cart-items>
+          {% for item in cart.items %}
+            <li>{% render 'cart-item', product: item %}</li>
+          {% endfor %}
+        </yc-cart-items>
       </ul>
     </div>
     <div class="summary">
@@ -49,7 +53,9 @@
               <span>{{ 'cart.page.summary.total' | t }}</span>
               <span data-cart-total>{{ cart.total | money }}</span>
             </div>
-            <button class="yc-btn primary">{{ 'cart.page.summary.checkout_button' | t }}</button>
+            <a href="{{ cart.cart_submit_url }}" class="yc-btn primary">
+              {{- 'cart.page.summary.checkout_button' | t -}}
+            </a>
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 {{ 'header-cart-drawer.css' | asset_url | stylesheet_tag }}
-{{ 'component-cart-drawer-items.js' | asset_url | script_tag_deferred }}
-{{ 'component-quantity-control.js' | asset_url | script_tag_deferred }}
+{{ 'cart.js' | asset_url | script_tag_deferred }}
 
 {% assign cart_size = cart.items.size %}
 
@@ -8,19 +7,21 @@
   <template data-cart-item-template>
     {% render 'cart-drawer-item' %}
   </template>
-  <button class="cart-btn icon" aria-label="cart" data-toggle>
-    <span
-      class="total-items"
-      data-cart-badge
-      {% unless cart_size > 0 %}
-        hidden
-      {% endunless %}
-    >
-      {{- cart_size -}}
-    </span>
-    {% render 'yc-icon', name: 'cart' %}
-    <span class="total-amount" data-total>{{ cart.sub_total | default: 0 | money }}</span>
-  </button>
+  <yc-cart-bubble>
+    <button class="cart-btn icon" aria-label="cart" data-toggle>
+      <span
+        class="total-items"
+        data-cart-badge
+        {% unless cart_size > 0 %}
+          hidden
+        {% endunless %}
+      >
+        {{- cart_size -}}
+      </span>
+      {% render 'yc-icon', name: 'cart' %}
+      <span class="total-amount" data-total>{{ cart.sub_total | default: 0 | money }}</span>
+    </button>
+  </yc-cart-bubble>
   <div class="drawer-container">
     <div class="drawer-box">
       <div
@@ -48,7 +49,7 @@
         <div class="footer">
           <div class="totals">
             <span>{{ 'cart.drawer.total' | t }}</span>
-            <span data-total>{{ cart.sub_total | default: 0 | money }}</span>
+            <span data-drawer-total>{{ cart.sub_total | default: 0 | money }}</span>
           </div>
           <div class="actions">
             <a href="/cart" class="yc-btn primary">{{ 'cart.drawer.actions.go_to_cart' | t }}</a>
