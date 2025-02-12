@@ -1,4 +1,5 @@
 {{ 'testimonial-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-testimonials.js' | asset_url | script_tag_deferred }}
 
 <yc-section
   style="
@@ -20,13 +21,16 @@
       {% endif %}
     </yc-section-head>
   {% endif %}
-  <div class="product-testimonials">
-    <ul class="items-grid">
-      {% for block in (1..4) %}
-        <li>{% render 'testimonial-card' %}</li>
-      {% endfor %}
+  <yc-testimonials product-id="{{ section.settings.product.id }}">
+    <ul class="items-grid" data-container>
+      {% render 'testimonial-card' %}
     </ul>
-  </div>
+    {% render 'testimonial-skeleton' %}
+    <div class="empty-section" data-empty hidden>
+      {% assign title = 'testimonials.empty.title' | t %}
+      {% render 'yc-empty', icon: 'testimonials', heading: title %}
+    </div>
+  </yc-testimonials>
 </yc-section>
 
 {% schema %}
