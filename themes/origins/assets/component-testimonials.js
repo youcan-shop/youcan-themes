@@ -3,7 +3,7 @@ class Testimonials extends HTMLElement {
 
   constructor() {
     super();
-    this.PRODUCT_ID = this.getAttribute("product-id");
+    this.productId = this.getAttribute("product-id");
 
     this.container = this.querySelector("[data-container]");
     this.skeleton = this.querySelector("[data-skeleton]");
@@ -16,14 +16,14 @@ class Testimonials extends HTMLElement {
 
   async _render() {
     try {
-      const response = await youcanjs.product.fetchReviews(this.PRODUCT_ID).data();
+      const response = await youcanjs.product.fetchReviews(this.productId).data();
 
       response.length ? this.setupItems(response) : this.isEmpty();
     } catch (error) {
       console.error(error);
 
       this.isEmpty();
-      this.PRODUCT_ID && toast.show(error.message, "error");
+      this.productId && toast.show(error.message, "error");
     } finally {
       this.skeleton.remove();
     }
@@ -53,10 +53,13 @@ class Testimonials extends HTMLElement {
     const itemRatings = testimonial.querySelectorAll("[data-rating] svg");
 
     itemContent.innerHTML = content;
-    itemAuthor.textContent = `- ${first_name} ${last_name} -`;
     itemRatings.forEach((star, i) => {
       if (i + 1 > ratings) star.style.fill = "none";
     });
+    
+    if (first_name || last_name) {
+      itemAuthor.textContent = `- ${first_name ?? ""} ${last_name ?? ""}`;
+    }
 
     this.container.appendChild(testimonial);
   }
