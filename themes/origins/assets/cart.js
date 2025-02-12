@@ -239,7 +239,6 @@ class CartItems extends HTMLElement {
     super();
 
     this.cart = this.closest("[data-cart]");
-    console.log(this.cart);
   }
 
   connectedCallback() {
@@ -594,3 +593,34 @@ class QuantityControl extends HTMLElement {
 }
 
 customElements.define("yc-quantity-control", QuantityControl);
+
+class CartSummary extends HTMLElement {
+  constructor() {
+    super();
+
+    // Subtotal
+    // total
+    this.subtotal = this.querySelector("[data-cart-subtotal]");
+    this.total = this.querySelector("[data-cart-total]");
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    // TODO: Add listener for coupon activation and disactivation
+    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
+      const { sub_total, total } = payload.cartData;
+
+      this.updateSummary(sub_total, total);
+    });
+  }
+
+  updateSummary(subTotal, total) {
+    this.subtotal.textContent = formatCurrency(subTotal);
+    this.total.textContent = formatCurrency(total);
+  }
+}
+
+customElements.define("yc-summary-box", CartSummary);
