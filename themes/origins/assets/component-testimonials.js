@@ -11,7 +11,7 @@ class Testimonials extends HTMLElement {
   }
 
   connectedCallback() {
-    this._render();
+    this.productId ? this._render() : (this.isEmpty(), this.skeleton.remove());
   }
 
   async _render() {
@@ -23,7 +23,7 @@ class Testimonials extends HTMLElement {
       console.error(error);
 
       this.isEmpty();
-      this.productId && toast.show(error.message, "error");
+      toast.show(error.message, "error");
     } finally {
       this.skeleton.remove();
     }
@@ -56,7 +56,7 @@ class Testimonials extends HTMLElement {
     itemRatings.forEach((star, i) => {
       if (i + 1 > ratings) star.style.fill = "none";
     });
-    
+
     if (first_name || last_name) {
       itemAuthor.textContent = `- ${first_name ?? ""} ${last_name ?? ""}`;
     }
