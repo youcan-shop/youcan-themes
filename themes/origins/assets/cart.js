@@ -595,8 +595,6 @@ class CartSummary extends HTMLElement {
   constructor() {
     super();
 
-    // Subtotal
-    // total
     this.subtotal = this.querySelector("[data-cart-subtotal]");
     this.total = this.querySelector("[data-cart-total]");
   }
