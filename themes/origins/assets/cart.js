@@ -61,7 +61,6 @@ class CartDrawerItems extends HTMLElement {
 
       if (payload.source === "product-form") this.cart.open();
 
-      // TODO: Only updateCartSubtotal if subtotal exists
       this.updateCartSubTotal(sub_total);
       this.updateCartList(items);
     });
@@ -132,7 +131,6 @@ class CartDrawerItems extends HTMLElement {
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
     this.updateItemDeleteButtonAttributes(elements.deleteButton, item.id, item.productVariant.id);
-    // TODO: Only Update item subtotal if it exists (cart page)
 
     this.updateItemAttributes(
       elements.quantity,
@@ -327,7 +325,6 @@ class CartItems extends HTMLElement {
     this.updateItemPrice(elements.price, item.price);
     this.updateItemSubprice(elements.subtotal, item.quantity, item.price);
     this.updateItemDeleteButtonAttributes(elements.deleteButton, item.id, item.productVariant.id);
-    // TODO: Only Update item subtotal if it exists (cart page)
 
     this.updateItemAttributes(
       elements.quantity,
