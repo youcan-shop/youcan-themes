@@ -1,0 +1,119 @@
+{{ 'thank-you.css' | asset_url | stylesheet_tag }}
+
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color.hex }};
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+  "
+>
+  <div class="message">
+    {% render 'yc-icon', name: 'check-circle', size: 80 %}
+    <h1>Thank you for your purchase!</h1>
+    <p>Your order has been received and is being processed</p>
+  </div>
+  {% comment %}
+    {% if section.settings.title or section.settings.description %}
+      <yc-section-head data-position="{{ section.settings.position }}">
+        {% if section.settings.title %}
+          <h2>{{ section.settings.title }}</h2>
+        {% endif %}
+        {% if section.settings.description %}
+          <p>{{ section.settings.description }}</p>
+        {% endif %}
+      </yc-section-head>
+    {% endif %}
+  {% endcomment %}
+
+  {% comment %}
+    - Message
+      icon
+      title
+      desc
+      continue shopping button
+    - Summary
+      status
+      payment method
+      - table
+        products
+  {% endcomment %}
+</yc-section>
+
+{%- schema -%}
+{
+  "label": "Thank you",
+  "templates": ["thank-you"],
+  "limit": 1,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "My title"
+    },
+    {
+      "id": "description",
+      "type": "textarea",
+      "label": "Description",
+      "default": "My subtitle"
+    },
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "id": "position",
+      "type": "select",
+      "label": "Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    }
+  ]
+}
+{%- endschema -%}
