@@ -39,7 +39,7 @@ class CartDrawerItems extends HTMLElement {
   constructor() {
     super();
 
-    this.cart = document.querySelector("yc-drawer#cart");
+    this.cart = this.closest("yc-drawer#cart");
     this.subTotal = this.cart.querySelector("[data-drawer-total]");
   }
 
