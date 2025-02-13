@@ -8,10 +8,95 @@
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
   "
 >
-  <div class="message">
-    {% render 'yc-icon', name: 'check-circle', size: 80 %}
-    <h1>Thank you for your purchase!</h1>
-    <p>Your order has been received and is being processed</p>
+  <yc-section-head data-position="center">
+    <div class="message">
+      {% render 'yc-icon', name: 'check-circle', size: 80 %}
+      <h1>{{ 'order.title' | t }}</h1>
+      <p>{{ 'order.description' | t }}</p>
+    </div>
+  </yc-section-head>
+
+  <div class="order">
+    <div class="title">
+      <h2 class="h3">Order summary</h2>
+    </div>
+    <div class="payment">
+      <div class="status">
+        <span class="label">Status:</span>
+        <span class="value">
+          Unpaid
+          {% comment %} TODO: Payment status snippet {% endcomment %}
+        </span>
+      </div>
+      <div class="method">
+        <span class="label">Payment Method:</span>
+        <span class="value">
+          Cash on Delivery
+          {% comment %}
+            TODO: Render payment method snippet by gateway number
+          {% endcomment %}
+        </span>
+      </div>
+    </div>
+    <div class="items">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div>
+                <img src="" alt="" width="64" height="64">
+                <span>Fabulous T-Shirt</span>
+              </div>
+            </td>
+            <td>$29.99</td>
+            <td>2</td>
+            <td>$59.98</td>
+          </tr>
+          <tr>
+            <td>
+              <div>
+                <img src="" alt="" width="64" height="64">
+                <span>Spectacular Garment</span>
+              </div>
+            </td>
+            <td>$89.99</td>
+            <td>14</td>
+            <td>$89.99</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td colspan="2">Subtotal</td>
+            <td>$149.97</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2">Coupon</td>
+            <td>-$15.00</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2">Shipping</td>
+            <td>$5.00</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2">Total price</td>
+            <td>$139.97</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="summary">summary</div>
   </div>
   {% comment %}
     {% if section.settings.title or section.settings.description %}

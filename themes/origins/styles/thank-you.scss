@@ -1,4 +1,6 @@
 yc-section {
+  --order-border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
   .message {
     display: flex;
     flex-direction: column;
@@ -7,6 +9,32 @@ yc-section {
 
     .icon {
       color: var(--color-success-500);
+    }
+  }
+
+  .order {
+    width: 768px;
+    margin-inline: auto;
+    border-radius: var(--radius-md);
+    border: var(--order-border);
+
+    .title,
+    .payment,
+    .items,
+    .summary {
+      padding: 1.5em;
+    }
+
+    .title,
+    .payment {
+      border-block-end: var(--order-border);
+    }
+
+    .payment {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--text-md);
     }
   }
 }
