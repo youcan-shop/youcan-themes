@@ -16,7 +16,7 @@
 {% assign end = current | plus: 2 %}
 
 {% if base != '' or base != null %}
-  {% assign page_params = '/collections/' | append: base | append: '?' %}
+  {% assign page_params = base | append: '?' %}
 {% else %}
   {% assign page_params = '/search?' %}
 {% endif %}
@@ -42,7 +42,7 @@
       data-previous
     >
       {% render 'yc-icon', name: 'chevron-left' %}
-      {{ 'pagination.previous' | t }}
+      <span>{{ 'pagination.previous' | t }}</span>
     </a>
 
     {% if start < 1 %}
@@ -88,6 +88,34 @@
       <a href="{{ page_link }}" class="yc-btn icon">{{ last }}</a>
     {% endif %}
 
+    <yc-modal as-drawer class="pages-selector">
+      <button class="page-trigger icon" data-trigger>
+        {{ 'pagination.page' | t }}
+        {{ current }}
+      </button>
+      <yc-modal-content>
+        <yc-select>
+          <yc-select-content>
+            {% for index in (1..last) %}
+              {% assign page_link = page_params | replace: '%p', index %}
+
+              <a
+                href="{{ page_link }}"
+                {% if index == current %}
+                  data-checked
+                {% endif %}
+              >
+                <span>
+                  {{ 'pagination.page' | t }}
+                  {{ index }}
+                </span>
+              </a>
+            {% endfor %}
+          </yc-select-content>
+        </yc-select>
+      </yc-modal-content>
+    </yc-modal>
+
     <a
       class="yc-btn icon"
       href="{{ next_page_url }}"
@@ -96,7 +124,7 @@
       {% endif %}
       data-next
     >
-      {{ 'pagination.next' | t }}
+      <span>{{ 'pagination.next' | t }}</span>
       {% render 'yc-icon', name: 'chevron-right' %}
     </a>
   </yc-pagination>
