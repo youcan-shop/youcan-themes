@@ -48,15 +48,16 @@
     {% render 'yc-quantity-control', button_size: 'sm' %}
     {% assign subtotal = product.quantity | times: product.price %}
     <span data-subtotal data-cart-item="subtotal">{{ subtotal | money }}</span>
-    <yc-cart-remove-button>
+    <yc-cart-remove-button
+      item="{{ product.id }}"
+      product-variant="{{ product.product_variant_id }}"
+      data-cart-item="delete-button"
+    >
       <button
         class="yc-btn icon delete"
         data-delete
         data-size="sm"
         aria-label="Delete"
-        data-item="{{ product.id }}"
-        data-product-variant="{{ product.product_variant_id }}"
-        data-cart-item="delete-button"
       >
         {% render 'yc-icon', name: 'trash' %}
       </button>

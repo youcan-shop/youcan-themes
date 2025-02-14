@@ -67,7 +67,9 @@ class CartDrawerItems extends HTMLElement {
   }
 
   async handleQuantityChangeForQuantityElement(element) {
-    const { item: cartItemId, productVariant: productVariantId, quantity } = element.dataset;
+    const cartItemId = element.getAttribute("item");
+    const productVariantId = element.getAttribute("product-variant");
+    const quantity = element.getAttribute("quantity");
 
     if (!(cartItemId && productVariantId && quantity)) {
       return;
@@ -206,8 +208,8 @@ class CartDrawerItems extends HTMLElement {
   }
 
   updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
-    buttonElement.setAttribute("data-item", cartItemId);
-    buttonElement.setAttribute("data-product-variant", productVariantId);
+    buttonElement.setAttribute("item", cartItemId);
+    buttonElement.setAttribute("product-variant", productVariantId);
   }
 
   setIsEmpty(isEmpty = false) {
@@ -215,10 +217,10 @@ class CartDrawerItems extends HTMLElement {
   }
 
   updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
-    quantityElement.setAttribute("data-item", cartItemId);
-    quantityElement.setAttribute("data-product-variant", productVariantId);
-    quantityElement.setAttribute("data-quantity", quantity);
-    if (inventory) quantityElement.setAttribute("data-inventory", inventory);
+    quantityElement.setAttribute("item", cartItemId);
+    quantityElement.setAttribute("product-variant", productVariantId);
+    quantityElement.setAttribute("quantity", quantity);
+    if (inventory) quantityElement.setAttribute("inventory", inventory);
   }
 
   replaceContent(fragment) {
@@ -262,7 +264,9 @@ class CartItems extends HTMLElement {
   }
 
   async handleQuantityChangeForQuantityElement(element) {
-    const { item: cartItemId, productVariant: productVariantId, quantity } = element.dataset;
+    const cartItemId = element.getAttribute("item");
+    const productVariantId = element.getAttribute("product-variant");
+    const quantity = element.getAttribute("quantity");
 
     if (!(cartItemId && productVariantId && quantity)) {
       return;
@@ -404,8 +408,8 @@ class CartItems extends HTMLElement {
   }
 
   updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
-    buttonElement.setAttribute("data-item", cartItemId);
-    buttonElement.setAttribute("data-product-variant", productVariantId);
+    buttonElement.setAttribute("item", cartItemId);
+    buttonElement.setAttribute("product-variant", productVariantId);
   }
 
   setIsEmpty(isEmpty = false) {
@@ -413,10 +417,10 @@ class CartItems extends HTMLElement {
   }
 
   updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
-    quantityElement.setAttribute("data-item", cartItemId);
-    quantityElement.setAttribute("data-product-variant", productVariantId);
-    quantityElement.setAttribute("data-quantity", quantity);
-    if (inventory) quantityElement.setAttribute("data-inventory", inventory);
+    quantityElement.setAttribute("item", cartItemId);
+    quantityElement.setAttribute("product-variant", productVariantId);
+    quantityElement.setAttribute("quantity", quantity);
+    if (inventory) quantityElement.setAttribute("inventory", inventory);
   }
 
   replaceContent(fragment) {
@@ -474,11 +478,11 @@ class CartRemoveButton extends HTMLElement {
   }
 
   get cartItemValue() {
-    return this.button.dataset.item;
+    return this.getAttribute("item");
   }
 
   get productVariantValue() {
-    return this.button.dataset.productVariant;
+    return this.getAttribute("product-variant");
   }
 
   get isLoading() {
@@ -571,11 +575,11 @@ class QuantityControl extends HTMLElement {
   }
 
   get inventoryValue() {
-    return parseInt(this.dataset.inventory, 10);
+    return parseInt(this.getAttribute("inventory"), 10);
   }
 
   get quantityValue() {
-    return parseInt(this.dataset.quantity, 10);
+    return parseInt(this.getAttribute("quantity"), 10);
   }
 
   set quantityValue(value) {
@@ -584,7 +588,7 @@ class QuantityControl extends HTMLElement {
       throw new Error("Invalid quantity value");
     }
 
-    this.dataset.quantity = value;
+    this.setAttribute("quantity", value);
     this.quantity.textContent = String(value);
   }
 }
