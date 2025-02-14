@@ -1,5 +1,6 @@
 {{ 'cart.css' | asset_url | stylesheet_tag }}
-{{ 'component-quantity-control.js' | asset_url | script_tag_deferred }}
+
+{% assign cart_size = cart.items.size %}
 
 <yc-section
   style="
@@ -9,45 +10,62 @@
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
   "
 >
-  <div class="cart">
+  <div
+    class="cart"
+    {% unless cart_size > 0 %}
+      data-is-empty
+    {% endunless %}
+    data-cart
+  >
+    <template data-cart-item-template>
+      {% render 'cart-item' %}
+    </template>
     <div class="content">
       <h1 class="title h4">{{ 'cart.page.title' | t }}</h1>
       <ul class="list">
-        <li>{% render 'cart-item' %}</li>
-        <li>{% render 'cart-item' %}</li>
-        <li>{% render 'cart-item' %}</li>
-        <li>{% render 'cart-item' %}</li>
-        <li>{% render 'cart-item' %}</li>
-        <li>{% render 'cart-item' %}</li>
-        <li>{% render 'cart-item' %}</li>
+        <yc-cart-items>
+          {% for item in cart.items %}
+            <li>{% render 'cart-item', product: item %}</li>
+          {% endfor %}
+        </yc-cart-items>
       </ul>
     </div>
     <div class="summary">
       <h2 class="h4">{{ 'cart.page.summary.title' | t }}</h2>
-      <div class="box">
-        {% if section.settings.show_coupon %}
-          <div class="coupon">
-            <input type="text" placeholder="{{ 'cart.page.coupon.placeholder' | t }}">
-            <button class="yc-btn secondary">{{ 'cart.page.coupon.apply' | t }}</button>
-          </div>
-        {% endif %}
-        <div class="subtotal">
-          <div class="item">
-            <span>{{ 'cart.page.summary.subtotal' | t }}</span>
-            <span>900 MAD</span>
-          </div>
-          <div class="item">
-            <span>{{ 'cart.page.summary.coupon' | t }}</span>
-            <span>-15%</span>
-          </div>
-          <div class="total-box">
-            <div class="total">
-              <span>{{ 'cart.page.summary.total' | t }}</span>
-              <span data-cart-total>765 MAD</span>
+      <yc-summary-box>
+        <div class="box">
+          {% if section.settings.show_coupon %}
+            <div class="coupon">
+              <input type="text" placeholder="{{ 'cart.page.coupon.placeholder' | t }}">
+              <button class="yc-btn secondary">{{ 'cart.page.coupon.apply' | t }}</button>
             </div>
-            <button class="yc-btn primary">{{ 'cart.page.summary.checkout_button' | t }}</button>
+          {% endif %}
+          <div class="subtotal">
+            <div class="item">
+              <span>{{ 'cart.page.summary.subtotal' | t }}</span>
+              <span data-cart-subtotal>{{ cart.sub_total | money }}</span>
+            </div>
+            <div class="item">
+              <span>{{ 'cart.page.summary.coupon' | t }}</span>
+              <span>-15%</span>
+            </div>
+            <div class="total-box">
+              <div class="total">
+                <span>{{ 'cart.page.summary.total' | t }}</span>
+                <span data-cart-total>{{ cart.total | money }}</span>
+              </div>
+              <a href="{{ cart.cart_submit_url }}" class="yc-btn primary">
+                {{- 'cart.page.summary.checkout_button' | t -}}
+              </a>
+            </div>
           </div>
         </div>
+      </yc-summary-box>
+    </div>
+    <div class="empty">
+      <div class="empty-page">
+        {% assign placeholder_title = 'cart.empty.title' | t %}
+        {% render 'yc-empty', icon: 'cart', heading: placeholder_title %}
       </div>
     </div>
   </div>
