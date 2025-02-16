@@ -59,3 +59,41 @@ function formatCurrency(amount) {
     ? `${CURRENCY_SYMBOL} ${formattedValue}`
     : `${formattedValue} ${CURRENCY_SYMBOL}`;
 }
+
+relativeTime = (date) => {
+  const diffInSeconds = Math.floor((new Date() - date) / 1000);
+
+  const SECOND = 1;
+  const MINUTE = 60 * SECOND;
+  const HOUR = 60 * MINUTE;
+  const DAY = 24 * HOUR;
+  const WEEK = 7 * DAY;
+  const MONTH = 30 * DAY;
+  const YEAR = 365 * DAY;
+
+  const units = [
+    ["year", YEAR],
+    ["month", MONTH],
+    ["week", WEEK],
+    ["day", DAY],
+    ["hour", HOUR],
+    ["minute", MINUTE],
+    ["second", SECOND],
+  ];
+
+  for (const [unit, seconds] of units) {
+    const interval = Math.floor(diffInSeconds / seconds);
+    if (interval >= 1)
+      return new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(
+        -interval,
+        unit,
+      );
+  }
+
+  const JUST_NOW = new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(
+    0,
+    "second",
+  );
+
+  return JUST_NOW;
+};
