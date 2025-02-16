@@ -1,0 +1,55 @@
+<template data-review>
+  <li class="review-card">
+    <div class="info">
+      <div class="author">
+        <p class="name" data-author>
+          <span class="anonymous">
+            {{ 'product.anonymous' | t }}
+          </span>
+        </p>
+        <span class="date" data-date></span>
+      </div>
+      <div class="rate" data-rating>
+        {% for star in (1..5) %}
+          {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="content">
+      <p data-content></p>
+      <yc-modal data-images>
+        <div class="images">
+          <template data-img>
+            <button class="icon" data-image data-trigger>
+              <img
+                height="100%"
+                width="100%"
+                alt="product"
+              >
+            </button>
+          </template>
+          <label class="yc-btn icon">
+            <input type="checkbox" name="show-more" hidden>
+            <span data-count>+0</span>
+          </label>
+        </div>
+
+        <yc-modal-content>
+          <div class="image-preview">
+            <button class="icon" data-size="sm" data-trigger>
+              {% render 'yc-icon', name: 'x-mark' %}
+            </button>
+            <div class="preview-core">
+              <img
+                data-image-preview
+                height="100%"
+                width="100%"
+                alt="product"
+              >
+            </div>
+          </div>
+        </yc-modal-content>
+      </yc-modal>
+    </div>
+  </li>
+</template>
