@@ -38,11 +38,11 @@ yc-reviews .rating-area .total .visual .count .stars{
   justify-content:center;
   color:var(--color-yellow-500);
 }
-yc-reviews .rating-area .total .visual .count span{
-  display:block;
-  text-align:center;
-  width:-moz-max-content;
-  width:max-content;
+yc-reviews .rating-area .total .visual .count .nbr{
+  display:flex;
+  gap:var(--gap-xs);
+  align-items:center;
+  justify-content:center;
   font-size:var(--text-md);
   color:rgba(var(--section-text-color), 70%);
 }
@@ -82,11 +82,13 @@ yc-reviews .rating-area .total .graph .bar .process{
 yc-reviews .rating-area .total .graph .bar .process::before{
   content:"";
   inset:0;
-  width:calc(var(--rating-count) * 10%);
   height:3px;
   position:absolute;
   border-radius:var(--radius-md);
+  width:calc(0 * 1%);
+  width:calc(var(--rating-count, 0) * 1%);
   background-color:rgb(var(--section-text-color));
+  transition:var(--transition-duration-normal);
 }
 yc-reviews .rating-area .filter{
   display:flex;
@@ -102,6 +104,10 @@ yc-reviews .rating-area .filter label{
 yc-reviews .rating-area .filter label svg{
   color:var(--color-yellow-500);
 }
+yc-reviews .rating-area .filter label:has(input:disabled){
+  opacity:0.5;
+  cursor:not-allowed;
+}
 yc-reviews .rating-area .filter label:has(input:checked){
   color:var(--section-bg-color);
   border-color:rgb(var(--section-text-color));
@@ -109,9 +115,9 @@ yc-reviews .rating-area .filter label:has(input:checked){
 }
 yc-reviews .reviews-area .review-card{
   padding:1.5em;
-  display:grid;
-  grid-gap:var(--gap-lg);
+  display:flex;
   gap:var(--gap-lg);
+  flex-direction:column;
   border-radius:var(--radius-md);
   border:1px solid rgba(var(--section-text-color), 8%);
 }
@@ -126,10 +132,13 @@ yc-reviews .reviews-area .review-card .info .author{
   gap:var(--gap-xs);
 }
 yc-reviews .reviews-area .review-card .info .author .name{
+  display:flex;
+  gap:var(--gap-sm);
   font-size:var(--text-md);
 }
 yc-reviews .reviews-area .review-card .info .author .date{
   font-size:var(--text-sm);
+  text-transform:capitalize;
   color:rgba(var(--section-text-color), 70%);
 }
 yc-reviews .reviews-area .review-card .info .rate{
@@ -174,6 +183,9 @@ yc-reviews .reviews-area .review-card .content .images button[data-image] img{
 yc-reviews .reviews-area .review-card .content .images button[data-image]:hover img{
   filter:blur(1px);
 }
+yc-reviews .reviews-area .review-card .content .images:not(:has(button:nth-child(n+4))) label{
+  display:none;
+}
 yc-reviews .reviews-area .review-card .content .images label{
   width:56px;
   height:56px;
@@ -210,29 +222,47 @@ yc-reviews .reviews-area .review-card .content .image-preview .preview-core img{
      object-fit:cover;
   border-radius:var(--radius-sm);
 }
+yc-reviews:has(input[id="1"]:checked) .reviews-area .review-card:not([data-ratings="1"]){
+  display:none;
+}
+yc-reviews:has(input[id="2"]:checked) .reviews-area .review-card:not([data-ratings="2"]){
+  display:none;
+}
+yc-reviews:has(input[id="3"]:checked) .reviews-area .review-card:not([data-ratings="3"]){
+  display:none;
+}
+yc-reviews:has(input[id="4"]:checked) .reviews-area .review-card:not([data-ratings="4"]){
+  display:none;
+}
+yc-reviews:has(input[id="5"]:checked) .reviews-area .review-card:not([data-ratings="5"]){
+  display:none;
+}
 
 @media (max-width: 1024px){
-  .product-reviews .rating-area{
+  yc-reviews .rating-area{
     width:100%;
   }
 }
 @media (max-width: 768px){
-  .product-reviews .rating-area .total{
+  yc-reviews .rating-area .total{
     display:grid;
   }
-  .product-reviews .rating-area .total .visual{
+  yc-reviews .rating-area .total .visual{
     display:flex;
     gap:var(--gap-md);
     align-items:center;
     justify-content:center;
   }
-  .product-reviews .rating-area .total .visual .count .stars{
+  yc-reviews .rating-area .total .visual .count .stars{
     justify-content:start;
   }
-  .product-reviews .review-card .content .image-preview{
+  yc-reviews .rating-area .total .visual .count .nbr{
+    display:block;
+  }
+  yc-reviews .review-card .content .image-preview{
     padding-block-start:0 !important;
   }
-  .product-reviews .review-card .content .image-preview button.icon{
+  yc-reviews .review-card .content .image-preview button.icon{
     display:none;
   }
 }

@@ -47,10 +47,11 @@ yc-reviews {
             color: var(--color-yellow-500);
           }
 
-          span {
-            display: block;
-            text-align: center;
-            width: max-content;
+          .nbr {
+            display: flex;
+            gap: var(--gap-xs);
+            align-items: center;
+            justify-content: center;
             font-size: var(--text-md);
             color: rgba(var(--section-text-color), 70%);
           }
@@ -96,11 +97,12 @@ yc-reviews {
             &::before {
               content: "";
               inset: 0;
-              width: calc(var(--rating-count) * 10%);
               height: 3px;
               position: absolute;
               border-radius: var(--radius-md);
+              width: calc(var(--rating-count, 0) * 1%);
               background-color: rgb(var(--section-text-color));
+              transition: var(--transition-duration-normal);
             }
           }
         }
@@ -122,6 +124,11 @@ yc-reviews {
           color: var(--color-yellow-500);
         }
 
+        &:has(input:disabled) {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
         &:has(input:checked) {
           color: var(--section-bg-color);
           border-color: rgb(var(--section-text-color));
@@ -134,8 +141,9 @@ yc-reviews {
   .reviews-area {
     .review-card {
       padding: 1.5em;
-      display: grid;
+      display: flex;
       gap: var(--gap-lg);
+      flex-direction: column;
       border-radius: var(--radius-md);
       border: 1px solid rgba(var(--section-text-color), 8%);
 
@@ -149,11 +157,14 @@ yc-reviews {
           gap: var(--gap-xs);
 
           .name {
+            display: flex;
+            gap: var(--gap-sm);
             font-size: var(--text-md);
           }
 
           .date {
             font-size: var(--text-sm);
+            text-transform: capitalize;
             color: rgba(var(--section-text-color), 70%);
           }
         }
@@ -206,6 +217,10 @@ yc-reviews {
             }
           }
 
+          &:not(:has(button:nth-child(n + 4))) label {
+            display: none;
+          }
+
           label {
             width: 56px;
             height: 56px;
@@ -252,10 +267,20 @@ yc-reviews {
       }
     }
   }
+
+  @for $i from 1 through 5 {
+    &:has(input[id="#{$i}"]:checked) {
+      .reviews-area {
+        .review-card:not([data-ratings="#{$i}"]) {
+          display: none;
+        }
+      }
+    }
+  }
 }
 
 @include breakpoint("lg") {
-  .product-reviews {
+  yc-reviews {
     .rating-area {
       width: 100%;
     }
@@ -263,7 +288,7 @@ yc-reviews {
 }
 
 @include breakpoint("md") {
-  .product-reviews {
+  yc-reviews {
     .rating-area {
       .total {
         display: grid;
@@ -277,6 +302,10 @@ yc-reviews {
           .count {
             .stars {
               justify-content: start;
+            }
+
+            .nbr {
+              display: block;
             }
           }
         }
