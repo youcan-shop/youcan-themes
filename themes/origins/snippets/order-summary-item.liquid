@@ -1,23 +1,18 @@
 <div class="item">
   <div class="image" data-cart-item="image">
-    {% comment %}
+    {% if product.thumbnail %}
       <img
         loading="lazy"
         height="100%"
         width="100%"
-        src="{{ product.image }}"
+        src="{{ product.thumbnail }}"
         alt="{{ product.name }}"
       >
-    {% endcomment %}
-    <div
-      class="card-placeholder"
-      {% if product.image %}
-        hidden
-      {% endif %}
-      data-cart-item-image-placeholder
-    >
-      {% render 'yc-placeholder', name: 'product', size: '32' %}
-    </div>
+    {% else %}
+      <div class="card-placeholder">
+        {% render 'yc-placeholder', name: 'product', size: '32' %}
+      </div>
+    {% endif %}
   </div>
   <div class="info">
     <div class="heading">
