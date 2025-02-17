@@ -1,5 +1,5 @@
 <div class="item">
-  <div class="image" data-cart-item="image">
+  <div class="image">
     {% if product.thumbnail %}
       <img
         loading="lazy"
@@ -16,27 +16,23 @@
   </div>
   <div class="info">
     <div class="heading">
-      <span class="name" title="{{ product.name }}" data-cart-item="title">
+      <span class="name" title="{{ product.name }}">
         {{ product.name | default: 'Product Name' }}
       </span>
-      <p
-        class="variant"
-        data-cart-item="variant"
-        {% unless product.variations.size > 1 %}
-          hidden
-        {% endunless %}
-      >
-        {% for variant in product.variations %}
-          <span>{{- variant[1] -}}</span>
-          {% unless forloop.index == product.variations.size - 1 %}
-            <span>/</span>
-          {% endunless %}
-        {% endfor %}
-      </p>
+      {% if product.variations.size > 1 %}
+        <p class="variant">
+          {% for variant in product.variations %}
+            <span>{{- variant[1] -}}</span>
+            {% unless forloop.index == product.variations.size - 1 %}
+              <span>/</span>
+            {% endunless %}
+          {% endfor %}
+        </p>
+      {% endif %}
       <span class="quantity">x2</span>
     </div>
   </div>
-  <span class="item-subtotal" data-cart-item="price">
+  <span class="item-subtotal">
     {{ product.price | default: 0 | money }}
   </span>
 </div>
