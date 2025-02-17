@@ -10,6 +10,7 @@ yc-add-review .review-form .core{
   display:grid;
   grid-gap:var(--gap-lg);
   gap:var(--gap-lg);
+  position:relative;
 }
 yc-add-review .review-form .core .rating-box{
   display:flex;
@@ -122,6 +123,53 @@ yc-add-review .review-form .core .info-box .actions button.primary{
   color:var(--section-bg-color);
   border-color:rgb(var(--section-text-color));
   background-color:rgb(var(--section-text-color));
+}
+yc-add-review .review-form .core .success-box{
+  width:100%;
+  display:flex;
+  gap:var(--gap-xl);
+  flex-direction:column;
+  position:absolute;
+  inset:50% 0 0 50%;
+  translate:-50% -40%;
+  visibility:hidden;
+}
+yc-add-review .review-form .core .success-box .icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+yc-add-review .review-form .core .success-box .icon svg{
+  width:60px;
+  height:60px;
+  padding:1em;
+  border-radius:var(--radius-circle);
+  color:var(--section-bg-color);
+  background-color:var(--color-success-500);
+  outline:10px solid var(--color-success-50);
+  animation:pulse 2s linear infinite;
+}
+@keyframes pulse{
+  0%{
+    outline-color:var(--color-success-50);
+  }
+  50%{
+    outline-color:transparent;
+  }
+  100%{
+    outline-color:var(--color-success-50);
+  }
+}
+yc-add-review .review-form .core .success-box .content{
+  display:grid;
+  text-align:center;
+  grid-gap:var(--gap-md);
+  gap:var(--gap-md);
+  justify-content:center;
+}
+yc-add-review .review-form .core .success-box .content p{
+  font-size:var(--text-sm);
+  color:color-mix(in srgb, currentColor 70%, transparent);
 }
 
 @media (max-width: 768px){
