@@ -24,30 +24,21 @@
       <div class="status">
         <span class="label">{{ 'order.status.label' | t }}:</span>
         <span class="value">
-          {% comment %} {% assign payment_status = order.paymentStatusSlug %} {% endcomment %}
-          {% assign payment_status = 'unpaid' %}
+          {% assign payment_status = order.paymentStatusSlug %}
           {% render 'payment-status', status: payment_status %}
         </span>
       </div>
       <div class="method">
         <span class="label">{{ 'order.payment_method.label' | t }}:</span>
         <span class="value">
-          {% comment %} {% assign payment_gateway = order.gatewayType %} {% endcomment %}
-          {% assign payment_gateway = 1 %}
+          {% assign payment_gateway = order.gatewayType %}
           {% render 'payment-gateway', gatewayType: payment_gateway %}
         </span>
       </div>
     </div>
     <ul class="items">
-      {% comment %}
-        {% for product in order.order_variants %}
-          <li>{% render 'order-summary-item', product: product %}</li>
-        {% endfor %}
-      {% endcomment %}
-      {% for item in (1..5) %}
-        <li>
-          {% render 'order-summary-item' %}
-        </li>
+      {% for product in order.order_variants %}
+        <li>{% render 'order-summary-item', product: product %}</li>
       {% endfor %}
     </ul>
     <div class="subtotal">
