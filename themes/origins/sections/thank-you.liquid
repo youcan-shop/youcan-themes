@@ -24,76 +24,58 @@
       <div class="status">
         <span class="label">{{ 'order.status.label' | t }}:</span>
         <span class="value">
-          {% render 'payment-status', status: 'unpaid' %}
+          {% assign payment_status = order.paymentStatusSlug %}
+          {% render 'payment-status', status: payment_status %}
         </span>
       </div>
       <div class="method">
         <span class="label">{{ 'order.payment_method.label' | t }}:</span>
         <span class="value">
-          {% render 'payment-gateway', gatewayType: 6 %}
+          {% assign payment_gateway = order.gatewayType %}
+          {% render 'payment-gateway', gatewayType: payment_gateway %}
         </span>
       </div>
     </div>
     <ul class="items">
-      {% for item in (1..5) %}
-        <li>
-          {% render 'order-summary-item' %}
-        </li>
+      {% for product in order.order_variants %}
+        <li>{% render 'order-summary-item', product: product %}</li>
       {% endfor %}
     </ul>
     <div class="subtotal">
       <div class="summary-item">
-        <div class="label">{{ 'order.subtotal' | t }}</div>
-        <div class="value">{{ 0 | money }}</div>
+        <span class="label">{{ 'order.subtotal' | t }}</span>
+        <span class="value">{{ order.sub_total | default: 0 | money }}</span>
       </div>
     </div>
     <div class="summary">
       <div class="summary-item">
-        <div class="label">{{ 'order.coupon_code' | t }}</div>
+        {% comment %} TODO: Get discount code from coupon object {% endcomment %}
+        <span class="label">{{ 'order.coupon_code' | t }}</span>
         <div class="value coupon-code">MAR25</div>
       </div>
       <div class="summary-item">
-        <div class="label">{{ 'order.discount_amount' | t }}</div>
-        <div class="value">{{ 40 | money }}</div>
+        {% comment %} TODO: Get discount amount/percentage from coupon object {% endcomment %}
+        <span class="label">{{ 'order.discount_amount' | t }}</span>
+        <span class="value">{{ 40 | money }}</span>
       </div>
       <div class="summary-item">
-        <div class="label">{{ 'order.shipping' | t }}</div>
-        <div class="value">{{ 45 | money }}</div>
+        <span class="label">{{ 'order.shipping' | t }}</span>
+        {% if order.shippingCost == 0 or order.shippingCost == null %}
+          {% assign shipping_cost = 'order.free' | t %}
+        {% else %}
+          {% assign shipping_cost = order.shippingCost | default: 0 | money %}
+        {% endif %}
+        <span class="value">{{ shipping_cost }}</span>
       </div>
     </div>
     <div class="grand-total">
       <div class="summary-item">
-        <div class="label">{{ 'order.total' | t }}</div>
-        <div class="value">{{ 0 | money }}</div>
+        <span class="label">{{ 'order.total' | t }}</span>
+        <span class="value">{{ 0 | money }}</span>
       </div>
       <a href="/" class="yc-btn primary">{{ 'order.action' | t }}</a>
     </div>
   </div>
-  {% comment %}
-    {% if section.settings.title or section.settings.description %}
-      <yc-section-head data-position="{{ section.settings.position }}">
-        {% if section.settings.title %}
-          <h2>{{ section.settings.title }}</h2>
-        {% endif %}
-        {% if section.settings.description %}
-          <p>{{ section.settings.description }}</p>
-        {% endif %}
-      </yc-section-head>
-    {% endif %}
-  {% endcomment %}
-
-  {% comment %}
-    - Message
-      icon
-      title
-      desc
-      continue shopping button
-    - Summary
-      status
-      payment method
-      - table
-        products
-  {% endcomment %}
 </yc-section>
 
 {%- schema -%}
