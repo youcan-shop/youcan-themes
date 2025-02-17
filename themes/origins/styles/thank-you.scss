@@ -22,7 +22,8 @@ yc-section {
     .payment,
     .items,
     .summary,
-    .subtotal {
+    .subtotal,
+    .grand-total {
       padding: 1em 1.5em;
     }
 
@@ -117,7 +118,31 @@ yc-section {
 
     .summary,
     .subtotal {
+      font-size: var(--text-md);
       border-block-start: var(--order-border);
+    }
+
+    .summary {
+      display: grid;
+      gap: var(--gap-md);
+      color: color-mix(in srgb, currentColor 70%, transparent);
+
+      .coupon-code {
+        background-color: color-mix(in srgb, currentColor 8%, transparent);
+        padding-inline: 0.5em;
+        border-radius: var(--radius-sm);
+        margin-inline-end: -4px;
+      }
+    }
+
+    .grand-total {
+      display: grid;
+      gap: var(--gap-lg);
+      border-block-start: var(--order-border);
+
+      .summary-item {
+        font-weight: 550;
+      }
     }
   }
 

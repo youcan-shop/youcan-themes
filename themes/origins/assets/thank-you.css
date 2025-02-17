@@ -20,7 +20,8 @@ yc-section .order .title,
 yc-section .order .payment,
 yc-section .order .items,
 yc-section .order .summary,
-yc-section .order .subtotal{
+yc-section .order .subtotal,
+yc-section .order .grand-total{
   padding:1em 1.5em;
 }
 yc-section .order .title,
@@ -100,5 +101,27 @@ yc-section .order .items .item .item-subtotal{
 }
 yc-section .order .summary,
 yc-section .order .subtotal{
+  font-size:var(--text-md);
   border-block-start:var(--order-border);
+}
+yc-section .order .summary{
+  display:grid;
+  grid-gap:var(--gap-md);
+  gap:var(--gap-md);
+  color:color-mix(in srgb, currentColor 70%, transparent);
+}
+yc-section .order .summary .coupon-code{
+  background-color:color-mix(in srgb, currentColor 8%, transparent);
+  padding-inline:0.5em;
+  border-radius:var(--radius-sm);
+  margin-inline-end:-4px;
+}
+yc-section .order .grand-total{
+  display:grid;
+  grid-gap:var(--gap-lg);
+  gap:var(--gap-lg);
+  border-block-start:var(--order-border);
+}
+yc-section .order .grand-total .summary-item{
+  font-weight:550;
 }
