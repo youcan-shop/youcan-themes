@@ -13,7 +13,7 @@ yc-section {
   }
 
   .order {
-    width: 768px;
+    width: 500px;
     margin-inline: auto;
     border-radius: var(--radius-md);
     border: var(--order-border);
@@ -21,8 +21,9 @@ yc-section {
     .title,
     .payment,
     .items,
-    .summary {
-      padding: 1.5em;
+    .summary,
+    .subtotal {
+      padding: 1em 1.5em;
     }
 
     .title,
@@ -54,6 +55,69 @@ yc-section {
           align-items: center;
         }
       }
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .items {
+      display: grid;
+      gap: var(--gap-lg);
+
+      .item {
+        display: flex;
+        gap: var(--gap-md);
+
+        .image {
+          --size: 70px;
+
+          width: var(--size);
+          height: var(--size);
+
+          .card-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(var(--header-text-color), 0.05);
+
+            svg {
+              color: rgba(var(--header-text-color), 0.3);
+            }
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .info {
+          flex: 1;
+
+          .name {
+            font-size: var(--text-md);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+        }
+
+        .variant,
+        .quantity,
+        .item-subtotal {
+          font-size: var(--text-xs);
+          color: color-mix(in srgb, currentColor 80%, transparent);
+        }
+      }
+    }
+
+    .summary,
+    .subtotal {
+      border-block-start: var(--order-border);
     }
   }
 

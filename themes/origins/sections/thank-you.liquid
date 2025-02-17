@@ -11,14 +11,14 @@
   <yc-section-head data-position="center">
     <div class="message">
       {% render 'yc-icon', name: 'check-circle', size: 80 %}
-      <h1>{{ 'order.title' | t }}</h1>
+      <h1 class="h3">{{ 'order.title' | t }}</h1>
       <p>{{ 'order.description' | t }}</p>
     </div>
   </yc-section-head>
 
   <div class="order">
     <div class="title">
-      <h2 class="h3">Order summary</h2>
+      <h2 class="h5">Order summary</h2>
     </div>
     <div class="payment">
       <div class="status">
@@ -32,13 +32,22 @@
         <span class="label">Payment Method:</span>
         <span class="value">
           {% render 'payment-gateway', gatewayType: 6 %}
-          {% comment %}
-            TODO: Render payment method snippet by gateway number
-          {% endcomment %}
         </span>
       </div>
     </div>
-    <div class="items"></div>
+    <ul class="items">
+      {% for item in (1..5) %}
+        <li>
+          {% render 'order-summary-item' %}
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="subtotal">
+      <div class="summary-item">
+        <div class="label">Subtotal</div>
+        <div class="value">{{ 0 | money }}</div>
+      </div>
+    </div>
     <div class="summary">summary</div>
   </div>
   {% comment %}
