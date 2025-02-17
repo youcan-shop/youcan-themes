@@ -42,6 +42,8 @@ yc-section {
               height: 100px;
               width: 100px;
               min-width: 100px;
+              border-radius: var(--radius-md);
+              overflow: hidden;
 
               .card-placeholder {
                 width: 100%;
@@ -73,7 +75,7 @@ yc-section {
                 color: color-mix(in srgb, currentColor 80%, transparent);
               }
 
-              & > [data-base-price] {
+              & > [data-cart-item="price"] {
                 font-size: var(--text-md);
                 color: color-mix(in srgb, currentColor 80%, transparent);
               }
@@ -85,18 +87,14 @@ yc-section {
             align-items: center;
             gap: var(--gap-3xl);
 
-            & > [data-subtotal] {
+            & > [data-cart-item="subtotal"] {
               font-size: var(--text-md);
               font-weight: 550;
             }
 
             .delete {
               border: none;
-              background-color: color-mix(
-                in srgb,
-                currentColor 5%,
-                transparent
-              );
+              background-color: color-mix(in srgb, currentColor 5%, transparent);
 
               &:hover {
                 color: var(--color-error-500);
@@ -196,6 +194,22 @@ yc-section {
             }
           }
         }
+      }
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      display: none;
+    }
+
+    &[data-is-empty] {
+      .content,
+      .summary {
+        display: none;
+      }
+
+      .empty {
+        display: flex;
       }
     }
   }

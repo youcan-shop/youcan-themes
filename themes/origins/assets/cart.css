@@ -39,6 +39,8 @@ yc-section .cart .content .list .item .info .image{
   height:100px;
   width:100px;
   min-width:100px;
+  border-radius:var(--radius-md);
+  overflow:hidden;
 }
 yc-section .cart .content .list .item .info .image .card-placeholder{
   width:100%;
@@ -65,7 +67,7 @@ yc-section .cart .content .list .item .info .heading .variant{
   font-size:var(--text-xs);
   color:color-mix(in srgb, currentColor 80%, transparent);
 }
-yc-section .cart .content .list .item .info .heading > [data-base-price]{
+yc-section .cart .content .list .item .info .heading > [data-cart-item=price]{
   font-size:var(--text-md);
   color:color-mix(in srgb, currentColor 80%, transparent);
 }
@@ -74,7 +76,7 @@ yc-section .cart .content .list .item .controls{
   align-items:center;
   gap:var(--gap-3xl);
 }
-yc-section .cart .content .list .item .controls > [data-subtotal]{
+yc-section .cart .content .list .item .controls > [data-cart-item=subtotal]{
   font-size:var(--text-md);
   font-weight:550;
 }
@@ -159,6 +161,17 @@ yc-section .cart .summary .box .subtotal .total-box .total{
 yc-section .cart .summary .box .subtotal .total-box button{
   background-color:rgb(var(--section-text-color));
   color:var(--section-bg-color);
+}
+yc-section .cart .empty{
+  grid-column:1/-1;
+  display:none;
+}
+yc-section .cart[data-is-empty] .content,
+yc-section .cart[data-is-empty] .summary{
+  display:none;
+}
+yc-section .cart[data-is-empty] .empty{
+  display:flex;
 }
 
 @media (max-width: 1024px){
