@@ -18,18 +18,17 @@
 
   <div class="order">
     <div class="title">
-      <h2 class="h5">Order summary</h2>
+      <h2 class="h5">{{ 'order.order_summary' | t }}</h2>
     </div>
     <div class="payment">
       <div class="status">
-        <span class="label">Status:</span>
+        <span class="label">{{ 'order.status.label' | t }}:</span>
         <span class="value">
           {% render 'payment-status', status: 'unpaid' %}
-          {% comment %} TODO: Payment status snippet {% endcomment %}
         </span>
       </div>
       <div class="method">
-        <span class="label">Payment Method:</span>
+        <span class="label">{{ 'order.payment_method.label' | t }}:</span>
         <span class="value">
           {% render 'payment-gateway', gatewayType: 6 %}
         </span>
@@ -44,30 +43,30 @@
     </ul>
     <div class="subtotal">
       <div class="summary-item">
-        <div class="label">Subtotal</div>
+        <div class="label">{{ 'order.subtotal' | t }}</div>
         <div class="value">{{ 0 | money }}</div>
       </div>
     </div>
     <div class="summary">
       <div class="summary-item">
-        <div class="label">coupon (code applied)</div>
+        <div class="label">{{ 'order.coupon_code' | t }}</div>
         <div class="value coupon-code">MAR25</div>
       </div>
       <div class="summary-item">
-        <div class="label">discount amount</div>
+        <div class="label">{{ 'order.discount_amount' | t }}</div>
         <div class="value">{{ 40 | money }}</div>
       </div>
       <div class="summary-item">
-        <div class="label">shipping</div>
+        <div class="label">{{ 'order.shipping' | t }}</div>
         <div class="value">{{ 45 | money }}</div>
       </div>
     </div>
     <div class="grand-total">
       <div class="summary-item">
-        <div class="label">Total</div>
+        <div class="label">{{ 'order.total' | t }}</div>
         <div class="value">{{ 0 | money }}</div>
       </div>
-      <a href="/" class="yc-btn primary">Continue Shopping</a>
+      <a href="/" class="yc-btn primary">{{ 'order.action' | t }}</a>
     </div>
   </div>
   {% comment %}

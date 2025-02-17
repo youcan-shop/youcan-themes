@@ -37,7 +37,7 @@ yc-section .order .payment{
 yc-section .order .payment .status,
 yc-section .order .payment .method{
   display:flex;
-  gap:var(--gap-lg);
+  gap:var(--gap-md);
   align-items:center;
 }
 yc-section .order .payment .label{
@@ -124,4 +124,33 @@ yc-section .order .grand-total{
 }
 yc-section .order .grand-total .summary-item{
   font-weight:550;
+}
+yc-section .badge{
+  --badge-color:currentColor;
+  padding:0.25em 0.5em;
+  color:currentColor;
+  color:var(--badge-color);
+  background-color:color-mix(in srgb, currentColor 8%, transparent);
+  font-size:var(--text-xs);
+  border-radius:var(--radius-sm);
+}
+@supports (color: color-mix(in lch, red, blue)){
+yc-section .badge{
+  background-color:color-mix(in srgb, var(--badge-color) 8%, transparent);
+}
+}
+yc-section .badge[data-status$=paid]{
+  --badge-color:var(--color-success-500);
+}
+yc-section .badge[data-status$=unpaid]{
+  --badge-color:var(--color-gray-500);
+}
+yc-section .badge[data-status$=captured]{
+  --badge-color:var(--color-info-500);
+}
+yc-section .badge[data-status$=refunded]{
+  --badge-color:var(--color-gray-500);
+}
+yc-section .badge[data-status$=pending]{
+  --badge-color:var(--color-warning-500);
 }

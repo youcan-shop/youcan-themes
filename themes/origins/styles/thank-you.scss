@@ -41,7 +41,7 @@ yc-section {
       .status,
       .method {
         display: flex;
-        gap: var(--gap-lg);
+        gap: var(--gap-md);
         align-items: center;
       }
 
@@ -147,15 +147,28 @@ yc-section {
   }
 
   .badge {
+    --badge-color: currentColor;
+
+    padding: 0.25em 0.5em;
+    color: var(--badge-color);
+    background-color: color-mix(in srgb, var(--badge-color) 8%, transparent);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+
     &[data-status$="paid"] {
+      --badge-color: var(--color-success-500);
     }
     &[data-status$="unpaid"] {
+      --badge-color: var(--color-gray-500);
     }
     &[data-status$="captured"] {
+      --badge-color: var(--color-info-500);
     }
     &[data-status$="refunded"] {
+      --badge-color: var(--color-gray-500);
     }
     &[data-status$="pending"] {
+      --badge-color: var(--color-warning-500);
     }
   }
 }
