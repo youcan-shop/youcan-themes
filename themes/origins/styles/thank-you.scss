@@ -1,3 +1,5 @@
+@import "mixins/breakpoints";
+
 yc-section {
   --order-border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
 
@@ -169,6 +171,33 @@ yc-section {
     }
     &[data-status$="pending"] {
       --badge-color: var(--color-warning-500);
+    }
+  }
+}
+
+@include breakpoint("sm") {
+  yc-section {
+    .order {
+      width: 100%;
+
+      .payment {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: var(--gap-lg);
+
+        .method,
+        .status {
+          flex-direction: column;
+        }
+      }
+
+      .items {
+        .item {
+          .image {
+            --size: 50px;
+          }
+        }
+      }
     }
   }
 }
