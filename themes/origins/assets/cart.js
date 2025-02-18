@@ -602,6 +602,9 @@ class CartSummary extends HTMLElement {
     this.couponForm = this.querySelector("[data-coupon-form]");
     this.subtotal = this.querySelector("[data-cart-subtotal]");
     this.total = this.querySelector("[data-cart-total]");
+    this.couponCode = this.querySelector("[data-coupon-code]");
+    this.discount = this.querySelector("[data-discount]");
+    this.removeCouponButton = this.querySelector("[data-remove-coupon]");
 
     const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
     this.couponInput = couponInput;
@@ -614,6 +617,7 @@ class CartSummary extends HTMLElement {
 
   _render() {
     this.couponForm.addEventListener("submit", this.handleApplyCoupon.bind(this));
+    this.removeCouponButton.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { sub_total, total } = payload.cartData;
@@ -622,28 +626,36 @@ class CartSummary extends HTMLElement {
     });
 
     subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
-      const { sub_total, total } = payload.cartData;
+      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
 
-      console.log("payload", payload);
-
-      /**
-       * Update summary:
-       *  update subtotal
-       *  update coupon:
-       *    show coupon discount value
-       *    show coupon code applied:
-       *      render button
-       *      handle remove coupon button click
-       */
-
-      // this.updateSummary(sub_total, total);
+      this.updateCoupon(coupon);
+      this.updateSummary(sub_total + discountedPrice, total);
     });
+  }
+
+  getFormattedDiscountValue(coupon) {
+    if (coupon.type == 1) {
+      return `${coupon.value}%`;
+    }
+
+    return formatCurrency(coupon.value * -1);
+  }
+
+  updateCoupon(coupon) {
+    this.discount.textContent = this.getFormattedDiscountValue(coupon);
+    this.couponCode.textContent = coupon.code;
+    this.discount.removeAttribute("hidden");
+    this.couponCode.removeAttribute("hidden");
   }
 
   updateSummary(subTotal, total) {
     // TODO: TVA, TTC, and HT
     this.subtotal.textContent = formatCurrency(subTotal);
     this.total.textContent = formatCurrency(total);
+  }
+
+  async handleRemoveCoupon() {
+    console.log("removing coupon...");
   }
 
   async handleApplyCoupon(event) {
