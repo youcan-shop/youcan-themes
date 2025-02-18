@@ -50,7 +50,7 @@
           <div class="subtotal">
             <div class="item">
               <span>{{ 'cart.page.summary.subtotal' | t }}</span>
-              <span data-cart-subtotal>{{ cart.sub_total | money }}</span>
+              <span data-cart-subtotal>{{ cart.sub_total | default: 0 | money }}</span>
             </div>
 
             <div class="item">
@@ -69,7 +69,7 @@
             <div class="total-box">
               <div class="total">
                 <span>{{ 'cart.page.summary.total' | t }}</span>
-                <span data-cart-total>{{ cart.total | money }}</span>
+                <span data-cart-total>{{ cart.total | default: 0 | money }}</span>
               </div>
               <a href="{{ cart.cart_submit_url }}" class="yc-btn primary">
                 {{- 'cart.page.summary.checkout_button' | t -}}
