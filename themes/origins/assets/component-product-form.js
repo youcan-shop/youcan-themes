@@ -1,6 +1,6 @@
 if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity"];
+    static observedAttributes = ["variant-id", "quantity", "not-available"];
 
     constructor() {
       super();
@@ -10,6 +10,12 @@ if (!customElements.get("yc-product-form")) {
 
     connectedCallback() {
       this._render();
+    }
+
+    attributeChangedCallback(name) {
+      if (name === "not-available") {
+        this.handleAvailabilityChange();
+      }
     }
 
     _render() {
@@ -24,6 +30,10 @@ if (!customElements.get("yc-product-form")) {
 
       const { quantity } = event.target.dataset;
       this.quantityValue = quantity;
+    }
+
+    handleAvailabilityChange() {
+      this.buyButton.disabled = this.hasAttribute("not-available");
     }
 
     async onBuyClicked(event) {
