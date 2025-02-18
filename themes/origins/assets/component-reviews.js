@@ -33,19 +33,14 @@ class Reviews extends HTMLElement {
   }
 
   setupItems(items) {
-    const ITEMS_WITH_CONTENT = items.filter((item) => !!item.content);
-    const totalItems = ITEMS_WITH_CONTENT.length;
+    const itemsWithContent = items.filter((item) => !!item.content);
+    const totalItems = itemsWithContent.length;
 
-    if (totalItems) {
-      ITEMS_WITH_CONTENT.forEach((item) => this.createItem(item));
-      totalItems > 1 && this.parentElement.style.setProperty("--items-columns", totalItems);
-    } else {
-      this.filter.remove();
-    }
+    totalItems ? itemsWithContent.forEach((item) => this.createItem(item)) : this.filter.remove();
 
     this.setTotalReviews(items.length);
     this.setPercentageReviews(items);
-    this.disableInactiveFilters(ITEMS_WITH_CONTENT);
+    this.disableInactiveFilters(itemsWithContent);
 
     this.skeleton.remove();
   }
@@ -76,7 +71,7 @@ class Reviews extends HTMLElement {
     const { first_name, last_name, images_urls, ratings, created_at } = data;
     review.firstElementChild.dataset.ratings = ratings;
 
-    const [author, content, rating, date, images] = review.querySelectorAll("[data-review-item]");
+    const [author, date, rating, content, images] = review.querySelectorAll("[data-review-item]");
 
     this.setItemAuthor(author, { first_name, last_name });
     this.setItemContent(content, data.content);
