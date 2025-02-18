@@ -1,12 +1,17 @@
 <yc-product-form
-  out-of-stock
   quantity="1"
   variant-id="{{ variant_id }}"
+  {% unless available %}
+    not-available
+  {% endunless %}
 >
   <button
     name="add"
     data-buy-button
     class="secondary"
+    {% unless available %}
+      disabled
+    {% endunless %}
   >
     <span
       data-add-to-cart="{{ 'general.add_to_cart' | t }}"

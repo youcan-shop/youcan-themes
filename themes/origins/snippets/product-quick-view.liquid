@@ -1,8 +1,11 @@
-<div class="product-quick-view">
+<yc-product class="product-quick-view">
   <yc-modal style="--modal-width: 60%">
     <button class="secondary" data-trigger>
       {{ 'general.choose_options' | t }}
     </button>
+    <script>
+      console.log(JSON.parse({{ product | json }}))
+    </script>
     <yc-modal-content>
       <div class="view-box">
         <div class="head">
@@ -37,27 +40,57 @@
             <div class="core-info">
               {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
               <div class="price-info">
-                <p class="current h2">{{ product.price | default: 0 | money }}</p>
+                <p class="current h2" data-product-item="price">
+                  {{ product.price | default: 0 | money }}
+                </p>
                 {% if product.compare_at_price != null %}
-                  <p class="compare-at h3">
+                  <p class="compare-at h3" data-product-item="compare-at-price">
                     {{ product.compare_at_price | default: 0 | money }}
                   </p>
                 {% endif %}
               </div>
               <div class="variants">
                 {% for variant in product.options %}
+                  {% assign default = '' %}
+
+                  {% for variation in product.selected_or_first_available_variant.variations %}
+                    {% if variation[0] == variant.name %}
+                      {% assign default = variation[1] %}
+                    {% endif %}
+                  {% endfor %}
+
                   <div class="variant">
                     <span class="label">{{ variant.name }}:</span>
                     {% if variant.type == 'textual_buttons' %}
-                      {% render 'variant-toggle', name: variant.name, options: variant.values %}
+                      {% render 'variant-toggle',
+                        name: variant.name,
+                        options: variant.values,
+                        default_value: default
+                      %}
                     {% elsif variant.type == 'radio_buttons' %}
-                      {% render 'variant-radio', name: variant.name, options: variant.values %}
+                      {% render 'variant-radio',
+                        name: variant.name,
+                        options: variant.values,
+                        default_value: default
+                      %}
                     {% elsif variant.type == 'color_base_buttons' %}
-                      {% render 'variant-color', name: variant.name, options: variant.values %}
+                      {% render 'variant-color',
+                        name: variant.name,
+                        options: variant.values,
+                        default_value: default
+                      %}
                     {% elsif variant.type == 'dropdown' %}
-                      {% render 'variant-dropdown', name: variant.name, options: variant.values %}
+                      {% render 'variant-dropdown',
+                        name: variant.name,
+                        options: variant.values,
+                        default_value: default
+                      %}
                     {% elsif variant.type == 'image_based_buttons' %}
-                      {% render 'variant-image', name: variant.name, options: variant.values %}
+                      {% render 'variant-image',
+                        name: variant.name,
+                        options: variant.values,
+                        default_value: default
+                      %}
                     {% elsif variant.type == 'upload_image_zone' %}
                       {% render 'variant-upload', name: variant.name %}
                     {% endif %}
@@ -65,10 +98,17 @@
                 {% endfor %}
               </div>
             </div>
-            {% render 'product-add-to-cart', variant_id: product.variants[0].id %}
+            {% render 'product-add-to-cart',
+              variant_id: product.variants[0].id,
+              available: product.selected_or_first_available_variant.available
+            %}
           </yc-product-info>
         </div>
       </div>
     </yc-modal-content>
   </yc-modal>
-</div>
+</yc-product>
+
+{% javascript %}
+  const productVariants = JSON.parse({{ product.variants | json }})
+{% endjavascript %}
