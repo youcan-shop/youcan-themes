@@ -599,8 +599,13 @@ class CartSummary extends HTMLElement {
   constructor() {
     super();
 
+    this.couponForm = this.querySelector("[data-coupon-form]");
     this.subtotal = this.querySelector("[data-cart-subtotal]");
     this.total = this.querySelector("[data-cart-total]");
+
+    const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
+    this.couponInput = couponInput;
+    this.couponButton = couponButton;
   }
 
   connectedCallback() {
@@ -608,7 +613,8 @@ class CartSummary extends HTMLElement {
   }
 
   _render() {
-    // TODO: Add listener for coupon activation and disactivation
+    this.couponForm.addEventListener("submit", this.handleApplyCoupon.bind(this));
+
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { sub_total, total } = payload.cartData;
 
@@ -619,6 +625,32 @@ class CartSummary extends HTMLElement {
   updateSummary(subTotal, total) {
     this.subtotal.textContent = formatCurrency(subTotal);
     this.total.textContent = formatCurrency(total);
+  }
+
+  handleApplyCoupon(event) {
+    event.preventDefault();
+
+    /**
+     * Get the coupon code ✅
+     * If it's empty early-return ✅
+     * If it's not, grab the button ✅
+     * Set it as loading ✅
+     * (Disable input also) ✅
+     * Send request
+     * on success -> update cart (dispatch)
+     * on fail -> show toast
+     * finally remove loading state
+     */
+    const couponCode = new FormData(event.target).get("coupon_code");
+
+    if (!couponCode) return;
+
+    this.setCouponFormIsLoading(true);
+  }
+
+  setCouponFormIsLoading(isLoading) {
+    this.couponButton.toggleAttribute("data-loading", isLoading);
+    this.couponInput.disabled = isLoading;
   }
 }
 
