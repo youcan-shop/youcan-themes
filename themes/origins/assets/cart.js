@@ -633,45 +633,28 @@ class CartSummary extends HTMLElement {
     });
   }
 
-  getFormattedDiscountValue(coupon) {
-    if (coupon.type == 1) {
-      return `${coupon.value}%`;
-    }
-
-    return formatCurrency(coupon.value * -1);
-  }
-
-  updateCoupon(coupon) {
-    this.discount.textContent = this.getFormattedDiscountValue(coupon);
-    this.couponCode.textContent = coupon.code;
-    this.discount.removeAttribute("hidden");
-    this.couponCode.removeAttribute("hidden");
-  }
-
-  updateSummary(subTotal, total) {
-    // TODO: TVA, TTC, and HT
-    this.subtotal.textContent = formatCurrency(subTotal);
-    this.total.textContent = formatCurrency(total);
-  }
-
   async handleRemoveCoupon() {
-    console.log("removing coupon...");
+    this.setCouponRemoveButtonIsLoading(true);
+
+    try {
+      const response = await youcanjs.checkout.removeCoupons();
+
+      publish(PUB_SUB_EVENTS.couponUpdate, {
+        source: "coupon-form",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setCouponRemoveButtonIsLoading(false);
+    }
   }
 
   async handleApplyCoupon(event) {
     event.preventDefault();
 
-    /**
-     * Get the coupon code ✅
-     * If it's empty early-return ✅
-     * If it's not, grab the button ✅
-     * Set it as loading ✅
-     * (Disable input also) ✅
-     * Send request
-     * on success -> update cart (dispatch)
-     * on fail -> show toast
-     * finally remove loading state
-     */
     const couponCode = new FormData(event.target).get("coupon_code");
 
     if (!couponCode) return;
@@ -695,8 +678,44 @@ class CartSummary extends HTMLElement {
     }
   }
 
+  updateCoupon(coupon) {
+    if (!coupon) {
+      this.setShowCouponInSummary(false);
+
+      return;
+    }
+
+    this.discount.textContent = this.getFormattedDiscountValue(coupon);
+    this.couponCode.textContent = coupon.code;
+
+    this.setShowCouponInSummary(true);
+  }
+
+  setShowCouponInSummary(shouldShow) {
+    this.discount.toggleAttribute("hidden", !shouldShow);
+    this.couponCode.toggleAttribute("hidden", !shouldShow);
+  }
+
+  updateSummary(subTotal, total) {
+    // TODO: TVA, TTC, and HT
+    this.subtotal.textContent = formatCurrency(subTotal);
+    this.total.textContent = formatCurrency(total);
+  }
+
+  getFormattedDiscountValue(coupon) {
+    if (coupon.type == 1) {
+      return `${coupon.value}%`;
+    }
+
+    return formatCurrency(coupon.value * -1);
+  }
+
   clearCouponForm() {
     this.couponInput.value = "";
+  }
+
+  setCouponRemoveButtonIsLoading(isLoading) {
+    this.removeCouponButton.toggleAttribute("data-loading", isLoading);
   }
 
   setCouponFormIsLoading(isLoading) {
