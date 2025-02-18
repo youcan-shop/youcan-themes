@@ -704,10 +704,10 @@ class CartSummary extends HTMLElement {
 
   getFormattedDiscountValue(coupon, discountedPrice) {
     if (coupon.type == 1) {
-      return `${formatCurrency(discountedPrice * -1)} (${coupon.value}%)`;
+      return `-${formatCurrency(discountedPrice)} (${coupon.value}%)`;
     }
 
-    return formatCurrency(coupon.value * -1);
+    return `-${formatCurrency(coupon.value)}`;
   }
 
   clearCouponForm() {
