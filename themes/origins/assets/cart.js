@@ -628,8 +628,8 @@ class CartSummary extends HTMLElement {
     subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
       const { sub_total, total, discountedPrice, coupon } = payload.cartData;
 
-      this.updateCoupon(coupon);
-      this.updateSummary(sub_total + discountedPrice, total);
+      this.updateCoupon(coupon, discountedPrice);
+      this.updateSummary(sub_total, total);
     });
   }
 
@@ -678,14 +678,14 @@ class CartSummary extends HTMLElement {
     }
   }
 
-  updateCoupon(coupon) {
+  updateCoupon(coupon, discountedPrice) {
     if (!coupon) {
       this.setShowCouponInSummary(false);
 
       return;
     }
 
-    this.discount.textContent = this.getFormattedDiscountValue(coupon);
+    this.discount.textContent = this.getFormattedDiscountValue(coupon, discountedPrice);
     this.couponCode.textContent = coupon.code;
 
     this.setShowCouponInSummary(true);
@@ -702,9 +702,9 @@ class CartSummary extends HTMLElement {
     this.total.textContent = formatCurrency(total);
   }
 
-  getFormattedDiscountValue(coupon) {
+  getFormattedDiscountValue(coupon, discountedPrice) {
     if (coupon.type == 1) {
-      return `${coupon.value}%`;
+      return `${formatCurrency(discountedPrice * -1)} (${coupon.value}%)`;
     }
 
     return formatCurrency(coupon.value * -1);
