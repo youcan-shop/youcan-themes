@@ -5,9 +5,10 @@
   - placeholder: {String} input placeholder
   - options: {Array} variant options
   - name: {String} input name
+  - default_value: (optional){String} default checked value
 
   Usage:
-  {% render 'variant-dropdown', name: 'pattern', options: [], placeholder: 'Select' %}
+  {% render 'variant-dropdown', name: 'pattern', options: [], placeholder: 'Select', default_value: '' %}
 {% endcomment %}
 
 <yc-variant name="dropdown">
@@ -17,7 +18,12 @@
     </yc-combobox-trigger>
     <yc-combobox-content>
       {% for option in options %}
-        <yc-combobox-item value="{{ option }}">
+        <yc-combobox-item
+          value="{{ option }}"
+          {% if option == default_value %}
+            checked
+          {% endif %}
+        >
           {{ option }}
         </yc-combobox-item>
       {% endfor %}
