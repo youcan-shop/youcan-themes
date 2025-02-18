@@ -620,14 +620,33 @@ class CartSummary extends HTMLElement {
 
       this.updateSummary(sub_total, total);
     });
+
+    subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
+      const { sub_total, total } = payload.cartData;
+
+      console.log("payload", payload);
+
+      /**
+       * Update summary:
+       *  update subtotal
+       *  update coupon:
+       *    show coupon discount value
+       *    show coupon code applied:
+       *      render button
+       *      handle remove coupon button click
+       */
+
+      // this.updateSummary(sub_total, total);
+    });
   }
 
   updateSummary(subTotal, total) {
+    // TODO: TVA, TTC, and HT
     this.subtotal.textContent = formatCurrency(subTotal);
     this.total.textContent = formatCurrency(total);
   }
 
-  handleApplyCoupon(event) {
+  async handleApplyCoupon(event) {
     event.preventDefault();
 
     /**
@@ -646,6 +665,26 @@ class CartSummary extends HTMLElement {
     if (!couponCode) return;
 
     this.setCouponFormIsLoading(true);
+
+    try {
+      const response = await youcanjs.checkout.applyCoupon(couponCode);
+
+      publish(PUB_SUB_EVENTS.couponUpdate, {
+        source: "coupon-form",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setCouponFormIsLoading(false);
+      this.clearCouponForm();
+    }
+  }
+
+  clearCouponForm() {
+    this.couponInput.value = "";
   }
 
   setCouponFormIsLoading(isLoading) {
