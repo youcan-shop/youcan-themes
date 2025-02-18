@@ -2,22 +2,22 @@
   <li class="review-card">
     <div class="info">
       <div class="author">
-        <p class="name" data-author>
+        <p class="name" data-review-item="author">
           <span class="anonymous">
             {{ 'product.anonymous' | t }}
           </span>
         </p>
-        <span class="date" data-date></span>
+        <span class="date" data-review-item="date"></span>
       </div>
-      <div class="rate" data-rating>
+      <div class="rate" data-review-item="rating">
         {% for star in (1..5) %}
           {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
         {% endfor %}
       </div>
     </div>
     <div class="content">
-      <p data-content></p>
-      <yc-modal data-images>
+      <p data-review-item="content"></p>
+      <yc-modal data-review-item="images">
         <div class="images">
           <template data-img>
             <button class="icon" data-image data-trigger>

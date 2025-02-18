@@ -26,19 +26,19 @@ class Reviews extends HTMLElement {
     } catch (error) {
       console.error(error);
 
-      this.productId && toast.show(error.message, "error");
+      toast.show(error.message, "error");
     } finally {
       this.skeleton.remove();
     }
   }
 
   setupItems(items) {
-    const ITEMS_WITH_CONTENT = items.filter((item) => Boolean(item.content));
-    const TOTAL_ITEMS = ITEMS_WITH_CONTENT.length;
+    const ITEMS_WITH_CONTENT = items.filter((item) => !!item.content);
+    const totalItems = ITEMS_WITH_CONTENT.length;
 
-    if (TOTAL_ITEMS) {
+    if (totalItems) {
       ITEMS_WITH_CONTENT.forEach((item) => this.createItem(item));
-      TOTAL_ITEMS > 1 && this.parentElement.style.setProperty("--items-columns", TOTAL_ITEMS);
+      totalItems > 1 && this.parentElement.style.setProperty("--items-columns", totalItems);
     } else {
       this.filter.remove();
     }
@@ -69,65 +69,63 @@ class Reviews extends HTMLElement {
     });
   }
 
-  createItem({ first_name, last_name, content, ratings, images_urls, created_at }) {
+  createItem(data) {
     const template = this.querySelector("[data-review]");
     const review = template.content.cloneNode(true);
 
+    const { first_name, last_name, images_urls, ratings, created_at } = data;
     review.firstElementChild.dataset.ratings = ratings;
 
-    this.setItemAuthor(review, { first_name, last_name });
-    this.setItemImages(review, images_urls);
-    this.setItemContent(review, content);
-    this.setItemDate(review, created_at);
-    this.setItemRating(review, ratings);
+    const [author, content, rating, date, images] = review.querySelectorAll("[data-review-item]");
+
+    this.setItemAuthor(author, { first_name, last_name });
+    this.setItemContent(content, data.content);
+    this.setItemImages(images, images_urls);
+    this.setItemRating(rating, ratings);
+    this.setItemDate(date, created_at);
 
     this.container.appendChild(review);
   }
 
-  setItemAuthor(element, { first_name, last_name }) {
-    const author = element.querySelector("[data-author]");
-
+  setItemAuthor(authorElement, { first_name, last_name }) {
     if (first_name || last_name) {
-      author.textContent = `${first_name || ""} ${last_name || ""}`;
+      authorElement.textContent = `${first_name || ""} ${last_name || ""}`;
     }
   }
 
-  setItemContent(element, text) {
-    const content = element.querySelector("[data-content]");
-    content.innerHTML = text;
+  setItemContent(contentElement, content) {
+    contentElement.innerHTML = content;
   }
 
-  setItemRating(element, ratings) {
-    const stars = element.querySelectorAll("[data-rating] svg");
+  setItemRating(ratingElement, ratings) {
+    const stars = ratingElement.querySelectorAll("svg");
 
     stars.forEach((star, i) => {
       if (i + 1 > ratings) star.style.fill = "none";
     });
   }
 
-  setItemDate(element, created_at) {
-    const date = element.querySelector("[data-date]");
-    date.textContent = relativeTime(new Date(created_at));
+  setItemDate(dateElement, created_at) {
+    dateElement.textContent = this.relativeTime(new Date(created_at));
   }
 
-  setItemImages(element, urls) {
+  setItemImages(imagesElement, urls) {
     const FIRST_SHOWED_IMAGES = 3;
     const TOTAL_URLs = urls.length;
-    const images = element.querySelector("[data-images]");
 
-    const listing = () => {
+    const listImages = () => {
       urls.forEach((src) => {
-        const template = images.querySelector("[data-img]");
+        const template = imagesElement.querySelector("[data-img]");
         const image = template.content.cloneNode(true);
 
         image.querySelector("img").src = src;
-        images.firstElementChild.prepend(image);
+        imagesElement.firstElementChild.prepend(image);
       });
     };
 
-    const preview = () => {
-      const buttons = images.querySelectorAll("[data-image]");
-      const previewImg = images.querySelector("[data-image-preview]");
+    const previewImage = () => {
+      const buttons = imagesElement.querySelectorAll("[data-image]");
+      const previewImg = imagesElement.querySelector("[data-image-preview]");
 
       buttons.forEach((img_button) => {
         img_button.addEventListener("click", () => {
@@ -136,14 +134,58 @@ class Reviews extends HTMLElement {
       });
     };
 
-    const showMore = () => {
+    const showMoreButton = () => {
       if (FIRST_SHOWED_IMAGES >= TOTAL_URLs) return;
 
-      const count = images.querySelector("[data-count]");
+      const count = imagesElement.querySelector("[data-count]");
       count.textContent = `+${TOTAL_URLs - FIRST_SHOWED_IMAGES}`;
     };
 
-    TOTAL_URLs ? (listing(), preview(), showMore()) : images.remove();
+    if (TOTAL_URLs) {
+      listImages();
+      previewImage();
+      showMoreButton();
+    } else {
+      imagesElement.remove();
+    }
+  }
+
+  relativeTime(date) {
+    const diffInSeconds = Math.floor((new Date() - date) / 1000);
+
+    const SECOND = 1;
+    const MINUTE = 60 * SECOND;
+    const HOUR = 60 * MINUTE;
+    const DAY = 24 * HOUR;
+    const WEEK = 7 * DAY;
+    const MONTH = 30 * DAY;
+    const YEAR = 365 * DAY;
+
+    const units = [
+      ["year", YEAR],
+      ["month", MONTH],
+      ["week", WEEK],
+      ["day", DAY],
+      ["hour", HOUR],
+      ["minute", MINUTE],
+      ["second", SECOND],
+    ];
+
+    for (const [unit, seconds] of units) {
+      const interval = Math.floor(diffInSeconds / seconds);
+      if (interval >= 1)
+        return new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(
+          -interval,
+          unit,
+        );
+    }
+
+    const justNow = new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(
+      0,
+      "second",
+    );
+
+    return justNow;
   }
 }
 
