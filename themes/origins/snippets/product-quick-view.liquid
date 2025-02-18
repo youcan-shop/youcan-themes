@@ -45,23 +45,27 @@
                 {% endif %}
               </div>
               <div class="variants">
-                {% assign options = 'XL,L,M,S' | split: ',' %}
-                {% render 'variant-toggle', name: 'size', options: options %}
-                {% render 'variant-dropdown', name: 'sizeo', options: options %}
-                {% render 'variant-radio', name: 'sizi', options: options %}
+                {% for variant in product.options %}
+                  <div class="variant">
+                    <span class="label">{{ variant.name }}:</span>
+                    {% if variant.type == 'textual_buttons' %}
+                      {% render 'variant-toggle', name: variant.name, options: variant.values %}
+                    {% elsif variant.type == 'radio_buttons' %}
+                      {% render 'variant-radio', name: variant.name, options: variant.values %}
+                    {% elsif variant.type == 'color_base_buttons' %}
+                      {% render 'variant-color', name: variant.name, options: variant.values %}
+                    {% elsif variant.type == 'dropdown' %}
+                      {% render 'variant-dropdown', name: variant.name, options: variant.values %}
+                    {% elsif variant.type == 'image_based_buttons' %}
+                      {% render 'variant-image', name: variant.name, options: variant.values %}
+                    {% elsif variant.type == 'upload_image_zone' %}
+                      {% render 'variant-upload', name: variant.name %}
+                    {% endif %}
+                  </div>
+                {% endfor %}
               </div>
             </div>
-            <yc-product-form
-              quantity="1"
-              variant-id="{{ product.variants[0].id  }}"
-            >
-              {% render 'yc-quantity-control' %}
-              <button class="primary" data-buy-button>
-                <span>
-                  {{ 'general.add_to_cart' | t }}
-                </span>
-              </button>
-            </yc-product-form>
+            {% render 'product-add-to-cart', variant_id: product.variants[0].id %}
           </yc-product-info>
         </div>
       </div>
