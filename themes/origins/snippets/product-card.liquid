@@ -45,22 +45,9 @@
     </div>
     {% unless settings.product_card_style == 'compact' %}
       {% if product.variants.size > 1 %}
-        {% render 'product-quick-view' %}
+        {% render 'product-quick-view', product: product %}
       {% else %}
-        <yc-product-form
-          variant-id="{{ product.variants[0].id  }}"
-          quantity="1"
-        >
-          <button
-            data-buy-button
-            name="add"
-            class="secondary"
-          >
-            <span>
-              {{ 'general.add_to_cart' | t }}
-            </span>
-          </button>
-        </yc-product-form>
+        {% render 'product-add-to-cart', variant_id: product.variants[0].id %}
       {% endif %}
     {% endunless %}
   </div>
