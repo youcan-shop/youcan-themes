@@ -620,8 +620,9 @@ class CartSummary extends HTMLElement {
     this.removeCouponButton.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, total } = payload.cartData;
+      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
 
+      this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, total);
     });
 
