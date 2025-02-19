@@ -1,6 +1,6 @@
 if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity", "not-available"];
+    static observedAttributes = ["variant-id", "quantity", "source", "not-available"];
 
     constructor() {
       super();
@@ -51,7 +51,7 @@ if (!customElements.get("yc-product-form")) {
         });
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
-          source: "product-form",
+          source: this.getAttribute("source") ?? "product-form",
           productVariantId,
           cartData: newCart,
         });
@@ -59,7 +59,7 @@ if (!customElements.get("yc-product-form")) {
         console.error(error);
 
         publish(PUB_SUB_EVENTS.cartError, {
-          source: "product-form",
+          source: this.getAttribute("source") ?? "product-form",
           productVariantId,
           error: error,
         });
