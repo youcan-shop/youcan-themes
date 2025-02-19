@@ -24,9 +24,10 @@ yc-section .cart .content .list{
   border:var(--cart-border);
 }
 yc-section .cart .content .list .item{
-  display:flex;
-  align-items:center;
+  display:grid;
+  grid-template-columns:2fr 1fr;
   justify-content:space-between;
+  grid-gap:var(--gap-lg);
   gap:var(--gap-lg);
   padding-block:1.5em;
   border-block-end:var(--cart-border);
@@ -41,6 +42,10 @@ yc-section .cart .content .list .item .info .image{
   min-width:100px;
   border-radius:var(--radius-md);
   overflow:hidden;
+}
+yc-section .cart .content .list .item .info .image img{
+  -o-object-fit:cover;
+     object-fit:cover;
 }
 yc-section .cart .content .list .item .info .image .card-placeholder{
   width:100%;
@@ -72,11 +77,16 @@ yc-section .cart .content .list .item .info .heading > [data-cart-item=price]{
   color:color-mix(in srgb, currentColor 80%, transparent);
 }
 yc-section .cart .content .list .item .controls{
+  width:300px;
   display:flex;
   align-items:center;
-  gap:var(--gap-3xl);
+  justify-content:space-between;
+  gap:var(--gap-xl);
 }
 yc-section .cart .content .list .item .controls > [data-cart-item=subtotal]{
+  flex:1;
+  text-align:center;
+  display:inline-block;
   font-size:var(--text-md);
   font-weight:550;
 }
@@ -174,6 +184,21 @@ yc-section .cart[data-is-empty] .empty{
   display:flex;
 }
 
+@media (max-width: 1280px){
+  yc-section .cart .list .item{
+    grid-template-columns:1fr !important;
+  }
+  yc-section .cart .list .item .controls{
+    width:100% !important;
+    justify-content:flex-start !important;
+  }
+  yc-section .cart .list .item .controls [data-cart-item=subtotal]{
+    flex:none !important;
+  }
+  yc-section .cart .list .item .controls yc-cart-remove-button{
+    margin-inline-start:auto;
+  }
+}
 @media (max-width: 1024px){
   yc-section .cart{
     grid-template-columns:1fr;
@@ -215,7 +240,7 @@ yc-section .cart[data-is-empty] .empty{
     width:100%;
     gap:var(--gap-xl) !important;
   }
-  yc-section .cart .list .item .controls .delete{
+  yc-section .cart .list .item .controls yc-cart-remove-button{
     margin-inline-start:auto;
   }
   yc-section .cart .summary .box .subtotal .total-box{
