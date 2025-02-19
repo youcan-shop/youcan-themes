@@ -27,8 +27,8 @@ yc-section {
         border: var(--cart-border);
 
         .item {
-          display: flex;
-          align-items: center;
+          display: grid;
+          grid-template-columns: 2fr 1fr;
           justify-content: space-between;
           gap: var(--gap-lg);
           padding-block: 1.5em;
@@ -44,6 +44,10 @@ yc-section {
               min-width: 100px;
               border-radius: var(--radius-md);
               overflow: hidden;
+
+              img {
+                object-fit: cover;
+              }
 
               .card-placeholder {
                 width: 100%;
@@ -83,11 +87,16 @@ yc-section {
           }
 
           .controls {
+            width: 300px;
             display: flex;
             align-items: center;
-            gap: var(--gap-3xl);
+            justify-content: space-between;
+            gap: var(--gap-xl);
 
             & > [data-cart-item="subtotal"] {
+              flex: 1;
+              text-align: center;
+              display: inline-block;
               font-size: var(--text-md);
               font-weight: 550;
             }
@@ -238,6 +247,31 @@ yc-section {
   }
 }
 
+@include breakpoint("xl") {
+  yc-section {
+    .cart {
+      .list {
+        .item {
+          grid-template-columns: 1fr !important;
+
+          .controls {
+            width: 100% !important;
+            justify-content: flex-start !important;
+
+            [data-cart-item="subtotal"] {
+              flex: none !important;
+            }
+
+            yc-cart-remove-button {
+              margin-inline-start: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 @include breakpoint("lg") {
   yc-section {
     .cart {
@@ -294,7 +328,7 @@ yc-section {
             width: 100%;
             gap: var(--gap-xl) !important;
 
-            .delete {
+            yc-cart-remove-button {
               margin-inline-start: auto;
             }
           }
