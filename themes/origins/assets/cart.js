@@ -59,7 +59,17 @@ class CartDrawerItems extends HTMLElement {
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { sub_total, items } = payload.cartData;
 
-      if (payload.source === "product-form") this.cart.open();
+      if (payload.source === "product-form") {
+        this.cart.open();
+      }
+
+      if (payload.source === "quick-view") {
+        const quickViewModal = document.querySelector(
+          "yc-product yc-modal:has(yc-modal-content[data-visible])",
+        );
+        quickViewModal.close();
+        this.cart.open();
+      }
 
       this.updateCartSubTotal(sub_total);
       this.updateCartList(items);
