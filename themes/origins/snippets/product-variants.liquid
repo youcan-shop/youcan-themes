@@ -1,0 +1,48 @@
+<yc-variants>
+  {% for variant in product.options %}
+    {% assign default = '' %}
+
+    {% for variation in product.selected_or_first_available_variant.variations %}
+      {% if variation[0] == variant.name %}
+        {% assign default = variation[1] %}
+      {% endif %}
+    {% endfor %}
+
+    <div class="variant">
+      <span class="label">{{ variant.name }}:</span>
+      {% if variant.type == 'textual_buttons' %}
+        {% render 'variant-toggle',
+          name: variant.name,
+          options: variant.values,
+          default_value: default
+        %}
+      {% elsif variant.type == 'radio_buttons' %}
+        {% render 'variant-radio',
+          name: variant.name,
+          options: variant.values,
+          default_value: default
+        %}
+      {% elsif variant.type == 'color_base_buttons' %}
+        {% render 'variant-color',
+          name: variant.name,
+          options: variant.values,
+          default_value: default
+        %}
+      {% elsif variant.type == 'dropdown' %}
+        {% render 'variant-dropdown',
+          name: variant.name,
+          options: variant.values,
+          default_value: default
+        %}
+      {% elsif variant.type == 'image_based_buttons' %}
+        {% render 'variant-image',
+          name: variant.name,
+          options: variant.values,
+          default_value: default
+        %}
+      {% elsif variant.type == 'upload_image_zone' %}
+        {% render 'variant-upload', name: variant.name %}
+      {% endif %}
+    </div>
+  {% endfor %}
+</yc-variants>
