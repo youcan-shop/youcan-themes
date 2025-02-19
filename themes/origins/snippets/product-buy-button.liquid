@@ -59,6 +59,7 @@
     </yc-modal>
   {% else %}
     {% assign quantity = 1 %}
+    {% assign available = product.selected_or_first_available_variant.available %}
 
     {% if product.quantity != null %}
       {% assign quantity = product.quantity %}
@@ -67,17 +68,25 @@
     <yc-product-form
       variant-id="{{ product.first_available_variant.id  }}"
       quantity="{{ quantity }}"
+      {% unless available %}
+        not-available
+      {% endunless %}
       class="actions"
       data-sticky
     >
       {% render 'yc-quantity-control', product: product %}
       <button
-        data-buy-button
         name="add"
+        data-buy-button
         class="primary"
+        {% unless available %}
+          disabled
+        {% endunless %}
       >
-        <span>
-          {{ 'general.add_to_cart' | t }}
+        <span
+          data-add-to-cart="{{ 'general.add_to_cart' | t }}"
+          data-out-of-stock="{{ 'general.out_of_stock' | t }}"
+        >
         </span>
       </button>
     </yc-product-form>
