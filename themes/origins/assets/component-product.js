@@ -36,6 +36,7 @@ class Product extends HTMLElement {
     const [priceElement, compareAtPriceElement] = this.querySelectorAll("[data-product-item]");
     priceElement.textContent = formatCurrency(price);
     compareAtPriceElement.textContent = formatCurrency(compare_at_price);
+    compareAtPriceElement.hidden = !compare_at_price;
   }
 
   disableUnavailableOptions() {

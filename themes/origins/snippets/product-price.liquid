@@ -2,9 +2,13 @@
   <p class="current h2" data-product-item="price">
     {{ price | default: 0 | money }}
   </p>
-  {% if compare_at_price != null %}
-    <p class="compare-at h3" data-product-item="compare-at-price">
-      {{ compare_at_price | default: 0 | money }}
-    </p>
-  {% endif %}
+  <p
+    class="compare-at h3"
+    data-product-item="compare-at-price"
+    {% if compare_at_price == null %}
+      hidden
+    {% endif %}
+  >
+    {{ compare_at_price | default: 0 | money }}
+  </p>
 </div>

@@ -43,11 +43,15 @@
                 <p class="current h2" data-product-item="price">
                   {{ product.price | default: 0 | money }}
                 </p>
-                {% if product.compare_at_price != null %}
-                  <p class="compare-at h3" data-product-item="compare-at-price">
-                    {{ product.compare_at_price | default: 0 | money }}
-                  </p>
-                {% endif %}
+                <p
+                  class="compare-at h3"
+                  data-product-item="compare-at-price"
+                  {% if compare_at_price == null %}
+                    hidden
+                  {% endif %}
+                >
+                  {{ product.compare_at_price | default: 0 | money }}
+                </p>
               </div>
               {% render 'product-variants' %}
             </div>
