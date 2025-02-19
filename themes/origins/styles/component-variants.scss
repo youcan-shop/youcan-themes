@@ -1,3 +1,5 @@
+@import "./mixins/breakpoints";
+
 yc-variant {
   --variant-bg-color: var(--section-bg-color, var(--color-base-white));
   --variant-text-color: rgb(var(--section-text-color, var(--color-base-black)));
@@ -283,6 +285,14 @@ yc-variant {
       .actions button {
         color: var(--variant-text-color);
       }
+    }
+  }
+
+  &[name="dropdown"] {
+    width: 50%;
+
+    @include breakpoint("md") {
+      width: 100%;
     }
   }
 }
