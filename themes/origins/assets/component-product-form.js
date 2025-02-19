@@ -28,8 +28,7 @@ if (!customElements.get("yc-product-form")) {
         return;
       }
 
-      const { quantity } = event.target.dataset;
-      this.quantityValue = quantity;
+      this.quantityValue = event.target.getAttribute("quantity");
     }
 
     handleAvailabilityChange() {
