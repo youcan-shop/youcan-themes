@@ -606,11 +606,24 @@ class QuantityControl extends HTMLElement {
 customElements.define("yc-quantity-control", QuantityControl);
 
 class CartSummary extends HTMLElement {
+  static COUPON_TYPES = {
+    FIXED: 0,
+    PERCENTAGE: 1,
+  };
+
   constructor() {
     super();
 
+    this.couponForm = this.querySelector("[data-coupon-form]");
     this.subtotal = this.querySelector("[data-cart-subtotal]");
     this.total = this.querySelector("[data-cart-total]");
+    this.couponCode = this.querySelector("[data-coupon-code]");
+    this.discount = this.querySelector("[data-discount]");
+    this.removeCouponButton = this.querySelector("[data-remove-coupon]");
+
+    const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
+    this.couponInput = couponInput;
+    this.couponButton = couponButton;
   }
 
   connectedCallback() {
@@ -618,17 +631,112 @@ class CartSummary extends HTMLElement {
   }
 
   _render() {
-    // TODO: Add listener for coupon activation and disactivation
-    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, total } = payload.cartData;
+    this.couponForm.addEventListener("submit", this.handleApplyCoupon.bind(this));
+    this.removeCouponButton.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
+    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
+      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
+
+      this.updateCoupon(coupon, discountedPrice);
+      this.updateSummary(sub_total, total);
+    });
+
+    subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
+      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
+
+      this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, total);
     });
   }
 
+  async handleRemoveCoupon() {
+    this.setCouponRemoveButtonIsLoading(true);
+
+    try {
+      const response = await youcanjs.checkout.removeCoupons();
+
+      publish(PUB_SUB_EVENTS.couponUpdate, {
+        source: "coupon-form",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setCouponRemoveButtonIsLoading(false);
+    }
+  }
+
+  async handleApplyCoupon(event) {
+    event.preventDefault();
+
+    const couponCode = new FormData(event.target).get("coupon_code");
+
+    if (!couponCode) return;
+
+    this.setCouponFormIsLoading(true);
+
+    try {
+      const response = await youcanjs.checkout.applyCoupon(couponCode);
+
+      publish(PUB_SUB_EVENTS.couponUpdate, {
+        source: "coupon-form",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setCouponFormIsLoading(false);
+      this.clearCouponForm();
+    }
+  }
+
+  updateCoupon(coupon, discountedPrice) {
+    if (!coupon) {
+      this.setShowCouponInSummary(false);
+
+      return;
+    }
+
+    this.discount.textContent = this.getFormattedDiscountValue(coupon, discountedPrice);
+    this.couponCode.textContent = coupon.code;
+
+    this.setShowCouponInSummary(true);
+  }
+
+  setShowCouponInSummary(shouldShow) {
+    this.discount.toggleAttribute("hidden", !shouldShow);
+    this.couponCode.toggleAttribute("hidden", !shouldShow);
+  }
+
   updateSummary(subTotal, total) {
+    // TODO: TVA, TTC, and HT
     this.subtotal.textContent = formatCurrency(subTotal);
     this.total.textContent = formatCurrency(total);
+  }
+
+  getFormattedDiscountValue(coupon, discountedPrice) {
+    if (coupon.type == CartSummary.COUPON_TYPES.PERCENTAGE) {
+      return `-${formatCurrency(discountedPrice)} (${coupon.value}%)`;
+    }
+
+    return `-${formatCurrency(coupon.value)}`;
+  }
+
+  clearCouponForm() {
+    this.couponInput.value = "";
+  }
+
+  setCouponRemoveButtonIsLoading(isLoading) {
+    this.removeCouponButton.toggleAttribute("data-loading", isLoading);
+  }
+
+  setCouponFormIsLoading(isLoading) {
+    this.couponButton.toggleAttribute("data-loading", isLoading);
+    this.couponInput.disabled = isLoading;
   }
 }
 
