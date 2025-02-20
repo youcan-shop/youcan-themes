@@ -596,6 +596,11 @@ class QuantityControl extends HTMLElement {
 customElements.define("yc-quantity-control", QuantityControl);
 
 class CartSummary extends HTMLElement {
+  static COUPON_TYPES = {
+    FIXED: 0,
+    PERCENTAGE: 1,
+  };
+
   constructor() {
     super();
 
@@ -704,7 +709,7 @@ class CartSummary extends HTMLElement {
   }
 
   getFormattedDiscountValue(coupon, discountedPrice) {
-    if (coupon.type == 1) {
+    if (coupon.type == CartSummary.COUPON_TYPES.PERCENTAGE) {
       return `-${formatCurrency(discountedPrice)} (${coupon.value}%)`;
     }
 
