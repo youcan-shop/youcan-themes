@@ -1,8 +1,8 @@
-{{ 'review-modal.css' | asset_url | stylesheet_tag }}
+{{ 'write-review.css' | asset_url | stylesheet_tag }}
 
-<yc-add-review>
+<yc-write-review product-id="25426cf9-f43f-4d04-9b30-d74e89e2a51d">
   <yc-modal style="--modal-width: 500px">
-    <button data-trigger>Add review</button>
+    <button data-trigger>Write a review</button>
     <yc-modal-content>
       <div class="review-form">
         <div class="head">
@@ -11,13 +11,19 @@
             {% render 'yc-icon', name: 'x-mark' %}
           </button>
         </div>
-        <div class="core">
+        <form class="core" data-review-form>
           <div class="rating-box">
             <div class="stars">
               {% for star in (1..5) %}
                 <label for="{{ star }}" class="star">
                   {% render 'yc-icon', name: 'star', size: 35 %}
-                  <input type="radio" name="rate" id="{{ star }}" hidden>
+                  <input
+                    hidden
+                    type="radio"
+                    name="ratings"
+                    id="{{ star }}"
+                    value="{{ star }}"
+                  >
                 </label>
               {% endfor %}
             </div>
@@ -54,18 +60,31 @@
                 >
               </div>
               <div class="field">
-                <label for="review"> Review </label>
+                <label for="content"> Review </label>
                 <textarea
                   required
                   type="text"
-                  id="review"
-                  name="review"
+                  id="content"
+                  name="content"
+                  minlength="5"
                   placeholder="Type text here.."
                 ></textarea>
               </div>
               <div class="field upload-image">
-                <label for="images">Add images</label>
+                <label for="add-images">Add images</label>
                 <div class="input">
+                  <template data-image>
+                    <div class="image">
+                      <button type="button" data-remove-image>
+                        {% render 'yc-icon', name: 'x-mark', size: 12 %}
+                      </button>
+                      <img
+                        alt="image"
+                        width="100%"
+                        height="100%"
+                      >
+                    </div>
+                  </template>
                   <label for="images" class="yc-btn icon">
                     {% render 'yc-icon', name: 'plus' %}
                     <input
@@ -73,26 +92,23 @@
                       type="file"
                       id="images"
                       name="images"
-                      accept="image/png, image/gif, image/jpeg, image/webp, image/avif"
+                      accept="image/png, image/gif, image/jpeg, image/jpg"
                     >
                   </label>
-                  <div class="image">
-                    <button>
-                      {% render 'yc-icon', name: 'x-mark', size: 12 %}
-                    </button>
-                    <img
-                      alt="image"
-                      width="100%"
-                      height="100%"
-                      src="{{ 'hoodie.webp' | asset_url }}"
-                    >
-                  </div>
+                  <yc-skeleton style="padding: 0;" hidden data-image-skeleton>
+                    <yc-skeleton-item
+                      variant="rounded"
+                      style="width: 60px; height: 60px"
+                    ></yc-skeleton-item>
+                  </yc-skeleton>
                 </div>
               </div>
             </div>
             <div class="actions">
-              <button class="icon" data-trigger>Cancel</button>
-              <button class="primary" data-submit>Submit</button>
+              <button class="icon" type="button" data-trigger>Cancel</button>
+              <button class="primary" type="submit" data-submit>
+                <span>Submit</span>
+              </button>
             </div>
           </div>
           <div class="success-box">
@@ -104,8 +120,8 @@
               <p>Your opinion is very important for us.</p>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </yc-modal-content>
   </yc-modal>
-</yc-add-review>
+</yc-write-review>
