@@ -210,7 +210,6 @@ button[data-loading],
 .yc-btn[data-loading]{
   opacity:0.5;
   cursor:not-allowed;
-  pointer-events:none;
 }
 button[data-loading] span,
 button[data-loading] svg,
@@ -220,9 +219,12 @@ button[data-loading] svg,
 }
 button[data-loading]::before,
 .yc-btn[data-loading]::before{
+  --size:18px;
   content:"";
   width:18px;
+  width:var(--size);
   height:18px;
+  height:var(--size);
   position:absolute;
   border:1.5px solid currentColor;
   border-bottom-color:transparent;
@@ -234,7 +236,6 @@ button:disabled, button[data-disabled],
 .yc-btn[data-disabled]{
   opacity:0.5;
   cursor:not-allowed;
-  pointer-events:none;
 }
 button.link:hover::before{
   opacity:1;

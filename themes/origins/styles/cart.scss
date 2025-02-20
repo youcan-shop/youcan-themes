@@ -139,9 +139,32 @@ yc-section {
           padding-block-end: 0.5em;
         }
 
+        .coupon-code {
+          display: flex;
+          align-items: center;
+          gap: var(--gap-sm);
+          background-color: color-mix(in srgb, currentColor 8%, transparent);
+          border-radius: var(--radius-sm);
+          padding: 0.2em 0.5em;
+
+          button {
+            background-color: transparent;
+            padding: 0;
+
+            &::before {
+              --size: 10px;
+            }
+          }
+        }
+
         .coupon {
           display: flex;
           padding-block-end: 1em;
+
+          input:placeholder-shown + button {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
 
           input,
           button {
@@ -185,6 +208,14 @@ yc-section {
 
           .item {
             color: color-mix(in srgb, currentColor 70%, transparent);
+
+            &:has(span[hidden]) {
+              display: none;
+            }
+          }
+
+          [data-discount] {
+            direction: ltr;
           }
 
           .total-box {

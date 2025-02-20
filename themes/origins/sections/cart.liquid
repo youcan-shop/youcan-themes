@@ -35,24 +35,41 @@
       <yc-summary-box>
         <div class="box">
           {% if section.settings.show_coupon %}
-            <div class="coupon">
-              <input type="text" placeholder="{{ 'cart.page.coupon.placeholder' | t }}">
-              <button class="yc-btn secondary">{{ 'cart.page.coupon.apply' | t }}</button>
-            </div>
+            <form class="coupon" data-coupon-form>
+              <input
+                name="coupon_code"
+                type="text"
+                placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
+                data-coupon="coupon-input"
+              >
+              <button type="submit" class="yc-btn secondary" data-coupon="coupon-button">
+                <span> {{ 'cart.page.coupon.apply' | t }} </span>
+              </button>
+            </form>
           {% endif %}
           <div class="subtotal">
             <div class="item">
               <span>{{ 'cart.page.summary.subtotal' | t }}</span>
-              <span data-cart-subtotal>{{ cart.sub_total | money }}</span>
+              <span data-cart-subtotal>{{ cart.sub_total | default: 0 | money }}</span>
+            </div>
+
+            <div class="item">
+              <span>{{ 'order.coupon_code' | t }}</span>
+              <div class="coupon-code">
+                <span data-coupon-code hidden></span>
+                <button class="tertiary" data-remove-coupon>
+                  {% render 'yc-icon', name: 'x-mark' %}
+                </button>
+              </div>
             </div>
             <div class="item">
-              <span>{{ 'cart.page.summary.coupon' | t }}</span>
-              <span>-15%</span>
+              <span>{{ 'order.discount_amount' | t }}</span>
+              <span data-discount hidden></span>
             </div>
             <div class="total-box">
               <div class="total">
                 <span>{{ 'cart.page.summary.total' | t }}</span>
-                <span data-cart-total>{{ cart.total | money }}</span>
+                <span data-cart-total>{{ cart.total | default: 0 | money }}</span>
               </div>
               <a href="{{ cart.cart_submit_url }}" class="yc-btn primary">
                 {{- 'cart.page.summary.checkout_button' | t -}}

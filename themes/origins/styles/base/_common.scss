@@ -83,7 +83,6 @@ button,
   &[data-loading] {
     opacity: 0.5;
     cursor: not-allowed;
-    pointer-events: none;
 
     span,
     svg {
@@ -91,9 +90,11 @@ button,
     }
 
     &::before {
+      --size: 18px;
+
       content: "";
-      width: 18px;
-      height: 18px;
+      width: var(--size);
+      height: var(--size);
       position: absolute;
       border: 1.5px solid currentColor;
       border-bottom-color: transparent;
@@ -106,7 +107,6 @@ button,
   &[data-disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-    pointer-events: none;
   }
 
   &:hover:is(.link)::before {
