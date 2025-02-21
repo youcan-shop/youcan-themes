@@ -57,14 +57,17 @@
       </ul>
     {% else %}
       <yc-slider
-        responsive
         arrows
-        data-type="fit"
+        responsive
+        per-move="page"
         style="
           --slider-gap: 30;
           --slider-speed: 600;
           --slider-height: auto;
           --slider-per-page: {{ section.settings.product_columns }};
+
+          --slider-max-items-lg: 2;
+          --slider-max-items-md: 1;
         "
         aria-role="region"
         aria-roledescription="Carousel"
@@ -73,6 +76,8 @@
           <div class="slider-box" data-slider-box>
             <ul class="slider-inner" data-slider>
               {%- paginate collection.products by number_of_products id category_id: collection.id %}
+                {%- assign products_size = items.size -%}
+
                 {%- for item in items -%}
                   <yc-slider-item>
                     <li>
