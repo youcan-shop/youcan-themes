@@ -74,7 +74,11 @@ class WriteReview extends HTMLElement {
         this.addImage(response.link);
       } catch (error) {
         console.error(error);
-        toast.show(error.message, "error");
+
+        toast.show(
+          (error.meta?.fields?.image && error.meta.fields.image[0]) ?? error.message,
+          "error",
+        );
       } finally {
         this.toggleImageSkeleton(true);
       }
