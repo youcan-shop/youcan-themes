@@ -89,6 +89,11 @@ yc-write-review {
               font-size: var(--text-sm);
             }
 
+            .info {
+              font-size: var(--text-xs);
+              color: color-mix(in srgb, currentColor 70%, transparent);
+            }
+
             &:has(input:required),
             &:has(textarea:required) {
               label::after {
@@ -171,66 +176,12 @@ yc-write-review {
           }
         }
       }
-
-      .success-box {
-        width: 100%;
-        display: flex;
-        gap: var(--gap-xl);
-        flex-direction: column;
-        position: absolute;
-        inset: 50% 0 0 50%;
-        translate: -50% -40%;
-        visibility: hidden;
-
-        .icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          svg {
-            width: 60px;
-            height: 60px;
-            padding: 1em;
-            border-radius: var(--radius-circle);
-            color: var(--section-bg-color);
-            background-color: var(--color-success-500);
-            outline: 10px solid var(--color-success-50);
-            animation: pulse 2s linear infinite;
-
-            @keyframes pulse {
-              0% {
-                outline-color: var(--color-success-50);
-              }
-
-              50% {
-                outline-color: transparent;
-              }
-
-              100% {
-                outline-color: var(--color-success-50);
-              }
-            }
-          }
-        }
-
-        .content {
-          display: grid;
-          text-align: center;
-          gap: var(--gap-md);
-          justify-content: center;
-
-          p {
-            font-size: var(--text-sm);
-            color: color-mix(in srgb, currentColor 70%, transparent);
-          }
-        }
-      }
     }
   }
 }
 
 @include breakpoint("md") {
-  yc-add-review {
+  yc-write-review {
     .review-form {
       .head {
         padding-block-start: 0;

@@ -2,11 +2,15 @@
 
 <yc-write-review product-id="25426cf9-f43f-4d04-9b30-d74e89e2a51d">
   <yc-modal style="--modal-width: 500px">
-    <button data-trigger>Write a review</button>
+    <button data-trigger>
+      {{ 'product.reviews.write_review' | t }}
+    </button>
     <yc-modal-content>
       <div class="review-form">
         <div class="head">
-          <h4 class="title">Write a review</h4>
+          <h4 class="title">
+            {{ 'product.reviews.write_review' | t }}
+          </h4>
           <button class="icon" data-size="sm" data-trigger>
             {% render 'yc-icon', name: 'x-mark' %}
           </button>
@@ -31,47 +35,57 @@
           <div class="info-box">
             <div class="fields">
               <div class="field">
-                <label for="first-name"> First name </label>
+                <label for="first-name">
+                  {{ 'product.reviews.fields.first_name.label' | t }}
+                </label>
                 <input
                   required
                   type="text"
                   id="first-name"
                   name="first-name"
-                  placeholder="Type your first name.."
+                  placeholder="{{ 'product.reviews.fields.first_name.placeholder' | t }}"
                 >
               </div>
               <div class="field">
-                <label for="last-name"> Last name </label>
+                <label for="last-name">
+                  {{ 'product.reviews.fields.last_name.label' | t }}
+                </label>
                 <input
                   required
                   type="text"
                   id="last-name"
                   name="last-name"
-                  placeholder="Type your last name.."
+                  placeholder="{{ 'product.reviews.fields.last_name.placeholder' | t }}"
                 >
               </div>
               <div class="field">
-                <label for="email"> Email </label>
+                <label for="email">
+                  {{ 'product.reviews.fields.email.label' | t }}
+                </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  placeholder="Type your email.."
+                  placeholder="{{ 'product.reviews.fields.email.placeholder' | t }}"
                 >
               </div>
               <div class="field">
-                <label for="content"> Review </label>
+                <label for="content">
+                  {{ 'product.reviews.fields.review.label' | t }}
+                </label>
                 <textarea
                   required
                   type="text"
                   id="content"
                   name="content"
                   minlength="5"
-                  placeholder="Type text here.."
+                  placeholder="{{ 'product.reviews.fields.review.placeholder' | t }}"
                 ></textarea>
               </div>
               <div class="field upload-image">
-                <label for="add-images">Add images</label>
+                <label for="add-images">
+                  {{ 'product.reviews.fields.upload_image.label' | t }}
+                </label>
                 <div class="input">
                   <template data-image>
                     <div class="image">
@@ -102,22 +116,18 @@
                     ></yc-skeleton-item>
                   </yc-skeleton>
                 </div>
+                <span class="info">
+                  {{ 'product.reviews.fields.upload_image.placeholder' | t }}
+                </span>
               </div>
             </div>
             <div class="actions">
-              <button class="icon" type="button" data-trigger>Cancel</button>
-              <button class="primary" type="submit" data-submit>
-                <span>Submit</span>
+              <button class="icon" type="button" data-trigger>
+                {{ 'product.reviews.actions.cancel' | t }}
               </button>
-            </div>
-          </div>
-          <div class="success-box">
-            <div class="icon">
-              {% render 'yc-icon', name: 'check' %}
-            </div>
-            <div class="content">
-              <h4>Thanks!</h4>
-              <p>Your opinion is very important for us.</p>
+              <button class="primary" type="submit" data-submit>
+                <span>{{ 'product.reviews.actions.submit' | t }}</span>
+              </button>
             </div>
           </div>
         </form>
