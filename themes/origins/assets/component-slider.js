@@ -1,11 +1,6 @@
 if (!customElements.get("yc-slider")) {
   class Slider extends HTMLElement {
-    static observedAttributes = [
-      "autoplay",
-      "interval",
-      "responsive",
-      "per-move",
-    ];
+    static observedAttributes = ["autoplay", "interval", "responsive", "per-move"];
 
     constructor() {
       super();
@@ -14,6 +9,7 @@ if (!customElements.get("yc-slider")) {
       this.sliderBox = this.querySelector("[data-slider-box]");
       this.leftArrow = this.querySelector("[data-arrow='left']");
       this.rightArrow = this.querySelector("[data-arrow='right']");
+      this.unDraggableLinks = this.querySelectorAll("a[draggable='false']");
 
       this.index = 0;
       this.startX = 0;
@@ -48,13 +44,13 @@ if (!customElements.get("yc-slider")) {
     }
 
     _getStyle(v, default_v) {
-      return (
-        parseInt(getComputedStyle(this).getPropertyValue(`--${v}`)) || default_v
-      );
+      return parseInt(getComputedStyle(this).getPropertyValue(`--${v}`)) || default_v;
     }
 
     _render() {
       this.swipe();
+
+      this.setFooter();
 
       this.hasAttribute("autoplay") && this.autoPlay();
 
@@ -116,6 +112,8 @@ if (!customElements.get("yc-slider")) {
     onSwipe(event) {
       if (!this.isSwiping) return;
 
+      if (event.target.tagName === "A") this.toggleUndraggableLinks(false);
+
       this.currentX = event.touches ? event.touches[0].clientX : event.clientX;
       const deltaX = this.currentX - this.startX;
 
@@ -137,12 +135,12 @@ if (!customElements.get("yc-slider")) {
       const deltaX = (this.currentX - this.startX) * (this.isRTL ? -1 : 1);
       const itemWidth = this.sliderBox.offsetWidth / this.PER_PAGE;
       const threshold = this.PER_PAGE === 1 ? 120 : itemWidth / 3;
-      const isValidSwipe =
-        this.isBoundaryAllowed && Math.abs(deltaX) > threshold;
+      const isValidSwipe = this.isBoundaryAllowed && Math.abs(deltaX) > threshold;
 
       isValidSwipe ? this.setIndex(deltaX > 0 ? -1 : 1) : this.move();
 
       this.setSwiping(false);
+      this.toggleUndraggableLinks(true);
       this.setTransitionDuration(this.SPEED);
     }
 
@@ -154,9 +152,7 @@ if (!customElements.get("yc-slider")) {
           Object.entries(this.BREAKPOINTS).forEach(([key, query]) => {
             if (matchMedia(query).matches) {
               perPage = this._getStyle(
-                key === "default"
-                  ? "slider-per-page"
-                  : `slider-max-items-${key}`,
+                key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
               );
             }
           });
@@ -167,16 +163,13 @@ if (!customElements.get("yc-slider")) {
 
       const listener = () => {
         Object.values(this.BREAKPOINTS).forEach((query) =>
-          matchMedia(query).addEventListener(
-            "change",
-            (e) =>
-              e.matches &&
+          matchMedia(query).addEventListener("change", (e) => {
+            if (e.matches) {
               this.setPerPage(
-                Object.keys(this.BREAKPOINTS).find(
-                  (key) => this.BREAKPOINTS[key] === query,
-                ),
-              ),
-          ),
+                Object.keys(this.BREAKPOINTS).find((key) => this.BREAKPOINTS[key] === query),
+              );
+            }
+          }),
         );
       };
 
@@ -204,6 +197,20 @@ if (!customElements.get("yc-slider")) {
       this.isSwiping = state;
     }
 
+    toggleUndraggableLinks(state) {
+      if (!this.unDraggableLinks.length) return;
+
+      this.unDraggableLinks.forEach((link) => (link.style.pointerEvents = state ? "auto" : "none"));
+    }
+
+    setFooter() {
+      this.sliderFooter = this.querySelector("yc-slider-footer");
+      if (!this.sliderFooter) return;
+
+      this.sliderItems = this.querySelectorAll("yc-slider-item");
+      this.sliderFooter.hidden = this.sliderItems.length <= this.PER_PAGE;
+    }
+
     setArrows() {
       if (!this.hasAttribute("arrows")) return;
 
@@ -215,6 +222,8 @@ if (!customElements.get("yc-slider")) {
       this.PER_PAGE = this._getStyle(
         key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
       );
+
+      this.setFooter();
       this.reset(0);
     };
 
@@ -225,22 +234,13 @@ if (!customElements.get("yc-slider")) {
     setIndex(direction) {
       const previousIndex = this.index;
 
-      if (
-        this.getAttribute("per-move") === "page" &&
-        matchMedia(this.BREAKPOINTS.md).matches
-      ) {
+      if (this.getAttribute("per-move") === "page") {
         this.index = Math.max(
           0,
-          Math.min(
-            this.TOTAL - this.PER_PAGE,
-            this.index + direction * this.PER_PAGE,
-          ),
+          Math.min(this.TOTAL - this.PER_PAGE, this.index + direction * this.PER_PAGE),
         );
       } else {
-        this.index = Math.max(
-          0,
-          Math.min(this.TOTAL - 1, this.index + direction),
-        );
+        this.index = Math.max(0, Math.min(this.TOTAL - 1, this.index + direction));
       }
 
       if (this.index !== previousIndex) {
