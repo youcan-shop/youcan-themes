@@ -1,0 +1,78 @@
+{{ 'upsell.css' | asset_url | stylesheet_tag }}
+
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color.hex }};
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+
+    --yes-btn-background: {{ upsell.actions.btn_yes.bg_color }};
+    --yes-btn-foreground: {{ upsell.actions.btn_yes.font_color }};
+
+    --no-btn-background: {{ upsell.actions.btn_no.bg_color }};
+    --no-btn-foreground: {{ upsell.actions.btn_no.font_color }};
+  "
+>
+  <yc-upsell>
+    <div class="content">
+      {{ upsell.description }}
+    </div>
+    <div class="actions">
+      <span class="title">Do you accept this offer?</span>
+      <a href="/checkout/thankyou" class="yc-btn">{{ upsell.actions.btn_no.title }}</a>
+      <button>
+        {{- upsell.actions.btn_yes.title -}}
+      </button>
+    </div>
+    {{ upsell.footer }}
+  </yc-upsell>
+
+  {% comment %} {% dump upsell %} {% endcomment %}
+</yc-section>
+
+{%- schema -%}
+{
+  "label": "Upsell",
+  "templates": ["upsell"],
+  "limit": 1,
+  "settings": [
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    }
+  ]
+}
+{%- endschema -%}
