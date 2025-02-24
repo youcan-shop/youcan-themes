@@ -5,6 +5,8 @@
 {% assign percentage_coupon_type = '1' %}
 {% assign fixed_coupon_type = '2' %}
 
+{% dump cart %}
+
 <yc-section
   style="
     --section-space-top: {{ section.settings.space_top }}px;
@@ -89,6 +91,28 @@
                 {% elsif cart.coupon.type == fixed_coupon_type %}
                   {{ '-' | append: coupon_value | default: 0 | money }}
                 {% endif %}
+              </span>
+            </div>
+            <div class="item">
+              <span>{{ 'cart.page.summary.vat' | t }}</span>
+              <span
+                data-discount
+                {% unless cart.vat != 0 %}
+                  hidden
+                {% endunless %}
+              >
+                {{ cart.vat | append: '%' }}
+              </span>
+            </div>
+            <div class="item">
+              <span>{{ 'cart.page.summary.tax_amount' | t }}</span>
+              <span
+                data-discount
+                {% unless cart.vat != 0 %}
+                  hidden
+                {% endunless %}
+              >
+                {{ cart.tax_amount | default: 0 | money }}
               </span>
             </div>
             <div class="total-box">
