@@ -50,7 +50,7 @@ if (!customElements.get("yc-slider")) {
     _render() {
       this.swipe();
 
-      this.setFooter();
+      this.updateFooterVisibility();
 
       this.hasAttribute("autoplay") && this.autoPlay();
 
@@ -112,7 +112,7 @@ if (!customElements.get("yc-slider")) {
     onSwipe(event) {
       if (!this.isSwiping) return;
 
-      if (event.target.tagName === "A") this.toggleUndraggableLinks(false);
+      if (event.target.tagName === "A") this.setLinksAreDraggable(false);
 
       this.currentX = event.touches ? event.touches[0].clientX : event.clientX;
       const deltaX = this.currentX - this.startX;
@@ -140,7 +140,7 @@ if (!customElements.get("yc-slider")) {
       isValidSwipe ? this.setIndex(deltaX > 0 ? -1 : 1) : this.move();
 
       this.setSwiping(false);
-      this.toggleUndraggableLinks(true);
+      this.setLinksAreDraggable(true);
       this.setTransitionDuration(this.SPEED);
     }
 
@@ -197,13 +197,13 @@ if (!customElements.get("yc-slider")) {
       this.isSwiping = state;
     }
 
-    toggleUndraggableLinks(state) {
+    setLinksAreDraggable(state) {
       if (!this.unDraggableLinks.length) return;
 
       this.unDraggableLinks.forEach((link) => (link.style.pointerEvents = state ? "auto" : "none"));
     }
 
-    setFooter() {
+    updateFooterVisibility() {
       this.sliderFooter = this.querySelector("yc-slider-footer");
       if (!this.sliderFooter) return;
 
@@ -223,7 +223,7 @@ if (!customElements.get("yc-slider")) {
         key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
       );
 
-      this.setFooter();
+      this.updateFooterVisibility();
       this.reset(0);
     };
 
