@@ -1,6 +1,6 @@
 {{ 'write-review.css' | asset_url | stylesheet_tag }}
 
-<yc-write-review product-id="25426cf9-f43f-4d04-9b30-d74e89e2a51d">
+<yc-write-review product-id="{{ product_id }}">
   <yc-modal style="--modal-width: 500px">
     <div class="action">
       <button class="icon" data-trigger>
@@ -22,13 +22,12 @@
           <div class="rating-box">
             <div class="stars">
               {% for star in (1..5) %}
-                <label for="{{ star }}" class="star">
+                <label class="star">
                   {% render 'yc-icon', name: 'star', size: 35 %}
                   <input
                     hidden
                     type="radio"
                     name="ratings"
-                    id="{{ star }}"
                     value="{{ star }}"
                   >
                 </label>
@@ -106,18 +105,14 @@
                     {% render 'yc-icon', name: 'plus' %}
                     <input
                       hidden
+                      multiple
                       type="file"
                       id="images"
                       name="images"
                       accept="image/png, image/gif, image/jpeg, image/jpg"
                     >
                   </label>
-                  <yc-skeleton style="padding: 0;" hidden data-image-skeleton>
-                    <yc-skeleton-item
-                      variant="rounded"
-                      style="width: 60px; height: 60px"
-                    ></yc-skeleton-item>
-                  </yc-skeleton>
+                  <div class="images-container" data-images-container></div>
                 </div>
                 <span class="info">
                   {{ 'product.reviews.fields.upload_image.placeholder' | t }}

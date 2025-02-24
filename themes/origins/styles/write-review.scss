@@ -86,6 +86,7 @@ yc-write-review {
             input,
             textarea {
               resize: vertical;
+              min-height: 46px;
               max-height: 150px;
               color: rgb(var(--section-text-color));
             }
@@ -121,7 +122,6 @@ yc-write-review {
 
             .input {
               display: flex;
-              flex-wrap: wrap;
               gap: var(--gap-md);
 
               label,
@@ -134,33 +134,35 @@ yc-write-review {
                 cursor: pointer;
               }
 
-              yc-skeleton {
-                order: 1;
-              }
+              .images-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--gap-md);
 
-              .image {
-                position: relative;
-                border-radius: var(--radius-md);
-                border: 1px solid rgb(var(--section-text-color), 15%);
+                .image {
+                  position: relative;
+                  border-radius: var(--radius-md);
+                  border: 1px solid rgb(var(--section-text-color), 15%);
 
-                img {
-                  object-fit: cover;
-                  border-radius: calc(var(--radius-md) - 1px);
-                }
+                  img {
+                    object-fit: cover;
+                    border-radius: calc(var(--radius-md) - 1px);
+                  }
 
-                button {
-                  padding: 5px;
-                  inset-inline-end: -8px;
-                  inset-block-start: -8px;
-                  position: absolute;
-                  border-radius: var(--radius-circle);
-                  color: rgb(var(--section-text-color));
-                  background-color: var(--section-bg-color);
-                  border: 0.5px solid rgb(var(--section-text-color), 15%);
+                  button {
+                    padding: 5px;
+                    inset-inline-end: -8px;
+                    inset-block-start: -8px;
+                    position: absolute;
+                    border-radius: var(--radius-circle);
+                    color: rgb(var(--section-text-color));
+                    background-color: var(--section-bg-color);
+                    border: 0.5px solid rgb(var(--section-text-color), 15%);
 
-                  &:hover {
-                    color: var(--color-error-500);
-                    border-color: var(--color-error-50);
+                    &:hover {
+                      color: var(--color-error-500);
+                      border-color: var(--color-error-50);
+                    }
                   }
                 }
               }

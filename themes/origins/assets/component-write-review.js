@@ -1,5 +1,8 @@
 class WriteReview extends HTMLElement {
   static observedAttributes = ["product-id"];
+  static MAXIMUM_FILE_SIZE = 2;
+  static BYTES_IN_KB = 1024;
+  static KB_IN_MB = 1024;
 
   constructor() {
     super();
@@ -9,9 +12,9 @@ class WriteReview extends HTMLElement {
     this.modal = this.querySelector("yc-modal");
     this.form = this.querySelector("[data-review-form]");
     this.imageInput = this.form.querySelector("input[name='images']");
+    this.imagesContainer = this.querySelector("[data-images-container]");
 
     this.submitButton = this.querySelector("[data-submit]");
-    this.imageSkeleton = this.querySelector("[data-image-skeleton]");
   }
 
   connectedCallback() {
@@ -46,12 +49,12 @@ class WriteReview extends HTMLElement {
 
     try {
       const response = await youcanjs.product.submitReview(this.productId, payload);
+      this.resetForm();
 
-      this.form.reset();
-      this.modal.close();
       toast.show(response.detail, "success");
     } catch (error) {
       console.error(error);
+
       toast.show(error.message, "error");
     } finally {
       this.toggleSubmitButton(false);
@@ -59,30 +62,26 @@ class WriteReview extends HTMLElement {
   }
 
   onUploadImage(event) {
-    const files = event.target.files;
+    const files = Array.from(event.target.files);
     if (files.length < 1) return;
 
-    const file = files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
+    files.forEach((file) => {
+      const fileSizeInKB = file.size / WriteReview.BYTES_IN_KB;
+      const fileSizeInMB = fileSizeInKB / WriteReview.KB_IN_MB;
 
-    reader.onload = async () => {
-      try {
-        this.toggleImageSkeleton(false);
+      if (fileSizeInMB <= WriteReview.MAXIMUM_FILE_SIZE) {
+        const reader = new FileReader();
 
-        const response = await youcanjs.product.upload(file);
-        this.addImage(response.link);
-      } catch (error) {
-        console.error(error);
-
-        toast.show(
-          (error.meta?.fields?.image && error.meta.fields.image[0]) ?? error.message,
-          "error",
-        );
-      } finally {
-        this.toggleImageSkeleton(true);
+        reader.onload = () => {
+          const base64 = reader.result;
+          this.addImage(base64);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        const message = window.errorStrings.large_file;
+        toast.show(message.replace("[file]", `"${file.name}"`), "error");
       }
-    };
+    });
   }
 
   addImage(source) {
@@ -93,7 +92,7 @@ class WriteReview extends HTMLElement {
     const removeButton = image.querySelector("[data-remove-image]");
 
     imgElement.src = source;
-    template.parentElement.appendChild(image);
+    this.imagesContainer.appendChild(image);
 
     removeButton.addEventListener("click", (event) =>
       this.removeImage(source, event.currentTarget.parentElement),
@@ -105,12 +104,15 @@ class WriteReview extends HTMLElement {
     this.images = this.images.filter((image) => image !== source);
   }
 
-  toggleSubmitButton(is_loading) {
-    this.submitButton.toggleAttribute("data-loading", is_loading);
+  resetForm() {
+    this.images = [];
+    this.imagesContainer.innerHTML = "";
+    this.form.reset();
+    this.modal.close();
   }
 
-  toggleImageSkeleton(state) {
-    this.imageSkeleton.hidden = state;
+  toggleSubmitButton(is_loading) {
+    this.submitButton.toggleAttribute("data-loading", is_loading);
   }
 }
 
