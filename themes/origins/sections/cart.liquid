@@ -2,6 +2,11 @@
 
 {% assign cart_size = cart.items.size %}
 
+{% assign percentage_coupon_type = '1' %}
+{% assign fixed_coupon_type = '2' %}
+
+{% dump cart %}
+
 <yc-section
   style="
     --section-space-top: {{ section.settings.space_top }}px;
@@ -56,7 +61,14 @@
             <div class="item">
               <span>{{ 'order.coupon_code' | t }}</span>
               <div class="coupon-code">
-                <span data-coupon-code hidden></span>
+                <span
+                  data-coupon-code
+                  {% unless cart.coupon != null %}
+                    hidden
+                  {% endunless %}
+                >
+                  {{- cart.coupon.code -}}
+                </span>
                 <button class="tertiary" data-remove-coupon>
                   {% render 'yc-icon', name: 'x-mark' %}
                 </button>
@@ -64,7 +76,22 @@
             </div>
             <div class="item">
               <span>{{ 'order.discount_amount' | t }}</span>
-              <span data-discount hidden></span>
+              <span
+                data-discount
+                {% unless cart.coupon != null %}
+                  hidden
+                {% endunless %}
+              >
+                {% assign coupon_value = cart.coupon.value %}
+                {% assign deducted_amount = cart.coupon.deducted_amount | default: 0 | money %}
+
+                {% if cart.coupon.type == percentage_coupon_type %}
+                  {% assign coupon_template = '-(%[percentage]) [value]' %}
+                  {{ coupon_template | replace: '[percentage]', coupon_value | replace: '[value]', deducted_amount }}
+                {% elsif cart.coupon.type == fixed_coupon_type %}
+                  {{ '-' | append: coupon_value | default: 0 | money }}
+                {% endif %}
+              </span>
             </div>
             <div class="total-box">
               <div class="total">
