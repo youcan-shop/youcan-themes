@@ -146,8 +146,7 @@ class CartDrawerItems extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, deleteButton] =
-      cartItem.querySelectorAll("[data-cart-item]");
+    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity, deleteButton };
   }
 
@@ -342,8 +341,7 @@ class CartItems extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, subtotal, deleteButton] =
-      cartItem.querySelectorAll("[data-cart-item]");
+    const [image, title, variant, price, quantity, subtotal, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity, subtotal, deleteButton };
   }
 
@@ -609,6 +607,8 @@ class CartSummary extends HTMLElement {
     this.total = this.querySelector("[data-cart-total]");
     this.couponCode = this.querySelector("[data-coupon-code]");
     this.discount = this.querySelector("[data-discount]");
+    this.taxAmount = this.querySelector("[data-tax-amount]");
+    this.vat = this.querySelector("[data-vat]");
     this.removeCouponButton = this.querySelector("[data-remove-coupon]");
 
     const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
@@ -625,9 +625,10 @@ class CartSummary extends HTMLElement {
     this.removeCouponButton.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
+      const { sub_total, total, discountedPrice, coupon, taxAmount } = payload.cartData;
 
       this.updateCoupon(coupon, discountedPrice);
+      this.updateTaxAmount(taxAmount);
       this.updateSummary(sub_total, total);
     });
 
@@ -697,13 +698,27 @@ class CartSummary extends HTMLElement {
     this.setShowCouponInSummary(true);
   }
 
+  updateTaxAmount(taxAmount) {
+    if (taxAmount == 0) {
+      this.setShowTaxInSummary(false);
+
+      return;
+    }
+
+    this.taxAmount.textContent = formatCurrency(taxAmount);
+  }
+
   setShowCouponInSummary(shouldShow) {
     this.discount.toggleAttribute("hidden", !shouldShow);
     this.couponCode.toggleAttribute("hidden", !shouldShow);
   }
 
+  setShowTaxInSummary(shouldShow) {
+    this.taxAmount.toggleAttribute("hidden", shouldShow);
+    this.vat.toggleAttribute("hidden", shouldShow);
+  }
+
   updateSummary(subTotal, total) {
-    // TODO: TVA, TTC, and HT
     this.subtotal.textContent = formatCurrency(subTotal);
     this.total.textContent = formatCurrency(total);
   }
