@@ -80,46 +80,10 @@
                 {% render 'discount-value', coupon: cart.coupon %}
               </span>
             </div>
-            {% for shipping_option in cart.available_shipping_options %}
-              <div class="item">
-                {% assign shipping_label = 'cart.page.summary.shipping_cost' | t %}
-                <span>{{ shipping_label | replace: '[country]', shipping_option.name }}</span>
-                <span
-                  data-discount
-                  {% unless cart.available_shipping_options != null %}
-                    hidden
-                  {% endunless %}
-                >
-                  {{ shipping_option.price | default: 0 | money }}
-                </span>
-              </div>
-            {% endfor %}
-            <div class="item">
-              <span>{{ 'cart.page.summary.vat' | t }}</span>
-              <span
-                data-vat
-                {% unless cart.vat != 0 %}
-                  hidden
-                {% endunless %}
-              >
-                {{ cart.vat | append: '%' }}
-              </span>
-            </div>
-            <div class="item">
-              <span>{{ 'cart.page.summary.tax_amount' | t }}</span>
-              <span
-                data-tax-amount
-                {% unless cart.vat != 0 %}
-                  hidden
-                {% endunless %}
-              >
-                {{ cart.tax_amount | default: 0 | money }}
-              </span>
-            </div>
             <div class="total-box">
               <div class="total">
                 <span>{{ 'cart.page.summary.total' | t }}</span>
-                <span data-cart-total>{{ cart.total | default: 0 | money }}</span>
+                <span data-cart-total>{{ cart.sub_total | minus: cart.coupon.deducted_amount | default: 0 | money }}</span>
               </div>
               <a href="{{ cart.cart_submit_url }}" class="yc-btn primary">
                 {{- 'cart.page.summary.checkout_button' | t -}}

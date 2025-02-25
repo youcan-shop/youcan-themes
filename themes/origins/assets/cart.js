@@ -607,8 +607,6 @@ class CartSummary extends HTMLElement {
     this.total = this.querySelector("[data-cart-total]");
     this.couponCode = this.querySelector("[data-coupon-code]");
     this.discount = this.querySelector("[data-discount]");
-    this.taxAmount = this.querySelector("[data-tax-amount]");
-    this.vat = this.querySelector("[data-vat]");
     this.removeCouponButton = this.querySelector("[data-remove-coupon]");
 
     const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
@@ -625,15 +623,18 @@ class CartSummary extends HTMLElement {
     this.removeCouponButton.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, total, discountedPrice, coupon, taxAmount } = payload.cartData;
+      const { sub_total, discountedPrice, coupon } = payload.cartData;
+
+      const total = sub_total - discountedPrice;
 
       this.updateCoupon(coupon, discountedPrice);
-      this.updateTaxAmount(taxAmount);
       this.updateSummary(sub_total, total);
     });
 
     subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
-      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
+      const { sub_total, discountedPrice, coupon } = payload.cartData;
+
+      const total = sub_total - discountedPrice;
 
       this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, total);
@@ -698,24 +699,9 @@ class CartSummary extends HTMLElement {
     this.setShowCouponInSummary(true);
   }
 
-  updateTaxAmount(taxAmount) {
-    if (taxAmount == 0) {
-      this.setShowTaxInSummary(false);
-
-      return;
-    }
-
-    this.taxAmount.textContent = formatCurrency(taxAmount);
-  }
-
   setShowCouponInSummary(shouldShow) {
     this.discount.toggleAttribute("hidden", !shouldShow);
     this.couponCode.toggleAttribute("hidden", !shouldShow);
-  }
-
-  setShowTaxInSummary(shouldShow) {
-    this.taxAmount.toggleAttribute("hidden", shouldShow);
-    this.vat.toggleAttribute("hidden", shouldShow);
   }
 
   updateSummary(subTotal, total) {
