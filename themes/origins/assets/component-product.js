@@ -21,27 +21,33 @@ class Product extends HTMLElement {
   get selectedOptions() {
     return Object.fromEntries(
       this.variants.flatMap((variant) =>
-        [...variant.querySelectorAll("input:checked")].map((input) => [
+        [...variant.querySelectorAll("input:checked, input[type='file']")].map((input) => [
           this.getBaseName(input.name),
-          input.value,
+          input.type === "file" ? "upload-zone" : input.value,
         ]),
       ),
     );
   }
 
-  onVariantChanged() {
+  async onVariantChanged() {
     const matchedVariant = this.productVariants.find(
       (variant) => JSON.stringify(variant.variations) === JSON.stringify(this.selectedOptions),
     );
 
-    if (matchedVariant) this.updateVariant(matchedVariant);
+    if (matchedVariant) await this.updateVariant(matchedVariant);
 
     this.disableUnavailableOptions();
   }
 
-  updateVariant({ id, available, price, compare_at_price }) {
+  async updateVariant({ id, available, price, compare_at_price }) {
     this.productForm.setAttribute("variant-id", id);
     this.productForm.toggleAttribute("not-available", !available);
+
+    const attachedImage = await this.getAttachedImage();
+
+    if (attachedImage) {
+      this.productForm.setAttribute("attached-image", attachedImage);
+    }
 
     const [priceElement, compareAtPriceElement] = this.querySelectorAll("[data-product-item]");
 
@@ -53,7 +59,9 @@ class Product extends HTMLElement {
   }
 
   disableUnavailableOptions() {
-    const lastVariant = this.variants.at(-1);
+    const lastVariant = this.variants
+      .filter((variant) => variant.getAttribute("name") !== "upload-image")
+      .at(-1);
 
     if (!lastVariant) return;
 
@@ -75,13 +83,27 @@ class Product extends HTMLElement {
       if (isUnavailable) input.checked = false;
     });
 
-    this.productForm.toggleAttribute(
-      "not-available",
-      [...inputs].every((input) => input.disabled),
-    );
-    this.productForm.querySelector("[data-buy-button]").disabled = ![...inputs].some(
-      (input) => input.checked,
-    );
+    const hasCheckedInput = [...inputs].some((input) => input.checked);
+    this.productForm.toggleAttribute("not-available", !hasCheckedInput);
+    this.productForm.querySelector("[data-buy-button]").disabled = !hasCheckedInput;
+  }
+
+  async getAttachedImage() {
+    const fileInput = this.variants
+      .flatMap((variant) =>
+        [...variant.querySelectorAll("input[type='file']")].filter(
+          (input) => input.files.length > 0,
+        ),
+      )
+      .pop();
+
+    return fileInput
+      ? new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(fileInput.files[0]);
+        })
+      : null;
   }
 
   getBaseName(name) {

@@ -1,6 +1,12 @@
 if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity", "source", "not-available"];
+    static observedAttributes = [
+      "variant-id",
+      "quantity",
+      "attached-image",
+      "source",
+      "not-available",
+    ];
 
     constructor() {
       super();
@@ -41,10 +47,12 @@ if (!customElements.get("yc-product-form")) {
       this.setIsBuyButtonLoading(true);
 
       const productVariantId = this.productVariantId;
+      const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
       try {
         const newCart = await youcanjs.cart.addItem({
+          attachedImage,
           productVariantId,
           quantity,
         });
@@ -71,6 +79,10 @@ if (!customElements.get("yc-product-form")) {
 
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
+    }
+
+    get attachedImage() {
+      return this.getAttribute("attached-image");
     }
 
     get productVariantId() {
