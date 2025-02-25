@@ -1,4 +1,14 @@
 {{ 'upsell.css' | asset_url | stylesheet_tag }}
+{{ 'component-upsell.js' | asset_url | script_tag_deferred }}
+
+{% capture product_offers %}
+{
+  {% for product in upsell.products %}
+    "product_offers[{{ product.id }}]": "{{ product.variants.0.id }}"
+    {% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}
+{% endcapture %}
 
 <yc-section
   style="
@@ -14,7 +24,12 @@
     --no-btn-foreground: {{ upsell.actions.btn_no.font_color }};
   "
 >
-  <yc-upsell>
+  {% comment %} {% dump upsell %} {% endcomment %}
+  <yc-upsell
+    id="{{ upsell.id }}"
+    order-id="{{ order.id }}"
+    product-offers="{{ product_offers | strip_newlines | strip | escape }}"
+  >
     <div class="content">
       <div class="description">
         {{ upsell.description }}
@@ -22,8 +37,8 @@
     </div>
     <div class="actions">
       <span class="title">Do you accept this offer?</span>
-      <a href="/checkout/thankyou" class="yc-btn">{{ upsell.actions.btn_no.title }}</a>
-      <button>
+      <button data-upsell name="no" class="yc-btn">{{ upsell.actions.btn_no.title }}</button>
+      <button data-upsell name="yes">
         {{- upsell.actions.btn_yes.title -}}
       </button>
     </div>
@@ -34,8 +49,8 @@
 
   <div class="actions">
     <span class="title">{{ 'upsell.offer_title' | t }}</span>
-    <a href="/checkout/thankyou" class="yc-btn">{{ upsell.actions.btn_no.title }}</a>
-    <button>
+    <button data-upsell name="no" class="yc-btn">{{ upsell.actions.btn_no.title }}</button>
+    <button data-upsell name="yes">
       {{- upsell.actions.btn_yes.title -}}
     </button>
   </div>
