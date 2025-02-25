@@ -162,13 +162,18 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="s
 
 // SECTION
 yc-section {
-  display: grid;
-  gap: var(--gap-3xl);
+  display: block;
   padding-inline: 10%;
   color: rgb(var(--section-text-color, var(--color-base-black)));
   background-color: var(--section-bg-color, var(--color-base-white));
   padding-block-start: var(--section-space-top);
   padding-block-end: var(--section-space-bottom);
+
+  > * {
+    &:not(:last-child) {
+      margin-block-end: var(--gap-3xl);
+    }
+  }
 
   &[data-full] {
     padding-inline: 0;

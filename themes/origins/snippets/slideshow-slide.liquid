@@ -5,17 +5,19 @@
   {% if slide.image.src %}
     <img src="{{ slide.image.src }}" alt="{{ slide.title }}" height="100%" width="100%">
   {% endif %}
-  <yc-slider-content data-alignment="{{ slideshow.content_alignment }}">
-    {% if slide.heading %}
-      <p class="heading">{{ slide.heading }}</p>
-    {% endif %}
-    {% if slide.subheading %}
-      <p class="subheading">{{ slide.subheading }}</p>
-    {% endif %}
-    {% if slide.button_text %}
-      <a href="{{ slide.button_link }}" class="yc-btn">
-        {{ slide.button_text }}
-      </a>
-    {% endif %}
-  </yc-slider-content>
+  {% if slide.heading or slide.subheading or slide.button_text %}
+    <yc-slider-content data-alignment="{{ slideshow.content_alignment }}">
+      {% if slide.heading %}
+        <p class="heading">{{ slide.heading }}</p>
+      {% endif %}
+      {% if slide.subheading %}
+        <p class="subheading">{{ slide.subheading }}</p>
+      {% endif %}
+      {% if slide.button_text %}
+        <a href="{{ slide.button_link }}" class="yc-btn">
+          {{ slide.button_text }}
+        </a>
+      {% endif %}
+    </yc-slider-content>
+  {% endif %}
 </yc-slider-item>
