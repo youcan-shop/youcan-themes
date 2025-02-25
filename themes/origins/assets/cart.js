@@ -67,6 +67,7 @@ class CartDrawerItems extends HTMLElement {
         const quickViewModal = document.querySelector(
           "yc-product yc-modal:has(yc-modal-content[data-visible])",
         );
+        
         quickViewModal.close();
         this.cart.open();
       }
