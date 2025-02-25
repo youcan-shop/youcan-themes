@@ -69,7 +69,7 @@ class Modal extends HTMLElement {
     const deltaY = this.currentY - this.startY;
     const threshold = this.modal.clientHeight * 0.2;
 
-    deltaY > threshold ? this.closeOnMobile() : this.openOnMobile();
+    deltaY > threshold ? this.close() : this.open();
     this.resetDrag();
     this.setTransition(this.SPEED);
   }
@@ -84,15 +84,10 @@ class Modal extends HTMLElement {
 
   close() {
     this.setIsVisible(false);
-    this.updatePosition();
-  }
-
-  closeOnMobile() {
-    this.setIsVisible(false);
     this.setPosition("0% 100%");
   }
 
-  openOnMobile() {
+  open() {
     this.setPosition("0%");
   }
 
