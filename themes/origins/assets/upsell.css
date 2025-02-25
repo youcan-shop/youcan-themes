@@ -1,3 +1,6 @@
+yc-section{
+  --actions-border:1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
 yc-section yc-upsell{
   display:grid;
   grid-template-columns:repeat(12, 1fr);
@@ -16,29 +19,56 @@ yc-section yc-upsell .actions{
   inset-block-start:180px;
   display:grid;
   grid-template-columns:repeat(2, 1fr);
-  grid-gap:var(--gap-lg);
-  gap:var(--gap-lg);
+  background-color:color-mix(in srgb, currentColor 2%, transparent);
+}
+yc-section .actions{
   padding:1em;
   height:-moz-fit-content;
   height:fit-content;
-  background-color:color-mix(in srgb, currentColor 2%, transparent);
-  border:1px solid color-mix(in srgb, currentColor 10%, transparent);
+  border:var(--actions-border);
   border-radius:var(--radius-md);
+  gap:var(--gap-lg);
+  z-index:1;
+  position:fixed;
+  inset-block-end:0;
+  inset-inline:0;
+  display:none;
 }
-yc-section yc-upsell .actions .title{
+yc-section .actions .title{
   height:-moz-fit-content;
   height:fit-content;
   grid-column:span 2/span 2;
 }
-yc-section yc-upsell .actions button{
+yc-section .actions button{
   flex:1;
   color:var(--yes-btn-foreground);
   background-color:var(--yes-btn-background);
   grid-row-start:2;
 }
-yc-section yc-upsell .actions a.yc-btn{
+yc-section .actions a.yc-btn{
   flex:1;
   color:var(--no-btn-foreground);
   background-color:var(--no-btn-background);
   grid-row-start:2;
+}
+yc-section .actions button:hover,
+yc-section .actions a:hover{
+  opacity:0.7;
+}
+
+@media (max-width: 1024px){
+  yc-section yc-upsell{
+    grid-template-columns:1fr;
+  }
+  yc-section yc-upsell .actions{
+    display:none;
+  }
+  yc-section .actions{
+    text-align:center;
+    display:grid;
+    border:0;
+    border-block-start:var(--actions-border);
+    border-radius:0;
+    background-color:var(--section-bg-color);
+  }
 }
