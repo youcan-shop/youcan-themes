@@ -1,4 +1,4 @@
-<yc-product class="product-quick-view">
+<yc-product class="product-quick-view" product-id="{{ product.id }}">
   <yc-modal style="--modal-width: 60%">
     <button class="secondary" data-trigger>
       {{ 'general.choose_options' | t }}
@@ -65,5 +65,7 @@
 </yc-product>
 
 {% javascript %}
-  const productVariants = JSON.parse({{ product.variants | json }})
+  if (!window.productsVariants["{{ product.id }}"]) {
+    window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+  }
 {% endjavascript %}

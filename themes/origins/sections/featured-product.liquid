@@ -18,7 +18,7 @@
     --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
-  <div class="single-product">
+  <yc-product class="single-product" product-id="{{ product.id }}">
     <yc-product-media role="region" aria-label="Product images">
       <div class="main-image">
         {% if product.images.size > 1 %}
@@ -136,16 +136,24 @@
             %}
           {% when 'accordion' %}
             {% render 'accordion', title: block.settings.title, content: block.settings.content %}
-          {% when 'buy_button' %}
-            {% render 'product-buy-button',
-              product: product,
-              checkout_type: block.settings.checkout_type
-            %}
         {% endcase %}
       {% endfor %}
+      {% render 'product-variants' %}
+      {% render 'product-buy-button',
+        product: product,
+        checkout_type: block.settings.checkout_type
+      %}
     </yc-product-info>
-  </div>
+  </yc-product>
 </yc-section>
+
+{% if product %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
 
 {% schema %}
 {

@@ -24,7 +24,7 @@
     --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
-  <yc-product class="single-product">
+  <yc-product class="single-product" product-id="{{ product.id }}">
     <yc-product-media role="region" aria-label="Product images">
       <div class="main-image">
         {% if product.images.size > 1 %}
@@ -153,9 +153,13 @@
   </yc-product>
 </yc-section>
 
-{% javascript %}
-  const productVariants = JSON.parse({{ product.variants | json }})
-{% endjavascript %}
+{% if product %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
 
 {%- schema -%}
 {
