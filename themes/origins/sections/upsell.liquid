@@ -24,38 +24,25 @@
     --no-btn-foreground: {{ upsell.actions.btn_no.font_color }};
   "
 >
-  {% comment %} {% dump upsell %} {% endcomment %}
-  <yc-upsell
-    id="{{ upsell.id }}"
-    order-id="{{ order.id }}"
-    product-offers="{{ product_offers | strip_newlines | strip | escape }}"
-  >
-    <div class="content">
-      <div class="description">
-        {{ upsell.description }}
-      </div>
+  <div class="upsell">
+    <div class="description">
+      {{ upsell.description }}
     </div>
-    <div class="actions">
+    <yc-upsell
+      id="{{ upsell.id }}"
+      order-id="{{ order.id }}"
+      product-offers="{{ product_offers | strip_newlines | strip | escape }}"
+    >
       <span class="title">Do you accept this offer?</span>
       <button data-upsell name="no" class="yc-btn">{{ upsell.actions.btn_no.title }}</button>
       <button data-upsell name="yes">
         {{- upsell.actions.btn_yes.title -}}
       </button>
+    </yc-upsell>
+    <div class="footer">
+      {{ upsell.footer }}
     </div>
-  </yc-upsell>
-  <div class="footer">
-    {{ upsell.footer }}
   </div>
-
-  <div class="actions">
-    <span class="title">{{ 'upsell.offer_title' | t }}</span>
-    <button data-upsell name="no" class="yc-btn">{{ upsell.actions.btn_no.title }}</button>
-    <button data-upsell name="yes">
-      {{- upsell.actions.btn_yes.title -}}
-    </button>
-  </div>
-
-  {% comment %} {% dump upsell %} {% endcomment %}
 </yc-section>
 
 {%- schema -%}
