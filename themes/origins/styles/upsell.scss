@@ -16,8 +16,9 @@ yc-section {
       grid-area: 1 / 9 / 2 / 13;
 
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
       gap: var(--gap-lg);
+      grid-template-columns: repeat(2, 1fr);
+      align-items: center;
       position: sticky;
       inset-block-start: 120px;
       background-color: color-mix(in srgb, currentColor 2%, transparent);
@@ -35,9 +36,34 @@ yc-section {
       button {
         flex: 1;
         grid-row-start: 2;
+        height: fit-content;
 
         &:hover {
           opacity: 0.7;
+        }
+
+        &[data-font-size="small"] {
+          font-size: var(--text-sm);
+        }
+
+        &[data-font-size="medium"] {
+          font-size: var(--text-md);
+        }
+
+        &[data-font-size="large"] {
+          font-size: var(--text-lg);
+        }
+
+        &[data-button-size="small"] {
+          padding: 8px 21px;
+        }
+
+        &[data-button-size="medium"] {
+          padding: 12px 25px;
+        }
+
+        &[data-button-size="large"] {
+          padding: 16px 29px;
         }
       }
 

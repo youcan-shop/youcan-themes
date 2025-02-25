@@ -34,8 +34,21 @@
       product-offers="{{ product_offers | strip_newlines | strip | escape }}"
     >
       <span class="title">Do you accept this offer?</span>
-      <button data-upsell name="no" class="yc-btn">{{ upsell.actions.btn_no.title }}</button>
-      <button data-upsell name="yes">
+      <button
+        data-upsell
+        name="no"
+        class="yc-btn"
+        data-button-size="{{ upsell.actions.btn_no.size }}"
+        data-font-size="{{ upsell.actions.btn_no.font_size }}"
+      >
+        {{ upsell.actions.btn_no.title }}
+      </button>
+      <button
+        data-upsell
+        name="yes"
+        data-button-size="{{ upsell.actions.btn_yes.size }}"
+        data-font-size="{{ upsell.actions.btn_yes.font_size }}"
+      >
         {{- upsell.actions.btn_yes.title -}}
       </button>
     </yc-upsell>
