@@ -1,3 +1,5 @@
+{% assign default_variant = product.selected_or_first_available_variant %}
+
 <yc-product class="product-quick-view" product-id="{{ product.id }}">
   <yc-modal style="--modal-width: 60%">
     <button class="secondary" data-trigger>
@@ -38,7 +40,8 @@
               {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
               <div class="price-info">
                 <p class="current h2" data-product-item="price">
-                  {{ product.price | default: 0 | money }}
+                  {% assign product_price = default_variant.price | default: product.price %}
+                  {{ product_price | default: 0 | money }}
                 </p>
                 <p
                   class="compare-at h3"
@@ -47,15 +50,18 @@
                     hidden
                   {% endif %}
                 >
-                  {{ product.compare_at_price | default: 0 | money }}
+                  {% assign product_compare_at_price = default_variant.compare_at_price
+                    | default: product.compare_at_price
+                  %}
+                  {{ product_compare_at_price | default: 0 | money }}
                 </p>
               </div>
               {% render 'product-variants' %}
             </div>
             {% render 'product-add-to-cart',
               source: 'quick-view',
-              variant_id: product.variants[0].id,
-              available: product.selected_or_first_available_variant.available
+              variant_id: default_variant.id,
+              available: default_variant.available
             %}
           </yc-product-info>
         </div>
