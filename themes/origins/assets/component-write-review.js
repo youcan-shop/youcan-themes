@@ -6,6 +6,7 @@ class WriteReview extends HTMLElement {
 
   constructor() {
     super();
+
     this.images = [];
     this.productId = this.getAttribute("product-id");
 
@@ -45,47 +46,51 @@ class WriteReview extends HTMLElement {
       content: formData.get("content"),
       email: formData.get("email"),
     };
-    this.toggleSubmitButton(true);
+    this.setSubmitButtonIsLoading(true);
 
     try {
-      const response = await youcanjs.product.submitReview(this.productId, payload);
+      await youcanjs.product.submitReview(this.productId, payload);
       this.resetForm();
 
-      toast.show(response.detail, "success");
+      toast.show(window.successStrings.review_submitted, "success");
     } catch (error) {
       console.error(error);
 
       toast.show(error.message, "error");
     } finally {
-      this.toggleSubmitButton(false);
+      this.setSubmitButtonIsLoading(false);
     }
   }
 
   onUploadImage(event) {
     const files = Array.from(event.target.files);
+
     if (files.length < 1) return;
 
     files.forEach((file) => {
       const fileSizeInKB = file.size / WriteReview.BYTES_IN_KB;
       const fileSizeInMB = fileSizeInKB / WriteReview.KB_IN_MB;
 
-      if (fileSizeInMB <= WriteReview.MAXIMUM_FILE_SIZE) {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          const base64 = reader.result;
-          this.addImage(base64);
-        };
-        reader.readAsDataURL(file);
-      } else {
+      if (fileSizeInMB > WriteReview.MAXIMUM_FILE_SIZE) {
         const message = window.errorStrings.large_file;
         toast.show(message.replace("[file]", `"${file.name}"`), "error");
+
+        return;
       }
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64 = reader.result;
+        this.addImage(base64);
+      };
+      reader.readAsDataURL(file);
     });
   }
 
   addImage(source) {
     this.images.push(source);
+
     const template = this.querySelector("[data-image]");
     const image = template.content.cloneNode(true);
     const imgElement = image.querySelector("img");
@@ -111,7 +116,7 @@ class WriteReview extends HTMLElement {
     this.modal.close();
   }
 
-  toggleSubmitButton(is_loading) {
+  setSubmitButtonIsLoading(is_loading) {
     this.submitButton.toggleAttribute("data-loading", is_loading);
   }
 }
