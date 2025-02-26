@@ -26,9 +26,7 @@ class Upsell extends HTMLElement {
     };
 
     try {
-      const response = await youcanjs.upsell.answer(params);
-
-      console.log(response);
+      await youcanjs.upsell.answer(params);
     } catch (error) {
       console.error(error);
 
