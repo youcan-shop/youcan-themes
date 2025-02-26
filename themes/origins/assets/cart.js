@@ -333,7 +333,7 @@ class CartItems extends HTMLElement {
     const cartItem = template.content.cloneNode(true);
     const elements = this.getCartItemElements(cartItem);
 
-    this.updateItemImage(elements.image, item.productVariant.product);
+    this.updateItemImage(elements.image, item.productVariant);
     this.updateItemTitle(elements.title, item.productVariant.product);
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
@@ -361,10 +361,10 @@ class CartItems extends HTMLElement {
   updateItemImage(imageContainer, product) {
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
-    const shouldShowImage = product.images.length > 0;
+    const shouldShowImage = !!product.image.url;
 
     if (shouldShowImage) {
-      img.src = product.thumbnail;
+      img.src = product.image.url;
       img.alt = product.name;
       img.hidden = false;
       placeholder.hidden = true;
