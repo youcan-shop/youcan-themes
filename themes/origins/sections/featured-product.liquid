@@ -1,8 +1,9 @@
-{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+{% if section.settings.item.images.size > 1 %}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+{% endif %}
 {{ 'featured-product.css' | asset_url | stylesheet_tag }}
 {{ 'component-product-media.js' | asset_url | script_tag_deferred }}
-{{ 'component-slider.js' | asset_url | script_tag_deferred }}
-{{ 'component-upload.js' | asset_url | script_tag_deferred }}
 
 {% assign product = section.settings.item %}
 {% assign product_image = product.images[0] %}

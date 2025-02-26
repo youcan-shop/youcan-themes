@@ -1,4 +1,7 @@
-{{ 'product-card.css' | asset_url | stylesheet_tag }}
+{% if section.settings.view_style == 'slides' %}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+{% endif %}
 {{ 'products-by-collection.css' | asset_url | stylesheet_tag }}
 
 {%- assign collection = section.settings.collection -%}
