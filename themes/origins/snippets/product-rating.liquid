@@ -1,7 +1,11 @@
 <div class="rating" data-rating>
   <div class="stars">
     {% for star in (1..5) %}
-      {% render 'yc-icon', name: 'star', fill: 'currentColor' %}
+      {% if star <= rating %}
+        {% render 'yc-icon', name: 'star', fill: 'currentColor' %}
+      {% else %}
+        {% render 'yc-icon', name: 'star' %}
+      {% endif %}
     {% endfor %}
   </div>
   <span class="average">

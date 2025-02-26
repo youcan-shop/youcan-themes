@@ -4,21 +4,29 @@
   Accepts:
   - options: {Array} variant options
   - name: {String} input name
+  - default_value: (optional) {String} default checked value
 
   Usage:
-  {% render 'variant-image', name: 'image', options: [] %}
+  {% render 'variant-image', name: 'image', options: [], default_value: '' %}
 {% endcomment %}
 
 <yc-variant name="image">
   {% for option in options %}
-    <label class="variant-item image-item yc-btn icon" for="{{ option }}">
+    <label class="variant-item image-item yc-btn icon">
       <img
-        src="{{ "hoodie.webp" | asset_url }}"
-        alt="{{ option }}"
+        src="{{ option.preview }}"
+        alt="{{ option.value }}"
         height="70"
         width="70"
       >
-      <input type="radio" name="{{ name }}" id="{{ option }}">
+      <input
+        type="radio"
+        name="{{ name }}"
+        value="{{ option.value }}"
+        {% if option.value == default_value %}
+          checked
+        {% endif %}
+      >
     </label>
   {% endfor %}
 </yc-variant>

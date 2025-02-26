@@ -8,14 +8,12 @@ yc-variant{
   width:inherit;
 }
 yc-variant .variant-item{
+  cursor:pointer;
   -webkit-user-select:none;
      -moz-user-select:none;
           user-select:none;
   font-size:var(--text-sm);
   color:var(--variant-text-color);
-}
-yc-variant .variant-item:not(.radio-item){
-  cursor:pointer;
 }
 yc-variant .variant-item:not(.radio-item) input[type=radio]{
   display:none;
@@ -49,16 +47,20 @@ yc-variant[name=toggle] .toggle-item:has(input:disabled)::before{
 yc-variant[name=toggle] .toggle-item:has(input:disabled):has(input:checked)::before{
   background-color:color-mix(in srgb, var(--variant-bg-color) 40%, transparent);
 }
+yc-variant[name=color]{
+  gap:var(--gap-lg);
+}
 yc-variant[name=color] .color-item{
   padding:0;
-  width:30px;
-  height:30px;
+  width:28px;
+  height:28px;
   position:relative;
   color:var(--variant-color);
   background-color:currentColor;
   border-radius:var(--radius-circle);
   border:1.5px solid var(--variant-bg-color);
-  outline:1px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
+  outline-offset:1.5px;
+  outline:1.5px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
 }
 yc-variant[name=color] .color-item:has(input:checked){
   outline-color:var(--variant-text-color);
@@ -80,8 +82,8 @@ yc-variant[name=color] .color-item:hover{
   background-color:color-mix(in srgb, currentColor 80%, transparent);
 }
 yc-variant[name=radio]{
-  display:grid;
-  grid-gap:var(--gap-lg);
+  display:flex;
+  flex-wrap:wrap;
   gap:var(--gap-lg);
 }
 yc-variant[name=radio] .radio-item{
@@ -89,9 +91,6 @@ yc-variant[name=radio] .radio-item{
   align-items:center;
   gap:var(--gap-md);
   font-size:var(--text-md);
-}
-yc-variant[name=radio] .radio-item label{
-  cursor:pointer;
 }
 yc-variant[name=radio] .radio-item input[type=radio]{
   width:18px;
@@ -119,12 +118,10 @@ yc-variant[name=radio] .radio-item input[type=radio]:checked::after{
   clip-path:circle();
   background-color:var(--variant-bg-color);
 }
-yc-variant[name=radio] .radio-item:has(input:disabled) label,
-yc-variant[name=radio] .radio-item:has(input:disabled) input{
+yc-variant[name=radio] .radio-item:has(input:disabled){
   opacity:0.5;
 }
-yc-variant[name=radio] .radio-item:has(input:disabled) label:hover,
-yc-variant[name=radio] .radio-item:has(input:disabled) input:hover{
+yc-variant[name=radio] .radio-item:has(input:disabled):hover{
   cursor:not-allowed;
 }
 yc-variant[name=image] .image-item{
@@ -133,6 +130,7 @@ yc-variant[name=image] .image-item{
   color:var(--variant-text-color);
 }
 yc-variant[name=image] .image-item img{
+  height:70px;
   -o-object-fit:cover;
      object-fit:cover;
   border-radius:calc(var(--radius-md) - 2px);
@@ -222,12 +220,12 @@ yc-variant[name=upload-image] yc-upload .upload-info .preview img{
      object-fit:cover;
   border-radius:calc(var(--radius-md) - 4px);
 }
-yc-variant[name=upload-image] yc-upload .upload-info .preview .info{
+yc-variant[name=upload-image] yc-upload .upload-info .preview .metadata{
   display:grid;
   grid-gap:var(--gap-sm);
   gap:var(--gap-sm);
 }
-yc-variant[name=upload-image] yc-upload .upload-info .preview .info .name{
+yc-variant[name=upload-image] yc-upload .upload-info .preview .metadata .name{
   font-size:var(--text-md);
   max-width:100%;
   overflow:hidden;
@@ -236,10 +234,18 @@ yc-variant[name=upload-image] yc-upload .upload-info .preview .info .name{
   white-space:nowrap;
   text-overflow:ellipsis;
 }
-yc-variant[name=upload-image] yc-upload .upload-info .preview .info .size{
+yc-variant[name=upload-image] yc-upload .upload-info .preview .metadata .size{
   opacity:0.6;
   font-size:var(--text-sm);
 }
 yc-variant[name=upload-image] yc-upload .upload-info .actions button{
   color:var(--variant-text-color);
+}
+yc-variant[name=dropdown]{
+  width:50%;
+}
+@media (max-width: 768px){
+  yc-variant[name=dropdown]{
+    width:100%;
+  }
 }

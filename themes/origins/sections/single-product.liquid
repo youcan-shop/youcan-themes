@@ -1,9 +1,18 @@
+{{ 'component-variants.css' | asset_url | stylesheet_tag }}
+
+{{ 'component-product.js' | asset_url | script_tag_deferred }}
+
+{{ 'component-combobox.js' | asset_url | script_tag_deferred }}
+{{ 'component-combobox.css' | asset_url | stylesheet_tag }}
+
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 {{ 'featured-product.css' | asset_url | stylesheet_tag }}
 {{ 'component-product-media.js' | asset_url | script_tag_deferred }}
 {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+{{ 'component-upload.js' | asset_url | script_tag_deferred }}
 
 {% assign product_image = product.images[0] %}
+{% assign default_variant = product.first_available_variant %}
 
 <yc-section
   style="
@@ -17,7 +26,7 @@
     --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
-  <div class="single-product">
+  <yc-product class="single-product" product-id="{{ product.id }}">
     <yc-product-media role="region" aria-label="Product images">
       <div class="main-image">
         {% if product.images.size > 1 %}
@@ -107,9 +116,13 @@
           {% when 'title' %}
             {% render 'product-title', title: product.name %}
           {% when 'price' %}
+            {% assign product_price = default_variant.price | default: product.price %}
+            {% assign product_compare_at_price = default_variant.compare_at_price
+              | default: product.compare_at_price
+            %}
             {% render 'product-price',
-              price: product.price,
-              compare_at_price: product.compare_at_price
+              price: product_price,
+              compare_at_price: product_compare_at_price
             %}
           {% when 'description' %}
             {% render 'product-description', description: product.description %}
@@ -135,16 +148,24 @@
             %}
           {% when 'accordion' %}
             {% render 'accordion', title: block.settings.title, content: block.settings.content %}
-          {% when 'buy_button' %}
-            {% render 'product-buy-button',
-              product: product,
-              checkout_type: block.settings.checkout_type
-            %}
         {% endcase %}
       {% endfor %}
+      {% render 'product-variants' %}
+      {% render 'product-buy-button',
+        product: product,
+        checkout_type: block.settings.checkout_type
+      %}
     </yc-product-info>
-  </div>
+  </yc-product>
 </yc-section>
+
+{% if product %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
 
 {%- schema -%}
 {

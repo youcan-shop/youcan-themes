@@ -59,7 +59,18 @@ class CartDrawerItems extends HTMLElement {
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { sub_total, items } = payload.cartData;
 
-      if (payload.source === "product-form") this.cart.open();
+      if (payload.source === "product-form") {
+        this.cart.open();
+      }
+
+      if (payload.source === "quick-view") {
+        const quickViewModal = document.querySelector(
+          "yc-product yc-modal:has(yc-modal-content[data-visible])",
+        );
+
+        quickViewModal.close();
+        this.cart.open();
+      }
 
       this.updateCartSubTotal(sub_total);
       this.updateCartList(items);
@@ -127,7 +138,7 @@ class CartDrawerItems extends HTMLElement {
     const cartItem = template.content.cloneNode(true);
     const elements = this.getCartItemElements(cartItem);
 
-    this.updateItemImage(elements.image, item.productVariant.product);
+    this.updateItemImage(elements.image, item.productVariant);
     this.updateItemTitle(elements.title, item.productVariant.product);
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
@@ -146,19 +157,18 @@ class CartDrawerItems extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, deleteButton] =
-      cartItem.querySelectorAll("[data-cart-item]");
+    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity, deleteButton };
   }
 
-  updateItemImage(imageContainer, product) {
+  updateItemImage(imageContainer, productVariant) {
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
-    const shouldShowImage = product.images.length > 0;
+    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
 
     if (shouldShowImage) {
-      img.src = product.thumbnail;
-      img.alt = product.name;
+      img.src = productVariant.image.url ?? productVariant.product.thumbnail;
+      img.alt = productVariant.name;
       img.hidden = false;
       placeholder.hidden = true;
     } else {
@@ -342,18 +352,17 @@ class CartItems extends HTMLElement {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, subtotal, deleteButton] =
-      cartItem.querySelectorAll("[data-cart-item]");
+    const [image, title, variant, price, quantity, subtotal, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
     return { image, title, variant, price, quantity, subtotal, deleteButton };
   }
 
   updateItemImage(imageContainer, product) {
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
-    const shouldShowImage = product.images.length > 0;
+    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
 
     if (shouldShowImage) {
-      img.src = product.thumbnail;
+      img.src = productVariant.image.url ?? productVariant.product.thumbnail;
       img.alt = product.name;
       img.hidden = false;
       placeholder.hidden = true;
@@ -625,14 +634,18 @@ class CartSummary extends HTMLElement {
     this.removeCouponButton.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
+      const { sub_total, discountedPrice, coupon } = payload.cartData;
+
+      const total = sub_total - discountedPrice;
 
       this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, total);
     });
 
     subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
-      const { sub_total, total, discountedPrice, coupon } = payload.cartData;
+      const { sub_total, discountedPrice, coupon } = payload.cartData;
+
+      const total = sub_total - discountedPrice;
 
       this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, total);
@@ -703,7 +716,6 @@ class CartSummary extends HTMLElement {
   }
 
   updateSummary(subTotal, total) {
-    // TODO: TVA, TTC, and HT
     this.subtotal.textContent = formatCurrency(subTotal);
     this.total.textContent = formatCurrency(total);
   }
