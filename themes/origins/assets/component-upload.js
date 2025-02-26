@@ -28,9 +28,7 @@ if (!customElements.get("yc-upload")) {
           const base64 = reader.result;
           const preview = this.info.querySelector("[data-preview]");
 
-          !preview
-            ? this.create(file, base64)
-            : this.update(file, base64, preview);
+          !preview ? this.create(file, base64) : this.update(file, base64, preview);
           this.unset.addEventListener("click", () => this.remove());
         };
 
