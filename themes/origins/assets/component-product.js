@@ -83,8 +83,12 @@ class Product extends HTMLElement {
       if (isUnavailable) input.checked = false;
     });
 
+    this.productForm.toggleAttribute(
+      "not-available",
+      [...inputs].every((input) => input.disabled),
+    );
+
     const hasCheckedInput = [...inputs].some((input) => input.checked);
-    this.productForm.toggleAttribute("not-available", !hasCheckedInput);
     this.productForm.querySelector("[data-buy-button]").disabled = !hasCheckedInput;
   }
 

@@ -59,14 +59,14 @@
     </yc-modal>
   {% else %}
     {% assign quantity = 1 %}
-    {% assign available = product.selected_or_first_available_variant.available %}
+    {% assign available = product.first_available_variant.available %}
 
     {% if product.quantity != null %}
       {% assign quantity = product.quantity %}
     {% endif %}
 
     <yc-product-form
-      variant-id="{{ product.selected_or_first_available_variant.id  }}"
+      variant-id="{{ product.first_available_variant.id  }}"
       quantity="{{ quantity }}"
       {% unless available %}
         not-available
