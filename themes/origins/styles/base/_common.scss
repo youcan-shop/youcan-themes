@@ -384,6 +384,10 @@ yc-skeleton {
   gap: var(--gap-xl);
   padding: 1.5em;
 
+  &[hidden] {
+    display: none !important;
+  }
+
   yc-skeleton-group {
     display: flex;
     gap: var(--gap-md);
@@ -401,57 +405,57 @@ yc-skeleton {
       flex-direction: row;
       justify-content: space-between;
     }
+  }
 
-    yc-skeleton-item {
-      overflow: hidden;
-      position: relative;
-      background-color: color-mix(in srgb, currentColor 10%, transparent);
+  yc-skeleton-item {
+    overflow: hidden;
+    position: relative;
+    background-color: color-mix(in srgb, currentColor 10%, transparent);
 
-      &::before {
-        content: "";
-        width: 100%;
-        height: 100%;
-        display: block;
-        position: absolute;
-        transform: translateX(-100%);
-        background: linear-gradient(
-          90deg,
-          transparent,
-          color-mix(in srgb, var(--section-bg-color, var(--color-base-white)), transparent),
-          transparent
-        );
-        animation: skeleton_loading 1s infinite;
+    &::before {
+      content: "";
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      transform: translateX(-100%);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--section-bg-color, var(--color-base-white)), transparent),
+        transparent
+      );
+      animation: skeleton_loading 1s infinite;
 
-        @keyframes skeleton_loading {
-          100% {
-            transform: translateX(100%);
-          }
+      @keyframes skeleton_loading {
+        100% {
+          transform: translateX(100%);
         }
       }
+    }
 
-      &[variant="text"] {
-        width: 100%;
-        height: 8px;
-        border-radius: var(--radius-sm);
+    &[variant="text"] {
+      width: 100%;
+      height: 8px;
+      border-radius: var(--radius-sm);
 
-        &:nth-child(2) {
-          width: 80%;
-        }
-
-        &:nth-child(3) {
-          width: 60%;
-        }
-
-        &:nth-child(4) {
-          width: 40%;
-        }
+      &:nth-child(2) {
+        width: 80%;
       }
 
-      &[variant="rounded"] {
-        width: 50px;
-        height: 50px;
-        border-radius: var(--radius-sm);
+      &:nth-child(3) {
+        width: 60%;
       }
+
+      &:nth-child(4) {
+        width: 40%;
+      }
+    }
+
+    &[variant="rounded"] {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-sm);
     }
   }
 }

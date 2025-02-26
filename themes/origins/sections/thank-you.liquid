@@ -48,16 +48,28 @@
       </div>
     </div>
     <div class="summary">
-      <div class="summary-item">
-        {% comment %} TODO: Get discount code from coupon object {% endcomment %}
-        <span class="label">{{ 'order.coupon_code' | t }}</span>
-        <div class="value coupon-code">MAR25</div>
-      </div>
-      <div class="summary-item">
-        {% comment %} TODO: Get discount amount/percentage from coupon object {% endcomment %}
-        <span class="label">{{ 'order.discount_amount' | t }}</span>
-        <span class="value">{{ 40 | money }}</span>
-      </div>
+      {% if order.coupon != null %}
+        <div class="summary-item">
+          <span class="label">{{ 'order.coupon_code' | t }}</span>
+          <div class="value coupon-code">{{ order.coupon.code }}</div>
+        </div>
+        <div class="summary-item">
+          <span class="label">{{ 'order.discount_amount' | t }}</span>
+          <span class="value">
+            {% render 'discount-value', coupon: order.coupon %}
+          </span>
+        </div>
+      {% endif %}
+      {% if order.vat != 0 %}
+        <div class="summary-item">
+          <span class="label">{{ 'cart.page.summary.vat' | t }}</span>
+          <div class="value coupon-code">{{ order.vat | times: 100 | append: '%' }}</div>
+        </div>
+        <div class="summary-item">
+          <span class="label">{{ 'cart.page.summary.tax_amount' | t }}</span>
+          <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
+        </div>
+      {% endif %}
       <div class="summary-item">
         <span class="label">{{ 'order.shipping' | t }}</span>
         {% if order.shippingCost == 0 or order.shippingCost == null %}

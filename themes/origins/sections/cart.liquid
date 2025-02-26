@@ -56,7 +56,14 @@
             <div class="item">
               <span>{{ 'order.coupon_code' | t }}</span>
               <div class="coupon-code">
-                <span data-coupon-code hidden></span>
+                <span
+                  data-coupon-code
+                  {% unless cart.coupon != null %}
+                    hidden
+                  {% endunless %}
+                >
+                  {{- cart.coupon.code -}}
+                </span>
                 <button class="tertiary" data-remove-coupon>
                   {% render 'yc-icon', name: 'x-mark' %}
                 </button>
@@ -64,12 +71,19 @@
             </div>
             <div class="item">
               <span>{{ 'order.discount_amount' | t }}</span>
-              <span data-discount hidden></span>
+              <span
+                data-discount
+                {% unless cart.coupon != null %}
+                  hidden
+                {% endunless %}
+              >
+                {% render 'discount-value', coupon: cart.coupon %}
+              </span>
             </div>
             <div class="total-box">
               <div class="total">
                 <span>{{ 'cart.page.summary.total' | t }}</span>
-                <span data-cart-total>{{ cart.total | default: 0 | money }}</span>
+                <span data-cart-total>{{ cart.sub_total | minus: cart.coupon.deducted_amount | default: 0 | money }}</span>
               </div>
               <a href="{{ cart.cart_submit_url }}" class="yc-btn primary">
                 {{- 'cart.page.summary.checkout_button' | t -}}
