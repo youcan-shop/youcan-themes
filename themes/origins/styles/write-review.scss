@@ -1,6 +1,11 @@
 @import "mixins/breakpoints";
 
-yc-add-review {
+yc-write-review {
+  .action {
+    display: flex;
+    justify-content: center;
+  }
+
   .review-form {
     .head {
       padding: 1.5em;
@@ -81,12 +86,18 @@ yc-add-review {
             input,
             textarea {
               resize: vertical;
+              min-height: 46px;
               max-height: 150px;
               color: rgb(var(--section-text-color));
             }
 
             label:not(.images) {
               font-size: var(--text-sm);
+            }
+
+            .info {
+              font-size: var(--text-xs);
+              color: color-mix(in srgb, currentColor 70%, transparent);
             }
 
             &:has(input:required),
@@ -111,7 +122,6 @@ yc-add-review {
 
             .input {
               display: flex;
-              flex-wrap: wrap;
               gap: var(--gap-md);
 
               label,
@@ -124,29 +134,35 @@ yc-add-review {
                 cursor: pointer;
               }
 
-              .image {
-                position: relative;
-                border-radius: var(--radius-md);
-                border: 1px solid rgb(var(--section-text-color), 15%);
+              .images-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--gap-md);
 
-                img {
-                  object-fit: cover;
-                  border-radius: calc(var(--radius-md) - 1px);
-                }
+                .image {
+                  position: relative;
+                  border-radius: var(--radius-md);
+                  border: 1px solid rgb(var(--section-text-color), 15%);
 
-                button {
-                  padding: 5px;
-                  inset-inline-end: -8px;
-                  inset-block-start: -8px;
-                  position: absolute;
-                  border-radius: var(--radius-circle);
-                  color: rgb(var(--section-text-color));
-                  background-color: var(--section-bg-color);
-                  border: 0.5px solid rgb(var(--section-text-color), 15%);
+                  img {
+                    object-fit: cover;
+                    border-radius: calc(var(--radius-md) - 1px);
+                  }
 
-                  &:hover {
-                    color: var(--color-error-500);
-                    border-color: var(--color-error-50);
+                  button {
+                    padding: 5px;
+                    inset-inline-end: -8px;
+                    inset-block-start: -8px;
+                    position: absolute;
+                    border-radius: var(--radius-circle);
+                    color: rgb(var(--section-text-color));
+                    background-color: var(--section-bg-color);
+                    border: 0.5px solid rgb(var(--section-text-color), 15%);
+
+                    &:hover {
+                      color: var(--color-error-500);
+                      border-color: var(--color-error-50);
+                    }
                   }
                 }
               }
@@ -167,66 +183,12 @@ yc-add-review {
           }
         }
       }
-
-      .success-box {
-        width: 100%;
-        display: flex;
-        gap: var(--gap-xl);
-        flex-direction: column;
-        position: absolute;
-        inset: 50% 0 0 50%;
-        translate: -50% -40%;
-        visibility: hidden;
-
-        .icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          svg {
-            width: 60px;
-            height: 60px;
-            padding: 1em;
-            border-radius: var(--radius-circle);
-            color: var(--section-bg-color);
-            background-color: var(--color-success-500);
-            outline: 10px solid var(--color-success-50);
-            animation: pulse 2s linear infinite;
-
-            @keyframes pulse {
-              0% {
-                outline-color: var(--color-success-50);
-              }
-
-              50% {
-                outline-color: transparent;
-              }
-
-              100% {
-                outline-color: var(--color-success-50);
-              }
-            }
-          }
-        }
-
-        .content {
-          display: grid;
-          text-align: center;
-          gap: var(--gap-md);
-          justify-content: center;
-
-          p {
-            font-size: var(--text-sm);
-            color: color-mix(in srgb, currentColor 70%, transparent);
-          }
-        }
-      }
     }
   }
 }
 
 @include breakpoint("md") {
-  yc-add-review {
+  yc-write-review {
     .review-form {
       .head {
         padding-block-start: 0;
