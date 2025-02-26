@@ -162,14 +162,14 @@ class CartDrawerItems extends HTMLElement {
     return { image, title, variant, price, quantity, deleteButton };
   }
 
-  updateItemImage(imageContainer, product) {
+  updateItemImage(imageContainer, productVariant) {
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
-    const shouldShowImage = !!product.image.url;
+    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
 
     if (shouldShowImage) {
-      img.src = product.image.url;
-      img.alt = product.name;
+      img.src = productVariant.image.url ?? productVariant.product.thumbnail;
+      img.alt = productVariant.name;
       img.hidden = false;
       placeholder.hidden = true;
     } else {
@@ -333,7 +333,7 @@ class CartItems extends HTMLElement {
     const cartItem = template.content.cloneNode(true);
     const elements = this.getCartItemElements(cartItem);
 
-    this.updateItemImage(elements.image, item.productVariant);
+    this.updateItemImage(elements.image, item.productVariant.product);
     this.updateItemTitle(elements.title, item.productVariant.product);
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
@@ -361,10 +361,10 @@ class CartItems extends HTMLElement {
   updateItemImage(imageContainer, product) {
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
-    const shouldShowImage = !!product.image.url;
+    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
 
     if (shouldShowImage) {
-      img.src = product.image.url;
+      img.src = productVariant.image.url ?? productVariant.product.thumbnail;
       img.alt = product.name;
       img.hidden = false;
       placeholder.hidden = true;
