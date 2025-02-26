@@ -3,7 +3,8 @@
 
   Accepts:
   - name: {String} input name
-  - placeholder: {String} input placeholder
+  - value: {String} input value
+  - placeholder: (optional) {String} input placeholder
 
   Usage:
   {% render 'variant-upload', name: 'file', placeholder: "Click to choose a file" %}
@@ -16,12 +17,11 @@
         {% render 'yc-placeholder', name: 'upload' %}
       </div>
       <span class="placeholder h6">
-        {{ placeholder | default: 'Click to choose a file' }}
+        {{ placeholder | default: 'general.choose_image' | t }}
       </span>
       <input
         accept="image/png, image/gif, image/jpeg, image/webp, image/avif"
         name="{{ name }}"
-        id="{{ name }}"
         type="file"
         hidden
       >

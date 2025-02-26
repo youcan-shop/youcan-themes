@@ -1,4 +1,6 @@
-<div class="product-quick-view">
+{% assign default_variant = product.first_available_variant %}
+
+<yc-product class="product-quick-view" product-id="{{ product.id }}">
   <yc-modal style="--modal-width: 60%">
     <button class="secondary" data-trigger>
       {{ 'general.choose_options' | t }}
@@ -37,34 +39,39 @@
             <div class="core-info">
               {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
               <div class="price-info">
-                <p class="current h2">{{ product.price | default: 0 | money }}</p>
-                {% if product.compare_at_price != null %}
-                  <p class="compare-at h3">
-                    {{ product.compare_at_price | default: 0 | money }}
-                  </p>
-                {% endif %}
+                <p class="current h2" data-product-item="price">
+                  {% assign product_price = default_variant.price | default: product.price %}
+                  {{ product_price | default: 0 | money }}
+                </p>
+                <p
+                  class="compare-at h3"
+                  data-product-item="compare-at-price"
+                  {% if compare_at_price == null %}
+                    hidden
+                  {% endif %}
+                >
+                  {% assign product_compare_at_price = default_variant.compare_at_price
+                    | default: product.compare_at_price
+                  %}
+                  {{ product_compare_at_price | default: 0 | money }}
+                </p>
               </div>
-              <div class="variants">
-                {% assign options = 'XL,L,M,S' | split: ',' %}
-                {% render 'variant-toggle', name: 'size', options: options %}
-                {% render 'variant-dropdown', name: 'sizeo', options: options %}
-                {% render 'variant-radio', name: 'sizi', options: options %}
-              </div>
+              {% render 'product-variants' %}
             </div>
-            <yc-product-form
-              quantity="1"
-              variant-id="{{ product.variants[0].id  }}"
-            >
-              {% render 'yc-quantity-control' %}
-              <button class="primary" data-buy-button>
-                <span>
-                  {{ 'general.add_to_cart' | t }}
-                </span>
-              </button>
-            </yc-product-form>
+            {% render 'product-add-to-cart',
+              source: 'quick-view',
+              variant_id: default_variant.id,
+              available: default_variant.available
+            %}
           </yc-product-info>
         </div>
       </div>
     </yc-modal-content>
   </yc-modal>
-</div>
+</yc-product>
+
+{% javascript %}
+  if (!window.productsVariants["{{ product.id }}"]) {
+    window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+  }
+{% endjavascript %}

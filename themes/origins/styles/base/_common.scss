@@ -345,6 +345,39 @@ yc-quantity-control {
   }
 }
 
+// Product form
+yc-product-form {
+  button[data-buy-button] {
+    span::before {
+      content: attr(data-add-to-cart);
+    }
+  }
+
+  &[not-available] button {
+    span::before {
+      content: attr(data-out-of-stock);
+    }
+  }
+}
+
+// Variants
+yc-variants {
+  display: flex;
+  gap: var(--gap-lg);
+  flex-direction: column;
+
+  .variant {
+    display: flex;
+    gap: var(--gap-sm);
+    flex-direction: column;
+
+    .label {
+      font-size: var(--text-md);
+      color: color-mix(in srgb, currentColor 70%, transparent);
+    }
+  }
+}
+
 // Skeleton
 yc-skeleton {
   display: grid;

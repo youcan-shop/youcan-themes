@@ -4,16 +4,24 @@
   Accepts:
   - options: {Array} variant options
   - name: {String} input name
+  - default_value: (optional) {String} default checked value
 
   Usage:
-  {% render 'variant-toggle', name: 'size', options: [] %}
+  {% render 'variant-toggle', name: 'size', options: [], default_value: '' %}
 {% endcomment %}
 
 <yc-variant name="toggle">
   {% for option in options %}
     <label class="variant-item toggle-item yc-btn icon">
       {{ option }}
-      <input type="radio" name="{{ name }}" id="{{ option }}">
+      <input
+        type="radio"
+        name="{{ name }}"
+        value="{{ option }}"
+        {% if option == default_value %}
+          checked
+        {% endif %}
+      >
     </label>
   {% endfor %}
 </yc-variant>

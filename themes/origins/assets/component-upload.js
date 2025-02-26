@@ -28,9 +28,7 @@ if (!customElements.get("yc-upload")) {
           const base64 = reader.result;
           const preview = this.info.querySelector("[data-preview]");
 
-          !preview
-            ? this.create(file, base64)
-            : this.update(file, base64, preview);
+          !preview ? this.create(file, base64) : this.update(file, base64, preview);
           this.unset.addEventListener("click", () => this.remove());
         };
 
@@ -47,7 +45,7 @@ if (!customElements.get("yc-upload")) {
         "afterbegin",
         `<div class="preview" data-preview>
           <img src="${image_src}" width="50" height="50" />
-          <div class="info">
+          <div class="metadata">
             <span class="name">${file.name}</span>
             <span class="size">${this.toKB(file.size)}</span>
           </div>

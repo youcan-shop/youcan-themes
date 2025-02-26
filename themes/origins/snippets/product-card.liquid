@@ -10,6 +10,8 @@
   {% render 'card-product', lazy_load: true %}
 {% endcomment %}
 
+{% assign default_variant = product.first_available_variant %}
+
 <div class="product-card" data-style="{{ settings.product_card_style }}">
   <a href="{{ product.url }}" class="img-link" aria-label="{{ product.name }}" draggable="false">
     {% if product.thumbnail %}
@@ -36,31 +38,27 @@
       {{ product.name | default: 'Product Name' }}
     </a>
     <div class="price">
-      <span class="current">{{ product.price | default: 0 | money }}</span>
+      <span class="current">
+        {% assign product_price = default_variant.price | default: product.price %}
+        {{ product_price | default: 0 | money -}}
+      </span>
       {% if product.compare_at_price != null %}
         <span class="compare-at">
-          {{ product.compare_at_price | default: 0 | money }}
+          {% assign product_compare_at_price = default_variant.compare_at_price
+            | default: product.compare_at_price
+          %}
+          {{ product_compare_at_price | default: 0 | money }}
         </span>
       {% endif %}
     </div>
     {% unless settings.product_card_style == 'compact' %}
       {% if product.variants.size > 1 %}
-        {% render 'product-quick-view' %}
+        {% render 'product-quick-view', product: product %}
       {% else %}
-        <yc-product-form
-          variant-id="{{ product.variants[0].id  }}"
-          quantity="1"
-        >
-          <button
-            data-buy-button
-            name="add"
-            class="secondary"
-          >
-            <span>
-              {{ 'general.add_to_cart' | t }}
-            </span>
-          </button>
-        </yc-product-form>
+        {% render 'product-add-to-cart',
+          variant_id: default_variant.id,
+          available: product.available
+        %}
       {% endif %}
     {% endunless %}
   </div>

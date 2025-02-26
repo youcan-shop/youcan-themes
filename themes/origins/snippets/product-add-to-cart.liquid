@@ -1,0 +1,25 @@
+<yc-product-form
+  quantity="1"
+  variant-id="{{ variant_id }}"
+  {% unless available %}
+    not-available
+  {% endunless %}
+  {% if source %}
+    source="{{ source }}"
+  {% endif %}
+>
+  <button
+    name="add"
+    data-buy-button
+    class="secondary"
+    {% unless available %}
+      disabled
+    {% endunless %}
+  >
+    <span
+      data-add-to-cart="{{ 'general.add_to_cart' | t }}"
+      data-out-of-stock="{{ 'general.out_of_stock' | t }}"
+    >
+    </span>
+  </button>
+</yc-product-form>

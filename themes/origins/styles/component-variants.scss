@@ -1,3 +1,5 @@
+@import "./mixins/breakpoints";
+
 yc-variant {
   --variant-bg-color: var(--section-bg-color, var(--color-base-white));
   --variant-text-color: rgb(var(--section-text-color, var(--color-base-black)));
@@ -9,13 +11,12 @@ yc-variant {
   width: inherit;
 
   .variant-item {
+    cursor: pointer;
     user-select: none;
     font-size: var(--text-sm);
     color: var(--variant-text-color);
 
     &:not(.radio-item) {
-      cursor: pointer;
-
       input[type="radio"] {
         display: none;
       }
@@ -59,16 +60,19 @@ yc-variant {
   }
 
   &[name="color"] {
+    gap: var(--gap-lg);
+
     .color-item {
       padding: 0;
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       position: relative;
       color: var(--variant-color);
       background-color: currentColor;
       border-radius: var(--radius-circle);
       border: 1.5px solid var(--variant-bg-color);
-      outline: 1px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
+      outline-offset: 1.5px;
+      outline: 1.5px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
 
       &:has(input:checked) {
         outline-color: var(--variant-text-color);
@@ -96,7 +100,8 @@ yc-variant {
   }
 
   &[name="radio"] {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--gap-lg);
 
     .radio-item {
@@ -104,10 +109,6 @@ yc-variant {
       align-items: center;
       gap: var(--gap-md);
       font-size: var(--text-md);
-
-      label {
-        cursor: pointer;
-      }
 
       input[type="radio"] {
         width: 18px;
@@ -137,13 +138,10 @@ yc-variant {
       }
 
       &:has(input:disabled) {
-        label,
-        input {
-          opacity: 0.5;
+        opacity: 0.5;
 
-          &:hover {
-            cursor: not-allowed;
-          }
+        &:hover {
+          cursor: not-allowed;
         }
       }
     }
@@ -156,6 +154,7 @@ yc-variant {
       color: var(--variant-text-color);
 
       img {
+        height: 70px;
         object-fit: cover;
         border-radius: calc(var(--radius-md) - 2px);
         transition: var(--transition-duration-normal);
@@ -255,7 +254,7 @@ yc-variant {
           border-radius: calc(var(--radius-md) - 4px);
         }
 
-        .info {
+        .metadata {
           display: grid;
           gap: var(--gap-sm);
 
@@ -278,6 +277,14 @@ yc-variant {
       .actions button {
         color: var(--variant-text-color);
       }
+    }
+  }
+
+  &[name="dropdown"] {
+    width: 50%;
+
+    @include breakpoint("md") {
+      width: 100%;
     }
   }
 }

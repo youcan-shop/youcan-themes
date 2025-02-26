@@ -1,6 +1,12 @@
 if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity"];
+    static observedAttributes = [
+      "variant-id",
+      "quantity",
+      "attached-image",
+      "source",
+      "not-available",
+    ];
 
     constructor() {
       super();
@@ -10,6 +16,12 @@ if (!customElements.get("yc-product-form")) {
 
     connectedCallback() {
       this._render();
+    }
+
+    attributeChangedCallback(name) {
+      if (name === "not-available") {
+        this.handleAvailabilityChange();
+      }
     }
 
     _render() {
@@ -22,8 +34,11 @@ if (!customElements.get("yc-product-form")) {
         return;
       }
 
-      const { quantity } = event.target.dataset;
-      this.quantityValue = quantity;
+      this.quantityValue = event.target.getAttribute("quantity");
+    }
+
+    handleAvailabilityChange() {
+      this.buyButton.disabled = this.hasAttribute("not-available");
     }
 
     async onBuyClicked(event) {
@@ -32,16 +47,18 @@ if (!customElements.get("yc-product-form")) {
       this.setIsBuyButtonLoading(true);
 
       const productVariantId = this.productVariantId;
+      const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
       try {
         const newCart = await youcanjs.cart.addItem({
+          attachedImage,
           productVariantId,
           quantity,
         });
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
-          source: "product-form",
+          source: this.getAttribute("source") ?? "product-form",
           productVariantId,
           cartData: newCart,
         });
@@ -49,7 +66,7 @@ if (!customElements.get("yc-product-form")) {
         console.error(error);
 
         publish(PUB_SUB_EVENTS.cartError, {
-          source: "product-form",
+          source: this.getAttribute("source") ?? "product-form",
           productVariantId,
           error: error,
         });
@@ -62,6 +79,10 @@ if (!customElements.get("yc-product-form")) {
 
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
+    }
+
+    get attachedImage() {
+      return this.getAttribute("attached-image");
     }
 
     get productVariantId() {
