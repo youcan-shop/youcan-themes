@@ -29,6 +29,7 @@ class WriteReview extends HTMLElement {
 
   async submitReview(event) {
     event.preventDefault();
+  
     const formData = new FormData(event.target);
 
     if (Number(formData.get("ratings")) === 0) {
