@@ -355,7 +355,6 @@ class CartItems extends HTMLElement {
   }
 
   updateItemImage(imageContainer, productVariant) {
-    console.log(productVariant);
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
     const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
