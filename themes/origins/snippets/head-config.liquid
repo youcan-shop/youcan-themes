@@ -137,6 +137,12 @@
 {{ 'pubsub.js' | asset_url | script_tag_deferred }}
 {{ 'youcan-js.min.js' | asset_url | script_tag_deferred }}
 {{ 'component-product-form.js' | asset_url | script_tag_deferred }}
+{{ 'cart.js' | asset_url | script_tag_deferred }}
+
+{% if template.name != 'cart' and template.name != 'thankyou' %}
+  {{ 'product-card.css' | asset_url | stylesheet_tag }}
+  {{ 'product-quick-view.css' | asset_url | stylesheet_tag }}
+{% endif %}
 
 <script>
   window.errorStrings = {
@@ -148,5 +154,6 @@
   window.successStrings = {
     review_submitted: '{{ 'success_messages.review_submitted' | t }}'
   }
+
   window.productsVariants = {};
 </script>
