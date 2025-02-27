@@ -64,9 +64,7 @@ class CartDrawerItems extends HTMLElement {
       }
 
       if (payload.source === "quick-view") {
-        const quickViewModal = document.querySelector(
-          "yc-product yc-modal:has(yc-modal-content[data-visible])",
-        );
+        const quickViewModal = document.querySelector("yc-product yc-modal:has(yc-modal-content[data-visible])");
 
         quickViewModal.close();
         this.cart.open();
@@ -332,7 +330,7 @@ class CartItems extends HTMLElement {
     const cartItem = template.content.cloneNode(true);
     const elements = this.getCartItemElements(cartItem);
 
-    this.updateItemImage(elements.image, item.productVariant.product);
+    this.updateItemImage(elements.image, item.productVariant);
     this.updateItemTitle(elements.title, item.productVariant.product);
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
@@ -356,14 +354,15 @@ class CartItems extends HTMLElement {
     return { image, title, variant, price, quantity, subtotal, deleteButton };
   }
 
-  updateItemImage(imageContainer, product) {
+  updateItemImage(imageContainer, productVariant) {
+    console.log(productVariant);
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
     const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
 
     if (shouldShowImage) {
       img.src = productVariant.image.url ?? productVariant.product.thumbnail;
-      img.alt = product.name;
+      img.alt = productVariant.product.name;
       img.hidden = false;
       placeholder.hidden = true;
     } else {
