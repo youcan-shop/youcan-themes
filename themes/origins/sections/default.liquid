@@ -1,33 +1,3 @@
-{{ 'component-combobox.js' | asset_url | script_tag_deferred }}
-{{ 'component-combobox.css' | asset_url | stylesheet_tag }}
-
-{{ 'component-product.js' | asset_url | script_tag_deferred }}
-{{ 'component-upload.js' | asset_url | script_tag_deferred }}
-
-{{ 'component-select.css' | asset_url | stylesheet_tag }}
-
-{{ 'component-variants.css' | asset_url | stylesheet_tag }}
-{{ 'product-quick-view.css' | asset_url | stylesheet_tag }}
-
-{{ 'component-write-review.js' | asset_url | script_tag_deferred }}
-
-{% comment %}
-  TO REMOVE ❌
-  TODO: This section is just a placeholder for the theme pages, as the template schema requires at least one section
-{% endcomment %}
-
-<script>
-  async function removeFromCart() {
-    const cart = {% if cart %}JSON.parse({{ cart | json }}){% else %}{}{% endif %};
-    console.log(cart);
-    const cartItem = cart.items[0];
-    const cartItemId = cartItem.id;
-    const productVariantId = cartItem.product_variant_id;
-    const response = await youcanjs.cart.removeItem({ cartItemId, productVariantId });
-    console.log(response);
-  }
-</script>
-
 <yc-section style="display: grid; gap: 1.5em;">
   {% assign nav_links_string = '/, Home | /collections, Collections| /product-a, Product A' %}
 
