@@ -28,9 +28,9 @@
       <p
         class="variant"
         data-cart-item="variant"
-        {% unless product.variations.size > 1 %}
+        {% if product.variations == null or product.variations.default %}
           hidden
-        {% endunless %}
+        {% endif %}
       >
         {% for variant in product.variations %}
           <span>{{- variant[1] -}}</span>

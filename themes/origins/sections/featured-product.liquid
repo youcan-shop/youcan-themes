@@ -1,12 +1,14 @@
-{{ 'component-slider.css' | asset_url | stylesheet_tag }}
 {{ 'featured-product.css' | asset_url | stylesheet_tag }}
 {{ 'component-product-media.js' | asset_url | script_tag_deferred }}
-{{ 'component-slider.js' | asset_url | script_tag_deferred }}
-{{ 'component-upload.js' | asset_url | script_tag_deferred }}
+
+{% if section.settings.item.images.size > 1 %}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+{% endif %}
 
 {% assign product = section.settings.item %}
 {% assign product_image = product.images[0] %}
-{% assign default_variant = product.first_available_variant%}
+{% assign default_variant = product.first_available_variant %}
 
 <yc-section
   style="
@@ -16,7 +18,7 @@
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
 
     --media-main-image-border-radius: {{ settings.product_card_border_radius }}px;
-    --media-gallery-border-radius: calc(var(--media-main-image-border-radius) - 6px);
+    --media-gallery-border-radius: calc(var(--media-main-image-border-radius) * 0.66);
     --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
@@ -111,13 +113,8 @@
             {% render 'product-title', title: product.name %}
           {% when 'price' %}
             {% assign product_price = default_variant.price | default: product.price %}
-            {% assign product_compare_at_price = default_variant.compare_at_price
-              | default: product.compare_at_price
-            %}
-            {% render 'product-price',
-              price: product_price,
-              compare_at_price: product_compare_at_price
-            %}
+            {% assign product_compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+            {% render 'product-price', price: product_price, compare_at_price: product_compare_at_price %}
           {% when 'description' %}
             {% render 'product-description', description: product.description %}
           {% when 'rating' %}
@@ -141,14 +138,11 @@
               second: block.settings.seconds
             %}
           {% when 'accordion' %}
-            {% render 'accordion', title: block.settings.title, content: block.settings.content %}
+            {% render 'product-accordion', title: block.settings.title, content: block.settings.content %}
         {% endcase %}
       {% endfor %}
       {% render 'product-variants' %}
-      {% render 'product-buy-button',
-        product: product,
-        checkout_type: block.settings.checkout_type
-      %}
+      {% render 'product-buy-button', product: product, checkout_type: block.settings.checkout_type %}
     </yc-product-info>
   </yc-product>
 </yc-section>

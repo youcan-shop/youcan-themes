@@ -1,7 +1,8 @@
 {% if product.related_products %}
-  {{ 'product-card.css' | asset_url | stylesheet_tag }}
-  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
-  {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+  {% if section.settings.view_style == 'slides' %}
+    {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+    {{ 'component-slider.js' | asset_url | script_tag_deferred }}
+  {% endif %}
 
   <yc-section
     style="

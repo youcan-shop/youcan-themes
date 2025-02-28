@@ -28,10 +28,7 @@ yc-slider {
         yc-slider-item {
           height: 100%;
           position: relative;
-          min-width: calc(
-            100% / var(--slider-per-page) - (var(--slider-gap) * 1px) +
-              (var(--slider-gap) / var(--slider-per-page) * 1px)
-          );
+          min-width: calc(100% / var(--slider-per-page) - (var(--slider-gap) * 1px) + (var(--slider-gap) / var(--slider-per-page) * 1px));
 
           & > :where(img, div) {
             height: 100%;
@@ -135,16 +132,12 @@ yc-slider {
 
       button {
         padding: 8px 15px;
-        border-radius: var(--radius-sm);
+        border-radius: calc(var(--button-border-radius) * 0.66);
         background-color: var(--section-arrows-background);
         color: var(--section-arrows-foreground);
 
         &.icon:hover {
-          background-color: color-mix(
-            in srgb,
-            var(--section-arrows-foreground) 10%,
-            var(--section-arrows-background)
-          );
+          background-color: color-mix(in srgb, var(--section-arrows-foreground) 10%, var(--section-arrows-background));
         }
 
         &:dir(rtl) .icon {

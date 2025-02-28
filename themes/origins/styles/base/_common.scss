@@ -8,7 +8,7 @@ button,
   align-items: center;
   justify-content: center;
   gap: var(--gap-md);
-  border-radius: var(--radius-md);
+  border-radius: var(--button-border-radius);
 
   &.primary {
     background-color: rgb(var(--color-button));
@@ -42,7 +42,7 @@ button,
       padding: 5px 0;
       translate: 0 -50%;
       position: absolute;
-      border-radius: var(--radius-sm);
+      border-radius: calc(var(--button-border-radius) * 0.66);
       transition: var(--transition-duration-normal);
       background-color: color-mix(in srgb, currentColor 5%, transparent);
     }
@@ -63,11 +63,8 @@ button,
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 
     &[data-size$="sm"] {
-      padding: 12px;
-    }
-
-    &[data-size$="sm"] {
       padding: 8px;
+      border-radius: calc(var(--button-border-radius) * 0.66);
 
       svg {
         width: 15px;
@@ -142,7 +139,7 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="s
   width: 100%;
   padding: 12px 15px;
   background-color: transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--input-border-radius);
   color: rgb(var(--color-primary));
   border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 
@@ -419,12 +416,7 @@ yc-skeleton {
       display: block;
       position: absolute;
       transform: translateX(-100%);
-      background: linear-gradient(
-        90deg,
-        transparent,
-        color-mix(in srgb, var(--section-bg-color, var(--color-base-white)), transparent),
-        transparent
-      );
+      background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--section-bg-color, var(--color-base-white)), transparent), transparent);
       animation: skeleton_loading 1s infinite;
 
       @keyframes skeleton_loading {
