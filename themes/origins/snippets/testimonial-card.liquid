@@ -1,6 +1,18 @@
 <template data-testimonial>
   <div class="testimonial-card">
-    {% render 'product-rating' %}
+    <div class="rating" data-rating>
+      <div class="stars">
+        {% for star in (1..5) %}
+          {% render 'yc-icon', name: 'star', fill: 'currentColor' %}
+        {% endfor %}
+      </div>
+      <span class="average">
+        {% if show_avg_rating %}
+          {{ rating }}
+        {% endif %}
+      </span>
+    </div>
+
     <article class="content">
       <p data-content></p>
       <span class="author">
