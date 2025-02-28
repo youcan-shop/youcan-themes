@@ -1,0 +1,51 @@
+{% comment %}
+  Quantity input
+
+  Accepts:
+  - button_size: (optional) 'sm', 'md' or 'lg'
+  - product: Cart item liquid object
+
+  Usage:
+  {% render 'yc-quantity-input' product: product %}
+{% endcomment %}
+
+{% assign quantity = 1 %}
+
+{% if product.quantity != null %}
+  {% assign quantity = product.quantity %}
+{% endif %}
+
+<yc-quantity-control
+  class="quantity cart-quantity"
+  item="{{ product.id }}"
+  product-variant="{{ product.product_variant_id }}"
+  {% if product.isTrackingInventory %}
+    inventory="{{ product.first_available_variant.inventory }}"
+  {% endif %}
+  quantity="{{ quantity }}"
+  data-cart-item="quantity"
+>
+  <button
+    class="yc-btn icon"
+    name="minus"
+    data-size="{{ button_size | default: 'md' }}"
+    type="button"
+    aria-label="decrease"
+  >
+    {% render 'yc-icon', name: 'minus' %}
+  </button>
+  <div class="current-quantity">
+    <span data-current-quantity>
+      {{- quantity -}}
+    </span>
+  </div>
+  <button
+    class="yc-btn icon"
+    name="plus"
+    data-size="{{ button_size | default: 'md' }}"
+    type="button"
+    aria-label="increase"
+  >
+    {% render 'yc-icon', name: 'plus' %}
+  </button>
+</yc-quantity-control>

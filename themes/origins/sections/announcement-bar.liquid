@@ -1,0 +1,78 @@
+{% if section.settings.is_visible %}
+  {{ 'announcement-bar.css' | asset_url | stylesheet_tag }}
+
+  {% style %}
+    #youcan-section--announcement-bar {
+      --announcement-bar-foreground-color: {{ section.settings.announcement_bar_text_color.red }}, {{ section.settings.announcement_bar_text_color.green }}, {{ section.settings.announcement_bar_text_color.blue }};
+      --announcement-bar-background-color:{{ section.settings.announcement_bar_background_color.red }}, {{ section.settings.announcement_bar_background_color.green }}, {{ section.settings.announcement_bar_background_color.blue }};
+      --announcement_bar_order: {{ section.settings.position }};
+    }
+  {% endstyle %}
+
+  <div class="announcement">
+    {% if section.settings.announcement_link != '' and section.settings.announcement_link != null %}
+      <a href="{{ section.settings.announcement_link }}" class="link">
+    {% endif %}
+    <p class="message">
+      {{ section.settings.announcement_message | default: 'Welcome to our store!' }}
+    </p>
+    {% if section.settings.announcement_link != '' and section.settings.announcement_link != null %}
+      </a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "label": "Announcement bar",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "is_visible",
+      "label": "Show bar",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "0",
+          "label": "Above Header"
+        },
+        {
+          "value": "1",
+          "label": "Below Header"
+        }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "text",
+      "id": "announcement_message",
+      "label": "Text",
+      "placeholder": "Welcome to our store!"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Link",
+      "placeholder": "Paste a link"
+    },
+    {
+      "type": "color",
+      "id": "announcement_bar_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "announcement_bar_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    }
+  ]
+}
+{% endschema %}
