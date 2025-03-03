@@ -6,18 +6,21 @@ yc-select{
   display:flex;
   position:relative;
 }
-yc-select label.yc-btn.icon{
+yc-select::before{
+  content:"";
+  z-index:2;
   width:100%;
-  cursor:pointer;
-  -webkit-user-select:none;
-     -moz-user-select:none;
-          user-select:none;
+  height:100%;
+  position:absolute;
+}
+yc-select button.icon{
+  width:100%;
   padding:8px 12px;
   font-size:var(--text-sm);
   justify-content:space-between;
 }
 @media (min-width: 768px){
-  yc-select label.yc-btn.icon::after{
+  yc-select button.icon::after{
     content:"";
     width:6px;
     height:6px;
@@ -29,7 +32,7 @@ yc-select label.yc-btn.icon{
     border-inline-end:1.5px solid currentColor;
     transition:var(--transition-duration-normal);
   }
-  yc-select label.yc-btn.icon:has(:not(input:checked)) + yc-select-content{
+  yc-select button.icon:has(:not(input:checked)) + yc-select-content{
     opacity:0;
     filter:blur(2px);
     visibility:hidden;
@@ -104,6 +107,17 @@ yc-select yc-select-content a[data-checked]::after{
 yc-select yc-select-content a:hover{
   background-color:color-mix(in srgb, currentColor 5%, transparent);
 }
+@media (min-width: 768px){
+  yc-select:not(:has(button.icon:focus-within))::before{
+    content:none;
+  }
+  yc-select:not(:has(button.icon:focus-within)) yc-select-content{
+    opacity:0;
+    filter:blur(2px);
+    visibility:hidden;
+    translate:0 -0.5em;
+  }
+}
 
 .select-trigger label[data-trigger]{
   display:none;
@@ -119,7 +133,7 @@ yc-select yc-select-content a:hover{
   yc-select{
     width:100%;
   }
-  yc-select label.yc-btn.icon{
+  yc-select button.icon{
     display:none;
   }
   yc-select yc-select-content{
