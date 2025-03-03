@@ -1,7 +1,9 @@
 yc-section {
+  --reading-mode-width: min(60ch, 100%);
+
   &:has(.page[data-page-width="reading-mode"]) {
     yc-section-head {
-      width: min(60ch, 100%);
+      width: var(--reading-mode-width);
       margin-inline: auto;
     }
   }
@@ -12,8 +14,39 @@ yc-section {
     }
 
     &[data-page-width="reading-mode"] {
-      width: min(60ch, 100%);
+      width: var(--reading-mode-width);
       margin-inline: auto;
+    }
+
+    form {
+      width: var(--reading-mode-width);
+      margin-inline: auto;
+      display: grid;
+      gap: var(--gap-lg);
+
+      .form-group {
+        display: flex;
+        gap: var(--gap-lg);
+
+        & > * {
+          flex: 1;
+        }
+      }
+
+      button {
+        order: 2;
+      }
+
+      textarea {
+        max-height: 300px;
+      }
+
+      [data-captcha] {
+        order: 1;
+        display: flex;
+        justify-content: center;
+        min-height: 85px;
+      }
     }
 
     // Resets for dynamic content

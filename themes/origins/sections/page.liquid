@@ -14,13 +14,8 @@
     </yc-section-head>
   {% endif %}
   <div class="page" data-page-width="{{ section.settings.page_width }}">
-    {% comment %}
-      TODO: The `type` property doesn't exist yet, it will be handled in another PR to render the contact form appropriately
-    {% endcomment %}
-    {% if page.type == 'contact' %}
-      {% comment %}
-        TODO: Render contact form
-      {% endcomment %}
+    {% if page.template == 'contact' %}
+      {% render 'contact-form', content: page.content %}
     {% else %}
       {{ page.content }}
     {% endif %}

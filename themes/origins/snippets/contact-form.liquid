@@ -1,0 +1,34 @@
+{% comment %}
+  Renders a contact form
+
+  Accepts:
+  - content: {String} (optional) page content
+
+  Usage:
+  {% render 'contact-form', content: page.content %}
+{% endcomment %}
+
+{% form 'contact' %}
+  {% if form.posted_successfully %}
+    {% comment %} TODO: Show success {% endcomment %}
+  {%- elsif form.errors -%}
+    {% comment %} TODO: Show errors list {% endcomment %}
+  {% endif %}
+  <div class="form-group">
+    <label for="email">
+      <input id="email" name="email" type="email" placeholder="Email" required>
+    </label>
+    <label for="subject">
+      <input id="subject" name="subject" type="text" placeholder="Subject">
+    </label>
+  </div>
+  <div class="form-group">
+    <label for="message">
+      <textarea type="text" id="message" name="message" minlength="5" rows="8" placeholder="Your message" required></textarea>
+    </label>
+  </div>
+
+  <button type="submit" class="primary">Send</button>
+
+  {% comment %} {% dump form %} {% endcomment %}
+{% endform %}
