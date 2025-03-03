@@ -202,7 +202,6 @@
     .buy-button {
       display: grid;
       gap: var(--gap-lg);
-      margin-block-start: 1em;
 
       .buy-area {
         display: grid;
@@ -285,11 +284,8 @@
         }
 
         .place-order {
-          z-index: 2;
-          display: none;
-          position: sticky;
-          inset-block-end: 0;
-          padding: 0.5em 1em;
+          display: flex;
+          gap: var(--gap-md);
 
           button {
             width: 100%;
@@ -298,8 +294,9 @@
       }
 
       .actions {
-        display: flex;
+        display: none;
         gap: var(--gap-md);
+        margin-block-start: var(--gap-lg);
         background-color: var(--section-bg-color, var(--color-base-white));
 
         button,
@@ -373,7 +370,14 @@
         }
 
         .place-order {
-          display: flex;
+          z-index: 2;
+          position: sticky;
+          inset-block-end: 0;
+          padding: 0.5em 1em;
+
+          yc-quantity-control {
+            display: none;
+          }
         }
       }
 

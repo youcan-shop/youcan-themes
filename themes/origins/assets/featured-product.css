@@ -169,7 +169,6 @@
   display:grid;
   grid-gap:var(--gap-lg);
   gap:var(--gap-lg);
-  margin-block-start:1em;
 }
 .single-product yc-product-info .buy-button .buy-area{
   display:grid;
@@ -244,18 +243,16 @@
   border-color:var(--color-error-500);
 }
 .single-product yc-product-info .buy-button .buy-area .place-order{
-  z-index:2;
-  display:none;
-  position:sticky;
-  inset-block-end:0;
-  padding:0.5em 1em;
+  display:flex;
+  gap:var(--gap-md);
 }
 .single-product yc-product-info .buy-button .buy-area .place-order button{
   width:100%;
 }
 .single-product yc-product-info .buy-button .actions{
-  display:flex;
+  display:none;
   gap:var(--gap-md);
+  margin-block-start:var(--gap-lg);
   background-color:var(--section-bg-color, var(--color-base-white));
 }
 .single-product yc-product-info .buy-button .actions button,
@@ -308,7 +305,13 @@
     border-start-end-radius:var(--radius-sm);
   }
   .single-product yc-product-info .buy-button .buy-area .place-order{
-    display:flex;
+    z-index:2;
+    position:sticky;
+    inset-block-end:0;
+    padding:0.5em 1em;
+  }
+  .single-product yc-product-info .buy-button .buy-area .place-order yc-quantity-control{
+    display:none;
   }
   .single-product yc-product-info .buy-button .actions[data-sticky]{
     z-index:2;
