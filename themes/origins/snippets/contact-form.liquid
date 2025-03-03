@@ -10,9 +10,15 @@
 
 {% form 'contact' %}
   {% if form.posted_successfully %}
-    {% comment %} TODO: Show success {% endcomment %}
+    <div class="success">
+      {% render 'yc-icon', name: 'check-circle', size: 24 %}
+      <span>Thanks for contacting us. We'll get back to you as soon as possible.</span>
+    </div>
   {%- elsif form.errors -%}
-    {% comment %} TODO: Show errors list {% endcomment %}
+    <div class="error">
+      {% render 'yc-icon', name: 'exclamation-triangle', size: 24 %}
+      <span>Please adjust the following:</span>
+    </div>
   {% endif %}
   <div class="form-group">
     <div class="field">
