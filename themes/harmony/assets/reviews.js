@@ -5,7 +5,7 @@ function convertDate(reviews) {
   return reviews.map(review => {
     const date = new Date(review.created_at);
     const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
-    
+
     return {
       ...review,
       created_at: formattedDate
@@ -78,9 +78,7 @@ const setupReviews = async () => {
    * @param {Array} reviews - Array of reviews
    */
   const handelPagination = (data) => {
-    const pagination = data.pagination();
-
-    if (pagination.totalPages > 1) {
+    if (data.meta.pagination.total_pages > 1) {
       showMoreButton.style.display = 'block';
 
       if (showMoreButton) {
@@ -90,12 +88,11 @@ const setupReviews = async () => {
           reviews = await response.data();
           addReviews(reviewsWrapper, reviews);
 
-          if (pagination.totalPages >= pagination.currentPage) {
+          if (!response.meta.pagination.links.next) {
             showMoreButton.style.display = 'none';
           }
         });
       };
-
     }
   }
 
