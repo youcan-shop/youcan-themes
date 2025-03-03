@@ -78,22 +78,17 @@ const setupReviews = async () => {
    * @param {Array} reviews - Array of reviews
    */
   const handelPagination = (data) => {
-    const pagination = data.pagination();
-
-    if (pagination.totalPages > 1) {
+    if (data.meta.pagination.total_pages > 1) {
       showMoreButton.style.display = 'block';
 
       if (showMoreButton) {
         showMoreButton.addEventListener('click', async () => {
           const response = data.next();
-          const recentPagination = response.pagination();
-          const firstPage = 1;
-          const currentPage = firstPage + recentPagination.currentPage;
 
           reviews = await response.data();
           addReviews(reviewsWrapper, reviews);
 
-          if (recentPagination.totalPages === currentPage) {
+          if (!response.meta.pagination.links.next) {
             showMoreButton.style.display = 'none';
           }
         });
