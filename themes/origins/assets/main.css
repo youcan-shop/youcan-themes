@@ -322,6 +322,24 @@ textarea{
   min-height:46px;
 }
 
+.field{
+  display:flex;
+  gap:var(--gap-md);
+  flex-direction:column;
+}
+.field input,
+.field textarea{
+  max-height:150px;
+  color:rgb(var(--section-text-color));
+}
+.field label:not(.images){
+  font-size:var(--text-sm);
+}
+.field:has(input:required) label::after, .field:has(textarea:required) label::after{
+  content:" *";
+  color:var(--color-error-500);
+}
+
 yc-section{
   display:block;
   padding-inline:10%;

@@ -162,6 +162,31 @@ textarea {
   min-height: 46px;
 }
 
+// FORMS
+.field {
+  display: flex;
+  gap: var(--gap-md);
+  flex-direction: column;
+
+  input,
+  textarea {
+    max-height: 150px;
+    color: rgb(var(--section-text-color));
+  }
+
+  label:not(.images) {
+    font-size: var(--text-sm);
+  }
+
+  &:has(input:required),
+  &:has(textarea:required) {
+    label::after {
+      content: " *";
+      color: var(--color-error-500);
+    }
+  }
+}
+
 // SECTION
 yc-section {
   display: block;
