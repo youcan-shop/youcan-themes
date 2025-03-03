@@ -1,3 +1,5 @@
+@import "mixins/breakpoints";
+
 yc-section {
   --reading-mode-width: min(60ch, 100%);
 
@@ -88,6 +90,21 @@ yc-section {
     picture,
     img {
       max-width: 100% !important;
+    }
+  }
+}
+
+@include breakpoint("sm") {
+  yc-section {
+    .page {
+      form {
+        gap: var(--gap-xl);
+
+        .form-group {
+          flex-direction: column;
+          gap: var(--gap-xl);
+        }
+      }
     }
   }
 }
