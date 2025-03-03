@@ -9,16 +9,23 @@
 {% endcomment %}
 
 {% form 'contact' %}
+  {% comment %} {% dump form %} {% endcomment %}
   {% if form.posted_successfully %}
     <div class="success">
       {% render 'yc-icon', name: 'check-circle', size: 24 %}
-      <span>Thanks for contacting us. We'll get back to you as soon as possible.</span>
+      <span></span>
     </div>
   {%- elsif form.errors -%}
     <div class="error">
       {% render 'yc-icon', name: 'exclamation-triangle', size: 24 %}
       <span>Please adjust the following:</span>
     </div>
+    <ul class="errors">
+      {% for error in form.errors %}
+        {% assign message = error[1] %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
   {% endif %}
   <div class="form-group">
     <div class="field">
@@ -27,7 +34,7 @@
     </div>
     <div class="field">
       <label for="subject">Subject</label>
-      <input id="subject" name="subject" type="text" placeholder="Subject">
+      <input id="subject" name="subject" type="text" placeholder="Subject" required>
     </div>
   </div>
   <div class="field">
