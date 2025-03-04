@@ -49,7 +49,7 @@ if (!customElements.get("yc-product-form")) {
       const quantity = this.quantityValue || 1;
 
       this.checkoutType === "express-checkout"
-        ? this.placeOrder(productVariantId, quantity)
+        ? this.placeOrder(productVariantId, attachedImage, quantity)
         : this.addToCart(productVariantId, attachedImage, quantity);
     }
 
@@ -81,13 +81,14 @@ if (!customElements.get("yc-product-form")) {
       }
     }
 
-    async placeOrder(productVariantId, quantity) {
+    async placeOrder(productVariantId, attachedImage, quantity) {
       const formData = new FormData(event.target);
       const fields = Object.fromEntries(formData);
 
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
           productVariantId,
+          attachedImage,
           quantity,
           fields,
         });
@@ -110,6 +111,8 @@ if (!customElements.get("yc-product-form")) {
             redirectToPaymentPage();
           });
       } catch (error) {
+        console.error(error);
+
         toast.show(error.message, "error");
       } finally {
         this.setIsBuyButtonLoading(false);
