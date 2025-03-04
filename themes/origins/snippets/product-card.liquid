@@ -49,10 +49,19 @@
       {% endif %}
     </div>
     {% unless settings.product_card_style == 'compact' %}
-      {% if product.variants.size > 1 %}
-        {% render 'product-quick-view', product: product %}
+      {% if settings.checkout_type == 'express' %}
+        <a
+          href="{{ product.url }}"
+          class="yc-btn secondary"
+        >
+          {{ 'general.buy_now' | t }}
+        </a>
       {% else %}
-        {% render 'product-add-to-cart', variant_id: default_variant.id, available: product.available %}
+        {% if product.variants.size > 1 %}
+          {% render 'product-quick-view', product: product %}
+        {% else %}
+          {% render 'product-add-to-cart', variant_id: default_variant.id, available: product.available %}
+        {% endif %}
       {% endif %}
     {% endunless %}
   </div>
