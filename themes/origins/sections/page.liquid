@@ -10,7 +10,13 @@
 >
   {% if section.settings.show_title %}
     <yc-section-head data-position="{{ section.settings.position }}">
-      <h1 class="h3">{{ page.name }}</h1>
+      <h1 class="h3">
+        {% if page.template == 'contact' %}
+          {{ 'contact.title' | t }}
+        {% else %}
+          {{ page.name }}
+        {% endif %}
+      </h1>
     </yc-section-head>
   {% endif %}
   <div class="page" data-page-width="{{ section.settings.page_width }}">
