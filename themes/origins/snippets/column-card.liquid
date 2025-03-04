@@ -1,13 +1,19 @@
 {% assign column = block.settings %}
 {% assign setting = section.settings %}
 
+{% assign image_url = 'column.webp' | asset_url %}
+
+{% if column.image.src %}
+  {% assign image_url = column.image.src %}
+{% endif %}
+
 <div class="column-card">
   <div class="column-img">
     <img
       width="100%"
       height="100%"
       alt="{{ column.title }}"
-      src="{{ column.image.src }}"
+      src="{{ image_url }}"
       data-width="{{ setting.image_width }}"
       data-ratio="{{ setting.image_ratio }}"
     >

@@ -9,10 +9,16 @@ yc-select {
   display: flex;
   position: relative;
 
-  label.yc-btn.icon {
+  &::before {
+    content: "";
+    z-index: 2;
     width: 100%;
-    cursor: pointer;
-    user-select: none;
+    height: 100%;
+    position: absolute;
+  }
+
+  button.icon {
+    width: 100%;
     padding: 8px 12px;
     font-size: var(--text-sm);
     justify-content: space-between;
@@ -119,6 +125,21 @@ yc-select {
       }
     }
   }
+
+  @media (min-width: 768px) {
+    &:not(:has(button.icon:focus-within)) {
+      &::before {
+        content: none;
+      }
+
+      yc-select-content {
+        opacity: 0;
+        filter: blur(2px);
+        visibility: hidden;
+        translate: 0 -0.5em;
+      }
+    }
+  }
 }
 
 .select-trigger {
@@ -139,7 +160,7 @@ yc-select {
   yc-select {
     width: 100%;
 
-    label.yc-btn.icon {
+    button.icon {
       display: none;
     }
 

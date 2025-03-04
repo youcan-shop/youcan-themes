@@ -140,7 +140,7 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="s
   padding: 12px 15px;
   background-color: transparent;
   border-radius: var(--input-border-radius);
-  color: rgb(var(--color-primary));
+  color: rgb(var(--section-text-color, var(--color-primary)));
   border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
 
   &::placeholder {
@@ -154,6 +154,35 @@ input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="s
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 46px;
+}
+
+// FORMS
+.field {
+  display: flex;
+  gap: var(--gap-md);
+  flex-direction: column;
+
+  input,
+  textarea {
+    max-height: 150px;
+  }
+
+  label:not(.images) {
+    font-size: var(--text-sm);
+  }
+
+  &:has(input:required),
+  &:has(textarea:required) {
+    label::after {
+      content: " *";
+      color: var(--color-error-500);
+    }
   }
 }
 

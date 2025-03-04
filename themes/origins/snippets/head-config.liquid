@@ -1,8 +1,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Rabi3a | ربيعة</title>
-<meta name="description" content="Rabi3a | ربيعة">
+{% assign title = store.name %}
+
+{% if store.title %}
+  {% assign title = title | append: ' - ' | append: store.title %}
+{% endif %}
+
+<title>{{ title }}</title>
+<meta name="description" content="{{ store.description }}">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,7 +16,7 @@
   href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 >
-<link rel="shortcut icon" href="{{ 'default-logo.webp' |  asset_url }}">
+<link rel="shortcut icon" href="{{ settings.favicon.src }}">
 {%- style -%}
   :root {
     /* Global */
