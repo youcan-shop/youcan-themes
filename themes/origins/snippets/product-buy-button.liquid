@@ -3,92 +3,17 @@
 
   Accepts:
   - product: Product variant
-  - checkout_type: 'express' || 'normal'
 
   Usage:
-  {% render 'product-buy-button', product: product, checkout_type: block.settings.checkout_type %}
+  {% render 'product-buy-button', product: product %}
 {% endcomment %}
 
+{% assign default_variant = product.first_available_variant %}
+
 <div class="buy-button">
-  {% if checkout_type == 'express' %}
-    <yc-modal as-drawer>
-      <yc-modal-content>
-        <div class="buy-area">
-          <div class="express-checkout">
-            <div class="header">
-              {{ 'product.buy_button.express_checkout.title' | t }}
-            </div>
-            <div class="fields" data-title="Customer information">
-              <div class="field">
-                <label for="first-name">First name</label>
-                <input type="text" name="first-name" placeholder="Type your first name.." required>
-              </div>
-              <div class="field">
-                <label for="last-name">Last name</label>
-                <input type="text" name="last-name" placeholder="Type your last name.." required>
-              </div>
-              <div class="field">
-                <label for="phone-number">Phone number</label>
-                <input
-                  type="tel"
-                  name="phone-number"
-                  placeholder="Type your phone number.."
-                  required
-                >
-              </div>
-              <div class="field">
-                <label for="address">Address</label>
-                <input type="text" name="address" placeholder="Type your address.." required>
-              </div>
-            </div>
-          </div>
-          <div class="place-order">
-            <button class="primary">
-              {{ 'product.buy_button.express_checkout.place_order' | t }}
-            </button>
-          </div>
-        </div>
-      </yc-modal-content>
-
-      <div class="actions" data-sticky>
-        {% render 'yc-quantity-control', product: product %}
-        <button class="primary" data-trigger>
-          {{ 'product.buy_button.buy_now' | t }}
-        </button>
-      </div>
-    </yc-modal>
+  {% if settings.checkout_type == 'express' %}
+    {% render 'yc-express-checkout', variant_id: default_variant.id, available: product.available %}
   {% else %}
-    {% assign quantity = 1 %}
-    {% assign available = product.first_available_variant.available %}
-
-    {% if product.quantity != null %}
-      {% assign quantity = product.quantity %}
-    {% endif %}
-
-    <yc-product-form
-      variant-id="{{ product.first_available_variant.id  }}"
-      quantity="{{ quantity }}"
-      {% unless available %}
-        not-available
-      {% endunless %}
-      class="actions"
-      data-sticky
-    >
-      {% render 'yc-quantity-control', product: product, button_size: 'lg' %}
-      <button
-        name="add"
-        data-buy-button
-        class="primary"
-        {% unless available %}
-          disabled
-        {% endunless %}
-      >
-        <span
-          data-add-to-cart="{{ 'general.add_to_cart' | t }}"
-          data-out-of-stock="{{ 'general.out_of_stock' | t }}"
-        >
-        </span>
-      </button>
-    </yc-product-form>
+    {% render 'yc-add-to-cart', variant_id: default_variant.id, available: product.available %}
   {% endif %}
 </div>
