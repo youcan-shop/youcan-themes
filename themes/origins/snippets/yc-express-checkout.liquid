@@ -1,75 +1,77 @@
-<yc-modal as-drawer>
-  <yc-modal-content>
-    <form class="buy-area" data-order-form>
-      <div class="express-checkout">
-        <div class="header">
-          {{ 'product.buy_button.express_checkout.title' | t }}
+<form data-order-form>
+  <yc-product-form
+    quantity="1"
+    variant-id="{{ variant_id }}"
+    checkout-type="express-checkout"
+    {% unless available %}
+      not-available
+    {% endunless %}
+  >
+    {% unless is_sticky %}
+      <div class="buy-area">
+        <div class="express-checkout">
+          <div class="header">
+            {{ 'product.buy_button.express_checkout.title' | t }}
+          </div>
+          <div class="fields" data-title="Customer information">
+            {% for field in checkout.fields %}
+              {% assign field_name = field.name %}
+
+              {% if field.custom %}
+                {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
+              {% endif %}
+
+              <div class="field" data-field>
+                <label>{{ field.display_name }}</label>
+                {% case field.type %}
+                  {% when 'text', 'number', 'hidden' %}
+                    <input
+                      type="{{ field.type }}"
+                      name="{{ field_name }}"
+                      value="{{ field.default_value }}"
+                      placeholder="{{ field.placeholder }}"
+                      {% if field.required %}
+                        required
+                      {% endif %}
+                    >
+                  {% when 'textarea' %}
+                    <textarea
+                      name="{{ field_name }}"
+                      placeholder="{{ field.placeholder }}"
+                      {% if field.required %}
+                        required
+                      {% endif %}
+                    ></textarea>
+                  {% when 'select' %}
+                    <yc-combobox name="{{ field_name }}">
+                      <yc-combobox-trigger class="yc-btn icon" role="combobox">
+                        <yc-combobox-value>{{ field.placeholder | default: 'Select' }}</yc-combobox-value>
+                      </yc-combobox-trigger>
+                      <yc-combobox-content>
+                        {% for option in field.options %}
+                          <yc-combobox-item
+                            value="{{ option }}"
+                            {% if field.required %}
+                              required
+                            {% endif %}
+                            {% if option == field.default_value %}
+                              checked
+                            {% endif %}
+                          >
+                            {{ option }}
+                          </yc-combobox-item>
+                        {% endfor %}
+                      </yc-combobox-content>
+                    </yc-combobox>
+                {% endcase %}
+              </div>
+            {% endfor %}
+          </div>
         </div>
-        <div class="fields" data-title="Customer information">
-          {% for field in checkout.fields %}
-            {% assign field_name = field.name %}
 
-            {% if field.custom %}
-              {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
-            {% endif %}
-
-            <div class="field" data-field>
-              <label>{{ field.display_name }}</label>
-              {% case field.type %}
-                {% when 'text', 'number', 'hidden' %}
-                  <input
-                    type="{{ field.type }}"
-                    name="{{ field_name }}"
-                    value="{{ field.default_value }}"
-                    placeholder="{{ field.placeholder }}"
-                    {% if field.required %}
-                      required
-                    {% endif %}
-                  >
-                {% when 'textarea' %}
-                  <textarea
-                    name="{{ field_name }}"
-                    placeholder="{{ field.placeholder }}"
-                    {% if field.required %}
-                      required
-                    {% endif %}
-                  ></textarea>
-                {% when 'select' %}
-                  <yc-combobox name="{{ field_name }}">
-                    <yc-combobox-trigger class="yc-btn icon" role="combobox">
-                      <yc-combobox-value>{{ field.placeholder | default: 'Select' }}</yc-combobox-value>
-                    </yc-combobox-trigger>
-                    <yc-combobox-content>
-                      {% for option in field.options %}
-                        <yc-combobox-item
-                          value="{{ option }}"
-                          {% if option == field.default_value %}
-                            checked
-                          {% endif %}
-                        >
-                          {{ option }}
-                        </yc-combobox-item>
-                      {% endfor %}
-                    </yc-combobox-content>
-                  </yc-combobox>
-              {% endcase %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-
-      <div class="place-order">
-        {% render 'yc-quantity-control', product: product %}
-        <yc-product-form
-          quantity="1"
-          variant-id="{{ variant_id }}"
-          checkout-type="express-checkout"
-          {% unless available %}
-            not-available
-          {% endunless %}
-        >
+        <div class="place-order">
+          {% render 'yc-quantity-control', product: product %}
           <button
-            name="add"
             type="submit"
             data-buy-button
             class="primary"
@@ -78,20 +80,104 @@
             {% endunless %}
           >
             <span
-              data-add-to-cart="Place order"
+              data-add-to-cart="{{ 'product.buy_button.express_checkout.place_order' | t }}"
               data-out-of-stock="{{ 'general.out_of_stock' | t }}"
             >
             </span>
           </button>
-        </yc-product-form>
+        </div>
       </div>
-    </form>
-  </yc-modal-content>
+    {% else %}
+      <yc-modal as-drawer>
+        <yc-modal-content>
+          <div class="buy-area">
+            <div class="express-checkout">
+              <div class="header">
+                {{ 'product.buy_button.express_checkout.title' | t }}
+              </div>
+              <div class="fields" data-title="Customer information">
+                {% for field in checkout.fields %}
+                  {% assign field_name = field.name %}
 
-  <div class="actions" data-sticky>
-    {% render 'yc-quantity-control', product: product %}
-    <button class="primary" data-trigger>
-      {{ 'product.buy_button.buy_now' | t }}
-    </button>
-  </div>
-</yc-modal>
+                  {% if field.custom %}
+                    {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
+                  {% endif %}
+
+                  <div class="field" data-field>
+                    <label>{{ field.display_name }}</label>
+                    {% case field.type %}
+                      {% when 'text', 'number', 'hidden' %}
+                        <input
+                          type="{{ field.type }}"
+                          name="{{ field_name }}"
+                          value="{{ field.default_value }}"
+                          placeholder="{{ field.placeholder }}"
+                          {% if field.required %}
+                            required
+                          {% endif %}
+                        >
+                      {% when 'textarea' %}
+                        <textarea
+                          name="{{ field_name }}"
+                          placeholder="{{ field.placeholder }}"
+                          {% if field.required %}
+                            required
+                          {% endif %}
+                        ></textarea>
+                      {% when 'select' %}
+                        <yc-combobox name="{{ field_name }}">
+                          <yc-combobox-trigger class="yc-btn icon" role="combobox">
+                            <yc-combobox-value>{{ field.placeholder | default: 'Select' }}</yc-combobox-value>
+                          </yc-combobox-trigger>
+                          <yc-combobox-content>
+                            {% for option in field.options %}
+                              <yc-combobox-item
+                                value="{{ option }}"
+                                {% if field.required %}
+                                  required
+                                {% endif %}
+                                {% if option == field.default_value %}
+                                  checked
+                                {% endif %}
+                              >
+                                {{ option }}
+                              </yc-combobox-item>
+                            {% endfor %}
+                          </yc-combobox-content>
+                        </yc-combobox>
+                    {% endcase %}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="place-order">
+              {% render 'yc-quantity-control', product: product %}
+              <button
+                type="submit"
+                data-buy-button
+                class="primary"
+                {% unless available %}
+                  disabled
+                {% endunless %}
+              >
+                <span
+                  data-add-to-cart="{{ 'product.buy_button.express_checkout.place_order' | t }}"
+                  data-out-of-stock="{{ 'general.out_of_stock' | t }}"
+                >
+                </span>
+              </button>
+            </div>
+          </div>
+        </yc-modal-content>
+
+        <div class="actions" data-sticky>
+          {% render 'yc-quantity-control', product: product %}
+          <button class="primary" data-trigger formnovalidate type="button">
+            {{ 'product.buy_button.buy_now' | t }}
+          </button>
+        </div>
+      </yc-modal>
+    {% endunless %}
+  </yc-product-form>
+</form>

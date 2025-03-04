@@ -271,7 +271,7 @@
                 display: none;
               }
 
-              &:has(input:required, textarea:required) label::after {
+              &:has(input:required, textarea:required) > label::after {
                 content: " *";
                 color: var(--color-error-500);
               }
@@ -296,12 +296,8 @@
           display: flex;
           gap: var(--gap-md);
 
-          yc-product-form {
+          button {
             width: 100%;
-
-            button {
-              width: 100%;
-            }
           }
         }
       }
@@ -359,57 +355,68 @@
     yc-product-info .buy-button {
       .buy-area {
         .express-checkout {
-          border: none;
-          border-radius: 0;
-
-          .header {
-            text-align: center;
-            padding-inline: 1em;
-          }
-
           .fields {
-            padding-inline: 1em;
-            border-block-start: none;
             grid-template-columns: 1fr;
-
-            &:last-child {
-              padding-block-end: 0;
-            }
-
-            &::before {
-              border-start-end-radius: var(--radius-sm);
-            }
-          }
-        }
-
-        .place-order {
-          z-index: 2;
-          position: sticky;
-          inset-block-end: 0;
-          padding: 0.5em 1em;
-
-          yc-quantity-control {
-            display: none;
           }
         }
       }
+    }
 
-      .actions[data-sticky] {
-        z-index: 2;
-        margin: 1em;
-        padding: 0.5em;
-        display: flex;
-        position: fixed;
-        inset-block-end: 0;
-        inset-inline-start: 0;
-        width: calc(100% - 2em);
-        border-radius: var(--radius-md);
-        background-color: var(--section-bg-color, var(--color-base-white));
-        border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+    &:not(.featured-product) {
+      yc-product-info .buy-button {
+        .buy-area {
+          .express-checkout {
+            border: none;
+            border-radius: 0;
 
-        button.primary,
-        yc-quantity-control button.yc-btn.icon {
-          padding: 10px;
+            .header {
+              text-align: center;
+              padding-inline: 1em;
+            }
+
+            .fields {
+              padding-inline: 1em;
+              border-block-start: none;
+
+              &:last-child {
+                padding-block-end: 0;
+              }
+
+              &::before {
+                border-start-end-radius: var(--radius-sm);
+              }
+            }
+          }
+
+          .place-order {
+            z-index: 2;
+            position: sticky;
+            inset-block-end: 0;
+            padding: 0.5em 1em;
+
+            yc-quantity-control {
+              display: none;
+            }
+          }
+        }
+
+        .actions[data-sticky] {
+          z-index: 2;
+          margin: 1em;
+          padding: 0.5em;
+          display: flex;
+          position: fixed;
+          inset-block-end: 0;
+          inset-inline-start: 0;
+          width: calc(100% - 2em);
+          border-radius: var(--radius-md);
+          background-color: var(--section-bg-color, var(--color-base-white));
+          border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
+          button.primary,
+          yc-quantity-control button.yc-btn.icon {
+            padding: 10px;
+          }
         }
       }
     }
