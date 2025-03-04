@@ -259,11 +259,19 @@
                 padding: 12px 15px;
               }
 
-              input {
+              input,
+              textarea {
+                resize: vertical;
+                min-height: 46px;
+                max-height: 150px;
                 color: currentColor;
               }
 
-              &:has(input:required) label::after {
+              &:has(input[type="hidden"]) {
+                display: none;
+              }
+
+              &:has(input:required, textarea:required) label::after {
                 content: " *";
                 color: var(--color-error-500);
               }
@@ -275,7 +283,8 @@
                   color: var(--color-error-500);
                 }
 
-                input {
+                input,
+                textarea {
                   border-color: var(--color-error-500);
                 }
               }
@@ -287,8 +296,12 @@
           display: flex;
           gap: var(--gap-md);
 
-          button {
+          yc-product-form {
             width: 100%;
+
+            button {
+              width: 100%;
+            }
           }
         }
       }

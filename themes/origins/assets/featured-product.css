@@ -227,10 +227,17 @@
 .single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field yc-combobox-trigger{
   padding:12px 15px;
 }
-.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field input{
+.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field input,
+.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field textarea{
+  resize:vertical;
+  min-height:46px;
+  max-height:150px;
   color:currentColor;
 }
-.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field:has(input:required) label::after{
+.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field:has(input[type=hidden]){
+  display:none;
+}
+.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field:has(input:required, textarea:required) label::after{
   content:" *";
   color:var(--color-error-500);
 }
@@ -239,14 +246,18 @@
   font-size:var(--text-sm);
   color:var(--color-error-500);
 }
-.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field[error-message] input{
+.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field[error-message] input,
+.single-product yc-product-info .buy-button .buy-area .express-checkout .fields .field[error-message] textarea{
   border-color:var(--color-error-500);
 }
 .single-product yc-product-info .buy-button .buy-area .place-order{
   display:flex;
   gap:var(--gap-md);
 }
-.single-product yc-product-info .buy-button .buy-area .place-order button{
+.single-product yc-product-info .buy-button .buy-area .place-order yc-product-form{
+  width:100%;
+}
+.single-product yc-product-info .buy-button .buy-area .place-order yc-product-form button{
   width:100%;
 }
 .single-product yc-product-info .buy-button .actions{
