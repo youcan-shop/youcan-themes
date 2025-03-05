@@ -14,6 +14,15 @@ const config = [
       "no-unused-vars": "warn",
     },
   },
+  {
+    globals: {
+      youcanjs: "readonly",
+      publish: "readonly",
+      subscribe: "readonly",
+      PUB_SUB_EVENTS: "readonly",
+      toast: "readonly",
+    },
+  },
 ];
 
 export default config;
