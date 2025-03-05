@@ -1,6 +1,20 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+{% assign lang = store.store_locale.iso_code %}
+{% assign direction = 'ltr' %}
+
+{% if lang == 'ar' %}
+  {% assign direction = 'rtl' %}
+{% endif %}
+
+<html lang="{{ lang }}" dir="{{ direction }}">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% render 'page-title' %}
+    <meta name="description" content="{{ store.description | default: store.name }}">
+
+    {%- render 'meta-tags' -%}
     {%- render 'head-config' -%}
   </head>
   <body>
