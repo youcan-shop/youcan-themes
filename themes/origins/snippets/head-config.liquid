@@ -4,7 +4,21 @@
   href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 >
-<link rel="shortcut icon" href="{{ settings.favicon.src }}">
+{% assign slug_initial = store.slug | slice: 0, 1 %}
+{% assign favicon = "data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48'><text x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dominant-baseline='middle'>[SLUG]</text></svg>" %}
+{% assign favicon = favicon | replace: '[SLUG]', slug_initial %}
+
+{% if settings.favicon.src %}
+  {% assign favicon = settings.favicon.src %}
+{% endif %}
+
+<link
+  {% unless settings.favicon.src != null %}
+    type="image/svg+xml"
+  {% endunless %}
+  rel="shortcut icon"
+  href="{{ favicon }}"
+>
 {%- style -%}
   :root {
     /* Global */
