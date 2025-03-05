@@ -7,6 +7,24 @@
   {% assign og_type = 'product' %}
 {% endif %}
 
+{% assign locale = store.store_locale.iso_code %}
+{% assign keywords = settings.keywords %}
+
+{% unless keywords %}
+  {% case locale %}
+    {% when 'en' %}
+      {% assign keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
+    {% when 'fr' %}
+      {% assign keywords = 'commerce en ligne, achats en ligne, bonnes affaires, livraison rapide, produits de qualité, prix abordables, articles tendance, achetez maintenant, cadeaux uniques, offres spéciales' %}
+    {% when 'ar' %}
+      {% assign keywords = 'تجارة إلكترونية, تسوق عبر الإنترنت, صفقات رائعة, شحن سريع, منتجات عالية الجودة, أسعار معقولة, عناصر عصرية, اشترِ الآن, هدايا فريدة, عروض المتجر' %}
+    {% else %}
+      {% assign keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
+  {% endcase %}
+{% endunless %}
+
+<meta property="keywords" content="{{ keywords }}">
+
 <meta property="og:site_name" content="{{ store.name }}">
 <meta property="og:url" content="{{ og_url }}">
 <meta property="og:title" content="{{ og_title | escape }}">

@@ -1,0 +1,14 @@
+{% assign locale = store.store_locale.iso_code %}
+
+{% case locale %}
+  {% when 'en' %}
+    {% assign selected_keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
+  {% when 'fr' %}
+    {% assign selected_keywords = 'commerce en ligne, achats en ligne, bonnes affaires, livraison rapide, produits de qualité, prix abordables, articles tendance, achetez maintenant, cadeaux uniques, offres spéciales' %}
+  {% when 'ar' %}
+    {% assign selected_keywords = 'تجارة إلكترونية, تسوق عبر الإنترنت, صفقات رائعة, شحن سريع, منتجات عالية الجودة, أسعار معقولة, عناصر عصرية, اشترِ الآن, هدايا فريدة, عروض المتجر' %}
+  {% else %}
+    {% assign selected_keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
+{% endcase %}
+
+<meta property="keywords" content="{{ selected_keywords }}">
