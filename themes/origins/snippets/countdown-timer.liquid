@@ -1,6 +1,22 @@
 {{ 'component-countdown-timer.css' | asset_url | stylesheet_tag }}
 {{ 'component-countdown-timer.js' | asset_url | script_tag_deferred }}
 
+{% comment %}
+  Renders a countdown timer (usually used in featured & single product sections)
+
+  Accepts:
+  - year: Year
+  - month: Month
+  - day: Day
+  - hour: Hour
+  - minute: Minute
+  - second: Second
+  - title: (Optional) Countdown timer title
+
+  Usage:
+  {% render 'countdown-timer', year: 2025, month: 02, day: 14, hour: 15, minute: 33, second: 59 %}
+{% endcomment %}
+
 <yc-countdown-timer
   date="{{ year }}-{{ month }}-{{ day }}"
   time="{{ hour }}:{{ minute }}:{{ second }}"
