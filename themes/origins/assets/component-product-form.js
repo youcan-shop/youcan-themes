@@ -102,6 +102,8 @@ if (!customElements.get("yc-product-form")) {
             redirectToThankyouPage();
           })
           .onValidationErr((error) => {
+            toast.show(error.message, "error");
+
             for (const [field, message] of Object.entries(error.meta.fields)) {
               this.form.querySelector(`input[name="${field}"]`)?.parentElement?.setAttribute("error-message", message);
             }
