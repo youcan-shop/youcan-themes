@@ -243,22 +243,34 @@ yc-section .cart[data-is-empty] .empty{
     position:relative;
   }
   yc-section .cart .summary .box .subtotal .total-box{
-    padding:1em 10%;
-    position:fixed;
-    inset-inline:0;
-    inset-block-end:0;
     z-index:1;
+    width:80%;
+    margin:1em 10%;
+    padding:1em;
+    position:fixed;
+    align-items:center;
+    padding-inline-start:0.5em;
+    inset-block-end:0;
+    inset-inline-start:0;
     background-color:var(--section-bg-color);
+    border-radius:var(--cart-border-radius);
     box-shadow:var(--shadow-dark-sm);
     border-block-start:none;
     flex-direction:row;
     justify-content:space-between;
   }
   yc-section .cart .summary .box .subtotal .total-box .total{
-    padding-block-start:0;
+    padding-block:0;
+    padding-inline:0.5em;
+    gap:var(--gap-xs);
     flex-direction:column;
     align-items:flex-start;
-    padding-block-end:0;
+  }
+  yc-section .cart .summary .box .subtotal .total-box .total span:first-of-type{
+    font-weight:normal;
+  }
+  yc-section .cart .summary .box .subtotal .total-box .total span[data-cart-total]{
+    font-size:var(--text-lg);
   }
 }
 @media (max-width: 768px){
@@ -274,7 +286,9 @@ yc-section .cart[data-is-empty] .empty{
     margin-inline-start:auto;
   }
   yc-section .cart .summary .box .subtotal .total-box{
-    padding:1em;
+    padding:0.5em;
+    margin-inline:1em;
+    width:calc(100% - 2em);
   }
   yc-section .cart .summary .box .subtotal .total-box .total span:first-of-type{
     font-size:var(--text-sm);
