@@ -8,14 +8,14 @@
     <yc-modal-content>
       <div class="view-box">
         <div class="head">
-          <button class="icon" data-trigger>
-            {% render 'yc-icon', name: 'chevron-left' %}
-          </button>
           <div class="title">
             <a href="{{ product.url }}" class="link h4">
               {{ product.name }}
             </a>
           </div>
+          <button class="icon" data-size="sm" data-trigger>
+            {% render 'yc-icon', name: 'chevron-down' %}
+          </button>
         </div>
         <div class="content">
           <yc-product-media>
@@ -50,19 +50,13 @@
                     hidden
                   {% endif %}
                 >
-                  {% assign product_compare_at_price = default_variant.compare_at_price
-                    | default: product.compare_at_price
-                  %}
+                  {% assign product_compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
                   {{ product_compare_at_price | default: 0 | money }}
                 </p>
               </div>
               {% render 'product-variants' %}
             </div>
-            {% render 'yc-add-to-cart',
-              source: 'quick-view',
-              variant_id: default_variant.id,
-              available: default_variant.available
-            %}
+            {% render 'yc-add-to-cart', source: 'quick-view', variant_id: default_variant.id, available: default_variant.available %}
           </yc-product-info>
         </div>
       </div>
