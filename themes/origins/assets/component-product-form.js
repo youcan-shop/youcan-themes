@@ -1,16 +1,11 @@
 if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
-    static observedAttributes = [
-      "variant-id",
-      "quantity",
-      "attached-image",
-      "source",
-      "not-available",
-    ];
+    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available"];
 
     constructor() {
       super();
 
+      this.form = this.closest("[data-order-form]");
       this.buyButton = this.querySelector("[data-buy-button]");
     }
 
@@ -25,7 +20,10 @@ if (!customElements.get("yc-product-form")) {
     }
 
     _render() {
-      this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
+      this.checkoutType === "express" && this.form
+        ? this.form.addEventListener("submit", this.onBuyClicked.bind(this))
+        : this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
+
       this.addEventListener("change", this.handleQuantityChange.bind(this));
     }
 
@@ -41,7 +39,7 @@ if (!customElements.get("yc-product-form")) {
       this.buyButton.disabled = this.hasAttribute("not-available");
     }
 
-    async onBuyClicked(event) {
+    onBuyClicked(event) {
       event.preventDefault();
 
       this.setIsBuyButtonLoading(true);
@@ -50,6 +48,16 @@ if (!customElements.get("yc-product-form")) {
       const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
+      if (this.checkoutType === "express") {
+        this.placeOrder(productVariantId, attachedImage, quantity);
+
+        return;
+      }
+
+      this.addToCart(productVariantId, attachedImage, quantity);
+    }
+
+    async addToCart(productVariantId, attachedImage, quantity) {
       try {
         const newCart = await youcanjs.cart.addItem({
           attachedImage,
@@ -77,8 +85,52 @@ if (!customElements.get("yc-product-form")) {
       }
     }
 
+    async placeOrder(productVariantId, attachedImage, quantity) {
+      const formData = new FormData(this.form);
+      const fields = Object.fromEntries(formData);
+
+      try {
+        const response = await youcanjs.checkout.placeExpressCheckoutOrder({
+          productVariantId,
+          attachedImage,
+          quantity,
+          fields,
+        });
+
+        response
+          .onSuccess((_, redirectToThankyouPage) => {
+            redirectToThankyouPage();
+          })
+          .onValidationErr((error) => {
+            toast.show(error.message, "error");
+
+            for (const [field, message] of Object.entries(error.meta.fields)) {
+              this.form.querySelector(`input[name="${field}"]`)?.parentElement?.setAttribute("error-message", message);
+            }
+
+            return;
+          })
+          .onSkipShippingStep((_, redirectToShippingPage) => {
+            redirectToShippingPage();
+          })
+          .onSkipPaymentStep((_, redirectToPaymentPage) => {
+            redirectToPaymentPage();
+          });
+      } catch (error) {
+        console.error(error);
+
+        toast.show(error.message, "error");
+      } finally {
+        this.setIsBuyButtonLoading(false);
+      }
+    }
+
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
+    }
+
+    get checkoutType() {
+      return this.getAttribute("checkout-type");
     }
 
     get attachedImage() {

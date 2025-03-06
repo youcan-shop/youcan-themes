@@ -78,9 +78,6 @@ button,
   }
 
   &[data-loading] {
-    opacity: 0.5;
-    cursor: not-allowed;
-
     span,
     svg {
       color: transparent;
@@ -101,9 +98,11 @@ button,
   }
 
   &:disabled,
-  &[data-disabled] {
+  &[data-disabled],
+  &[data-loading] {
     opacity: 0.5;
     cursor: not-allowed;
+    pointer-events: none;
   }
 
   &:hover:is(.link)::before {
@@ -179,7 +178,7 @@ textarea {
 
   &:has(input:required),
   &:has(textarea:required) {
-    label::after {
+    & > label::after {
       content: " *";
       color: var(--color-error-500);
     }

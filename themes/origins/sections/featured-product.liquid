@@ -22,7 +22,7 @@
     --accordion-border-radius: {{ settings.accordion_radius }}px;
   "
 >
-  <yc-product class="single-product" product-id="{{ product.id }}">
+  <yc-product class="single-product" product-id="{{ product.id }}" data-prevent-sticky>
     <yc-product-media role="region" aria-label="Product images">
       <div class="main-image">
         {% if product.images.size > 1 %}
@@ -142,7 +142,7 @@
         {% endcase %}
       {% endfor %}
       {% render 'product-variants' %}
-      {% render 'product-buy-button', product: product, checkout_type: block.settings.checkout_type %}
+      {% render 'product-buy-button', product: product %}
     </yc-product-info>
   </yc-product>
 </yc-section>
@@ -249,29 +249,6 @@
       "label": "Description",
       "limit": 1,
       "settings": []
-    },
-    {
-      "type": "buy_button",
-      "label": "Buy button",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "checkout_type",
-          "options": [
-            {
-              "value": "normal",
-              "label": "Normal (Cart)"
-            },
-            {
-              "value": "express",
-              "label": "Express checkout"
-            }
-          ],
-          "default": "normal",
-          "label": "Checkout Type"
-        }
-      ]
     },
     {
       "type": "countdown_timer",
