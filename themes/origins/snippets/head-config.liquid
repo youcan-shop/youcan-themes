@@ -1,7 +1,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+  href="https://fonts.googleapis.com/css2?family={{ settings.font_family }}:wght@400;500;600;700&display=swap"
   rel="stylesheet"
 >
 {% assign slug_initial = store.slug | slice: 0, 1 %}
@@ -21,11 +21,8 @@
 >
 {%- style -%}
   :root {
-    /* Global */
-    --direction: ltr;
-
     /* Typography */
-    --font-family: 'Poppins', sans-serif;
+    --font-family: '{{ settings.font_family }}', sans-serif;
     --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
     --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
 
