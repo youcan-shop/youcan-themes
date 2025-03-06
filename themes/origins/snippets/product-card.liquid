@@ -43,21 +43,25 @@
       </span>
       {% if product.compare_at_price != null %}
         <span class="compare-at">
-          {% assign product_compare_at_price = default_variant.compare_at_price
-            | default: product.compare_at_price
-          %}
+          {% assign product_compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
           {{ product_compare_at_price | default: 0 | money }}
         </span>
       {% endif %}
     </div>
     {% unless settings.product_card_style == 'compact' %}
-      {% if product.variants.size > 1 %}
-        {% render 'product-quick-view', product: product %}
+      {% if settings.checkout_type == 'express' %}
+        <a
+          href="{{ product.url }}"
+          class="yc-btn secondary"
+        >
+          {{ 'general.buy_now' | t }}
+        </a>
       {% else %}
-        {% render 'product-add-to-cart',
-          variant_id: default_variant.id,
-          available: product.available
-        %}
+        {% if product.variants.size > 1 %}
+          {% render 'product-quick-view', product: product %}
+        {% else %}
+          {% render 'product-add-to-cart', variant_id: default_variant.id, available: product.available %}
+        {% endif %}
       {% endif %}
     {% endunless %}
   </div>

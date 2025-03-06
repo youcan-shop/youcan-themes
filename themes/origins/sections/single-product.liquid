@@ -141,7 +141,7 @@
         {% endcase %}
       {% endfor %}
       {% render 'product-variants' %}
-      {% render 'product-buy-button', product: product, checkout_type: block.settings.checkout_type %}
+      {% render 'product-buy-button', is_sticky: true, product: product %}
     </yc-product-info>
   </yc-product>
 </yc-section>
@@ -244,29 +244,6 @@
       "label": "Description",
       "limit": 1,
       "settings": []
-    },
-    {
-      "type": "buy_button",
-      "label": "Buy button",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "checkout_type",
-          "options": [
-            {
-              "value": "normal",
-              "label": "Normal (Cart)"
-            },
-            {
-              "value": "express",
-              "label": "Express checkout"
-            }
-          ],
-          "default": "normal",
-          "label": "Checkout Type"
-        }
-      ]
     },
     {
       "type": "countdown_timer",

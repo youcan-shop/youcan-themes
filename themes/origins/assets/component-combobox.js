@@ -25,6 +25,7 @@ if (!customElements.get("yc-combobox")) {
         const label = item.textContent.trim();
         const checked = item.hasAttribute("checked");
         const disabled = item.hasAttribute("disabled");
+        const required = item.hasAttribute("required");
 
         if (checked) this.placeholder.textContent = label;
 
@@ -32,7 +33,7 @@ if (!customElements.get("yc-combobox")) {
           <label>
             <span>${label}</span>
             <input type="radio" name="${this.getAttribute("name")}" value="${value?.value}" 
-              ${disabled ? "disabled" : ""} ${checked ? "checked" : ""} hidden>
+              ${disabled ? "disabled" : ""} ${checked ? "checked" : ""} ${required ? "required" : ""} hidden>
           </label>`;
       });
     }
@@ -76,10 +77,7 @@ if (!customElements.get("yc-combobox")) {
 
     onTrigger() {
       this.trigger.addEventListener("click", () => {
-        this.content.toggleAttribute(
-          "is-above",
-          innerHeight - this.trigger.getBoundingClientRect().bottom < this.content.offsetHeight,
-        );
+        this.content.toggleAttribute("is-above", innerHeight - this.trigger.getBoundingClientRect().bottom < this.content.offsetHeight);
         this.toggleState(!this.state);
       });
     }

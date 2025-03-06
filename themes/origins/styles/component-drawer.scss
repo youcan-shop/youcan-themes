@@ -1,7 +1,7 @@
 @import "mixins/breakpoints";
 
 :root {
-  --drawer-offset: 1em;
+  --drawer-offset: .5em;
   --drawer-width: 500px;
 }
 yc-drawer {
@@ -14,9 +14,9 @@ yc-drawer {
     position: fixed;
     z-index: 100;
     inset: 0;
-    margin: 0.5em;
+    margin: var(--drawer-offset);
     width: var(--drawer-width);
-    inset-inline-start: calc(var(--drawer-width) * -1 - var(--drawer-offset));
+    inset-inline-start: calc(var(--drawer-width) * -1 - (var(--drawer-offset) * 2));
     border-radius: var(--drawer-border-radius);
     overflow: hidden;
     transition: var(--transition-duration-normal);
@@ -31,7 +31,7 @@ yc-drawer {
 
   &[data-hidden$="false"] {
     &[data-direction$="rtl"] .drawer-box {
-      inset-inline-start: calc(100% - var(--drawer-width) - var(--drawer-offset));
+      inset-inline-start: calc(100% - var(--drawer-width) - calc(var(--drawer-offset) * 2));
     }
     .drawer-box {
       inset-inline-start: 0%;
