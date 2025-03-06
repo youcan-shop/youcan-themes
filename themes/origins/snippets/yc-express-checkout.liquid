@@ -2,7 +2,7 @@
   <yc-product-form
     quantity="1"
     variant-id="{{ variant_id }}"
-    checkout-type="express-checkout"
+    checkout-type="express"
     {% unless available %}
       not-available
     {% endunless %}
@@ -16,7 +16,7 @@
         <div class="header">
           {{ 'product.buy_button.express_checkout.title' | t }}
         </div>
-        <div class="fields" data-title="Customer information">
+        <div class="fields" data-title="{{ 'product.buy_button.express_checkout.subtitle' | t }}">
           {% for field in checkout.fields %}
             {% assign field_name = field.name %}
             {% if field.custom %}

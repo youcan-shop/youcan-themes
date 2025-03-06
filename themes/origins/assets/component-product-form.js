@@ -20,7 +20,7 @@ if (!customElements.get("yc-product-form")) {
     }
 
     _render() {
-      this.checkoutType === "express-checkout" && this.form
+      this.checkoutType === "express" && this.form
         ? this.form.addEventListener("submit", this.onBuyClicked.bind(this))
         : this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
 
@@ -48,9 +48,13 @@ if (!customElements.get("yc-product-form")) {
       const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
-      this.checkoutType === "express-checkout"
-        ? this.placeOrder(productVariantId, attachedImage, quantity)
-        : this.addToCart(productVariantId, attachedImage, quantity);
+      if (this.checkoutType === "express") {
+        this.placeOrder(productVariantId, attachedImage, quantity);
+
+        return;
+      }
+
+      this.addToCart(productVariantId, attachedImage, quantity);
     }
 
     async addToCart(productVariantId, attachedImage, quantity) {
@@ -82,7 +86,7 @@ if (!customElements.get("yc-product-form")) {
     }
 
     async placeOrder(productVariantId, attachedImage, quantity) {
-      const formData = new FormData(event.target);
+      const formData = new FormData(this.form);
       const fields = Object.fromEntries(formData);
 
       try {

@@ -202,6 +202,7 @@
     .buy-button {
       display: grid;
       gap: var(--gap-lg);
+      margin-block: 1.5em;
 
       > yc-product-form {
         display: flex;
@@ -371,7 +372,7 @@
       }
     }
 
-    &:not(.featured-product) {
+    &:not([data-prevent-sticky]) {
       yc-product-info .buy-button {
         .buy-area {
           .express-checkout {
@@ -385,7 +386,6 @@
 
             .fields {
               padding-inline: 1em;
-              border-block-start: none;
 
               &:last-child {
                 padding-block-end: 0;
@@ -409,7 +409,8 @@
           }
         }
 
-        .actions[data-sticky] {
+        .actions[data-sticky],
+        > yc-product-form {
           z-index: 2;
           margin: 1em;
           padding: 0.5em;
