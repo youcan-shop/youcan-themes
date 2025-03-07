@@ -5,9 +5,8 @@
   - product: {Object} Product information
 
   Usage:
-  {% render 'product-price', product: {...} %}
+  {% render 'product-quick-view', product: {...} %}
 {% endcomment %}
-
 
 {% assign default_variant = product.first_available_variant %}
 
@@ -67,7 +66,7 @@
               </div>
               {% render 'product-variants' %}
             </div>
-            {% render 'yc-add-to-cart', source: 'quick-view', variant_id: default_variant.id, available: default_variant.available %}
+            {% render 'yc-add-to-cart', variant_id: default_variant.id, available: default_variant.available, source: 'quick-view' %}
           </yc-product-info>
         </div>
       </div>

@@ -8,14 +8,14 @@
   {% render 'slideshow-slide', slide: {...} %}
 {% endcomment %}
 
-{% assign slideshow = section.settings %}
+{% assign slideshow_settings = section.settings %}
 
 <yc-slider-item>
   {% if slide.image.src %}
     <img src="{{ slide.image.src }}" alt="{{ slide.title }}" height="100%" width="100%">
   {% endif %}
   {% if slide.heading or slide.subheading or slide.button_text %}
-    <yc-slider-content data-alignment="{{ slideshow.content_alignment }}">
+    <yc-slider-content data-alignment="{{ slideshow_settings.content_alignment }}">
       {% if slide.heading %}
         <p class="heading">{{ slide.heading }}</p>
       {% endif %}
