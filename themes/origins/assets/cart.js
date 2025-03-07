@@ -59,7 +59,6 @@ class BaseCartItem extends HTMLElement {
     });
   }
 
-  // To be overridden
   handleCartUpdate(payload) {}
 
   async handleQuantityChangeForQuantityElement(element) {
@@ -115,10 +114,8 @@ class BaseCartItem extends HTMLElement {
     this.replaceContent(fragment);
   }
 
-  // To be overridden
   getCartItemTemplate() {}
 
-  // To be overridden
   appendCartItem(fragment, cartItem) {}
 
   createCartItem(template, item) {
@@ -145,10 +142,8 @@ class BaseCartItem extends HTMLElement {
     return cartItem;
   }
 
-  // To be overridden
   additionalItemUpdates(elements, item) {}
 
-  // To be overridden
   getCartItemElements(cartItem) {}
 
   updateItemImage(imageContainer, productVariant) {
@@ -212,7 +207,6 @@ class BaseCartItem extends HTMLElement {
     buttonElement.setAttribute("product-variant", productVariantId);
   }
 
-  // To be overridden
   setIsEmpty(isEmpty = false) {}
 
   updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
@@ -278,6 +272,8 @@ class CartDrawerItems extends BaseCartItem {
   }
 }
 
+customElements.define("yc-cart-drawer-items", CartDrawerItems);
+
 class CartItems extends BaseCartItem {
   constructor() {
     super();
@@ -319,7 +315,6 @@ class CartItems extends BaseCartItem {
   }
 }
 
-customElements.define("yc-cart-drawer-items", CartDrawerItems);
 customElements.define("yc-cart-items", CartItems);
 
 class CartRemoveButton extends HTMLElement {
