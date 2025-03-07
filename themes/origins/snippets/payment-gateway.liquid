@@ -1,4 +1,14 @@
-{%- case gatewayType -%}
+{% comment %}
+  Renders a payment gateway
+
+  Accepts:
+  - type: {String} Gateway type (1: Cash on Delivery, 2: Stripe, 3: Paypal, 4: Custom, 6: YouCan Pay)
+
+  Usage:
+  {% render 'payment-gateway', type: 'product' %}
+{% endcomment %}
+
+{%- case type -%}
   {% when '1' %}
     {{ 'order.payment_method.cod' | t }}
   {% when '2' %}

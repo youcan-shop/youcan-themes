@@ -1,3 +1,10 @@
+{% comment %}
+  Renders the cart item template (cart page)
+
+  Usage:
+  {% render 'cart-item' %}
+{% endcomment %}
+
 <div class="item">
   <div class="info">
     <div class="image" data-cart-item="image">
@@ -45,7 +52,7 @@
     </div>
   </div>
   <div class="controls">
-    {% render 'yc-quantity-control', button_size: 'sm' %}
+    {% render 'yc-quantity-control', product: product, button_size: 'sm' %}
     {% assign subtotal = product.quantity | times: product.price %}
     <span data-cart-item="subtotal">{{ subtotal | money }}</span>
     <yc-cart-remove-button
