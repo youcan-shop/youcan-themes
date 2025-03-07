@@ -35,12 +35,9 @@ class CartBubble extends HTMLElement {
 
 customElements.define("yc-cart-bubble", CartBubble);
 
-class CartDrawerItems extends HTMLElement {
+class BaseCartItem extends HTMLElement {
   constructor() {
     super();
-
-    this.cart = this.closest("yc-drawer#cart");
-    this.subTotal = this.cart.querySelector("[data-drawer-total]");
   }
 
   connectedCallback() {
@@ -50,213 +47,6 @@ class CartDrawerItems extends HTMLElement {
   _render() {
     const handleQuantityChange = debounce((event) => {
       const quantityControl = event.target;
-
-      this.handleQuantityChangeForQuantityElement(quantityControl);
-    }, ON_CHANGE_DEBOUNCE_TIMER);
-
-    this.addEventListener("change", handleQuantityChange.bind(this));
-
-    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, items } = payload.cartData;
-
-      if (payload.source === "product-form") {
-        this.cart.open();
-      }
-
-      if (payload.source === "quick-view") {
-        const quickViewModal = document.querySelector("yc-product yc-modal:has(yc-modal-content[data-visible])");
-
-        quickViewModal.close();
-        this.cart.open();
-      }
-
-      this.updateCartSubTotal(sub_total);
-      this.updateCartList(items);
-    });
-  }
-
-  async handleQuantityChangeForQuantityElement(element) {
-    const cartItemId = element.getAttribute("item");
-    const productVariantId = element.getAttribute("product-variant");
-    const quantity = element.getAttribute("quantity");
-
-    if (!(cartItemId && productVariantId && quantity)) {
-      return;
-    }
-
-    this.setItemIsLoading(element, true);
-
-    try {
-      const newCart = await youcanjs.cart.updateItem({
-        cartItemId,
-        productVariantId,
-        quantity,
-      });
-
-      publish(PUB_SUB_EVENTS.cartUpdate, {
-        source: "quantity-control",
-        productVariantId: this.productVariantValue,
-        cartData: newCart,
-      });
-    } catch (error) {
-      console.error(error);
-
-      publish(PUB_SUB_EVENTS.cartError, {
-        source: "quantity-control",
-        productVariantId: this.productVariantValue,
-        error: error,
-      });
-
-      toast.show(error.message, "error");
-    } finally {
-      this.setItemIsLoading(element, false);
-    }
-  }
-
-  updateCartSubTotal(subtotal) {
-    this.subTotal.textContent = formatCurrency(subtotal);
-  }
-
-  updateCartList(items) {
-    const fragment = new DocumentFragment();
-    const template = this.cart.querySelector("[data-cart-item-template]");
-
-    if (items.length) {
-      items.map((item) => {
-        const cartItem = this.createCartItem(template, item);
-        fragment.append(cartItem);
-      });
-    }
-
-    this.setIsEmpty(!items.length);
-    this.replaceContent(fragment);
-  }
-
-  createCartItem(template, item) {
-    const cartItem = template.content.cloneNode(true);
-    const elements = this.getCartItemElements(cartItem);
-
-    this.updateItemImage(elements.image, item.productVariant);
-    this.updateItemTitle(elements.title, item.productVariant.product);
-    this.updateItemVariant(elements.variant, item.productVariant.variations);
-    this.updateItemQuantity(elements.quantity, item.quantity);
-    this.updateItemPrice(elements.price, item.price);
-    this.updateItemDeleteButtonAttributes(elements.deleteButton, item.id, item.productVariant.id);
-
-    this.updateItemAttributes(
-      elements.quantity,
-      item.id,
-      item.productVariant.id,
-      item.quantity,
-      item.productVariant.product.track_inventory && item.productVariant.inventory,
-    );
-
-    return cartItem;
-  }
-
-  getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
-    return { image, title, variant, price, quantity, deleteButton };
-  }
-
-  updateItemImage(imageContainer, productVariant) {
-    const img = imageContainer.querySelector("img");
-    const placeholder = imageContainer.querySelector("[data-cart-item-image-placeholder]");
-    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
-
-    if (shouldShowImage) {
-      img.src = productVariant.image.url ?? productVariant.product.thumbnail;
-      img.alt = productVariant.name;
-      img.hidden = false;
-      placeholder.hidden = true;
-    } else {
-      img.hidden = true;
-      placeholder.hidden = false;
-    }
-  }
-
-  updateItemTitle(titleElement, product) {
-    titleElement.textContent = product.name;
-  }
-
-  updateItemVariant(variantElement, variations) {
-    const variationKeys = Object.keys(variations);
-    if (variationKeys.length === 1 && variationKeys[0] === "default") return;
-
-    const variantFragment = this.createVariantFragment(variations);
-    variantElement.removeAttribute("hidden");
-    variantElement.replaceChildren(variantFragment);
-  }
-
-  createVariantFragment(variations) {
-    const fragment = new DocumentFragment();
-    const values = Object.values(variations);
-
-    values.forEach((variation, index) => {
-      const valueSpan = document.createElement("span");
-      valueSpan.textContent = variation;
-      fragment.append(valueSpan);
-
-      if (index < values.length - 1) {
-        const separatorSpan = document.createElement("span");
-        separatorSpan.textContent = " / ";
-        fragment.append(separatorSpan);
-      }
-    });
-
-    return fragment;
-  }
-
-  updateItemQuantity(quantityElement, quantity) {
-    quantityElement.querySelector("[data-current-quantity]").textContent = quantity;
-  }
-
-  updateItemPrice(priceElement, price) {
-    priceElement.textContent = formatCurrency(price);
-  }
-
-  updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
-    buttonElement.setAttribute("item", cartItemId);
-    buttonElement.setAttribute("product-variant", productVariantId);
-  }
-
-  setIsEmpty(isEmpty = false) {
-    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty", isEmpty);
-  }
-
-  updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
-    quantityElement.setAttribute("item", cartItemId);
-    quantityElement.setAttribute("product-variant", productVariantId);
-    quantityElement.setAttribute("quantity", quantity);
-    if (inventory) quantityElement.setAttribute("inventory", inventory);
-  }
-
-  replaceContent(fragment) {
-    this.replaceChildren(fragment);
-  }
-
-  setItemIsLoading(element, isLoading) {
-    element.toggleAttribute("data-loading", isLoading);
-  }
-}
-
-customElements.define("yc-cart-drawer-items", CartDrawerItems);
-
-class CartItems extends HTMLElement {
-  constructor() {
-    super();
-
-    this.cart = this.closest("[data-cart]");
-  }
-
-  connectedCallback() {
-    this._render();
-  }
-
-  _render() {
-    const handleQuantityChange = debounce((event) => {
-      const quantityControl = event.target;
-
       this.handleQuantityChangeForQuantityElement(quantityControl);
     }, ON_CHANGE_DEBOUNCE_TIMER);
 
@@ -264,12 +54,13 @@ class CartItems extends HTMLElement {
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { items } = payload.cartData;
-
-      if (payload.source === "product-form") this.cart.open();
-
+      this.handleCartUpdate(payload);
       this.updateCartList(items);
     });
   }
+
+  // To be overridden
+  handleCartUpdate(payload) {}
 
   async handleQuantityChangeForQuantityElement(element) {
     const cartItemId = element.getAttribute("item");
@@ -311,20 +102,24 @@ class CartItems extends HTMLElement {
 
   updateCartList(items) {
     const fragment = new DocumentFragment();
-    const template = this.cart.querySelector("[data-cart-item-template]");
+    const template = this.getCartItemTemplate();
 
     if (items.length) {
       items.map((item) => {
         const cartItem = this.createCartItem(template, item);
-        const li = document.createElement("li");
-        li.appendChild(cartItem);
-        fragment.append(li);
+        this.appendCartItem(fragment, cartItem);
       });
     }
 
     this.setIsEmpty(!items.length);
     this.replaceContent(fragment);
   }
+
+  // To be overridden
+  getCartItemTemplate() {}
+
+  // To be overridden
+  appendCartItem(fragment, cartItem) {}
 
   createCartItem(template, item) {
     const cartItem = template.content.cloneNode(true);
@@ -335,8 +130,9 @@ class CartItems extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
-    this.updateItemSubprice(elements.subtotal, item.quantity, item.price);
     this.updateItemDeleteButtonAttributes(elements.deleteButton, item.id, item.productVariant.id);
+
+    this.additionalItemUpdates(elements, item);
 
     this.updateItemAttributes(
       elements.quantity,
@@ -349,10 +145,11 @@ class CartItems extends HTMLElement {
     return cartItem;
   }
 
-  getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, subtotal, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
-    return { image, title, variant, price, quantity, subtotal, deleteButton };
-  }
+  // To be overridden
+  additionalItemUpdates(elements, item) {}
+
+  // To be overridden
+  getCartItemElements(cartItem) {}
 
   updateItemImage(imageContainer, productVariant) {
     const img = imageContainer.querySelector("img");
@@ -410,18 +207,13 @@ class CartItems extends HTMLElement {
     priceElement.textContent = formatCurrency(price);
   }
 
-  updateItemSubprice(subPriceElement, quantity, basePrice) {
-    subPriceElement.textContent = formatCurrency(quantity * basePrice);
-  }
-
   updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
     buttonElement.setAttribute("item", cartItemId);
     buttonElement.setAttribute("product-variant", productVariantId);
   }
 
-  setIsEmpty(isEmpty = false) {
-    this.cart.toggleAttribute("data-is-empty", isEmpty);
-  }
+  // To be overridden
+  setIsEmpty(isEmpty = false) {}
 
   updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
     quantityElement.setAttribute("item", cartItemId);
@@ -439,6 +231,95 @@ class CartItems extends HTMLElement {
   }
 }
 
+class CartDrawerItems extends BaseCartItem {
+  constructor() {
+    super();
+
+    this.cart = this.closest("yc-drawer#cart");
+    this.subTotal = this.cart.querySelector("[data-drawer-total]");
+  }
+
+  handleCartUpdate(payload) {
+    const { sub_total } = payload.cartData;
+
+    if (payload.source === "product-form") {
+      this.cart.open();
+    }
+
+    if (payload.source === "quick-view") {
+      const quickViewModal = document.querySelector("yc-product yc-modal:has(yc-modal-content[data-visible])");
+
+      quickViewModal.close();
+      this.cart.open();
+    }
+
+    this.updateCartSubTotal(sub_total);
+  }
+
+  updateCartSubTotal(subtotal) {
+    this.subTotal.textContent = formatCurrency(subtotal);
+  }
+
+  getCartItemTemplate() {
+    return this.cart.querySelector("[data-cart-item-template]");
+  }
+
+  appendCartItem(fragment, cartItem) {
+    fragment.append(cartItem);
+  }
+
+  getCartItemElements(cartItem) {
+    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
+    return { image, title, variant, price, quantity, deleteButton };
+  }
+
+  setIsEmpty(isEmpty = false) {
+    this.cart.querySelector("[data-cart]").toggleAttribute("data-is-empty", isEmpty);
+  }
+}
+
+class CartItems extends BaseCartItem {
+  constructor() {
+    super();
+
+    this.cart = this.closest("[data-cart]");
+  }
+
+  handleCartUpdate(payload) {
+    if (payload.source === "product-form") this.cart.open();
+  }
+
+  getCartItemTemplate() {
+    return this.cart.querySelector("[data-cart-item-template]");
+  }
+
+  appendCartItem(fragment, cartItem) {
+    const li = document.createElement("li");
+    li.appendChild(cartItem);
+    fragment.append(li);
+  }
+
+  getCartItemElements(cartItem) {
+    const [image, title, variant, price, quantity, subtotal, deleteButton] = cartItem.querySelectorAll("[data-cart-item]");
+    return { image, title, variant, price, quantity, subtotal, deleteButton };
+  }
+
+  additionalItemUpdates(elements, item) {
+    if (elements.subtotal) {
+      this.updateItemSubprice(elements.subtotal, item.quantity, item.price);
+    }
+  }
+
+  updateItemSubprice(subPriceElement, quantity, basePrice) {
+    subPriceElement.textContent = formatCurrency(quantity * basePrice);
+  }
+
+  setIsEmpty(isEmpty = false) {
+    this.cart.toggleAttribute("data-is-empty", isEmpty);
+  }
+}
+
+customElements.define("yc-cart-drawer-items", CartDrawerItems);
 customElements.define("yc-cart-items", CartItems);
 
 class CartRemoveButton extends HTMLElement {
