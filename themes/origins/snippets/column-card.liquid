@@ -1,6 +1,14 @@
-{% assign column = block.settings %}
-{% assign setting = section.settings %}
+{% comment %}
+  Renders a column card
 
+  Accepts:
+  - column: {Object} Column information
+
+  Usage:
+  {% render 'column-card', column: {...} %}
+{% endcomment %}
+
+{% assign section_settings = section.settings %}
 {% assign image_url = 'column.webp' | asset_url %}
 
 {% if column.image.src %}
@@ -14,8 +22,8 @@
       height="100%"
       alt="{{ column.title }}"
       src="{{ image_url }}"
-      data-width="{{ setting.image_width }}"
-      data-ratio="{{ setting.image_ratio }}"
+      data-width="{{ section_settings.image_width }}"
+      data-ratio="{{ section_settings.image_ratio }}"
     >
   </div>
   <div class="column-info">
