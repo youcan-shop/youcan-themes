@@ -434,7 +434,6 @@ class QuantityControl extends HTMLElement {
   }
 
   updatePlusButtonState(quantity) {
-    console.log(quantity, this.inventoryValue);
     this.plusButton.toggleAttribute("disabled", quantity === this.inventoryValue);
   }
 
