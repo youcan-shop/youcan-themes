@@ -1,13 +1,10 @@
 if (!customElements.get("yc-product")) {
   class Product extends HTMLElement {
     static observedAttributes = ["product-id"];
-    static INVENTORY_STATUSES = {
-      OUT_OF_STOCK: 0,
-      UNAVAILABLE: null,
-    };
 
     constructor() {
       super();
+
       this.variants = [...this.querySelectorAll("yc-variant")];
       this.productForm = this.querySelector("yc-product-form");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
@@ -15,7 +12,8 @@ if (!customElements.get("yc-product")) {
 
     connectedCallback() {
       if (!this.productVariants) return;
-      this.syncOptionAvailability();
+
+      this.disableUnavailableOptions();
       this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
     }
 
@@ -33,12 +31,9 @@ if (!customElements.get("yc-product")) {
     async onVariantChanged() {
       const matchedVariant = this.productVariants.find((variant) => JSON.stringify(variant.variations) === JSON.stringify(this.selectedOptions));
 
-      this.syncOptionAvailability();
-      this.syncInventoryStatus();
+      matchedVariant ? await this.updateVariant(matchedVariant) : this.updateInventoryStatus(null);
 
-      if (matchedVariant) {
-        await this.updateVariant(matchedVariant);
-      }
+      this.disableUnavailableOptions();
     }
 
     async updateVariant({ id, available, inventory, price, compare_at_price }) {
@@ -46,6 +41,7 @@ if (!customElements.get("yc-product")) {
       this.productForm.toggleAttribute("not-available", !available);
 
       const attachedImage = await this.getAttachedImage();
+
       if (attachedImage) {
         this.productForm.setAttribute("attached-image", attachedImage);
       }
@@ -67,13 +63,15 @@ if (!customElements.get("yc-product")) {
 
     updateInventoryStatus(inventory) {
       const inventoryElement = this.querySelector("[data-product-item='inventory']");
+
       if (!inventoryElement) return;
 
       const statuses = window.inventoryStatuses;
       const inventoryStatus = this.querySelector("[data-status]");
 
-      if (inventory === Product.INVENTORY_STATUSES.UNAVAILABLE) {
+      if (inventory === null) {
         inventoryStatus.textContent = "--";
+
         return;
       }
 
@@ -81,7 +79,7 @@ if (!customElements.get("yc-product")) {
       const threshold = Number(inventoryElement.getAttribute("data-threshold")) || 0;
 
       const statusKey =
-        inventory === Product.INVENTORY_STATUSES.OUT_OF_STOCK
+        inventory === 0
           ? "out_of_stock"
           : inventory > threshold
             ? showCount
@@ -95,9 +93,12 @@ if (!customElements.get("yc-product")) {
       inventoryElement.setAttribute("data-inventory", statusKey.replace("_show_count", "").replaceAll("_", "-"));
     }
 
-    syncOptionAvailability() {
-      const inputs = this.lastVariantInputs;
-      if (!inputs.length) return;
+    disableUnavailableOptions() {
+      const lastVariant = this.variants.filter((variant) => variant.getAttribute("name") !== "upload-image").at(-1);
+
+      if (!lastVariant) return;
+
+      const inputs = lastVariant.querySelectorAll("input");
 
       inputs.forEach((input) => {
         const compareOptions = {
@@ -109,27 +110,17 @@ if (!customElements.get("yc-product")) {
         );
 
         input.disabled = isUnavailable;
+
         if (isUnavailable) input.checked = false;
       });
 
-      const allDisabled = inputs.every((input) => input.disabled);
-      const hasCheckedInput = inputs.some((input) => input.checked);
+      this.productForm.toggleAttribute(
+        "not-available",
+        [...inputs].every((input) => input.disabled),
+      );
 
-      this.productForm.toggleAttribute("not-available", allDisabled);
+      const hasCheckedInput = [...inputs].some((input) => input.checked);
       this.productForm.querySelector("[data-buy-button]").disabled = !hasCheckedInput;
-    }
-
-    syncInventoryStatus() {
-      const inputs = this.lastVariantInputs;
-      if (!inputs.length) return;
-
-      inputs.every((input) => input.disabled)
-        ? this.updateInventoryStatus(Product.INVENTORY_STATUSES.OUT_OF_STOCK)
-        : this.updateInventoryStatus(Product.INVENTORY_STATUSES.UNAVAILABLE);
-    }
-
-    getBaseName(name) {
-      return name.split("_")[0];
     }
 
     async getAttachedImage() {
@@ -146,9 +137,8 @@ if (!customElements.get("yc-product")) {
         : null;
     }
 
-    get lastVariantInputs() {
-      const lastVariant = this.variants.filter((variant) => variant.getAttribute("name") !== "upload-image").at(-1);
-      return lastVariant ? [...lastVariant.querySelectorAll("input")] : [];
+    getBaseName(name) {
+      return name.split("_")[0];
     }
   }
 
