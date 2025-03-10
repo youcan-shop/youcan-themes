@@ -31,7 +31,7 @@ if (!customElements.get("yc-product")) {
     async onVariantChanged() {
       const matchedVariant = this.productVariants.find((variant) => JSON.stringify(variant.variations) === JSON.stringify(this.selectedOptions));
 
-      matchedVariant ? await this.updateVariant(matchedVariant) : this.updateInventoryStatus(null);
+      if (matchedVariant) await this.updateVariant(matchedVariant);
 
       this.disableUnavailableOptions();
     }
@@ -68,12 +68,6 @@ if (!customElements.get("yc-product")) {
 
       const statuses = window.inventoryStatuses;
       const inventoryStatus = this.querySelector("[data-status]");
-
-      if (inventory === null) {
-        inventoryStatus.textContent = "--";
-
-        return;
-      }
 
       const showCount = inventoryElement.getAttribute("data-show-count");
       const threshold = Number(inventoryElement.getAttribute("data-threshold")) || 0;
