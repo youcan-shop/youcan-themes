@@ -4,6 +4,7 @@
   Accepts:
   - product: {Object} Cart item liquid object
   - button_size: {String} (optional) 'sm', 'md' or 'lg'
+  - inventory: {Number} Available products
 
   Usage:
   {% render 'yc-quantity-input' product: product, button_size: 'md' %}
@@ -19,8 +20,8 @@
   class="quantity cart-quantity"
   item="{{ product.id }}"
   product-variant="{{ product.product_variant_id }}"
-  {% if product.isTrackingInventory %}
-    inventory="{{ product.first_available_variant.inventory }}"
+  {% if inventory %}
+    inventory="{{ inventory }}"
   {% endif %}
   quantity="{{ quantity }}"
   data-cart-item="quantity"
