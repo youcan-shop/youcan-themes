@@ -36,7 +36,7 @@ if (!customElements.get("yc-product")) {
       this.disableUnavailableOptions();
     }
 
-    async updateVariant({ id, available, price, compare_at_price }) {
+    async updateVariant({ id, available, inventory, price, compare_at_price }) {
       this.productForm.setAttribute("variant-id", id);
       this.productForm.toggleAttribute("not-available", !available);
 
@@ -46,13 +46,45 @@ if (!customElements.get("yc-product")) {
         this.productForm.setAttribute("attached-image", attachedImage);
       }
 
-      const [priceElement, compareAtPriceElement] = this.querySelectorAll("[data-product-item]");
+      this.updateProduct(price, compare_at_price);
+      this.updateInventoryStatus(inventory);
+    }
+
+    updateProduct(price, compare_at_price) {
+      const priceElement = this.querySelector("[data-product-item='price']");
+      const compareAtPriceElement = this.querySelector("[data-product-item='compare-at-price']");
 
       if (!priceElement) return;
 
       priceElement.textContent = formatCurrency(price);
       compareAtPriceElement.textContent = formatCurrency(compare_at_price);
       compareAtPriceElement.hidden = !compare_at_price;
+    }
+
+    updateInventoryStatus(inventory) {
+      const inventoryElement = this.querySelector("[data-product-item='inventory']");
+
+      if (!inventoryElement) return;
+
+      const statuses = window.inventoryStatuses;
+      const inventoryStatus = this.querySelector("[data-status]");
+
+      const showCount = inventoryElement.getAttribute("data-show-count");
+      const threshold = Number(inventoryElement.getAttribute("data-threshold")) || 0;
+
+      const statusKey =
+        inventory === 0
+          ? "out_of_stock"
+          : inventory > threshold
+            ? showCount
+              ? "in_stock_show_count"
+              : "in_stock"
+            : showCount
+              ? "low_stock_show_count"
+              : "low_stock";
+
+      inventoryStatus.textContent = statuses[statusKey].replace("%", inventory);
+      inventoryElement.setAttribute("data-inventory", statusKey.replace("_show_count", "").replaceAll("_", "-"));
     }
 
     disableUnavailableOptions() {
