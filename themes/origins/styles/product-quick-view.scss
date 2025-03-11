@@ -40,6 +40,16 @@
       display: grid;
       gap: var(--gap-2xl);
       grid-template-columns: repeat(2, 1fr);
+      max-height: 750px;
+      overflow-y: scroll;
+
+      @media (max-height: 885px) {
+        max-height: 650px;
+      }
+
+      @media (max-height: 785px) {
+        max-height: 600px;
+      }
 
       yc-product-info {
         display: flex;
@@ -72,12 +82,22 @@
           display: flex;
           gap: var(--gap-md);
           align-items: center;
+          z-index: 1;
+          position: sticky;
+          inset-block-end: 0;
 
           button[data-buy-button] {
             width: 100%;
             color: var(--quick-view-bg-color);
             border-color: var(--quick-view-text-color);
             background-color: var(--quick-view-text-color);
+          }
+
+          yc-quantity-control {
+            button[name="plus"],
+            button[name="minus"] {
+              background-color: var(--quick-view-bg-color);
+            }
           }
         }
       }
