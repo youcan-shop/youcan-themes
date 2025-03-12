@@ -7,6 +7,8 @@
     --section-space-bottom: {{ section.settings.space_bottom }}px;
     --section-bg-color: {{ section.settings.background_color.hex }};
     --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+
+    --items-columns: {{ section.settings.columns }};
   "
 >
   {% if section.settings.title or section.settings.description %}
@@ -20,7 +22,7 @@
     </yc-section-head>
   {% endif %}
 
-  <div class="columns" style="--column-length: {{ section.blocks.size }}">
+  <div class="columns">
     {% for block in section.blocks %}
       {% render 'column-card', column: block.settings %}
     {% endfor %}
@@ -101,6 +103,16 @@
       "type": "color",
       "label": "Background color",
       "default": "#FFFFFFFF"
+    },
+    {
+      "id": "columns",
+      "type": "range",
+      "label": "Number of columns on desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "unit": "",
+      "default": 3
     },
     {
       "id": "image_width",
