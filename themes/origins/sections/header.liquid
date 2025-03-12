@@ -8,6 +8,7 @@
   :root {
     --header-bg-color: {{ section.settings.header_background_color.hex }};
     --header-text-color: {{ section.settings.header_text_color.red }}, {{ section.settings.header_text_color.green }}, {{ section.settings.header_text_color.blue }};
+    --header-logo-width: {{ section.settings.logo_width }}px;
   }
 {% endstyle %}
 
@@ -27,8 +28,8 @@
         <img
           src="{{ section.settings.header_logo.src }}"
           alt="{{ store.name }}"
-          height="60"
-          width="60"
+          height="auto"
+          width="{{ section.settings.logo_width }}"
         >
       {% else %}
         {{ store.name }}
@@ -71,9 +72,23 @@
       "content": "Header links can be managed from your [menu settings](https:\/\/seller-area.youcan.shop\/admin\/menus)"
     },
     {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
       "type": "image_picker",
       "id": "header_logo",
       "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 60
     },
     {
       "type": "select",
@@ -114,6 +129,10 @@
       ],
       "default": "center",
       "label": "Mobile logo position"
+    },
+    {
+      "type": "header",
+      "content": "Style"
     },
     {
       "type": "checkbox",
