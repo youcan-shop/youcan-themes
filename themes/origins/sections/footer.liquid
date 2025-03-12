@@ -5,6 +5,7 @@
   footer {
     --footer-bg-color: {{ section.settings.footer_background_color.hex}};
     --footer-text-color: {{ section.settings.footer_text_color.red }}, {{ section.settings.footer_text_color.green }}, {{ section.settings.footer_text_color.blue }};
+    --footer-logo-width: {{ section.settings.logo_width }}px;
   }
 {% endstyle %}
 
@@ -26,8 +27,8 @@
             <img
               src="{{ section.settings.footer_logo.src }}"
               alt="{{ store.name }}"
-              height="60"
-              width="60"
+              height="auto"
+              width="{{ section.settings.logo_width }}"
             >
           {% else %}
             {{ store.name }}
@@ -115,15 +116,33 @@
       "default": true
     },
     {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
       "type": "image_picker",
       "id": "footer_logo",
       "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 60
     },
     {
       "type": "color",
       "id": "footer_background_color",
       "label": "Background color",
       "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Style"
     },
     {
       "type": "color",
