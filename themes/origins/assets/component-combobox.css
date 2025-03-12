@@ -35,13 +35,16 @@ yc-combobox yc-combobox-trigger.yc-btn.icon::after{
   border-inline-end:1.5px solid currentColor;
   transition:var(--transition-duration-normal);
 }
+[dir="rtl"] yc-combobox yc-combobox-trigger.yc-btn.icon::after{
+  rotate:-45deg;
+}
 yc-combobox yc-combobox-content{
   display:grid;
   z-index:2;
   width:100%;
   position:absolute;
   inset-block-start:calc(100% + 0.5em);
-  border-radius:var(--radius-md);
+  border-radius:var(--modal-border-radius);
   background-color:var(--select-bg-color);
   transition:var(--transition-duration-normal);
   border:1px solid color-mix(in srgb, currentColor 20%, transparent);
@@ -77,7 +80,7 @@ yc-combobox yc-combobox-content label{
   position:relative;
   margin-inline:4px;
   font-size:var(--text-sm);
-  border-radius:var(--radius-md);
+  border-radius:var(--button-border-radius);
   transition:var(--transition-duration-normal);
 }
 yc-combobox yc-combobox-content label span{
@@ -133,4 +136,7 @@ yc-combobox yc-combobox-content[data-no-results]:not([data-no-results=""])::afte
 yc-combobox:has(yc-combobox-content[data-visible=true]) yc-combobox-trigger.yc-btn.icon::after{
   rotate:-135deg;
   inset-block-start:2px;
+}
+[dir="rtl"] yc-combobox:has(yc-combobox-content[data-visible=true]) yc-combobox-trigger.yc-btn.icon::after{
+  rotate:135deg;
 }

@@ -41,7 +41,7 @@ yc-slider {
 
           yc-slider-content {
             inset: 0;
-            padding: 1.5em;
+            padding: 1.5em 10%;
             position: absolute;
             pointer-events: auto;
             display: flex;
@@ -161,10 +161,10 @@ yc-slider {
 
   &[data-radius$="true"] {
     .slider-area .slider-box {
-      border-radius: var(--radius-lg);
+      border-radius: var(--button-border-radius);
     }
     yc-slider-item > :where(img, div, yc-slider-content) {
-      border-radius: var(--radius-lg);
+      border-radius: var(--button-border-radius);
     }
   }
 
@@ -175,14 +175,18 @@ yc-slider {
     &[data-position$="center"] {
       translate: -50% 0;
       inset-inline-start: 50%;
+
+      &:dir(rtl) {
+        translate: 50% 0;
+      }
     }
 
     &[data-position$="left"] {
-      inset-inline-start: 1.5em;
+      inset-inline-start: 10%;
     }
 
     &[data-position$="right"] {
-      inset-inline-end: 1.5em;
+      inset-inline-end: 10%;
     }
 
     button {

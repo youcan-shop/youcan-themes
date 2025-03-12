@@ -13,7 +13,10 @@
     --items-columns: {{ section.settings.collection_columns }};
   "
 >
-  {% assign nav_links_string = '/, Home | /collections, Collections' %}
+  {% capture nav_links_string %}
+    /, {{ 'navigation.home' | t }} | /collections, {{ 'navigation.collections' | t }}
+  {% endcapture %}
+
   {% render 'yc-breadcrumb', nav_links_string: nav_links_string %}
   <div class="all-collections">
     {%- paginate collections by 8 cod %}

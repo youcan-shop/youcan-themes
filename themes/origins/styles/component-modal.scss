@@ -12,10 +12,11 @@ yc-modal {
   @media (min-width: 768px) {
     &:not([as-drawer]) yc-modal-content {
       z-index: 100;
+      left: 50%;
       position: fixed;
-      inset: 50% 0 0 50%;
       height: fit-content;
       translate: -50% -40%;
+      inset-block-start: 50%;
       color: var(--modal-text-color);
       background-color: var(--modal-bg-color);
       border-radius: var(--modal-border-radius);
@@ -33,13 +34,13 @@ yc-modal {
   @include breakpoint("md") {
     yc-modal-content {
       z-index: 100;
+      left: 0;
+      inset-block-end: 0;
       position: fixed;
       height: fit-content;
       color: var(--modal-text-color);
       background-color: var(--modal-bg-color);
       translate: 0% 100%;
-      inset-block-end: 0;
-      inset-inline-start: 0;
       width: var(--modal-mobile-width);
       margin: var(--modal-mobile-offset);
       border-radius: var(--modal-border-radius);
@@ -53,7 +54,6 @@ yc-modal {
       // Trigger
       &::before {
         content: "";
-        left: 50%;
         z-index: 3;
         width: 48px;
         height: 4px;
@@ -61,8 +61,13 @@ yc-modal {
         position: sticky;
         border-radius: 999px;
         translate: -50% -50%;
+        inset-inline-start: 50%;
         margin-block-start: 0.5em;
         background-color: color-mix(in srgb, currentColor 10%, transparent);
+
+        &:dir(rtl) {
+          translate: 50% -50%;
+        }
       }
     }
   }

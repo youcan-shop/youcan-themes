@@ -134,7 +134,7 @@ if (!customElements.get("yc-slider")) {
 
       const deltaX = (this.currentX - this.startX) * (this.isRTL ? -1 : 1);
       const itemWidth = this.sliderBox.offsetWidth / this.PER_PAGE;
-      const threshold = this.PER_PAGE === 1 ? 120 : itemWidth / 3;
+      const threshold = this.PER_PAGE === 1 ? 50 : itemWidth / 3;
       const isValidSwipe = this.isBoundaryAllowed && Math.abs(deltaX) > threshold;
 
       isValidSwipe ? this.setIndex(deltaX > 0 ? -1 : 1) : this.move();
