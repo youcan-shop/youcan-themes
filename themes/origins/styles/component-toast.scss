@@ -13,8 +13,8 @@ yc-toast-container {
   z-index: 101;
   position: fixed;
   translate: -50% 0%;
+  left: 50%;
   inset-block-end: 1em;
-  inset-inline-start: 50%;
 
   @include breakpoint("sm") {
     --toast-width: calc(100% - 2em);
@@ -31,13 +31,12 @@ yc-toast-container {
     font-size: var(--text-sm);
     backdrop-filter: blur(2px);
     padding: var(--toast-padding);
-    border-radius: var(--radius-md);
+    border-radius: var(--toast-border-radius);
     background-color: var(--color-base-white);
     transition: var(--transition-duration-normal);
     animation: showUp var(--transition-duration-normal);
     border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
-    box-shadow: color-mix(in srgb, currentColor 15%, transparent) 0px 48px 80px
-      0px;
+    box-shadow: color-mix(in srgb, currentColor 15%, transparent) 0px 48px 80px 0px;
 
     @include breakpoint("sm") {
       font-size: var(--text-xs);
@@ -54,7 +53,7 @@ yc-toast-container {
         svg {
           stroke-width: 0;
           fill: var(--toast-theme);
-          border-radius: var(--radius-md);
+          border-radius: var(--toast-border-radius);
         }
       }
     }
@@ -139,9 +138,7 @@ yc-toast-container {
       }
 
       &:nth-last-child(3) {
-        inset-block-end: calc(
-          (var(--toast-offset) * 2) + var(--extra-offset, 0em)
-        );
+        inset-block-end: calc((var(--toast-offset) * 2) + var(--extra-offset, 0em));
 
         &[data-multiline] {
           --extra-offset: 3em;

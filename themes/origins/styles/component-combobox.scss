@@ -34,6 +34,10 @@ yc-combobox {
       border-block-end: 1.5px solid currentColor;
       border-inline-end: 1.5px solid currentColor;
       transition: var(--transition-duration-normal);
+
+      &:dir(rtl) {
+        rotate: -45deg;
+      }
     }
   }
 
@@ -43,7 +47,7 @@ yc-combobox {
     width: 100%;
     position: absolute;
     inset-block-start: calc(100% + 0.5em);
-    border-radius: var(--radius-md);
+    border-radius: var(--modal-border-radius);
     background-color: var(--select-bg-color);
     transition: var(--transition-duration-normal);
     border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
@@ -84,7 +88,7 @@ yc-combobox {
       position: relative;
       margin-inline: 4px;
       font-size: var(--text-sm);
-      border-radius: var(--radius-md);
+      border-radius: var(--button-border-radius);
       transition: var(--transition-duration-normal);
 
       span {
@@ -155,5 +159,9 @@ yc-combobox {
   &:has(yc-combobox-content[data-visible="true"]) yc-combobox-trigger.yc-btn.icon::after {
     rotate: -135deg;
     inset-block-start: 2px;
+
+    &:dir(rtl) {
+      rotate: 135deg;
+    }
   }
 }
