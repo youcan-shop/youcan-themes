@@ -1,5 +1,4 @@
 document.getElementById("upsell-form").addEventListener("submit", async function (event) {
-  event.preventDefault();
   const form = event.target;
   const formData = new FormData(form);
 
@@ -35,7 +34,6 @@ document.getElementById("upsell-form").addEventListener("submit", async function
 
     if (response.error) throw new Error(response.error);
 
-    window.location.href = "/checkout/thankyou";
   } catch (error) {
     yesButton.disabled = false;
     noButton.disabled = false;
