@@ -18,7 +18,7 @@ function loadingButton(event, loading) {
   }
 }
 
-async function submitAnser(event, answer) {
+async function submitAnswer(event, answer) {
   const productOffer = document.querySelector('[data-product-offer]');
   const upsellId = document.querySelector('[data-upsell-id]');
   const orderId = document.querySelector('[data-order-id]');
@@ -46,5 +46,5 @@ async function submitAnser(event, answer) {
   }
 }
 
-yesButton?.addEventListener("click", (event) => { submitAnser(event, "yes"); });
-noButton?.addEventListener("click", (event) => { submitAnser(event, "no"); });
+yesButton?.addEventListener("click", (event) => { submitAnswer(event, "yes"); });
+noButton?.addEventListener("click", (event) => { submitAnswer(event, "no"); });
