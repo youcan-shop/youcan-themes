@@ -1,20 +1,20 @@
-const yesButton = document.querySelector("[data-upsell-submit-yes]");
-const noButton = document.querySelector("[data-upsell-submit-no]");
+const yesButton = document.querySelector('[data-upsell-submit-yes]');
+const noButton = document.querySelector('[data-upsell-submit-no]');
 
 function loadingButton(event, loading) {
-  const buttonText = event.target.querySelector(".button-text");
-  const spinnerLoader = event.target.querySelector(".spinner");
+  const buttonText = event.target.querySelector('.button-text');
+  const spinnerLoader = event.target.querySelector('.spinner');
 
   if (loading) {
     yesButton.disabled = true;
     noButton.disabled = true;
-    buttonText.style.display = "none";
-    spinnerLoader.style.display = "inline-block";
+    buttonText.style.display = 'none';
+    spinnerLoader.style.display = 'inline-block';
   } else {
     yesButton.disabled = false;
     noButton.disabled = false;
-    buttonText.style.display = "inline";
-    spinnerLoader.style.display = "none";
+    buttonText.style.display = 'inline';
+    spinnerLoader.style.display = 'none';
   }
 }
 
@@ -40,11 +40,11 @@ async function submitAnswer(event, answer) {
     window.location.reload(); // reload the page if success;
   } catch (error) {
     loadingButton(event, false);
-    notify(error, "error");
+    notify(error, 'error');
   } finally {
     loadingButton(event, false);
   }
 }
 
-yesButton?.addEventListener("click", (event) => { submitAnswer(event, "yes"); });
-noButton?.addEventListener("click", (event) => { submitAnswer(event, "no"); });
+yesButton?.addEventListener('click', (event) => { submitAnswer(event, 'yes'); });
+noButton?.addEventListener('click', (event) => { submitAnswer(event, 'no'); });
