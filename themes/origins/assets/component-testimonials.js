@@ -45,8 +45,6 @@ class Testimonials extends HTMLElement {
 
     if (ITEMS_WITH_CONTENT.length) {
       ITEMS_WITH_CONTENT.forEach((item) => this.createItem(item));
-      ITEMS_WITH_CONTENT.length > 1 &&
-        this.parentElement.style.setProperty("--items-columns", ITEMS_WITH_CONTENT.length);
     }
     this.skeleton.remove();
   }
