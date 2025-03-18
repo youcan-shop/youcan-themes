@@ -53,7 +53,7 @@ class Reviews extends HTMLElement {
     this.percentages.forEach((item, i) => {
       const percentage = reviews.filter((r) => r.ratings === i + 1).length / reviews.length;
 
-      item.textContent = `${percentage.toFixed(2) * 100}%`;
+      item.textContent = `${formatNumber(percentage * 100, false)}%`;
       item.previousElementSibling.style.setProperty("--rating-count", percentage * 100);
     });
   }
@@ -168,17 +168,10 @@ class Reviews extends HTMLElement {
 
     for (const [unit, seconds] of units) {
       const interval = Math.floor(diffInSeconds / seconds);
-      if (interval >= 1)
-        return new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(
-          -interval,
-          unit,
-        );
+      if (interval >= 1) return new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(-interval, unit);
     }
 
-    const justNow = new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(
-      0,
-      "second",
-    );
+    const justNow = new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(0, "second");
 
     return justNow;
   }
