@@ -4,14 +4,16 @@
   <div class="upsell-content">
     {{ upsell.description }}
   </div>
-  <div>
+  <form id="upsell-form">
     <input
       type="hidden"
-      data-upsell-id="{{ upsell.id }}"
+      name="upsell_id"
+      value="{{ upsell.id }}"
     />
     <input
       type="hidden"
-      data-order-id="{{ order.id }}"
+      name="order_id"
+      value="{{ order.id }}"
     />
     {%- for product in upsell.products %}
       <input
@@ -21,23 +23,24 @@
         value="{{ product.variants.0.id }}"
       />
     {%- endfor %}
+
     <div class="upsell-form-submit">
-      <button data-upsell-submit-yes class="upsell-submit-yes size-{{- upsell.actions.btn_yes.size -}}"
-        style="background: {{- upsell.actions.btn_yes.bg_color -}};">
-        <span class="button-text text-{{- upsell.actions.btn_yes.font_size -}}" style="color: {{- upsell.actions.btn_yes.font_color -}}">
-            {{- upsell.actions.btn_yes.title -}}
-        </span>
-        <div class="spinner hidden"></div>
-      </button>
-      <button data-upsell-submit-no class="upsell-submit-no size-{{- upsell.actions.btn_no.size -}}"
-        style="background: {{- upsell.actions.btn_no.bg_color -}};">
-        <span class="button-text text-{{- upsell.actions.btn_no.font_size -}}" style="color: {{- upsell.actions.btn_no.font_color -}}">
-            {{- upsell.actions.btn_no.title -}}
-        </span>
-        <div class="spinner hidden"></div>
-      </button>
-    </div>
+    <button type="submit" name="answer" value="yes" class="upsell-submit-yes size-{{- upsell.actions.btn_yes.size -}}"
+      style="background: {{- upsell.actions.btn_yes.bg_color -}};">
+      <span class="button-text text-{{- upsell.actions.btn_yes.font_size -}}" style="color: {{- upsell.actions.btn_yes.font_color -}}">
+          {{- upsell.actions.btn_yes.title -}}
+      </span>
+      <div class="spinner hidden"></div>
+    </button>
+    <button type="submit" name="answer" value="no" class="upsell-submit-no size-{{- upsell.actions.btn_no.size -}}"
+      style="background: {{- upsell.actions.btn_no.bg_color -}};">
+      <span class="button-text text-{{- upsell.actions.btn_no.font_size -}}" style="color: {{- upsell.actions.btn_no.font_color -}}">
+          {{- upsell.actions.btn_no.title -}}
+      </span>
+      <div class="spinner hidden"></div>
+    </button>
   </div>
+  </form>
   <div class="upsell-content">
     {{ upsell.footer }}
   </div>

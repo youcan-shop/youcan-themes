@@ -1,9 +1,31 @@
-const yesButton = document.querySelector('[data-upsell-submit-yes]');
-const noButton = document.querySelector('[data-upsell-submit-no]');
+document.getElementById("upsell-form").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const form = event.target;
+  const formData = new FormData(form);
+  const answer = event.submitter.value;
+
+  const upsellParams = {
+    upsell_id: formData.get("upsell_id"),
+    answer: answer,
+    order_id: formData.get("order_id"),
+    product_offers: {}
+  };
+
+  formData.forEach((value, key) => {
+    if (!["upsell_id", "order_id"].includes(key)) {
+      upsellParams.product_offers[key] = value;
+    }
+  });
+
+  await submitAnswer(event, upsellParams);
+});
 
 function loadingButton(event, loading) {
-  const buttonText = event.target.querySelector('.button-text');
-  const spinnerLoader = event.target.querySelector('.spinner');
+  const yesButton = document.querySelector(".upsell-submit-yes");
+  const noButton = document.querySelector(".upsell-submit-no");
+  const buttonText = event.submitter.querySelector(".button-text");
+  const spinnerLoader = event.submitter.querySelector(".spinner");
 
   if (loading) {
     yesButton.disabled = true;
@@ -18,19 +40,7 @@ function loadingButton(event, loading) {
   }
 }
 
-async function submitAnswer(event, answer) {
-  const productOffer = document.querySelector('[data-product-offer]');
-  const upsellId = document.querySelector('[data-upsell-id]');
-  const orderId = document.querySelector('[data-order-id]');
-  const upsellParams = {
-    upsell_id: upsellId?.dataset.upsellId,
-    answer: answer,
-    order_id: orderId?.dataset.orderId,
-    product_offers: {
-      [productOffer?.name]: productOffer?.value
-    }
-  };
-
+async function submitAnswer(event, upsellParams) {
   loadingButton(event, true);
   try {
     const response = await youcanjs.upsell.answer(upsellParams);
@@ -45,6 +55,3 @@ async function submitAnswer(event, answer) {
     loadingButton(event, false);
   }
 }
-
-yesButton?.addEventListener('click', (event) => { submitAnswer(event, 'yes'); });
-noButton?.addEventListener('click', (event) => { submitAnswer(event, 'no'); });
