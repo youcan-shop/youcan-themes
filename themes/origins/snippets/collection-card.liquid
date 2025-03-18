@@ -3,6 +3,7 @@
 
   Accepts:
   - collection: {Object} Collection information
+  - youcan_attributes: {String} (optional) YouCan attributes (allow blocks to be highlighted in the theme editor)
 
   Usage:
   {% render 'collection-card', collection: {...} %}
@@ -13,6 +14,7 @@
   aria-label="{{ collection.name }}"
   href="/collections/{{ collection.slug }}"
   style="--collection-height: {{ height |  default: 400 }}"
+  {{ youcan_attributes }}
 >
   <div class="cover">
     {% if collection.image %}
