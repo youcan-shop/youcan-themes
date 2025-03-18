@@ -33,19 +33,18 @@ function shouldUsePrecision(amount) {
 }
 
 function formatNumber(amount, withPrecision = false) {
-  const usePrecision = withPrecision && shouldUsePrecision(amount);
   const formatter = new Intl.NumberFormat(CUSTOMER_LOCALE, {
     style: "decimal",
     roundingMode: "floor",
-    maximumFractionDigits: usePrecision ? 2 : 0,
-    minimumFractionDigits: usePrecision ? 2 : 0,
+    maximumFractionDigits: withPrecision ? 2 : 0,
+    minimumFractionDigits: withPrecision ? 2 : 0,
   });
 
   return formatter.format(amount);
 }
 
 function formatCurrency(amount) {
-  const formattedValue = formatNumber(amount, true);
+  const formattedValue = formatNumber(amount, shouldUsePrecision(amount));
 
   const determineSymbolPositionFormatter = new Intl.NumberFormat(CUSTOMER_LOCALE, {
     style: "currency",
@@ -56,7 +55,5 @@ function formatCurrency(amount) {
   const parts = determineSymbolPositionFormatter.formatToParts(1); // format with 1 USD just to determine the position of the currency symbol
   const symbolIndex = parts.findIndex((part) => part.type === "currency");
 
-  return symbolIndex === 0
-    ? `${CURRENCY_SYMBOL} ${formattedValue}`
-    : `${formattedValue} ${CURRENCY_SYMBOL}`;
+  return symbolIndex === 0 ? `${CURRENCY_SYMBOL} ${formattedValue}` : `${formattedValue} ${CURRENCY_SYMBOL}`;
 }
