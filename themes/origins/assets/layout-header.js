@@ -11,12 +11,12 @@ class Header extends HTMLElement {
   }
 
   toggle() {
-    this.searchField.dataset.visibility = this.searchField.dataset.visibility !== "true";
+    this.searchField.dataset.expanded = this.searchField.dataset.expanded !== "true";
   }
 
   onClickOutside(e) {
     if (![this.searchBtn, this.searchField].some((el) => e.composedPath().includes(el))) {
-      this.searchField.dataset.visibility = false;
+      this.searchField.dataset.expanded = false;
     }
   }
 }
