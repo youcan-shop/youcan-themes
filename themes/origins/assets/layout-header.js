@@ -6,14 +6,18 @@ class Header extends HTMLElement {
   }
 
   connectedCallback() {
-    this.searchHandler();
+    this.searchBtn.addEventListener("click", () => this.toggle());
+    document.addEventListener("click", (e) => this.onClickOutside(e));
   }
 
-  searchHandler() {
-    this.searchBtn.addEventListener("click", () => {
-      const isHidden = this.searchField.dataset.hidden === "true";
-      this.searchField.dataset.hidden = !isHidden;
-    });
+  toggle() {
+    this.searchField.dataset.expanded = this.searchField.dataset.expanded !== "true";
+  }
+
+  onClickOutside(e) {
+    if (![this.searchBtn, this.searchField].some((el) => e.composedPath().includes(el))) {
+      this.searchField.dataset.expanded = false;
+    }
   }
 }
 
