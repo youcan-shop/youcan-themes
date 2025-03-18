@@ -1,13 +1,14 @@
 .single-product{
-  --image-border:1px solid color-mix(in srgb, currentColor 5%, transparent);
+  --media-main-image-border:1px solid color-mix(in srgb, currentColor 5%, transparent);
+  --media-thumbnail-image-border:1.5px solid color-mix(in srgb, currentColor 5%, transparent);
   position:relative;
   display:grid;
-  grid-template-columns:repeat(2, 1fr);
   grid-gap:var(--gap-3xl);
   gap:var(--gap-3xl);
+  grid-template-columns:repeat(2, 1fr);
 }
 .single-product yc-product-media{
-  --main-image-height:550px;
+  --media-main-image-height:550px;
   height:-moz-fit-content;
   height:fit-content;
   display:grid;
@@ -24,9 +25,9 @@
 .single-product yc-product-media .main-image{
   position:relative;
   width:100%;
-  height:var(--main-image-height);
+  height:var(--media-main-image-height);
   border-radius:var(--media-main-image-border-radius);
-  border:var(--image-border);
+  border:var(--media-main-image-border);
   overflow:hidden;
 }
 .single-product yc-product-media .main-image .count{
@@ -66,7 +67,7 @@
   cursor:pointer;
   display:inline-block;
   width:100%;
-  border:var(--image-border);
+  border:var(--media-thumbnail-image-border);
   border-radius:var(--media-gallery-border-radius);
   overflow:hidden;
   position:relative;
@@ -74,14 +75,13 @@
 }
 .single-product yc-product-media .gallery .slider-inner yc-slider-item .image::before{
   content:"";
-  position:absolute;
+  opacity:0;
   width:100%;
   height:100%;
-  opacity:0;
+  position:absolute;
+  -webkit-backdrop-filter:contrast(0.8);
+          backdrop-filter:contrast(0.8);
   border-radius:calc(var(--media-gallery-border-radius) - 1px);
-  -webkit-backdrop-filter:var(--media-blur);
-          backdrop-filter:var(--media-blur);
-  background-color:var(--media-background);
   transition:var(--transition-duration-normal);
 }
 .single-product yc-product-media .gallery .slider-inner yc-slider-item .image:hover::before{
@@ -282,7 +282,7 @@
 
 @media (max-width: 1280px){
   .single-product yc-product-media{
-    --main-image-height:450px;
+    --media-main-image-height:450px;
     flex-direction:column;
   }
 }
