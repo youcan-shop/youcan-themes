@@ -28,7 +28,7 @@ if (!customElements.get("yc-upload")) {
         const fileSizeInKB = file.size / Upload.BYTES_IN_KB;
         const fileSizeInMB = fileSizeInKB / Upload.KB_IN_MB;
 
-        if (fileSizeInMB > WriteReview.MAXIMUM_FILE_SIZE) {
+        if (fileSizeInMB > Upload.MAXIMUM_FILE_SIZE) {
           const message = window.errorStrings.large_file;
           toast.show(message.replace("[file]", `"${file.name}"`), "error");
 
