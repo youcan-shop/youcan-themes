@@ -9,6 +9,7 @@ class Modal extends HTMLElement {
     this.overlay = document.querySelector("yc-overlay");
     this.modal = this.querySelector("yc-modal-content");
     this.state = this.modal.hasAttribute("[data-visible]");
+    this.parentSection = this.closest("yc-section");
 
     this.SPEED = 300;
     this.MOBILE_SCREEN = 768;
@@ -97,9 +98,19 @@ class Modal extends HTMLElement {
   }
 
   setIsVisible(isVisible) {
+    const ycSlider = this.parentSection.querySelector("yc-slider");
+
+    if (isVisible && ycSlider) {
+      this.dispatchEvent(new CustomEvent("modal:willOpen", { bubbles: true }));
+    }
+
     this.state = isVisible;
     this.modal.toggleAttribute("data-visible", isVisible);
     this.overlay.toggleAttribute("data-active", isVisible);
+
+    if (!isVisible && ycSlider) {
+      ycSlider.dispatchEvent(new CustomEvent("modal:didClose", { bubbles: true }));
+    }
   }
 
   setTransition(duration) {
