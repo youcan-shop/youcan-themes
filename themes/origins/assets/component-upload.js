@@ -1,6 +1,9 @@
 if (!customElements.get("yc-upload")) {
   class Upload extends HTMLElement {
     static observedAttributes = ["name"];
+    static MAXIMUM_FILE_SIZE = 2;
+    static BYTES_IN_KB = 1024;
+    static KB_IN_MB = 1024;
 
     constructor() {
       super();
@@ -21,6 +24,16 @@ if (!customElements.get("yc-upload")) {
       this.input.addEventListener("change", () => {
         const file = this.input.files?.[0];
         if (!file) return;
+
+        const fileSizeInKB = file.size / Upload.BYTES_IN_KB;
+        const fileSizeInMB = fileSizeInKB / Upload.KB_IN_MB;
+
+        if (fileSizeInMB > WriteReview.MAXIMUM_FILE_SIZE) {
+          const message = window.errorStrings.large_file;
+          toast.show(message.replace("[file]", `"${file.name}"`), "error");
+
+          return;
+        }
 
         const reader = new FileReader();
 
