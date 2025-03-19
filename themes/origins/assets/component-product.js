@@ -1,6 +1,9 @@
 if (!customElements.get("yc-product")) {
   class Product extends HTMLElement {
     static observedAttributes = ["product-id"];
+    static MAXIMUM_FILE_SIZE = 2;
+    static BYTES_IN_KB = 1024;
+    static KB_IN_MB = 1024;
 
     constructor() {
       super();
@@ -121,6 +124,12 @@ if (!customElements.get("yc-product")) {
       const fileInput = this.variants
         .flatMap((variant) => [...variant.querySelectorAll("input[type='file']")].filter((input) => input.files.length > 0))
         .pop();
+
+      const file = fileInput.files[0];
+      const fileSizeInKB = file.size / Product.BYTES_IN_KB;
+      const fileSizeInMB = fileSizeInKB / Product.KB_IN_MB;
+
+      if (fileSizeInMB > Product.MAXIMUM_FILE_SIZE) return null;
 
       return fileInput
         ? new Promise((resolve) => {
