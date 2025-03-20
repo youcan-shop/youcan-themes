@@ -18,12 +18,12 @@ document.getElementById("upsell-form").addEventListener("submit", async function
     }
   });
 
-  await submitAnswer(event, upsellParams);
+  setButtonIsLoading(event, true);
+  await submitAnswer(upsellParams);
 });
 
-function loadingButton(event, loading) {
-  const yesButton = document.querySelector(".upsell-submit-yes");
-  const noButton = document.querySelector(".upsell-submit-no");
+function setButtonIsLoading(event, loading) {
+  const [yesButton, noButton] = document.querySelectorAll('[data-upsell-submit]');
   const buttonText = event.submitter.querySelector(".button-text");
   const spinnerLoader = event.submitter.querySelector(".spinner");
 
@@ -40,18 +40,10 @@ function loadingButton(event, loading) {
   }
 }
 
-async function submitAnswer(event, upsellParams) {
-  loadingButton(event, true);
-  try {
-    const response = await youcanjs.upsell.answer(upsellParams);
+async function submitAnswer(upsellParams) {
+  const response = await youcanjs.upsell.answer(upsellParams);
 
-    if (response.error) throw new Error(response.error);
-
-    window.location.reload(); // reload the page if success;
-  } catch (error) {
-    loadingButton(event, false);
-    notify(error, 'error');
-  } finally {
-    loadingButton(event, false);
+  if (response) {
+    window.location.reload();
   }
 }
