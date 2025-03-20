@@ -10,6 +10,7 @@ if (!customElements.get("yc-product")) {
 
       this.variants = [...this.querySelectorAll("yc-variant")];
       this.productForm = this.querySelector("yc-product-form");
+      this.productMedia = this.querySelector("yc-product-media");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
     }
 
@@ -39,15 +40,14 @@ if (!customElements.get("yc-product")) {
       this.disableUnavailableOptions();
     }
 
-    async updateVariant({ id, available, inventory, price, compare_at_price }) {
+    async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
       this.productForm.setAttribute("variant-id", id);
       this.productForm.toggleAttribute("not-available", !available);
 
       const attachedImage = await this.getAttachedImage();
 
-      if (attachedImage) {
-        this.productForm.setAttribute("attached-image", attachedImage);
-      }
+      attachedImage && this.productForm.setAttribute("attached-image", attachedImage);
+      image && this.updateMainImage(image);
 
       this.updateProduct(price, compare_at_price);
       this.updateInventoryStatus(inventory);
@@ -90,6 +90,21 @@ if (!customElements.get("yc-product")) {
       inventoryElement.setAttribute("data-inventory", statusKey.replace("_show_count", "").replaceAll("_", "-"));
     }
 
+    updateMainImage(image_src) {
+      const gallery = this.productMedia.querySelector("[data-gallery]");
+
+      if (!gallery) return;
+
+      gallery.querySelectorAll("img").forEach((element) => {
+        if (element.src === image_src) {
+          const input = element.previousElementSibling;
+
+          input.checked = true;
+          this.productMedia.updateMainImage(input.value, element.src);
+        }
+      });
+    }
+
     disableUnavailableOptions() {
       const lastVariant = this.variants.filter((variant) => variant.getAttribute("name") !== "upload-image").at(-1);
 
@@ -124,6 +139,8 @@ if (!customElements.get("yc-product")) {
       const fileInput = this.variants
         .flatMap((variant) => [...variant.querySelectorAll("input[type='file']")].filter((input) => input.files.length > 0))
         .pop();
+
+      if (!fileInput) return null;
 
       const file = fileInput.files[0];
       const fileSizeInKB = file.size / Product.BYTES_IN_KB;

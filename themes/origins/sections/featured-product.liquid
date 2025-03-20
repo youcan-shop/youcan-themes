@@ -6,9 +6,16 @@
   {{ 'component-slider.js' | asset_url | script_tag_deferred }}
 {% endif %}
 
+{% assign current_main_image = 1 %}
 {% assign product = section.settings.item %}
 {% assign product_image = product.images[0] %}
 {% assign default_variant = product.selected_or_first_available_variant %}
+
+{% for image in product.images %}
+  {% if default_variant.image == image %}
+    {% assign current_main_image = forloop.index %}
+  {% endif %}
+{% endfor %}
 
 <yc-section
   style="
@@ -27,14 +34,14 @@
       <div class="main-image">
         {% if product.images.size > 1 %}
           <div class="count">
-            <span data-current-image>1</span>
+            <span data-current-image>{{ current_main_image }}</span>
             <span>/</span>
             <span>{{ product.images.size }}</span>
           </div>
         {% endif %}
         {% if product_image %}
           <img
-            src="{{ product_image }}"
+            src="{{ default_variant.image | default: product_image }}"
             alt="{{ product.name }}"
             height="100%"
             width="100%"
@@ -79,11 +86,11 @@
                           value="{{ index }}"
                           hidden
                           aria-label="{{ product.name }} - {{ index }}"
-                          {% if index == 1 %}
+                          {% if default_variant.image == image or index == 1 %}
                             checked
                           {% endif %}
                         >
-                        <img src="{{ image }}" alt="" height="100%" width="100%">
+                        <img src="{{ image }}" alt="{{ product.name }}" height="100%" width="100%">
                       </label>
                     </yc-slider-item>
                   {% endfor %}
