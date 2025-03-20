@@ -22,7 +22,7 @@
 {%- style -%}
   :root {
     /* Typography */
-    --font-family: '{{ settings.font_family }}', sans-serif;
+    --font-family: '{{ settings.font_family | replace: '+', ' '  }}', sans-serif;
     --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
     --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
 
@@ -53,21 +53,15 @@
       {{ settings.button_background_color.red }},
       {{ settings.button_background_color.green }},
       {{ settings.button_background_color.blue }};
-    /* --color-secondary */
     --color-button-text:
       {{ settings.button_text_color.red }},
       {{ settings.button_text_color.green }},
       {{ settings.button_text_color.blue }};
+    /* --color-secondary */
     --color-secondary-button:
       {{ settings.secondary_button_color.red }},
       {{ settings.secondary_button_color.green }},
       {{ settings.secondary_button_color.blue }};
-    /* --color-secondary-text */
-    --color-secondary-button-text:
-      {{ settings.secondary_button_text_color.red }},
-      {{ settings.secondary_button_text_color.green }},
-      {{ settings.secondary_button_text_color.blue }};
-    --color-secondary-button-outline: rgba(var(--color-secondary-button-text), 0.15);
 
     /* Text Size */
     --text-xs: 1.2rem;
