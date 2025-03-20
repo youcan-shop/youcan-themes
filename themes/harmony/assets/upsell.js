@@ -34,9 +34,11 @@ function setButtonIsLoading(event) {
 }
 
 async function submitAnswer(upsellParams) {
-  const response = await youcanjs.upsell.answer(upsellParams);
+  try {
+    await youcanjs.upsell.answer(upsellParams);
 
-  if (response) {
     window.location.reload();
+  } catch (error) {
+    window.location.href = "/checkout/thankyou";
   }
 }
