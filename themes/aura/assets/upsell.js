@@ -18,26 +18,19 @@ document.getElementById("upsell-form").addEventListener("submit", async function
     }
   });
 
-  setButtonIsLoading(event, true);
+  setButtonIsLoading(event);
   await submitAnswer(upsellParams);
 });
 
-function setButtonIsLoading(event, loading) {
+function setButtonIsLoading(event) {
   const [yesButton, noButton] = document.querySelectorAll('[data-upsell-submit]');
   const buttonText = event.submitter.querySelector(".button-text");
   const spinnerLoader = event.submitter.querySelector(".spinner");
 
-  if (loading) {
-    yesButton.disabled = true;
-    noButton.disabled = true;
-    buttonText.style.display = 'none';
-    spinnerLoader.style.display = 'inline-block';
-  } else {
-    yesButton.disabled = false;
-    noButton.disabled = false;
-    buttonText.style.display = 'inline';
-    spinnerLoader.style.display = 'none';
-  }
+  yesButton.disabled = true;
+  noButton.disabled = true;
+  buttonText.style.display = 'none';
+  spinnerLoader.style.display = 'inline-block';
 }
 
 async function submitAnswer(upsellParams) {
