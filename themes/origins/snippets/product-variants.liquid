@@ -18,7 +18,7 @@
     {% assign name_id = 100 | rand: 2000 %}
     {% assign unique_name = variant.name | append: '_' | append: name_id %}
 
-    {% for variation in product.first_available_variant.variations %}
+    {% for variation in product.selected_or_first_available_variant.variations %}
       {% if variation[0] == variant.name %}
         {% assign default = variation[1] %}
       {% endif %}

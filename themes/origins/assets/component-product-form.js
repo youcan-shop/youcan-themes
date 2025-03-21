@@ -105,7 +105,11 @@ if (!customElements.get("yc-product-form")) {
             toast.show(error.message, "error");
 
             for (const [field, message] of Object.entries(error.meta.fields)) {
-              this.form.querySelector(`input[name="${field}"]`)?.parentElement?.setAttribute("error-message", message);
+              const isCustomField = field.includes("extra_fields");
+
+              this.form
+                .querySelector(`input[name="${isCustomField ? field.replace(".", "[") + "]" : field}"]`)
+                ?.parentElement?.setAttribute("error-message", message);
             }
 
             return;

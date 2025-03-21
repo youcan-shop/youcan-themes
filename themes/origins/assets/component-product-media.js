@@ -17,12 +17,15 @@ class ProductMedia extends HTMLElement {
         const target = event.target;
 
         if (target.tagName === "INPUT") {
-          const imageSrc = target.nextElementSibling.src;
-          this.mainImage.src = imageSrc;
-          this.currentImage.textContent = target.value;
+          this.updateMainImage(target.value, target.nextElementSibling.src);
         }
       });
     }
+  }
+
+  updateMainImage(id, src) {
+    this.mainImage.src = src;
+    this.currentImage.textContent = id;
   }
 }
 

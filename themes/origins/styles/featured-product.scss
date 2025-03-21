@@ -1,15 +1,16 @@
 @import "mixins/breakpoints";
 
 .single-product {
-  --image-border: 1px solid color-mix(in srgb, currentColor 5%, transparent);
+  --media-main-image-border: 1px solid color-mix(in srgb, currentColor 5%, transparent);
+  --media-thumbnail-image-border: 1.5px solid color-mix(in srgb, currentColor 5%, transparent);
 
   position: relative;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: var(--gap-3xl);
+  grid-template-columns: repeat(2, 1fr);
 
   yc-product-media {
-    --main-image-height: 550px;
+    --media-main-image-height: 550px;
 
     height: fit-content;
     display: grid;
@@ -24,9 +25,9 @@
     .main-image {
       position: relative;
       width: 100%;
-      height: var(--main-image-height);
+      height: var(--media-main-image-height);
       border-radius: var(--media-main-image-border-radius);
-      border: var(--image-border);
+      border: var(--media-main-image-border);
       overflow: hidden;
 
       .count {
@@ -70,7 +71,7 @@
             cursor: pointer;
             display: inline-block;
             width: 100%;
-            border: var(--image-border);
+            border: var(--media-thumbnail-image-border);
             border-radius: var(--media-gallery-border-radius);
             overflow: hidden;
             position: relative;
@@ -78,13 +79,12 @@
 
             &::before {
               content: "";
-              position: absolute;
+              opacity: 0;
               width: 100%;
               height: 100%;
-              opacity: 0;
+              position: absolute;
+              backdrop-filter: contrast(0.8);
               border-radius: calc(var(--media-gallery-border-radius) - 1px);
-              backdrop-filter: var(--media-blur);
-              background-color: var(--media-background);
               transition: var(--transition-duration-normal);
             }
 
@@ -112,7 +112,7 @@
   yc-product-info {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: var(--gap-lg);
 
     .price {
       display: flex;
@@ -130,6 +130,11 @@
     }
 
     .description {
+      img,
+      iframe {
+        max-width: 100%;
+      }
+
       .card-placeholder {
         font-size: var(--text-md);
       }
@@ -171,6 +176,11 @@
         align-items: center;
         padding: 12px 15px;
         cursor: pointer;
+
+        &::marker,
+        &::-webkit-details-marker {
+          display: none;
+        }
 
         .title {
           font-size: var(--text-md);
@@ -330,7 +340,7 @@
 @include breakpoint("xl") {
   .single-product {
     yc-product-media {
-      --main-image-height: 450px;
+      --media-main-image-height: 450px;
 
       flex-direction: column;
     }
@@ -358,9 +368,31 @@
     }
 
     yc-product-info .buy-button {
+      margin-block: 0;
+
       .buy-area {
+        max-height: 750px;
+        overflow-y: scroll;
+
+        @media (max-height: 885px) {
+          max-height: 650px;
+        }
+
+        @media (max-height: 785px) {
+          max-height: 600px;
+        }
+
         .express-checkout {
+          .header {
+            z-index: 2;
+            position: sticky;
+            inset-block-start: 0;
+            background-color: var(--section-bg-color, var(--color-base-white));
+            border-block-end: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+          }
+
           .fields {
+            border-block-start: none;
             grid-template-columns: 1fr;
           }
         }
