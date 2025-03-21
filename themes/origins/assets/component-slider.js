@@ -10,6 +10,7 @@ if (!customElements.get("yc-slider")) {
       this.leftArrow = this.querySelector("[data-arrow='left']");
       this.rightArrow = this.querySelector("[data-arrow='right']");
       this.unDraggableLinks = this.querySelectorAll("a[draggable='false']");
+      this.canSwipe = true;
 
       this.index = 0;
       this.startX = 0;
@@ -50,6 +51,9 @@ if (!customElements.get("yc-slider")) {
     _render() {
       this.swipe();
 
+      this.addEventListener("modal:willOpen", this.handleModalWillOpen.bind(this));
+      this.addEventListener("modal:didClose", this.handleModalDidClose.bind(this));
+
       this.updateFooterVisibility();
 
       this.hasAttribute("autoplay") && this.autoPlay();
@@ -70,6 +74,15 @@ if (!customElements.get("yc-slider")) {
           this.autoPlay();
         });
       }
+    }
+
+    handleModalWillOpen() {
+      this.canSwipe = false;
+    }
+
+    handleModalDidClose() {
+      this.canSwipe = true;
+      this.move(0, false);
     }
 
     canGoPrevious() {
@@ -102,7 +115,7 @@ if (!customElements.get("yc-slider")) {
     }
 
     startSwipe(event) {
-      this.setSwiping(true);
+      this.setSwiping(this.canSwipe);
       this.setTransitionDuration(0);
 
       this.startX = event.touches ? event.touches[0].clientX : event.clientX;
@@ -117,10 +130,7 @@ if (!customElements.get("yc-slider")) {
       this.currentX = event.touches ? event.touches[0].clientX : event.clientX;
       const deltaX = this.currentX - this.startX;
 
-      if (
-        (!this.canGoPrevious() && (this.isRTL ? -deltaX : deltaX) > 0) ||
-        (!this.canGoNext() && (this.isRTL ? -deltaX : deltaX) < 0)
-      ) {
+      if ((!this.canGoPrevious() && (this.isRTL ? -deltaX : deltaX) > 0) || (!this.canGoNext() && (this.isRTL ? -deltaX : deltaX) < 0)) {
         this.isBoundaryAllowed = false;
         this.move(deltaX / 4);
       } else {
@@ -129,7 +139,11 @@ if (!customElements.get("yc-slider")) {
       }
     }
 
-    endSwipe() {
+    endSwipe(event) {
+      if (event.target.hasAttribute("data-trigger")) {
+        this.canSwipe = false;
+        this.move(0, false);
+      }
       if (!this.isSwiping) return;
 
       const deltaX = (this.currentX - this.startX) * (this.isRTL ? -1 : 1);
@@ -151,9 +165,7 @@ if (!customElements.get("yc-slider")) {
         if (this.hasAttribute("responsive")) {
           Object.entries(this.BREAKPOINTS).forEach(([key, query]) => {
             if (matchMedia(query).matches) {
-              perPage = this._getStyle(
-                key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
-              );
+              perPage = this._getStyle(key === "default" ? "slider-per-page" : `slider-max-items-${key}`);
             }
           });
         }
@@ -165,9 +177,7 @@ if (!customElements.get("yc-slider")) {
         Object.values(this.BREAKPOINTS).forEach((query) =>
           matchMedia(query).addEventListener("change", (e) => {
             if (e.matches) {
-              this.setPerPage(
-                Object.keys(this.BREAKPOINTS).find((key) => this.BREAKPOINTS[key] === query),
-              );
+              this.setPerPage(Object.keys(this.BREAKPOINTS).find((key) => this.BREAKPOINTS[key] === query));
             }
           }),
         );
@@ -176,12 +186,16 @@ if (!customElements.get("yc-slider")) {
       return { initial, listener };
     }
 
-    move(offset = 0) {
+    move(offset = 0, withTransform = true) {
+      if (!this.canSwipe || !withTransform) {
+        this.slider.style.transform = null;
+
+        return;
+      }
+
       const dir = this.isRTL ? "+" : "-";
 
-      const translateX = `calc(${dir}${(100 / this.PER_PAGE) * this.index}% ${dir} ${
-        (this.GAP / this.PER_PAGE) * this.index
-      }px + ${offset}px)`;
+      const translateX = `calc(${dir}${(100 / this.PER_PAGE) * this.index}% ${dir} ${(this.GAP / this.PER_PAGE) * this.index}px + ${offset}px)`;
 
       this.slider.style.transform = `translateX(${translateX})`;
     }
@@ -219,9 +233,7 @@ if (!customElements.get("yc-slider")) {
     }
 
     setPerPage = (key) => {
-      this.PER_PAGE = this._getStyle(
-        key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
-      );
+      this.PER_PAGE = this._getStyle(key === "default" ? "slider-per-page" : `slider-max-items-${key}`);
 
       this.updateFooterVisibility();
       this.reset(0);
@@ -235,10 +247,7 @@ if (!customElements.get("yc-slider")) {
       const previousIndex = this.index;
 
       if (this.getAttribute("per-move") === "page") {
-        this.index = Math.max(
-          0,
-          Math.min(this.TOTAL - this.PER_PAGE, this.index + direction * this.PER_PAGE),
-        );
+        this.index = Math.max(0, Math.min(this.TOTAL - this.PER_PAGE, this.index + direction * this.PER_PAGE));
       } else {
         this.index = Math.max(0, Math.min(this.TOTAL - 1, this.index + direction));
       }
@@ -246,6 +255,10 @@ if (!customElements.get("yc-slider")) {
       if (this.index !== previousIndex) {
         this.reset();
       }
+    }
+
+    get innerSlider() {
+      return this.slider;
     }
   }
 
