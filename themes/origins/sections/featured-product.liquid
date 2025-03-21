@@ -148,13 +148,15 @@
             {% render 'product-accordion', title: block.settings.title, content: block.settings.content %}
         {% endcase %}
       {% endfor %}
-      {% render 'product-variants' %}
+      {% if product.options.size > 0 %}
+        {% render 'product-variants' %}
+      {% endif %}
       {% render 'product-buy-button', product: product %}
     </yc-product-info>
   </yc-product>
 </yc-section>
 
-{% if product %}
+{% if product and product.options.size %}
   {% javascript %}
     if (!window.productsVariants["{{ product.id }}"]) {
       window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
