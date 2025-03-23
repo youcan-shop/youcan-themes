@@ -112,17 +112,20 @@ yc-header .actions .cart-btn .total-items{
   inset-block-start:-8px;
   inset-inline-start:-8px;
 }
+yc-header .actions .search-btn{
+  z-index:2;
+}
 yc-header .actions .search-btn .icon{
   display:none;
 }
 yc-header .actions .search-bar{
+  width:250px;
   position:relative;
+  transition:var(--transition-duration-normal);
 }
 yc-header .actions .search-bar .search-input{
-  width:250px !important;
   padding-inline-start:40px !important;
   color:rgb(var(--header-text-color)) !important;
-  transition:var(--transition-duration-slow);
 }
 yc-header .actions .search-bar .icon{
   position:absolute;
@@ -131,15 +134,9 @@ yc-header .actions .search-bar .icon{
   color:rgb(var(--header-text-color));
 }
 yc-header .actions .search-bar[data-expanded$=false]{
-  visibility:hidden;
+  width:0px;
   opacity:0;
-}
-yc-header .actions .search-bar[data-expanded$=false] .search-input,
-yc-header .actions .search-bar[data-expanded$=false] .icon{
-  width:0px !important;
-}
-yc-header .actions .search-bar[data-expanded$=false] .search-input{
-  padding-inline:0px;
+  visibility:hidden;
 }
 yc-header .actions .search-bar[data-expanded$=false] ~ .search-btn .icon:first-child{
   display:block;
