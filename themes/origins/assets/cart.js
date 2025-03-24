@@ -237,14 +237,14 @@ class CartDrawerItems extends BaseCartItem {
     const { sub_total } = payload.cartData;
 
     if (payload.source === "product-form") {
-      this.cart.open();
+      payload.skipCart ? (window.location.href = "/cart") : this.cart.open();
     }
 
     if (payload.source === "quick-view") {
       const quickViewModal = document.querySelector("yc-product yc-modal:has(yc-modal-content[data-visible])");
 
       quickViewModal.close();
-      this.cart.open();
+      payload.skipCart ? (window.location.href = "/cart") : this.cart.open();
     }
 
     this.updateCartSubTotal(sub_total);
