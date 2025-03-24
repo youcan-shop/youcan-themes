@@ -131,7 +131,7 @@ class Modal extends HTMLElement {
 customElements.define("yc-modal", Modal);
 
 class ModalDialog extends HTMLElement {
-  static observedAttributes = ["as-drawer"];
+  static observedAttributes = ["as-drawer", "detachable"];
 
   constructor() {
     super();
@@ -152,9 +152,11 @@ class ModalDialog extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.moved) return;
-    this.moved = true;
-    document.body.appendChild(this);
+    if (this.hasAttribute("detachable")) {
+      if (this.moved) return;
+      this.moved = true;
+      document.body.appendChild(this);
+    }
 
     this._render();
   }
