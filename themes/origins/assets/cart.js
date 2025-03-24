@@ -281,10 +281,6 @@ class CartItems extends BaseCartItem {
     this.cart = this.closest("[data-cart]");
   }
 
-  handleCartUpdate(payload) {
-    if (payload.source === "product-form") this.cart.open();
-  }
-
   getCartItemTemplate() {
     return this.cart.querySelector("[data-cart-item-template]");
   }
