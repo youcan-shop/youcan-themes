@@ -10,7 +10,6 @@ class WriteReview extends HTMLElement {
     this.images = [];
     this.productId = this.getAttribute("product-id");
 
-    this.modal = this.querySelector("yc-modal");
     this.form = this.querySelector("[data-review-form]");
     this.imageInput = this.form.querySelector("input[name='images']");
     this.imagesContainer = this.querySelector("[data-images-container]");
@@ -29,7 +28,7 @@ class WriteReview extends HTMLElement {
 
   async submitReview(event) {
     event.preventDefault();
-  
+
     const formData = new FormData(event.target);
 
     if (Number(formData.get("ratings")) === 0) {
@@ -100,9 +99,7 @@ class WriteReview extends HTMLElement {
     imgElement.src = source;
     this.imagesContainer.appendChild(image);
 
-    removeButton.addEventListener("click", (event) =>
-      this.removeImage(source, event.currentTarget.parentElement),
-    );
+    removeButton.addEventListener("click", (event) => this.removeImage(source, event.currentTarget.parentElement));
   }
 
   removeImage(source, element) {
@@ -114,7 +111,8 @@ class WriteReview extends HTMLElement {
     this.images = [];
     this.imagesContainer.innerHTML = "";
     this.form.reset();
-    this.modal.close();
+    const reviewModal = document.querySelector("yc-dialog[data-visible]");
+    reviewModal.close();
   }
 
   setSubmitButtonIsLoading(is_loading) {

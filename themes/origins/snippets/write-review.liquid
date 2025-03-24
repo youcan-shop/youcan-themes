@@ -10,136 +10,136 @@
   {% render 'write-review', product_id: '045-dj8-30k-ws7' %}
 {% endcomment %}
 
-<yc-write-review product-id="{{ product_id }}">
-  <yc-modal style="--modal-width: 500px">
-    <div class="action">
-      <button class="icon" data-trigger>
-        {{ 'product.reviews.write_review' | t }}
-        {% render 'yc-icon', name: 'plus' %}
-      </button>
-    </div>
-    <yc-modal-content>
-      <div class="review-form">
-        <div class="head">
-          <h4 class="title">
-            {{ 'product.reviews.write_review' | t }}
-          </h4>
-          <button class="icon" data-size="sm" data-trigger>
-            {% render 'yc-icon', name: 'x-mark' %}
-          </button>
+<yc-dialog-trigger data-modal="#quick-view-{{ product.id }}-{{ section.id }}">
+  <div class="action">
+    <button class="icon" data-trigger>
+      {{ 'product.reviews.write_review' | t }}
+      {% render 'yc-icon', name: 'plus' %}
+    </button>
+  </div>
+</yc-dialog-trigger>
+<yc-dialog id="quick-view-{{ product.id }}-{{ section.id }}" style="--modal-width: 500px">
+  <yc-write-review product-id="{{ product_id }}">
+    <div class="review-form" role="dialog">
+      <div class="head">
+        <h4 class="title">
+          {{ 'product.reviews.write_review' | t }}
+        </h4>
+        <button class="icon" data-size="sm" data-trigger>
+          {% render 'yc-icon', name: 'x-mark' %}
+        </button>
+      </div>
+      <form class="core" data-review-form>
+        <div class="rating-box">
+          <div class="stars">
+            {% for star in (1..5) %}
+              <label class="star">
+                {% render 'yc-icon', name: 'star', size: 35 %}
+                <input
+                  hidden
+                  type="radio"
+                  name="ratings"
+                  value="{{ star }}"
+                >
+              </label>
+            {% endfor %}
+          </div>
         </div>
-        <form class="core" data-review-form>
-          <div class="rating-box">
-            <div class="stars">
-              {% for star in (1..5) %}
-                <label class="star">
-                  {% render 'yc-icon', name: 'star', size: 35 %}
+        <div class="info-box">
+          <div class="fields">
+            <div class="field">
+              <label for="first-name">
+                {{ 'product.reviews.fields.first_name.label' | t }}
+              </label>
+              <input
+                required
+                type="text"
+                id="first-name"
+                name="first-name"
+                placeholder="{{ 'product.reviews.fields.first_name.placeholder' | t }}"
+              >
+            </div>
+            <div class="field">
+              <label for="last-name">
+                {{ 'product.reviews.fields.last_name.label' | t }}
+              </label>
+              <input
+                required
+                type="text"
+                id="last-name"
+                name="last-name"
+                placeholder="{{ 'product.reviews.fields.last_name.placeholder' | t }}"
+              >
+            </div>
+            <div class="field">
+              <label for="email">
+                {{ 'product.reviews.fields.email.label' | t }}
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="{{ 'product.reviews.fields.email.placeholder' | t }}"
+              >
+            </div>
+            <div class="field">
+              <label for="content">
+                {{ 'product.reviews.fields.review.label' | t }}
+              </label>
+              <textarea
+                required
+                type="text"
+                id="content"
+                name="content"
+                minlength="5"
+                placeholder="{{ 'product.reviews.fields.review.placeholder' | t }}"
+              ></textarea>
+            </div>
+            <div class="field upload-image">
+              <label for="add-images">
+                {{ 'product.reviews.fields.upload_image.label' | t }}
+              </label>
+              <div class="input">
+                <template data-image>
+                  <div class="image">
+                    <button type="button" data-remove-image>
+                      {% render 'yc-icon', name: 'x-mark', size: 12 %}
+                    </button>
+                    <img
+                      alt="image"
+                      width="100%"
+                      height="100%"
+                    >
+                  </div>
+                </template>
+                <label for="images" class="yc-btn icon">
+                  {% render 'yc-icon', name: 'plus' %}
                   <input
                     hidden
-                    type="radio"
-                    name="ratings"
-                    value="{{ star }}"
+                    multiple
+                    type="file"
+                    id="images"
+                    name="images"
+                    accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
                   >
                 </label>
-              {% endfor %}
+                <div class="images-container" data-images-container></div>
+              </div>
+              <span class="info">
+                {{ 'product.reviews.fields.upload_image.placeholder' | t }}
+              </span>
             </div>
           </div>
-          <div class="info-box">
-            <div class="fields">
-              <div class="field">
-                <label for="first-name">
-                  {{ 'product.reviews.fields.first_name.label' | t }}
-                </label>
-                <input
-                  required
-                  type="text"
-                  id="first-name"
-                  name="first-name"
-                  placeholder="{{ 'product.reviews.fields.first_name.placeholder' | t }}"
-                >
-              </div>
-              <div class="field">
-                <label for="last-name">
-                  {{ 'product.reviews.fields.last_name.label' | t }}
-                </label>
-                <input
-                  required
-                  type="text"
-                  id="last-name"
-                  name="last-name"
-                  placeholder="{{ 'product.reviews.fields.last_name.placeholder' | t }}"
-                >
-              </div>
-              <div class="field">
-                <label for="email">
-                  {{ 'product.reviews.fields.email.label' | t }}
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="{{ 'product.reviews.fields.email.placeholder' | t }}"
-                >
-              </div>
-              <div class="field">
-                <label for="content">
-                  {{ 'product.reviews.fields.review.label' | t }}
-                </label>
-                <textarea
-                  required
-                  type="text"
-                  id="content"
-                  name="content"
-                  minlength="5"
-                  placeholder="{{ 'product.reviews.fields.review.placeholder' | t }}"
-                ></textarea>
-              </div>
-              <div class="field upload-image">
-                <label for="add-images">
-                  {{ 'product.reviews.fields.upload_image.label' | t }}
-                </label>
-                <div class="input">
-                  <template data-image>
-                    <div class="image">
-                      <button type="button" data-remove-image>
-                        {% render 'yc-icon', name: 'x-mark', size: 12 %}
-                      </button>
-                      <img
-                        alt="image"
-                        width="100%"
-                        height="100%"
-                      >
-                    </div>
-                  </template>
-                  <label for="images" class="yc-btn icon">
-                    {% render 'yc-icon', name: 'plus' %}
-                    <input
-                      hidden
-                      multiple
-                      type="file"
-                      id="images"
-                      name="images"
-                      accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
-                    >
-                  </label>
-                  <div class="images-container" data-images-container></div>
-                </div>
-                <span class="info">
-                  {{ 'product.reviews.fields.upload_image.placeholder' | t }}
-                </span>
-              </div>
-            </div>
-            <div class="actions">
-              <button class="icon" type="button" data-trigger>
-                {{ 'product.reviews.actions.cancel' | t }}
-              </button>
-              <button class="primary" type="submit" data-submit>
-                <span>{{ 'product.reviews.actions.submit' | t }}</span>
-              </button>
-            </div>
+          <div class="actions">
+            <button class="icon" type="button" data-trigger>
+              {{ 'product.reviews.actions.cancel' | t }}
+            </button>
+            <button class="primary" type="submit" data-submit>
+              <span>{{ 'product.reviews.actions.submit' | t }}</span>
+            </button>
           </div>
-        </form>
-      </div>
-    </yc-modal-content>
-  </yc-modal>
-</yc-write-review>
+        </div>
+      </form>
+    </div>
+  </yc-write-review>
+</yc-dialog>
