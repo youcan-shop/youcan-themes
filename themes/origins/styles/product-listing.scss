@@ -1,5 +1,9 @@
 @import "mixins/breakpoints";
 
+.mobile-sort-dialog {
+  display: none;
+}
+
 .product-listing {
   --product-listing-border-radius: var(--button-border-radius);
 
@@ -52,7 +56,7 @@
 
     .sort-box {
       display: flex;
-      gap: var(--gap-lg);
+      gap: var(--gap-md);
       align-items: center;
 
       @include breakpoint("md") {
@@ -110,7 +114,19 @@
 }
 
 @include breakpoint("md") {
+  .mobile-sort-dialog {
+    display: block;
+  }
+
   .product-listing {
+    .filter-area {
+      .sort-box {
+        .desktop-sort {
+          display: none;
+        }
+      }
+    }
+
     .products-area {
       yc-pagination {
         display: grid;
