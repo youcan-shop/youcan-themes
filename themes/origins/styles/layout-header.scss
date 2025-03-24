@@ -138,19 +138,21 @@ yc-header {
     }
 
     .search-btn {
+      z-index: 2;
+
       .icon {
         display: none;
       }
     }
 
     .search-bar {
+      width: 250px;
       position: relative;
+      transition: var(--transition-duration-normal);
 
       .search-input {
-        width: 250px !important;
         padding-inline-start: 40px !important;
         color: rgb(var(--header-text-color)) !important;
-        transition: var(--transition-duration-slow);
       }
 
       .icon {
@@ -161,17 +163,9 @@ yc-header {
       }
 
       &[data-expanded$="false"] {
-        visibility: hidden;
+        width: 0px;
         opacity: 0;
-
-        .search-input,
-        .icon {
-          width: 0px !important;
-        }
-
-        .search-input {
-          padding-inline: 0px;
-        }
+        visibility: hidden;
 
         & ~ .search-btn .icon:first-child {
           display: block;
