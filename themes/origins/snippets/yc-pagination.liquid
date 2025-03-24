@@ -88,33 +88,63 @@
       <a href="{{ page_link }}" class="yc-btn icon">{{ last }}</a>
     {% endif %}
 
-    <yc-modal as-drawer class="pages-selector">
+    <yc-dialog-trigger data-modal="#pagination-{{ section.id }}" as-drawer class="pages-selector">
       <button class="page-trigger icon" data-trigger>
         {{ 'pagination.page' | t }}
         {{ current }}
       </button>
-      <yc-modal-content>
-        <yc-select>
-          <yc-select-content>
-            {% for index in (1..last) %}
-              {% assign page_link = page_params | replace: '%p', index %}
+    </yc-dialog-trigger>
+    <yc-dialog id="pagination-{{ section.id }}">
+      <yc-select>
+        <yc-select-content>
+          {% for index in (1..last) %}
+            {% assign page_link = page_params | replace: '%p', index %}
 
-              <a
-                href="{{ page_link }}"
-                {% if index == current %}
-                  data-checked
-                {% endif %}
-              >
-                <span>
-                  {{ 'pagination.page' | t }}
-                  {{ index }}
-                </span>
-              </a>
-            {% endfor %}
-          </yc-select-content>
-        </yc-select>
-      </yc-modal-content>
-    </yc-modal>
+            <a
+              href="{{ page_link }}"
+              {% if index == current %}
+                data-checked
+              {% endif %}
+            >
+              <span>
+                {{ 'pagination.page' | t }}
+                {{ index }}
+              </span>
+            </a>
+          {% endfor %}
+        </yc-select-content>
+      </yc-select>
+    </yc-dialog>
+
+    {% comment %}
+      <yc-modal as-drawer class="pages-selector">
+        <button class="page-trigger icon" data-trigger>
+          {{ 'pagination.page' | t }}
+          {{ current }}
+        </button>
+        <yc-modal-content>
+          <yc-select>
+            <yc-select-content>
+              {% for index in (1..last) %}
+                {% assign page_link = page_params | replace: '%p', index %}
+
+                <a
+                  href="{{ page_link }}"
+                  {% if index == current %}
+                    data-checked
+                  {% endif %}
+                >
+                  <span>
+                    {{ 'pagination.page' | t }}
+                    {{ index }}
+                  </span>
+                </a>
+              {% endfor %}
+            </yc-select-content>
+          </yc-select>
+        </yc-modal-content>
+      </yc-modal>
+    {% endcomment %}
 
     <a
       class="yc-btn icon"

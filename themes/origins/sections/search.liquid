@@ -2,6 +2,7 @@
 {{ 'component-select.css' | asset_url | stylesheet_tag }}
 
 <yc-section
+  id="{{ section.id }}"
   style="
     --section-space-top: {{ section.settings.space_top }}px;
     --section-space-bottom: {{ section.settings.space_bottom }}px;
@@ -11,7 +12,7 @@
     --items-columns: {{ section.settings.product_columns }};
   "
 >
-  {%- paginate search.products by 24 cod %}
+  {%- paginate search.products by 1 cod %}
     <div class="product-listing">
       <div class="filter-area">
         <h1 class="title h3">
