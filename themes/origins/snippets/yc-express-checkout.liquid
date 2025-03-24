@@ -20,7 +20,7 @@
     {% endunless %}
   >
     {% if is_sticky %}
-      <yc-modal as-drawer><yc-modal-content>
+      <yc-dialog as-drawer id="express-checkout-{{ product.id }}-{{ section.id }}">
     {% endif %}
 
     <div class="buy-area">
@@ -100,14 +100,25 @@
     </div>
 
     {% if is_sticky %}
-      </yc-modal-content>
-      <div class="actions" data-sticky>
-        {% render 'yc-quantity-control', product: product %}
-        <button class="primary" data-trigger formnovalidate type="button">
-          {{ 'product.buy_button.buy_now' | t }}
-        </button>
-      </div>
-      </yc-modal>
+      </yc-dialog>
+      <yc-dialog-trigger data-modal="#express-checkout-{{ product.id }}-{{ section.id }}">
+        <div class="actions" data-sticky>
+          {% render 'yc-quantity-control', product: product %}
+          <button class="primary" data-trigger formnovalidate type="button">
+            {{ 'product.buy_button.buy_now' | t }}
+          </button>
+        </div>
+      </yc-dialog-trigger>
+      {% comment %}
+        </yc-modal-content>
+        <div class="actions" data-sticky>
+          {% render 'yc-quantity-control', product: product %}
+          <button class="primary" data-trigger formnovalidate type="button">
+            {{ 'product.buy_button.buy_now' | t }}
+          </button>
+        </div>
+        </yc-modal>
+      {% endcomment %}
     {% endif %}
   </yc-product-form>
 </form>
