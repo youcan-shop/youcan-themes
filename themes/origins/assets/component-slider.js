@@ -115,12 +115,11 @@ if (!customElements.get("yc-slider")) {
       if (event.target.tagName === "A") this.setLinksAreDraggable(false);
 
       this.currentX = event.touches ? event.touches[0].clientX : event.clientX;
-      const deltaX = this.currentX - this.startX;
+      let deltaX = this.currentX - this.startX;
 
-      if (
-        (!this.canGoPrevious() && (this.isRTL ? -deltaX : deltaX) > 0) ||
-        (!this.canGoNext() && (this.isRTL ? -deltaX : deltaX) < 0)
-      ) {
+      if (this.isRTL) deltaX = -deltaX;
+
+      if ((!this.canGoPrevious() && deltaX > 0) || (!this.canGoNext() && deltaX < 0)) {
         this.isBoundaryAllowed = false;
         this.move(deltaX / 4);
       } else {
@@ -151,9 +150,7 @@ if (!customElements.get("yc-slider")) {
         if (this.hasAttribute("responsive")) {
           Object.entries(this.BREAKPOINTS).forEach(([key, query]) => {
             if (matchMedia(query).matches) {
-              perPage = this._getStyle(
-                key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
-              );
+              perPage = this._getStyle(key === "default" ? "slider-per-page" : `slider-max-items-${key}`);
             }
           });
         }
@@ -165,9 +162,7 @@ if (!customElements.get("yc-slider")) {
         Object.values(this.BREAKPOINTS).forEach((query) =>
           matchMedia(query).addEventListener("change", (e) => {
             if (e.matches) {
-              this.setPerPage(
-                Object.keys(this.BREAKPOINTS).find((key) => this.BREAKPOINTS[key] === query),
-              );
+              this.setPerPage(Object.keys(this.BREAKPOINTS).find((key) => this.BREAKPOINTS[key] === query));
             }
           }),
         );
@@ -177,13 +172,9 @@ if (!customElements.get("yc-slider")) {
     }
 
     move(offset = 0) {
-      const dir = this.isRTL ? "+" : "-";
+      const translateX = `calc(-${(100 / this.PER_PAGE) * this.index}% - ${(this.GAP / this.PER_PAGE) * this.index}px + ${offset}px)`;
 
-      const translateX = `calc(${dir}${(100 / this.PER_PAGE) * this.index}% ${dir} ${
-        (this.GAP / this.PER_PAGE) * this.index
-      }px + ${offset}px)`;
-
-      this.slider.style.transform = `translateX(${translateX})`;
+      this.slider.style.insetInlineStart = translateX;
     }
 
     reset(new_index = this.index) {
@@ -219,9 +210,7 @@ if (!customElements.get("yc-slider")) {
     }
 
     setPerPage = (key) => {
-      this.PER_PAGE = this._getStyle(
-        key === "default" ? "slider-per-page" : `slider-max-items-${key}`,
-      );
+      this.PER_PAGE = this._getStyle(key === "default" ? "slider-per-page" : `slider-max-items-${key}`);
 
       this.updateFooterVisibility();
       this.reset(0);
@@ -235,10 +224,7 @@ if (!customElements.get("yc-slider")) {
       const previousIndex = this.index;
 
       if (this.getAttribute("per-move") === "page") {
-        this.index = Math.max(
-          0,
-          Math.min(this.TOTAL - this.PER_PAGE, this.index + direction * this.PER_PAGE),
-        );
+        this.index = Math.max(0, Math.min(this.TOTAL - this.PER_PAGE, this.index + direction * this.PER_PAGE));
       } else {
         this.index = Math.max(0, Math.min(this.TOTAL - 1, this.index + direction));
       }
