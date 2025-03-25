@@ -73,6 +73,7 @@ class Reviews extends HTMLElement {
 
     const [author, date, rating, content, images] = review.querySelectorAll("[data-review-item]");
 
+    this.updateDialogAttributes(review);
     this.setItemAuthor(author, { first_name, last_name });
     this.setItemContent(content, data.content);
     this.setItemImages(images, images_urls);
@@ -80,6 +81,12 @@ class Reviews extends HTMLElement {
     this.setItemDate(date, created_at);
 
     this.container.appendChild(review);
+  }
+
+  updateDialogAttributes(review) {
+    const dialog = review.querySelector("yc-dialog");
+    const uniqueSuffix = Date.now() + "-" + Math.floor(Math.random() * 1000);
+    dialog.id += `-${uniqueSuffix}`;
   }
 
   setItemAuthor(authorElement, { first_name, last_name }) {
@@ -113,6 +120,10 @@ class Reviews extends HTMLElement {
         const template = imagesElement.querySelector("[data-img]");
         const image = template.content.cloneNode(true);
 
+        const dialog = imagesElement.closest(".content").querySelector("yc-dialog");
+        const dialogTrigger = image.querySelector("yc-dialog-trigger");
+        dialogTrigger.setAttribute("data-modal", `#${dialog.id}`);
+
         image.querySelector("img").src = src;
         imagesElement.firstElementChild.prepend(image);
       });
@@ -120,7 +131,7 @@ class Reviews extends HTMLElement {
 
     const previewImage = () => {
       const buttons = imagesElement.querySelectorAll("[data-image]");
-      const previewImg = imagesElement.querySelector("[data-image-preview]");
+      const previewImg = imagesElement.nextElementSibling.querySelector("[data-image-preview]");
 
       buttons.forEach((img_button) => {
         img_button.addEventListener("click", () => {

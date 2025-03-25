@@ -24,39 +24,41 @@
     </div>
     <div class="content">
       <p data-review-item="content"></p>
-      <yc-modal data-review-item="images">
+      <div data-review-item="images">
         <div class="images">
           <template data-img>
-            <button class="icon" data-image data-trigger>
-              <img
-                alt="{{ product.name }}"
-                height="100%"
-                width="100%"
-              >
-            </button>
+            <yc-dialog-trigger data-modal="#review-images-{{ section.id }}-{{ product.id }}">
+              <button class="icon" data-image data-trigger>
+                <img
+                  alt="{{ product.name }}"
+                  height="100%"
+                  width="100%"
+                >
+              </button>
+            </yc-dialog-trigger>
           </template>
           <label class="yc-btn icon">
             <input type="checkbox" name="show-more" hidden>
             <span data-count>+0</span>
           </label>
         </div>
+      </div>
 
-        <yc-modal-content>
-          <div class="image-preview">
-            <button class="icon" data-size="sm" data-trigger>
-              {% render 'yc-icon', name: 'x-mark' %}
-            </button>
-            <div class="preview-core">
-              <img
-                data-image-preview
-                height="100%"
-                width="100%"
-                alt="product"
-              >
-            </div>
+      <yc-dialog id="review-images-{{ section.id }}-{{ product.id }}">
+        <div class="image-preview">
+          <button class="icon" data-size="sm" data-trigger>
+            {% render 'yc-icon', name: 'x-mark' %}
+          </button>
+          <div class="preview-core">
+            <img
+              data-image-preview
+              height="100%"
+              width="100%"
+              alt="product"
+            >
           </div>
-        </yc-modal-content>
-      </yc-modal>
+        </div>
+      </yc-dialog>
     </div>
   </li>
 </template>
