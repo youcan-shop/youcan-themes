@@ -27,7 +27,7 @@
       <div data-review-item="images">
         <div class="images">
           <template data-img>
-            <yc-dialog-trigger data-modal="#review-images-{{ section.id }}-{{ product.id }}">
+            <yc-modal-trigger data-modal="#review-images-{{ section.id }}-{{ product.id }}">
               <button class="icon" data-image data-trigger>
                 <img
                   alt="{{ product.name }}"
@@ -35,7 +35,7 @@
                   width="100%"
                 >
               </button>
-            </yc-dialog-trigger>
+            </yc-modal-trigger>
           </template>
           <label class="yc-btn icon">
             <input type="checkbox" name="show-more" hidden>
@@ -44,8 +44,8 @@
         </div>
       </div>
 
-      <yc-dialog id="review-images-{{ section.id }}-{{ product.id }}">
-        <div class="image-preview">
+      <yc-modal id="review-images-{{ section.id }}-{{ product.id }}">
+        <div class="image-preview" role="dialog">
           <button class="icon" data-size="sm" data-trigger>
             {% render 'yc-icon', name: 'x-mark' %}
           </button>
@@ -58,7 +58,7 @@
             >
           </div>
         </div>
-      </yc-dialog>
+      </yc-modal>
     </div>
   </li>
 </template>

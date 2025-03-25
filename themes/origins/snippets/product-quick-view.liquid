@@ -10,10 +10,10 @@
 
 {% assign default_variant = product.selected_or_first_available_variant %}
 
-<yc-dialog-trigger data-modal="#quick-view-{{ product.id }}-{{ section.id }}">
-  <button class="secondary" data-trigger>{{ 'general.choose_options' | t }} (Dialog)</button>
-</yc-dialog-trigger>
-<yc-dialog id="quick-view-{{ product.id }}-{{ section.id }}" style="--modal-width: 60%" detachable>
+<yc-modal-trigger data-modal="#quick-view-{{ product.id }}-{{ section.id }}">
+  <button class="secondary" data-trigger>{{ 'general.choose_options' | t }}</button>
+</yc-modal-trigger>
+<yc-modal id="quick-view-{{ product.id }}-{{ section.id }}" style="--modal-width: 60%" detachable>
   <yc-product class="product-quick-view" product-id="{{ product.id }}">
     <div class="view-box" role="dialog">
       <div class="head">
@@ -70,7 +70,7 @@
       </div>
     </div>
   </yc-product>
-</yc-dialog>
+</yc-modal>
 
 {% javascript %}
   if (!window.productsVariants["{{ product.id }}"]) {

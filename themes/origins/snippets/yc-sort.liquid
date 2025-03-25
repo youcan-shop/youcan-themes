@@ -35,14 +35,14 @@
 {% assign values = 'desc,asc' | split: ',' %}
 {% assign options = labels | split: ',' %}
 
-<yc-dialog-trigger class="select-trigger" data-modal="#sort-{{ section.id }}">
+<yc-modal-trigger class="select-trigger" data-modal="#sort-{{ section.id }}">
   <label for="trigger" class="yc-btn icon" data-trigger>
     {% render 'yc-icon', name: 'sort' %}
   </label>
-</yc-dialog-trigger>
+</yc-modal-trigger>
 
-<yc-dialog as-drawer id="sort-{{ section.id }}" class="mobile-sort-dialog">
-  <yc-select>
+<yc-modal as-drawer id="sort-{{ section.id }}" class="mobile-sort-dialog">
+  <yc-select role="dialog">
     <button class="icon">
       {% assign placeholder = 'general.sort.placeholder' | t %}
       {% for opt in options %}
@@ -82,4 +82,4 @@
       {% endfor %}
     </yc-select-content>
   </yc-select>
-</yc-dialog>
+</yc-modal>

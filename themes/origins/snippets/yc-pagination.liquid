@@ -88,14 +88,14 @@
       <a href="{{ page_link }}" class="yc-btn icon">{{ last }}</a>
     {% endif %}
 
-    <yc-dialog-trigger data-modal="#pagination-{{ section.id }}" as-drawer class="pages-selector">
+    <yc-modal-trigger data-modal="#pagination-{{ section.id }}" as-drawer class="pages-selector">
       <button class="page-trigger icon" data-trigger>
         {{ 'pagination.page' | t }}
         {{ current }}
       </button>
-    </yc-dialog-trigger>
-    <yc-dialog id="pagination-{{ section.id }}">
-      <yc-select>
+    </yc-modal-trigger>
+    <yc-modal id="pagination-{{ section.id }}">
+      <yc-select role="dialog">
         <yc-select-content>
           {% for index in (1..last) %}
             {% assign page_link = page_params | replace: '%p', index %}
@@ -114,7 +114,7 @@
           {% endfor %}
         </yc-select-content>
       </yc-select>
-    </yc-dialog>
+    </yc-modal>
     <a
       class="yc-btn icon"
       href="{{ next_page_url }}"

@@ -111,7 +111,7 @@ class WriteReview extends HTMLElement {
     this.images = [];
     this.imagesContainer.innerHTML = "";
     this.form.reset();
-    const reviewModal = document.querySelector("yc-dialog[data-visible]");
+    const reviewModal = document.querySelector("yc-modal[data-visible]");
     reviewModal.close();
   }
 

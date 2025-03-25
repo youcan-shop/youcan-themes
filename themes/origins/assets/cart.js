@@ -241,7 +241,7 @@ class CartDrawerItems extends BaseCartItem {
     }
 
     if (payload.source === "quick-view") {
-      const quickViewModal = document.querySelector("yc-dialog[data-visible]");
+      const quickViewModal = document.querySelector("yc-modal[data-visible]");
 
       quickViewModal.close();
       this.cart.open();

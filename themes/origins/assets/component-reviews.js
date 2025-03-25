@@ -73,7 +73,7 @@ class Reviews extends HTMLElement {
 
     const [author, date, rating, content, images] = review.querySelectorAll("[data-review-item]");
 
-    this.updateDialogAttributes(review);
+    this.updateModalAttributes(review);
     this.setItemAuthor(author, { first_name, last_name });
     this.setItemContent(content, data.content);
     this.setItemImages(images, images_urls);
@@ -83,10 +83,10 @@ class Reviews extends HTMLElement {
     this.container.appendChild(review);
   }
 
-  updateDialogAttributes(review) {
-    const dialog = review.querySelector("yc-dialog");
+  updateModalAttributes(review) {
+    const modal = review.querySelector("yc-modal");
     const uniqueSuffix = Date.now() + "-" + Math.floor(Math.random() * 1000);
-    dialog.id += `-${uniqueSuffix}`;
+    modal.id += `-${uniqueSuffix}`;
   }
 
   setItemAuthor(authorElement, { first_name, last_name }) {
@@ -120,9 +120,9 @@ class Reviews extends HTMLElement {
         const template = imagesElement.querySelector("[data-img]");
         const image = template.content.cloneNode(true);
 
-        const dialog = imagesElement.closest(".content").querySelector("yc-dialog");
-        const dialogTrigger = image.querySelector("yc-dialog-trigger");
-        dialogTrigger.setAttribute("data-modal", `#${dialog.id}`);
+        const modal = imagesElement.closest(".content").querySelector("yc-modal");
+        const modalTrigger = image.querySelector("yc-modal-trigger");
+        modalTrigger.setAttribute("data-modal", `#${modal.id}`);
 
         image.querySelector("img").src = src;
         imagesElement.firstElementChild.prepend(image);
