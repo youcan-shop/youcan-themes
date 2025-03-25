@@ -141,6 +141,7 @@ class ModalDialog extends HTMLElement {
     this.startY = this.currentY = 0;
     this.overlay = document.querySelector("yc-overlay");
     this.state = this.hasAttribute("[data-visible]");
+    this.detachable = this.hasAttribute("detachable");
 
     this.SPEED = 300;
     this.MOBILE_SCREEN = 768;
@@ -152,7 +153,7 @@ class ModalDialog extends HTMLElement {
   }
 
   connectedCallback() {
-    if (this.hasAttribute("detachable")) {
+    if (this.detachable) {
       if (this.moved) return;
       this.moved = true;
       document.body.appendChild(this);
@@ -230,7 +231,9 @@ class ModalDialog extends HTMLElement {
   show(trigger) {
     const originalSection = document.getElementById(trigger.getAttribute("data-section"));
 
-    this.inheritSectionColors(originalSection);
+    if (this.detachable) {
+      this.inheritSectionColors(originalSection);
+    }
 
     const isMobile = window.innerWidth <= this.MOBILE_SCREEN;
 
