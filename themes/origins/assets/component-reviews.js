@@ -120,7 +120,7 @@ class Reviews extends HTMLElement {
         const template = imagesElement.querySelector("[data-img]");
         const image = template.content.cloneNode(true);
 
-        const modal = imagesElement.closest(".content").querySelector("yc-modal");
+        const modal = imagesElement.closest("[data-content]").querySelector("yc-modal");
         const modalTrigger = image.querySelector("yc-modal-trigger");
         modalTrigger.setAttribute("data-modal", `#${modal.id}`);
 
