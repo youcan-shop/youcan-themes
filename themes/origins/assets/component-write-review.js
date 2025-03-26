@@ -58,7 +58,7 @@ class WriteReview extends HTMLElement {
       let errorMessage = error.message;
       const fieldsError = error.meta.fields;
 
-      if (fieldsError && fieldsError.content[0]) {
+      if (fieldsError) {
         errorMessage = fieldsError.content[0];
       }
 
