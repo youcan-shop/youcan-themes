@@ -1,15 +1,18 @@
 <!doctype html>
+{% assign lang = store.store_locale.iso_code %}
+
 <html
-  lang='en'
+  lang="{{ lang }}"
   dir='{{ settings.theme_direction }}'
 >
   <head>
+    <meta charset='UTF-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% render 'page-title' %}
+    {%- render 'meta-tags' -%}
     {%- render 'head-config' -%}
-
-    {{ content_for_header }}
-
-    {{ 'youcan-js.min.js' | asset_url | script_tag }}
-    {{ 'helper.js' | asset_url | script_tag }}
   </head>
   <body>
     {%- render 'overlay' -%}
