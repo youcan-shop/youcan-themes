@@ -1,6 +1,6 @@
 if (!customElements.get("yc-product-form")) {
   class ProductForm extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available"];
+    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart"];
 
     constructor() {
       super();
@@ -67,6 +67,7 @@ if (!customElements.get("yc-product-form")) {
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
           source: this.getAttribute("source") ?? "product-form",
+          skipCart: this.hasAttribute("skip-cart"),
           productVariantId,
           cartData: newCart,
         });
