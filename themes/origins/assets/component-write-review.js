@@ -29,7 +29,7 @@ class WriteReview extends HTMLElement {
 
   async submitReview(event) {
     event.preventDefault();
-  
+
     const formData = new FormData(event.target);
 
     if (Number(formData.get("ratings")) === 0) {
@@ -55,9 +55,15 @@ class WriteReview extends HTMLElement {
 
       toast.show(window.successStrings.review_submitted, "success");
     } catch (error) {
-      console.error(error);
+      let errorMessage = error.message;
+      const fieldsError = error.meta.fields;
 
-      toast.show(error.message, "error");
+      if (fieldsError && fieldsError.content[0]) {
+        errorMessage = fieldsError.content[0];
+      }
+
+      console.error(error);
+      toast.show(errorMessage, "error");
     } finally {
       this.setSubmitButtonIsLoading(false);
     }
@@ -100,9 +106,7 @@ class WriteReview extends HTMLElement {
     imgElement.src = source;
     this.imagesContainer.appendChild(image);
 
-    removeButton.addEventListener("click", (event) =>
-      this.removeImage(source, event.currentTarget.parentElement),
-    );
+    removeButton.addEventListener("click", (event) => this.removeImage(source, event.currentTarget.parentElement));
   }
 
   removeImage(source, element) {
