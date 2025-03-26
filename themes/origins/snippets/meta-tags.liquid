@@ -12,6 +12,8 @@
 
 {% if template.name == 'product' %}
   {% assign og_type = 'product' %}
+  {% assign og_title = product.meta.title %}
+  {% assign og_description = product.meta.description | default: og_description %}
 {% endif %}
 
 {% assign locale = store.store_locale.iso_code %}
@@ -38,17 +40,14 @@
 <meta property="og:type" content="{{ og_type }}">
 <meta property="og:description" content="{{ og_description | escape }}">
 
-{% if settings.og_image %}
+{% if settings.og_image and page.name != 'product' %}
   <meta property="og:image" content="{{ settings.og_image.src }}">
   <meta property="og:image:secure_url" content="{{ settings.og_image.src }}">
 {% endif %}
 
-{% if product %}
+{% if template.name == 'product' %}
   <meta property="og:image" content="{{ product.thumbnail }}">
   <meta property="og:image:secure_url" content="{{ product.thumbnail }}">
-{% endif %}
-
-{% if template.name == 'product' %}
   <meta property="og:price:amount" content="{{ product.price | default: 0 }}">
   <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
 {% endif %}
