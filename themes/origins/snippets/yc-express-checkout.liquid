@@ -1,3 +1,11 @@
+{% for field in checkout.fields %}
+  {% if field.type == 'select' %}
+    {{ 'component-combobox.css' | asset_url | stylesheet_tag }}
+    {{ 'component-combobox.js' | asset_url | script_tag_deferred }}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
 {% comment %}
   Renders a checkout form (usually used in featured & single product sections)
 

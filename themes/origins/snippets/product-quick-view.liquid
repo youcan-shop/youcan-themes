@@ -66,7 +66,12 @@
               </div>
               {% render 'product-variants' %}
             </div>
-            {% render 'yc-add-to-cart', variant_id: default_variant.id, available: default_variant.available, source: 'quick-view' %}
+            {% render 'yc-add-to-cart',
+              variant_id: default_variant.id,
+              available: default_variant.available,
+              skip_cart: product.skip_to_checkout,
+              source: 'quick-view'
+            %}
           </yc-product-info>
         </div>
       </div>
