@@ -265,6 +265,28 @@ yc-section {
   display: grid;
   grid-template-columns: repeat(var(--items-columns, 3), 1fr);
   gap: var(--gap-lg);
+
+  .show-more {
+    order: 1;
+    display: flex;
+    grid-column: 1/-1;
+    align-items: center;
+    justify-content: center;
+
+    button,
+    .yc-btn {
+      padding: 8px 15px;
+    }
+  }
+}
+
+yc-slider-footer {
+  .show-more {
+    button,
+    .yc-btn {
+      padding: 8px 15px;
+    }
+  }
 }
 
 // Modal
@@ -450,10 +472,6 @@ yc-skeleton {
   gap: var(--gap-xl);
   padding: 1.5em;
 
-  &[hidden] {
-    display: none !important;
-  }
-
   yc-skeleton-group {
     display: flex;
     gap: var(--gap-md);
@@ -554,6 +572,11 @@ yc-skeleton {
       }
     }
   }
+}
+
+// Hidden attribute
+[hidden] {
+  display: none !important;
 }
 
 // Breakpoints

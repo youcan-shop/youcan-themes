@@ -21,11 +21,19 @@
       {% endif %}
     </yc-section-head>
   {% endif %}
-  <yc-testimonials product-id="{{ section.settings.product.id }}">
+  <yc-testimonials product-id="{{ section.settings.product.id }}" limit="{{ section.settings.columns }}">
     <ul class="items-grid" data-container>
       {% render 'testimonial-card' %}
+      <div class="show-more" data-show-more hidden>
+        <button
+          class="icon"
+          aria-label="{{ 'general.show_more' | t }}"
+        >
+          {{ 'general.show_more' | t }}
+        </button>
+      </div>
     </ul>
-    {% render 'testimonial-skeleton' %}
+    {% render 'testimonial-skeleton', count: section.settings.columns %}
     <div class="empty-section" data-empty hidden>
       {% assign title = 'testimonials.empty.title' | t %}
       {% render 'yc-empty', icon: 'testimonials', heading: title %}

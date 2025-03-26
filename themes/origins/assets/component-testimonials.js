@@ -1,52 +1,61 @@
 class Testimonials extends HTMLElement {
-  static observedAttributes = ["product-id"];
+  static observedAttributes = ["product-id", "limit"];
 
   constructor() {
     super();
     this.productId = this.getAttribute("product-id");
 
     this.container = this.querySelector("[data-container]");
+    this.showMore = this.querySelector("[data-show-more]");
     this.skeleton = this.querySelector("[data-skeleton]");
     this.empty = this.querySelector("[data-empty]");
   }
 
   connectedCallback() {
-    if (!this.productId) {
-      this.setIsEmpty();
-      this.skeleton.remove();
+    this._render();
+  }
+
+  _render() {
+    if (!this.productId) return this.setEmptyState();
+    this.fetchReviews();
+  }
+
+  async fetchReviews(response = null) {
+    try {
+      this.setIsLoading();
+
+      const res = response || youcanjs.product.fetchReviews(this.productId, { limit: this.getAttribute("limit") });
+      const items = await res.data();
+
+      items.length ? this.setupItems(items) : this.setEmptyState();
+      this.updatePagination(res);
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+      this.setEmptyState();
+    } finally {
+      this.skeleton.setAttribute("hidden", true);
+    }
+  }
+
+  setupItems(items) {
+    items.filter(({ content }) => content).forEach((item) => this.createItem(item));
+  }
+
+  updatePagination(response) {
+    const { total_pages, current_page } = response.meta.pagination;
+    if (current_page >= total_pages) {
+      this.showMore.setAttribute("hidden", true);
 
       return;
     }
 
-    this._render();
-  }
-
-  async _render() {
-    try {
-      const response = await youcanjs.product.fetchReviews(this.productId).data();
-
-      response.length ? this.setupItems(response) : this.setIsEmpty();
-    } catch (error) {
-      console.error(error);
-
-      this.setIsEmpty();
-      toast.show(error.message, "error");
-    } finally {
-      this.skeleton.remove();
-    }
-  }
-
-  setIsEmpty() {
-    this.empty.removeAttribute("hidden");
-  }
-
-  setupItems(items) {
-    const ITEMS_WITH_CONTENT = items.filter((item) => Boolean(item.content));
-
-    if (ITEMS_WITH_CONTENT.length) {
-      ITEMS_WITH_CONTENT.forEach((item) => this.createItem(item));
-    }
-    this.skeleton.remove();
+    this.showMore.removeAttribute("hidden");
+    this.showMore.onclick = () => {
+      this.skeleton.removeAttribute("hidden");
+      this.fetchReviews(response.next());
+    };
   }
 
   createItem({ first_name, last_name, content, ratings }) {
@@ -63,10 +72,20 @@ class Testimonials extends HTMLElement {
     });
 
     if (first_name || last_name) {
-      itemAuthor.textContent = `- ${first_name ?? ""} ${last_name ?? ""}`;
+      itemAuthor.textContent = `- ${first_name ?? ""} ${last_name ?? ""}`.trim();
     }
 
     this.container.appendChild(testimonial);
+  }
+
+  setIsLoading() {
+    this.showMore?.setAttribute("hidden", true);
+    this.skeleton.removeAttribute("hidden");
+  }
+
+  setEmptyState() {
+    this.empty.removeAttribute("hidden");
+    this.skeleton.remove();
   }
 }
 

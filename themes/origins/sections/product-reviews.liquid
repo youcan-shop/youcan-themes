@@ -58,7 +58,17 @@
         {% render 'review-card' %}
       </ul>
       {% render 'review-skeleton' %}
-      {% render 'write-review', product_id: product.id %}
+      <div class="reviews-actions">
+        <button
+          hidden
+          class="icon"
+          data-show-more
+          aria-label="{{ 'general.show_more' | t }}"
+        >
+          {{ 'general.show_more' | t }}
+        </button>
+        {% render 'write-review', product_id: product.id %}
+      </div>
     </yc-reviews>
   </yc-section>
 {% endif %}
