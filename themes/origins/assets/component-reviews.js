@@ -7,6 +7,7 @@ class Reviews extends HTMLElement {
 
     this.total = this.querySelector("[data-total]");
     this.skeleton = this.querySelector("[data-skeleton]");
+    this.showMore = this.querySelector("[data-show-more]");
     this.container = this.querySelector("[data-container]");
     this.percentages = this.querySelectorAll("[data-graph] [data-percentage]");
 
@@ -18,17 +19,25 @@ class Reviews extends HTMLElement {
     this._render();
   }
 
-  async _render() {
-    try {
-      const response = await youcanjs.product.fetchReviews(this.productId).data();
+  _render() {
+    this.fetchReviews();
+  }
 
-      response.length && this.setupItems(response);
+  async fetchReviews(response = null) {
+    try {
+      this.setLoadingState();
+
+      const res = response || youcanjs.product.fetchReviews(this.productId);
+      const items = await res.data();
+
+      items.length && this.setupItems(items);
+      this.setupPagination(res);
     } catch (error) {
       console.error(error);
 
       toast.show(error.message, "error");
     } finally {
-      this.skeleton.remove();
+      this.skeleton.setAttribute("hidden", true);
     }
   }
 
@@ -41,8 +50,17 @@ class Reviews extends HTMLElement {
     this.setTotalReviews(items.length);
     this.setPercentageReviews(items);
     this.disableInactiveFilters(itemsWithContent);
+  }
 
-    this.skeleton.remove();
+  setupPagination(response) {
+    const { total_pages, current_page } = response.meta.pagination;
+    if (current_page >= total_pages) return this.showMore.setAttribute("hidden", true);
+
+    this.showMore.removeAttribute("hidden");
+    this.showMore.addEventListener("click", () => {
+      this.skeleton.removeAttribute("hidden");
+      this.fetchReviews(response.next());
+    });
   }
 
   setTotalReviews(total) {
@@ -84,7 +102,7 @@ class Reviews extends HTMLElement {
 
   setItemAuthor(authorElement, { first_name, last_name }) {
     if (first_name || last_name) {
-      authorElement.textContent = `${first_name || ""} ${last_name || ""}`;
+      authorElement.textContent = `${first_name || ""} ${last_name || ""}`.trim();
     }
   }
 
@@ -174,6 +192,11 @@ class Reviews extends HTMLElement {
     const justNow = new Intl.RelativeTimeFormat(CUSTOMER_LOCALE, { numeric: "auto" }).format(0, "second");
 
     return justNow;
+  }
+
+  setLoadingState() {
+    this.showMore?.setAttribute("hidden", true);
+    this.skeleton.removeAttribute("hidden");
   }
 }
 
