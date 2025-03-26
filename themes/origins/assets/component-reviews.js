@@ -57,10 +57,10 @@ class Reviews extends HTMLElement {
     if (current_page >= total_pages) return this.showMore.setAttribute("hidden", true);
 
     this.showMore.removeAttribute("hidden");
-    this.showMore.addEventListener("click", () => {
+    this.showMore.onclick = () => {
       this.skeleton.removeAttribute("hidden");
       this.fetchReviews(response.next());
-    });
+    };
   }
 
   setTotalReviews(total) {

@@ -1,5 +1,5 @@
 class Testimonials extends HTMLElement {
-  static observedAttributes = ["product-id"];
+  static observedAttributes = ["product-id", "limit"];
 
   constructor() {
     super();
@@ -24,7 +24,7 @@ class Testimonials extends HTMLElement {
     try {
       this.setIsLoading();
 
-      const res = response || youcanjs.product.fetchReviews(this.productId, { limit: 9 });
+      const res = response || youcanjs.product.fetchReviews(this.productId, { limit: this.getAttribute("limit") });
       const items = await res.data();
 
       items.length ? this.setupItems(items) : this.setEmptyState();
