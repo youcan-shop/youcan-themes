@@ -7,9 +7,7 @@
   {% assign og_type = 'product' %}
 {% endif %}
 
-{%- if settings.meta_description %}
-  <meta name='description' content='{{ settings.meta_description }}'>
-{% endif %}
+<meta name='description' content='{{ settings.meta_description | default: og_description }}'>
 
 {%- if settings.meta_keywords %}
   <meta property='keywords' content='{{ settings.meta_keywords }}'>
