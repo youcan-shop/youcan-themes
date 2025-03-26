@@ -1,0 +1,24 @@
+{% assign store_title = store.title | default: store.name %}
+
+<title>
+  {% if page %}
+    {{ page.name }} - {{ store_title }}
+  {% elsif product %}
+    {{ product.name }} - {{ store_title }}
+  {% elsif category %}
+    {{ category.name }} - {{ store_title }}
+  {% elsif template %}
+    {% case template.name %}
+      {% when 'index' %}
+        {{ store_title }}
+      {% when 'list-collections' %}
+        {{ 'head_metadata.collections' | t }} - {{ store_title }}
+      {% when 'cart' %}
+        {{ 'head_metadata.cart' | t }} - {{ store_title }}
+      {% when 'thankyou' %}
+        {{ 'head_metadata.thankyou' | t }} - {{ store_title }}
+      {% else %}
+        {{ template.name }} - {{ store_title }}
+    {% endcase %}
+  {% endif %}
+</title>
