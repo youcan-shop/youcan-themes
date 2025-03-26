@@ -1,16 +1,10 @@
-<meta charset='UTF-8'>
-<meta
-  http-equiv='X-UA-Compatible'
-  content='IE=edge'
->
-<meta
-  name='viewport'
-  content='width=device-width, initial-scale=1.0'
->
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ settings.font_family }}:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap">
+
+{%- if settings.favicon %}
+  <link rel='shortcut icon' href='{{ settings.favicon.src }}'>
+{% endif %}
 
 {%- style -%}
   :root {
@@ -86,68 +80,19 @@
   }
 {%- endstyle -%}
 
-{%- if settings.favicon %}
-  <link
-    rel='shortcut icon'
-    href='{{ settings.favicon.src }}'
-  >
-{% endif %}
-
-{%- if settings.meta_description %}
-  <meta
-    name='description'
-    content='{{ settings.meta_description }}'
-  >
-{% endif %}
-
-{%- if settings.meta_keywords %}
-  <meta
-    name='keywords'
-    content='{{ settings.meta_keywords }}'
-  >
-{% endif %}
-
-{%- if settings.og_image %}
-  <meta
-    property='og:image'
-    content='{{ settings.og_image.src }}'
-  >
-{% endif %}
+{{ 'main.css' | asset_url | preload_tag }}
+{{ 'utils.css' | asset_url | preload_tag }}
 
 <script
   type='module'
   src='https://unpkg.com/ionicons@latest/dist/ionicons/ionicons.esm.js'
 ></script>
 
+{{ content_for_header }}
+{{ 'youcan-js.min.js' | asset_url | script_tag }}
+{{ 'helper.js' | asset_url | script_tag }}
+
 {% javascript %}
   const defaultAvatar = "{{ 'avatar.png' | asset_url }}";
   const ratings = "{{ 'reviews.ratings' | t }}";
 {% endjavascript %}
-
-{{ 'main.css' | asset_url | preload_tag }}
-{{ 'utils.css' | asset_url | preload_tag }}
-
-{% assign store_title = store.title | default: store.name %}
-
-<title>
-  {% if page %}
-    {{ store_title }} | {{ page.name }}
-  {% elsif product %}
-    {{ store_title }} | {{ product.name }}
-  {% elsif category %}
-    {{ store_title }} | {{ category.name }}
-  {% elsif template %}
-    {% case template.name %}
-      {% when 'index' %}
-        {{ store_title }}
-      {% when 'list-collections' %}
-        {{ store_title }} | {{ 'head_metadata.collections' | t }}
-      {% when 'cart' %}
-        {{ store_title }} | {{ 'head_metadata.cart' | t }}
-      {% when 'thankyou' %}
-        {{ store_title }} | {{ 'head_metadata.thankyou' | t }}
-      {% else %}
-        {{ store_title }} | {{ template.name }}
-    {% endcase %}
-  {% endif %}
-</title>
