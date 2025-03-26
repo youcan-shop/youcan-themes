@@ -45,7 +45,11 @@ class Testimonials extends HTMLElement {
 
   updatePagination(response) {
     const { total_pages, current_page } = response.meta.pagination;
-    if (current_page >= total_pages) return this.showMore.setAttribute("hidden", true);
+    if (current_page >= total_pages) {
+      this.showMore.setAttribute("hidden", true);
+
+      return;
+    }
 
     this.showMore.removeAttribute("hidden");
     this.showMore.onclick = () => {
