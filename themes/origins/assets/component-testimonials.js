@@ -12,6 +12,10 @@ class Testimonials extends HTMLElement {
   }
 
   connectedCallback() {
+    this._render();
+  }
+
+  _render() {
     if (!this.productId) return this.setEmptyState();
     this.fetchReviews();
   }
@@ -23,7 +27,7 @@ class Testimonials extends HTMLElement {
       const res = response || youcanjs.product.fetchReviews(this.productId);
       const items = await res.data();
 
-      items.length ? this.renderItems(items) : this.setEmptyState();
+      items.length ? this.setupItems(items) : this.setEmptyState();
       this.setupPagination(res);
     } catch (error) {
       console.error(error);
@@ -34,7 +38,7 @@ class Testimonials extends HTMLElement {
     }
   }
 
-  renderItems(items) {
+  setupItems(items) {
     items.filter(({ content }) => content).forEach((item) => this.createItem(item));
   }
 
