@@ -5,6 +5,7 @@
   - variant_id: {String} Default variant id
   - available: {Boolean} Whether the variant is available or not
   - source: {String} (Optional) Parent source 'product-form', 'quick-view'
+  - skip_cart: {Boolean} (Optional) Skips the cart drawer and takes users to the cart page (after adding an item)
 
   Usage:
   {% render 'yc-add-to-cart', variant_id: '045-dj8-30k-ws7', available: true %}
@@ -21,6 +22,9 @@
   {% if source %}
     source="{{ source }}"
   {% endif %}
+  {% if skip_cart %}
+    skip-cart
+  {% endif %}
 >
   {% render 'yc-quantity-control', product: product, inventory: product.selected_or_first_available_variant.inventory %}
   <button
@@ -32,7 +36,7 @@
     {% endunless %}
   >
     <span
-      data-add-to-cart="{{ 'general.add_to_cart' | t }}"
+      data-add-to-cart="{% if skip_cart %}{{ 'general.shop_now' | t }}{% else %}{{ 'general.add_to_cart' | t }}{% endif %}"
       data-out-of-stock="{{ 'general.out_of_stock' | t }}"
     >
     </span>
