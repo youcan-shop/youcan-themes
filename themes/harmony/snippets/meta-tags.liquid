@@ -17,21 +17,23 @@
 
 <meta property="og:site_name" content="{{ store.name }}">
 <meta property="og:url" content="{{ og_url }}">
-<meta property="og:title" content="{{ og_title | escape }}">
 <meta property="og:type" content="{{ og_type }}">
-<meta property="og:description" content="{{ og_description | escape }}">
 
-{%- if settings.og_image %}
-    <meta property="og:image" content="{{ settings.og_image.src }}">
-    <meta property="og:image:secure_url" content="{{ settings.og_image.src }}">
-{% endif %}
+{%- if template.name != 'product' %}
+  <meta property="og:title" content="{{ og_title | escape }}">
+  <meta property="og:description" content="{{ og_description | escape }}">
+{%- endif %}
 
-{% if product %}
-  <meta property="og:image" content="{{ product.thumbnail }}">
-  <meta property="og:image:secure_url" content="{{ product.thumbnail }}">
+{%- if settings.og_image and template.name != 'product' %}
+  <meta property="og:image" content="{{ settings.og_image.src }}">
+  <meta property="og:image:secure_url" content="{{ settings.og_image.src }}">
 {% endif %}
 
 {% if template.name == 'product' %}
+  <meta property="og:title" content="{{ product.meta.title | escape }}">
+  <meta property="og:description" content="{{ product.meta.description | escape }}">
   <meta property="og:price:amount" content="{{ product.price | default: 0 }}">
   <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
+  <meta property="og:image" content="{{ product.thumbnail }}">
+  <meta property="og:image:secure_url" content="{{ product.thumbnail }}">
 {% endif %}
