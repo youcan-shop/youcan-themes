@@ -25,13 +25,13 @@ class Reviews extends HTMLElement {
 
   async fetchReviews(response = null) {
     try {
-      this.setLoadingState();
+      this.setIsLoading();
 
-      const res = response || youcanjs.product.fetchReviews(this.productId);
+      const res = response || youcanjs.product.fetchReviews(this.productId, { limit: 9 });
       const items = await res.data();
 
       items.length && this.setupItems(items);
-      this.setupPagination(res);
+      this.updatePagination(res);
     } catch (error) {
       console.error(error);
 
@@ -52,7 +52,7 @@ class Reviews extends HTMLElement {
     this.disableInactiveFilters(itemsWithContent);
   }
 
-  setupPagination(response) {
+  updatePagination(response) {
     const { total_pages, current_page } = response.meta.pagination;
     if (current_page >= total_pages) return this.showMore.setAttribute("hidden", true);
 
@@ -194,7 +194,7 @@ class Reviews extends HTMLElement {
     return justNow;
   }
 
-  setLoadingState() {
+  setIsLoading() {
     this.showMore?.setAttribute("hidden", true);
     this.skeleton.removeAttribute("hidden");
   }

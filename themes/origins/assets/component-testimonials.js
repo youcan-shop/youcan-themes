@@ -22,15 +22,16 @@ class Testimonials extends HTMLElement {
 
   async fetchReviews(response = null) {
     try {
-      this.setLoadingState();
+      this.setIsLoading();
 
-      const res = response || youcanjs.product.fetchReviews(this.productId);
+      const res = response || youcanjs.product.fetchReviews(this.productId, { limit: 9 });
       const items = await res.data();
 
       items.length ? this.setupItems(items) : this.setEmptyState();
-      this.setupPagination(res);
+      this.updatePagination(res);
     } catch (error) {
       console.error(error);
+
       toast.show(error.message, "error");
       this.setEmptyState();
     } finally {
@@ -42,7 +43,7 @@ class Testimonials extends HTMLElement {
     items.filter(({ content }) => content).forEach((item) => this.createItem(item));
   }
 
-  setupPagination(response) {
+  updatePagination(response) {
     const { total_pages, current_page } = response.meta.pagination;
     if (current_page >= total_pages) return this.showMore.setAttribute("hidden", true);
 
@@ -73,7 +74,7 @@ class Testimonials extends HTMLElement {
     this.container.appendChild(testimonial);
   }
 
-  setLoadingState() {
+  setIsLoading() {
     this.showMore?.setAttribute("hidden", true);
     this.skeleton.removeAttribute("hidden");
   }
