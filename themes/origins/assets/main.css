@@ -17,11 +17,9 @@ body{
   color:rgb(var(--color-primary));
   background-color:var(--color-secondary);
 }
-body:has(* [data-visible=true]), body:has(* [data-hidden=false]){
+body:has(* [data-visible=true]), body:has(* [data-hidden=false]), body:has(yc-overlay[data-active]){
   overflow:hidden;
-}
-body:has(yc-overlay[data-active]){
-  overflow:hidden;
+  overscroll-behavior:contain;
 }
 body .main-container{
   flex:2;
@@ -287,6 +285,7 @@ a.link:not(.yc-btn):hover{
 }
 
 a,
+label,
 button,
 summary,
 .yc-btn{
@@ -294,6 +293,8 @@ summary,
   outline:1.5px solid transparent;
 }
 a:focus-visible, a:has(input:focus-visible),
+label:focus-visible,
+label:has(input:focus-visible),
 button:focus-visible,
 button:has(input:focus-visible),
 summary:focus-visible,
