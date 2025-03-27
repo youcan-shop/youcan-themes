@@ -14,6 +14,9 @@ class Upsell extends HTMLElement {
   }
 
   async handleChoice(event) {
+    event.target.setAttribute("data-loading", true);
+    this.disableActionButtons();
+
     const answer = event.target.name;
 
     if (answer !== "yes" && answer !== "no") return;
@@ -27,11 +30,9 @@ class Upsell extends HTMLElement {
 
     try {
       await youcanjs.upsell.answer(params);
-    } catch (error) {
-      console.error(error);
 
-      toast.show(error.message, "error");
-    } finally {
+      window.location.reload();
+    } catch (error) {
       window.location.href = "/checkout/thankyou";
     }
   }
@@ -51,6 +52,16 @@ class Upsell extends HTMLElement {
       console.error(error);
       return {};
     }
+  }
+
+  disableActionButtons() {
+    const actionButtons = document.querySelectorAll('[data-upsell-submit]');
+
+    if (!actionButtons.length) return;
+
+    actionButtons.forEach(button => {
+      button.disabled = true;
+    });
   }
 }
 
