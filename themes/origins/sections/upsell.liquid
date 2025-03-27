@@ -4,7 +4,7 @@
 {% capture product_offers %}
 {
   {% for product in upsell.products %}
-    "product_offers[{{ product.id }}]": "{{ product.variants.0.id }}"
+    "{{ product.id }}": "{{ product.variants.0.id }}"
     {% unless forloop.last %},{% endunless %}
   {% endfor %}
 }
@@ -35,21 +35,21 @@
     >
       <span class="title">{{ 'upsell.offer_title' | t }}</span>
       <button
-        data-upsell
+        data-upsell-submit
         name="no"
         class="yc-btn"
         data-button-size="{{ upsell.actions.btn_no.size }}"
         data-font-size="{{ upsell.actions.btn_no.font_size }}"
       >
-        {{ upsell.actions.btn_no.title }}
+        <span>{{ upsell.actions.btn_no.title }}</span>
       </button>
       <button
-        data-upsell
+        data-upsell-submit
         name="yes"
         data-button-size="{{ upsell.actions.btn_yes.size }}"
         data-font-size="{{ upsell.actions.btn_yes.font_size }}"
       >
-        {{- upsell.actions.btn_yes.title -}}
+        <span>{{ upsell.actions.btn_yes.title }}</span>
       </button>
     </yc-upsell>
     <div class="footer">
