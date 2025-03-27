@@ -78,8 +78,19 @@ yc-variant {
       outline-offset: 1.5px;
       outline: 1.5px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
 
+      &::before {
+        width: 150%;
+        height: 150%;
+        position: absolute;
+        border: 1.5px solid var(--variant-text-color);
+      }
+
       &:has(input:checked) {
         outline-color: var(--variant-text-color);
+      }
+
+      &:has(input:focus-visible)::before {
+        content: "";
       }
 
       &:has(input:disabled) {

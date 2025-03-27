@@ -66,8 +66,17 @@ yc-variant[name=color] .color-item{
   outline-offset:1.5px;
   outline:1.5px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
 }
+yc-variant[name=color] .color-item::before{
+  width:150%;
+  height:150%;
+  position:absolute;
+  border:1.5px solid var(--variant-text-color);
+}
 yc-variant[name=color] .color-item:has(input:checked){
   outline-color:var(--variant-text-color);
+}
+yc-variant[name=color] .color-item:has(input:focus-visible)::before{
+  content:"";
 }
 yc-variant[name=color] .color-item:has(input:disabled){
   opacity:0.6;
