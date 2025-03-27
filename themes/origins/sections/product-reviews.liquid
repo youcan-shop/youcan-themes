@@ -1,7 +1,13 @@
-{% if product.averageRating > 0 %}
-  {{ 'product-reviews.css' | asset_url | stylesheet_tag }}
-  {{ 'component-reviews.js' | asset_url | script_tag_deferred }}
-  {{ 'component-write-review.js' | asset_url | script_tag_deferred }}
+{% if product.averageRating > 0 or section.settings.show_write_review %}
+  {{ 'product-reviews.css' | asset_url | stylesheet_tag -}}
+
+  {% if product.averageRating > 0 %}
+    {{ 'component-reviews.js' | asset_url | script_tag_deferred }}
+  {% endif %}
+
+  {% if section.settings.show_write_review %}
+    {{ 'component-write-review.js' | asset_url | script_tag_deferred }}
+  {% endif %}
 
   <yc-section
     style="
@@ -12,52 +18,54 @@
     "
   >
     <yc-reviews product-id="{{ product.id }}">
-      <div class="rating-area">
-        <div class="total">
-          <div class="visual">
-            <h1 class="average">{{ product.averageRating }}</h1>
-            <div class="count">
-              <div class="stars">
-                {% for star in (1..5) %}
-                  {% if star <= product.averageRating %}
-                    {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
-                  {% else %}
-                    {% render 'yc-icon', name: 'star', size: 15 %}
-                  {% endif %}
-                {% endfor %}
+      {% if product.averageRating > 0 %}
+        <div class="rating-area">
+          <div class="total">
+            <div class="visual">
+              <h1 class="average">{{ product.averageRating }}</h1>
+              <div class="count">
+                <div class="stars">
+                  {% for star in (1..5) %}
+                    {% if star <= product.averageRating %}
+                      {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+                    {% else %}
+                      {% render 'yc-icon', name: 'star', size: 15 %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <p class="nbr"><span data-total>-</span> {{ 'product.reviews.ratings' | t }}</p>
               </div>
-              <p class="nbr"><span data-total>-</span> {{ 'product.reviews.ratings' | t }}</p>
+            </div>
+            <div class="graph" data-graph>
+              {% for bar in (1..5) %}
+                <div class="bar">
+                  {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
+                  <span>{{ bar }}</span>
+                  <div class="process"></div>
+                  <span data-percentage>0%</span>
+                </div>
+              {% endfor %}
             </div>
           </div>
-          <div class="graph" data-graph>
-            {% for bar in (1..5) %}
-              <div class="bar">
+          <div class="filter" data-filters>
+            <label for="all" class="yc-btn icon">
+              <input type="radio" name="rating-type" id="all" checked hidden>
+              {{ 'general.all' | t }}
+            </label>
+            {% for star in (1..5) %}
+              <label class="yc-btn icon">
                 {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
-                <span>{{ bar }}</span>
-                <div class="process"></div>
-                <span data-percentage>0%</span>
-              </div>
+                <input type="radio" name="rating-type" value="{{ star }}" hidden>
+                {{ star }}
+              </label>
             {% endfor %}
           </div>
         </div>
-        <div class="filter" data-filters>
-          <label class="yc-btn icon">
-            <input type="radio" name="rating-type" value="all" checked>
-            {{ 'general.all' | t }}
-          </label>
-          {% for star in (1..5) %}
-            <label class="yc-btn icon">
-              {% render 'yc-icon', name: 'star', size: 15, fill: 'currentColor' %}
-              <input type="radio" name="rating-type" value="{{ star }}">
-              {{ star }}
-            </label>
-          {% endfor %}
-        </div>
-      </div>
-      <ul class="items-grid reviews-area" data-container>
-        {% render 'review-card' %}
-      </ul>
-      {% render 'review-skeleton' %}
+        <ul class="items-grid reviews-area" data-container>
+          {% render 'review-card' %}
+        </ul>
+        {% render 'review-skeleton' %}
+      {% endif %}
       <div class="reviews-actions">
         <button
           hidden
@@ -67,11 +75,13 @@
         >
           {{ 'general.show_more' | t }}
         </button>
-        {% render 'write-review', product_id: product.id %}
+        {% if section.settings.show_write_review %}
+          {% render 'write-review', product_id: product.id %}
+        {% endif %}
       </div>
     </yc-reviews>
   </yc-section>
-{% endif %}
+{%- endif %}
 
 {%- schema -%}
 {
@@ -79,6 +89,12 @@
   "templates": ["product"],
   "label": "Product Reviews",
   "settings": [
+    {
+      "id": "show_write_review",
+      "type": "checkbox",
+      "label": "Show 'Write review' button",
+      "default": "true"
+    },
     {
       "id": "text_color",
       "type": "color",
