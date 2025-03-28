@@ -1,0 +1,29 @@
+{% comment %}
+  Renders a testimonial card skeleton
+
+  Accepts:
+  - count: (optional) {Number} number of skeleton items
+
+  Usage:
+  {% render 'testimonial-skeleton' %}
+{% endcomment %}
+
+{% assign number_of_items = count | default: 4 %}
+
+<div class="items-grid" data-skeleton>
+  {% for item in (1..number_of_items) %}
+    <yc-skeleton>
+      <yc-skeleton-group data-center>
+        <yc-skeleton-item variant="text" style="width: 120px; height: 25px"></yc-skeleton-item>
+      </yc-skeleton-group>
+      <yc-skeleton-group data-center>
+        <yc-skeleton-item variant="text"></yc-skeleton-item>
+        <yc-skeleton-item variant="text"></yc-skeleton-item>
+        <yc-skeleton-item variant="text"></yc-skeleton-item>
+      </yc-skeleton-group>
+      <yc-skeleton-group data-center>
+        <yc-skeleton-item variant="text" style="width: 120px;"></yc-skeleton-item>
+      </yc-skeleton-group>
+    </yc-skeleton>
+  {% endfor %}
+</div>
