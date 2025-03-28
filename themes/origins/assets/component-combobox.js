@@ -30,7 +30,7 @@ if (!customElements.get("yc-combobox")) {
         if (checked) this.placeholder.textContent = label;
 
         item.outerHTML = `
-          <label>
+          <label role="option">
             <span>${label}</span>
             <input type="radio" name="${this.getAttribute("name")}" value="${value?.value}" 
               ${disabled ? "disabled" : ""} ${checked ? "checked" : ""} ${required ? "required" : ""} hidden>

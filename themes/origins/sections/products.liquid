@@ -52,20 +52,18 @@
           --slider-max-items-lg: 2;
           --slider-max-items-md: 1;
         "
-        aria-role="region"
-        aria-roledescription="Carousel"
+        role="region"
+        aria-roledescription="carousel"
       >
         <div class="slider-area">
           <div class="slider-box" data-slider-box>
-            <ul class="slider-inner" data-slider>
+            <div class="slider-inner" data-slider>
               {% for block in section.blocks %}
-                <yc-slider-item>
-                  <li>
-                    {%- render 'product-card', product: block.settings.item, badge_text: block.settings.badge_text -%}
-                  </li>
+                <yc-slider-item role="group" aria-roledescription="slide">
+                  {%- render 'product-card', product: block.settings.item, badge_text: block.settings.badge_text -%}
                 </yc-slider-item>
               {%- endfor -%}
-            </ul>
+            </div>
           </div>
         </div>
         <yc-slider-footer
