@@ -17,11 +17,9 @@ body{
   color:rgb(var(--color-primary));
   background-color:var(--color-secondary);
 }
-body:has(* [data-visible=true]), body:has(* [data-hidden=false]){
+body:has(* [data-visible=true]), body:has(* [data-hidden=false]), body:has(yc-overlay[data-active]){
   overflow:hidden;
-}
-body:has(yc-overlay[data-active]){
-  overflow:hidden;
+  overscroll-behavior:contain;
 }
 body .main-container{
   flex:2;
@@ -142,6 +140,10 @@ button.primary,
   background-color:rgb(var(--color-button));
   color:rgb(var(--color-button-text));
   border:1px solid rgb(var(--color-button));
+}
+button.primary:focus-visible,
+.yc-btn.primary:focus-visible{
+  outline-color:rgb(var(--color-button));
 }
 button.secondary,
 .yc-btn.secondary{
@@ -286,6 +288,27 @@ a.link:not(.yc-btn):hover{
   text-decoration:underline;
 }
 
+a,
+label,
+button,
+summary,
+.yc-btn{
+  outline-offset:1px;
+  outline:1.5px solid transparent;
+}
+a:focus-visible, a:has(input:focus-visible),
+label:focus-visible,
+label:has(input:focus-visible),
+button:focus-visible,
+button:has(input:focus-visible),
+summary:focus-visible,
+summary:has(input:focus-visible),
+.yc-btn:focus-visible,
+.yc-btn:has(input:focus-visible){
+  outline-color:rgb(currentColor);
+  outline-color:rgb(var(--section-text-color, currentColor));
+}
+
 select,
 textarea,
 input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=search]){
@@ -337,6 +360,7 @@ textarea{
 .field textarea{
   max-height:150px;
 }
+.field .label,
 .field label:not(.images){
   font-size:var(--text-sm);
 }
@@ -643,6 +667,26 @@ yc-skeleton yc-skeleton-item[variant=rounded]{
 .breadcrumb ol li a[aria-current]{
   color:currentColor;
   pointer-events:none;
+}
+
+.skip-to-content{
+  left:50%;
+  opacity:0;
+  z-index:1000;
+  position:fixed;
+  translate:-50% -100%;
+  padding:16px 24px;
+  font-size:var(--text-md);
+  color:var(--color-base-white);
+  background-color:var(--color-base-black);
+  border-end-end-radius:var(--button-border-radius);
+  border-end-start-radius:var(--button-border-radius);
+  transition:var(--transition-duration-fast);
+}
+.skip-to-content:focus-visible{
+  opacity:1;
+  translate:-50% 0%;
+  outline-color:var(--color-base-black);
 }
 
 [hidden]{

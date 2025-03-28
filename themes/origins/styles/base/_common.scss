@@ -14,6 +14,10 @@ button,
     background-color: rgb(var(--color-button));
     color: rgb(var(--color-button-text));
     border: 1px solid rgb(var(--color-button));
+
+    &:focus-visible {
+      outline-color: rgb(var(--color-button));
+    }
   }
 
   &.secondary {
@@ -131,6 +135,20 @@ a.link:not(.yc-btn):hover {
   text-decoration: underline;
 }
 
+a,
+label,
+button,
+summary,
+.yc-btn {
+  outline-offset: 1px;
+  outline: 1.5px solid transparent;
+
+  &:focus-visible,
+  &:has(input:focus-visible) {
+    outline-color: rgb(var(--section-text-color, currentColor));
+  }
+}
+
 // INPUT
 select,
 textarea,
@@ -176,6 +194,7 @@ textarea {
     max-height: 150px;
   }
 
+  .label,
   label:not(.images) {
     font-size: var(--text-sm);
   }
@@ -571,6 +590,28 @@ yc-skeleton {
         }
       }
     }
+  }
+}
+
+// Skip to content
+.skip-to-content {
+  left: 50%;
+  opacity: 0;
+  z-index: 1000;
+  position: fixed;
+  translate: -50% -100%;
+  padding: 16px 24px;
+  font-size: var(--text-md);
+  color: var(--color-base-white);
+  background-color: var(--color-base-black);
+  border-end-end-radius: var(--button-border-radius);
+  border-end-start-radius: var(--button-border-radius);
+  transition: var(--transition-duration-fast);
+
+  &:focus-visible {
+    opacity: 1;
+    translate: -50% 0%;
+    outline-color: var(--color-base-black);
   }
 }
 

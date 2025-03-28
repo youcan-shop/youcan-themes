@@ -17,7 +17,10 @@ yc-variant .variant-item{
   color:var(--variant-text-color);
 }
 yc-variant .variant-item:not(.radio-item) input[type=radio]{
-  display:none;
+  width:0;
+  height:0;
+  opacity:0;
+  position:absolute;
 }
 yc-variant[name=toggle] .toggle-item{
   position:relative;
@@ -63,8 +66,17 @@ yc-variant[name=color] .color-item{
   outline-offset:1.5px;
   outline:1.5px solid color-mix(in srgb, var(--variant-text-color) 20%, transparent);
 }
+yc-variant[name=color] .color-item::before{
+  width:150%;
+  height:150%;
+  position:absolute;
+  border:1.5px solid var(--variant-text-color);
+}
 yc-variant[name=color] .color-item:has(input:checked){
   outline-color:var(--variant-text-color);
+}
+yc-variant[name=color] .color-item:has(input:focus-visible)::before{
+  content:"";
 }
 yc-variant[name=color] .color-item:has(input:disabled){
   opacity:0.6;
@@ -182,6 +194,12 @@ yc-variant[name=upload-image] yc-upload .upload-preview{
 }
 yc-variant[name=upload-image] yc-upload .upload-preview svg{
   color:color-mix(in srgb, currentColor 60%, transparent);
+}
+yc-variant[name=upload-image] yc-upload .upload-preview input[type=file]{
+  width:0;
+  height:0;
+  opacity:0;
+  position:absolute;
 }
 yc-variant[name=upload-image] yc-upload .upload-preview img{
   position:absolute;
