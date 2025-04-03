@@ -10,9 +10,9 @@
 
 {% assign slideshow_settings = section.settings %}
 
-<yc-slider-item>
+<yc-slider-item role="group" aria-roledescription="slide">
   {% if slide.image.src %}
-    <img src="{{ slide.image.src }}" alt="{{ slide.title }}" height="100%" width="100%">
+    <img src="{{ slide.image.src }}" alt="{{ "slide " | append: forloop.index }}" height="100%" width="100%">
   {% endif %}
   {% if slide.heading or slide.subheading or slide.button_text %}
     <yc-slider-content data-alignment="{{ slideshow_settings.content_alignment }}">

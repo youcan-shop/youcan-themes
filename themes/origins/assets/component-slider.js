@@ -198,8 +198,7 @@ if (!customElements.get("yc-slider")) {
       this.sliderFooter = this.querySelector("yc-slider-footer");
       if (!this.sliderFooter) return;
 
-      this.sliderItems = this.querySelectorAll("yc-slider-item");
-      this.sliderFooter.hidden = this.sliderItems.length <= this.PER_PAGE;
+      this.sliderFooter.hidden = this.TOTAL <= this.PER_PAGE;
     }
 
     setArrows() {

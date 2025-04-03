@@ -76,32 +76,28 @@
           --slider-max-items-lg: 2;
           --slider-max-items-md: 1;
         "
-        aria-role="region"
+        role="region"
         aria-roledescription="Carousel"
       >
         <div class="slider-area">
           <div class="slider-box" data-slider-box>
-            <ul class="slider-inner" data-slider>
+            <div class="slider-inner" data-slider>
               {% if collection %}
                 {%- paginate collection.products by number_of_products id category_id: collection.id %}
                   {%- for item in items -%}
-                    <yc-slider-item>
-                      <li>
-                        {%- render 'product-card', product: item -%}
-                      </li>
+                    <yc-slider-item role="group" aria-roledescription="slide">
+                      {%- render 'product-card', product: item -%}
                     </yc-slider-item>
                   {%- endfor -%}
                 {%- endpaginate %}
               {% else %}
                 {%- for _ in (1..number_of_products) -%}
-                  <yc-slider-item>
-                    <li>
-                      {%- render 'product-card', product: null -%}
-                    </li>
+                  <yc-slider-item role="group" aria-roledescription="slide">
+                    {%- render 'product-card', product: null -%}
                   </yc-slider-item>
                 {%- endfor -%}
               {% endif %}
-            </ul>
+            </div>
           </div>
         </div>
         <yc-slider-footer>
