@@ -1,0 +1,217 @@
+@import "mixins/breakpoints";
+
+yc-section {
+  --order-border-radius: var(--button-border-radius);
+  --order-border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+
+  .message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-md);
+
+    .icon {
+      color: var(--color-success-500);
+    }
+  }
+
+  .order {
+    width: 500px;
+    margin-inline: auto;
+    border-radius: var(--order-border-radius);
+    border: var(--order-border);
+
+    .title,
+    .payment,
+    .items,
+    .summary,
+    .subtotal,
+    .grand-total {
+      padding: 1em 1.5em;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    .title,
+    .payment {
+      border-block-end: var(--order-border);
+    }
+
+    .payment {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--text-md);
+
+      .status,
+      .method {
+        display: flex;
+        gap: var(--gap-md);
+        align-items: center;
+      }
+
+      .label {
+        color: rgba(var(--section-text-color), 70%);
+      }
+
+      .method {
+        .value {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .items {
+      display: grid;
+      gap: var(--gap-lg);
+
+      .item {
+        display: flex;
+        gap: var(--gap-md);
+
+        .image {
+          --size: 70px;
+
+          width: var(--size);
+          height: var(--size);
+          overflow: hidden;
+          border-radius: calc(var(--order-border-radius) * 0.66);
+          border: 1px solid rgba(var(--section-text-color), 0.05);
+
+          .card-placeholder {
+            width: 100%;
+            height: 100%;
+            background-color: rgba(var(--section-text-color), 0.05);
+
+            svg {
+              color: rgba(var(--section-text-color), 0.3);
+            }
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .info {
+          flex: 1;
+
+          .name {
+            font-size: var(--text-md);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+        }
+
+        .variant,
+        .quantity,
+        .item-subtotal {
+          font-size: var(--text-xs);
+          color: color-mix(in srgb, currentColor 80%, transparent);
+        }
+      }
+    }
+
+    .summary,
+    .subtotal {
+      font-size: var(--text-md);
+      border-block-start: var(--order-border);
+    }
+
+    .summary {
+      display: grid;
+      gap: var(--gap-md);
+      color: color-mix(in srgb, currentColor 70%, transparent);
+
+      .coupon-code {
+        background-color: color-mix(in srgb, currentColor 8%, transparent);
+        padding-inline: 0.5em;
+        margin-inline-end: -4px;
+        border-radius: calc(var(--order-border-radius) * 0.66);
+      }
+    }
+
+    .grand-total {
+      display: grid;
+      gap: var(--gap-lg);
+      border-block-start: var(--order-border);
+
+      .summary-item {
+        font-weight: 550;
+      }
+    }
+
+    a {
+      color: var(--section-bg-color);
+      background-color: rgb(var(--section-text-color));
+    }
+  }
+
+  .badge {
+    --badge-color: currentColor;
+
+    padding: 0.25em 0.5em;
+    color: var(--badge-color);
+    background-color: color-mix(in srgb, var(--badge-color) 8%, transparent);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+
+    &[data-status$="paid"] {
+      --badge-color: var(--color-success-500);
+    }
+    &[data-status$="unpaid"] {
+      --badge-color: var(--color-gray-500);
+    }
+    &[data-status$="captured"] {
+      --badge-color: var(--color-info-500);
+    }
+    &[data-status$="refunded"] {
+      --badge-color: var(--color-gray-500);
+    }
+    &[data-status$="pending"] {
+      --badge-color: var(--color-warning-500);
+    }
+  }
+}
+
+@include breakpoint("sm") {
+  yc-section {
+    .order {
+      width: 100%;
+
+      .payment {
+        align-items: flex-start;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--gap-lg);
+
+        .method,
+        .status {
+          flex-direction: column;
+        }
+      }
+
+      .items {
+        .item {
+          .image {
+            --size: 50px;
+          }
+        }
+      }
+    }
+  }
+}

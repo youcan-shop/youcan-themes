@@ -1,0 +1,163 @@
+{{ 'layout-header.css' | asset_url | stylesheet_tag }}
+{{ 'component-drawer.css' | asset_url | stylesheet_tag }}
+
+{{ 'layout-header.js' | asset_url | script_tag_deferred }}
+{{ 'component-drawer.js' | asset_url | script_tag_deferred }}
+
+{% style %}
+  :root {
+    --header-bg-color: {{ section.settings.header_background_color.hex }};
+    --header-text-color: {{ section.settings.header_text_color.red }}, {{ section.settings.header_text_color.green }}, {{ section.settings.header_text_color.blue }};
+    --header-logo-width: {{ section.settings.logo_width }}px;
+  }
+{% endstyle %}
+
+<yc-header
+  {% if section.settings.header_sticky %}
+    data-sticky
+  {% endif %}
+  {% if section.settings.header_border %}
+    data-bottom-border
+  {% endif %}
+  data-desktop-logo-position="{{ section.settings.desktop_logo_position }}"
+  data-mobile-logo-position="{{ section.settings.mobile_logo_position }}"
+>
+  <div class="logo" data-block>
+    <a href="/" aria-label="home">
+      {% if section.settings.header_logo.src %}
+        <img
+          src="{{ section.settings.header_logo.src }}"
+          alt="{{ store.name }}"
+          height="100%"
+          width="{{ section.settings.logo_width }}"
+        >
+      {% else %}
+        {{ store.name }}
+      {% endif %}
+    </a>
+  </div>
+  <div class="links" data-block>
+    <ul>
+      {% for link in main-link-list.links %}
+        <li>
+          <a class="yc-btn link" href="{{ link.url }}">
+            {{ link.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    {% render 'header-menu-drawer' %}
+  </div>
+  <div class="actions" data-block>
+    <form action="/search" class="search-bar" data-expanded="false" data-search-field>
+      {% render 'yc-icon', name: 'search' %}
+      <input class="search-input" type="text" name="q" placeholder="{{ 'general.search' | t }}" name="products" required>
+    </form>
+    <button type="submit" class="search-btn icon" aria-label="search" data-search-action>
+      {% render 'yc-icon', name: 'search' %}
+      {% render 'yc-icon', name: 'x-mark' %}
+    </button>
+    {% render 'header-cart-drawer' %}
+  </div>
+</yc-header>
+
+{% schema %}
+{
+  "label": "Header",
+  "tag": "header",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Main menu links can be managed from your [menu settings](https:\/\/seller-area.youcan.shop\/admin\/menus)"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "desktop_logo_position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "Top left"
+        },
+        {
+          "value": "top-center",
+          "label": "Top center"
+        },
+        {
+          "value": "middle-left",
+          "label": "Middle left"
+        },
+        {
+          "value": "middle-center",
+          "label": "Middle center"
+        }
+      ],
+      "default": "middle-left",
+      "label": "Desktop logo position"
+    },
+    {
+      "type": "select",
+      "id": "mobile_logo_position",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center",
+      "label": "Mobile logo position"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_sticky",
+      "label": "Sticky mode",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "header_border",
+      "label": "Bottom border",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "header_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,40 @@
+{% comment %}
+  Renders a product card 'Add to cart' button
+
+  Accepts:
+  - variant_id: {String}  Default variant id
+  - available: {Boolean} Whether the variant is available or not
+  - skip_cart: {Boolean} (Optional) Skips the cart drawer and takes users to the cart page (after adding an item)
+
+  Usage:
+  {% render 'product-add-to-cart', variant_id: '045-dj8-30k-ws7', available: true %}
+{% endcomment %}
+
+<yc-product-form
+  quantity="1"
+  variant-id="{{ variant_id }}"
+  {% unless available %}
+    not-available
+  {% endunless %}
+  {% if source %}
+    source="{{ source }}"
+  {% endif %}
+  {% if skip_cart %}
+    skip-cart
+  {% endif %}
+>
+  <button
+    data-buy-button
+    aria-label="buy"
+    class="secondary"
+    {% unless available %}
+      disabled
+    {% endunless %}
+  >
+    <span
+      data-add-to-cart="{% if skip_cart %}{{ 'general.shop_now' | t }}{% else %}{{ 'general.add_to_cart' | t }}{% endif %}"
+      data-out-of-stock="{{ 'general.out_of_stock' | t }}"
+    >
+    </span>
+  </button>
+</yc-product-form>

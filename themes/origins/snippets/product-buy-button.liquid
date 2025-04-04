@@ -1,0 +1,19 @@
+{% comment %}
+  Renders either an 'express checkout' form or an 'add to cart' button
+
+  Accepts:
+  - product: {Object} Product variant
+
+  Usage:
+  {% render 'product-buy-button', product: product %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+
+<div class="buy-button">
+  {% if settings.checkout_type == 'express' %}
+    {% render 'yc-express-checkout', variant_id: default_variant.id, available: product.available, is_sticky: is_sticky %}
+  {% else %}
+    {% render 'yc-add-to-cart', variant_id: default_variant.id, available: product.available, skip_cart: product.skip_to_checkout %}
+  {% endif %}
+</div>
