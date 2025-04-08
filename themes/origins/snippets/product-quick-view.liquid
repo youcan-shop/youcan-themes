@@ -1,0 +1,86 @@
+{% comment %}
+  Renders a product variant selector (quick view modal)
+
+  Accepts:
+  - product: {Object} Product information
+
+  Usage:
+  {% render 'product-quick-view', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+
+<yc-product class="product-quick-view" product-id="{{ product.id }}">
+  <yc-modal style="--modal-width: 60%">
+    <button class="secondary" data-trigger>
+      {{ 'general.choose_options' | t }}
+    </button>
+    <yc-modal-content>
+      <div class="view-box">
+        <div class="head">
+          <div class="title">
+            <a href="{{ product.url }}" class="link h4">
+              {{ product.name }}
+            </a>
+          </div>
+          <button class="icon" data-size="sm" data-trigger>
+            {% render 'yc-icon', name: 'chevron-down' %}
+          </button>
+        </div>
+        <div class="content">
+          <yc-product-media>
+            <div class="main-image">
+              {% if product.thumbnail %}
+                <img
+                  src="{{ product.thumbnail }}"
+                  alt="{{ product.name }}"
+                  loading="lazy"
+                  height="100%"
+                  width="100%"
+                >
+              {% else %}
+                <div class="card-placeholder">
+                  {% render 'yc-placeholder', name: 'product' %}
+                </div>
+              {% endif %}
+            </div>
+          </yc-product-media>
+          <yc-product-info>
+            <div class="core-info">
+              {% render 'product-rating', rating: product.averageRating, show_avg_rating: true %}
+              <div class="price-info">
+                <p class="current h2" data-product-item="price">
+                  {% assign product_price = default_variant.price | default: product.price %}
+                  {{ product_price | default: 0 | money }}
+                </p>
+                <p
+                  class="compare-at h3"
+                  data-product-item="compare-at-price"
+                  {% if compare_at_price == null %}
+                    hidden
+                  {% endif %}
+                >
+                  {% assign product_compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+                  {{ product_compare_at_price | default: 0 | money }}
+                </p>
+              </div>
+              {% render 'product-variants' %}
+            </div>
+            {% render 'yc-add-to-cart',
+              variant_id: default_variant.id,
+              available: default_variant.available,
+              skip_cart: product.skip_to_checkout,
+              source: 'quick-view'
+            %}
+          </yc-product-info>
+        </div>
+      </div>
+    </yc-modal-content>
+  </yc-modal>
+</yc-product>
+
+{% javascript %}
+  if (!window.productsVariants["{{ product.id }}"]) {
+    window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+  }
+{% endjavascript %}

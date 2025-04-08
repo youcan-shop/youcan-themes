@@ -1,0 +1,44 @@
+{{ 'component-combobox.css' | asset_url | stylesheet_tag }}
+{{ 'component-variants.css' | asset_url | stylesheet_tag }}
+
+{{ 'component-combobox.js' | asset_url | script_tag_deferred }}
+{{ 'component-upload.js' | asset_url | script_tag_deferred }}
+{{ 'component-product.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a product variant options
+
+  Usage:
+  {% render 'product-variants' %}
+{% endcomment %}
+
+<yc-variants>
+  {% for variant in product.options %}
+    {% assign default = '' %}
+    {% assign name_id = 100 | rand: 2000 %}
+    {% assign unique_name = variant.name | append: '_' | append: name_id %}
+
+    {% for variation in product.selected_or_first_available_variant.variations %}
+      {% if variation[0] == variant.name %}
+        {% assign default = variation[1] %}
+      {% endif %}
+    {% endfor %}
+
+    <div class="variant">
+      <span class="label">{{ variant.name }}:</span>
+      {% if variant.type == 'textual_buttons' %}
+        {% render 'variant-toggle', name: unique_name, options: variant.values, default_value: default %}
+      {% elsif variant.type == 'radio_buttons' %}
+        {% render 'variant-radio', name: unique_name, options: variant.values, default_value: default %}
+      {% elsif variant.type == 'color_base_buttons' %}
+        {% render 'variant-color', name: unique_name, options: variant.values, default_value: default %}
+      {% elsif variant.type == 'dropdown' %}
+        {% render 'variant-dropdown', name: unique_name, options: variant.values, default_value: default %}
+      {% elsif variant.type == 'image_based_buttons' %}
+        {% render 'variant-image', name: unique_name, options: variant.values, default_value: default %}
+      {% elsif variant.type == 'upload_image_zone' %}
+        {% render 'variant-upload', name: unique_name %}
+      {% endif %}
+    </div>
+  {% endfor %}
+</yc-variants>

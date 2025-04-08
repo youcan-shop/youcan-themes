@@ -1,0 +1,38 @@
+{% comment %}
+  Breadcrumb
+
+  Accepts:
+  - nav_links_string: {String} The list of links (url & text) separated by a pipe '|'. Note that each link should have a url and text, separated by a comma ','
+
+  Usage:
+  {% assign nav_links_string = '/, Home | /products, Products' %}
+  {% render 'yc-breadcrumb', nav_links_string: nav_links_string %}
+{% endcomment %}
+
+{% assign links = nav_links_string | split: '|' %}
+
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ol>
+    {% for nav_link in links %}
+      {% assign index = forloop.index %}
+      {% assign link = nav_link | split: ',' %}
+      {% assign url = link[0] | strip %}
+      {% assign text = link[1] | strip %}
+
+      <li>
+        <a
+          href="{{ url }}"
+          class="link"
+          {% if index == links.size - 1 %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{ text }}
+        </a>
+        {% unless index == links.size - 1 %}
+          {% render 'yc-icon', name: 'chevron-right', size: 12 %}
+        {% endunless %}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>

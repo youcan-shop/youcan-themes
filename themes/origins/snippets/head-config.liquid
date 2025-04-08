@@ -1,0 +1,185 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family={{ settings.font_family }}:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+>
+{% assign slug_initial = store.slug | slice: 0, 1 %}
+{% assign favicon = "data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><rect width='100%' height='100%' fill='white' rx='8' ry='8'/><text x='50%' y='50%' font-size='48' fill='currentColor' text-anchor='middle' dy='10'>[SLUG]</text></svg>" %}
+{% assign favicon = favicon | replace: '[SLUG]', slug_initial %}
+
+{% if settings.favicon.src %}
+  {% assign favicon = settings.favicon.src %}
+{% endif %}
+
+<link
+  {% unless settings.favicon.src != null %}
+    type="image/svg+xml"
+  {% endunless %}
+  rel="shortcut icon"
+  href="{{ favicon }}"
+>
+{%- style -%}
+  :root {
+    /* Typography */
+    --font-family: '{{ settings.font_family | replace: '+', ' '  }}', sans-serif;
+    --font-heading-scale: {{ settings.heading_scale | times: 1.0 | divided_by: settings.body_scale }};
+    --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+
+    /* Colors */
+    --color-primary: 18, 18, 18;
+    --color-secondary: #fff;
+
+    --color-base-white: #fff;
+    --color-base-black: #121212;
+
+    --color-gray-50: #f3f3f3;
+    --color-gray-300: #dcdcdc;
+    --color-gray-500: #535151;
+    --color-yellow-50: #fff5dc;
+    --color-yellow-500: #faab00;
+
+    --color-info-50: #ddeefd;
+    --color-info-500: #335CFF;
+    --color-error-50: #ffe0e0;
+    --color-error-500: #fb3748;
+    --color-warning-50: #ffaa00;
+    --color-warning-500: #ff9147;
+    --color-success-50: #d0f0e1;
+    --color-success-500: #1fc16b;
+
+    /* --color-primary */
+    --color-button:
+      {{ settings.button_background_color.red }},
+      {{ settings.button_background_color.green }},
+      {{ settings.button_background_color.blue }};
+    --color-button-text:
+      {{ settings.button_text_color.red }},
+      {{ settings.button_text_color.green }},
+      {{ settings.button_text_color.blue }};
+    /* --color-secondary */
+    --color-secondary-button:
+      {{ settings.secondary_button_color.red }},
+      {{ settings.secondary_button_color.green }},
+      {{ settings.secondary_button_color.blue }};
+
+    /* Text Size */
+    --text-xs: 1.2rem;
+    --text-sm: 1.3rem;
+    --text-md: 1.4rem;
+    --text-lg: 1.6rem;
+    --text-xl: 1.8rem;
+    --text-2xl: 2.4rem;
+    --text-3xl: 3.0rem;
+
+    /* Gap */
+    --gap-2xs: 2px;
+    --gap-xs: 3px;
+    --gap-sm: 5px;
+    --gap-md: 8px;
+    --gap-lg: 16px;
+    --gap-xl: 25px;
+    --gap-2xl: 32px;
+    --gap-3xl: 48px;
+
+    /* Radius */
+    --radius-sm: 0.5em;
+    --radius-md: 0.7em;
+    --radius-lg: 1em;
+    --radius-xl: 1.5em;
+    --radius-2xl: 2em;
+    --radius-circle: 50%;
+
+    /* Media Blur */
+    --media-blur: blur(1px);
+    --media-background: #0000001a;
+
+    /* Overlay */
+    --overlay-blur: blur(2px);
+    --overlay-background: rgba(0, 0, 0, 0.2);
+
+    /* Shadow */
+    --shadow-dark-sm: rgba(0, 0, 0, 0.03) 0px 3px 14px 0px, rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
+    --shadow-dark-focus-sm: rgba(0, 0, 0, 0.03) 0px 3px 14px 0px, var(--color-gray-500) 0px 0px 0px 1px;
+
+    /* Animation | Transition */
+    --transition-duration-fast: 0.1s;
+    --transition-duration-normal: 0.3s;
+    --transition-duration-slow: 0.4s;
+
+    /* Button */
+    --button-border-radius: {{ settings.button_border_radius }}px;
+
+    /* Input */
+    --input-border-radius: {{ settings.input_border_radius }}px;
+
+    /* Modal */
+    --modal-border-radius: {{ settings.modal_border_radius }}px;
+
+    /* Drawer */
+    --drawer-border-radius: {{ settings.drawer_border_radius }}px;
+
+    /* Toast */
+    --toast-border-radius: {{ settings.toast_border_radius }}px;
+
+    /* Product Cards */
+    --product-card-border-radius: {{ settings.product_card_border_radius }}px;
+    --product-card-text-alignment: {{ settings.product_card_text_alignment }};
+
+    /* Collection Cards */
+    --collection-card-border-radius: {{ settings.collection_card_border_radius }}px;
+    --collection-card-text-alignment: {{ settings.collection_card_text_alignment }};
+
+    /* Column Cards */
+    --column-card-border-radius: {{ settings.column_card_border_radius }}px;
+    --column-card-text-alignment: {{ settings.column_card_text_alignment }};
+
+    /* Product Review Cards */
+    --review-card-border-radius: {{ settings.review_card_border_radius }}px;
+    --review-card-text-alignment: {{ settings.review_card_text_alignment }};
+
+    /* Badges */
+    --badge-text-color: {{ settings.badge_text_color.hex }};
+    --badge-bg-color: {{ settings.badge_background_color.hex }};
+  }
+{%- endstyle -%}
+{{ 'main.css' | asset_url | stylesheet_tag }}
+{{ 'component-toast.css' | asset_url | stylesheet_tag }}
+{{ 'component-modal.css' | asset_url | stylesheet_tag }}
+
+{{ content_for_header }}
+
+{{ 'component-toast.js' | asset_url | script_tag_deferred }}
+{{ 'component-modal.js' | asset_url | script_tag_deferred }}
+{{ 'global.js' | asset_url | script_tag_deferred }}
+{{ 'pubsub.js' | asset_url | script_tag_deferred }}
+{{ 'youcan-js.min.js' | asset_url | script_tag_deferred }}
+{{ 'cart.js' | asset_url | script_tag_deferred }}
+
+{% if template.name != 'cart' and template.name != 'thankyou' and template.name != 'page' %}
+  {{ 'product-card.css' | asset_url | stylesheet_tag }}
+  {{ 'product-quick-view.css' | asset_url | stylesheet_tag }}
+  {{ 'component-product-form.js' | asset_url | script_tag_deferred }}
+{% endif %}
+
+<script>
+  window.errorStrings = {
+    insufficient_inventory: '{{ 'error_messages.insufficient_inventory' | t }}',
+    rating_is_required: '{{ 'error_messages.rating_is_required' | t }}',
+    large_file: '{{ 'error_messages.large_file' | t }}'
+  }
+
+  window.successStrings = {
+    review_submitted: '{{ 'success_messages.review_submitted' | t }}'
+  }
+
+  window.inventoryStatuses = {
+    in_stock: '{{ 'product.inventory_in_stock' | t }}',
+    in_stock_show_count: '{{ 'product.inventory_in_stock_show_count' | t }}',
+    low_stock: '{{ 'product.inventory_low_stock' | t }}',
+    low_stock_show_count: '{{ 'product.inventory_low_stock_show_count' | t }}',
+    out_of_stock: '{{ 'product.inventory_out_of_stock' | t }}',
+  }
+
+  window.productsVariants = {};
+</script>

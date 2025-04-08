@@ -1,0 +1,34 @@
+* {
+  margin: 0;
+  padding: 0;
+  line-height: 150%;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: rgb(var(--color-primary));
+  background-color: var(--color-secondary);
+
+  &:has(* [data-visible="true"]),
+  &:has(* [data-hidden="false"]),
+  &:has(yc-overlay[data-active]) {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  .main-container {
+    flex: 2;
+    order: 3;
+  }
+  #youcan-section--footer {
+    order: 4;
+  }
+}

@@ -1,0 +1,32 @@
+{% comment %}
+  Renders a slideshow slide item
+
+  Accepts:
+  - slide: {Object} Slide item
+
+  Usage:
+  {% render 'slideshow-slide', slide: {...} %}
+{% endcomment %}
+
+{% assign slideshow_settings = section.settings %}
+
+<yc-slider-item role="group" aria-roledescription="slide">
+  {% if slide.image.src %}
+    <img src="{{ slide.image.src }}" alt="{{ "slide " | append: forloop.index }}" height="100%" width="100%">
+  {% endif %}
+  {% if slide.heading or slide.subheading or slide.button_text %}
+    <yc-slider-content data-alignment="{{ slideshow_settings.content_alignment }}">
+      {% if slide.heading %}
+        <p class="heading">{{ slide.heading }}</p>
+      {% endif %}
+      {% if slide.subheading %}
+        <p class="subheading">{{ slide.subheading }}</p>
+      {% endif %}
+      {% if slide.button_text %}
+        <a href="{{ slide.button_url }}" class="yc-btn">
+          {{ slide.button_text }}
+        </a>
+      {% endif %}
+    </yc-slider-content>
+  {% endif %}
+</yc-slider-item>

@@ -1,0 +1,365 @@
+@import "mixins/breakpoints";
+
+#youcan-section--product-reviews {
+  --section-border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
+
+  &:not(:first-of-type) {
+    yc-section {
+      border-block-start: var(--section-border);
+    }
+  }
+
+  &:first-of-type {
+    yc-section {
+      border-block-end: var(--section-border);
+    }
+  }
+}
+
+yc-reviews {
+  display: grid;
+  gap: var(--gap-xl);
+
+  .rating-area {
+    display: grid;
+    gap: var(--gap-xl);
+    width: 50%;
+
+    .total {
+      display: flex;
+      gap: var(--gap-2xl);
+      align-items: center;
+
+      .visual {
+        .average {
+          text-align: center;
+        }
+
+        .count {
+          display: flex;
+          gap: var(--gap-sm);
+          flex-direction: column;
+
+          .stars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-yellow-500);
+          }
+
+          .nbr {
+            display: flex;
+            gap: var(--gap-xs);
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-md);
+            color: rgba(var(--section-text-color), 70%);
+          }
+        }
+      }
+
+      .graph {
+        width: 100%;
+        display: flex;
+        gap: var(--gap-sm);
+        flex-direction: column-reverse;
+
+        .bar {
+          display: flex;
+          align-items: center;
+          gap: var(--gap-md);
+          position: relative;
+
+          svg {
+            color: var(--color-yellow-500);
+          }
+
+          span {
+            width: 12px;
+            text-align: center;
+            font-size: var(--text-sm);
+
+            &:last-child {
+              min-width: 25px;
+              font-size: var(--text-xs);
+              color: rgba(var(--section-text-color), 70%);
+            }
+          }
+
+          .process {
+            height: 3px;
+            width: 100%;
+            display: block;
+            position: relative;
+            border-radius: var(--product-card-border-radius);
+            background-color: rgba(var(--section-text-color), 8%);
+
+            &::before {
+              content: "";
+              inset: 0;
+              height: 3px;
+              position: absolute;
+              border-radius: var(--product-card-border-radius);
+              width: calc(var(--rating-count, 0) * 1%);
+              background-color: rgb(var(--section-text-color));
+              transition: var(--transition-duration-normal);
+            }
+          }
+        }
+      }
+    }
+
+    .filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--gap-md);
+      align-items: center;
+
+      label {
+        cursor: pointer;
+        padding: 6px 12px;
+        font-size: var(--text-sm);
+        border-radius: calc(var(--button-border-radius) * 0.66);
+
+        svg {
+          color: var(--color-yellow-500);
+        }
+
+        input[type="radio"] {
+          width: 0;
+          height: 0;
+          opacity: 0;
+          position: absolute;
+        }
+
+        &:has(input:disabled) {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        &:has(input:checked) {
+          color: var(--section-bg-color);
+          border-color: rgb(var(--section-text-color));
+          background-color: rgb(var(--section-text-color));
+        }
+      }
+    }
+  }
+
+  .reviews-area {
+    .review-card {
+      min-width: 0;
+      padding: 1.5em;
+      display: flex;
+      gap: var(--gap-lg);
+      flex-direction: column;
+      border-radius: var(--product-card-border-radius);
+      border: 1px solid rgba(var(--section-text-color), 8%);
+
+      .info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .author {
+          display: grid;
+          gap: var(--gap-xs);
+
+          .name {
+            display: flex;
+            gap: var(--gap-sm);
+            font-size: var(--text-md);
+          }
+
+          .date {
+            font-size: var(--text-sm);
+            color: rgba(var(--section-text-color), 70%);
+          }
+        }
+
+        .rate {
+          display: flex;
+          align-items: center;
+          font-size: var(--text-sm);
+
+          svg {
+            color: var(--color-yellow-500);
+          }
+        }
+      }
+
+      .content {
+        display: grid;
+        gap: var(--gap-lg);
+
+        p {
+          width: 100%;
+          font-size: var(--text-sm);
+          color: rgba(var(--section-text-color), 70%);
+          word-break: break-all;
+          white-space: normal;
+        }
+
+        .images {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: var(--gap-md);
+          padding-block-start: var(--gap-lg);
+          border-block-start: 1px solid rgba(var(--section-text-color), 8%);
+
+          button[data-image] {
+            padding: 2px;
+            border-radius: calc(var(--button-border-radius) * 0.66);
+
+            &:nth-child(n + 4) {
+              display: none;
+            }
+
+            img {
+              width: 50px;
+              height: 50px;
+              object-fit: cover;
+              border-radius: calc(var(--button-border-radius) * 0.66);
+              transition: var(--transition-duration-normal);
+            }
+
+            &:hover img {
+              filter: blur(1px);
+            }
+          }
+
+          &:not(:has(button:nth-child(n + 4))) label {
+            display: none;
+          }
+
+          label {
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            font-size: var(--text-sm);
+            border-radius: calc(var(--button-border-radius) * 0.66);
+
+            input[type="checkbox"] {
+              width: 0;
+              height: 0;
+              opacity: 0;
+              position: absolute;
+            }
+          }
+
+          &:has(label input:checked) {
+            label {
+              display: none;
+            }
+
+            button[data-image]:nth-child(n + 4) {
+              display: flex;
+            }
+          }
+        }
+
+        .image-preview {
+          padding: 1em;
+          display: grid;
+          gap: var(--gap-xl);
+
+          button.icon {
+            z-index: 2;
+            padding: 8px;
+            position: absolute;
+            inset-inline-end: 2em;
+            inset-block-start: 2em;
+            background-color: var(--section-bg-color);
+          }
+
+          .preview-core {
+            height: 400px;
+            position: relative;
+
+            img {
+              width: 100%;
+              object-fit: cover;
+              border-radius: calc(var(--product-card-border-radius) * 0.66);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .reviews-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button:only-child {
+      margin: 0 auto;
+    }
+
+    button[data-show-more],
+    .action button[data-trigger] {
+      padding: 8px 15px;
+    }
+
+    &:has(button[data-show-more][hidden]) {
+      justify-content: center;
+    }
+  }
+
+  @for $i from 1 through 5 {
+    &:has(input[value="#{$i}"][name="rating-type"]:checked) {
+      .reviews-area {
+        .review-card:not([data-ratings="#{$i}"]) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@include breakpoint("lg") {
+  yc-reviews {
+    .rating-area {
+      width: 100%;
+    }
+  }
+}
+
+@include breakpoint("md") {
+  yc-reviews {
+    .rating-area {
+      .total {
+        display: grid;
+
+        .visual {
+          display: flex;
+          gap: var(--gap-md);
+          align-items: center;
+          justify-content: center;
+
+          .count {
+            .stars {
+              justify-content: start;
+            }
+
+            .nbr {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+    .review-card {
+      .content {
+        .image-preview {
+          padding-block-start: 0 !important;
+
+          button.icon {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{{ 'thank-you.css' | asset_url | stylesheet_tag }}
+
+<yc-section
+  style="
+    --section-space-top: {{ section.settings.space_top }}px;
+    --section-space-bottom: {{ section.settings.space_bottom }}px;
+    --section-bg-color: {{ section.settings.background_color.hex }};
+    --section-text-color: {{ section.settings.text_color.red }}, {{ section.settings.text_color.green }}, {{ section.settings.text_color.blue }};
+  "
+>
+  <yc-section-head data-position="center">
+    <div class="message">
+      {% render 'yc-icon', name: 'check-circle', size: 80 %}
+      <h1 class="h3">{{ 'order.title' | t }}</h1>
+      <p>{{ 'order.description' | t }}</p>
+    </div>
+  </yc-section-head>
+
+  <div class="order">
+    <div class="title">
+      <h2 class="h4">{{ 'order.order_summary' | t }}</h2>
+    </div>
+    <div class="payment">
+      <div class="status">
+        <span class="label">{{ 'order.status.label' | t }}:</span>
+        <span class="value">
+          {% assign payment_status = order.paymentStatusSlug %}
+          {% render 'payment-status', status: payment_status %}
+        </span>
+      </div>
+      <div class="method">
+        <span class="label">{{ 'order.payment_method.label' | t }}:</span>
+        <span class="value">
+          {% assign payment_gateway = order.gatewayType %}
+          {% render 'payment-gateway', type: payment_gateway %}
+        </span>
+      </div>
+    </div>
+    <ul class="items">
+      {% for product in order.order_variants %}
+        <li>{% render 'order-summary-item', product: product %}</li>
+      {% endfor %}
+    </ul>
+    <div class="subtotal">
+      <div class="summary-item">
+        <span class="label">{{ 'order.subtotal' | t }}</span>
+        <span class="value">{{ order.sub_total | default: 0 | money }}</span>
+      </div>
+    </div>
+    <div class="summary">
+      {% if order.coupon != null %}
+        <div class="summary-item">
+          <span class="label">{{ 'order.coupon_code' | t }}</span>
+          <div class="value coupon-code">{{ order.coupon.code }}</div>
+        </div>
+        <div class="summary-item">
+          <span class="label">{{ 'order.discount_amount' | t }}</span>
+          <span class="value">
+            {% render 'discount-value', coupon: order.coupon %}
+          </span>
+        </div>
+      {% endif %}
+      {% if order.vat != 0 %}
+        <div class="summary-item">
+          <span class="label">{{ 'cart.page.summary.vat' | t }}</span>
+          <div class="value coupon-code">{{ order.vat | times: 100 | append: '%' }}</div>
+        </div>
+        <div class="summary-item">
+          <span class="label">{{ 'cart.page.summary.tax_amount' | t }}</span>
+          <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
+        </div>
+      {% endif %}
+      <div class="summary-item">
+        <span class="label">{{ 'order.shipping' | t }}</span>
+        {% if order.shippingCost == 0 or order.shippingCost == null %}
+          {% assign shipping_cost = 'order.free' | t %}
+        {% else %}
+          {% assign shipping_cost = order.shippingCost | default: 0 | money %}
+        {% endif %}
+        <span class="value">{{ shipping_cost }}</span>
+      </div>
+    </div>
+    <div class="grand-total">
+      <div class="summary-item">
+        <span class="label">{{ 'order.total' | t }}</span>
+        <span class="value">{{ order.total | default: 0 | money }}</span>
+      </div>
+      <a href="/" class="yc-btn primary">{{ 'order.action' | t }}</a>
+    </div>
+  </div>
+</yc-section>
+
+{%- schema -%}
+{
+  "label": "Thank you",
+  "templates": ["thank-you"],
+  "limit": 1,
+  "settings": [
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "id": "background_color",
+      "type": "color",
+      "label": "Background color",
+      "default": "#FFFFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "id": "space_top",
+      "type": "range",
+      "label": "Space top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "id": "space_bottom",
+      "type": "range",
+      "label": "Space bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    }
+  ]
+}
+{%- endschema -%}

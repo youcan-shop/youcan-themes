@@ -1,0 +1,26 @@
+{% comment %}
+  Renders a payment status
+
+  Accepts:
+  - status: {String} Status ('paid' | 'unpaid' | 'captured' | 'refunded' | 'pending')
+
+  Usage:
+  {% render 'payment-status', status: 'product' %}
+{% endcomment %}
+
+<span class="badge" data-status="{{ status }}">
+  {%- case status -%}
+    {% when 'paid' %}
+      {{ 'order.status.paid' | t }}
+    {% when 'unpaid' %}
+      {{ 'order.status.unpaid' | t }}
+    {% when 'captured' %}
+      {{ 'order.status.captured' | t }}
+    {% when 'refunded' %}
+      {{ 'order.status.refunded' | t }}
+    {% when 'pending' %}
+      {{ 'order.status.pending' | t }}
+    {% else %}
+      --
+  {% endcase %}
+</span>

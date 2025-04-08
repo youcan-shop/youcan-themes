@@ -1,0 +1,54 @@
+{{ 'header-menu-drawer.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders the header menu drawer
+
+  Usage:
+  {% render 'header-menu-drawer' %}
+{% endcomment %}
+
+<yc-drawer id="menu" data-hidden="true" data-direction="ltr">
+  <button class="drawer-btn icon" aria-label="menu" data-toggle>
+    {% render 'yc-icon' | name: 'menu' %}
+  </button>
+  <div class="drawer-container">
+    <div class="drawer-box menu-drawer">
+      <div class="menu-head">
+        <a href="/" aria-label="home">
+          {% if section.settings.header_logo.src %}
+            <img
+              src="{{ section.settings.header_logo.src }}"
+              alt="{{ store.name }}"
+              height="100%"
+              width="{{ section.settings.logo_width }}"
+            >
+          {% else %}
+            {{ store.name }}
+          {% endif %}
+        </a>
+        <button class="close-btn icon" data-size="sm" aria-label="close" data-toggle>
+          {% render 'yc-icon' | name: 'x-mark' %}
+        </button>
+      </div>
+      <div class="menu-core">
+        <form action="/search" class="search-bar">
+          <input type="text" name="q" placeholder="{{ 'general.search' | t }}" name="products">
+          <button type="submit" class="icon" data-size="lg" aria-label="search">
+            {% render 'yc-icon' | name: 'search' %}
+          </button>
+        </form>
+        <ul role="list" class="navigation">
+          {% for link in main-link-list.links %}
+            <li>
+              <a href="{{ link.url }}">
+                {{ link.title }}
+                {% render 'yc-icon' | name: 'caret-right' %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="drawer-overlay overlay" data-toggle></div>
+  </div>
+</yc-drawer>
