@@ -3,12 +3,13 @@
 
 <html
   lang="{{ lang }}"
-  dir='{{ settings.theme_direction }}'
+  dir="{{ settings.theme_direction }}"
 >
   <head>
-    <meta charset='UTF-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="{{ request.url }}">
 
     {% render 'page-title' %}
     {%- render 'meta-tags' -%}
@@ -21,7 +22,7 @@
     {%- section 'notice-bar' %}
     {%- section 'main-navbar' %}
 
-    <main class='main-content'>
+    <main class="main-content">
       {{ content_for_layout }}
     </main>
 
@@ -30,8 +31,8 @@
 
     {% javascript %}
       const FORM = {
-        errors:  '{{ form.errors | first }}',
-      }
+        errors: '{{ form.errors | first }}',
+      };
     {% endjavascript %}
 
     {{ 'main.js' | asset_url | script_tag }}
