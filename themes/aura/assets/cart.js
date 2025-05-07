@@ -57,7 +57,7 @@ const CartUI = {
       summaryItem.id = `cart-item-${ item.id }`;
 
       const name = item.productVariant.product.name
-      const subtotal = formatCurrency(item.price * item.quantity, currencyCode, customerLocale);
+      const subtotal = formatCurrency(item.price * item.quantity, CURRENCY_CODE, CUSTOMER_LOCALE);
 
       const [itemName, itemPrice] = summaryItem.querySelectorAll('.item-name, .item-price');
       [itemName.textContent, itemPrice.textContent] = [name, subtotal];
@@ -69,7 +69,7 @@ const CartUI = {
     priceBox.appendChild(fragment);
 
     if (totalPriceElement) {
-      totalPriceElement.innerText = formatCurrency(total, currencyCode, customerLocale);
+      totalPriceElement.innerText = formatCurrency(total, CURRENCY_CODE, CUSTOMER_LOCALE);
     }
   },
   updateCoupon(coupon, discount) {
@@ -80,7 +80,7 @@ const CartUI = {
     if (couponsEnabled) {
       if (coupon && discount) {
         const percentageDiscount = `${coupon.value}%`;
-        const fixedDiscount = formatCurrency(coupon.value, currencyCode, customerLocale);
+        const fixedDiscount = formatCurrency(coupon.value, CURRENCY_CODE, CUSTOMER_LOCALE);
         couponType = coupon.type === 1 ? percentageDiscount : fixedDiscount;
 
         couponsEnabled.innerHTML = `
@@ -91,7 +91,7 @@ const CartUI = {
           </div>
           <ion-icon class="close-search" id="remove-coupon" name="close-outline"></ion-icon>
         `;
-        document.querySelector('.discount-price').innerText = formatCurrency(discount, currencyCode, customerLocale);
+        document.querySelector('.discount-price').innerText = formatCurrency(discount, CURRENCY_CODE, CUSTOMER_LOCALE);
         discountWrapper.classList.remove('hidden');
       } else {
         couponsEnabled.innerHTML = '';
@@ -115,7 +115,7 @@ const CartUI = {
     );
 
     input.value = quantity;
-    totalPrice.innerHTML = formatCurrency(itemSubtotal, currencyCode, customerLocale);
+    totalPrice.innerHTML = formatCurrency(itemSubtotal, CURRENCY_CODE, CUSTOMER_LOCALE);
   },
   setQuantityButtonsHandlers(increase, decrease, cartItemId, productVariantId, quantity) {
     decrease
