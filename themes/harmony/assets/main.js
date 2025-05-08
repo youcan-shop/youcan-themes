@@ -1,6 +1,7 @@
 /* ----- Store currency ----- */
-const currencyCode = window.Dotshop.currency;
-const customerLocale = window.Dotshop.customer_locale;
+const CURRENCY_CODE = window.Dotshop.currency;
+const CUSTOMER_LOCALE = window.Dotshop.customer_locale || 'en-US';
+const CUSTOMER_COUNTRY_CODE = new Intl.Locale(CUSTOMER_LOCALE).region;;
 /* ------------------ */
 /* ----- navbar ----- */
 /* ------------------ */
