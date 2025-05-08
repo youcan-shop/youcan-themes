@@ -1,6 +1,8 @@
 {{ 'express-checkout.css' | asset_url | stylesheet_tag }}
 
 {% assign checkout_id = 100 | rand: 2000 %}
+{% assign linked_fields = 'country,region,city' %}
+{% assign has_linked_fields = checkout.linked_fields %}
 
 {% style %}
   {% if is_sticky %}
@@ -79,63 +81,95 @@
 {% endstyle %}
 
 <form
-  id='express-checkout-form'
-  class='custom-checkout-{{ checkout_id }}
-  {% if is_placeholder %}express-checkout-placeholder{% endif %}'
+  id="express-checkout-form"
+  class="
+    custom-checkout-{{ checkout_id }}
+    {% if is_placeholder %}express-checkout-placeholder{% endif %}
+  "
   onsubmit="return false;"
 >
-  <div class='express-checkout-fields'>
-    <div class='express-checkout-title'>{{ settings.form_title }}</div>
+  <div class="express-checkout-fields">
+    <div class="express-checkout-title">{{ settings.form_title }}</div>
     {% for field in checkout.fields %}
       {% assign field_name = field.name %}
       {% if field.custom %}
-        {% assign field_name = "extra_fields[" | append: field.name | append: "]" %}
+        {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
       {% endif %}
 
-      <div class='express-checkout-field'>
-        {% case field.type %}
-          {% when 'select' %}
-            <select class="w-full" name='{{ field_name }}'>
-              {% if field.placeholder %}
-                <option value='' disabled {% if field.default_value == '' %}selected{% endif %}>
-                  {{ field.placeholder }}
-                </option>
-              {% endif %}
-              {% for option in field.options %}
-                <option value='{{ option }}' {% if option == field.default_value %}selected{% endif %}>
-                  {{ option }}
-                </option>
-              {% endfor %}
-            </select>
-          {% when 'textarea' %}
-            <textarea
-              name='{{ field_name }}'
-              id='{{ field.name }}'
-              class='w-full'
-              placeholder='{{ field.placeholder }}'
-              required='{{ field.required }}' min></textarea>
-          {% else %}
-            <input
-              name='{{ field_name }}'
-              type='{{ field.type }}'
-              id='{{ field.name }}'
-              class='w-full'
-              placeholder='{{ field.placeholder }}'
-              required='{{ field.required }}'>
-        {% endcase %}
+      <div class="express-checkout-field">
+        {% unless has_linked_fields and linked_fields contains field.name %}
+          {% case field.type %}
+            {% when 'select' %}
+              <select class="w-full" name="{{ field_name }}">
+                {% if field.placeholder %}
+                  <option
+                    value=""
+                    disabled
+                    {% if field.default_value == '' %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ field.placeholder }}
+                  </option>
+                {% endif %}
+                {% for option in field.options %}
+                  <option
+                    value="{{ option }}"
+                    {% if option == field.default_value %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ option }}
+                  </option>
+                {% endfor %}
+              </select>
+            {% when 'textarea' %}
+              <textarea
+                name="{{ field_name }}"
+                id="{{ field.name }}"
+                class="w-full"
+                placeholder="{{ field.placeholder }}"
+                required="{{ field.required }}"
+                min
+              ></textarea>
+            {% else %}
+              <input
+                name="{{ field_name }}"
+                type="{{ field.type }}"
+                id="{{ field.name }}"
+                class="w-full"
+                placeholder="{{ field.placeholder }}"
+                required="{{ field.required }}"
+              >
+          {% endcase %}
+        {% else %}
+          <select
+            data-linked-field="{{ field.name }}"
+            required="{{ field.required }}"
+            name="{{ field.name }}"
+            class="w-full"
+          ></select>
+        {% endunless %}
         <div
-          class='validation-error'
+          class="validation-error"
           {% if field.custom %}
-            data-error='extra_fields[{{ field.name }}]'
+            data-error="extra_fields[{{ field.name }}]"
           {% else %}
-            data-error='{{ field.name }}'
+            data-error="{{ field.name }}"
           {% endif %}
         ></div>
       </div>
     {% endfor %}
     {% if is_sticky == false %}
-      <button type='submit' class='express-checkout-button' {% if is_placeholder %} disabled {% endif %} onclick='placeOrder(this)'>
-        <span class='spinner hidden' id='loading__checkout'></span>
+      <button
+        type="submit"
+        class="express-checkout-button"
+        {% if is_placeholder %}
+          disabled
+        {% endif %}
+        onclick="placeOrder(this)"
+      >
+        <span class="spinner hidden" id="loading__checkout"></span>
         <span>{{ settings.express_checkout_cta | default: 'general.buy_now' | t }}</span>
       </button>
     {% endif %}
@@ -143,3 +177,6 @@
 </form>
 
 {{ 'express-checkout.js' | asset_url | script_tag_deferred }}
+{% if has_linked_fields %}
+  {{ 'linked-fields.js' | asset_url | script_tag_deferred }}
+{% endif %}
