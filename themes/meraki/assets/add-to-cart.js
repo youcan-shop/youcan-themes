@@ -155,14 +155,14 @@ async function updateCartDrawer() {
       const products = document.createElement('ul');
 
       for (const item of cartData.items) {
-        item.price = formatCurrency(item.price, currencyCode, customerLocale);
-        item.productVariant.price = formatCurrency(item.productVariant.price, currencyCode, customerLocale);
+        item.price = formatCurrency(item.price, CURRENCY_CODE, CUSTOMER_LOCALE);
+        item.productVariant.price = formatCurrency(item.productVariant.price, CURRENCY_CODE, CUSTOMER_LOCALE);
 
         if (item.productVariant.compare_at_price) {
           item.productVariant.compare_at_price = formatCurrency(
             item.productVariant.compare_at_price,
-            currencyCode,
-            customerLocale,
+            CURRENCY_CODE,
+            CUSTOMER_LOCALE,
           );
         }
 
@@ -181,7 +181,7 @@ async function updateCartDrawer() {
       cartDrawerContent.appendChild(p);
     }
 
-    cartData.sub_total = formatCurrency(cartData.sub_total, currencyCode, customerLocale);
+    cartData.sub_total = formatCurrency(cartData.sub_total, CURRENCY_CODE, CUSTOMER_LOCALE);
 
     const footerContainerHTML = `
         <div class="footer">
