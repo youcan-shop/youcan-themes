@@ -161,7 +161,7 @@ async function updateQuantity(cartItemId, productVariantId, quantity) {
       const itemSubtotal = cartItem.price * cartItem.quantity;
 
       CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal);
-      CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+      CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
     }
   } catch (e) {
     notify(e.message, 'error');
@@ -177,7 +177,7 @@ async function removeItem(cartItemId, productVariantId) {
 
     CartUI.removeCartItemFromUI(cartItemId);
     CartUI.updateCartBadge(updatedCart.count);
-    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+    CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
 
     if (updatedCart.items.length === 0) {
       CartUI.handleEmptyCart();
@@ -197,7 +197,7 @@ document.forms['promo']?.addEventListener('submit', async (e) => {
   try {
     const updatedCart = await CartService.applyCoupon(coupon);
     CartUI.updateCoupon(updatedCart.coupon, updatedCart.discountedPrice);
-    CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+    CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
   } catch (e) {
     notify(e.message, 'error');
   } finally {
@@ -211,7 +211,7 @@ document.addEventListener('click', async (e) => {
     try {
       const updatedCart = await CartService.removeCoupons();
       CartUI.updateCoupon(null, null);
-      CartUI.updateTotalPrice(updatedCart.total, updatedCart.items);
+      CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
     } catch (e) {
       notify(e.message, 'error');
     } finally {
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const cart = await CartService.fetchCart();
 
     if (cart.items.length > 0) {
-      CartUI.updateTotalPrice(cart.total, cart.items);
+      CartUI.updateTotalPrice(cart.discounted_sub_total, cart.items);
     }
 
     if (cart.coupon && cart.discountedPrice) {
