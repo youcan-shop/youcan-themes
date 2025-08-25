@@ -1,0 +1,18 @@
+{% comment %}
+  Renders a benefit item (Block)
+
+  Accepts:
+  - content: {String} Benefit content
+  - icon: {String} Benefit icon
+  - youcan_attributes: {String} (optional) YouCan attributes (allow blocks to be highlighted in the theme editor)
+
+  Usage:
+  {% render 'block-benefit', content: 'Worldwide Shipping', icon: 'language' %}
+{% endcomment %}
+
+<li block="benefit" {{ youcan_attributes }}>
+  {% if icon %}
+    {% render 'ui-icon', name: icon %}
+  {% endif %}
+  <span>{{ content }}</span>
+</li>

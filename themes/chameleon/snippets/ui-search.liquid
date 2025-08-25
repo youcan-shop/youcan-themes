@@ -1,0 +1,23 @@
+{{ 'ui.search.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a search modal
+
+  Usage:
+  {% render 'ui-search'  %}
+{% endcomment %}
+
+<ui-search role="search">
+  <button class="search-trigger action" aria-label="search">
+    {% render 'ui-icon', name: 'search' %}
+  </button>
+  <label class="search-content" data-state="closed">
+    {% render 'ui-icon', name: 'search' %}
+    <form action="/search">
+      <input type="text" name="q" placeholder="{{ 'general.search' | t }}">
+    </form>
+    <button aria-label="close">
+      {% render 'ui-icon', name: 'cancel', filled: true %}
+    </button>
+  </label>
+</ui-search>

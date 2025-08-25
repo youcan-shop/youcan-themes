@@ -1,0 +1,43 @@
+{% comment %}
+  Renders a contact form
+
+  Usage:
+  {% render 'misc-contact-form' %}
+{% endcomment %}
+
+{% form 'contact' %}
+  {% if form.posted_successfully %}
+    <div class="success">
+      {% render 'ui-icon', name: 'celebration', filled: true %}
+      <span>{{ 'contact.success_message' | t }}</span>
+    </div>
+  {% elsif form.errors %}
+    <div class="error">
+      {% render 'ui-icon', name: 'error', filled: true %}
+      <span>{{ 'contact.error_message' | t }}</span>
+    </div>
+    <ul class="errors">
+      {% for error in form.errors %}
+        {% assign message = error[1] %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <div class="fields">
+    <div class="field">
+      <label for="email">{{ 'contact.fields.email' | t }}</label>
+      <input id="email" name="email" type="email" placeholder="{{ 'contact.fields.email' | t }}" required>
+    </div>
+    <div class="field">
+      <label for="subject">{{ 'contact.fields.subject' | t }}</label>
+      <input id="subject" name="subject" type="text" placeholder="{{ 'contact.fields.subject' | t }}" required>
+    </div>
+    <div class="field">
+      <label for="message">{{ 'contact.fields.message' | t }}</label>
+      <textarea type="text" id="message" name="message" minlength="5" rows="8" placeholder="{{ 'contact.fields.message' | t }}" required></textarea>
+    </div>
+  </div>
+  <button type="submit" ui-button data-variant="primary" data-size="md" class="add-to-cart">
+    {{ 'contact.action' | t }}
+  </button>
+{% endform %}

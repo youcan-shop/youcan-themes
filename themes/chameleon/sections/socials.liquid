@@ -1,0 +1,62 @@
+{{ 'section.socials.css' | asset_url | stylesheet_tag }}
+{{ 'block.social.css' | asset_url | stylesheet_tag }}
+
+<ul section="socials">
+  {% for social in section.blocks %}
+    {% render 'block-social', type: social.settings.social_name, href: social.settings.social_link, youcan_attributes: social.youcan_attributes %}
+  {% endfor %}
+</ul>
+
+{% schema %}
+{
+  "label": "t:sections.socials.label",
+  "limit": 1,
+  "max_blocks": 4,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "social",
+      "label": "t:sections.socials.blocks.label",
+      "settings": [
+        {
+          "type": "select",
+          "id": "social_name",
+          "label": "t:sections.socials.blocks.social_name",
+          "options": [
+            {
+              "value": "facebook",
+              "label": "t:sections.socials.blocks.facebook"
+            },
+            {
+              "value": "instagram",
+              "label": "t:sections.socials.blocks.instagram"
+            },
+            {
+              "value": "x-twitter",
+              "label": "t:sections.socials.blocks.x"
+            },
+            {
+              "value": "tiktok",
+              "label": "t:sections.socials.blocks.tiktok"
+            },
+            {
+              "value": "whatsapp",
+              "label": "t:sections.socials.blocks.whatsapp"
+            },
+            {
+              "value": "snapchat",
+              "label": "t:sections.socials.blocks.snapchat"
+            }
+          ],
+          "default": "facebook"
+        },
+        {
+          "type": "text",
+          "id": "social_link",
+          "label": "t:sections.socials.blocks.social_link"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

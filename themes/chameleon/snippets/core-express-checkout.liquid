@@ -1,0 +1,72 @@
+{{ 'core.express-checkout.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders an icon (Material Icons)
+
+  Accepts:
+  - fields: {Array} Checkout fields
+
+  Usage:
+  {% render 'core-express-checkout', name: [...] %}
+{% endcomment %}
+
+{% assign linked_fields = 'country,region,city' %}
+{% assign has_linked_fields = checkout.linked_fields %}
+
+<ui-express-checkout>
+  {% for field in checkout.fields %}
+    {% assign field_name = field.name %}
+
+    {% if field.custom %}
+      {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
+    {% endif %}
+
+    {% unless has_linked_fields and linked_fields contains field.name %}
+      <label ui-express-checkout-field>
+        <span ui-express-checkout-label>{{ field.display_name }}</span>
+        {% case field.type %}
+          {% when 'text', 'number', 'hidden' %}
+            <input
+              type="{{ field.type }}"
+              name="{{ field_name }}"
+              value="{{ field.default_value }}"
+              placeholder="{{ field.placeholder }}"
+              {% if field.required %}
+                required
+              {% endif %}
+            >
+          {% when 'textarea' %}
+            <textarea
+              name="{{ field_name }}"
+              placeholder="{{ field.placeholder }}"
+              {% if field.required %}
+                required
+              {% endif %}
+            ></textarea>
+          {% when 'select' %}
+            <select
+              name="{{ field_name }}"
+              {% if field.required %}
+                required
+              {% endif %}
+            >
+              {% for opt in field.options %}
+                <option
+                  value="{{ opt }}"
+                  {% if option == field.default_value %}
+                    selected
+                  {% endif %}
+                >
+                  {{ opt }}
+                </option>
+              {% endfor %}
+            </select>
+        {% endcase %}
+      </label>
+    {% endunless %}
+  {% endfor %}
+
+  {% if has_linked_fields %}
+    {% render 'misc-linked-fields', fields: checkout.fields %}
+  {% endif %}
+</ui-express-checkout>

@@ -1,0 +1,64 @@
+@import url("./_tokens.css");
+@import url("./_misc.css");
+@import url("./_layout.css");
+
+@import url("./ui.toast.css");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font: var(--font-body-md);
+  color: var(--color-on-background);
+  background-color: var(--color-background);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--spacing-12);
+
+  & > [layout="main"],
+  & > #youcan-section--header,
+  & > #youcan-section--footer {
+    width: 100%;
+  }
+
+  & > [layout="main"] {
+    flex: 2;
+    display: flex;
+    gap: var(--spacing-12);
+    flex-direction: column;
+  }
+
+  &[data-theme-mode="dark"],
+  &:has(ui-theme > input:checked) {
+    color-scheme: dark;
+
+    [data-invert] {
+      filter: invert(1);
+    }
+  }
+}
+
+ul {
+  list-style: none;
+}
+
+.section-head {
+  text-align: center;
+  padding: var(--spacing-16);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-container-low);
+
+  h2 {
+    font: var(--font-title-md);
+  }
+}

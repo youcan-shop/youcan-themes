@@ -1,0 +1,87 @@
+{{ 'section.faq.css' | asset_url | stylesheet_tag }}
+{% if section.blocks.size > 0 %}
+  {{ 'ui.accordion.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+<div section="faq">
+  <div class="section-head">
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+  <div class="section-core">
+    <div class="media">
+      {% if section.settings.image.src %}
+        <img
+          src="{{ section.settings.image.src }}"
+          alt="{{ section.settings.title | default: "faq" }}"
+          height="100%"
+          width="100%"
+        >
+      {% else %}
+        {% render 'ui-icon', name: 'image', size: 60, filled: true %}
+      {% endif %}
+    </div>
+    <div class="content">
+      <div class="head">
+        <h2 class="title">{{ section.settings.heading }}</h2>
+        <p class="description">{{ section.settings.subheading }}</p>
+      </div>
+      <div class="core">
+        {% render 'ui-accordion', name: 'faq', items: section.blocks %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.faq.label",
+  "templates": ["index", "product", "page"],
+  "limit": 1,
+  "max_blocks": 8,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "FAQ"
+    },
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "t:common.heading",
+      "default": "Heading"
+    },
+    {
+      "id": "subheading",
+      "type": "text",
+      "label": "t:common.subheading",
+      "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur possimus non ipsa esse iure ratione aperiam consectetur doloremque accusantium necessitatibus."
+    },
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "t:common.image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "label": "t:sections.faq.blocks.label",
+      "settings": [
+        {
+          "id": "question",
+          "type": "text",
+          "label": "t:sections.faq.blocks.question",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        },
+        {
+          "id": "answer",
+          "type": "text",
+          "label": "t:sections.faq.blocks.answer",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias impedit illo quam culpa rem eius, eveniet sunt beatae officia consequuntur."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

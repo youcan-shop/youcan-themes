@@ -1,0 +1,31 @@
+{% comment %}
+  Renders an accordion component
+
+  Accepts:
+  - name: {String} Unique name
+  - items: {Array} List of accordion items (trigger + content)[]
+
+  Usage:
+  {% render 'ui-accordion', items: [...] %}
+{% endcomment %}
+
+<ul ui-accordion>
+  {% for item in items %}
+    {% if item.type == 'accordion' or item.type == 'faq' %}
+      <li ui-accordion-item {{ item.youcan_attributes }}>
+        <label>
+          <div ui-accordion-trigger>
+            <span>{{ item.trigger | default: item.settings.question }}</span>
+            {% render 'ui-icon', name: 'add' %}
+          </div>
+          <div ui-accordion-portal>
+            <div ui-accordion-content>
+              <p>{{ item.content | default: item.settings.answer }}</p>
+            </div>
+          </div>
+          <input type="checkbox" name="{{ name }}">
+        </label>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

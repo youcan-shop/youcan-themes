@@ -1,0 +1,124 @@
+{% comment %}
+  Renders a set of pagination controls '<' '1' '2' '..' 'n' '>'
+
+  Accepts:
+  - next_page_url: {String} The next page's URL,
+  - previous_page_url: {String} The previous page's URL,
+  - current: {Number} The index of the currently viewed page (e.g 1, 2, 3),
+  - last: {Number} The index of the last available page (e.g 4, 5, 6),
+  - terms: {String} (optional) Search term(s)
+
+  Usage:
+  {% render 'ui-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+{% endcomment %}
+
+{% assign start = current | minus: 2 %}
+{% assign end = current | plus: 2 %}
+
+{% if base != '' or base != null %}
+  {% assign page_params = base | append: '?' %}
+{% else %}
+  {% assign page_params = '/search?' %}
+{% endif %}
+
+{% if sort_order and sort_field %}
+  {% assign page_params = page_params | append: 'sort_field=' | append: sort_field %}
+  {% assign page_params = page_params | append: '&sort_order=' | append: sort_order | append: '&' %}
+{% endif %}
+
+{% unless terms == null or terms == '' %}
+  {% assign page_params = page_params | append: 'q=' | append: terms | append: '&' %}
+{% endunless %}
+{% assign page_params = page_params | append: 'page%5Bcod%5D=%p' %}
+
+{% if last > 1 %}
+  <div ui-pagination>
+    <a
+      href="{{ previous_page_url }}"
+      ui-button
+      data-size="md"
+      data-variant="ghost"
+      {% if current == 1 %}
+        data-disabled
+      {% endif %}
+    >
+      {% render 'ui-icon', name: 'chevron_backward' %}
+      <span>{{ 'pagination.previous' | t }}</span>
+    </a>
+
+    {% if start < 1 %}
+      {% assign end = end | plus: (1 - start) %}
+      {% assign start = 1 %}
+    {% endif %}
+
+    {% if end > last %}
+      {% assign start = start | minus: (end - last) %}
+      {% assign end = last %}
+    {% endif %}
+
+    {% if start > 1 %}
+      {% assign page_link = page_params | replace: '%p', 1 %}
+
+      <a
+        href="{{ page_link }}"
+        ui-button
+        data-size="md"
+        data-variant="ghost"
+        as-icon
+        >1</a
+      >
+      {% if start > 2 %}
+        {% render 'ui-icon', name: 'chevron_forward' %}
+      {% endif %}
+    {% endif %}
+
+    {% for index in (start..end) %}
+      {% assign page_link = page_params | replace: '%p', index %}
+
+      <a
+        ui-button
+        data-size="md"
+        as-icon
+        {% if index == current %}
+          data-variant="tertiary"
+        {% else %}
+          data-variant="ghost"
+        {% endif %}
+        href="{{ page_link }}"
+      >
+        {{ index }}
+      </a>
+    {% endfor %}
+
+    {% if end < last %}
+      {% if end < last - 1 %}
+        {% render 'ui-icon', name: 'more_horiz' %}
+      {% endif %}
+
+      {% assign page_link = page_params | replace: '%p', last %}
+
+      <a
+        href="{{ page_link }}"
+        ui-button
+        data-size="md"
+        data-variant="ghost"
+        as-icon
+      >
+        {{- last -}}
+      </a>
+    {% endif %}
+
+    <a
+      ui-button
+      data-size="md"
+      data-variant="ghost"
+      href="{{ next_page_url }}"
+      {% if current >= last %}
+        data-disabled
+      {% endif %}
+    >
+      <span>{{ 'pagination.next' | t }}</span>
+      {% render 'ui-icon', name: 'chevron_forward' %}
+    </a>
+  </div>
+{% endif %}

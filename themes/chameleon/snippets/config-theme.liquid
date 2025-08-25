@@ -1,0 +1,122 @@
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/@material/material-color-utilities@0.3.0/index.js">
+
+{% comment %}
+  Renders theme generator logic
+
+  Usage:
+  {% render 'config-theme' %}
+{% endcomment %}
+
+<script type="module">
+  import { argbFromHex, hexFromArgb, CorePalette, Hct } from 'https://cdn.jsdelivr.net/npm/@material/material-color-utilities@0.3.0/index.js';
+
+  const THEME_KEY = 'theme-tokens';
+  const primaryColor = document.querySelector('body').dataset.primary.slice(0, 7);
+
+  function toneFromPalette(palette, toneValue) {
+    return hexFromArgb(palette.tone(toneValue));
+  }
+
+  function generateTokens(isDark, argb, baseHct) {
+    const palette = CorePalette.of(argb);
+    const error = palette.error;
+    const n1 = palette.n1;
+    const n2 = palette.n2;
+
+    const toneMap = isDark
+      ? { lowest: 4, low: 10, base: 12, high: 17, highest: 22, bg: 6, onBg: 90 }
+      : { lowest: 100, low: 96, base: 94, high: 92, highest: 90, bg: 98, onBg: 10 };
+
+    // PRIMARY COLOR
+    const primaryTone = isDark ? 80 : 40;
+    const onPrimaryTone = isDark ? 20 : 100;
+
+    const primaryHct = Hct.from(baseHct.hue, baseHct.chroma, primaryTone);
+    const onPrimaryHct = Hct.from(baseHct.hue, baseHct.chroma, onPrimaryTone);
+
+    const primaryHex = hexFromArgb(primaryHct.toInt());
+    const onPrimaryHex = hexFromArgb(onPrimaryHct.toInt());
+
+    // PRIMARY CONTAINER
+    const containerTone = isDark ? 30 : 90;
+    const onContainerTone = isDark ? 90 : 10;
+
+    const containerHct = Hct.from(baseHct.hue, baseHct.chroma, containerTone);
+    const onContainerHct = Hct.from(baseHct.hue, baseHct.chroma, onContainerTone);
+
+    const primaryContainerHex = hexFromArgb(containerHct.toInt());
+    const onPrimaryContainerHex = hexFromArgb(onContainerHct.toInt());
+
+    return {
+      '--color-primary': primaryHex,
+      '--color-on-primary': onPrimaryHex,
+      '--color-primary-container': primaryContainerHex,
+      '--color-on-primary-container': onPrimaryContainerHex,
+      '--color-error': toneFromPalette(error, isDark ? 80 : 40),
+      '--color-on-error': toneFromPalette(error, isDark ? 20 : 100),
+      '--color-error-container': toneFromPalette(error, isDark ? 30 : 90),
+      '--color-on-error-container': toneFromPalette(error, isDark ? 90 : 10),
+      '--color-background': toneFromPalette(n1, toneMap.bg),
+      '--color-on-background': toneFromPalette(n1, toneMap.onBg),
+      '--color-surface': toneFromPalette(n1, toneMap.bg),
+      '--color-on-surface': toneFromPalette(n1, toneMap.onBg),
+      '--color-surface-container-lowest': toneFromPalette(n1, toneMap.lowest),
+      '--color-surface-container-low': toneFromPalette(n1, toneMap.low),
+      '--color-surface-container': toneFromPalette(n1, toneMap.base),
+      '--color-surface-container-high': toneFromPalette(n1, toneMap.high),
+      '--color-surface-container-highest': toneFromPalette(n1, toneMap.highest),
+      '--color-surface-variant': toneFromPalette(n2, isDark ? 30 : 90),
+      '--color-on-surface-variant': toneFromPalette(n2, isDark ? 80 : 30),
+      '--color-outline': toneFromPalette(n2, isDark ? 60 : 50),
+      '--color-outline-variant': toneFromPalette(n2, isDark ? 30 : 80),
+      '--color-overlay': isDark ? 'rgba(125, 125, 125, 0.3)' : 'rgba(0, 0, 0, 0.3)',
+    };
+  }
+
+  function combineLightDark(lightTokens, darkTokens) {
+    const combined = {};
+    for (const key in lightTokens) {
+      const lightValue = lightTokens[key];
+      const darkValue = darkTokens[key];
+      combined[key] = `light-dark(${lightValue}, ${darkValue})`;
+    }
+    return combined;
+  }
+
+  function applyTheme(tokens) {
+    const root = document.documentElement;
+    for (const [key, value] of Object.entries(tokens)) {
+      root.style.setProperty(key, value);
+    }
+
+    document.querySelector('[ui-loader]').style.opacity = 0;
+    document.querySelector('[ui-loader]').style.visibility = 'hidden';
+  }
+
+  function loadCachedTheme() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(THEME_KEY));
+      if (cached && cached.primaryColor === primaryColor) {
+        return cached.tokens;
+      }
+    } catch {}
+    return null;
+  }
+
+  function saveTheme(tokens) {
+    localStorage.setItem(THEME_KEY, JSON.stringify({ primaryColor, tokens }));
+  }
+
+  const cached = loadCachedTheme();
+  if (cached) {
+    applyTheme(cached);
+  } else {
+    const argb = argbFromHex(primaryColor);
+    const hct = Hct.fromInt(argb);
+    const lightTokens = generateTokens(false, argb, hct);
+    const darkTokens = generateTokens(true, argb, hct);
+    const merged = combineLightDark(lightTokens, darkTokens);
+    applyTheme(merged);
+    saveTheme(merged);
+  }
+</script>

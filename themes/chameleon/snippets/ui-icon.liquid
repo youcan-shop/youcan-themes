@@ -1,0 +1,30 @@
+{% comment %}
+  Renders an icon (Material Icons)
+
+  Accepts:
+  - name: {String} Icon name,
+  - size: {Number} (optional) Icon size
+  - filled: {String} (optional) Icon fill color
+  - hidden: {Boolean} (optional) Hide icon
+  - flip_in_rtl: {Boolean} (optional) Flip icon in dir="rtl"
+
+  Usage:
+  {% render 'ui-icon', name: 'search', size: 24, filled: true, hidden: false, flip_in_rtl: false %}
+{% endcomment %}
+
+<span
+  ui-icon
+  {% if filled %}
+    filled
+  {% endif %}
+  {% if hidden %}
+    hidden
+  {% endif %}
+  {% if flip_in_rtl %}
+    flip-in-rtl
+  {% endif %}
+  class="material-symbols-outlined"
+  style="--icon-size: {{ size | default: 24 }}px;"
+>
+  {{ name }}
+</span>

@@ -1,0 +1,160 @@
+[ui-variants] {
+  display: grid;
+  gap: var(--spacing-12);
+
+  [ui-variant] {
+    display: grid;
+    gap: var(--spacing-8);
+
+    [ui-variant-options] {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+
+      [ui-variant-opt] {
+        &:has(input:disabled) {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+
+    &:not([ui-variant="radio_buttons"]) {
+      [ui-variant-opt] {
+        cursor: pointer;
+        border-radius: var(--radius-xs);
+        padding: var(--spacing-12) var(--spacing-16);
+        background-color: var(--color-surface-container);
+        border: 1px solid var(--color-surface-container-highest);
+        transition: var(--transition-standard-default-effects);
+
+        & > input[type="radio"] {
+          scale: 0;
+          opacity: 0;
+          visibility: hidden;
+          position: absolute;
+        }
+
+        &:hover:not(:has(input:disabled)) {
+          border-color: var(--color-on-background);
+        }
+      }
+    }
+
+    &:not([ui-variant="radio_buttons"], [ui-variant="color_base_buttons"]) {
+      [ui-variant-opt] {
+        &:has(> input[type="radio"]:checked) {
+          border-color: transparent;
+          color: var(--color-background);
+          background-color: var(--color-on-background);
+        }
+      }
+    }
+
+    &[ui-variant="color_base_buttons"] {
+      [ui-variant-opt] {
+        width: 36px;
+        height: 36px;
+        position: relative;
+        border-radius: var(--radius-circled);
+        background-color: var(--variant-color);
+
+        &:has(> input[type="radio"]:checked) {
+          border-color: var(--color-on-background);
+        }
+      }
+    }
+
+    &[ui-variant="radio_buttons"] {
+      [ui-variant-options] {
+        display: grid;
+
+        [ui-variant-opt] {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-8);
+
+          & > input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            cursor: pointer;
+            appearance: none;
+            position: relative;
+            border-radius: var(--radius-circled);
+            background-color: var(--color-surface-container);
+            border: 1px solid var(--color-surface-container-highest);
+
+            &:checked {
+              border-color: transparent;
+              background-color: var(--color-on-background);
+
+              &::before {
+                content: "";
+                width: 8px;
+                height: 8px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                clip-path: circle();
+                translate: -50% -50%;
+                background-color: var(--color-background);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &[ui-variant="dropdown"] {
+      position: relative;
+
+      [ui-variant-options] {
+        outline: none;
+        cursor: pointer;
+        appearance: none;
+        border-radius: var(--radius-xs);
+        padding: var(--spacing-12) var(--spacing-16);
+        background-color: var(--color-surface-container);
+        border: 1px solid var(--color-surface-container-highest);
+        transition: var(--transition-standard-default-effects);
+
+        &:focus {
+          border-color: var(--color-on-background);
+        }
+      }
+
+      &::after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        rotate: 45deg;
+        position: absolute;
+        inset-block-end: 20px;
+        inset-inline-end: var(--spacing-16);
+        border-block-end: 1.2px solid currentColor;
+        border-inline-end: 1.2px solid currentColor;
+      }
+    }
+
+    &[ui-variant="image_based_buttons"] {
+      [ui-variant-opt] {
+        width: 72px;
+        height: 72px;
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        padding: var(--spacing-0);
+        background-color: var(--color-surface-container);
+
+        & > [ui-icon] {
+          opacity: 0.3;
+          position: absolute;
+          translate: -50% -50%;
+          left: 50%;
+          inset-block-start: 50%;
+        }
+      }
+    }
+  }
+}

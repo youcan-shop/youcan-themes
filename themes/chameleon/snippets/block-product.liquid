@@ -1,0 +1,87 @@
+{% comment %}
+  Renders a product card (Block)
+
+  Accepts:
+  - product: {Object} Product info,
+  - badge: {Boolean} Control product badge visibility
+  - youcan_attributes: {String} (optional) YouCan attributes (allow blocks to be highlighted in the theme editor)
+
+  Usage:
+  {% render 'block-product', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<li block="product" {{ youcan_attributes }}>
+  <a href="{{ product.url }}">
+    <div class="media">
+      {% if product.preview_image %}
+        <img
+          srcset="
+            {{ product.preview_image.medium }} 480w,
+            {{ product.preview_image.large }} 800w,
+            {{ product.preview_image.original }} 1200w
+          "
+          sizes="
+            (max-width: 640px) 50vw,
+            (max-width: 768px) 33vw,
+            (max-width: 1024px) 25vw,
+            33vw
+          "
+          src="{{ product.preview_image.original }}"
+          alt="product"
+          height="100%"
+          width="100%"
+        >
+      {% else %}
+        {% render 'ui-icon', name: 'image', size: 60, filled: true %}
+      {% endif %}
+    </div>
+    <div class="head">
+      <div class="price">
+        <span class="original-price">
+          {{ price | default: 0 | money }}
+        </span>
+        {% if compare_at_price %}
+          <span class="compare-at-price">
+            {{ compare_at_price | default: 0 | money }}
+          </span>
+        {% endif %}
+      </div>
+      {% if badge %}
+        <div class="badge">
+          <span>{{ badge }}</span>
+        </div>
+      {% endif %}
+      {% unless settings.checkout_type == 'express' or product.variants.size > 1 or product.skip_to_checkout %}
+        {% render 'core-product-button', product: product, as_icon: true %}
+      {% endunless %}
+    </div>
+    <div class="info">
+      <p class="title">{{ product.name | default: 'My product' }}</p>
+      <span class="action">
+        {% if settings.checkout_type == 'express' or product.variants.size > 1 %}
+          {{ 'general.buy_now' | t }}
+        {% else %}
+          {% if product.skip_to_checkout %}
+            {% render 'core-product-button', product: product, as_icon: true %}
+          {% endif %}
+        {% endif %}
+      </span>
+    </div>
+    <div class="min-info">
+      <div class="price">
+        <span class="original-price">
+          {{ price | default: 0 | money }}
+        </span>
+        {% if compare_at_price %}
+          <span class="compare-at-price">
+            {{ compare_at_price | default: 0 | money }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+</li>

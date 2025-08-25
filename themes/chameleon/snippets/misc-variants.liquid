@@ -1,0 +1,112 @@
+{{ 'misc.variants.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a product variant options
+
+  Usage:
+  {% render 'misc-variants' %}
+{% endcomment %}
+
+<ul ui-variants>
+  {% for variant in product.options %}
+    {% assign default = '' %}
+    {% assign name_id = 100 | rand: 2000 %}
+    {% assign unique_name = variant.name | append: '_' | append: name_id %}
+
+    {% for variation in product.selected_or_first_available_variant.variations %}
+      {% if variation[0] == variant.name %}
+        {% assign default = variation[1] %}
+      {% endif %}
+    {% endfor %}
+
+    <li ui-variant="{{ variant.type }}">
+      <label for="{{ unique_name }}" ui-variant-label>{{ variant.name }}</label>
+      {% if variant.type == 'textual_buttons' %}
+        <div ui-variant-options>
+          {% for opt in variant.values %}
+            <label ui-variant-opt>
+              {{ opt }}
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt }}"
+                {% if opt == default %}
+                  checked
+                {% endif %}
+              >
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'radio_buttons' %}
+        <div ui-variant-options>
+          {% for opt in variant.values %}
+            <label ui-variant-opt>
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt }}"
+                {% if opt == default %}
+                  checked
+                {% endif %}
+              >
+              {{ opt }}
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'color_base_buttons' %}
+        <div ui-variant-options>
+          {% for opt in variant.values %}
+            <label ui-variant-opt style="--variant-color: {{ opt.preview }}">
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt.value }}"
+                {% if opt.value == default %}
+                  checked
+                {% endif %}
+              >
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'dropdown' %}
+        <select ui-variant-options name="{{ unique_name }}">
+          {% for opt in variant.values %}
+            <option
+              value="{{ opt }}"
+              {% if opt == default %}
+                selected
+              {% endif %}
+            >
+              {{ opt }}
+            </option>
+          {% endfor %}
+        </select>
+      {% elsif variant.type == 'image_based_buttons' %}
+        <div ui-variant-options>
+          {% for opt in variant.values %}
+            <label ui-variant-opt>
+              {% if opt.preview %}
+                <img
+                  src="{{ opt.preview }}"
+                  alt="{{ opt.value }}"
+                  height="70"
+                  width="70"
+                >
+              {% else %}
+                {% render 'ui-icon', name: 'image', filled: true %}
+              {% endif %}
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt.value }}"
+                {% if opt.value == default %}
+                  checked
+                {% endif %}
+              >
+            </label>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

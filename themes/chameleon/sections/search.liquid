@@ -1,0 +1,39 @@
+{{ 'section.search.css' | asset_url | stylesheet_tag }}
+
+{% paginate search.products by 24 cod %}
+  <div section="search">
+    <div class="search-head">
+      <h2 class="title">
+        {% if terms == null or terms == '' %}
+          {{ 'search.all_products' | t }}
+        {% else %}
+          "{{ terms | escape }}" <small>[{{ total }}]</small>
+        {% endif %}
+      </h2>
+      {% if terms %}
+        <p class="description">{{ 'search.heading' | t }}</p>
+      {% endif %}
+    </div>
+    <div class="search-core">
+      {% if items.size > 0 %}
+        <ul class="search-products">
+          {% for product in items %}
+            {% render 'block-product', product: product %}
+          {% endfor %}
+        </ul>
+        {% render 'ui-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+      {% else %}
+        {% assign empty_content = 'search.empty.title' | t %}
+        {% render 'ui-empty', content: empty_content %}
+      {% endif %}
+    </div>
+  </div>
+{% endpaginate %}
+
+{%- schema -%}
+{
+  "label": "t:sections.search.label",
+  "templates": ["search"],
+  "limit": 1
+}
+{%- endschema -%}

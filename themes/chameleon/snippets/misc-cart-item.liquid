@@ -1,0 +1,70 @@
+{% comment %}
+  Renders the cart item template (cart page)
+
+  Accepts:
+  - product: {Object} cart item info
+
+  Usage:
+  {% render 'misc-cart-item', product: {...} %}
+{% endcomment %}
+
+<div class="item">
+  <div class="media" ui-cart-item="image">
+    <img
+      src="{{ product.image }}"
+      alt="{{ product.name }}"
+      height="100%"
+      width="100%"
+      {% if product.image contains '/store-front/images/product-default' %}
+        hidden
+      {% endif %}
+    >
+    {% if product.image contains '/store-front/images/product-default' %}
+      {% render 'ui-icon', name: 'image', filled: true %}
+    {% else %}
+      {% render 'ui-icon', name: 'image', filled: true, hidden: true %}
+    {% endif %}
+  </div>
+  <div class="content">
+    <div class="top">
+      <div class="info">
+        <span class="title" ui-cart-item="title">{{ product.name }}</span>
+        <span
+          class="variants"
+          ui-cart-item="variant"
+          {% if product.variations == null or product.variations.default %}
+            hidden
+          {% endif %}
+        >
+          {% for variant in product.variations %}
+            <span>{{ variant[1] }}</span>
+            {% unless forloop.index == product.variations.size - 1 %}
+              <span>/</span>
+            {% endunless %}
+          {% endfor %}
+        </span>
+      </div>
+      <ui-cart-remove
+        item="{{ product.id }}"
+        product-variant="{{ product.product_variant_id }}"
+      >
+        <button
+          ui-button
+          data-variant="secondary"
+          data-size="sm"
+          as-icon
+          aria-label="delete"
+          ui-cart-item="delete-button"
+        >
+          {% render 'ui-icon', name: 'delete' %}
+        </button>
+      </ui-cart-remove>
+    </div>
+    <div class="bottom">
+      {% render 'core-quantity', product: product %}
+      {% assign subtotal = product.quantity | times: product.price %}
+      <span class="price" ui-cart-item="price" hidden>{{ product.price | default: 0 | money }}</span>
+      <span class="price" ui-cart-item="subtotal">{{ subtotal | money }}</span>
+    </div>
+  </div>
+</div>

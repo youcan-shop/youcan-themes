@@ -1,0 +1,110 @@
+{{ 'misc.add-review.css' | asset_url | stylesheet_tag }}
+{{ 'misc.add-review.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a review form modal (Add review)
+
+  Accepts:
+  - product_id: {String} Product id
+
+  Usage:
+  {% render 'misc-add-review', product_id: '...' %}
+{% endcomment %}
+
+<ui-add-review product-id="{{ product_id }}">
+  <button ui-link ui-add-review-trigger>
+    {% render 'ui-icon', name: 'add' %}
+    {{ 'product.reviews.write_review' | t }}
+  </button>
+  <div ui-add-review-content data-state="closed">
+    <div class="head">
+      <h6 class="title">{{ 'product.reviews.write_review' | t }}</h6>
+      <button ui-button data-variant="secondary" data-size="sm" as-icon aria-label="close" ui-add-review-close>
+        {% render 'ui-icon', name: 'close' %}
+      </button>
+    </div>
+    <form class="core">
+      <div class="field rating">
+        <label for="rating">{{ 'product.reviews.fields.rating.label' | t }}</label>
+        <div class="stars">
+          {% for star in (1..5) %}
+            <button
+              class="star"
+              type="button"
+              ui-button
+              data-variant="secondary"
+              data-size="md"
+              data-star="{{ star }}"
+            >
+              {{ star }}
+            </button>
+          {% endfor %}
+        </div>
+        <div class="preview">
+          {% for i in (1..5) %}
+            {% for j in (1..5) %}
+              <span data-index="{{ j }}"></span>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="field">
+        <label for="first-name">
+          {{ 'product.reviews.fields.first_name.label' | t }}
+        </label>
+        <input
+          required
+          type="text"
+          id="first-name"
+          name="first-name"
+          placeholder="{{ 'product.reviews.fields.first_name.placeholder' | t }}"
+        >
+      </div>
+      <div class="field">
+        <label for="last-name">
+          {{ 'product.reviews.fields.last_name.label' | t }}
+        </label>
+        <input
+          required
+          type="text"
+          id="last-name"
+          name="last-name"
+          placeholder="{{ 'product.reviews.fields.last_name.placeholder' | t }}"
+        >
+      </div>
+      <div class="field">
+        <label for="email">
+          {{ 'product.reviews.fields.email.label' | t }}
+        </label>
+        <input
+          required
+          type="email"
+          id="email"
+          name="email"
+          placeholder="{{ 'product.reviews.fields.email.placeholder' | t }}"
+        >
+      </div>
+      <div class="field">
+        <label for="content">
+          {{ 'product.reviews.fields.review.label' | t }}
+        </label>
+        <textarea
+          required
+          type="text"
+          id="content"
+          name="content"
+          minlength="5"
+          placeholder="{{ 'product.reviews.fields.review.placeholder' | t }}"
+        ></textarea>
+      </div>
+      <div class="actions" ui-add-review-actions>
+        <button ui-button data-variant="secondary" data-size="md" type="button" ui-add-review-close>
+          {{ 'product.reviews.actions.cancel' | t }}
+        </button>
+        <button ui-button data-variant="primary" data-size="md" ui-add-review-submit>
+          {{ 'product.reviews.actions.submit' | t }}
+        </button>
+      </div>
+    </form>
+  </div>
+</ui-add-review>

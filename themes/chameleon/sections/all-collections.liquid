@@ -1,0 +1,60 @@
+{{ 'section.all-collections.css' | asset_url | stylesheet_tag }}
+
+<div section="all-collections">
+  <div class="all-collections-head">
+    <h2 class="title">{{ 'navigation.collections' | t }}</h2>
+  </div>
+  <div class="all-collections-core">
+    {% paginate collections by 24 cod %}
+      {% if items.size > 0 %}
+        <ul class="items">
+          {% for collection in items %}
+            <li class="item">
+              <a href="/collections/{{ collection.slug }}">
+                <div class="media">
+                  {% if collection.preview_image %}
+                    <img
+                      srcset="
+                        {{ collection.preview_image.medium }} 480w,
+                        {{ collection.preview_image.large }} 800w,
+                        {{ collection.preview_image.original }} 1200w
+                      "
+                      sizes="
+                        (max-width: 640px) 50vw,
+                        (max-width: 768px) 33vw,
+                        (max-width: 1024px) 25vw,
+                        33vw
+                      "
+                      src="{{ collection.preview_image.original }}"
+                      alt="{{ collection.name }}"
+                      height="100%"
+                      width="100%"
+                    >
+                  {% else %}
+                    {% render 'ui-icon', name: 'image', size: 60, filled: true %}
+                  {% endif %}
+                </div>
+                <div class="content">
+                  <span class="title">{{ collection.name | default: 'My collection' }}</span>
+                  {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
+                </div>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        {% render 'ui-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+      {% else %}
+        {% assign empty_content = 'collections.empty.title' | t %}
+        {% render 'ui-empty', content: empty_content %}
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.all_collections.label",
+  "templates": ["list-collections"],
+  "limit": 1
+}
+{% endschema %}

@@ -1,0 +1,58 @@
+{% comment %}
+  Renders a product button
+
+  Accepts:
+  - product: {Object} Product info
+  - as_icon: {Boolean} Button style
+
+  Usage:
+  {% render 'core-product-button', product: {...}, as_icon: false %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+
+<ui-product-button
+  quantity="1"
+  variant-id="{{ default_variant.id }}"
+  {% unless product.available %}
+    not-available
+  {% endunless %}
+  {% if source %}
+    source="{{ source }}"
+  {% endif %}
+  {% if product.skip_to_checkout %}
+    skip-cart
+  {% endif %}
+>
+  {% if product.skip_to_checkout %}
+    {% if as_icon %}
+      {{ 'general.shop_now' | t }}
+    {% else %}
+      <button ui-button data-variant="primary" data-size="md" class="add-to-cart">
+        {{ 'general.shop_now' | t }}
+      </button>
+    {% endif %}
+  {% else %}
+    {% if as_icon %}
+      <button
+        ui-button
+        data-variant="primary"
+        data-size="sm"
+        as-icon
+        aria-label="{{ 'general.add_to_cart' | t }}"
+      >
+        {% render 'ui-icon', name: 'add' %}
+      </button>
+    {% else %}
+      <button
+        ui-button
+        data-variant="primary"
+        data-size="md"
+        class="add-to-cart"
+        aria-label="{{ 'general.add_to_cart' | t }}"
+        data-cta="{{ 'general.add_to_cart' | t }}"
+        data-out-of-stock="{{ 'general.out_of_stock' | t }}"
+      ></button>
+    {% endif %}
+  {% endif %}
+</ui-product-button>

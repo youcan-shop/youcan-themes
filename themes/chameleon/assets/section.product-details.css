@@ -1,0 +1,111 @@
+[section="product-details"] {
+  display: grid;
+  gap: var(--spacing-12);
+
+  .section-core {
+    display: grid;
+    gap: var(--spacing-12);
+
+    li {
+      display: grid;
+      gap: var(--spacing-12);
+      grid-template-columns: auto 60%;
+
+      &:first-child {
+        grid-template-columns: 60% auto;
+
+        .media {
+          order: -1;
+        }
+      }
+
+      .content {
+        padding: var(--spacing-64);
+        border-radius: var(--radius-md);
+        background-color: var(--color-surface-container-low);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .title {
+          font: var(--font-headline-md);
+        }
+
+        .description {
+          opacity: 0.8;
+          text-wrap: balance;
+        }
+      }
+
+      .media {
+        height: 70vh;
+        overflow: hidden;
+        position: relative;
+        border-radius: var(--radius-md);
+        background-color: var(--color-surface-container);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        & > [ui-icon] {
+          opacity: 0.3;
+          position: absolute;
+          translate: -50% -50%;
+          left: 50%;
+          inset-block-start: 50%;
+        }
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 1280px) {
+  [section="product-details"] {
+    .section-core {
+      li {
+        height: 35vh;
+        grid-template-columns: repeat(2, 1fr) !important;
+
+        .content {
+          padding: var(--spacing-48);
+
+          .title {
+            margin-block-end: var(--spacing-16);
+          }
+        }
+
+        .media {
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  [section="product-details"] {
+    .section-core {
+      li {
+        height: auto;
+        grid-template-columns: 1fr !important;
+
+        .content {
+          padding: calc(var(--spacing-24) + var(--spacing-8));
+
+          .title {
+            font: var(--font-title-lg);
+          }
+        }
+
+        .media {
+          order: -1;
+          height: 35vh;
+        }
+      }
+    }
+  }
+}

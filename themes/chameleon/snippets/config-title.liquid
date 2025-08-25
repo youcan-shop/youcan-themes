@@ -1,0 +1,32 @@
+{% comment %}
+  Renders page title
+
+  Usage:
+  {% render 'config-title' %}
+{% endcomment %}
+
+{% assign store_title = store.title | default: store.name %}
+
+<title>
+  {% if page %}
+    {{ page.name }} - {{ store_title }}
+  {% elsif product %}
+    {{ product.name }} - {{ store_title }}
+  {% elsif category %}
+    {{ category.name }} - {{ store_title }}
+  {% elsif template %}
+    {% case template.name %}
+      {% when 'index' %}
+        {{ store_title }}
+      {% when 'list-collections' %}
+        {{ 'metadata.page_titles.collections' | t }} - {{ store_title }}
+      {% when 'cart' %}
+        {{ 'metadata.page_titles.cart' | t }} - {{ store_title }}
+      {% when 'thankyou' %}
+        {{ 'metadata.page_titles.thank-you' | t }} - {{ store_title }}
+      {% else %}
+        {{ template.name }} - {{ store_title }}
+    {% endcase %}
+  {% endif %}
+</title>
+<meta name="description" content="{{ store.description | default: store.name }}">

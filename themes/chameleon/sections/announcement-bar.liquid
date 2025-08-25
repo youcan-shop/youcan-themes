@@ -1,0 +1,57 @@
+<div
+  layout="announcement-bar"
+  {% if settings.enable_global_theme_style %}
+    theme="{{ settings.theme_style }}"
+  {% else %}
+    theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="marquee-container">
+    <div class="marquee">
+      {% for _ in (1..2) %}
+        <ul class="bar-wrapper">
+          {% for _ in (1..3) %}
+            <li>
+              <span class="content"> {{ section.settings.content }} </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.announcement_bar.label",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "content",
+      "label": "t:common.content.text",
+      "default": "Save 20% on your first order"
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.theme.label",
+      "options": [
+        {
+          "value": "primary-low",
+          "label": "t:common.theme.contrast.low"
+        },
+        {
+          "value": "primary-high",
+          "label": "t:common.theme.contrast.high"
+        },
+        {
+          "value": "neutral",
+          "label": "t:common.theme.contrast.neutral"
+        }
+      ],
+      "default": "primary-low"
+    }
+  ]
+}
+{% endschema %}
