@@ -1,0 +1,44 @@
+{{ 'section.products.css' | asset_url | stylesheet_tag }}
+
+{% assign collection = section.settings.collection %}
+
+<div section="products">
+  <div class="section-head">
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+  <ul class="section-core">
+    {% if collection %}
+      {% paginate collection.products by 4 id category_id: collection.id %}
+        {% for item in items %}
+          {% render 'block-product', product: item %}
+        {% endfor %}
+      {% endpaginate %}
+    {% else %}
+      {% for item in (1..4) %}
+        {% render 'block-product' %}
+      {% endfor %}
+    {% endif %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.products_by_collection.label",
+  "templates": ["index", "product"],
+  "limit": 3,
+  "max_blocks": 24,
+  "settings": [
+    {
+      "type": "category",
+      "id": "collection",
+      "label": "t:sections.products_by_collection.label"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "Best Offers"
+    }
+  ]
+}
+{% endschema %}

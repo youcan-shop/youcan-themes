@@ -1,0 +1,60 @@
+{% comment %}
+  Quantity input
+
+  Accepts:
+  - product: {Object} Cart item liquid object
+  - size: {String} Buttons size ("xss" | "md")
+
+  Usage:
+  {% render 'core-quantity' product: {...}, size: 'sm' %}
+{% endcomment %}
+
+{% assign quantity = 1 %}
+
+{% if product.quantity != null %}
+  {% assign quantity = product.quantity %}
+{% endif %}
+
+<ui-quantity
+  class="quantity"
+  item="{{ product.id }}"
+  product-variant="{{ product.product_variant_id }}"
+  {% if product.inventory %}
+    inventory="{{ product.inventory }}"
+  {% endif %}
+  quantity="{{ quantity }}"
+>
+  <button
+    ui-button
+    type="button"
+    {% if size == 'md' %}
+      data-variant="tertiary"
+    {% else %}
+      data-variant="ghost"
+    {% endif %}
+    data-size="{{ size |  default: 'xxs' }}"
+    as-icon
+    name="minus"
+    aria-label="decrease"
+  >
+    {% render 'ui-icon', name: 'remove' %}
+  </button>
+  <span ui-quantity-value class="value" ui-cart-item="quantity">
+    {{ quantity }}
+  </span>
+  <button
+    ui-button
+    type="button"
+    {% if size == 'md' %}
+      data-variant="tertiary"
+    {% else %}
+      data-variant="ghost"
+    {% endif %}
+    data-size="{{ size |  default: 'xxs' }}"
+    as-icon
+    name="plus"
+    aria-label="increase"
+  >
+    {% render 'ui-icon', name: 'add' %}
+  </button>
+</ui-quantity>

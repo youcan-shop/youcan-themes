@@ -1,0 +1,47 @@
+{
+  "name": "chameleon",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Modern look, easy theming, light and dark modes, fully accessible",
+  "author": {
+    "name": "YouCan",
+    "url": "https://youcan.shop"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/youcan-shop/chameleon"
+  },
+  "scripts": {
+    "postcss": "postcss ./.temp/*.css --dir ./assets",
+    "watch:postcss": "onchange './.temp/*.css' -- pnpm run postcss",
+    "yc": "youcan theme:dev -p",
+    "dev": "npm-run-all --parallel watch:postcss yc",
+    "zip": "node ./tooling/zip.js",
+    "release": "bumpp --execute 'pnpm run zip'"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "child_process": "^1.0.2",
+    "clean-css-cli": "^5.6.1",
+    "concurrently": "^7.6.0",
+    "eslint": "^9.16.0",
+    "fs": "0.0.1-security",
+    "globals": "^15.13.0",
+    "node-watch": "^0.7.3",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "postcss": "^8.4.41",
+    "postcss-cli": "^11.0.0",
+    "postcss-discard-comments": "^7.0.2",
+    "postcss-preset-env": "^10.0.2",
+    "prettier": "3.4.2",
+    "strip-css-comments-cli": "^3.0.0"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "bumpp": "^10.1.0",
+    "fs-extra": "^11.2.0",
+    "zip-lib": "^1.0.4"
+  }
+}

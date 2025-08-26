@@ -1,0 +1,117 @@
+{{ 'section.slideshow.css' | asset_url | stylesheet_tag }}
+{{ 'section.slideshow.js' | asset_url | script_tag_deferred }}
+
+<ui-slideshow
+  section="slideshow"
+  style="--slideshow-height: {{ section.settings.height }}vh;"
+>
+  <div class="slideshow-wrapper">
+    <ul class="wrapper-box">
+      {% for slide in section.blocks %}
+        {% render 'block-slideshow', settings: slide.settings %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% if section.blocks.size > 1 and section.settings.show_arrows %}
+    <div class="slideshow-arrows">
+      <button aria-label="previous">
+        {% render 'ui-icon', name: 'chevron_left', size: 34 %}
+      </button>
+      <button aria-label="next">
+        {% render 'ui-icon', name: 'chevron_right', size: 34 %}
+      </button>
+    </div>
+  {% endif %}
+  {% if section.blocks.size > 1 %}
+    <div class="slideshow-pagination" role="tablist" aria-label="Slideshow navigation">
+      {% for index in (1..section.blocks.size) %}
+        <button
+          role="tab"
+          aria-label="Go to slide {{ index }}"
+          {% if index == 1 %}
+            aria-selected="true"
+          {% else %}
+            aria-selected="false"
+          {% endif %}
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</ui-slideshow>
+
+{%- schema -%}
+{
+  "label": "t:sections.slideshow.label",
+  "templates": ["index"],
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.style.style"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:sections.slideshow.height",
+      "options": [
+        {
+          "value": "45",
+          "label": "t:common.sizes.small"
+        },
+        {
+          "value": "65",
+          "label": "t:common.sizes.medium"
+        },
+        {
+          "value": "85",
+          "label": "t:common.sizes.large"
+        }
+      ],
+      "default": "65"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:sections.slideshow.show_arrows",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "label": "t:sections.slideshow.blocks.slide.label",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "t:sections.slideshow.blocks.slide.image"
+        },
+        {
+          "id": "heading",
+          "type": "text",
+          "label": "t:sections.slideshow.blocks.slide.heading",
+          "default": "t:sections.slideshow.blocks.slide.heading_default"
+        },
+        {
+          "id": "subheading",
+          "type": "text",
+          "label": "t:sections.slideshow.blocks.slide.subheading",
+          "default": "t:sections.slideshow.blocks.slide.subheading_default"
+        },
+        {
+          "id": "button_text",
+          "type": "text",
+          "label": "t:common.buttons.button_text",
+          "default": ""
+        },
+        {
+          "id": "button_url",
+          "type": "text",
+          "label": "t:sections.slideshow.blocks.slide.button_link",
+          "default": ""
+        }
+      ]
+    }
+  ]
+}
+{%- endschema -%}

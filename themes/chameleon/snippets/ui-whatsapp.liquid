@@ -1,0 +1,45 @@
+{% comment %}
+  Renders Whatsapp button
+
+  Accepts:
+  - number: {String} Number
+  - message: {String} Default message
+  - type: {String} Button style (FAB | CTA)
+  - youcan_attributes: {String} (optional) YouCan attributes (allow blocks to be highlighted in the theme editor)
+
+  Usage:
+  {% render 'ui-whatsapp' %}
+{% endcomment %}
+
+{% if type == 'fab' %}
+  <a
+    ui-whatsapp
+    data-type="fab"
+    target="_blank"
+    href="https://api.whatsapp.com/send?phone={{ number }}&text={{ message }}"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M8.6175 12.4037L10.4966 10.5L10.0004 7H7C7.00036 10 8.58063 13.4407 11.6225 15.4209M11.6225 15.4209C13.1131 16.3912 14.9993 17 17 17V14L13.4982 13.5L11.6225 15.4209Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12.0019 22.002C17.5259 22.002 22.0039 17.5239 22.0039 12C22.0039 6.47607 17.5259 1.99805 12.0019 1.99805C6.47802 1.99805 2 6.47607 2 12C2 13.8889 2.43396 15.4979 3.34399 17.005L2.00177 22L6.97239 20.666C8.48539 21.5862 10.1017 22.002 12.0019 22.002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+{% else %}
+  <a
+    ui-whatsapp
+    data-type="cta"
+    ui-button
+    data-size="lg"
+    target="_blank"
+    href="https://api.whatsapp.com/send?phone={{ number }}&text={{ message }}"
+    {{ youcan_attributes }}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <path d="M8.6175 12.4037L10.4966 10.5L10.0004 7H7C7.00036 10 8.58063 13.4407 11.6225 15.4209M11.6225 15.4209C13.1131 16.3912 14.9993 17 17 17V14L13.4982 13.5L11.6225 15.4209Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12.0019 22.002C17.5259 22.002 22.0039 17.5239 22.0039 12C22.0039 6.47607 17.5259 1.99805 12.0019 1.99805C6.47802 1.99805 2 6.47607 2 12C2 13.8889 2.43396 15.4979 3.34399 17.005L2.00177 22L6.97239 20.666C8.48539 21.5862 10.1017 22.002 12.0019 22.002Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="info">
+      <span class="title">{{ 'whatsapp.title' | t }}</span>
+      <p class="subtitle">{{ 'whatsapp.subtitle' | t }}</p>
+    </div>
+  </a>
+{% endif %}

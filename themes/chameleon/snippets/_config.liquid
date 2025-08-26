@@ -1,0 +1,87 @@
+{% comment %} Icons {% endcomment %}
+<link
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,200,0..1,0"
+  rel="stylesheet"
+>
+
+{% comment %} Fonts {% endcomment %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family={{ settings.font_family }}:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+>
+
+{% comment %} Favicon {% endcomment %}
+{% assign slug_initial = store.slug | slice: 0, 1 %}
+{% assign favicon = "data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><rect width='100%' height='100%' fill='white' rx='24' ry='24'/><text x='50%' y='50%' font-size='40' fill='black' text-anchor='middle' dominant-baseline='middle' font-family='monospace'>[SLUG]</text></svg>" %}
+{% assign favicon = favicon | replace: '[SLUG]', slug_initial %}
+
+{% if settings.favicon.src %}
+  {% assign favicon = settings.favicon.src %}
+{% endif %}
+
+<link
+  {% unless settings.favicon.src != null %}
+    type="image/svg+xml"
+  {% endunless %}
+  rel="shortcut icon"
+  href="{{ favicon }}"
+>
+
+{% comment %} Tokens {% endcomment %}
+{% style %}
+  :root {
+    --font-family: '{{ settings.font_family | replace: '+', ' '  }}', sans-serif;
+  }
+{% endstyle %}
+
+{{ content_for_header }}
+
+{% comment %} Core Assets {% endcomment %}
+<script src="https://unpkg.com/@youcan/js@latest/dist/index.umd.js" defer></script>
+{{ 'ui.toast.js' | asset_url | script_tag_deferred }}
+{{ '_global.js' | asset_url | script_tag_deferred }}
+{{ '_pubsub.js' | asset_url | script_tag_deferred }}
+{{ '_cart.js' | asset_url | script_tag_deferred }}
+
+{% if template.name != 'cart' and template.name != 'thankyou' and template.name != 'page' %}
+  {{ 'block.product.css' | asset_url | stylesheet_tag }}
+  {{ 'core.product-button.js' | asset_url | script_tag_deferred }}
+{% endif %}
+
+{% if template.name == 'product' %}
+  {{ 'ui.whatsapp.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if template.name == 'collection' or template.name == 'search' %}
+  {{ 'ui.pagination.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+<script>
+  window.errorStrings = {
+    checkout: '{{ form.errors | first }}',
+    insufficient_inventory: '{{ 'error_messages.insufficient_inventory' | t }}',
+    rating_is_required: '{{ 'error_messages.rating_is_required' | t }}',
+    large_file: '{{ 'error_messages.large_file' | t }}',
+  }
+
+  window.combobox = {
+    search: '{{ 'general.search' | t }}',
+    no_results: '{{ 'general.no-results' | t }}',
+  }
+
+  window.successStrings = {
+    review_submitted: '{{ 'success_messages.review_submitted' | t }}'
+  }
+
+  window.inventoryStatuses = {
+    in_stock: '{{ 'product.inventory_in_stock' | t }}',
+    in_stock_show_count: '{{ 'product.inventory_in_stock_show_count' | t }}',
+    low_stock: '{{ 'product.inventory_low_stock' | t }}',
+    low_stock_show_count: '{{ 'product.inventory_low_stock_show_count' | t }}',
+    out_of_stock: '{{ 'product.inventory_out_of_stock' | t }}',
+  }
+
+  window.productsVariants = {};
+</script>

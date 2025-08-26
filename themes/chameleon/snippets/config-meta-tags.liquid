@@ -1,0 +1,66 @@
+{% comment %}
+  Renders all necessary meta tags for the theme (og_*, keywords)
+
+  Usage:
+  {% render 'config-meta-tags' %}
+{% endcomment %}
+
+{% assign og_title = store.title | default: store.name %}
+{% assign og_type = 'website' %}
+{% assign og_url = request.url %}
+{% assign og_description = default: store.description | default: store.name %}
+
+{% if template.name == 'product' %}
+  {% assign og_type = 'product' %}
+  {% assign og_title = product.meta.title %}
+  {% assign og_description = product.meta.description | default: og_description %}
+{% endif %}
+
+{% assign locale = store.store_locale.iso_code %}
+{% assign keywords = settings.keywords %}
+
+{% unless keywords %}
+  {% case locale %}
+    {% when 'en' %}
+      {% assign keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
+    {% when 'fr' %}
+      {% assign keywords = 'commerce en ligne, achats en ligne, bonnes affaires, livraison rapide, produits de qualité, prix abordables, articles tendance, achetez maintenant, cadeaux uniques, offres spéciales' %}
+    {% when 'ar' %}
+      {% assign keywords = 'تجارة إلكترونية, تسوق عبر الإنترنت, صفقات رائعة, شحن سريع, منتجات عالية الجودة, أسعار معقولة, عناصر عصرية, اشترِ الآن, هدايا فريدة, عروض المتجر' %}
+    {% else %}
+      {% assign keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
+  {% endcase %}
+{% endunless %}
+
+<meta property="keywords" content="{{ keywords }}">
+
+<meta property="og:site_name" content="{{ store.name }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description | escape }}">
+
+{% if settings.og_image and page.name != 'product' %}
+  <meta property="og:image" content="{{ settings.og_image.src }}">
+  <meta property="og:image:secure_url" content="{{ settings.og_image.src }}">
+{% endif %}
+
+{% if template.name == 'product' %}
+  <meta property="og:image" content="{{ product.thumbnail }}">
+  <meta property="og:image:secure_url" content="{{ product.thumbnail }}">
+  <meta property="og:price:amount" content="{{ product.price | default: 0 }}">
+  <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
+{% endif %}
+
+{% if store.brand.social_links.twitter != null %}
+  {% if store.brand.social_links.twitter contains 'twitter.com/' %}
+    {% assign twitter_site = store.brand.social_links.twitter | split: 'twitter.com/' | last | prepend: '@' %}
+  {% endif %}
+  {% if store.brand.social_links.twitter contains 'x.com/' %}
+    {% assign twitter_site = store.brand.social_links.twitter | split: 'x.com/' | last | prepend: '@' %}
+  {% endif %}
+  <meta name="twitter:site" content="{{ twitter_site }}">
+{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ og_description | escape }}">

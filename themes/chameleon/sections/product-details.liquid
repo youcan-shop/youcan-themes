@@ -1,0 +1,77 @@
+{{ 'section.product-details.css' | asset_url | stylesheet_tag }}
+
+<div section="product-details">
+  <div class="section-head">
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+  <ul class="section-core">
+    {% for detail in section.blocks %}
+      <li>
+        <div class="content">
+          <h2 class="title">
+            {{ detail.settings.heading }}
+          </h2>
+          {% if detail.settings.description %}
+            <p class="description">
+              {{ detail.settings.description }}
+            </p>
+          {% endif %}
+        </div>
+        <div class="media">
+          {% if detail.settings.image.src %}
+            <img
+              src="{{ detail.settings.image.src }}"
+              alt="{{detail.settings.heading}}"
+              height="100%"
+              width="100%"
+            >
+          {% else %}
+            {% render 'ui-icon', name: 'image', size: 60, filled: true %}
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.product_details.label",
+  "templates": ["product"],
+  "limit": 3,
+  "max_blocks": 2,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "Product details"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "detail",
+      "label": "t:sections.product_details.blocks.label",
+      "settings": [
+        {
+          "id": "heading",
+          "type": "text",
+          "label": "t:common.heading",
+          "default": "Heading"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "t:common.content.description",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur possimus non ipsa esse iure ratione aperiam consectetur doloremque accusantium necessitatibus."
+        },
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "t:common.image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

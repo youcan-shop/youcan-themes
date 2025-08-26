@@ -1,0 +1,69 @@
+{% comment %}
+  Renders cart drawer item
+
+  Accepts:
+  - product: {Object} product info
+
+  Usage:
+  {% render 'misc-cart-drawer-item' %}
+{% endcomment %}
+
+<div class="item">
+  <div class="image" ui-cart-item="image">
+    <img
+      src="{{ product.image }}"
+      alt="{{ product.name }}"
+      height="100%"
+      width="100%"
+      {% if product.image contains '/store-front/images/product-default' %}
+        hidden
+      {% endif %}
+    >
+    {% if product.image contains '/store-front/images/product-default' %}
+      {% render 'ui-icon', name: 'image', filled: true %}
+    {% else %}
+      {% render 'ui-icon', name: 'image', filled: true, hidden: true %}
+    {% endif %}
+  </div>
+  <div class="content">
+    <div class="info">
+      <div class="bio">
+        <span class="title" title="{{ product.name }}" ui-cart-item="title">{{ product.name }}</span>
+        <span
+          class="variants"
+          ui-cart-item="variant"
+          {% if product.variations == null or product.variations.default %}
+            hidden
+          {% endif %}
+        >
+          {% for variant in product.variations %}
+            <span>{{ variant[1] }}</span>
+            {% unless forloop.index == product.variations.size - 1 %}
+              <span>/</span>
+            {% endunless %}
+          {% endfor %}
+        </span>
+      </div>
+      <span class="price" ui-cart-item="price">{{ product.price | default: 0 | money }}</span>
+    </div>
+    <div class="actions">
+      {% render 'core-quantity', product: product %}
+      <ui-cart-remove
+        item="{{ product.id }}"
+        product-variant="{{ product.product_variant_id }}"
+      >
+        <button
+          ui-button
+          data-variant="secondary"
+          data-size="xs"
+          as-icon
+          class="remove"
+          aria-label="remove"
+          ui-cart-item="delete-button"
+        >
+          {% render 'ui-icon', name: 'close_small' %}
+        </button>
+      </ui-cart-remove>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+{{ 'section.single-collection.css' | asset_url | stylesheet_tag }}
+
+<div section="single-collection">
+  <div class="collection-head">
+    <h2 class="title">{{ category.name }}</h2>
+    {% if category.description %}
+      <p class="description">{{ category.description }}</p>
+    {% endif %}
+  </div>
+  <div class="collection-path">
+    <a href="/" ui-button data-variant="secondary" data-size="lg" as-icon aria-label="home">
+      {% render 'ui-icon', name: 'home' %}
+    </a>
+    <a href="/collections" ui-button data-variant="secondary" data-size="lg">
+      {{ 'navigation.collections' | t }}
+      {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
+    </a>
+    <a href="/collections/{{ category.slug }}" ui-button data-variant="secondary" data-size="lg">
+      {{ category.name }}
+      {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
+    </a>
+  </div>
+
+  {% paginate collection.products by 24 cod, category_id: category.id %}
+    <div class="collection-core">
+      {% if items.size > 0 %}
+        <ul class="collection-products">
+          {% for product in items %}
+            {% render 'block-product', product: product %}
+          {% endfor %}
+        </ul>
+        {% render 'ui-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+      {% else %}
+        {% assign empty_content = 'single-collection.empty.title' | t %}
+        {% render 'ui-empty', content: empty_content %}
+      {% endif %}
+    </div>
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.single_collection.label",
+  "templates": ["collection"],
+  "limit": 1
+}
+{% endschema %}

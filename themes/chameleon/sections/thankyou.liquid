@@ -1,0 +1,106 @@
+{{ 'section.thankyou.css' | asset_url | stylesheet_tag }}
+
+<div section="thankyou">
+  <div class="thankyou-head">
+    <div class="icon">
+      {% render 'ui-icon', name: 'check_circle', filled: true, size: 80 %}
+    </div>
+    <h2 class="title">{{ 'order.title' | t }}</h2>
+    <p class="description">{{ 'order.description' | t }}</p>
+  </div>
+  <div class="thankyou-core">
+    <div class="order-summary">
+      <div class="summary-head">
+        <div class="info">
+          <h4 class="id">{{ 'order.your_order' | t }}</h4>
+          <span class="date-total">{{ 'now' | date: '%b %d, %Y' }} . {{ order.total | default: 0 | money }}</span>
+        </div>
+        {% render 'const-payment-status', status: order.paymentStatusSlug %}
+      </div>
+      <div class="summary-title">{{ 'order.products' | t }}</div>
+      <div class="order-info">
+        {% for product in order.order_variants %}
+          <div class="product">
+            <div class="image">
+              {% if product.image %}
+                <img
+                  src="{{ product.image }}"
+                  alt="{{ product.name }}"
+                  height="100%"
+                  width="100%"
+                >
+              {% else %}
+                {% render 'ui-icon', name: 'image', filled: true %}
+              {% endif %}
+            </div>
+            <div class="content">
+              <span class="title">{{ product.name }}</span>
+              <span class="count">x{{ product.quantity }}</span>
+            </div>
+            <div class="value">{{ product.price | default: 0 | money }}</div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="summary-title">{{ 'order.payment' | t }}</div>
+      <div class="order-info">
+        <div class="item">
+          <span class="label">{{ 'order.payment_method.label' | t }}:</span>
+          <span class="value">
+            {% assign payment_gateway = order.gatewayType %}
+            {% render 'const-payment-gateway', type: payment_gateway %}
+          </span>
+        </div>
+      </div>
+      <div class="summary-title">{{ 'order.order_summary' | t }}</div>
+      <div class="order-info">
+        <div class="item">
+          <span class="label">{{ 'order.subtotal' | t }}</span>
+          <span class="value">{{ order.sub_total | default: 0 | money }}</span>
+        </div>
+        {% if order.coupon != null %}
+          <div class="item">
+            <span class="label">{{ 'order.coupon_code' | t }}</span>
+            <div class="value">{{ order.coupon.code }}</div>
+          </div>
+          <div class="item">
+            <span class="label">{{ 'order.discount_amount' | t }}</span>
+            <span class="value">
+              {% render 'const-discount-value', coupon: order.coupon %}
+            </span>
+          </div>
+        {% endif %}
+        {% if order.vat != 0 %}
+          <div class="item">
+            <span class="label">{{ 'cart.page.summary.vat' | t }} ({{ order.vat | times: 100 | append: '%' }})</span>
+            <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
+          </div>
+        {% endif %}
+        <div class="item">
+          <span class="label">{{ 'order.shipping' | t }}</span>
+          {% if order.shippingCost == 0 or order.shippingCost == null %}
+            {% assign shipping_cost = 'order.free' | t %}
+          {% else %}
+            {% assign shipping_cost = order.shippingCost | default: 0 | money %}
+          {% endif %}
+          <span class="value">{{ shipping_cost }}</span>
+        </div>
+        <div class="item">
+          <span class="label">{{ 'order.total' | t }}</span>
+          <span class="value">{{ order.total | default: 0 | money }}</span>
+        </div>
+        <a href="{{ routes.root_url |  default: "/" }}" ui-button data-variant="primary" data-size="md">
+          {{ 'order.action' | t }}
+          {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.thank_you.label",
+  "templates": ["thank-you"],
+  "limit": 1
+}
+{% endschema %}

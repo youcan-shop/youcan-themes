@@ -1,0 +1,48 @@
+[ui-whatsapp] {
+  color: var(--color-on-success);
+  background-color: var(--color-success);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-on-success-container) 50%, var(--color-success));
+  }
+
+  /* FAB */
+  &[data-type="fab"] {
+    position: fixed;
+    clip-path: circle();
+    padding: var(--spacing-12);
+    inset-block-end: var(--spacing-12);
+    inset-inline-end: var(--spacing-12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-standard-default-effects);
+
+    & > svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  /* CTA */
+  &[data-type="cta"] {
+    height: fit-content;
+    justify-content: start;
+    padding-block: var(--spacing-12);
+
+    & > svg {
+      width: 25px;
+      height: 25px;
+    }
+
+    .info {
+      display: grid;
+      gap: var(--spacing-4);
+
+      .subtitle {
+        opacity: 0.8;
+        font: var(--font-body-sm);
+      }
+    }
+  }
+}

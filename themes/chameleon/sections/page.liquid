@@ -1,0 +1,28 @@
+{{ 'section.page.css' | asset_url | stylesheet_tag }}
+
+<div section="page">
+  <div class="page-head">
+    <h2 class="title">
+      {% if page.template == 'contact' %}
+        {{ 'contact.title' | t }}
+      {% else %}
+        {{ page.name }}
+      {% endif %}
+    </h2>
+  </div>
+  <div class="page-content">
+    {% if page.template == 'contact' %}
+      {% render 'misc-contact-form', content: page.content %}
+    {% else %}
+      {{ page.content }}
+    {% endif %}
+  </div>
+</div>
+
+{%- schema -%}
+{
+  "label": "t:sections.page.label",
+  "templates": ["page"],
+  "limit": 1
+}
+{%- endschema -%}

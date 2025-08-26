@@ -1,0 +1,31 @@
+{% comment %}
+  Renders menu drawer
+
+  Usage:
+  {% render 'ui-menu-drawer' %}
+{% endcomment %}
+
+<ui-drawer class="menu">
+  <button class="drawer-trigger action" aria-expanded="false" aria-label="menu">
+    {{ 'header.menu.name' | t }}
+  </button>
+  <div class="drawer-content" data-state="closed">
+    <div class="header">
+      <h6 class="title">{{ 'header.menu.name' | t }}</h6>
+      <button ui-button data-variant="secondary" data-size="sm" as-icon aria-label="close">
+        {% render 'ui-icon', name: 'close' %}
+      </button>
+    </div>
+    <div class="main">
+      <ul class="items">
+        {% for link in main-link-list.links %}
+          <li class="item">
+            <a href="{{ link.url }}" ui-link>
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</ui-drawer>

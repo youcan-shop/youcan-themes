@@ -1,0 +1,68 @@
+{{ 'section.benefits.css' | asset_url | stylesheet_tag }}
+
+<ul
+  section="benefits"
+  {% if settings.enable_global_theme_style %}
+    theme="{{ settings.theme_style }}"
+  {% else %}
+    theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% for benefit in section.blocks %}
+    {% render 'block-benefit', content: benefit.settings.content, icon: benefit.settings.icon, youcan_attributes: benefit.youcan_attributes %}
+  {% endfor %}
+</ul>
+
+{% schema %}
+{
+  "label": "t:sections.benefits.label",
+  "templates": ["index"],
+  "limit": 3,
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.theme.label",
+      "options": [
+        {
+          "value": "primary-low",
+          "label": "t:common.theme.contrast.low"
+        },
+        {
+          "value": "primary-high",
+          "label": "t:common.theme.contrast.high"
+        },
+        {
+          "value": "neutral",
+          "label": "t:common.theme.contrast.neutral"
+        }
+      ],
+      "default": "primary-low"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "label": "t:sections.benefits.blocks.benefit.label",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.benefits.blocks.benefit.icon_source"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "t:sections.benefits.blocks.benefit.icon"
+        },
+        {
+          "type": "text",
+          "id": "content",
+          "label": "t:sections.benefits.blocks.benefit.content",
+          "default": "My benefit"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

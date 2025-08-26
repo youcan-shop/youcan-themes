@@ -1,0 +1,39 @@
+{% comment %}
+  Renders a slideshow item (Block)
+
+  Accepts:
+  - settings: {Object} Slide settings
+
+  Usage:
+  {% render 'block-slideshow', slide: {...} %}
+{% endcomment %}
+
+<li block="slideshow-slide">
+  {% if settings.image.src %}
+    <img
+      src="{{ settings.image.src }}"
+      alt="{{ "slide " | append: forloop.index }}"
+      height="100%"
+      width="100%"
+    >
+  {% else %}
+    {% render 'ui-icon', name: 'web_stories', size: 60, filled: true %}
+  {% endif %}
+  {% if settings.heading or settings.subheading or settings.button_text %}
+    <div class="content">
+      <div class="text">
+        {% if settings.heading %}
+          <h2 class="title">{{ settings.heading }}</h2>
+        {% endif %}
+        {% if settings.subheading %}
+          <p class="description">{{ settings.subheading }}</p>
+        {% endif %}
+      </div>
+      {% if settings.button_text %}
+        <a href="{{ settings.button_url }}" ui-link="secondary" class="action">
+          {{ settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+</li>

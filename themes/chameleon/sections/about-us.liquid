@@ -1,0 +1,77 @@
+{{ 'section.about-us.css' | asset_url | stylesheet_tag }}
+
+<div section="about-us">
+  <div class="section-head">
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+  <div class="section-core">
+    <div class="content">
+      <h2 class="title">{{ section.settings.heading }}</h2>
+      <div class="text">
+        <p class="description">
+          {{ section.settings.subheading }}
+        </p>
+        {% if section.settings.button_text %}
+          <a href="{{ section.settings.button_link }}" ui-link="secondary" class="action">
+            {{ section.settings.button_text }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="media">
+      {% if section.settings.image.src %}
+        <img
+          src="{{ section.settings.image.src }}"
+          alt="{{ section.settings.heading | default: "about us" }}"
+          height="100%"
+          width="100%"
+        >
+      {% else %}
+        {% render 'ui-icon', name: 'image', size: 60, filled: true %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{%- schema -%}
+{
+  "label": "t:sections.about_us.label",
+  "templates": ["index"],
+  "limit": 4,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "About Us"
+    },
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "t:common.heading",
+      "default": "Heading"
+    },
+    {
+      "id": "subheading",
+      "type": "text",
+      "label": "t:common.subheading",
+      "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur possimus non ipsa esse iure ratione aperiam consectetur doloremque accusantium necessitatibus."
+    },
+    {
+      "id": "button_text",
+      "type": "text",
+      "label": "t:common.buttons.button_text"
+    },
+    {
+      "id": "button_link",
+      "type": "text",
+      "label": "t:common.buttons.button_link"
+    },
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "t:common.image"
+    }
+  ]
+}
+{%- endschema -%}

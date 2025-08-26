@@ -1,0 +1,31 @@
+{% comment %}
+  Renders a payment status
+
+  Accepts:
+  - status: {String} Status ('paid' | 'unpaid' | 'captured' | 'refunded' | 'pending')
+
+  Usage:
+  {% render 'const-payment-status', status: 'paid' %}
+{% endcomment %}
+
+<div class="status" data-status="{{ status }}">
+  {% case status -%}
+    {% when 'paid' %}
+      {% render 'ui-icon', name: 'check_circle', filled: true, size: 18 %}
+      {{ 'order.status.paid' | t }}
+    {% when 'unpaid' %}
+      {% render 'ui-icon', name: 'schedule', filled: true, size: 18 %}
+      {{ 'order.status.unpaid' | t }}
+    {% when 'captured' %}
+      {% render 'ui-icon', name: 'search_activity', filled: true, size: 18 %}
+      {{ 'order.status.captured' | t }}
+    {% when 'refunded' %}
+      {% render 'ui-icon', name: 'cancel', filled: true, size: 18 %}
+      {{ 'order.status.refunded' | t }}
+    {% when 'pending' %}
+      {% render 'ui-icon', name: 'warning', filled: true, size: 18 %}
+      {{ 'order.status.pending' | t }}
+    {% else %}
+      --
+  {% endcase %}
+</div>

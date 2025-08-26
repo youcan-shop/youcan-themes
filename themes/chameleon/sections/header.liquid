@@ -1,0 +1,100 @@
+{{ 'ui.drawer.css' | asset_url | stylesheet_tag }}
+{{ 'ui.search.css' | asset_url | stylesheet_tag }}
+{{ 'ui.drawer.js' | asset_url | script_tag_deferred }}
+
+<header
+  layout="header"
+  {% if section.settings.header_sticky %}
+    data-sticky
+  {% endif %}
+>
+  <ul class="links">
+    <li class="link">
+      <a href="/" ui-link>
+        {% if section.settings.header_logo.src %}
+          <img
+            src="{{ section.settings.header_logo.src }}"
+            alt="{{ store.name }}"
+            height="100%"
+            width="{{ section.settings.logo_width }}"
+            {% if section.settings.logo_invert %}
+              data-invert
+            {% endif %}
+          >
+        {% else %}
+          {{ store.name }}
+        {% endif %}
+      </a>
+    </li>
+    {% for link in main-link-list.links %}
+      <li class="link">
+        <a href="{{ link.url }}" ui-link>
+          {{ link.title }}
+        </a>
+      </li>
+    {% endfor %}
+    {% if settings.them_mode == 'auto' %}
+      {% render 'ui-theme' %}
+    {% endif %}
+  </ul>
+  <ul class="actions">
+    <li>
+      {% render 'ui-search' %}
+    </li>
+    <li>
+      {% render 'ui-cart-drawer' %}
+    </li>
+    <li>
+      {% render 'ui-menu-drawer' %}
+    </li>
+  </ul>
+</header>
+
+{% schema %}
+{
+  "label": "t:sections.header.label",
+  "tag": "header",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.header.menu_links_paragraph"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "header_logo",
+      "label": "t:sections.header.logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 20,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.header.width",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "logo_invert",
+      "label": "Invert logo color in dark mode",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.style.style"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_sticky",
+      "label": "t:sections.header.sticky_mode",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

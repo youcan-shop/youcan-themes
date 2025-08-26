@@ -1,0 +1,66 @@
+{{ 'misc.media.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a product media (images)
+
+  Accepts:
+  - images: {Array} Product images,
+
+  Usage:
+  {% render 'block-pd-media', images: [...] %}
+{% endcomment %}
+
+<ui-media block="pd-media">
+  <div class="images" ui-media-images>
+    {% if product.images.size %}
+      {% for image in product.images %}
+        <img
+          src="{{ image }}"
+          alt="{{ product.name }}"
+          height="100%"
+          width="100%"
+        >
+      {% endfor %}
+    {% else %}
+      {% render 'ui-icon', name: 'image', size: 60, filled: true %}
+    {% endif %}
+  </div>
+  {% if product.images.size > 1 %}
+    <div class="controller" ui-media-pagination="images">
+      <div class="controller-wrapper">
+        {% for image in product.images %}
+          <button
+            aria-label="product"
+            {% if forloop.first %}
+              aria-selected="true"
+            {% else %}
+              aria-selected="false"
+            {% endif %}
+          >
+            <img
+              src="{{ image }}"
+              alt="{{ product.name }}"
+              height="100%"
+              width="100%"
+            >
+          </button>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+  {% if product.images.size > 1 %}
+    <div class="pagination" ui-media-pagination="dots">
+      {% for image in product.images %}
+        <button
+          class="page"
+          aria-label="page-{{ forloop.index }}"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% else %}
+            aria-selected="false"
+          {% endif %}
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</ui-media>

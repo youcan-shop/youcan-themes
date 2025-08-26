@@ -1,0 +1,79 @@
+{{ 'section.collections.css' | asset_url | stylesheet_tag }}
+
+<div
+  section="collections"
+  {% if settings.enable_global_theme_style %}
+    theme="{{ settings.theme_style }}"
+  {% else %}
+    theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="section-head">
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+  <ul class="section-core">
+    {% for block in section.blocks %}
+      {% render 'block-collection',
+        collection: block.settings.collection,
+        action: block.settings.button_text,
+        youcan_attributes: block.youcan_attributes
+      %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.collections.label",
+  "templates": ["index", "product"],
+  "limit": 3,
+  "max_blocks": 3,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "Collections"
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.theme.label",
+      "options": [
+        {
+          "value": "primary-low",
+          "label": "t:common.theme.contrast.low"
+        },
+        {
+          "value": "primary-high",
+          "label": "t:common.theme.contrast.high"
+        },
+        {
+          "value": "neutral",
+          "label": "t:common.theme.contrast.neutral"
+        }
+      ],
+      "default": "primary-low"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "label": "t:common.blocks.collection",
+      "settings": [
+        {
+          "type": "category",
+          "id": "collection",
+          "label": "t:common.collection.label"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "t:common.buttons.button_text",
+          "default": "View collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

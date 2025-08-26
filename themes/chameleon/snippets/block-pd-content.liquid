@@ -1,0 +1,104 @@
+{% comment %}
+  Renders a product content (title, description, price...)
+
+  Accepts:
+  - product: {Object} Product info,
+
+  Usage:
+  {% render 'block-pd-content', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<div block="pd-content">
+  <form class="general-info" ui-order-form>
+    <div class="price">
+      <span class="original-price" ui-product-item="price">
+        {{ price | default: 0 | money }}
+      </span>
+      <div
+        class="compare-at-price"
+        ui-product-item="compare-at-price"
+        {% unless compare_at_price %}
+          hidden
+        {% endunless %}
+      >
+        {{ compare_at_price | default: 0 | money }}
+      </div>
+    </div>
+    <div class="about">
+      <h1 class="title">{{ product.name }}</h1>
+    </div>
+    {% if product.options.size > 0 %}
+      {% render 'misc-variants' %}
+    {% endif %}
+    {% if product.isTrackingInventory %}
+      {% render 'const-inventory-status', count: inventory_value, threshold: 10 %}
+    {% endif %}
+    {% if settings.checkout_type == 'express' %}
+      {% render 'core-express-checkout' %}
+    {% endif %}
+    <div class="cta">
+      {% render 'core-quantity', product: product, size: 'md' %}
+      {% if settings.checkout_type == 'express' %}
+        <ui-product-button
+          quantity="1"
+          variant-id="{{ default_variant.id }}"
+          checkout-type="express"
+          {% unless product.available %}
+            not-available
+          {% endunless %}
+        >
+          <button ui-button data-variant="primary" data-size="md" class="add-to-cart">
+            {{ 'product.buy_button.express_checkout.place_order' | t }}
+          </button>
+        </ui-product-button>
+      {% else %}
+        {% render 'core-product-button', product: product %}
+      {% endif %}
+    </div>
+    {% for block in section.blocks %}
+      {% if block.type == 'whatsapp_button' %}
+        {% render 'ui-whatsapp',
+          type: 'cta',
+          number: block.settings.whatsapp_number,
+          message: block.settings.whatsapp_message,
+          youcan_attributes: block.youcan_attributes
+        %}
+      {% endif %}
+    {% endfor %}
+  </form>
+  {% if product.description %}
+    <div class="general-info">
+      <article>{{ product.description }}</article>
+    </div>
+  {% endif %}
+  {% render 'ui-accordion', name: product.id, items: section.blocks %}
+
+  {% assign has_social = false %}
+  {% for block in section.blocks %}
+    {% if block.type == 'social' %}
+      {% assign has_social = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if has_social %}
+    {{ 'block.social.css' | asset_url | stylesheet_tag }}
+
+    <ul class="social-info">
+      {% for block in section.blocks %}
+        {% if block.type == 'social' %}
+          {% render 'block-social',
+            target_arrow: true,
+            type: block.settings.social_name,
+            href: block.settings.social_link,
+            youcan_attributes: block.youcan_attributes
+          %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

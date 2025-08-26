@@ -1,0 +1,30 @@
+{% if product.related_products %}
+  {{ 'section.related-products.css' | asset_url | stylesheet_tag }}
+
+  <div section="related-products">
+    <div class="section-head">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    <ul class="section-core">
+      {% for product in product.related_products %}
+        {% render 'block-product', product: product %}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "label": "t:sections.related_products.label",
+  "templates": ["product"],
+  "limit": 1,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "Related products"
+    }
+  ]
+}
+{% endschema %}

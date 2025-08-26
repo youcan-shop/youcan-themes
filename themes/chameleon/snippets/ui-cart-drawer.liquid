@@ -1,0 +1,57 @@
+{% comment %}
+  Renders cart drawer
+
+  Usage:
+  {% render 'ui-cart-drawer' %}
+{% endcomment %}
+
+<ui-drawer class="cart">
+  <button class="drawer-trigger action" aria-expanded="false" aria-label="cart">
+    {% render 'ui-icon', name: 'shopping_cart' %}
+    (<ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>)
+  </button>
+  <div class="drawer-content" data-state="closed">
+    <div class="header">
+      <h6 class="title">
+        {{ 'cart.drawer.title' | t }}
+        <span class="total">
+          (<ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>)
+        </span>
+      </h6>
+      <button ui-button data-variant="secondary" data-size="sm" as-icon aria-label="close">
+        {% render 'ui-icon', name: 'close' %}
+      </button>
+    </div>
+    <div class="main">
+      <template ui-cart-drawer-item>
+        {% render 'misc-cart-drawer-item', product: product %}
+      </template>
+      <ui-cart-drawer-items>
+        {% for product in cart.items %}
+          {% render 'misc-cart-drawer-item', product: product %}
+        {% endfor %}
+      </ui-cart-drawer-items>
+      {% assign empty_cart_content = 'cart.empty.title' | t %}
+      {% unless cart.count > 0 %}
+        {% render 'ui-empty', content: empty_cart_content %}
+      {% else %}
+        {% render 'ui-empty', content: empty_cart_content, hidden: true %}
+      {% endunless %}
+    </div>
+    <div
+      class="footer"
+      {% unless cart.count > 0 %}
+        hidden
+      {% endunless %}
+      ui-cart-drawer-footer
+    >
+      <div class="info">
+        <span class="label">{{ 'cart.drawer.total' | t }}</span>
+        <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+      </div>
+      <a href="{{ routes.cart_url }}" ui-button data-variant="primary" data-size="md" class="checkout">
+        {{ 'cart.drawer.actions.go_to_cart' | t }}
+      </a>
+    </div>
+  </div>
+</ui-drawer>

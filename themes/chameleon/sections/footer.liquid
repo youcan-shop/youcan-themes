@@ -1,0 +1,102 @@
+<footer
+  layout="footer"
+  {% if settings.enable_global_theme_style %}
+    theme="{{ settings.theme_style }}"
+  {% else %}
+    theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="general">
+    <div class="store">
+      <a href="#" class="logo">
+        {% if section.settings.footer_logo.src %}
+          <img
+            src="{{ section.settings.footer_logo.src }}"
+            alt="{{ store.name }}"
+            height="100%"
+            width="{{ section.settings.logo_width }}"
+          >
+        {% else %}
+          {{ store.name }}
+        {% endif %}
+      </a>
+      <p class="bio">{{ store.description | default: store.title | default: store.name }}</p>
+    </div>
+    <div class="copyright">
+      {{ 'footer.copyright.title' | t }}
+      <a href="https://youcan.shop" target="_blank">{{ 'footer.copyright.platform' | t }}</a>
+    </div>
+  </div>
+  <div class="links">
+    {% for linklist in link-lists %}
+      {% if linklist.links | count > 0  and linklist != main-link-list -%}
+        <div class="links-box">
+          <span>{{ linklist.title }}</span>
+          <ul>
+            {% for link in linklist.links %}
+              <li>
+                <a href="{{ link.url }}" ui-link>{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "label": "t:sections.footer.label",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.footer_links_paragraph"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.footer.logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "footer_logo",
+      "label": "t:sections.footer.logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "t:sections.footer.width",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "t:common.style.style"
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.theme.label",
+      "options": [
+        {
+          "value": "primary-low",
+          "label": "t:common.theme.contrast.low"
+        },
+        {
+          "value": "primary-high",
+          "label": "t:common.theme.contrast.high"
+        },
+        {
+          "value": "neutral",
+          "label": "t:common.theme.contrast.neutral"
+        }
+      ],
+      "default": "primary-low"
+    }
+  ]
+}
+{% endschema %}

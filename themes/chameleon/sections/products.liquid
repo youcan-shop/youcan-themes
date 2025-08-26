@@ -1,0 +1,47 @@
+{{ 'section.products.css' | asset_url | stylesheet_tag }}
+
+<div section="products">
+  <div class="section-head">
+    <h2>{{ section.settings.title }}</h2>
+  </div>
+  <ul class="section-core">
+    {% for block in section.blocks %}
+      {% render 'block-product', product: block.settings.product, badge: block.settings.badge, youcan_attributes: block.youcan_attributes %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.products.label",
+  "templates": ["index", "product"],
+  "limit": 3,
+  "max_blocks": 24,
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "t:common.content.title",
+      "default": "Our Favorites"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "label": "t:sections.products.blocks.product.label",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "t:sections.products.blocks.product.label"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "t:sections.products.blocks.product.badge_text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

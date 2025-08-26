@@ -1,0 +1,108 @@
+{{ 'section.single-product.css' | asset_url | stylesheet_tag }}
+{{ 'ui.accordion.css' | asset_url | stylesheet_tag }}
+{{ 'section.product.js' | asset_url | script_tag_deferred }}
+
+<ui-product section="single-product" product-id="{{ product.id }}">
+  {% render 'block-pd-media' %}
+  {% render 'block-pd-content' %}
+</ui-product>
+
+{% if product and product.options.size %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
+
+{% schema %}
+{
+  "label": "t:sections.product_information.label",
+  "templates": ["product"],
+  "limit": 1,
+  "max_blocks": 9,
+  "settings": [],
+  "blocks": [
+    {
+      "limit": 1,
+      "type": "whatsapp_button",
+      "label": "WhatsApp button",
+      "settings": [
+        {
+          "id": "whatsapp_number",
+          "type": "text",
+          "label": "Phone number"
+        },
+        {
+          "id": "whatsapp_message",
+          "type": "textarea",
+          "label": "Message"
+        }
+      ]
+    },
+    {
+      "limit": 4,
+      "type": "social",
+      "label": "Social link",
+      "settings": [
+        {
+          "type": "select",
+          "id": "social_name",
+          "label": "Social name",
+          "options": [
+            {
+              "value": "facebook",
+              "label": "Facebook"
+            },
+            {
+              "value": "instagram",
+              "label": "Instagram"
+            },
+            {
+              "value": "x-twitter",
+              "label": "X (Twitter)"
+            },
+            {
+              "value": "tiktok",
+              "label": "TikTok"
+            },
+            {
+              "value": "whatsapp",
+              "label": "WhatsApp"
+            },
+            {
+              "value": "snapchat",
+              "label": "Snapchat"
+            }
+          ],
+          "default": "facebook"
+        },
+        {
+          "type": "text",
+          "id": "social_link",
+          "label": "Social link"
+        }
+      ]
+    },
+    {
+      "limit": 4,
+      "type": "accordion",
+      "label": "Accordion",
+      "settings": [
+        {
+          "id": "question",
+          "type": "text",
+          "label": "Question",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        },
+        {
+          "id": "answer",
+          "type": "text",
+          "label": "Answer",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias impedit illo quam culpa rem eius, eveniet sunt beatae officia consequuntur."
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
