@@ -192,8 +192,10 @@
             width: 100%;
             max-width: calc(100% - var(--spacing-48));
             padding: calc(var(--spacing-24) - var(--spacing-4));
+            display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            grid-template-columns: auto max-content;
+            justify-content: space-between;
 
             .text {
               .title {
@@ -208,6 +210,22 @@
 
     .slideshow-pagination {
       display: none;
+    }
+
+    &:not(:has(.slideshow-arrows)) {
+      .slideshow-wrapper {
+        overflow-x: scroll;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+
+        [block="slideshow-slide"] {
+          scroll-snap-align: center;
+          scroll-snap-stop: always;
+        }
+      }
     }
   }
 }

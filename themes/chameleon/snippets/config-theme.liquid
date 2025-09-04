@@ -73,21 +73,25 @@
     };
   }
 
-  function combineLightDark(lightTokens, darkTokens) {
-    const combined = {};
-    for (const key in lightTokens) {
-      const lightValue = lightTokens[key];
-      const darkValue = darkTokens[key];
-      combined[key] = `light-dark(${lightValue}, ${darkValue})`;
-    }
-    return combined;
-  }
-
-  function applyTheme(tokens) {
-    const root = document.documentElement;
-    for (const [key, value] of Object.entries(tokens)) {
-      root.style.setProperty(key, value);
-    }
+  function injectTheme(lightTokens, darkTokens) {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @layer light-mode {
+        body[data-theme-mode="light"] {
+          ${Object.entries(lightTokens)
+            .map(([k, v]) => `${k}: ${v};`)
+            .join('\n')}
+        }
+      }
+      @layer dark-mode {
+        body[data-theme-mode="dark"] {
+          ${Object.entries(darkTokens)
+            .map(([k, v]) => `${k}: ${v};`)
+            .join('\n')}
+        }
+      }
+    `;
+    document.head.appendChild(style);
 
     document.querySelector('[ui-loader]').style.opacity = 0;
     document.querySelector('[ui-loader]').style.visibility = 'hidden';
@@ -97,26 +101,26 @@
     try {
       const cached = JSON.parse(localStorage.getItem(THEME_KEY));
       if (cached && cached.primaryColor === primaryColor) {
-        return cached.tokens;
+        return cached;
       }
     } catch {}
     return null;
   }
 
-  function saveTheme(tokens) {
-    localStorage.setItem(THEME_KEY, JSON.stringify({ primaryColor, tokens }));
+  function saveTheme(lightTokens, darkTokens) {
+    localStorage.setItem(THEME_KEY, JSON.stringify({ primaryColor, lightTokens, darkTokens }));
   }
 
   const cached = loadCachedTheme();
   if (cached) {
-    applyTheme(cached);
+    injectTheme(cached.lightTokens, cached.darkTokens);
   } else {
     const argb = argbFromHex(primaryColor);
     const hct = Hct.fromInt(argb);
     const lightTokens = generateTokens(false, argb, hct);
     const darkTokens = generateTokens(true, argb, hct);
-    const merged = combineLightDark(lightTokens, darkTokens);
-    applyTheme(merged);
-    saveTheme(merged);
+
+    injectTheme(lightTokens, darkTokens);
+    saveTheme(lightTokens, darkTokens);
   }
 </script>

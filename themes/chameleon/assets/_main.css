@@ -15,6 +15,8 @@ html {
   scroll-behavior: smooth;
 }
 
+@layer light-mode;
+
 body {
   font: var(--font-body-md);
   color: var(--color-on-background);
@@ -38,12 +40,41 @@ body {
     flex-direction: column;
   }
 
+  [theme="neutral"] {
+    --color-on-theme: var(--color-background);
+    --color-theme: var(--color-on-background);
+  }
+
+  /* LIGHT */
+  &[data-theme-mode="light"] {
+    [theme="primary-low"] {
+      --color-on-theme: var(--color-on-primary-container);
+      --color-theme: var(--color-primary-container);
+    }
+
+    [theme="primary-high"] {
+      --color-on-theme: var(--color-on-primary);
+      --color-theme: var(--color-primary);
+    }
+  }
+
+  /* DARK */
   &[data-theme-mode="dark"],
   &:has(ui-theme > input:checked) {
-    color-scheme: dark;
+    @layer dark-mode;
 
     [data-invert] {
       filter: invert(1);
+    }
+
+    [theme="primary-low"] {
+      --color-on-theme: var(--color-on-primary);
+      --color-theme: var(--color-primary);
+    }
+
+    [theme="primary-high"] {
+      --color-on-theme: var(--color-on-primary-container);
+      --color-theme: var(--color-primary-container);
     }
   }
 }
