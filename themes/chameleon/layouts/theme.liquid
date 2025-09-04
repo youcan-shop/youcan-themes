@@ -21,7 +21,11 @@
   </head>
   <body
     data-primary="{{ settings.primary_color.hex }}"
-    data-theme-mode="{{ settings.theme_mode }}"
+    {% if settings.theme_mode == 'auto' %}
+      data-theme-mode="light"
+    {% else %}
+      data-theme-mode="{{ settings.theme_mode }}"
+    {% endif %}
   >
     {% render 'ui-skip-to-content' %}
     {% render 'ui-loader' %}
