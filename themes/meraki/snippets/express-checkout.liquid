@@ -99,7 +99,7 @@
         {% assign field_name = "extra_fields[" | append: field.name | append: "]" %}
       {% endif %}
 
-      <div class="express-checkout-field">
+      <div class="express-checkout-field" style="{% if field contains field.hidden %} display: none;{% endif %}">
         {% unless has_linked_fields and linked_fields contains field.name %}
           {% case field.type %}
             {% when 'select' %}

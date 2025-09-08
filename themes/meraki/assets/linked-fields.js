@@ -2,7 +2,7 @@ const TYPES = ['country', 'region', 'city'];
 
 let fields = {};
 let regionCode = null;
-let countryCode = CUSTOMER_COUNTRY_CODE;
+let countryCode = null;
 const locale = document.documentElement.lang || 'en';
 
 for (const type of TYPES) {
@@ -48,7 +48,7 @@ async function onChange(type) {
 
 async function fetchLocationByType(type) {
   const fetchMap = {
-    country: () => youcanjs.misc.getCountries(locale),
+    country: () => youcanjs.misc.getStoreMarketCountries(),
     region: () => youcanjs.misc.getCountryRegions(countryCode, locale),
     city: () => youcanjs.misc.getCountryCities(countryCode, regionCode, locale),
   };
@@ -58,7 +58,12 @@ async function fetchLocationByType(type) {
     if (!response) throw new Error(`Unknown fetch type: ${type}`);
 
     const map = {
-      country: () => setUpOptions(type, response.countries),
+      country: () => {
+        const customerCountryExists = response.countries.some(country => country.code === CUSTOMER_COUNTRY_CODE);
+        countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
+
+        this.setUpOptions(type, response.countries);
+      },
       region: () => {
         regionCode = response.states[0].code;
         setUpOptions(type, response.states);
