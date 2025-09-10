@@ -14,10 +14,11 @@ if (!customElements.get("ui-theme")) {
 
     _render() {
       this.switch.checked = this.getThemeMode() === this.DARK_MODE;
+      document.querySelector("body").dataset.themeMode = this.getThemeMode();
 
       this.switch.addEventListener("change", (e) => {
         this.setThemeMode(e.target.checked ? this.DARK_MODE : this.LIGHT_MODE);
-        document.querySelector("body").style.colorScheme = this.getThemeMode();
+        document.querySelector("body").dataset.themeMode = this.getThemeMode();
       });
     }
 

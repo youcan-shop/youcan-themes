@@ -115,6 +115,7 @@
         appearance: none;
         border-radius: var(--radius-xs);
         padding: var(--spacing-12) var(--spacing-16);
+        color: inherit;
         background-color: var(--color-surface-container);
         border: 1px solid var(--color-surface-container-highest);
         transition: var(--transition-standard-default-effects);
@@ -147,12 +148,96 @@
         padding: var(--spacing-0);
         background-color: var(--color-surface-container);
 
+        &:has(> input[type="radio"]:checked) {
+          border-color: var(--color-on-background);
+          background-color: transparent;
+        }
+
         & > [ui-icon] {
           opacity: 0.3;
           position: absolute;
           translate: -50% -50%;
           left: 50%;
           inset-block-start: 50%;
+        }
+      }
+    }
+
+    &[ui-variant="upload_image_zone"] {
+      [ui-variant-upload] {
+        display: grid;
+        gap: var(--spacing-8);
+        position: relative;
+
+        [ui-variant-upload-input] {
+          height: 200px;
+          cursor: pointer;
+          padding: var(--spacing-12);
+          border-radius: var(--radius-md);
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-12);
+          flex-direction: column;
+          justify-content: center;
+          background-color: var(--color-surface-container);
+          border: 1px dashed var(--color-surface-container-highest);
+          transition: var(--transition-standard-default-effects);
+
+          &:hover {
+            background-color: color-mix(in srgb, currentColor 8%, transparent);
+          }
+
+          input[type="file"] {
+            scale: 0;
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+          }
+
+          .content {
+            display: grid;
+            gap: var(--spacing-2);
+            text-align: center;
+
+            .label {
+              font: var(--font-body-md);
+            }
+
+            .accept {
+              opacity: 0.8;
+              font: var(--font-body-sm);
+            }
+          }
+        }
+
+        [ui-variant-upload-output] {
+          width: 100px;
+          height: 100px;
+          overflow: hidden;
+          position: relative;
+          border-radius: var(--radius-md);
+          border: 1px solid var(--color-surface-container-highest);
+
+          & > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          & > button {
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-end: 0;
+            border-radius: 0;
+            border-end-start-radius: var(--radius-sm);
+            color: var(--color-on-error-container);
+            background-color: var(--color-error-container);
+
+            &:hover {
+              color: var(--color-on-error);
+              background-color: var(--color-error);
+            }
+          }
         }
       }
     }

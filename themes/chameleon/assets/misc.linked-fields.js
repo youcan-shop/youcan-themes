@@ -4,7 +4,7 @@ class LinkedFields extends HTMLElement {
   constructor() {
     super();
     this.locale = document.documentElement.lang || "en";
-    this.countryCode = CUSTOMER_COUNTRY_CODE;
+    this.countryCode = null;
     this.regionCode = null;
 
     for (const name of LinkedFields.TYPES) {
@@ -39,11 +39,13 @@ class LinkedFields extends HTMLElement {
       const label = typeof opt === "string" ? opt : opt.name;
       const value = typeof opt === "string" ? opt : opt.code;
 
-      const option = new Option(label, value, isDefault[type]);
+      const option = new Option(label, label, isDefault[type], isDefault[type]);
+      option.dataset.value = value;
+
       select.add(option);
     });
 
-    select.addEventListener("change", (e) => this.onChange(e.target.value, type));
+    select.addEventListener("change", (e) => this.onChange(e.target.selectedOptions[0].dataset.value, type));
   }
 
   async onChange(value, type) {
@@ -56,7 +58,7 @@ class LinkedFields extends HTMLElement {
 
   async fetchLocationByType(type) {
     const fetchMap = {
-      country: () => youcanjs.misc.getCountries(this.locale),
+      country: () => youcanjs.misc.getStoreMarketCountries(),
       region: () => youcanjs.misc.getCountryRegions(this.countryCode, this.locale),
       city: () => youcanjs.misc.getCountryCities(this.countryCode, this.regionCode, this.locale),
     };
@@ -68,7 +70,12 @@ class LinkedFields extends HTMLElement {
       if (!response) throw new Error(`Unknown fetch type: ${type}`);
 
       const map = {
-        country: () => this.setUpOptions(type, response.countries),
+        country: () => {
+          const customerCountryExists = response.countries.some((country) => country.code === CUSTOMER_COUNTRY_CODE);
+          this.countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
+
+          this.setUpOptions(type, response.countries);
+        },
         region: () => {
           this.regionCode = response.states[0].code;
           this.setUpOptions(type, response.states);
