@@ -70,7 +70,7 @@ class LinkedFields extends HTMLElement {
       const map = {
         country: () => {
           const customerCountryExists = response.countries.some((country) => country.code === CUSTOMER_COUNTRY_CODE);
-          countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
+          this.countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
 
           this.setUpOptions(type, response.countries);
         },

@@ -106,7 +106,6 @@ if (!customElements.get("ui-product")) {
       if (!lastVariant) return;
 
       const inputs = lastVariant.querySelectorAll("input, select");
-      console.log(inputs)
 
       inputs.forEach((input) => {
         const compareOptions = {
