@@ -15,7 +15,12 @@
 <ui-linked-fields>
   {% for field in fields %}
     {% if linked_fields contains field.name %}
-      <label ui-express-checkout-field>
+      <label
+        ui-express-checkout-field
+        {% if field contains field.hidden %}
+          hidden
+        {% endif %}
+      >
         <span ui-express-checkout-label>{{ field.display_name }}</span>
         <select
           name="{{ field.name }}"

@@ -4,7 +4,7 @@ class LinkedFields extends HTMLElement {
   constructor() {
     super();
     this.locale = document.documentElement.lang || "en";
-    this.countryCode = CUSTOMER_COUNTRY_CODE;
+    this.countryCode = null;
     this.regionCode = null;
 
     for (const name of LinkedFields.TYPES) {
@@ -56,7 +56,7 @@ class LinkedFields extends HTMLElement {
 
   async fetchLocationByType(type) {
     const fetchMap = {
-      country: () => youcanjs.misc.getCountries(this.locale),
+      country: () => youcanjs.misc.getStoreMarketCountries(),
       region: () => youcanjs.misc.getCountryRegions(this.countryCode, this.locale),
       city: () => youcanjs.misc.getCountryCities(this.countryCode, this.regionCode, this.locale),
     };
@@ -68,7 +68,12 @@ class LinkedFields extends HTMLElement {
       if (!response) throw new Error(`Unknown fetch type: ${type}`);
 
       const map = {
-        country: () => this.setUpOptions(type, response.countries),
+        country: () => {
+          const customerCountryExists = response.countries.some((country) => country.code === CUSTOMER_COUNTRY_CODE);
+          countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
+
+          this.setUpOptions(type, response.countries);
+        },
         region: () => {
           this.regionCode = response.states[0].code;
           this.setUpOptions(type, response.states);
