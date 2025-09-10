@@ -57,7 +57,7 @@ if (!customElements.get("ui-media")) {
     }
 
     isRTL() {
-      return document.dir === "rtl";
+      return document.dir === "rtl" && matchMedia("(max-width: 769px)").matches;
     }
 
     onScroll(dir) {
@@ -65,7 +65,7 @@ if (!customElements.get("ui-media")) {
 
       this.scrollRAF = requestAnimationFrame(() => {
         const el = this.isDirectionTop(dir) ? this : this.imgWrapper;
-        let pos = this.isDirectionTop(dir) ? el.scrollTop : el.scrollLeft;
+        const pos = this.isDirectionTop(dir) ? el.scrollTop : el.scrollLeft;
         const size = this.isDirectionTop(dir) ? el.clientHeight : el.clientWidth;
 
         let newIndex = Math.abs(Math.round(pos / Math.max(1, size)));
