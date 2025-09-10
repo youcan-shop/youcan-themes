@@ -37,7 +37,7 @@ class LinkedFields extends HTMLElement {
         city: index === 0,
       };
       const label = typeof opt === "string" ? opt : opt.name;
-      const value = typeof opt === "string" ? opt : opt.code;
+      const value = typeof opt === "string" ? opt : opt.name;
 
       const option = new Option(label, value, isDefault[type]);
       select.add(option);
