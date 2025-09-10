@@ -101,7 +101,7 @@ if (!customElements.get("ui-product")) {
     }
 
     disableUnavailableOptions() {
-      const lastVariant = this.variants.filter((variant) => variant.getAttribute("name") !== "upload-image").at(-1);
+      const lastVariant = this.variants.filter((variant) => variant.getAttribute("ui-variant") !== "upload_image_zone").at(-1);
 
       if (!lastVariant) return;
 
@@ -146,6 +146,22 @@ if (!customElements.get("ui-product")) {
       return fileInput
         ? new Promise((resolve) => {
             const reader = new FileReader();
+
+            reader.onload = () => {
+              const base64 = reader.result;
+
+              const output = fileInput.parentElement.nextElementSibling;
+              output.removeAttribute("hidden");
+
+              output.querySelector("img").src = base64;
+              output.querySelector("img").alt = file.name;
+
+              output.querySelector("button").addEventListener("click", () => {
+                this.productForm.removeAttribute("attached-image");
+                output.setAttribute("hidden", "");
+                fileInput.value = "";
+              });
+            };
             reader.onloadend = () => resolve(reader.result);
             reader.readAsDataURL(fileInput.files[0]);
           })
