@@ -37,13 +37,15 @@ class LinkedFields extends HTMLElement {
         city: index === 0,
       };
       const label = typeof opt === "string" ? opt : opt.name;
-      const value = typeof opt === "string" ? opt : opt.name;
+      const value = typeof opt === "string" ? opt : opt.code;
 
-      const option = new Option(label, value, isDefault[type]);
+      const option = new Option(label, label, isDefault[type], isDefault[type]);
+      option.dataset.value = value;
+
       select.add(option);
     });
 
-    select.addEventListener("change", (e) => this.onChange(e.target.value, type));
+    select.addEventListener("change", (e) => this.onChange(e.target.selectedOptions[0].dataset.value, type));
   }
 
   async onChange(value, type) {
