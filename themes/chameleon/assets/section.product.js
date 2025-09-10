@@ -105,7 +105,8 @@ if (!customElements.get("ui-product")) {
 
       if (!lastVariant) return;
 
-      const inputs = lastVariant.querySelectorAll("input");
+      const inputs = lastVariant.querySelectorAll("input, select");
+      console.log(inputs)
 
       inputs.forEach((input) => {
         const compareOptions = {
@@ -126,7 +127,7 @@ if (!customElements.get("ui-product")) {
         [...inputs].every((input) => input.disabled),
       );
 
-      const hasCheckedInput = [...inputs].some((input) => input.checked);
+      const hasCheckedInput = [...inputs].some((input) => input.checked || input.value);
       this.productForm.querySelector("[ui-button]").disabled = !hasCheckedInput;
     }
 
