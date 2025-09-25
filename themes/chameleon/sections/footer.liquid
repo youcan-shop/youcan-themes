@@ -20,12 +20,8 @@
           {{ store.name }}
         {% endif %}
       </a>
-      <p class="bio">{{ store.description | default: store.title | default: store.name }}</p>
     </div>
-    <div class="copyright">
-      {{ 'footer.copyright.title' | t }}
-      <a href="https://youcan.shop" target="_blank">{{ 'footer.copyright.platform' | t }}</a>
-    </div>
+    <span class="copyright">{{ section.settings.copyright }}</span>
   </div>
   <div class="links">
     {% for linklist in link-lists %}
@@ -96,6 +92,12 @@
         }
       ],
       "default": "primary-low"
+    },
+    {
+      "type": "textarea",
+      "id": "copyright",
+      "label": "t:sections.footer.copyright.label",
+      "default": "t:sections.footer.copyright.default"
     }
   ]
 }
