@@ -82,6 +82,21 @@
 {{ 'main.css' | asset_url | preload_tag }}
 {{ 'utils.css' | asset_url | preload_tag }}
 
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Store",
+    "name": "{{ store.name }}"
+    "sameAs": [
+      "{{ store.brand.social_links.facebook }}",
+      "{{ store.brand.social_links.twitter }}",
+      "{{ store.brand.social_links.instagram }}",
+      "{{ store.brand.social_links.tiktok }}"
+    ],
+    "url": "{{ request.url }}"
+  }
+</script>
+
 <script
   type='module'
   src='https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js'
