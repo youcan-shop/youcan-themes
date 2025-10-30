@@ -25,7 +25,8 @@
 
   .custom-checkout-{{ checkout_id }} input,
   .custom-checkout-{{ checkout_id }} textarea,
-  .custom-checkout-{{ checkout_id }} select {
+  .custom-checkout-{{ checkout_id }} select,
+  .phone-field__input-group {
     padding: {{ settings.input_padding }}px;
     border-radius: {{ settings.input_border_radius }}px;
     font-size: {{ settings.input_text_size }}px !important;
@@ -80,6 +81,31 @@
     color: #ffffff !important;
     cursor: not-allowed;
   }
+
+  .phone-field__input-group {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .phone-field__select {
+    border-block: none !important;
+    border-left: 0 !important;
+    border-right: 1px solid {{ settings.input_border_color.hex }} !important;
+    border-radius: 0 !important;
+    width: 30%;
+    padding: 0;
+  }
+
+  .phone-field__select option[data-code]::before {
+    content: attr(data-code) " - ";
+  }
+
+  .phone-field__number {
+    border: none !important;
+    padding: 0;
+  }
 {% endstyle %}
 
 <form
@@ -132,15 +158,30 @@
                 min
               ></textarea>
             {% else %}
+            {% comment %} Phone Input Group {% endcomment %}
+              {% if field.name == 'phone' %}
+                <div dir="ltr" class="phone-field__input-group">
+                  <input type="hidden" id="{{ field.name }}" name="{{ field_name }}">
+                  <select id="phone-field__country-code" class="phone-field__select"></select>
+                  <input
+                  type="{{ field.type }}"
+                  id="phone-field__number"
+                  class="w-full phone-field__number"
+                  placeholder="{{ field.placeholder }}"
+                  required="{{ field.required }}"
+                >
+                </div>
+              {% else %}
               <input
-                name="{{ field_name }}"
-                type="{{ field.type }}"
-                id="{{ field.name }}"
-                class="w-full"
-                placeholder="{{ field.placeholder }}"
-                required="{{ field.required }}"
-              >
-          {% endcase %}
+                    name="{{ field_name }}"
+                    type="{{ field.type }}"
+                    id="{{ field.name }}"
+                    class="w-full"
+                    placeholder="{{ field.placeholder }}"
+                    required="{{ field.required }}"
+                  >
+            {% endif %}
+            {% endcase %}
         {% else %}
           <select
             data-linked-field="{{ field.name }}"
