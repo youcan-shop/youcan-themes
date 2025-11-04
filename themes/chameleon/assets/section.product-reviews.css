@@ -69,6 +69,46 @@
         }
       }
 
+      .images {
+        display: flex;
+        flex-wrap: wrap;
+
+        & > img {
+          cursor: pointer;
+          border-radius: var(--radius-md);
+          object-fit: cover;
+          border: 2px solid var(--color-background);
+          background-color: var(--color-surface-container-low);
+          box-shadow: color-mix(in srgb, currentColor 10%, transparent) 0px 28px 50px 0px;
+          transition: var(--transition-expressive-default-spatial);
+
+          &:nth-child(odd) {
+            rotate: -3deg;
+          }
+
+          &:nth-child(even) {
+            rotate: 3deg;
+          }
+
+          &:nth-child(2) {
+            transform: translateX(-0.5em);
+          }
+
+          &:nth-child(3) {
+            transform: translateX(-1em);
+          }
+
+          &:nth-child(4) {
+            transform: translateX(-1.5em);
+          }
+
+          &:hover {
+            scale: 1.05;
+            rotate: 0deg;
+          }
+        }
+      }
+
       &.skeleton {
         height: 208px;
 
@@ -124,6 +164,12 @@
         }
       }
     }
+
+    &:has([block="review"] .images) {
+      [block="review"] {
+        justify-content: flex-start;
+      }
+    }
   }
 
   .show-more {
@@ -136,6 +182,101 @@
       cursor: pointer;
       user-select: none;
       width: fit-content;
+    }
+  }
+
+  [ui-show-images] {
+    &:has(.show-content[data-state="open"]) {
+      &::before {
+        content: "";
+        inset: 0;
+        cursor: auto;
+        z-index: 9998;
+        position: fixed;
+        background-color: var(--color-overlay);
+      }
+    }
+
+    .show-content {
+      z-index: 9999;
+      position: fixed;
+      translate: -50% -50%;
+      left: 50%;
+      inset-block-start: 50%;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      background-color: var(--color-background);
+      width: 500px;
+      padding: var(--spacing-12);
+      transition: var(--transition-expressive-slow-spatial);
+      display: grid;
+      gap: var(--spacing-12);
+
+      &[data-state="closed"] {
+        opacity: 0;
+        visibility: hidden;
+        inset-block-start: 55%;
+      }
+
+      .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--spacing-12);
+        border-radius: var(--radius-md);
+        background-color: var(--color-surface-container-low);
+
+        .title {
+          font: var(--font-body-lg);
+        }
+      }
+
+      .core {
+        display: grid;
+        gap: var(--spacing-12);
+        padding-block: var(--spacing-24) (--spacing-12);
+        position: relative;
+
+        .images-wrapper {
+          display: grid;
+          align-items: center;
+          gap: var(--spacing-12);
+          grid-template-columns: auto 1fr auto;
+
+          &:not(:has(.images img:nth-child(2))) {
+            grid-template-columns: 1fr;
+
+            [ui-show-images="arrow"] {
+              display: none;
+            }
+          }
+
+          .images {
+            display: flex;
+            gap: var(--spacing-8);
+            height: 40vh;
+            overflow-x: scroll;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-overflow-scrolling: touch;
+
+            & > img {
+              min-width: 100%;
+              object-fit: cover;
+              scroll-snap-align: center;
+              scroll-snap-stop: always;
+              border-radius: var(--radius-md);
+            }
+          }
+        }
+
+        .actions {
+          display: flex;
+          justify-content: center;
+        }
+      }
     }
   }
 }
@@ -172,6 +313,28 @@
         .author {
           .name {
             font: var(--font-title-sm);
+          }
+        }
+
+        .images {
+          & > img {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-sm);
+          }
+        }
+      }
+    }
+
+    [ui-show-images] {
+      .show-content {
+        width: calc(100% - var(--spacing-24));
+
+        .core {
+          .images-wrapper {
+            .images {
+              height: 35vh;
+            }
           }
         }
       }
