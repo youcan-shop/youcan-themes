@@ -43,7 +43,7 @@ if (!customElements.get("ui-product-reviews")) {
       const itemsWithContent = items.filter((item) => !!item.content);
       const totalItems = itemsWithContent.length;
 
-      totalItems ? itemsWithContent.forEach((item) => this.createItem(item)) : this.filter.remove();
+      if (totalItems) itemsWithContent.forEach((item) => this.createItem(item));
     }
 
     updatePagination(response) {
