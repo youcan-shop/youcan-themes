@@ -87,19 +87,24 @@
 {% endstyle %}
 
 <form
-  id='express-checkout-form'
-  class='custom-checkout-{{ checkout_id }}'
+  id="express-checkout-form"
+  class="custom-checkout-{{ checkout_id }}"
   onsubmit="return false;"
 >
-  <div class='express-checkout-fields'>
-    <div class='express-checkout-title'>{{ settings.form_title }}</div>
+  <div class="express-checkout-fields">
+    <div class="express-checkout-title">{{ settings.form_title }}</div>
     {% for field in checkout.fields %}
       {% assign field_name = field.name %}
       {% if field.custom %}
-        {% assign field_name = "extra_fields[" | append: field.name | append: "]" %}
+        {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
       {% endif %}
 
-      <div class="express-checkout-field" {% if field contains field.hidden %} hidden {% endif %}>
+      <div
+        class="express-checkout-field"
+        {% if field contains field.hidden %}
+          hidden
+        {% endif %}
+      >
         {% unless has_linked_fields and linked_fields contains field.name %}
           {% case field.type %}
             {% when 'select' %}
@@ -137,6 +142,9 @@
               ></textarea>
             {% else %}
               <input
+                {% if field.name == 'phone' or field.type == 'number' %}
+                  inputmode="tel"
+                {% endif %}
                 name="{{ field_name }}"
                 type="{{ field.type }}"
                 id="{{ field.name }}"
@@ -164,8 +172,15 @@
       </div>
     {% endfor %}
     {% if is_sticky == false %}
-      <button type='submit' class='express-checkout-button' {% if is_placeholder %} disabled {% endif %} onclick='placeOrder(this)'>
-        <span class='spinner hidden' id='loading__checkout'></span>
+      <button
+        type="submit"
+        class="express-checkout-button"
+        {% if is_placeholder %}
+          disabled
+        {% endif %}
+        onclick="placeOrder(this)"
+      >
+        <span class="spinner hidden" id="loading__checkout"></span>
         <span>{{ settings.express_checkout_cta | default: 'general.buy_now' | t }}</span>
       </button>
     {% endif %}
