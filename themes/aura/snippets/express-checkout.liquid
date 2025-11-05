@@ -121,7 +121,12 @@
         {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
       {% endif %}
 
-      <div class="express-checkout-field" {% if field contains field.hidden %} hidden {% endif %}>
+      <div
+        class="express-checkout-field"
+        {% if field contains field.hidden %}
+          hidden
+        {% endif %}
+      >
         {% unless has_linked_fields and linked_fields contains field.name %}
           {% case field.type %}
             {% when 'select' %}
@@ -165,6 +170,7 @@
                   <select id="phone-field__country-code" class="phone-field__select"></select>
                   <input
                   type="{{ field.type }}"
+                  inputmode="tel"
                   id="phone-field__number"
                   class="w-full phone-field__number"
                   placeholder="{{ field.placeholder }}"
@@ -173,15 +179,20 @@
                 </fieldset>
               {% else %}
               <input
-                    name="{{ field_name }}"
-                    type="{{ field.type }}"
-                    id="{{ field.name }}"
-                    class="w-full"
-                    placeholder="{{ field.placeholder }}"
-                    required="{{ field.required }}"
-                  >
-            {% endif %}
-            {% endcase %}
+                {% if field.name == 'phone' or field.type == 'number' %}
+                  inputmode="tel"
+                {% endif %}
+                {% if field.name == 'email' %}
+                  inputmode="email"
+                {% endif %}
+                name="{{ field_name }}"
+                type="{{ field.type }}"
+                id="{{ field.name }}"
+                class="w-full"
+                placeholder="{{ field.placeholder }}"
+                required="{{ field.required }}"
+              >
+          {% endcase %}
         {% else %}
           <select
             data-linked-field="{{ field.name }}"
