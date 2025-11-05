@@ -61,3 +61,64 @@ async function placeOrder() {
     stopLoad('#loading__checkout');
   }
 }
+
+// Set initial display to country code only
+function updateSelectedOptionText(select) {
+  const selected = select.selectedOptions[0];
+  selected.textContent = selected.dataset.code;
+}
+
+function updatePhoneHidden(countryCode) {
+  const hiddenInput = document.querySelector('#phone');
+  const phoneNumberInput = document.querySelector('#phone-field__number');
+
+  if(hiddenInput && phoneNumberInput) {
+    hiddenInput.value = `+${countryCode}${phoneNumberInput.value}`;
+  }
+
+  phoneNumberInput.addEventListener('change', e => {
+    hiddenInput.value = `+${countryCode}${e.target?.value}`
+  })
+}
+
+const DEFAULT_COUNTRY_CODE = 'MA';
+
+async function populateCountries() {
+
+  const { countries } = await youcanjs.misc.getStoreMarketCountries();
+  const selectCountry = document.querySelector('#phone-field__country-code');
+
+  if(countries.length && selectCountry) {
+    countries.forEach(country => {
+      const option = document.createElement('option');
+      option.value = country.phone;
+      option.textContent = `${country.name} (+${country.phone})`;
+      option.dataset.code = `+${country.phone}`;
+      selectCountry.appendChild(option);
+
+      if (country.code === DEFAULT_COUNTRY_CODE) {
+        option.selected = true;
+        updatePhoneHidden(country.phone)
+      }
+    });
+
+    updateSelectedOptionText(selectCountry);
+
+    // Update display When select changes
+    selectCountry.addEventListener('change', (e) => {
+      updateSelectedOptionText(selectCountry);
+      updatePhoneHidden(e.target?.value);
+    });
+
+    // When opening select, show full countries names with their code
+    selectCountry.addEventListener('mousedown', () => {
+      selectCountry.querySelectorAll('option').forEach(opt => {
+        opt.textContent = `${countries.find(c => '+' + c.phone === opt.dataset.code).name} (${opt.dataset.code})`;
+      });
+    });
+
+  }
+
+}
+
+populateCountries()
