@@ -96,7 +96,12 @@
         {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
       {% endif %}
 
-      <div class="express-checkout-field" {% if field contains field.hidden %} hidden {% endif %}>
+      <div
+        class="express-checkout-field"
+        {% if field contains field.hidden %}
+          hidden
+        {% endif %}
+      >
         {% unless has_linked_fields and linked_fields contains field.name %}
           {% case field.type %}
             {% when 'select' %}
@@ -134,6 +139,12 @@
               ></textarea>
             {% else %}
               <input
+                {% if field.name == 'phone' or field.type == 'number' %}
+                  inputmode="tel"
+                {% endif %}
+                {% if field.name == 'email' %}
+                  inputmode="email"
+                {% endif %}
                 name="{{ field_name }}"
                 type="{{ field.type }}"
                 id="{{ field.name }}"
