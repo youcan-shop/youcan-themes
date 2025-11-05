@@ -1,0 +1,33 @@
+{% comment %}
+  Renders images preview modal (Show images)
+
+  Usage:
+  {% render 'misc-show-images' %}
+{% endcomment %}
+
+<div ui-show-images>
+  <div class="show-content" data-state="closed">
+    <div class="head">
+      <h6 class="title">{{ 'product.reviews.preview' | t }}</h6>
+      <button ui-button data-variant="secondary" data-size="sm" as-icon aria-label="close" ui-show-images="close">
+        {% render 'ui-icon', name: 'close' %}
+      </button>
+    </div>
+    <div class="core">
+      <div class="images-wrapper">
+        <button ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="previous" ui-show-images="arrow">
+          {% render 'ui-icon', name: 'chevron_left', size: 24 %}
+        </button>
+        <div class="images" ui-show-images="images"></div>
+        <button ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="next" ui-show-images="arrow">
+          {% render 'ui-icon', name: 'chevron_right', size: 24 %}
+        </button>
+      </div>
+      <div class="actions">
+        <button ui-button data-variant="secondary" data-size="md" type="button" ui-show-images="close">
+          {{ 'general.close' | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
