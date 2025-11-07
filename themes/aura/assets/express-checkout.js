@@ -94,6 +94,7 @@ async function populateCountries() {
       option.value = country.phone;
       option.textContent = `${country.name} (+${country.phone})`;
       option.dataset.code = `+${country.phone}`;
+      option.dataset.codeAndCountry = `${country.name} (+${country.phone})`
       selectCountry.appendChild(option);
 
       if (country.code === DEFAULT_COUNTRY_CODE) {
@@ -113,7 +114,7 @@ async function populateCountries() {
     // When opening select, show full countries names with their code
     selectCountry.addEventListener('mousedown', () => {
       selectCountry.querySelectorAll('option').forEach(opt => {
-        opt.textContent = `${countries.find(c => '+' + c.phone === opt.dataset.code).name} (${opt.dataset.code})`;
+        opt.textContent = opt.dataset.codeAndCountry;
       });
     });
 
