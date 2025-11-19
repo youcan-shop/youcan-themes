@@ -105,6 +105,14 @@ async function populateCountries() {
 
     updateSelectedOptionText(selectCountry);
 
+    // Track when the select is opeened
+    let selectIsOpen = false;
+
+    selectCountry.addEventListener('blur', () => {
+      selectIsOpen = false;
+      updateSelectedOptionText(selectCountry);
+    });
+
     // Update display When select changes
     selectCountry.addEventListener('change', (e) => {
       updateSelectedOptionText(selectCountry);
@@ -112,10 +120,16 @@ async function populateCountries() {
     });
 
     // When opening select, show full countries names with their code
-    selectCountry.addEventListener('mousedown', () => {
+    selectCountry.addEventListener('click', () => {
+      selectIsOpen = !selectIsOpen;
+
       selectCountry.querySelectorAll('option').forEach(opt => {
         opt.textContent = opt.dataset.codeAndCountry;
       });
+
+      if (!selectIsOpen) {
+        updateSelectedOptionText(selectCountry);
+      }
     });
 
   }
