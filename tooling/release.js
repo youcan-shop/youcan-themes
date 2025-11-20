@@ -1,31 +1,63 @@
-const zl = require('zip-lib');
-const fs = require('fs-extra');
-const path = require('path');
+const zl = require("zip-lib");
+const fs = require("fs-extra");
+const path = require("path");
+const postcss = require("postcss");
+const nesting = require("postcss-nesting");
 
-const theme_folders = ['layouts', 'sections', 'locales', 'snippets', 'assets', 'config', 'templates'];
-const themes_path = path.resolve(__dirname, '..', 'themes');
-const themes_dist = path.resolve(__dirname, '..', 'dist');
-const themes = fs.readdirSync(themes_path).filter(theme => {
-  return fs.statSync(path.resolve(themes_path, theme)).isDirectory();
-});
+const FOLDERS = ["layouts", "sections", "locales", "snippets", "assets", "config", "templates"];
+const ROOT = path.resolve(__dirname, "..");
+const THEMES = path.join(ROOT, "themes");
+const DIST = path.join(ROOT, "dist");
 
-themes.forEach(theme => {
-  const currentDate = new Date();
-  const day = currentDate.getDate();
-  const month = currentDate.getMonth() + 1;
-  const year = currentDate.getFullYear();
+async function processCSS(tempPath, originalPath) {
+  const css = await fs.readFile(originalPath, "utf8");
+  const result = await postcss([nesting]).process(css, { from: originalPath });
+  await fs.writeFile(tempPath, result.css);
+}
 
-  const theme_path = path.resolve(themes_path, theme);
-  const theme_dist_path = path.resolve(themes_dist, `${theme}_${day}-${month}-${year}.zip`)
+async function zipTheme(theme) {
+  const themePath = path.join(THEMES, theme);
+  const output = path.join(DIST, `${theme}_${getCurrentDate()}.zip`);
   const zip = new zl.Zip();
 
-  theme_folders.forEach(folder => {
-    zip.addFolder(path.resolve(theme_path, folder), folder);
-  });
+  for (const folder of FOLDERS) {
+    const folderPath = path.join(themePath, folder);
 
-  fs.ensureDirSync(themes_dist);
+    if (folder === "assets") {
+      if (!fs.existsSync(folderPath)) continue;
 
-  zip.archive(theme_dist_path).then(() => {
-    console.log(`Successfully zipped ${theme}`);
-  });
-});
+      for (const file of fs.readdirSync(folderPath)) {
+        const src = path.join(folderPath, file);
+        const zipPath = `assets/${file}`;
+
+        if (file.endsWith(".css")) {
+          const temp = path.join(__dirname, `.tmp_${file}`);
+          await processCSS(temp, src);
+          zip.addFile(temp, zipPath);
+        } else {
+          zip.addFile(src, zipPath);
+        }
+      }
+    } else {
+      zip.addFolder(folderPath, folder);
+    }
+  }
+
+  await fs.ensureDir(DIST);
+  await zip.archive(output);
+
+  fs.readdirSync(__dirname)
+    .filter((f) => f.startsWith(".tmp_"))
+    .forEach((f) => fs.removeSync(path.join(__dirname, f)));
+
+  console.log(`Successfully zipped: ${theme}`);
+}
+
+function getCurrentDate() {
+  const date = new Date();
+  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+}
+
+fs.readdirSync(THEMES)
+  .filter((name) => fs.statSync(path.join(THEMES, name)).isDirectory())
+  .forEach((theme) => zipTheme(theme));
