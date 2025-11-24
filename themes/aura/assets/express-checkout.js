@@ -62,78 +62,167 @@ async function placeOrder() {
   }
 }
 
-// Set initial display to country code only
-function updateSelectedOptionText(select) {
-  const selected = select.selectedOptions[0];
+// PHONE VALIDATION
+const DEFAULT_COUNTRY_CODE = 'MA';
+
+const INVALID_PHONE_MESSAGES = {
+  en: "Please enter a valid phone number.",
+  fr: "Veuillez saisir un numéro de téléphone valide.",
+  ar: "يرجى إدخال رقم هاتف صحيح.",
+};
+
+const getLang = () => {
+  return document.documentElement.lang || 'en';
+} 
+
+const selectCountry = document.querySelector('#phone-field__country-code');
+const inputNumber = document.querySelector('#phone-field__number');
+const hiddenFullPhone = document.querySelector('#phone')
+
+// SET INITIAL DISPLAY TO COUNTRY CODE ONLY
+function updateSelectedOptionText() {
+  const selected = selectCountry.selectedOptions[0];
   selected.textContent = selected.dataset.code;
 }
 
-function updatePhoneHidden(countryCode) {
-  const hiddenInput = document.querySelector('#phone');
-  const phoneNumberInput = document.querySelector('#phone-field__number');
-
-  if(hiddenInput && phoneNumberInput) {
-    hiddenInput.value = `+${countryCode}${phoneNumberInput.value}`;
-  }
-
-  phoneNumberInput.addEventListener('change', e => {
-    hiddenInput.value = `+${countryCode}${e.target?.value}`
-  })
-}
-
-const DEFAULT_COUNTRY_CODE = 'MA';
-
+// POPULATE COUNTRIES
 async function populateCountries() {
-
   const { countries } = await youcanjs.misc.getStoreMarketCountries();
-  const selectCountry = document.querySelector('#phone-field__country-code');
 
-  if(countries.length && selectCountry) {
-    countries.forEach(country => {
-      const option = document.createElement('option');
-      option.value = country.phone;
-      option.textContent = `${country.name} (+${country.phone})`;
-      option.dataset.code = `+${country.phone}`;
-      option.dataset.codeAndCountry = `${country.name} (+${country.phone})`
-      selectCountry.appendChild(option);
+  if(!countries || !countries.length) return;
 
-      if (country.code === DEFAULT_COUNTRY_CODE) {
-        option.selected = true;
-        updatePhoneHidden(country.phone)
-      }
+  countries.forEach(country => {
+    const opt = document.createElement("option");
+    opt.value = country.phone;
+    opt.dataset.country = country.code;
+    opt.dataset.code = `+${country.phone}`;
+    opt.dataset.codeAndCountry = `${country.name} (+${country.phone})`;
+    opt.textContent = opt.dataset.codeAndCountry;
+    selectCountry.appendChild(opt);
+
+    if (country.code === DEFAULT_COUNTRY_CODE) {
+      opt.selected = true;
+    }
+  });
+
+  updateSelectedOptionText(selectCountry);
+
+  // Handle select open/close and styling
+  let selectIsOpen = false;
+
+  selectCountry.addEventListener("click", () => {
+    selectIsOpen = !selectIsOpen;
+    selectCountry.querySelectorAll("option").forEach(o => {
+      o.textContent = o.dataset.codeAndCountry;
     });
+    if (!selectIsOpen) updateSelectedOptionText(selectCountry);
+  });
 
+  selectCountry.addEventListener("blur", () => {
+    selectIsOpen = false;
     updateSelectedOptionText(selectCountry);
-
-    // Track when the select is opeened
-    let selectIsOpen = false;
-
-    selectCountry.addEventListener('blur', () => {
-      selectIsOpen = false;
-      updateSelectedOptionText(selectCountry);
-    });
-
-    // Update display When select changes
-    selectCountry.addEventListener('change', (e) => {
-      updateSelectedOptionText(selectCountry);
-      updatePhoneHidden(e.target?.value);
-    });
-
-    // When opening select, show full countries names with their code
-    selectCountry.addEventListener('click', () => {
-      selectIsOpen = !selectIsOpen;
-
-      selectCountry.querySelectorAll('option').forEach(opt => {
-        opt.textContent = opt.dataset.codeAndCountry;
-      });
-
-      if (!selectIsOpen) {
-        updateSelectedOptionText(selectCountry);
-      }
-    });
-
-  }
-
+  });
 }
 
-populateCountries()
+function getCurrentFullPhone() {
+  const countryCode = selectCountry.value;
+  const nationalNumber = inputNumber.value.trim();
+  
+  if(!nationalNumber || !countryCode) return '';
+
+  return `+${countryCode}${nationalNumber}`
+}
+
+// UPDATE HIDDEN INPUT
+function updateHiddenInput() {
+  const fullNumber = getCurrentFullPhone();
+  const parsed = libphonenumber.parsePhoneNumber(fullNumber)
+  
+  if(parsed && parsed.isValid()) {
+    hiddenFullPhone.value = parsed.number;
+    return;
+  }
+
+  hiddenFullPhone.value = "";
+}
+
+// SHOW ERROR
+function handleError(message = null) {
+  const errorDiv = document.querySelector('.validation-error[data-error="phone"]')
+  if(message) {
+    errorDiv.textContent = message;
+    return;
+  }
+
+  errorDiv.textContent = ""
+}
+
+// CASE 1: User typed the full international number (including country code '+')
+function syncSelectToNumberField() {
+  const numberVal = inputNumber.value.trim();
+
+  if(numberVal.startsWith('+')) {
+    const parsed = libphonenumber.parsePhoneNumberFromString(numberVal);
+    
+    if(!parsed) return;
+    
+    inputNumber.value = parsed.nationalNumber;
+    // Auto-update SELECT if country code exists 
+    const optionToSelect = [...selectCountry.options].find(
+      opt => opt.value === parsed.countryCallingCode
+    );
+  
+    if (optionToSelect) {
+      selectCountry.value = parsed.countryCallingCode;
+    }
+  
+    updateSelectedOptionText();
+    return;
+  }
+
+  detectAndFixCountryCodeFromInput()
+}
+
+// CASE 2: User type only the national number
+function detectAndFixCountryCodeFromInput() {
+  const val = inputNumber.value.trim();
+
+  if(val.startsWith('+')) return; // already checked in syncSelectToNumberField
+
+  const fullNumber = getCurrentFullPhone();
+
+  const parsed = libphonenumber.parsePhoneNumber(fullNumber);
+
+  if(!parsed.isValid()) {
+    // Show error message
+    handleError(INVALID_PHONE_MESSAGES[getLang()])
+    return;
+  }
+}
+
+// LISTENERS
+function initPhoneListeners() {
+
+  selectCountry.addEventListener('change', () => {
+    handleError()
+    syncSelectToNumberField();
+    updateHiddenInput();
+  })
+
+  inputNumber.addEventListener('change', () => {
+    handleError();
+    syncSelectToNumberField();
+    updateHiddenInput();
+  })
+  
+  inputNumber.addEventListener("blur", () => {
+    updateHiddenInput();
+  });
+}
+
+async function initPhoneFields() {
+  await populateCountries();
+  initPhoneListeners();
+}
+
+initPhoneFields()
