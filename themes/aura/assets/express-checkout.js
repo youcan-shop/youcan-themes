@@ -136,8 +136,14 @@ function getCurrentFullPhone() {
 // UPDATE HIDDEN INPUT
 function updateHiddenInput() {
   const fullNumber = getCurrentFullPhone();
-  const parsed = libphonenumber.parsePhoneNumber(fullNumber)
   
+  if (!fullNumber) {
+    handleError(INVALID_PHONE_MESSAGES[getLang()]);
+    return;
+  }
+  
+  const parsed = libphonenumber.parsePhoneNumber(fullNumber)
+
   if(parsed && parsed.isValid()) {
     hiddenFullPhone.value = parsed.number;
     return;
@@ -191,6 +197,11 @@ function detectAndFixCountryCodeFromInput() {
 
   const fullNumber = getCurrentFullPhone();
 
+  if (!fullNumber) {
+    handleError(INVALID_PHONE_MESSAGES[getLang()]);
+    return;
+  }
+  
   const parsed = libphonenumber.parsePhoneNumber(fullNumber);
 
   if(!parsed.isValid()) {
