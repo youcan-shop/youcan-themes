@@ -62,7 +62,6 @@ async function placeOrder() {
   }
 }
 
-// Set initial display to country code only
 function updateSelectedOptionText(select) {
   const selected = select.selectedOptions[0];
   selected.textContent = selected.dataset.code;
@@ -105,7 +104,6 @@ async function populateCountries() {
 
     updateSelectedOptionText(selectCountry);
 
-    // Track when the select is opeened
     let selectIsOpen = false;
 
     selectCountry.addEventListener('blur', () => {
@@ -113,13 +111,11 @@ async function populateCountries() {
       updateSelectedOptionText(selectCountry);
     });
 
-    // Update display When select changes
     selectCountry.addEventListener('change', (e) => {
       updateSelectedOptionText(selectCountry);
       updatePhoneHidden(e.target?.value);
     });
 
-    // When opening select, show full countries names with their code
     selectCountry.addEventListener('click', () => {
       selectIsOpen = !selectIsOpen;
 
