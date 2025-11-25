@@ -177,6 +177,7 @@
                   required="{{ field.required }}"
                 >
                 </fieldset>
+                <div style="display: none;" class="validation-error" id="validation-error__phone_field">{{ 'errors.invalid_phone_number' | t }}</div>
               {% else %}
               <input
                 {% if field.name == 'phone' or field.type == 'number' %}
@@ -228,7 +229,7 @@
   </div>
 </form>
 
-<script src="https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js"></script>
+{{ "https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js" | script_tag_deferred }}
 
 {{ 'express-checkout.js' | asset_url | script_tag_deferred }}
 {% if has_linked_fields %}

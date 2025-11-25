@@ -65,16 +65,6 @@ async function placeOrder() {
 // PHONE VALIDATION
 const DEFAULT_COUNTRY_CODE = 'MA';
 
-const INVALID_PHONE_MESSAGES = {
-  en: "Please enter a valid phone number.",
-  fr: "Veuillez saisir un numéro de téléphone valide.",
-  ar: "يرجى إدخال رقم هاتف صحيح.",
-};
-
-const getLang = () => {
-  return document.documentElement.lang || 'en';
-} 
-
 const selectCountry = document.querySelector('#phone-field__country-code');
 const inputNumber = document.querySelector('#phone-field__number');
 const hiddenFullPhone = document.querySelector('#phone')
@@ -138,10 +128,10 @@ function updateHiddenInput() {
   const fullNumber = getCurrentFullPhone();
   
   if (!fullNumber) {
-    handleError(INVALID_PHONE_MESSAGES[getLang()]);
+    showError();
     return;
   }
-  
+
   const parsed = libphonenumber.parsePhoneNumber(fullNumber)
 
   if(parsed && parsed.isValid()) {
@@ -153,14 +143,20 @@ function updateHiddenInput() {
 }
 
 // SHOW ERROR
-function handleError(message = null) {
-  const errorDiv = document.querySelector('.validation-error[data-error="phone"]')
-  if(message) {
-    errorDiv.textContent = message;
+function showError(show = true) {
+  const errorDiv = document.querySelector('#validation-error__phone_field');
+  const inputGroup = document.querySelector('.phone-field__input-group');
+  
+  if (!errorDiv || !inputGroup) return;
+
+  if (show) {
+    errorDiv.style.display = 'block';
+    inputGroup.classList.add('error');
     return;
   }
 
-  errorDiv.textContent = ""
+    errorDiv.style.display = 'none';
+    inputGroup.classList.remove('error');
 }
 
 // CASE 1: User typed the full international number (including country code '+')
@@ -198,7 +194,7 @@ function detectAndFixCountryCodeFromInput() {
   const fullNumber = getCurrentFullPhone();
 
   if (!fullNumber) {
-    handleError(INVALID_PHONE_MESSAGES[getLang()]);
+    showError();
     return;
   }
   
@@ -206,7 +202,7 @@ function detectAndFixCountryCodeFromInput() {
 
   if(!parsed.isValid()) {
     // Show error message
-    handleError(INVALID_PHONE_MESSAGES[getLang()])
+    showError();
     return;
   }
 }
@@ -215,13 +211,13 @@ function detectAndFixCountryCodeFromInput() {
 function initPhoneListeners() {
 
   selectCountry.addEventListener('change', () => {
-    handleError()
+    showError(false)
     syncSelectToNumberField();
     updateHiddenInput();
   })
 
   inputNumber.addEventListener('change', () => {
-    handleError();
+    showError(false);
     syncSelectToNumberField();
     updateHiddenInput();
   })
