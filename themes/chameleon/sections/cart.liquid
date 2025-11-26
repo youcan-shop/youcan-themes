@@ -34,28 +34,31 @@
         <h3>{{ 'cart.page.summary.title' | t }}</h3>
       </div>
       <ul class="detail-items">
-        <li class="coupon">
-          <form class="coupon-input" ui-summary-box="coupon-form">
-            <div class="icon">
-              {% render 'ui-icon', name: 'local_activity', size: 20 %}
-            </div>
-            <input
-              type="text"
-              name="coupon_code"
-              data-coupon="coupon-input"
-              placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
-            >
-            <button
-              ui-button
-              data-variant="ghost"
-              data-size="sm"
-              type="submit"
-              data-coupon="coupon-button"
-            >
-              {{ 'cart.page.coupon.apply' | t }}
-            </button>
-          </form>
-        </li>
+        {% if section.settings.show_coupon %}
+          <li class="coupon">
+            <form class="coupon-input" ui-summary-box="coupon-form">
+              <div class="icon">
+                {% render 'ui-icon', name: 'local_activity', size: 20 %}
+              </div>
+              <input
+                type="text"
+                name="coupon_code"
+                data-coupon="coupon-input"
+                placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
+              >
+              <button
+                ui-button
+                data-variant="ghost"
+                data-size="sm"
+                type="submit"
+                data-coupon="coupon-button"
+              >
+                {{ 'cart.page.coupon.apply' | t }}
+              </button>
+            </form>
+          </li>
+        {% endif %}
+
         <li class="item">
           <span class="label">{{ 'order.coupon_code' | t }}</span>
           <span class="value">
@@ -117,6 +120,12 @@
   "templates": ["cart"],
   "limit": 1,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_coupon",
+      "label": "t:sections.cart.show_coupon",
+      "default": true
+    },
     {
       "type": "select",
       "id": "theme",
