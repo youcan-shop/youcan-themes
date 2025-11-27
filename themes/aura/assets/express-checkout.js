@@ -84,50 +84,59 @@ const DEFAULT_COUNTRY_CODE = 'MA';
 
 async function populateCountries() {
 
-  const { countries } = await youcanjs.misc.getStoreMarketCountries();
-  const selectCountry = document.querySelector('#phone-field__country-code');
+  try {
+    const { countries } = await youcanjs.misc.getStoreMarketCountries();
+    const selectCountry = document.querySelector('#phone-field__country-code');
+  
+    if(!selectCountry) return;
 
-  if(countries.length && selectCountry) {
+    const fragment = document.createDocumentFragment();
+  
     countries.forEach(country => {
       const option = document.createElement('option');
       option.value = country.phone;
       option.textContent = `${country.name} (+${country.phone})`;
       option.dataset.code = `+${country.phone}`;
-      option.dataset.codeAndCountry = `${country.name} (+${country.phone})`
-      selectCountry.appendChild(option);
-
+      option.dataset.codeAndCountry = `${country.name} (+${country.phone})`;
+      
       if (country.code === DEFAULT_COUNTRY_CODE) {
-        option.selected = true;
-        updatePhoneHidden(country.phone)
+          option.selected = true;
+          updatePhoneHidden(country.phone);
       }
+  
+      fragment.appendChild(option);
     });
-
-    updateSelectedOptionText(selectCountry);
-
-    let selectIsOpen = false;
-
-    selectCountry.addEventListener('blur', () => {
-      selectIsOpen = false;
+  
+      selectCountry.appendChild(fragment);
+  
       updateSelectedOptionText(selectCountry);
-    });
-
-    selectCountry.addEventListener('change', (e) => {
-      updateSelectedOptionText(selectCountry);
-      updatePhoneHidden(e.target?.value);
-    });
-
-    selectCountry.addEventListener('click', () => {
-      selectIsOpen = !selectIsOpen;
-
-      selectCountry.querySelectorAll('option').forEach(opt => {
-        opt.textContent = opt.dataset.codeAndCountry;
-      });
-
-      if (!selectIsOpen) {
+  
+      let selectIsOpen = false;
+  
+      selectCountry.addEventListener('blur', () => {
+        selectIsOpen = false;
         updateSelectedOptionText(selectCountry);
-      }
-    });
+      });
+  
+      selectCountry.addEventListener('change', (e) => {
+        updateSelectedOptionText(selectCountry);
+        updatePhoneHidden(e.target?.value);
+      });
+  
+      selectCountry.addEventListener('click', () => {
+        selectIsOpen = !selectIsOpen;
+  
+        selectCountry.querySelectorAll('option').forEach(opt => {
+          opt.textContent = opt.dataset.codeAndCountry;
+        });
+  
+        if (!selectIsOpen) {
+          updateSelectedOptionText(selectCountry);
+        }
 
+      });
+  } catch (error) {
+    notify(error.message, 'error');
   }
 
 }
