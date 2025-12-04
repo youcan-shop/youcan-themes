@@ -37,7 +37,7 @@ async function addToCart(snippetId) {
 
     const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
 
-    if (IS_CART_SKIPED){
+    if (IS_CART_SKIPED) {
       window.location.href = checkoutPageUrl;
 
       return;
@@ -57,12 +57,12 @@ async function attachRemoveItemListeners() {
       const cartItemId = event.target.getAttribute('data-cart-item-id');
       const productVariantId = event.target.getAttribute('data-product-variant-id');
 
-      if(cartItemId && productVariantId) {
+      if (cartItemId && productVariantId) {
         await removeCartItem(cartItemId, productVariantId);
         await updateCartDrawer();
         updateCartCount(-1, true);
       }
-    })
+    }),
   );
 }
 
@@ -142,8 +142,8 @@ function cartTemplate(item) {
   const variationsCheck = variationsString === 'default: default' ? '' : variationsString;
   const variantInventory = item.productVariant.product.track_inventory ? item.productVariant.inventory : null;
 
-  // Check if there's an image URL available
-  const imageUrl = item.productVariant.product.images.length > 0 ? item.productVariant.product.images[0].url : defaultImage;
+  const imageUrl = item.productVariant.image.url ?? item.productVariant.product.thumbnail ?? defaultImage;
+
   return `
     <li class="cart-item">
       <div class="item-body">
@@ -155,10 +155,7 @@ function cartTemplate(item) {
             ${variationsCheck}
           </div>
           <div class="product-price">
-          ${
-            item.productVariant.compare_at_price ?
-            `<span class="compare-price">${item.productVariant.compare_at_price}</span>` : ''
-          }
+          ${item.productVariant.compare_at_price ? `<span class="compare-price">${item.productVariant.compare_at_price}</span>` : ''}
             <div class="currency-wrapper">
               <span class="price">${item.productVariant.price}</span>
             </div>
@@ -214,11 +211,7 @@ async function updateCartDrawer() {
         item.productVariant.price = formatCurrency(item.productVariant.price, CURRENCY_CODE, CUSTOMER_LOCALE);
 
         if (item.productVariant.compare_at_price) {
-          item.productVariant.compare_at_price = formatCurrency(
-            item.productVariant.compare_at_price,
-            CURRENCY_CODE,
-            CUSTOMER_LOCALE,
-          );
+          item.productVariant.compare_at_price = formatCurrency(item.productVariant.compare_at_price, CURRENCY_CODE, CUSTOMER_LOCALE);
         }
 
         products.innerHTML += cartTemplate(item);
@@ -228,7 +221,6 @@ async function updateCartDrawer() {
 
       // Attach event listeners to the newly added remove buttons
       await attachRemoveItemListeners();
-
     } else {
       const p = document.createElement('p');
       p.classList.add('empty-cart');
@@ -258,7 +250,6 @@ async function updateCartDrawer() {
 
     // Append the footer container to the cart drawer content
     cartDrawerContent.appendChild(footerContainer);
-
   } catch (error) {
     notify(error.message, 'error');
   }
@@ -333,13 +324,13 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Remove the click event from the cart icon if the user is inside the cart page
  */
 function preventCartDrawerOpening(templateName) {
-  if(templateName !== 'cart') {
+  if (templateName !== 'cart') {
     return;
   }
 
   const cartDrawerIcon = document.querySelector('#navbar-cart-icon');
 
-  cartDrawerIcon.removeEventListener("click", toggleCartDrawer);
+  cartDrawerIcon.removeEventListener('click', toggleCartDrawer);
   window.location.reload();
 }
 
@@ -347,7 +338,7 @@ async function directAddToCart(productId) {
   try {
     const response = await youcanjs.cart.addItem({
       productVariantId: productId,
-      quantity: 1
+      quantity: 1,
     });
 
     if (response.error) throw new Error(response.error);
@@ -363,4 +354,3 @@ async function directAddToCart(productId) {
     stopLoad('#loading__cart');
   }
 }
-
