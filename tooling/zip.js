@@ -36,10 +36,8 @@ async function zipTheme(theme) {
 
         if (file.endsWith(".css")) {
           if (hasPostCSSConfig(themePath)) {
-            // Theme already processes its CSS, add directly
             zip.addFile(src, zipPath);
           } else {
-            // Apply postcss-nesting for themes using raw CSS
             const temp = path.join(__dirname, `.tmp_${file}`);
             await processCSS(temp, src);
             zip.addFile(temp, zipPath);
