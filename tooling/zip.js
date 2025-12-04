@@ -9,10 +9,14 @@ const ROOT = path.resolve(__dirname, "..");
 const THEMES = path.join(ROOT, "themes");
 const DIST = path.join(ROOT, "dist");
 
-async function processCSS(tempPath, originalPath) {
+async function processCss(tempPath, originalPath) {
   const css = await fs.readFile(originalPath, "utf8");
   const result = await postcss([nesting]).process(css, { from: originalPath });
   await fs.writeFile(tempPath, result.css);
+}
+
+function hasPostCssConfig(themePath) {
+  return fs.readdirSync(themePath).some((file) => file.startsWith("postcss.config."));
 }
 
 async function zipTheme(theme) {
@@ -31,9 +35,13 @@ async function zipTheme(theme) {
         const zipPath = `assets/${file}`;
 
         if (file.endsWith(".css")) {
-          const temp = path.join(__dirname, `.tmp_${file}`);
-          await processCSS(temp, src);
-          zip.addFile(temp, zipPath);
+          if (hasPostCssConfig(themePath)) {
+            zip.addFile(src, zipPath);
+          } else {
+            const temp = path.join(__dirname, `.tmp_${file}`);
+            await processCss(temp, src);
+            zip.addFile(temp, zipPath);
+          }
         } else {
           zip.addFile(src, zipPath);
         }
