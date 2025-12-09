@@ -1,22 +1,22 @@
 const DEFAULT_COUNTRY_CODE = 'MA';
 const elements = {
-  phoneCountryCodes: null,
+  phoneSelectContryCode: null,
   phoneDisplayedCountryCode: null,
   phoneNumber: null,
   phoneHiddenInput: null
 };
 
 function getElements() {
-  elements.phoneCountryCodes = document.querySelector('[data-phone-country-codes]');
+  elements.phoneSelectContryCode = document.querySelector('[data-phone-select-country-code]');
   elements.phoneDisplayedCountryCode = document.querySelector('[data-phone-displayed-country-code]');
   elements.phoneNumber = document.querySelector('[data-phone-number]');
   elements.phoneHiddenInput = document.querySelector('[data-phone-hidden-input]');
 
-  return elements.phoneCountryCodes && elements.phoneDisplayedCountryCode && elements.phoneNumber && elements.phoneHiddenInput;
+  return elements.phoneSelectContryCode && elements.phoneDisplayedCountryCode && elements.phoneNumber && elements.phoneHiddenInput;
 }
 
 function displaySelectedCountryCode() {
-  const selectedOption = elements.phoneCountryCodes.options[elements.phoneCountryCodes.selectedIndex];
+  const selectedOption = elements.phoneSelectContryCode.options[elements.phoneSelectContryCode.selectedIndex];
   if (selectedOption) {
     elements.phoneDisplayedCountryCode.textContent = `+${selectedOption.value}`;
   }
@@ -28,7 +28,7 @@ async function buildCountryCodeOptions() {
 
     if (!countries || !countries.length) return;
 
-    elements.phoneCountryCodes.innerHTML = '';
+    elements.phoneSelectContryCode.innerHTML = '';
 
     countries.forEach(country => {
       const option = document.createElement('option');
@@ -41,7 +41,7 @@ async function buildCountryCodeOptions() {
         option.selected = true;
       }
 
-      elements.phoneCountryCodes.appendChild(option);
+      elements.phoneSelectContryCode.appendChild(option);
     });
   } catch (e) {
     console.error('Failed to populate countries', e);
@@ -49,7 +49,7 @@ async function buildCountryCodeOptions() {
 }
 
 function getFullPhoneNumber() {
-  const countryCode = elements.phoneCountryCodes.value;
+  const countryCode = elements.phoneSelectContryCode.value;
   const nationalNumber = elements.phoneNumber.value.trim();
 
   if (!nationalNumber || !countryCode) return '';
@@ -69,7 +69,6 @@ function updatePhoneField() {
   const fullNumber = getFullPhoneNumber();
 
   if (!fullNumber) {
-    toggleError(true);
     elements.phoneHiddenInput.value = '';
     return;
   }
@@ -90,20 +89,21 @@ function updatePhoneField() {
 }
 
 function syncCountryCodeFromInput() {
-  const val = elements.phoneNumber.value.trim();
-  if (!val.startsWith('+')) return;
+  const inputValue = elements.phoneNumber.value.trim();
+  if (!inputValue.startsWith('+')) return;
 
   try {
-    const parsed = libphonenumber.parsePhoneNumberFromString(val);
+    const parsed = libphonenumber.parsePhoneNumberFromString(inputValue);
     if (parsed) {
       elements.phoneNumber.value = parsed.nationalNumber;
 
-      const matchingOption = Array.from(elements.phoneCountryCodes.options).find(
-        opt => opt.value === parsed.countryCallingCode
+      const matchingOption = Array.from(elements.phoneSelectContryCode.options).find(
+        option => option.value === parsed.countryCallingCode
       );
 
       if (matchingOption) {
-        elements.phoneCountryCodes.value = parsed.countryCallingCode;
+        elements.phoneSelectContryCode.value = parsed.countryCallingCode;
+        displaySelectedCountryCode();
       }
     }
   } catch (e) {
@@ -112,7 +112,7 @@ function syncCountryCodeFromInput() {
 }
 
 function attachListeners() {
-  elements.phoneCountryCodes.addEventListener('change', () => {
+  elements.phoneSelectContryCode.addEventListener('change', () => {
     toggleError(false);
     updatePhoneField();
     displaySelectedCountryCode();
