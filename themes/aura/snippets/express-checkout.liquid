@@ -3,6 +3,7 @@
 {% assign checkout_id = 100 | rand: 2000 %}
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
+{% assign has_phone_validation = checkout.phoneValidation %}
 
 {% style %}
   {% if is_sticky %}
@@ -25,7 +26,8 @@
 
   .custom-checkout-{{ checkout_id }} input,
   .custom-checkout-{{ checkout_id }} textarea,
-  .custom-checkout-{{ checkout_id }} select {
+  .custom-checkout-{{ checkout_id }} select,
+  .custom-checkout-{{ checkout_id }} fieldset {
     padding: {{ settings.input_padding }}px;
     border-radius: {{ settings.input_border_radius }}px;
     font-size: {{ settings.input_text_size }}px !important;
@@ -79,6 +81,41 @@
     background: #bdc3c7 !important;
     color: #ffffff !important;
     cursor: not-allowed;
+  }
+
+  .phone-field__input-group {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 !important;
+  }
+
+  .phone-country-wrapper {
+    position: relative;
+    width: 30%;
+    border-right: 1px solid {{ settings.input_border_color.hex }} !important;
+  }
+
+  .phone-country-display {
+    display: block;
+    padding: {{ settings.input_padding }}px;
+    pointer-events: none;
+  }
+
+  .phone-field__select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none !important;
+  }
+
+  .phone-field__number {
+    border: none !important;
+    padding: 0 !important;
   }
 {% endstyle %}
 
@@ -137,20 +174,43 @@
                 min
               ></textarea>
             {% else %}
-              <input
-                {% if field.name == 'phone' or field.type == 'number' %}
-                  inputmode="tel"
-                {% endif %}
-                {% if field.name == 'email' %}
-                  inputmode="email"
-                {% endif %}
-                name="{{ field_name }}"
-                type="{{ field.type }}"
-                id="{{ field.name }}"
-                class="w-full"
-                placeholder="{{ field.placeholder }}"
-                required="{{ field.required }}"
-              >
+              <!-- Phone Input Group -->
+              {% if field.name == 'phone' and has_phone_validation %}
+                <fieldset dir="ltr" class="phone-field__input-group" data-phone-fieldset>
+                  <input type="hidden" name="phone-full-number" data-phone-hidden-input>
+                  <div class="phone-country-wrapper">
+                    <span class="phone-country-display" data-phone-displayed-country-code></span>
+                    <select class="phone-field__select" name="phone-country-codes" data-phone-country-codes></select>
+                  </div>
+                  <input
+                    type="tel"
+                    inputmode="tel"
+                    class="w-full phone-field__number"
+                    placeholder="{{ field_name }}"
+                    data-phone-number
+                    name="{{ field_name }}"
+                    autocomplete="tel-national"
+                  >
+                </fieldset>
+                <div style="display: none;" class="validation-error" data-phone-error>
+                  {{ 'errors.invalid_phone_number' | t }}
+                </div>
+              {% else %}
+                <input
+                  {% if field.name == 'phone' or field.type == 'number' %}
+                    inputmode="tel"
+                  {% endif %}
+                  {% if field.name == 'email' %}
+                    inputmode="email"
+                  {% endif %}
+                  name="{{ field_name }}"
+                  type="{{ field.type }}"
+                  id="{{ field.name }}"
+                  class="w-full"
+                  placeholder="{{ field.placeholder }}"
+                  required="{{ field.required }}"
+                >
+              {% endif %}
           {% endcase %}
         {% else %}
           <select
@@ -189,4 +249,10 @@
 {{ 'express-checkout.js' | asset_url | script_tag_deferred }}
 {% if has_linked_fields %}
   {{ 'linked-fields.js' | asset_url | script_tag_deferred }}
+{% endif %}
+
+{% if has_phone_validation %}
+  {{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
+
+  {{ 'phone-validation.js' | asset_url | script_tag_deferred }}
 {% endif %}
