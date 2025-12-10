@@ -24,11 +24,14 @@
     grid-gap: {{ settings.inputs_gap }}px;
   }
 
+  .custom-checkout-{{ checkout_id }} input, {
+    padding: {{ settings.input_padding }}px;
+  }
+
   .custom-checkout-{{ checkout_id }} input,
   .custom-checkout-{{ checkout_id }} textarea,
   .custom-checkout-{{ checkout_id }} select,
-  .custom-checkout-{{ checkout_id }} fieldset {
-    padding: {{ settings.input_padding }}px;
+  .custom-checkout-{{ checkout_id }} .phone-fieldset {
     border-radius: {{ settings.input_border_radius }}px;
     font-size: {{ settings.input_text_size }}px !important;
 
@@ -45,7 +48,7 @@
     {% endif %}
   }
 
-  .custom-checkout-{{ checkout_id }} select,
+  .custom-checkout-{{ checkout_id }} select:not(.phone-select-menu),
   .custom-checkout-{{ checkout_id }} textarea {
     padding: calc({{ settings.input_padding }}px - 4px);
   }
@@ -83,40 +86,16 @@
     cursor: not-allowed;
   }
 
-  .phone-field__input-group {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    padding: 0 !important;
-  }
+  {% if has_phone_validation %}
+    .custom-checkout-{{ checkout_id }} .phone-countries-wrapper,
+    .custom-checkout-{{ checkout_id }} .phone-number {
+      padding: {{ settings.input_padding }}px;
+    }
 
-  .phone-country-wrapper {
-    position: relative;
-    width: 30%;
-    border-right: 1px solid {{ settings.input_border_color.hex }} !important;
-  }
-
-  .phone-country-display {
-    display: block;
-    padding: {{ settings.input_padding }}px;
-    pointer-events: none;
-  }
-
-  .phone-field__select {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    border: none !important;
-  }
-
-  .phone-field__number {
-    border: none !important;
-    padding: 0 !important;
-  }
+    .phone-countries-wrapper {
+      border-inline-end: 1px solid {{ settings.input_border_color.hex }};
+    }
+  {% endif %}
 {% endstyle %}
 
 <form
@@ -176,23 +155,22 @@
             {% else %}
               <!-- Phone Input Group -->
               {% if field.name == 'phone' and has_phone_validation %}
-                <fieldset dir="ltr" class="phone-field__input-group" data-phone-fieldset>
-                  <input type="hidden" name="phone-full-number" data-phone-hidden-input>
-                  <div class="phone-country-wrapper">
-                    <span class="phone-country-display" data-phone-displayed-country-code></span>
-                    <select class="phone-field__select" name="phone-country-codes" data-phone-select-country-code></select>
+                <fieldset class="phone-fieldset" data-phone-fieldset>
+                  <input type="hidden" name="{{ field_name }}" data-phone-hidden-input>
+                  <div class="phone-countries-wrapper">
+                    <span class="phone-code" data-phone-displayed-country-code></span>
+                    <select class="phone-select-menu" name="phone_country_code" data-phone-select-country-code></select>
                   </div>
                   <input
-                    type="tel"
+                    type="{{ field.type }}"
                     inputmode="tel"
-                    class="w-full phone-field__number"
+                    class="w-full phone-number"
                     placeholder="{{ field_name }}"
-                    data-phone-number
-                    name="{{ field_name }}"
                     autocomplete="tel-national"
+                    data-phone-number
                   >
                 </fieldset>
-                <div style="display: none;" class="validation-error" data-phone-error>
+                <div class="validation-error" style="display: none;" data-phone-error>
                   {{ 'errors.invalid_phone_number' | t }}
                 </div>
               {% else %}

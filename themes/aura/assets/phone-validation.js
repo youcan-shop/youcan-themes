@@ -1,24 +1,24 @@
-const DEFAULT_COUNTRY_CODE = 'MA';
+const defaultCountryCode = 'MA';
 const elements = {
-  phoneSelectContryCode: null,
+  phoneSelectCountryCode: null,
   phoneDisplayedCountryCode: null,
   phoneNumber: null,
   phoneHiddenInput: null
 };
 
 function getElements() {
-  elements.phoneSelectContryCode = document.querySelector('[data-phone-select-country-code]');
+  elements.phoneSelectCountryCode = document.querySelector('[data-phone-select-country-code]');
   elements.phoneDisplayedCountryCode = document.querySelector('[data-phone-displayed-country-code]');
   elements.phoneNumber = document.querySelector('[data-phone-number]');
   elements.phoneHiddenInput = document.querySelector('[data-phone-hidden-input]');
 
-  return elements.phoneSelectContryCode && elements.phoneDisplayedCountryCode && elements.phoneNumber && elements.phoneHiddenInput;
+  return elements.phoneSelectCountryCode && elements.phoneDisplayedCountryCode && elements.phoneNumber && elements.phoneHiddenInput;
 }
 
 function displaySelectedCountryCode() {
-  const selectedOption = elements.phoneSelectContryCode.options[elements.phoneSelectContryCode.selectedIndex];
+  const selectedOption = elements.phoneSelectCountryCode.options[elements.phoneSelectCountryCode.selectedIndex];
   if (selectedOption) {
-    elements.phoneDisplayedCountryCode.textContent = `+${selectedOption.value}`;
+    elements.phoneDisplayedCountryCode.innerHTML = `<bdo dir="ltr">+${selectedOption.value}</bdo>`;
   }
 }
 
@@ -28,20 +28,23 @@ async function buildCountryCodeOptions() {
 
     if (!countries || !countries.length) return;
 
-    elements.phoneSelectContryCode.innerHTML = '';
+    elements.phoneSelectCountryCode.innerHTML = '';
+
+    const startLtr = '\u202A';
+    const endLtr = '\u202C';
 
     countries.forEach(country => {
       const option = document.createElement('option');
 
       option.value = country.phone;
       option.dataset.country = country.code;
-      option.textContent = `${country.name} (+${country.phone})`;
+      option.textContent = `${country.name} (${startLtr}+${country.phone}${endLtr})`;
 
-      if (country.code === DEFAULT_COUNTRY_CODE) {
+      if (country.code === defaultCountryCode) {
         option.selected = true;
       }
 
-      elements.phoneSelectContryCode.appendChild(option);
+      elements.phoneSelectCountryCode.appendChild(option);
     });
   } catch (e) {
     console.error('Failed to populate countries', e);
@@ -49,7 +52,7 @@ async function buildCountryCodeOptions() {
 }
 
 function getFullPhoneNumber() {
-  const countryCode = elements.phoneSelectContryCode.value;
+  const countryCode = elements.phoneSelectCountryCode.value;
   const nationalNumber = elements.phoneNumber.value.trim();
 
   if (!nationalNumber || !countryCode) return '';
@@ -97,12 +100,12 @@ function syncCountryCodeFromInput() {
     if (parsed) {
       elements.phoneNumber.value = parsed.nationalNumber;
 
-      const matchingOption = Array.from(elements.phoneSelectContryCode.options).find(
+      const matchingOption = Array.from(elements.phoneSelectCountryCode.options).find(
         option => option.value === parsed.countryCallingCode
       );
 
       if (matchingOption) {
-        elements.phoneSelectContryCode.value = parsed.countryCallingCode;
+        elements.phoneSelectCountryCode.value = parsed.countryCallingCode;
         displaySelectedCountryCode();
       }
     }
@@ -112,7 +115,7 @@ function syncCountryCodeFromInput() {
 }
 
 function attachListeners() {
-  elements.phoneSelectContryCode.addEventListener('change', () => {
+  elements.phoneSelectCountryCode.addEventListener('change', () => {
     toggleError(false);
     updatePhoneField();
     displaySelectedCountryCode();
