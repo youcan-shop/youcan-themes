@@ -6,6 +6,15 @@
     {% if category.description %}
       <p class="description">{{ category.description }}</p>
     {% endif %}
+    {% if subCategories.size > 0 %}
+      <div class="links">
+        {% for collection in subCategories %}
+          <a href="/collections/{{ collection.slug }}" ui-link>
+            {{ collection.name }}
+          </a>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
   <div class="collection-path">
     <a href="/" ui-button data-variant="secondary" data-size="lg" as-icon aria-label="home">
