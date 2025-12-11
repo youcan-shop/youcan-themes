@@ -1,10 +1,12 @@
-const defaultCountryCode = 'MA';
+const DEFAULT_COUNTRY_CODE = 'MA';
 const elements = {
   phoneSelectCountryCode: null,
   phoneDisplayedCountryCode: null,
   phoneNumber: null,
   phoneHiddenInput: null
 };
+
+let customerCountryCode = DEFAULT_COUNTRY_CODE;
 
 function getElements() {
   elements.phoneSelectCountryCode = document.querySelector('[data-phone-select-country-code]');
@@ -13,6 +15,19 @@ function getElements() {
   elements.phoneHiddenInput = document.querySelector('[data-phone-hidden-input]');
 
   return elements.phoneSelectCountryCode && elements.phoneDisplayedCountryCode && elements.phoneNumber && elements.phoneHiddenInput;
+}
+
+async function getCustomerCountryCode() {
+  try {
+    const response = await fetch('https://api.country.is');
+    const data = await response.json();
+
+    if (data?.country) {
+      customerCountryCode = data.country;
+    }
+  } catch (error) {
+    // Fallback to default country code
+  }
 }
 
 function displaySelectedCountryCode() {
@@ -40,7 +55,7 @@ async function buildCountryCodeOptions() {
       option.dataset.country = country.code;
       option.textContent = `${country.name} (${startLtr}+${country.phone}${endLtr})`;
 
-      if (country.code === defaultCountryCode) {
+      if (country.code === customerCountryCode) {
         option.selected = true;
       }
 
@@ -136,6 +151,7 @@ async function init() {
 
   if (!getElements()) return;
 
+  await getCustomerCountryCode();
   await buildCountryCodeOptions();
   attachListeners();
   displaySelectedCountryCode();
