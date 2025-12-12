@@ -31,8 +31,7 @@ async function buildCountryCodeOptions() {
 
     elements.phoneSelectCountryCode.innerHTML = '';
 
-    const startLtr = '\u202A';
-    const endLtr = '\u202C';
+    const isRtl = document.documentElement.dir === 'rtl';
     const fragment = document.createDocumentFragment();
 
     countries.forEach(country => {
@@ -40,7 +39,9 @@ async function buildCountryCodeOptions() {
 
       option.value = country.phone;
       option.dataset.country = country.code;
-      option.textContent = `${country.name} (${startLtr}+${country.phone}${endLtr})`;
+      option.textContent = isRtl
+        ? `${country.name} (${country.phone}+)`
+        : `${country.name} (+${country.phone})`;
 
       if (country.code === customerCountryCode) {
         option.selected = true;
