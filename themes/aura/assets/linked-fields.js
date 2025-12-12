@@ -48,7 +48,7 @@ async function onChange(type) {
 
 async function fetchLocationByType(type) {
   const fetchMap = {
-    country: () => youcanjs.misc.getStoreMarketCountries(),
+    country: () => window.storeMarketCountries,
     region: () => youcanjs.misc.getCountryRegions(countryCode, locale),
     city: () => youcanjs.misc.getCountryCities(countryCode, regionCode, locale),
   };
