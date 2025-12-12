@@ -39,7 +39,7 @@ function displaySelectedCountryCode() {
 
 async function buildCountryCodeOptions() {
   try {
-    const { countries } = await youcanjs.misc.getStoreMarketCountries();
+    const { countries } = await window.storeMarketCountries;
 
     if (!countries || !countries.length) return;
 

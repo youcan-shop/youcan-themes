@@ -229,6 +229,17 @@
   </div>
 </form>
 
+{% if has_linked_fields or has_phone_validation %}
+  {% javascript %}
+    window.storeMarketCountries = new Promise((resolve) => {
+      document.addEventListener('DOMContentLoaded', async () => {
+        const data = await youcanjs.misc.getStoreMarketCountries();
+        resolve(data);
+      });
+    });
+  {% endjavascript %}
+{% endif %}
+
 {{ 'express-checkout.js' | asset_url | script_tag_deferred }}
 {% if has_linked_fields %}
   {{ 'linked-fields.js' | asset_url | script_tag_deferred }}
@@ -236,6 +247,5 @@
 
 {% if has_phone_validation %}
   {{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
-
   {{ 'phone-validation.js' | asset_url | script_tag_deferred }}
 {% endif %}
