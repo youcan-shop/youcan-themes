@@ -1,4 +1,5 @@
 const DEFAULT_COUNTRY_CODE = 'MA';
+const customerCountryCode = CUSTOMER_COUNTRY_CODE || DEFAULT_COUNTRY_CODE;
 const elements = {
   phoneSelectCountryCode: null,
   phoneDisplayedCountryCode: null,
@@ -6,28 +7,13 @@ const elements = {
   phoneHiddenInput: null
 };
 
-let customerCountryCode = DEFAULT_COUNTRY_CODE;
-
-function getElements() {
+function validatePhoneElements() {
   elements.phoneSelectCountryCode = document.querySelector('[data-phone-select-country-code]');
   elements.phoneDisplayedCountryCode = document.querySelector('[data-phone-displayed-country-code]');
   elements.phoneNumber = document.querySelector('[data-phone-number]');
   elements.phoneHiddenInput = document.querySelector('[data-phone-hidden-input]');
 
   return elements.phoneSelectCountryCode && elements.phoneDisplayedCountryCode && elements.phoneNumber && elements.phoneHiddenInput;
-}
-
-async function getCustomerCountryCode() {
-  try {
-    const response = await fetch('https://api.country.is');
-    const data = await response.json();
-
-    if (data?.country) {
-      customerCountryCode = data.country;
-    }
-  } catch (error) {
-    // Fallback to default country code
-  }
 }
 
 function displaySelectedCountryCode() {
@@ -47,6 +33,7 @@ async function buildCountryCodeOptions() {
 
     const startLtr = '\u202A';
     const endLtr = '\u202C';
+    const fragment = document.createDocumentFragment();
 
     countries.forEach(country => {
       const option = document.createElement('option');
@@ -59,8 +46,10 @@ async function buildCountryCodeOptions() {
         option.selected = true;
       }
 
-      elements.phoneSelectCountryCode.appendChild(option);
+      fragment.appendChild(option);
     });
+
+    elements.phoneSelectCountryCode.appendChild(fragment);
   } catch (e) {
     console.error('Failed to populate countries', e);
   }
@@ -145,13 +134,8 @@ function attachListeners() {
 }
 
 async function init() {
-  if (document.readyState === 'loading') {
-    await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
-  }
+  if (!validatePhoneElements()) return;
 
-  if (!getElements()) return;
-
-  await getCustomerCountryCode();
   await buildCountryCodeOptions();
   attachListeners();
   displaySelectedCountryCode();
