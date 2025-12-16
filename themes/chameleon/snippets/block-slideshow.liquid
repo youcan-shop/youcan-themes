@@ -9,13 +9,22 @@
 {% endcomment %}
 
 <li block="slideshow-slide">
-  {% if settings.image.src %}
-    <img
-      src="{{ settings.image.src }}"
-      alt="{{ "slide " | append: forloop.index }}"
-      height="100%"
-      width="100%"
-    >
+  {% comment %} {% dump settings %} {% endcomment %}
+  {% if settings.desktop_image.src or settings.mobile_image.src %}
+    <picture>
+      {% if settings.mobile_image.src %}
+        <source srcset="{{ settings.mobile_image.src }}" media="(max-width: 768px)">
+      {% endif %}
+      {% if settings.desktop_image.src %}
+        <source srcset="{{ settings.desktop_image.src }}" media="(min-width: 769px)">
+      {% endif %}
+      <img
+        src="{{ settings.desktop_image.src | default: settings.mobile_image.src }}"
+        alt="{{ "slide " | append: forloop.index }}"
+        height="100%"
+        width="100%"
+      >
+    </picture>
   {% else %}
     {% render 'ui-icon', name: 'web_stories', size: 60, filled: true %}
   {% endif %}
