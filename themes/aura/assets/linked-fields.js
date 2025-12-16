@@ -7,7 +7,7 @@ const locale = document.documentElement.lang || 'en';
 
 for (const type of TYPES) {
   fields[type] = document.querySelector(`[data-linked-field='${type}']`);
-  fields[type].addEventListener('change', () => onChange(type));
+  fields[type]?.addEventListener('change', () => onChange(type));
 }
 
 fetchOptions();
