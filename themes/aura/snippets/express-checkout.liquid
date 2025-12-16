@@ -3,6 +3,7 @@
 {% assign checkout_id = 100 | rand: 2000 %}
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
+{% assign has_phone_validation = checkout.phone_validation %}
 
 {% style %}
   {% if is_sticky %}
@@ -23,10 +24,14 @@
     grid-gap: {{ settings.inputs_gap }}px;
   }
 
+  .custom-checkout-{{ checkout_id }} input, {
+    padding: {{ settings.input_padding }}px;
+  }
+
   .custom-checkout-{{ checkout_id }} input,
   .custom-checkout-{{ checkout_id }} textarea,
-  .custom-checkout-{{ checkout_id }} select {
-    padding: {{ settings.input_padding }}px;
+  .custom-checkout-{{ checkout_id }} select,
+  .custom-checkout-{{ checkout_id }} .phone-fieldset {
     border-radius: {{ settings.input_border_radius }}px;
     font-size: {{ settings.input_text_size }}px !important;
 
@@ -43,7 +48,7 @@
     {% endif %}
   }
 
-  .custom-checkout-{{ checkout_id }} select,
+  .custom-checkout-{{ checkout_id }} select:not(.phone-select-menu),
   .custom-checkout-{{ checkout_id }} textarea {
     padding: calc({{ settings.input_padding }}px - 4px);
   }
@@ -80,6 +85,17 @@
     color: #ffffff !important;
     cursor: not-allowed;
   }
+
+  {% if has_phone_validation %}
+    .custom-checkout-{{ checkout_id }} .phone-countries-wrapper,
+    .custom-checkout-{{ checkout_id }} .phone-number {
+      padding: {{ settings.input_padding }}px;
+    }
+
+    .phone-countries-wrapper {
+      border-inline-end: 1px solid {{ settings.input_border_color.hex }};
+    }
+  {% endif %}
 {% endstyle %}
 
 <form
@@ -137,20 +153,47 @@
                 min
               ></textarea>
             {% else %}
-              <input
-                {% if field.name == 'phone' or field.type == 'number' %}
-                  inputmode="tel"
-                {% endif %}
-                {% if field.name == 'email' %}
-                  inputmode="email"
-                {% endif %}
-                name="{{ field_name }}"
-                type="{{ field.type }}"
-                id="{{ field.name }}"
-                class="w-full"
-                placeholder="{{ field.placeholder }}"
-                required="{{ field.required }}"
-              >
+              {% if field.name == 'phone' and has_phone_validation %}
+                <fieldset class="phone-fieldset" data-phone-fieldset>
+                  <input type="hidden" name="{{ field_name }}" data-phone-hidden-input>
+                  <div class="phone-countries-wrapper">
+                    <span class="phone-code" data-phone-displayed-country-code></span>
+                    <select
+                      class="phone-select-menu"
+                      name="phone_country_code"
+                      autocomplete="tel-country-code"
+                      data-phone-select-country-code
+                    ></select>
+                  </div>
+                  <input
+                    type="{{ field.type }}"
+                    inputmode="tel"
+                    name="phone_number"
+                    class="w-full phone-number"
+                    placeholder="{{ field_name }}"
+                    autocomplete="tel-national"
+                    data-phone-number
+                  >
+                </fieldset>
+                <div class="validation-error" style="display: none;" data-phone-error>
+                  {{ 'errors.invalid_phone_number' | t }}
+                </div>
+              {% else %}
+                <input
+                  {% if field.name == 'phone' or field.type == 'number' %}
+                    inputmode="tel"
+                  {% endif %}
+                  {% if field.name == 'email' %}
+                    inputmode="email"
+                  {% endif %}
+                  name="{{ field_name }}"
+                  type="{{ field.type }}"
+                  id="{{ field.name }}"
+                  class="w-full"
+                  placeholder="{{ field.placeholder }}"
+                  required="{{ field.required }}"
+                >
+              {% endif %}
           {% endcase %}
         {% else %}
           <select
@@ -186,7 +229,24 @@
   </div>
 </form>
 
-{{ 'express-checkout.js' | asset_url | script_tag_deferred }}
+{% if has_linked_fields or has_phone_validation %}
+  {% javascript %}
+    window.storeMarketCountries = new Promise((resolve) => {
+      document.addEventListener('DOMContentLoaded', async () => {
+        const data = await youcanjs.misc.getStoreMarketCountries();
+        resolve(data);
+      });
+    });
+  {% endjavascript %}
+{% endif %}
+
 {% if has_linked_fields %}
   {{ 'linked-fields.js' | asset_url | script_tag_deferred }}
 {% endif %}
+
+{% if has_phone_validation %}
+  {{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
+  {{ 'phone-validation.js' | asset_url | script_tag_deferred }}
+{% endif %}
+
+{{ 'express-checkout.js' | asset_url | script_tag_deferred }}
