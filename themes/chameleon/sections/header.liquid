@@ -7,25 +7,9 @@
   {% if section.settings.header_sticky %}
     data-sticky
   {% endif %}
+  data-logo-position="{{ section.settings.logo_position }}"
 >
   <ul class="links">
-    <li class="link">
-      <a href="/" ui-link>
-        {% if section.settings.header_logo.src %}
-          <img
-            src="{{ section.settings.header_logo.src }}"
-            alt="{{ store.name }}"
-            height="100%"
-            width="{{ section.settings.logo_width }}"
-            {% if section.settings.logo_invert %}
-              data-invert
-            {% endif %}
-          >
-        {% else %}
-          {{ store.name }}
-        {% endif %}
-      </a>
-    </li>
     {% for link in main-link-list.links %}
       <li class="link">
         <a href="{{ link.url }}" ui-link>
@@ -37,6 +21,23 @@
       {% render 'ui-theme' %}
     {% endif %}
   </ul>
+  <div class="logo">
+    <a href="/" ui-link>
+      {% if section.settings.header_logo.src %}
+        <img
+          src="{{ section.settings.header_logo.src }}"
+          alt="{{ store.name }}"
+          height="100%"
+          width="{{ section.settings.logo_width }}"
+          {% if section.settings.logo_invert %}
+            data-invert
+          {% endif %}
+        >
+      {% else %}
+        {{ store.name }}
+      {% endif %}
+    </a>
+  </div>
   <ul class="actions">
     <li>
       {% render 'ui-search' %}
@@ -80,9 +81,25 @@
       "default": 40
     },
     {
+      "type": "select",
+      "id": "logo_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.header.logo_position_left"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.header.logo_position_center"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.header.desktop_logo_position"
+    },
+    {
       "type": "checkbox",
       "id": "logo_invert",
-      "label": "Invert logo color in dark mode",
+      "label": "t:sections.header.logo_invert",
       "default": false
     },
     {

@@ -21,7 +21,7 @@
         {% endif %}
       </a>
     </div>
-    <span class="copyright">{{ section.settings.copyright }}</span>
+    <span class="copyright">{{ section.settings.copyright | default: 'footer.copyright.default' | t }}</span>
   </div>
   <div class="links">
     {% for linklist in link-lists %}
@@ -96,8 +96,7 @@
     {
       "type": "textarea",
       "id": "copyright",
-      "label": "t:sections.footer.copyright.label",
-      "default": "t:sections.footer.copyright.default"
+      "label": "t:sections.footer.copyright.label"
     }
   ]
 }
