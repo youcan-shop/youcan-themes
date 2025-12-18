@@ -7,7 +7,7 @@ const locale = document.documentElement.lang || 'en';
 
 for (const type of TYPES) {
   fields[type] = document.querySelector(`[data-linked-field='${type}']`);
-  fields[type].addEventListener('change', () => onChange(type));
+  fields[type]?.addEventListener('change', () => onChange(type));
 }
 
 fetchOptions();
@@ -48,7 +48,7 @@ async function onChange(type) {
 
 async function fetchLocationByType(type) {
   const fetchMap = {
-    country: () => youcanjs.misc.getStoreMarketCountries(),
+    country: () => window.storeMarketCountries,
     region: () => youcanjs.misc.getCountryRegions(countryCode, locale),
     city: () => youcanjs.misc.getCountryCities(countryCode, regionCode, locale),
   };
