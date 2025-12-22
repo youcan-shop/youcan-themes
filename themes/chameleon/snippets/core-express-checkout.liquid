@@ -12,6 +12,7 @@
 
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
+{% assign has_phone_validation = true %}
 
 <ui-express-checkout>
   {% for field in checkout.fields %}
@@ -26,21 +27,25 @@
         <span ui-express-checkout-label>{{ field.display_name }}</span>
         {% case field.type %}
           {% when 'text', 'number', 'hidden' %}
-            <input
-              {% if field.name == 'phone' or field.type == 'number' %}
-                inputmode="tel"
-              {% endif %}
-              {% if field.name == 'email' %}
-                inputmode="email"
-              {% endif %}
-              type="{{ field.type }}"
-              name="{{ field_name }}"
-              value="{{ field.default_value }}"
-              placeholder="{{ field.placeholder }}"
-              {% if field.required %}
-                required
-              {% endif %}
-            >
+            {% if field.name == 'phone' and has_phone_validation %}
+              {% render 'misc-phone-validation', field_type: field.type, field_name: field_name %}
+            {% else %}
+              <input
+                {% if field.name == 'phone' or field.type == 'number' %}
+                  inputmode="tel"
+                {% endif %}
+                {% if field.name == 'email' %}
+                  inputmode="email"
+                {% endif %}
+                type="{{ field.type }}"
+                name="{{ field_name }}"
+                value="{{ field.default_value }}"
+                placeholder="{{ field.placeholder }}"
+                {% if field.required %}
+                  required
+                {% endif %}
+              >
+            {% endif %}
           {% when 'textarea' %}
             <textarea
               name="{{ field_name }}"
@@ -71,6 +76,17 @@
       </label>
     {% endunless %}
   {% endfor %}
+
+  {% if has_linked_fields or has_phone_validation %}
+    {% javascript %}
+      window.storeMarketCountries = new Promise((resolve) => {
+        document.addEventListener('DOMContentLoaded', async () => {
+          const data = await youcanjs.misc.getStoreMarketCountries();
+          resolve(data);
+        });
+      });
+    {% endjavascript %}
+  {% endif %}
 
   {% if has_linked_fields %}
     {% render 'misc-linked-fields', fields: checkout.fields %}

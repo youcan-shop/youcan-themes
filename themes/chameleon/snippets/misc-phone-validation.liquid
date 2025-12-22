@@ -1,0 +1,31 @@
+{{ 'misc.phone-validation.css' | asset_url | stylesheet_tag }}
+
+<ui-phone-validation>
+  <fieldset class="phone-fieldset" ui-phone-fieldset>
+    <input type="hidden" name="{{ field_name }}" ui-phone-hidden-input>
+    <div class="phone-countries-wrapper">
+      <span class="phone-code" ui-phone-displayed-country-code></span>
+      <select
+        class="phone-select-menu"
+        name="phone_country_code"
+        autocomplete="tel-country-code"
+        ui-phone-select-country-code
+      ></select>
+    </div>
+    <input
+      type="{{ field_type }}"
+      inputmode="tel"
+      name="phone_number"
+      class="phone-number"
+      placeholder="{{ field_name }}"
+      autocomplete="tel-national"
+      ui-phone-number
+    >
+  </fieldset>
+  <div class="validation-error" style="display: none;" ui-phone-error>
+    {{ 'error_messages.invalid_phone_number' | t }}
+  </div>
+</ui-phone-validation>
+
+{{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
+{{ 'misc.phone-validation.js' | asset_url | script_tag_deferred }}
