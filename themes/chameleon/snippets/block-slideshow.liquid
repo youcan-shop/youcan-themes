@@ -9,16 +9,16 @@
 {% endcomment %}
 
 <li block="slideshow-slide">
-  {% if settings.desktop_image.src or settings.mobile_image.src %}
+  {% if settings.image.src or settings.mobile_image.src %}
     <picture>
       {% if settings.mobile_image.src %}
         <source srcset="{{ settings.mobile_image.src }}" media="(max-width: 768px)">
       {% endif %}
-      {% if settings.desktop_image.src %}
-        <source srcset="{{ settings.desktop_image.src }}" media="(min-width: 769px)">
+      {% if settings.image.src %}
+        <source srcset="{{ settings.image.src }}" media="(min-width: 769px)">
       {% endif %}
       <img
-        src="{{ settings.desktop_image.src | default: settings.mobile_image.src }}"
+        src="{{ settings.image.src | default: settings.mobile_image.src }}"
         alt="{{ "slide " | append: forloop.index }}"
         height="100%"
         width="100%"
