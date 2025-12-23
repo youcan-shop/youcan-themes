@@ -10,12 +10,13 @@
   {% render 'core-express-checkout', name: [...] %}
 {% endcomment %}
 
+{% assign fields = checkout.fields %}
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
 {% assign has_phone_validation = true %}
 
 <ui-express-checkout>
-  {% for field in checkout.fields %}
+  {% for field in fields %}
     {% assign field_name = field.name %}
 
     {% if field.custom %}
@@ -23,13 +24,13 @@
     {% endif %}
 
     {% unless has_linked_fields and linked_fields contains field.name %}
-      <label ui-express-checkout-field>
-        <span ui-express-checkout-label>{{ field.display_name }}</span>
-        {% case field.type %}
-          {% when 'text', 'number', 'hidden' %}
-            {% if field.name == 'phone' and has_phone_validation %}
-              {% render 'misc-phone-validation', field_type: field.type, field_name: field_name %}
-            {% else %}
+      {% if field.name == 'phone' and has_phone_validation %}
+        {% render 'misc-phone-validation', field: field %}
+      {% else %}
+        <label ui-express-checkout-field>
+          <span ui-express-checkout-label>{{ field.display_name }}</span>
+          {% case field.type %}
+            {% when 'text', 'number', 'hidden' %}
               <input
                 {% if field.name == 'phone' or field.type == 'number' %}
                   inputmode="tel"
@@ -45,35 +46,35 @@
                   required
                 {% endif %}
               >
-            {% endif %}
-          {% when 'textarea' %}
-            <textarea
-              name="{{ field_name }}"
-              placeholder="{{ field.placeholder }}"
-              {% if field.required %}
-                required
-              {% endif %}
-            ></textarea>
-          {% when 'select' %}
-            <select
-              name="{{ field_name }}"
-              {% if field.required %}
-                required
-              {% endif %}
-            >
-              {% for opt in field.options %}
-                <option
-                  value="{{ opt }}"
-                  {% if option == field.default_value %}
-                    selected
-                  {% endif %}
-                >
-                  {{ opt }}
-                </option>
-              {% endfor %}
-            </select>
-        {% endcase %}
-      </label>
+            {% when 'textarea' %}
+              <textarea
+                name="{{ field_name }}"
+                placeholder="{{ field.placeholder }}"
+                {% if field.required %}
+                  required
+                {% endif %}
+              ></textarea>
+            {% when 'select' %}
+              <select
+                name="{{ field_name }}"
+                {% if field.required %}
+                  required
+                {% endif %}
+              >
+                {% for opt in field.options %}
+                  <option
+                    value="{{ opt }}"
+                    {% if option == field.default_value %}
+                      selected
+                    {% endif %}
+                  >
+                    {{ opt }}
+                  </option>
+                {% endfor %}
+              </select>
+          {% endcase %}
+        </label>
+      {% endif %}
     {% endunless %}
   {% endfor %}
 
@@ -89,6 +90,6 @@
   {% endif %}
 
   {% if has_linked_fields %}
-    {% render 'misc-linked-fields', fields: checkout.fields %}
+    {% render 'misc-linked-fields', fields: fields %}
   {% endif %}
 </ui-express-checkout>

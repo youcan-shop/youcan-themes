@@ -11,7 +11,6 @@ if (!customElements.get("ui-phone-validation")) {
       this.phoneNumber = this.querySelector("[ui-phone-number]");
       this.phoneHiddenInput = this.querySelector("[ui-phone-hidden-input]");
       this.phoneErrorElement = this.querySelector("[ui-phone-error]");
-      this.fieldsetElement = this.querySelector("[ui-phone-fieldset]");
     }
 
     async connectedCallback() {
@@ -81,8 +80,9 @@ if (!customElements.get("ui-phone-validation")) {
     }
 
     toggleError(show) {
-      if (this.phoneErrorElement) this.phoneErrorElement.style.display = show ? "block" : "none";
-      if (this.fieldsetElement) this.fieldsetElement.classList.toggle("error", show);
+      if (this.phoneErrorElement) {
+        this.phoneErrorElement.style.display = show ? "block" : "none";
+      }
     }
 
     updatePhoneField() {
