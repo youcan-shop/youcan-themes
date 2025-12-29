@@ -68,6 +68,51 @@
   @include breakpoint('md') {
     padding: unset;
   }
+
+  .phone-fieldset {
+    display: flex;
+
+    .phone-countries-wrapper {
+      position: relative;
+      width: 30%;
+      line-height: 100%;
+
+      .phone-code {
+        display: flex;
+        height: 100%;
+        justify-content: space-between;
+        align-items: center;
+        pointer-events: none;
+
+        &::after {
+          content: "";
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          border-right: 1px solid currentColor;
+          border-bottom: 1px solid currentColor;
+          transform: rotate(45deg);
+        }
+      }
+
+      .phone-select-menu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100% !important;
+        opacity: 0;
+        cursor: pointer;
+        border: none !important;
+        padding: unset !important;
+      }
+    }
+
+    .phone-number {
+      border: none !important;
+      direction: inherit;
+    }
+  }
 }
 
 .express-checkout-title {
