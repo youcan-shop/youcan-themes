@@ -1,0 +1,91 @@
+/* 
+  Component: Breadcrumb
+
+  Usage:
+    - <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb">
+        <ol ui-slot="breadcrumb-group">
+          <li ui-slot="breadcrumb-item">
+            <a href="/"> Settings </a>
+          </li>
+          <li ui-slot="breadcrumb-item">
+            <a href="/"> Notifications </a>
+          </li>
+          <li ui-slot="breadcrumb-item">
+            <a href="/" aria-current="page"> Email Notifications </a>
+          </li>
+        </ol>
+      </nav>
+*/
+
+[ui-slot="breadcrumb"] {
+  --separator-arrow-rotate: -45deg;
+  --separator-splash-rotate: 15deg;
+
+  &:dir(rtl) {
+    --separator-arrow-rotate: 45deg;
+    --separator-splash-rotate: -15deg;
+  }
+
+  /* Group */
+  [ui-slot="breadcrumb-group"] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-6);
+
+    /* Item */
+    [ui-slot="breadcrumb-item"] {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-6);
+
+      /* Link */
+      & > a {
+        display: flex;
+        align-items: center;
+        transition: color var(--transition-standard-default-spatial);
+        color: var(--color-on-surface-variant);
+        font: var(--font-body-md);
+        text-decoration: none;
+        gap: var(--spacing-6);
+        text-underline-offset: 2px;
+
+        /* Hover */
+        &:hover {
+          color: var(--color-on-background);
+          text-decoration: underline;
+        }
+
+        /* Current */
+        &[aria-current="page"] {
+          color: var(--color-on-background);
+          pointer-events: none;
+        }
+      }
+
+      /* Splash Separator */
+      & + [ui-slot="breadcrumb-item"]::before {
+        content: "";
+        height: 14px;
+        margin-inline: var(--spacing-6);
+        transform: rotate(var(--separator-splash-rotate));
+        border-inline-end: 1.2px solid
+          color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      }
+    }
+  }
+
+  /* Arrow Separator */
+  &[data-separator="arrow"] {
+    [ui-slot="breadcrumb-group"] {
+      [ui-slot="breadcrumb-item"]::before {
+        width: 6px;
+        height: 6px;
+        margin-inline-start: 0;
+        transform: rotate(var(--separator-arrow-rotate));
+        border-block-end: 1.2px solid
+          color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      }
+    }
+  }
+}

@@ -1,0 +1,189 @@
+/* 
+  Component: Tooltip
+
+  Accepts:
+    - data-variant: {String} dark | light
+    - data-size: {String} lg | md | sm
+    - data-side: {String} left | right | top | bottom
+
+  Usage:
+    - <div ui-slot="tooltip" data-variant="light" data-size="md" data-side="right">
+        <button ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="sm" aria-describedby="my-tooltip">
+          Hover or focus
+        </button>
+        <div ui-slot="tooltip-content" role="tooltip" id="my-tooltip">
+          Tooltip content.
+        </div>
+      </div>
+*/
+
+[ui-slot="tooltip"] {
+  --arrow-size: 8px;
+
+  position: relative;
+  width: fit-content;
+
+  /* Content */
+  [ui-slot="tooltip-content"] {
+    display: flex;
+    visibility: hidden;
+    position: absolute;
+    z-index: 50;
+    align-items: center;
+    justify-content: center;
+    width: max-content;
+    transition: var(--transition-standard-default-spatial);
+    border: 1px solid var(--color-tooltip-border);
+    opacity: 0;
+    background-color: var(--color-tooltip);
+    color: var(--color-on-tooltip);
+
+    /* Arrow */
+    &::before {
+      content: "";
+      position: absolute;
+      z-index: 49;
+      width: var(--arrow-size);
+      height: var(--arrow-size);
+      border: 1px solid var(--color-tooltip-border);
+      background-color: var(--color-tooltip);
+      rotate: 45deg;
+    }
+  }
+
+  /* Size */
+  &[data-size="sm"] {
+    [ui-slot="tooltip-content"] {
+      height: 20px;
+      padding-inline: var(--spacing-6);
+      border-radius: var(--radius-4);
+      font: var(--font-body-sm);
+    }
+  }
+
+  &[data-size="md"] {
+    [ui-slot="tooltip-content"] {
+      height: 28px;
+      padding-inline: var(--spacing-10);
+      border-radius: calc(var(--radius-8) - var(--spacing-2));
+      font: var(--font-body-md);
+    }
+  }
+
+  &[data-size="lg"] {
+    [ui-slot="tooltip-content"] {
+      padding: var(--spacing-12);
+      gap: var(--spacing-12);
+      border-radius: var(--radius-12);
+    }
+  }
+
+  /* Variant */
+  &[data-variant="dark"] {
+    --tooltip-arrow-offset: -4px;
+    --color-tooltip: var(--color-on-background);
+    --color-on-tooltip: var(--color-background);
+  }
+
+  &[data-variant="light"] {
+    --tooltip-arrow-offset: -5px;
+    --color-tooltip: var(--color-background);
+    --color-on-tooltip: var(--color-on-background);
+    --color-tooltip-border: var(--color-surface-variant);
+
+    &[data-size="sm"] {
+      --arrow-size: 5px;
+      --tooltip-arrow-offset: -4px;
+    }
+
+    [ui-slot="tooltip-content"] {
+      box-shadow: 0 12px 24px 0
+        color-mix(in srgb, var(--color-on-tooltip) 8%, transparent);
+    }
+  }
+
+  /* Side */
+  &[data-side="left"],
+  &[data-side="right"] {
+    [ui-slot="tooltip-content"] {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  &[data-side="left"] [ui-slot="tooltip-content"] {
+    inset-inline-end: calc(100% + var(--spacing-6));
+
+    &::before {
+      inset-inline-end: var(--tooltip-arrow-offset);
+      border-start-end-radius: 2px;
+      border-inline-start-color: transparent;
+      border-block-end-color: transparent;
+    }
+  }
+
+  &[data-side="right"] [ui-slot="tooltip-content"] {
+    inset-inline-start: calc(100% + var(--spacing-6));
+
+    &::before {
+      inset-inline-start: var(--tooltip-arrow-offset);
+      border-end-start-radius: 2px;
+      border-inline-end-color: transparent;
+      border-block-start-color: transparent;
+    }
+  }
+
+  &[data-side="top"],
+  &[data-side="bottom"] {
+    [ui-slot="tooltip-content"] {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  &[data-side="top"] [ui-slot="tooltip-content"] {
+    inset-block-end: calc(100% + var(--spacing-6));
+
+    &::before {
+      inset-block-end: var(--tooltip-arrow-offset);
+      border-end-end-radius: 2px;
+      border-block-start-color: transparent;
+      border-inline-start-color: transparent;
+    }
+  }
+
+  &[data-side="bottom"] [ui-slot="tooltip-content"] {
+    inset-block-start: calc(100% + var(--spacing-6));
+
+    &::before {
+      inset-block-start: var(--tooltip-arrow-offset);
+      border-start-start-radius: 2px;
+      border-block-end-color: transparent;
+      border-inline-end-color: transparent;
+    }
+  }
+
+  /* Trigger */
+  &:has(> *:first-child:where(:hover, :focus)) {
+    [ui-slot="tooltip-content"] {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    &[data-side="left"] [ui-slot="tooltip-content"] {
+      inset-inline-end: calc(100% + var(--spacing-12));
+    }
+
+    &[data-side="right"] [ui-slot="tooltip-content"] {
+      inset-inline-start: calc(100% + var(--spacing-12));
+    }
+
+    &[data-side="top"] [ui-slot="tooltip-content"] {
+      inset-block-end: calc(100% + var(--spacing-12));
+    }
+
+    &[data-side="bottom"] [ui-slot="tooltip-content"] {
+      inset-block-start: calc(100% + var(--spacing-12));
+    }
+  }
+}

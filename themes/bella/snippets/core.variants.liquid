@@ -1,0 +1,141 @@
+{{ 'core.variants.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a product variants
+
+  Usage:
+  {% render 'core.variants'%}
+{% endcomment %}
+
+<ui-variants>
+  {% for variant in product.options %}
+    {% assign default = '' %}
+    {% assign name_id = 100 | rand: 2000 %}
+    {% assign unique_name = variant.name | append: '_' | append: name_id %}
+
+    {% for variation in product.selected_or_first_available_variant.variations %}
+      {% if variation[0] == variant.name %}
+        {% assign default = variation[1] %}
+      {% endif %}
+    {% endfor %}
+
+    <div ui-variant="{{ variant.type }}">
+      <span class="label">{{ variant.name }}</span>
+      {% if variant.type == 'textual_buttons' %}
+        <div class="options">
+          {% for opt in variant.values %}
+            <label class="opt">
+              {{ opt }}
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt }}"
+                {% if opt == default %}
+                  checked
+                {% endif %}
+              >
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'radio_buttons' %}
+        <div class="options">
+          {% for opt in variant.values %}
+            <label class="opt">
+              <input
+                ui-slot="radio"
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt }}"
+                {% if opt == default %}
+                  checked
+                {% endif %}
+              >
+              {{ opt }}
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'color_base_buttons' %}
+        <div class="options">
+          {% for opt in variant.values %}
+            <label class="opt" style="--color-value: {{ opt.preview }}">
+              {% render 'misc.icon', name: 'hgi-tick-02', size: 20 %}
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt.value }}"
+                {% if opt.value == default %}
+                  checked
+                {% endif %}
+              >
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'dropdown' %}
+        <ui-select ui-slot="select" data-size="md">
+          <button ui-slot="select-trigger" popovertarget="{{ unique_name }}" type="button">
+            {{ 'general.select' | t }}
+          </button>
+
+          <div ui-slot="select-content" id="{{ unique_name }}" popover>
+            {% for opt in variant.values %}
+              <button ui-slot="select-option" popovertarget="{{ unique_name }}" type="button">
+                <label>
+                  <input
+                    type="radio"
+                    name="{{ unique_name }}"
+                    value="{{ opt }}"
+                    {% if opt == default %}
+                      checked
+                    {% endif %}
+                  >
+                  {{ opt }}
+                </label>
+              </button>
+            {% endfor %}
+          </div>
+        </ui-select>
+      {% elsif variant.type == 'image_based_buttons' %}
+        <div class="options">
+          {% for opt in variant.values %}
+            <label class="opt">
+              {% if opt.preview %}
+                <img
+                  src="{{ opt.preview }}"
+                  alt="{{ opt.value }}"
+                  height="80"
+                  width="80"
+                >
+              {% else %}
+                {% render 'misc.image-fallback' %}
+              {% endif %}
+              <input
+                type="radio"
+                name="{{ unique_name }}"
+                value="{{ opt.value }}"
+                {% if opt.value == default %}
+                  checked
+                {% endif %}
+              >
+              <div class="checked">
+                {% render 'misc.icon', name: 'hgi-tick-02', size: 24 %}
+              </div>
+            </label>
+          {% endfor %}
+        </div>
+      {% elsif variant.type == 'upload_image_zone' %}
+        <label ui-slot="file-upload">
+          <input type="file" name="{{ unique_name }}" accept="image/png, image/gif, image/jpg, image/jpeg, image/webp">
+
+          <div ui-slot="file-upload-icon">
+            <i class="hgi hgi-stroke hgi-cloud-upload"></i>
+          </div>
+          <div ui-slot="file-upload-content">
+            <h4 ui-slot="file-upload-label">{{ 'product.upload_image.label' | t }}</h4>
+            <p ui-slot="file-upload-description">{{ 'product.upload_image.accept' | t }}</p>
+          </div>
+          <div ui-slot="file-upload-button">{{ 'product.upload_image.trigger' | t }}</div>
+        </label>
+      {% endif %}
+    </div>
+  {% endfor %}
+</ui-variants>

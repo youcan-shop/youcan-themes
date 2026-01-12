@@ -1,0 +1,190 @@
+/* VARIANTS */
+ui-variants {
+  display: grid;
+  gap: var(--spacing-12);
+
+  [ui-variant] {
+    display: grid;
+    gap: var(--spacing-8);
+
+    .label {
+      color: var(--color-on-surface-variant);
+      font: var(--font-body-md);
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+
+      .opt {
+        position: relative;
+        font: var(--font-body-md);
+      }
+    }
+
+    &:not([ui-variant="radio_buttons"]) {
+      .options {
+        .opt {
+          & > input[type="radio"] {
+            position: absolute;
+            scale: 0;
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    &[ui-variant="textual_buttons"] {
+      .options {
+        .opt {
+          display: flex;
+          align-items: center;
+          min-width: 36px;
+          height: 36px;
+          padding-inline: var(--spacing-12);
+          transition: var(--transition-standard-default-effects);
+          border: 1px solid var(--color-surface-variant);
+          border-radius: var(--radius-8);
+          cursor: pointer;
+
+          &:has(> input[type="radio"]:checked) {
+            border-color: transparent;
+            background-color: var(--color-primary);
+            color: var(--color-on-primary);
+          }
+
+          &:has(> input[type="radio"]:disabled) {
+            opacity: 0.5;
+            background-color: var(--color-surface-container);
+            pointer-events: none;
+          }
+        }
+      }
+    }
+
+    &[ui-variant="color_base_buttons"] {
+      .options {
+        .opt {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          padding-inline: var(--spacing-12);
+          transition: var(--transition-standard-default-effects);
+          border: 2px solid white;
+          border-radius: var(--radius-rounded);
+          background-color: color-mix(in srgb, var(--color-value), black 5%);
+          box-shadow: rgb(99 99 99 / 20%) 0 2px 8px 0;
+          cursor: pointer;
+
+          & > i {
+            color: transparent;
+          }
+
+          &:has(> input[type="radio"]:checked) {
+            & > i {
+              color: white;
+            }
+          }
+
+          &:has(> input[type="radio"]:disabled) {
+            background-color: color-mix(
+              in srgb,
+              var(--color-value) 50%,
+              transparent
+            );
+            pointer-events: none;
+
+            &::before {
+              content: "";
+              position: absolute;
+              width: 1px;
+              height: 100%;
+              rotate: 35deg;
+              filter: invert(1);
+              background-color: var(--color-value);
+            }
+          }
+        }
+      }
+    }
+
+    &[ui-variant="image_based_buttons"] {
+      .options {
+        .opt {
+          display: flex;
+          position: relative;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
+          overflow: hidden;
+          transition: var(--transition-standard-default-effects);
+          border: 2px solid white;
+          border-radius: var(--radius-8);
+          background-color: color-mix(in srgb, var(--color-value), black 5%);
+          box-shadow: rgb(99 99 99 / 20%) 0 2px 8px 0;
+          cursor: pointer;
+
+          .checked {
+            display: flex;
+            position: absolute;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-standard-default-effects);
+            opacity: 0;
+            background-color: rgb(0 0 0 / 30%);
+            color: white;
+            inset: 0;
+            backdrop-filter: blur(2px);
+          }
+
+          & > img {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-8);
+            object-fit: cover;
+          }
+
+          &:has(> input[type="radio"]:checked) {
+            .checked {
+              opacity: 1;
+            }
+          }
+
+          &:has(> input[type="radio"]:disabled) {
+            & > img {
+              filter: grayscale(1) blur(1px);
+            }
+
+            &::before {
+              content: "";
+              position: absolute;
+              z-index: 2;
+              width: 1px;
+              height: 140%;
+              background-color: white;
+              rotate: 45deg;
+            }
+          }
+        }
+      }
+    }
+
+    &[ui-variant="radio_buttons"] {
+      .options {
+        display: grid;
+        gap: calc(var(--spacing-16) + var(--spacing-4));
+
+        .opt {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          gap: var(--spacing-8);
+        }
+      }
+    }
+  }
+}

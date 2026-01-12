@@ -1,0 +1,53 @@
+{{ 'misc.cart-drawer.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a cart drawer
+
+  Usage:
+  {% render 'misc.cart-drawer' %}
+{% endcomment %}
+
+<div ui-slot="sheet" class="cart-drawer">
+  <button
+    ui-slot="button"
+    data-variant="neutral"
+    data-mode="stroke"
+    data-size="md"
+    data-as-icon
+    aria-label="Cart"
+    popovertarget="cart"
+  >
+    {% render 'misc.icon', name: 'hgi-shopping-basket-03' %}
+    <div ui-slot="badge" data-variant="light" data-size="md" data-color="gray" data-square="true">
+      <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+    </div>
+  </button>
+  <div ui-slot="sheet-content" id="cart" popover>
+    <div ui-slot="sheet-header">
+      <h2 ui-slot="sheet-title">
+        {{ 'cart.drawer.title' | t }}
+      </h2>
+    </div>
+    <div ui-slot="sheet-body">
+      {% render 'core.cart-form' %}
+      <div
+        class="footer"
+        {% unless cart.count > 0 %}
+          hidden
+        {% endunless %}
+        ui-cart-drawer="footer"
+      >
+        <span class="label">{{ 'cart.drawer.total' | t }}</span>
+        <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+      </div>
+    </div>
+    <div ui-slot="sheet-footer">
+      <button ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" popovertarget="cart">
+        {{ 'cart.drawer.actions.continue_shopping' | t }}
+      </button>
+      <a href="/cart" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
+        {{ 'cart.drawer.actions.go_to_cart' | t }}
+      </a>
+    </div>
+  </div>
+</div>

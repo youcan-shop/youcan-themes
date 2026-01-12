@@ -1,0 +1,32 @@
+{{ 'section.list-collections.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="list-collections">
+  {% paginate collections by 24 cod %}
+    {% if items.size > 0 %}
+      <ul class="list">
+        {% for collection in items %}
+          {% render 'block.collection', collection: collection %}
+        {% endfor %}
+      </ul>
+
+      {% render 'misc.pagination',
+        next_page_url: next_page,
+        previous_page_url: previous_page,
+        current: current,
+        last: last,
+        terms: terms
+      %}
+
+    {% else %}
+      {% assign empty_content = 'single-collection.empty.title' | t %}
+      {% render 'misc.empty', heading: empty_content %}
+    {% endif %}
+  {% endpaginate %}
+</div>
+{% schema %}
+{
+  "label": "List Collections",
+  "templates": ["list-collections"],
+  "limit": 1
+}
+{% endschema %}

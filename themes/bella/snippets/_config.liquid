@@ -1,0 +1,89 @@
+{% comment %}
+  Renders all necessary assets (components, icons, fonts, YouCan JS, cart, variants, error messages..)
+
+  Usage:
+  {% render '_config' %}
+{% endcomment %}
+
+{% comment %}
+  Global Styles (layout + components)
+{% endcomment %}
+{{ 'main.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Icons
+{% endcomment %}
+<link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css">
+
+{% comment %}
+  Font (default: DM Sans | Almarai)
+{% endcomment %}
+
+{% assign font_family = 'DM+Sans' %}
+
+{% if lang == 'ar' %}
+  {% assign font_family = 'Almarai' %}
+{% endif %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family={{ font_family }}:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+>
+
+{{ content_for_header }}
+
+{% comment %}
+  Core Assets (YouCan JS, cart logic, product & collection, shop button)
+{% endcomment %}
+<script src="https://unpkg.com/@youcan/js@latest/dist/index.umd.js" defer></script>
+{{ 'misc.toast.js' | asset_url | script_tag_deferred }}
+{{ '_global.js' | asset_url | script_tag_deferred }}
+{{ '_pubsub.js' | asset_url | script_tag_deferred }}
+{{ '_cart.js' | asset_url | script_tag_deferred }}
+{{ 'misc.select.js' | asset_url | script_tag_deferred }}
+{{ 'core.quantity.css' | asset_url | stylesheet_tag }}
+
+{% if template.name != 'cart' and template.name != 'thankyou' and template.name != 'page' %}
+  {{ 'block.product.css' | asset_url | stylesheet_tag }}
+  {{ 'core.shop-button.js' | asset_url | script_tag_deferred }}
+{% endif %}
+
+{% if template.name == 'product' %}
+  {{ 'core.shop-button.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if template.name == 'list-collections' %}
+  {{ 'block.collection.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% comment %}
+  Translated Errors + Product Variants
+{% endcomment %}
+<script>
+  window.errorStrings = {
+    checkout: '{{ form.errors | first }}',
+    insufficient_inventory: '{{ 'error_messages.insufficient_inventory' | t }}',
+    rating_is_required: '{{ 'error_messages.rating_is_required' | t }}',
+    large_file: '{{ 'error_messages.large_file' | t }}',
+  }
+
+  window.successStrings = {
+    review_submitted: '{{ 'success_messages.review_submitted' | t }}'
+  }
+
+  window.inventoryStatuses = {
+    in_stock: '{{ 'product.inventory_in_stock' | t }}',
+    in_stock_show_count: '{{ 'product.inventory_in_stock_show_count' | t }}',
+    low_stock: '{{ 'product.inventory_low_stock' | t }}',
+    low_stock_show_count: '{{ 'product.inventory_low_stock_show_count' | t }}',
+    out_of_stock: '{{ 'product.inventory_out_of_stock' | t }}',
+  }
+
+  window.actions = {
+    out_of_stock: '{{ "general.out_of_stock" | t }}'
+  }
+
+  window.productsVariants = {};
+</script>

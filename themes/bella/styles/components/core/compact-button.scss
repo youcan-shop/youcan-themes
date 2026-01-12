@@ -1,0 +1,102 @@
+/* 
+  Component: Compact Button
+
+  Accepts:
+    - data-variant: {String} stroke | ghost | white
+    - data-size: {String} lg | md
+    - data-full-radius: {Boolean} (Optional) true | false
+    - data-flip-icon-in-rtl: {Boolean} (Optional) true | false
+
+  Usage:
+    - <button ui-slot="compact-button" data-variant="stroke" data-size="lg" aria-label="Close">
+        <i class="hgi hgi-stroke hgi-cancel-01"></i>
+      </button>
+*/
+
+[ui-slot="compact-button"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--compact-button-size);
+  height: var(--compact-button-size);
+  transition: all var(--transition-standard-default-spatial);
+  border: 1px solid;
+  border-radius: calc(var(--radius-8) - var(--spacing-2));
+  outline: none;
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+  cursor: pointer;
+
+  /* Size */
+  &[data-size="lg"] {
+    --icon-size: 16px;
+    --compact-button-size: 24px;
+  }
+
+  &[data-size="md"] {
+    --icon-size: 12px;
+    --compact-button-size: 20px;
+  }
+
+  /* Variant */
+  &[data-variant="white"] {
+    border-color: transparent;
+    background-color: var(--color-background);
+    box-shadow: 0 1px 2px 0 #0a0d1408;
+  }
+
+  &[data-variant="stroke"] {
+    border-color: var(--color-surface-variant);
+    background-color: transparent;
+  }
+
+  &[data-variant="ghost"] {
+    border-color: transparent;
+    background-color: transparent;
+  }
+
+  /* Icon */
+  & > i {
+    flex-shrink: 0;
+    font-size: var(--icon-size);
+  }
+
+  /* Full Radius */
+  &[data-full-radius="true"] {
+    border-radius: var(--radius-rounded);
+  }
+
+  /* Flip Icon In RTL */
+  &[data-flip-icon-in-rtl]:dir(rtl) {
+    & > i {
+      rotate: 180deg;
+    }
+  }
+
+  /* Active */
+  &:active {
+    scale: 0.98;
+  }
+
+  /* Focus */
+  &:focus-visible {
+    background-color: var(--color-on-surface);
+    color: var(--color-surface);
+  }
+
+  /* Disabled */
+  &:disabled,
+  &[aria-disabled="true"] {
+    border-color: transparent;
+    background-color: var(--color-surface-container);
+    color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    pointer-events: none;
+  }
+
+  /* Hover */
+  &:hover:not(:disabled, [aria-disabled="true"], :focus-visible) {
+    border-color: transparent;
+    background-color: var(--color-surface-container-high);
+    color: var(--color-on-surface);
+  }
+}

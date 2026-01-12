@@ -1,0 +1,33 @@
+<!doctype html>
+{% assign lang = store.store_locale.iso_code %}
+{% assign direction = 'ltr' %}
+
+{% if lang == 'ar' %}
+  {% assign direction = 'rtl' %}
+{% endif %}
+
+<html lang="{{ lang }}" dir="{{ direction }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="{{ request.url }}">
+
+    {% render '_meta-tags' %}
+    {% render '_config' %}
+  </head>
+
+  <body>
+    {% render 'misc.toast' %}
+
+    <div id="app">
+      {% section 'header' %}
+
+      <main id="main">
+        {% render 'misc.breadcrumb' %}
+        {{ content_for_layout }}
+      </main>
+
+      {% section 'footer' %}
+    </div>
+  </body>
+</html>

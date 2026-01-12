@@ -1,0 +1,88 @@
+/* 
+  Component: Sheet
+
+  Usage:
+    - ...
+*/
+
+[ui-slot="sheet"] {
+  --sheet-width: 400px;
+
+  /* Content */
+  [ui-slot="sheet-content"] {
+    display: flex;
+    position: fixed;
+    z-index: 50;
+    flex-direction: column;
+    justify-content: space-between;
+    width: var(--sheet-width);
+    height: 100dvh;
+    transition: var(--transition-expressive-default-spatial);
+    border: none;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    inset: unset;
+    inset-block-start: var(--spacing-0);
+    inset-inline-end: calc(var(--sheet-width) * -1);
+
+    /* Header */
+    [ui-slot="sheet-header"] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-12);
+      border-block-end: 1px solid var(--color-surface-variant);
+      padding: calc(var(--spacing-24) - var(--spacing-4));
+
+      /* Title */
+      [ui-slot="sheet-title"] {
+        font: var(--font-title-md);
+      }
+    }
+
+    /* Body */
+    [ui-slot="sheet-body"] {
+      flex: 2;
+      padding: calc(var(--spacing-24) - var(--spacing-4));
+    }
+
+    /* Body */
+    [ui-slot="sheet-footer"] {
+      display: grid;
+      gap: var(--spacing-12);
+      grid-template-columns: repeat(2, 1fr);
+      border-block-start: 1px solid var(--color-surface-variant);
+      padding: calc(var(--spacing-24) - var(--spacing-4));
+    }
+
+    /* Backdrop */
+    &::backdrop {
+      transition: var(--transition-standard-default-spatial);
+    }
+
+    /* State */
+    &:popover-open {
+      inset-inline-end: var(--spacing-0);
+
+      &::backdrop {
+        backdrop-filter: blur(10px);
+        background-color: color-mix(in srgb, currentcolor 15%, transparent);
+      }
+
+      @starting-style {
+        inset-inline-end: calc(var(--sheet-width) * -1);
+
+        &::backdrop {
+          backdrop-filter: blur(0);
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+@media (width <= 769px) {
+  [ui-slot="sheet"] {
+    --sheet-width: 100%;
+  }
+}

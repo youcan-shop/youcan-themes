@@ -1,0 +1,78 @@
+ui-cart-form {
+  flex: 1;
+
+  &:has(ui-empty:not([hidden])) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ui-cart-drawer-items {
+    display: flex;
+    gap: var(--spacing-24);
+    flex-direction: column;
+
+    .item {
+      display: flex;
+      gap: var(--spacing-16);
+
+      .image {
+        position: relative;
+        width: 90px;
+        height: 90px;
+        overflow: hidden;
+        border-radius: var(--radius-8);
+        background-color: var(--color-surface-container);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border: 1px solid var(--color-surface-container);
+        }
+      }
+
+      .content {
+        display: flex;
+        flex: 2;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .info {
+          display: grid;
+          gap: var(--spacing-16);
+          grid-template-columns: auto auto;
+
+          .bio {
+            display: grid;
+            gap: var(--spacing-8);
+
+            .title {
+              overflow: hidden;
+              font: var(--font-body-md);
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            .variants {
+              opacity: 0.8;
+              font: var(--font-body-sm);
+            }
+          }
+
+          .price {
+            display: flex;
+            justify-content: flex-end;
+            color: var(--color-primary);
+          }
+        }
+
+        .actions {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+    }
+  }
+}

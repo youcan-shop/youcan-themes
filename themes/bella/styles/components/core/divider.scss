@@ -1,0 +1,54 @@
+/* 
+  Component: Divider
+
+  Accepts:
+    - data-variant: {String}: line | line-text | solid-text | content
+
+  Usage:
+    - <hr ui-slot="divider" data-variant="line" />
+    - <div ui-slot="divider" role="separator" data-variant="line-text">OR</div>
+*/
+
+[ui-slot="divider"] {
+  --color-divider: var(--color-surface-container-highest);
+
+  /* Variant */
+  &[data-variant="line"] {
+    &:is(hr) {
+      width: 100%;
+      height: 1px;
+      border: none;
+      background-color: var(--color-divider);
+    }
+  }
+
+  &[data-variant="solid-text"] {
+    &:not(hr) {
+      padding: var(--spacing-6) calc(var(--spacing-16) + var(--spacing-4));
+      background-color: var(--color-divider);
+      color: var(--color-on-surface-variant);
+      font: var(--font-label-md);
+      text-transform: uppercase;
+    }
+  }
+
+  &[data-variant="line-text"],
+  &[data-variant="content"] {
+    &:not(hr) {
+      display: flex;
+      align-items: center;
+      color: var(--color-on-surface-variant);
+      font: var(--font-label-sm);
+      gap: var(--spacing-10);
+
+      &::before,
+      &::after {
+        content: "";
+        display: flex;
+        width: 100%;
+        height: 1px;
+        background-color: var(--color-divider);
+      }
+    }
+  }
+}

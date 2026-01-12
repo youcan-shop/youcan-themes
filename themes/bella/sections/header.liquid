@@ -1,0 +1,27 @@
+{{ 'section.header.css' | asset_url | stylesheet_tag }}
+
+<div ui-layout="header">
+  <ul class="links">
+    {% for link in main-link-list.links %}
+      <li class="link">
+        <a ui-slot="link-button" data-variant="black" data-size="md" href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% render 'misc.menu-drawer' %}
+  <div class="actions">
+    {% render 'misc.search' %}
+    {% render 'misc.cart-drawer' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Header",
+  "tag": "header",
+  "limit": 1,
+  "settings": []
+}
+{% endschema %}

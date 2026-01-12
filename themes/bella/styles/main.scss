@@ -1,0 +1,53 @@
+@use "./base/tokens.scss";
+@use "./base/colors.scss";
+@use "./components/index.scss";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font: var(--font-body-md);
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+
+    & > main {
+      flex: 2;
+      padding-inline: 8%;
+
+      @media (width <= 769px) {
+        padding-inline: var(--spacing-24);
+      }
+    }
+  }
+
+  &:has([popover]:popover-open) {
+    &::before {
+      content: "";
+      position: fixed;
+      z-index: 50;
+      inset: 0;
+    }
+  }
+}
+
+fieldset {
+  border: none;
+}
+
+ul {
+  list-style: none;
+}
+
+[hidden] {
+  display: none !important;
+}

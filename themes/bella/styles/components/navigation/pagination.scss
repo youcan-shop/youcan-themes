@@ -1,0 +1,108 @@
+/* 
+  Component: Pagination
+
+  Accepts:
+    - data-variant: {String}: basic | rounded | group
+
+  Usage:
+    - <div ui-slot="pagination" data-variant="basic">
+        <a ui-slot="pagination-item" href="/"> 1 </a>
+        <a ui-slot="pagination-item" href="/"> 2 </a>
+      </div>
+  
+  - > Component Child: Pagination Item
+
+      Accepts:
+        - aria-current: {Boolean}: true | false
+
+      Usage:
+        - <a ui-slot="pagination-item" href="/" aria-current="true"> 4 </a>
+*/
+
+[ui-slot="pagination"] {
+  display: flex;
+  justify-content: center;
+
+  /* Variant */
+  &[data-variant="basic"],
+  &[data-variant="rounded"] {
+    --pagination-min-width: 32px;
+
+    gap: var(--spacing-8);
+
+    &[data-variant="basic"] {
+      --pagination-border-radius: var(--radius-8);
+    }
+
+    &[data-variant="rounded"] {
+      --pagination-border-radius: var(--radius-rounded);
+    }
+  }
+
+  &[data-variant="group"] {
+    --pagination-min-width: 40px;
+    --pagination-border-radius: var(--radius-0);
+
+    overflow: hidden;
+    border: 1px solid var(--color-surface-variant);
+    border-radius: var(--radius-8);
+
+    [ui-slot*="pagination-nav"],
+    [ui-slot*="pagination-item"],
+    [ui-slot*="pagination-ellipsis"] {
+      border-color: transparent;
+
+      &:not(:last-child) {
+        border-inline-end: 1px solid var(--color-surface-variant);
+      }
+    }
+  }
+
+  /* Nav - Item - Ellipsis */
+  [ui-slot="pagination-nav"],
+  [ui-slot="pagination-item"],
+  [ui-slot="pagination-ellipsis"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--pagination-min-width);
+    height: 32px;
+    padding-inline: var(--spacing-6);
+    transition: all var(--transition-standard-default-spatial);
+    border: 1px solid var(--color-surface-variant);
+    border-radius: var(--pagination-border-radius);
+    background-color: var(--color-background);
+    color: var(--color-on-surface-variant);
+    text-decoration: none;
+
+    &[ui-slot="pagination-nav"] {
+      border-color: transparent;
+    }
+
+    /* Current */
+    &[aria-current="true"] {
+      border-color: transparent;
+      background-color: var(--color-primary-container);
+      color: var(--color-on-primary-container);
+    }
+
+    /* Hover */
+    &:hover:not([aria-disabled="true"], [aria-current="true"]) {
+      border-color: transparent;
+      background-color: var(--color-surface-container-high);
+    }
+
+    &[aria-current="true"]:hover:not([aria-disabled="true"]) {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    /* Disabled */
+    &[aria-disabled="true"] {
+      border-color: transparent;
+      background-color: var(--color-surface-container);
+      color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      pointer-events: none;
+    }
+  }
+}

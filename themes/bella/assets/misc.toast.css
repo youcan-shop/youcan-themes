@@ -1,0 +1,63 @@
+ui-toast{
+  display:flex;
+  position:fixed;
+  z-index:50;
+  left:50%;
+  align-items:center;
+  min-width:300px;
+  max-width:calc(100vw - var(--spacing-48));
+  padding:var(--spacing-6);
+  padding-left:var(--spacing-12);
+  transform:translateX(-50%);
+  transition:var(--transition-expressive-default-spatial);
+  border:1px solid var(--color-surface-variant);
+  border-radius:var(--radius-12);
+  background-color:var(--color-background);
+  color:var(--color-on-background);
+  bottom:var(--spacing-12);
+  gap:var(--spacing-12);
+}
+ui-toast > hr{
+  width:1px;
+  height:16px;
+  border:none;
+  opacity:0.3;
+  background-color:currentcolor;
+}
+ui-toast [ui-toast=status]{
+  width:20px;
+  height:20px;
+  clip-path:circle();
+  margin-left:calc(var(--spacing-4) * -1);
+  margin-right:calc(var(--spacing-4) * -1);
+}
+ui-toast [ui-toast=status][data-state=success]{
+  background:linear-gradient(135deg, var(--color-success), var(--color-success-container));
+}
+ui-toast [ui-toast=status][data-state=error]{
+  background:linear-gradient(135deg, var(--color-error), var(--color-error-container));
+}
+ui-toast [ui-toast=status][data-state=info]{
+  background:linear-gradient(135deg, var(--color-info), var(--color-info-container));
+}
+ui-toast [ui-toast=status][data-state=warning]{
+  background:linear-gradient(135deg, var(--color-warning), var(--color-warning-container));
+}
+ui-toast [ui-toast=message]{
+  flex:2;
+  width:-moz-max-content;
+  width:max-content;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+ui-toast[data-state=closed]{
+  visibility:hidden;
+  opacity:0;
+  bottom:-5%;
+}
+@media (max-width: 769px){
+  ui-toast{
+    width:calc(100vw - var(--spacing-48));
+  }
+}

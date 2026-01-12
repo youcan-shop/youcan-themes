@@ -1,0 +1,126 @@
+/* 
+  Component: Modal
+
+  Usage:
+    - <div ui-slot="modal">
+        <button popovertarget="my-modal">  Click to Open </button>
+
+        <div ui-slot="modal-content" id="my-modal" popover> My Modal Content </div>
+      </div>
+    
+*/
+
+[ui-slot="modal"] {
+  /* Content */
+  [ui-slot="modal-content"][popover] {
+    display: flex;
+    visibility: hidden;
+    inset: auto;
+    left: 50%;
+    flex-direction: column;
+    width: calc(100% - var(--spacing-32));
+    max-width: 400px;
+    transform: translate(-50%, -50%) scale(0.94);
+    transition: var(--transition-expressive-fast-spatial);
+    border: none;
+    border-radius: var(--radius-20);
+    opacity: 0;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    inset-block-start: 50%;
+    filter: blur(2px);
+
+    /* Header */
+    [ui-slot="modal-header"] {
+      display: flex;
+      position: relative;
+      align-items: center;
+      padding: var(--spacing-16) calc(var(--spacing-24) - var(--spacing-4));
+      gap: var(--spacing-14);
+      border-block-end: 1px solid var(--color-surface-variant);
+
+      /* Icon */
+      [ui-slot="modal-icon"] {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--color-surface-variant);
+        border-radius: var(--radius-rounded);
+
+        & > i {
+          font-size: 20px;
+        }
+      }
+
+      /* Title */
+      [ui-slot="modal-title"] {
+        font: var(--font-title-sm);
+      }
+
+      /* Description */
+      [ui-slot="modal-description"] {
+        margin-block-start: var(--spacing-4);
+        color: var(--color-on-surface-variant);
+        font: var(--font-body-sm);
+      }
+
+      /* Close */
+      &:has(button) {
+        padding-inline-end: var(--spacing-48);
+
+        button {
+          position: absolute;
+          inset-block-start: var(--spacing-16);
+          inset-inline-end: calc(var(--spacing-24) - var(--spacing-4));
+        }
+      }
+    }
+
+    /* Body */
+    [ui-slot="modal-body"] {
+      padding: calc(var(--spacing-24) - var(--spacing-4));
+    }
+
+    /* Body */
+    [ui-slot="modal-footer"] {
+      display: grid;
+      gap: var(--spacing-12);
+      grid-template-columns: repeat(2, 1fr);
+      border-block-start: 1px solid var(--color-surface-variant);
+      padding: var(--spacing-16) calc(var(--spacing-24) - var(--spacing-4));
+    }
+
+    /* Backdrop */
+    &::backdrop {
+      transition: var(--transition-standard-default-spatial);
+    }
+
+    /* State */
+    &:popover-open {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      filter: blur(0);
+
+      &::backdrop {
+        backdrop-filter: blur(10px);
+        background-color: color-mix(in srgb, currentcolor 15%, transparent);
+      }
+
+      @starting-style {
+        visibility: hidden;
+        transform: translate(-50%, -50%) scale(0.94);
+        opacity: 0;
+        filter: blur(2px);
+
+        &::backdrop {
+          backdrop-filter: blur(0);
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}

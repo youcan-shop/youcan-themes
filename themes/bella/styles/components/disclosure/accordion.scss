@@ -1,0 +1,85 @@
+/* 
+  Component: Accordion
+
+  Usage:
+    - <div ui-slot="accordion">
+        <div ui-slot="accordion-item">
+          <label ui-slot="accordion-trigger">
+            Accordion Trigger
+            <input type="checkbox" name="my-accordion" checked />
+          </label>
+          <div ui-slot="accordion-content" role="region">
+            <p>Accordion content </p>
+          </div>
+        </div>
+      </div>
+*/
+
+[ui-slot="accordion"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-24);
+
+  /* Item */
+  [ui-slot="accordion-item"] {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color var(--transition-standard-default-spatial);
+    border: 1px solid var(--color-surface-variant);
+    border-radius: calc(var(--radius-12) - var(--spacing-2));
+
+    /* Trigger */
+    [ui-slot="accordion-trigger"] {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-14);
+      font: var(--font-body-md);
+      cursor: pointer;
+      user-select: none;
+      gap: var(--spacing-10);
+
+      & > input[type="checkbox"] {
+        overflow: hidden;
+        opacity: 0;
+        scale: 0;
+      }
+
+      & > i {
+        flex-shrink: 0;
+        font-size: 20px;
+      }
+    }
+
+    /* Content */
+    [ui-slot="accordion-content"] {
+      display: grid;
+      grid-template-rows: 0fr;
+      padding-block-end: var(--spacing-0);
+      padding-inline: var(--spacing-14);
+      transition: all var(--transition-expressive-default-spatial);
+      color: var(--color-on-surface-variant);
+      font: var(--font-body-md);
+
+      & > * {
+        overflow: hidden;
+      }
+    }
+
+    /* Hover */
+    &:has([ui-slot="accordion-trigger"]:where(:hover, :focus-within)) {
+      background-color: var(--color-surface-container-high);
+    }
+
+    /* Checked */
+    &:has(input[type="checkbox"]:checked) {
+      background-color: var(--color-surface-container-high);
+
+      [ui-slot="accordion-content"] {
+        grid-template-rows: 1fr;
+        padding-block-end: var(--spacing-14);
+      }
+    }
+  }
+}
