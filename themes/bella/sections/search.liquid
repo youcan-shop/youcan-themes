@@ -1,0 +1,27 @@
+{{ 'section.search.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="search">
+  {% paginate collection.products by 24 cod, category_id: category.id %}
+    {% if items.size > 0 %}
+      <ul class="list">
+        {% for product in items %}
+          {% render 'block.product', product: product %}
+        {% endfor %}
+      </ul>
+
+      {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+
+    {% else %}
+      {% assign empty_content = 'search.empty.title' | t %}
+      {% render 'misc.empty', heading: empty_content %}
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "Search",
+  "templates": ["search"],
+  "limit": 1
+}
+{% endschema %}

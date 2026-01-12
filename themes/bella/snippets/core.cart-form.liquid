@@ -1,0 +1,18 @@
+{{ 'core.cart-form.css' | asset_url | stylesheet_tag }}
+
+<ui-cart-form>
+  <template ui-cart-drawer="item">
+    {% render 'core.cart-form-item', product: product %}
+  </template>
+  <ui-cart-drawer-items>
+    {% for product in cart.items %}
+      {% render 'core.cart-form-item', product: product %}
+    {% endfor %}
+  </ui-cart-drawer-items>
+  {% assign empty_cart_content = 'cart.empty.title' | t %}
+  {% unless cart.count > 0 %}
+    {% render 'misc.empty', heading: empty_cart_content %}
+  {% else %}
+    {% render 'misc.empty', heading: empty_cart_content, hidden: true %}
+  {% endunless %}
+</ui-cart-form>

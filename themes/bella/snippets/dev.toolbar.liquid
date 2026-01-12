@@ -1,0 +1,115 @@
+{{ 'dev.toolbar.css' | asset_url | stylesheet_tag }}
+{{ 'dev.toolbar.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a dev toolbar
+
+  Usage:
+  {% render 'dev.toolbar' %}
+{% endcomment %}
+
+<ui-dev-toolbar ui-slot="modal" is-global>
+  <div data-dev-toolbar="highlight">
+    <div>
+      {% render 'misc.icon', name: 'hgi-align-selection' %}
+      <span>Element</span>
+    </div>
+  </div>
+
+  <div ui-slot="button-group" data-size="sm" role="group" class="toolbar" data-theme="dark">
+    <a
+      ui-slot="button-group-item"
+      role="radio"
+      aria-checked="false"
+      href="https://developer.youcan.shop/themes/introduction"
+      target="_blank"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 124 109" fill="none">
+        <path d="M38.0676 0H0L23.7971 54.5H61.8452L38.0676 0Z" fill="var(--color-primary)"/>
+        <path d="M85.6423 0L61.8452 54.5194L38.0481 109H76.1157L99.9128 54.5194L123.71 0H85.6423Z" fill="var(--color-primary)"/>
+      </svg>
+    </a>
+    <button ui-slot="button-group-item" role="radio" aria-checked="false" data-dev-toolbar="highlight-trigger">
+      {% render 'misc.icon', name: 'hgi-cursor-rectangle-selection-02' %} Inspect
+    </button>
+    <button ui-slot="button-group-item" role="radio" aria-checked="false" popovertarget="structure">
+      {% render 'misc.icon', name: 'hgi-structure-05' %} Structure
+    </button>
+    <button ui-slot="button-group-item" role="radio" aria-checked="false" popovertarget="settings">
+      {% render 'misc.icon', name: 'hgi-settings-03' %} Settings
+    </button>
+  </div>
+
+  <div ui-slot="modal-content" id="structure" popover>
+    <div ui-slot="modal-header">
+      <div ui-slot="modal-icon">
+        {% render 'misc.icon', name: 'hgi-structure-05' %}
+      </div>
+      <div>
+        <h2 ui-slot="modal-title">Structure</h2>
+        <p ui-slot="modal-description">Choose contact preferences for companies.</p>
+      </div>
+      <button
+        ui-slot="compact-button"
+        data-variant="ghost"
+        data-size="lg"
+        aria-label="Close"
+        popovertarget="structure"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
+    </div>
+    <div ui-slot="modal-body">
+      <ul class="tree" data-structure></ul>
+    </div>
+  </div>
+
+  <div ui-slot="modal-content" id="settings" popover>
+    <div ui-slot="modal-header">
+      <div ui-slot="modal-icon">
+        {% render 'misc.icon', name: 'hgi-settings-03' %}
+      </div>
+      <div>
+        <h2 ui-slot="modal-title">Settings</h2>
+        <p ui-slot="modal-description">Choose contact preferences for companies.</p>
+      </div>
+      <button
+        ui-slot="compact-button"
+        data-variant="ghost"
+        data-size="lg"
+        aria-label="Close"
+        popovertarget="settings"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
+    </div>
+    <div ui-slot="modal-body">
+      <fieldset>
+        <label ui-slot="label">Theme</label>
+        <div class="theme-options">
+          <label class="theme">
+            <div class="icon">
+              <span>Aa</span>
+            </div>
+            <p class="label">Light</p>
+            <input type="radio" name="theme" value="light">
+          </label>
+          <label class="theme">
+            <div class="icon">
+              <span>Aa</span>
+            </div>
+            <p class="label">Dark</p>
+            <input type="radio" name="theme" value="dark">
+          </label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <label ui-slot="label">Brand Color</label>
+        <label ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" class="brand-color">
+          <input type="color" name="brand-color" value="#9fae2d">
+          #9FAE2D
+        </label>
+      </fieldset>
+    </div>
+  </div>
+</ui-dev-toolbar>

@@ -1,0 +1,39 @@
+{% comment %}
+  Renders a collection item (Block)
+
+  Accepts:
+  - collection: {Object} Collection info
+  - youcan_attributes: {String} (optional) YouCan attributes (allow blocks to be highlighted in the theme editor)
+
+  Usage:
+  {% render 'block-collection', collection: {...} %}
+{% endcomment %}
+
+<li ui-block="collection" {{ youcan_attributes }}>
+  <a href="/collections/{{ collection.slug }}" class="media">
+    {% if collection.preview_image %}
+      <img
+        srcset="
+          {{ collection.preview_image.medium }} 480w,
+          {{ collection.preview_image.large }} 800w,
+          {{ collection.preview_image.original }} 1200w
+        "
+        sizes="
+          (max-width: 640px) 50vw,
+          (max-width: 768px) 33vw,
+          (max-width: 1024px) 25vw,
+          33vw
+        "
+        src="{{ collection.preview_image.original }}"
+        alt="{{ collection.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback' %}
+    {% endif %}
+  </a>
+  <a ui-slot="link-button" data-variant="black" data-size="md" href="/collections/{{ collection.slug }}" class="title">
+    {{ collection.name | default: 'My collection' }}
+  </a>
+</li>

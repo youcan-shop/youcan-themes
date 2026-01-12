@@ -1,0 +1,62 @@
+/* 
+  Component: Slider
+
+  Usage:
+    - <input ui-slot="slider" name="my-slider" type="range" />
+*/
+
+input[type="range"] {
+  --color-slider: var(--color-primary);
+  --track-height: 6px;
+  --thumb-size: 16px;
+  --color-slider-mixed: color-mix(
+    in srgb,
+    var(--color-slider),
+    var(--color-on-background) var(--color-slider-darkness, 0%)
+  );
+
+  position: relative;
+  height: var(--thumb-size);
+  overflow: hidden;
+  transition: all var(--transition-standard-default-spatial);
+  background-color: transparent;
+  appearance: none;
+
+  /* Thumb */
+  &::-webkit-slider-thumb {
+    height: var(--thumb-size);
+    transition: inherit;
+    border-radius: var(--radius-rounded);
+    background-color: var(--color-slider);
+    box-shadow: 0 0 0 5px inset var(--color-background);
+    aspect-ratio: 1;
+    border-image: linear-gradient(
+        90deg,
+        var(--color-slider-mixed) 50%,
+        var(--color-surface-container-highest) 0
+      )
+      0 1 / calc(50% - var(--track-height) / 2) 100vw / 0 100vw;
+    appearance: none;
+    cursor: grab;
+  }
+
+  /* Disabled */
+  &:disabled {
+    --color-slider: var(--color-surface-container-highest);
+
+    pointer-events: none;
+  }
+
+  /* Hover & Focus */
+  &:focus-visible,
+  &:hover:not(:disabled) {
+    --color-slider-darkness: 25%;
+  }
+
+  /* Active */
+  &:active {
+    &::-webkit-slider-thumb {
+      cursor: grabbing;
+    }
+  }
+}

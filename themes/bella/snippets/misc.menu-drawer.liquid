@@ -1,0 +1,36 @@
+{% comment %}
+  Renders a menu drawer
+
+  Usage:
+  {% render 'misc.menu-drawer' %}
+{% endcomment %}
+
+<div ui-slot="drawer" class="menu">
+  <button
+    ui-slot="button"
+    data-variant="neutral"
+    data-mode="stroke"
+    data-size="md"
+    data-as-icon
+    aria-label="Menu"
+    popovertarget="menu"
+  >
+    {% render 'misc.icon', name: 'hgi-menu-03' %}
+  </button>
+  <div ui-slot="drawer-content" id="menu" popover>
+    <div ui-slot="drawer-header">
+      <h2 ui-slot="drawer-title">{{ 'header.menu.name' | t }}</h2>
+    </div>
+    <div ui-slot="drawer-body">
+      <ul class="sm-links">
+        {% for link in main-link-list.links %}
+          <li class="link">
+            <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" href="{{ link.url }}">
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,252 @@
+/*
+  Component: Select
+
+  Accepts:
+    - data-variant: {String} default | compact | inline
+
+  Usage:
+    - <div ui-slot="select" data-size="md">
+        <button -slot="select-trigger" popovertarget="my-select">
+          Select
+        </button>
+
+        <div ui-slot="select-content" id="my-select" popover>
+          <button ui-slot="select-option" popovertarget="my-select">
+            <label>
+              <input type="radio" name="opt" value="apple" />
+              Apple
+            </label>
+          </button>
+          <button ui-slot="select-option" popovertarget="my-select">
+            <label>
+              <input type="radio" name="opt" value="carrot" />
+              Carrot
+            </label>
+          </button>
+          <button ui-slot="select-option" popovertarget="my-select">
+            <label>
+              <input type="radio" name="opt" value="banana" />
+              Banana
+            </label>
+          </button>
+        </div>
+      </div>
+*/
+
+[ui-slot*="select"] {
+  width: 100%;
+
+  /* Trigger */
+  [ui-slot="select-trigger"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: inherit;
+    height: inherit;
+    transition: var(--transition-standard-default-spatial);
+    border: 1px solid var(--color-surface-variant);
+    outline: none;
+    background-color: var(--color-background);
+    box-shadow: 0 0 0 3px transparent;
+    color: var(--color-on-surface-variant);
+    font: var(--font-body-md);
+    cursor: pointer;
+
+    /* Arrow */
+    &::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      transform: translate(-1.5px, -1.5px) rotate(45deg);
+      border-inline-end: 1.2px solid
+        color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      border-block-end: 1.2px solid
+        color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      transition: var(--transition-standard-default-spatial);
+    }
+
+    &:dir(rtl)::after {
+      transform: translate(-1.5px, -1.5px) rotate(-45deg);
+    }
+
+    /* Focus */
+    &:focus-within {
+      border-color: currentcolor;
+      box-shadow: 0 0 0 3px color-mix(in oklab, currentcolor 8%, transparent);
+      color: var(--color-on-surface);
+    }
+
+    /* Disabled */
+    &:disabled {
+      border-color: transparent;
+      background-color: var(--color-surface-container);
+      color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      pointer-events: none;
+    }
+
+    /* Hover */
+    &:hover:not(:disabled, :focus-within) {
+      border-color: transparent;
+      background-color: var(--color-surface-container-high);
+      color: var(--color-on-surface);
+
+      &::after {
+        border-color: var(--color-on-surface);
+      }
+    }
+  }
+
+  &:has([ui-slot="select-content"]:popover-open) {
+    [ui-slot="select-trigger"] {
+      &::after {
+        transform: translate(-1.5px, 1.5px) rotate(-135deg);
+      }
+
+      &:dir(rtl)::after {
+        transform: translate(-1.5px, 1.5px) rotate(135deg);
+      }
+    }
+  }
+
+  /* Content */
+  [ui-slot="select-content"][popover] {
+    max-height: 196px;
+    padding: var(--spacing-8);
+    transition: var(--transition-expressive-fast-spatial);
+    border: 1px solid var(--color-surface-variant);
+    border-radius: var(--radius-16);
+    background-color: var(--color-background);
+    box-shadow: 0 16px 32px -12px
+      color-mix(in srgb, var(--color-on-background) 8%, transparent);
+
+    /* Option */
+    [ui-slot="select-option"] {
+      width: 100%;
+      overflow: hidden;
+      border: none;
+      border-radius: var(--radius-8);
+      background-color: transparent;
+
+      & > label {
+        display: flex;
+        position: relative;
+        align-items: center;
+        height: 36px;
+        padding: var(--spacing-8);
+        padding-inline-end: var(--spacing-32);
+        overflow: hidden;
+        transition: var(--transition-standard-default-spatial);
+        color: var(--color-on-background);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        gap: var(--spacing-8);
+
+        & > input[type="radio"] {
+          position: absolute;
+          scale: 0;
+          opacity: 0;
+        }
+
+        /* Icon */
+        & > i {
+          flex-shrink: 0;
+          font-size: 16px;
+        }
+
+        &:has(> input[type="radio"]:checked) {
+          /* Check */
+          &::after {
+            content: "";
+            position: absolute;
+            width: 6px;
+            height: 10px;
+            inset-inline-end: var(--spacing-8);
+            transform: translate(-1.5px, -1.5px) rotate(45deg);
+            border-right: 1.2px solid var(--color-on-surface-variant);
+            border-bottom: 1.2px solid var(--color-on-surface-variant);
+          }
+
+          &:dir(rtl)::after {
+            transform: translate(4px, -1.5px) rotate(45deg);
+          }
+        }
+
+        &:hover {
+          background-color: var(--color-surface-container);
+        }
+      }
+
+      &:disabled {
+        pointer-events: none;
+
+        & > label {
+          color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+        }
+      }
+    }
+
+    /* State */
+    &:popover-open {
+      visibility: visible;
+      transform: translateY(var(--spacing-6)) scale(1);
+      opacity: 1;
+      filter: blur(0);
+      inset: auto;
+
+      @starting-style {
+        visibility: hidden;
+        transform: translateY(0) scale(0.94);
+        opacity: 0;
+        filter: blur(5px);
+      }
+    }
+  }
+
+  /* Size */
+  &[data-size="lg"] {
+    [ui-slot="select-trigger"] {
+      height: 40px;
+      gap: var(--spacing-8);
+      padding-inline: var(--spacing-12);
+      border-radius: calc(var(--radius-12) - var(--spacing-2));
+    }
+  }
+
+  &[data-size="md"] {
+    [ui-slot="select-trigger"] {
+      height: 36px;
+      gap: var(--spacing-8);
+      padding-inline: var(--spacing-10);
+      border-radius: var(--radius-8);
+    }
+  }
+
+  &[data-size="sm"] {
+    [ui-slot="select-trigger"] {
+      height: 32px;
+      gap: var(--spacing-6);
+      padding-inline: var(--spacing-8);
+      border-radius: var(--radius-8);
+    }
+  }
+
+  /* Variant */
+  &[data-variant="compact"] {
+    width: fit-content;
+  }
+
+  &[data-variant="inline"] {
+    width: fit-content;
+
+    [ui-slot="select-trigger"] {
+      height: fit-content;
+      padding-inline: var(--spacing-0);
+      border: none;
+
+      &:focus-within {
+        box-shadow: none;
+      }
+    }
+  }
+}

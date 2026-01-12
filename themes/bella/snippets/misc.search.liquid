@@ -1,0 +1,31 @@
+{{ 'misc.search.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a search modal
+
+  Usage:
+  {% render 'misc.search' %}
+{% endcomment %}
+
+<ui-search ui-slot="modal">
+  <button
+    ui-slot="button"
+    data-variant="neutral"
+    data-mode="stroke"
+    data-size="md"
+    data-as-icon
+    aria-label="Search"
+    popovertarget="search"
+  >
+    {% render 'misc.icon', name: 'hgi-search-01' %}
+  </button>
+  <div ui-slot="modal-content" id="search" popover>
+    <form action="/search">
+      <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
+        <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
+        <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.drawer.placeholder' | t }}">
+        <button ui-slot="input-button">{{ 'search.drawer.action' | t }}</button>
+      </fieldset>
+    </form>
+  </div>
+</ui-search>

@@ -1,0 +1,29 @@
+{{ 'core.linked-fields.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a list of linked fields, typically "country", "region", and "city" (optional)
+
+  Accepts:
+  - fields: {Array} list of fields
+
+  Usage:
+  {% render 'core.linked-fields', fields: [...] %}
+{% endcomment %}
+
+{% assign linked_fields = 'country,region,city' %}
+
+<ui-linked-fields>
+  {% for field in fields %}
+    {% if linked_fields contains field.name %}
+      <label ui-express-checkout="field">
+        <span ui-slot="label">{{ field.display_name }}</span>
+        <ui-select ui-slot="select" data-size="lg">
+          <button ui-slot="select-trigger" popovertarget="{{ field.name }}" type="button" disabled>
+            {{ 'general.select' | t }}
+          </button>
+          <div ui-slot="select-content" id="{{ field.name }}" popover></div>
+        </ui-select>
+      </label>
+    {% endif %}
+  {% endfor %}
+</ui-linked-fields>

@@ -1,0 +1,24 @@
+{{ 'misc.image-fallback.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders an image fallback
+
+  Accepts:
+  - icon: {String} (optional) Icon
+  - icon_size: {Number} (optional) Icon Size
+  - hidden: {Boolean} (optional) Hide element
+
+  Usage:
+  {% render 'misc-image-fallback' %}
+{% endcomment %}
+
+{% assign icon_name = icon | default: 'hgi-image-02' %}
+{% assign icon_size = icon_size | default: 20 %}
+
+<ui-image-fallback
+  {% if hidden %}
+    hidden
+  {% endif %}
+>
+  {% render 'misc.icon', name: icon_name, size: icon_size %}
+</ui-image-fallback>

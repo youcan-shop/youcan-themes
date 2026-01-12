@@ -1,0 +1,79 @@
+{{ 'section.page.css' | asset_url | stylesheet_tag }}
+
+{% if page.template == 'contact' %}
+  <div ui-section="page">
+    {% form 'contact' %}
+      {% if form.posted_successfully %}
+        <div ui-slot="alert" data-variant="lighter" data-status="success" data-size="md">
+          {% render 'misc.icon', name: 'hgi-checkmark-circle-02' %}
+          <span>{{ 'contact.success_message' | t }}</span>
+        </div>
+      {% elsif form.errors %}
+        <div ui-slot="alert" data-variant="lighter" data-status="error" data-size="md">
+          {% render 'misc.icon', name: 'hgi-alert-02' %}
+          <span>{{ 'contact.error_message' | t }}</span>
+        </div>
+        <ul class="errors">
+          {% for error in form.errors %}
+            {% assign message = error[1] %}
+            <li>
+              <span ui-slot="hint" aria-invalid="true">{{ message }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <div class="fields">
+        <fieldset>
+          <label ui-slot="label" for="email">{{ 'contact.fields.email' | t }}</label>
+          <input
+            ui-slot="input"
+            data-size="lg"
+            id="email"
+            name="email"
+            type="email"
+            placeholder="{{ 'contact.fields.email' | t }}"
+            required
+          >
+        </fieldset>
+        <fieldset>
+          <label ui-slot="label" for="subject">{{ 'contact.fields.subject' | t }}</label>
+          <input
+            ui-slot="input"
+            data-size="lg"
+            id="subject"
+            name="subject"
+            type="text"
+            placeholder="{{ 'contact.fields.subject' | t }}"
+            required
+          >
+        </fieldset>
+        <fieldset>
+          <label ui-slot="label" for="message">{{ 'contact.fields.message' | t }}</label>
+          <textarea
+            ui-slot="textarea"
+            type="text"
+            id="message"
+            name="message"
+            minlength="5"
+            rows="8"
+            placeholder="{{ 'contact.fields.message' | t }}"
+            required
+          ></textarea>
+        </fieldset>
+      </div>
+      <button type="submit" ui-slot="button" data-variant="primary" data-mode="filled" data-size="md">
+        {{ 'contact.action' | t }}
+      </button>
+    {% endform %}
+  </div>
+{% else %}
+  {{ page.content }}
+{% endif %}
+
+{% schema %}
+{
+  "label": "Page",
+  "templates": ["page"],
+  "limit": 1
+}
+{% endschema %}

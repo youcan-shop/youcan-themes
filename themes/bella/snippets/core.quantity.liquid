@@ -1,0 +1,54 @@
+{% comment %}
+  Renders a quantity input
+
+  Accepts:
+  - product: {Object} Cart item liquid object
+  - size: {Object} (Optional) Button controls size (lg, md, sm, xs)
+
+  Usage:
+  {% render 'core.quantity' product: {...}, size: 'sm' %}
+{% endcomment %}
+
+{% assign quantity = 1 %}
+
+{% if product.quantity != null %}
+  {% assign quantity = product.quantity %}
+{% endif %}
+
+<ui-quantity
+  class="quantity"
+  item="{{ product.id }}"
+  product-variant="{{ product.product_variant_id }}"
+  quantity="{{ quantity }}"
+  {% if product.inventory %}
+    inventory="{{ product.inventory }}"
+  {% endif %}
+>
+  <button
+    ui-slot="button"
+    data-variant="neutral"
+    data-mode="stroke"
+    data-size="{{ size | default: "lg" }}"
+    data-as-icon
+    name="minus"
+    aria-label="decrease"
+    type="button"
+  >
+    {% render 'misc.icon', name: 'hgi-remove-01' %}
+  </button>
+  <span ui-quantity="value" class="value" ui-cart-item="quantity">
+    {{ quantity }}
+  </span>
+  <button
+    ui-slot="button"
+    data-variant="neutral"
+    data-mode="stroke"
+    data-size="{{ size | default: "lg" }}"
+    data-as-icon
+    name="plus"
+    aria-label="increase"
+    type="button"
+  >
+    {% render 'misc.icon', name: 'hgi-add-01' %}
+  </button>
+</ui-quantity>

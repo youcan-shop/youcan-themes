@@ -1,0 +1,158 @@
+/* 
+  Component: Badge
+
+  Accepts:
+    - data-variant: {String}: filled | light | lighter | stroke
+    - data-size: {String}: small | medium
+    - data-color: {String}: gray | blue | orange | red | green | yellow | purple | sky | pink | teal
+    - data-square: {Boolean}: true | false
+    - aria-disabled: {Boolean}: true | false
+
+  Usage:
+    - <div ui-slot="badge" data-variant="light" data-size="sm" data-color="sky">Badge</div>
+*/
+
+[ui-slot="badge"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: var(--badge-size);
+  padding-inline: var(--spacing-8);
+  border: 1px solid transparent;
+  border-radius: var(--radius-rounded);
+
+  /* Icon */
+  & > i {
+    margin-inline: calc(var(--spacing-4) * -1);
+    font-size: var(--icon-size);
+  }
+
+  /* Dot */
+  & > [ui-slot="badge-dot"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--icon-size);
+    height: var(--icon-size);
+
+    &::before {
+      content: "";
+      display: block;
+      width: 4px;
+      height: 4px;
+      clip-path: circle();
+      background-color: currentcolor;
+    }
+  }
+
+  /* Size */
+  &[data-size="md"] {
+    --icon-size: 16px;
+    --badge-size: 20px;
+
+    gap: var(--spacing-6);
+    font: var(--font-label-md);
+
+    & > [ui-slot="badge-dot"] {
+      margin-inline: calc(var(--spacing-6) * -1);
+    }
+  }
+
+  &[data-size="sm"] {
+    --icon-size: 12px;
+    --badge-size: 16px;
+
+    font: var(--font-label-sm);
+    text-transform: uppercase;
+    gap: var(--spacing-8);
+
+    & > [ui-slot="badge-dot"] {
+      margin-inline: calc(var(--spacing-8) * -1);
+    }
+  }
+
+  /* Square */
+  &[data-square="true"] {
+    min-width: var(--badge-size);
+    padding-inline: var(--spacing-4);
+  }
+
+  /* Variant */
+  &[data-variant="filled"] {
+    background-color: var(--color-badge);
+    color: var(--color-background);
+  }
+
+  &[data-variant="light"] {
+    background-color: color-mix(
+      in srgb,
+      var(--color-badge) 30%,
+      var(--color-background)
+    );
+    color: color-mix(in srgb, var(--color-badge), var(--color-on-background));
+  }
+
+  &[data-variant="lighter"] {
+    background-color: color-mix(
+      in srgb,
+      currentcolor 15%,
+      var(--color-background)
+    );
+    color: var(--color-badge);
+  }
+
+  &[data-variant="stroke"] {
+    border-color: currentcolor;
+    color: var(--color-badge);
+  }
+
+  /* Color */
+  &[data-color="gray"] {
+    --color-badge: #7b7b7b;
+  }
+
+  &[data-color="yellow"] {
+    --color-badge: #f6b51e;
+  }
+
+  &[data-color="purple"] {
+    --color-badge: #7d52f4;
+  }
+
+  &[data-color="sky"] {
+    --color-badge: #47c2ff;
+  }
+
+  &[data-color="blue"] {
+    --color-badge: #335cff;
+  }
+
+  &[data-color="red"] {
+    --color-badge: #fb3748;
+  }
+
+  &[data-color="orange"] {
+    --color-badge: #fa7319;
+  }
+
+  &[data-color="pink"] {
+    --color-badge: #fb4ba3;
+  }
+
+  &[data-color="teal"] {
+    --color-badge: #22d3bb;
+  }
+
+  &[data-color="green"] {
+    --color-badge: #1fc16b;
+  }
+
+  /* Disabled */
+  &[aria-disabled="true"] {
+    border-color: var(--color-surface-container-highest);
+    background-color: transparent;
+    color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    pointer-events: none;
+  }
+}

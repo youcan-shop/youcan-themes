@@ -1,0 +1,121 @@
+{{ 'section.cart.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="cart">
+  <div class="cart-core">
+    <template ui-cart-item>
+      {% render 'core.cart-item', product: product %}
+    </template>
+    <ui-cart-items
+      {% unless cart.items.size > 0 %}
+        hidden
+      {% endunless %}
+    >
+      {% for product in cart.items %}
+        {% render 'core.cart-item', product: product %}
+      {% endfor %}
+    </ui-cart-items>
+    <ui-summary-box
+      class="summary"
+      {% unless cart.items.size > 0 %}
+        hidden
+      {% endunless %}
+    >
+      <div class="head">
+        <h3>{{ 'cart.page.summary.title' | t }}</h3>
+      </div>
+      <ul class="detail-items">
+        <li class="coupon">
+          <form ui-slot="input-wrapper" data-size="lg" ui-summary-box="coupon-form">
+            <div ui-slot="input-icon">
+              {% render 'misc.icon', name: 'hgi-discount' %}
+            </div>
+            <input
+              ui-slot="input"
+              type="text"
+              name="coupon_code"
+              data-coupon="coupon-input"
+              placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
+            >
+            <button ui-slot="input-button" type="submit" data-coupon="coupon-button">
+              {{ 'cart.page.coupon.apply' | t }}
+            </button>
+          </form>
+        </li>
+        <li class="item">
+          <span class="label">{{ 'order.coupon_code' | t }}</span>
+          <span ui-slot="kbd" class="value">
+            <span
+              ui-summary-box="coupon-code"
+              {% unless cart.coupon != null %}
+                hidden
+              {% endunless %}
+            >
+              {{ cart.coupon.code }}
+            </span>
+            <button
+              ui-slot="compact-button"
+              data-variant="ghost"
+              data-size="lg"
+              data-full-radius="true"
+              aria-label="remove"
+              ui-summary-box="remove-coupon"
+            >
+              {% render 'misc.icon', name: 'hgi-cancel-01' %}
+            </button>
+          </span>
+        </li>
+        <li class="item">
+          <span class="label">{{ 'cart.page.summary.subtotal' | t }}</span>
+          <span class="value" ui-cart-item="subtotal" ui-summary-box="subtotal">
+            {{- cart.sub_total | default: 0 | money -}}
+          </span>
+        </li>
+        <li class="item">
+          <span class="label">
+            {{ 'order.discount_amount' | t }}
+          </span>
+          <span
+            class="value"
+            ui-summary-box="discount"
+            {% unless cart.coupon != null %}
+              hidden
+            {% endunless %}
+          >
+            {% render 'const.discount-value', coupon: cart.coupon %}
+          </span>
+        </li>
+        <li class="item">
+          <span class="label">{{ 'cart.page.summary.total' | t }}</span>
+          <span class="value" ui-summary-box="total">{{ cart.discounted_sub_total | default: 0 | money }}</span>
+        </li>
+      </ul>
+      <div class="cta">
+        <a
+          href="{{ cart.cart_submit_url }}"
+          ui-slot="button"
+          data-variant="neutral"
+          data-mode="stroke"
+          data-size="md"
+          data-flip-icon-in-rtl
+        >
+          {{ 'cart.page.summary.checkout_button' | t }}
+          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+        </a>
+      </div>
+    </ui-summary-box>
+    {% assign empty_content = 'cart.empty.title' | t %}
+    {% if cart.items.size > 0 %}
+      {% render 'misc.empty', heading: empty_content, hidden: true %}
+    {% else %}
+      {% render 'misc.empty', heading: empty_content %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Cart",
+  "templates": ["cart"],
+  "limit": 1
+}
+{% endschema %}

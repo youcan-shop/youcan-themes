@@ -1,0 +1,45 @@
+{% comment %}
+  Renders an inventory status
+
+  Accepts:
+  - count: {Number} Inventory number
+  - threshold: {Number} Inventory threshold
+  - show_count: {Boolean} Toggle inventory count visibility
+
+  Usage:
+  {% render 'const.inventory-status', count: 10, threshold: 24 %}
+{% endcomment %}
+
+<div
+  ui-slot="status-badge"
+  data-variant="light"
+  {% if count == 0 or count == null %}
+    data-status="disabled"
+  {% elsif count > threshold %}
+    data-status="completed"
+  {% else %}
+    data-status="pending"
+  {% endif %}
+  data-product-item="inventory"
+  data-threshold="{{ threshold }}"
+  data-show-count="{{ show_count }}"
+>
+  <span ui-slot="badge-dot"></span>
+  <span class="value">
+    {% if count == 0 %}
+      {{ 'product.inventory_out_of_stock' | t }}
+    {% elsif count > threshold %}
+      {% if show_count %}
+        {{ 'product.inventory_in_stock_show_count' | t | replace: '%', count }}
+      {% else %}
+        {{ 'product.inventory_in_stock' | t }}
+      {% endif %}
+    {% else %}
+      {% if show_count %}
+        {{ 'product.inventory_low_stock_show_count' | t | replace: '%', count }}
+      {% else %}
+        {{ 'product.inventory_low_stock' | t }}
+      {% endif %}
+    {% endif %}
+  </span>
+</div>

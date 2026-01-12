@@ -1,0 +1,69 @@
+{% comment %}
+  Renders a product card (Block)
+
+  Accepts:
+  - product: {Object} Product info,
+  - youcan_attributes: {String} (optional) YouCan attributes (allow blocks to be highlighted in the theme editor)
+
+  Usage:
+  {% render 'block.product', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<li ui-block="product" {{ youcan_attributes }}>
+  <a href="{{ product.url }}" class="media">
+    {% if product.preview_image %}
+      <img
+        srcset="
+          {{ product.preview_image.medium }} 480w,
+          {{ product.preview_image.large }} 800w,
+          {{ product.preview_image.original }} 1200w
+        "
+        sizes="
+          (max-width: 640px) 50vw,
+          (max-width: 768px) 33vw,
+          (max-width: 1024px) 25vw,
+          33vw
+        "
+        src="{{ product.preview_image.original }}"
+        alt="{{ product.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
+  </a>
+  <div class="content">
+    <div class="info">
+      <a ui-slot="link-button" data-variant="black" data-size="md" class="title" href="{{ product.url }}">
+        {% assign placeholder = 'product.title' | t %}
+        {{ product.name | default: placeholder }}
+      </a>
+      <div class="price">
+        <span class="original-price">
+          {{ price | default: 0 | money }}
+        </span>
+        {% if compare_at_price %}
+          <span class="compare-at-price">
+            {{ compare_at_price | default: 0 | money }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+    {% if product.variants.size > 1 %}
+      {% render 'core.shop-button',
+        product: product,
+        is_express_checkout: true,
+        as_icon: true,
+        size: 'sm',
+        mode: 'lighter'
+      %}
+    {% else %}
+      {% render 'core.shop-button', product: product, as_icon: true, size: 'sm', mode: 'lighter' %}
+    {% endif %}
+  </div>
+</li>

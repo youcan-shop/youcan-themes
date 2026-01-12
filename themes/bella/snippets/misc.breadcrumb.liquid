@@ -1,0 +1,31 @@
+{% comment %}
+  Renders a breadcrumb component
+
+  Usage:
+  {% render 'misc.breadcrumb'%}
+{% endcomment %}
+
+{% unless template.name == 'index' %}
+  <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb" style="margin-block-end: 32px;">
+    <ol ui-slot="breadcrumb-group">
+      <li ui-slot="breadcrumb-item">
+        <a href="/"> {{ 'navigation.home' | t }} </a>
+      </li>
+      {% unless category %}
+        <li ui-slot="breadcrumb-item">
+          <a href="/" aria-current="page">
+            {{ 'templates.' | append: template.name | t }}
+          </a>
+        </li>
+      {% endunless %}
+      {% if category %}
+        <li ui-slot="breadcrumb-item">
+          <a href="/collections"> {{ 'navigation.collections' | t }} </a>
+        </li>
+        <li ui-slot="breadcrumb-item">
+          <a href="/" aria-current="page"> {{ category.name }} </a>
+        </li>
+      {% endif %}
+    </ol>
+  </nav>
+{% endunless %}
