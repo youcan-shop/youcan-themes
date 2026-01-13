@@ -5,31 +5,69 @@
   {% render 'misc.menu-drawer' %}
 {% endcomment %}
 
-<div ui-slot="drawer" class="menu">
+<div ui-slot="sheet" class="menu">
   <button
     ui-slot="button"
     data-variant="neutral"
-    data-mode="stroke"
+    data-mode="ghost"
     data-size="md"
     data-as-icon
     aria-label="Menu"
     popovertarget="menu"
   >
-    {% render 'misc.icon', name: 'hgi-menu-03' %}
+    {% render 'misc.icon', name: 'hgi-menu-01' %}
   </button>
-  <div ui-slot="drawer-content" id="menu" popover>
-    <div ui-slot="drawer-header">
-      <h2 ui-slot="drawer-title">{{ 'header.menu.name' | t }}</h2>
+  <div ui-slot="sheet-content" id="menu" popover>
+    <div ui-slot="sheet-header">
+      <div class="logo">
+        <a class="name" ui-slot="link-button" data-variant="black" href="/">
+          {{ store.name }}
+        </a>
+      </div>
+      <button
+        ui-slot="button"
+        data-variant="neutral"
+        data-mode="lighter"
+        data-size="md"
+        aria-label="Close"
+        popovertarget="menu"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
     </div>
-    <div ui-slot="drawer-body">
-      <ul class="sm-links">
+    <div ui-slot="sheet-body">
+      <ul class="mobile-links">
         {% for link in main-link-list.links %}
           <li class="link">
-            <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" href="{{ link.url }}">
+            <a ui-slot="link-button" data-variant="black" data-size="lg" href="{{ link.url }}">
               {{ link.title }}
             </a>
           </li>
         {% endfor %}
+      </ul>
+    </div>
+    <div ui-slot="sheet-footer">
+      <ul class="social-links">
+        <li class="link">
+          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Facebook">
+            {% render 'misc.icon', name: 'hgi-facebook-02' %}
+          </a>
+        </li>
+        <li class="link">
+          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Snapchat">
+            {% render 'misc.icon', name: 'hgi-snapchat' %}
+          </a>
+        </li>
+        <li class="link">
+          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Instagram">
+            {% render 'misc.icon', name: 'hgi-instagram' %}
+          </a>
+        </li>
+        <li class="link">
+          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="TikTok">
+            {% render 'misc.icon', name: 'hgi-tiktok' %}
+          </a>
+        </li>
       </ul>
     </div>
   </div>
