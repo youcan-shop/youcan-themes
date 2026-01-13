@@ -1,0 +1,36 @@
+{{ 'section.navbar.css' | asset_url | stylesheet_tag }}
+
+<div ui-layout="navbar">
+  {% render 'misc.menu-drawer' %}
+  <div class="logo">
+    <a class="name" ui-slot="link-button" data-variant="black" href="/">
+      {{ store.name }}
+    </a>
+  </div>
+  <ul class="links">
+    {% for link in main-link-list.links %}
+      <li class="link">
+        <a ui-slot="link-button" data-variant="black" data-size="md" href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="actions">
+    <button ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="md" aria-label="Search">
+      {% render 'misc.icon', name: 'hgi-search-01' %}
+    </button>
+    <button ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="md" aria-label="Cart">
+      {% render 'misc.icon', name: 'hgi-shopping-basket-03' %}
+    </button>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Navbar",
+  "tag": "header",
+  "limit": 1,
+  "settings": []
+}
+{% endschema %}
