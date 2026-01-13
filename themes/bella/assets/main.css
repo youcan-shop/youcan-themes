@@ -1156,11 +1156,15 @@ hr[ui-slot=divider][data-variant=line]{
   justify-content:center;
   width:-moz-fit-content;
   width:fit-content;
-  transition:color 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
-  transition:color var(--transition-standard-default-spatial);
+  transition:500ms cubic-bezier(0.27, 1.06, 0.18, 1);
+  transition:var(--transition-standard-default-spatial);
+  transition-property:color, background-size;
+  background:linear-gradient(to right, currentcolor, currentcolor) 0 1px/0 1px no-repeat;
   color:var(--color-link-button);
   gap:4px;
   gap:var(--spacing-4);
+  background-position-x:right;
+  background-position-y:bottom;
 }
 a[ui-slot=link-button]{
   -webkit-text-decoration:none;
@@ -1170,17 +1174,6 @@ button[ui-slot=link-button]{
   border:none;
   background-color:transparent;
 }
-[ui-slot=link-button]::before{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:1px;
-  transition:opacity 350ms cubic-bezier(0.27, 1.06, 0.18, 1);
-  transition:opacity var(--transition-standard-fast-spatial);
-  background-color:currentcolor;
-  bottom:0;
-  bottom:var(--spacing-0);
-}
 [ui-slot=link-button]{
 }
 [ui-slot=link-button] > i{
@@ -1189,8 +1182,8 @@ button[ui-slot=link-button]{
 }
 [ui-slot=link-button]{
 }
-[ui-slot=link-button]:not([data-underline=true])::before{
-  opacity:0;
+[ui-slot=link-button][data-underline=true]{
+  background-size:100% 1px;
 }
 [ui-slot=link-button]{
 }
@@ -1231,15 +1224,15 @@ button[ui-slot=link-button]{
 [ui-slot=link-button]{
 }
 [ui-slot=link-button]:hover:not(:disabled):not([aria-disabled=true]){
+  background-size:100% 1px;
   color:color-mix(in srgb, var(--color-link-button), hsl(67, 5%, 10%) 30%);
+  background-position-x:left;
+  background-position-y:bottom;
 }
 @supports (color: color-mix(in lch, red, blue)){
 [ui-slot=link-button]:hover:not(:disabled):not([aria-disabled=true]){
   color:color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
 }
-}
-[ui-slot=link-button]:hover:not(:disabled):not([aria-disabled=true])::before{
-  opacity:1;
 }
 [ui-slot=status-badge]{
   --icon-size:16px;
