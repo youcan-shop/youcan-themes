@@ -1,0 +1,31 @@
+{% comment %}
+  Renders a slide item (Block)
+
+  Accepts:
+    - slide: {Object} Item info
+
+  Usage:
+  {% render 'block.slide' %}
+{% endcomment %}
+
+<li
+  ui-block="slide"
+  ui-slot="carousel-item"
+  {{ slide.youcan_attributes }}
+>
+  <div class="media" style="background-color: var(--color-{{ slide }}-container);"></div>
+  <div class="content">
+    <h4 class="subheading">Wellness Care</h4>
+    <h1 class="heading">Beauty, Starts from within</h1>
+    <a
+      class="cta"
+      ui-slot="button"
+      data-variant="neutral"
+      data-mode="filled"
+      data-size="lg"
+      href="/"
+    >
+      See All Collections
+    </a>
+  </div>
+</li>
