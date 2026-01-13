@@ -18,7 +18,6 @@
 [ui-slot="accordion"] {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-24);
 
   /* Item */
   [ui-slot="accordion-item"] {
@@ -27,15 +26,15 @@
     flex-direction: column;
     overflow: hidden;
     transition: background-color var(--transition-standard-default-spatial);
-    border: 1px solid var(--color-surface-variant);
-    border-radius: calc(var(--radius-12) - var(--spacing-2));
+    border-block-end: 1px solid var(--color-surface-variant);
 
     /* Trigger */
     [ui-slot="accordion-trigger"] {
       display: flex;
+      position: relative;
       align-items: center;
-      padding: var(--spacing-14);
-      font: var(--font-body-md);
+      padding-block: var(--spacing-24);
+      font: var(--font-title-md);
       cursor: pointer;
       user-select: none;
       gap: var(--spacing-10);
@@ -50,6 +49,22 @@
         flex-shrink: 0;
         font-size: 20px;
       }
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 1.5px;
+        transition: transform var(--transition-standard-default-spatial);
+        border-radius: var(--radius-rounded);
+        background-color: currentcolor;
+        inset-inline-end: 0;
+      }
+
+      &::after {
+        transform: rotate(90deg);
+      }
     }
 
     /* Content */
@@ -57,24 +72,22 @@
       display: grid;
       grid-template-rows: 0fr;
       padding-block-end: var(--spacing-0);
-      padding-inline: var(--spacing-14);
       transition: all var(--transition-expressive-default-spatial);
       color: var(--color-on-surface-variant);
-      font: var(--font-body-md);
+      font: var(--font-body-lg);
 
       & > * {
         overflow: hidden;
       }
     }
 
-    /* Hover */
-    &:has([ui-slot="accordion-trigger"]:where(:hover, :focus-within)) {
-      background-color: var(--color-surface-container-high);
-    }
-
     /* Checked */
     &:has(input[type="checkbox"]:checked) {
-      background-color: var(--color-surface-container-high);
+      [ui-slot="accordion-trigger"] {
+        &::after {
+          transform: rotate(0deg);
+        }
+      }
 
       [ui-slot="accordion-content"] {
         grid-template-rows: 1fr;

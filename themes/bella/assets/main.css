@@ -1595,8 +1595,6 @@ button[ui-slot=link-button]{
 [ui-slot=accordion]{
   display:flex;
   flex-direction:column;
-  gap:24px;
-  gap:var(--spacing-24);
 }
 [ui-slot=accordion] [ui-slot=accordion-item]{
   display:flex;
@@ -1605,18 +1603,24 @@ button[ui-slot=link-button]{
   overflow:hidden;
   transition:background-color 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
   transition:background-color var(--transition-standard-default-spatial);
-  border:1px solid hsl(67, 15%, 90%);
-  border:1px solid var(--color-surface-variant);
-  border-radius:calc(12px - 2px);
-  border-radius:calc(var(--radius-12) - var(--spacing-2));
+  border-bottom:1px solid hsl(67, 15%, 90%);
+  border-bottom:1px solid hsl(
+    67
+      max(2%, min(15%, 15%))
+      max(85%, min(90%, 92%))
+  );
+  border-bottom:1px solid var(--color-surface-variant);
 }
 [ui-slot=accordion] [ui-slot=accordion-item] [ui-slot=accordion-trigger]{
   display:flex;
+  position:relative;
   align-items:center;
-  padding:14px;
-  padding:var(--spacing-14);
-  font:400 14px/20px "DM Sans", "Almarai", sans-serif;
-  font:var(--font-body-md);
+  padding-top:24px;
+  padding-bottom:24px;
+  padding-top:var(--spacing-24);
+  padding-bottom:var(--spacing-24);
+  font:500 16px/24px "DM Sans", "Almarai", sans-serif;
+  font:var(--font-title-md);
   cursor:pointer;
   -webkit-user-select:none;
      -moz-user-select:none;
@@ -1633,6 +1637,21 @@ button[ui-slot=link-button]{
   flex-shrink:0;
   font-size:20px;
 }
+[ui-slot=accordion] [ui-slot=accordion-item] [ui-slot=accordion-trigger]::before, [ui-slot=accordion] [ui-slot=accordion-item] [ui-slot=accordion-trigger]::after{
+  content:"";
+  position:absolute;
+  width:16px;
+  height:1.5px;
+  transition:transform 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
+  transition:transform var(--transition-standard-default-spatial);
+  border-radius:calc(1px * infinity);
+  border-radius:var(--radius-rounded);
+  background-color:currentcolor;
+  right:0;
+}
+[ui-slot=accordion] [ui-slot=accordion-item] [ui-slot=accordion-trigger]::after{
+  transform:rotate(90deg);
+}
 [ui-slot=accordion] [ui-slot=accordion-item]{
 }
 [ui-slot=accordion] [ui-slot=accordion-item] [ui-slot=accordion-content]{
@@ -1640,31 +1659,20 @@ button[ui-slot=link-button]{
   grid-template-rows:0fr;
   padding-bottom:0;
   padding-bottom:var(--spacing-0);
-  padding-left:14px;
-  padding-right:14px;
-  padding-left:var(--spacing-14);
-  padding-right:var(--spacing-14);
   transition:all 500ms cubic-bezier(0.38, 1.21, 0.22, 1);
   transition:all var(--transition-expressive-default-spatial);
   color:hsl(67, 15%, 30%);
   color:var(--color-on-surface-variant);
-  font:400 14px/20px "DM Sans", "Almarai", sans-serif;
-  font:var(--font-body-md);
+  font:400 16px/24px "DM Sans", "Almarai", sans-serif;
+  font:var(--font-body-lg);
 }
 [ui-slot=accordion] [ui-slot=accordion-item] [ui-slot=accordion-content] > *{
   overflow:hidden;
 }
 [ui-slot=accordion] [ui-slot=accordion-item]{
 }
-[ui-slot=accordion] [ui-slot=accordion-item]:has([ui-slot=accordion-trigger]:where(:hover, :focus-within)){
-  background-color:hsl(67, 5%, 92%);
-  background-color:var(--color-surface-container-high);
-}
-[ui-slot=accordion] [ui-slot=accordion-item]{
-}
-[ui-slot=accordion] [ui-slot=accordion-item]:has(input[type=checkbox]:checked){
-  background-color:hsl(67, 5%, 92%);
-  background-color:var(--color-surface-container-high);
+[ui-slot=accordion] [ui-slot=accordion-item]:has(input[type=checkbox]:checked) [ui-slot=accordion-trigger]::after{
+  transform:rotate(0deg);
 }
 [ui-slot=accordion] [ui-slot=accordion-item]:has(input[type=checkbox]:checked) [ui-slot=accordion-content]{
   grid-template-rows:1fr;
