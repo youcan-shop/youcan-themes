@@ -1,0 +1,19 @@
+{{ 'section.slideshow.css' | asset_url | stylesheet_tag }}
+
+{% assign variants = 'primary,secondary,tertiary' %}
+{% assign slides = variants | split: ',' %}
+
+<div ui-section="slideshow">
+  <ul ui-slot="carousel" aria-orientation="vertical" data-align="center">
+    {% for slide in slides %}
+      {% render 'block.slide' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "Slideshow",
+  "templates": ["index"]
+}
+{% endschema %}
