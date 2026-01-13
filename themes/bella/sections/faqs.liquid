@@ -1,0 +1,31 @@
+{{ 'section.faqs.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="faqs">
+  <div class="content-area">
+    <h4 class="subheading">We got you covered</h4>
+    <h1 class="heading">Help Center</h1>
+    <p class="description">Find quick solutions to your queries from product details, to returns and exchanges.</p>
+    <a
+      class="cta"
+      ui-slot="button"
+      data-variant="neutral"
+      data-mode="filled"
+      data-size="lg"
+      href="/"
+    >
+      Contact Us
+    </a>
+  </div>
+  <ul class="items-area" ui-slot="accordion">
+    {% for faq in (1..4) %}
+      {% render 'block.faq' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "FAQs",
+  "templates": ["index"]
+}
+{% endschema %}
