@@ -1,18 +1,55 @@
 {{ 'section.footer.css' | asset_url | stylesheet_tag }}
 
 <div ui-layout="footer">
-  {{ 'footer.copyright.title' | t }}
-  <a
-    ui-slot="link-button"
-    data-variant="black"
-    data-size="md"
-    data-underline="true"
-    href="https://youcan.shop"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    {{ 'footer.copyright.platform' | t }}
-  </a>
+  <div class="main-area">
+    <div class="logo">
+      <a class="name" ui-slot="link-button" data-variant="black" href="/">{{ store.name }}</a>
+    </div>
+    <div class="groups">
+      {% for list in link-lists %}
+        {% if list.links | count > 0  and list != main-link-list %}
+          <div class="group">
+            <h4 class="title">{{ list.title }}</h4>
+            <ul class="links">
+              {% for link in list.links %}
+                <li class="link">
+                  <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  <hr ui-slot="divider" data-variant="line">
+  <div class="secondary-area">
+    <span class="copyright"> ©2026. All Rights Reserved. </span>
+    <ul class="social-links">
+      <li class="link">
+        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Facebook">
+          {% render 'misc.icon', name: 'hgi-facebook-02' %}
+        </a>
+      </li>
+      <li class="link">
+        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Snapchat">
+          {% render 'misc.icon', name: 'hgi-snapchat' %}
+        </a>
+      </li>
+      <li class="link">
+        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Instagram">
+          {% render 'misc.icon', name: 'hgi-instagram' %}
+        </a>
+      </li>
+      <li class="link">
+        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="TikTok">
+          {% render 'misc.icon', name: 'hgi-tiktok' %}
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
 {% schema %}
 {
