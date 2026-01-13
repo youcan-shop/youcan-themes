@@ -1,0 +1,20 @@
+{{ 'section.feature-list.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="feature-list">
+  <div class="head-area">
+    <h4 class="subheading">Explore our line</h4>
+    <h1 class="heading">Discover Radiance</h1>
+  </div>
+  <ul class="items-area">
+    {% for feature-item in (1..8) %}
+      {% render 'block.feature-item' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "Feature List",
+  "templates": ["index"]
+}
+{% endschema %}
