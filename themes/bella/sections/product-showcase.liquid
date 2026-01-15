@@ -1,0 +1,45 @@
+{{ 'section.product-showcase.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="product-showcase">
+  <div class="head-area">
+    <div class="content">
+      <h4 class="subheading">Our self care collections</h4>
+      <h1 class="heading">A holistic wellness & beauty line</h1>
+      <p class="description">We create safe products that really work and are designed to make you feel good</p>
+    </div>
+    <div class="actions">
+      <button
+        ui-slot="button"
+        data-variant="neutral"
+        data-mode="stroke"
+        data-size="lg"
+        data-as-icon
+        aria-label="Previous"
+      >
+        {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+      </button>
+      <button
+        ui-slot="button"
+        data-variant="neutral"
+        data-mode="stroke"
+        data-size="lg"
+        data-as-icon
+        aria-label="Next"
+      >
+        {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+      </button>
+    </div>
+  </div>
+  <ul class="items-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+    {% for product in (1..4) %}
+      {% render 'block.showcase' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "Product Showcase",
+  "templates": ["index"]
+}
+{% endschema %}
