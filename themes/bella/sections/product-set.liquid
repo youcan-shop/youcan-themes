@@ -1,0 +1,31 @@
+{{ 'section.product-set.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="product-set">
+  <div class="media-area">
+    {% render 'misc.image-fallback' %}
+  </div>
+  <div class="core-area">
+    <div class="head-box">
+      <h4 class="subheading">Explore our line</h4>
+      <h1 class="heading">Discover Radiance</h1>
+    </div>
+    <ul class="items-box">
+      {% for product in (1..3) %}
+        {% render 'block.product-item' %}
+      {% endfor %}
+    </ul>
+    <div class="cta-box">
+      <button ui-slot="button" data-variant="neutral" data-mode="filled" data-size="lg">
+        {% render 'misc.icon', name: 'hgi-shopping-bag-01' %}
+        Add All to Cart - 8,200 MAD
+      </button>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Feature List",
+  "templates": ["index"]
+}
+{% endschema %}
