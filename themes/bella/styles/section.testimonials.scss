@@ -1,0 +1,124 @@
+[ui-section="testimonials"] {
+  --per-page: 3;
+  --gap: var(--spacing-32);
+  --item-size: 75%;
+
+  display: grid;
+  gap: var(--spacing-48);
+
+  .head-area {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-24);
+    width: 100%;
+    padding-inline: 8%;
+
+    .content {
+      display: grid;
+      gap: var(--spacing-16);
+
+      .subheading {
+        font: var(--font-body-lg);
+      }
+
+      .heading {
+        font: var(--font-display-md);
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: var(--spacing-16);
+    }
+  }
+
+  .items-area {
+    padding-inline: 8%;
+
+    [ui-block="testimonial"] {
+      display: grid;
+      overflow: hidden;
+      border: 1px solid var(--color-surface-variant);
+      border-radius: var(--radius-20);
+
+      .media {
+        height: 30vh;
+
+        & > img {
+          object-fit: cover;
+        }
+      }
+
+      .content {
+        display: grid;
+        gap: var(--spacing-16);
+        padding: var(--spacing-24);
+        border-block-start: 1px solid var(--color-surface-variant);
+
+        .info {
+          display: grid;
+          gap: var(--spacing-16);
+
+          .author {
+            font: var(--font-title-md);
+          }
+
+          .review {
+            color: var(--color-on-surface-variant);
+            text-wrap: balance;
+          }
+        }
+
+        .product {
+          display: flex;
+          gap: var(--spacing-16);
+          align-items: center;
+
+          .image {
+            width: 56px;
+            height: 56px;
+            overflow: hidden;
+            border: 1px solid var(--color-surface-variant);
+            border-radius: var(--radius-12);
+          }
+        }
+      }
+    }
+  }
+
+  @media (width <= 1280px) {
+    --per-page: 2;
+  }
+
+  @media (width <= 1028px) {
+    --per-page: 1;
+
+    .head-area {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+
+      .actions {
+        justify-content: center;
+      }
+    }
+  }
+
+  @media (width <= 769px) {
+    --item-size: 84%;
+
+    .head-area {
+      padding-inline: var(--spacing-0);
+
+      .content {
+        .heading {
+          font: var(--font-headline-lg);
+        }
+      }
+    }
+
+    .items-area {
+      padding-inline: var(--spacing-24);
+    }
+  }
+}
