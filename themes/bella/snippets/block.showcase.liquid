@@ -1,0 +1,49 @@
+{% comment %}
+  Renders a product showcase item (Block)
+
+  Accepts:
+  - product: {Object} Item info
+
+  Usage:
+  {% render 'block.showcase', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<li ui-block="showcase" ui-slot="carousel-item" {{ product.youcan_attributes }}>
+  <a href="{{ product.url }}" class="media">
+    {% render 'misc.image-fallback', icon_size: 40 %}
+  </a>
+  <div class="content">
+    <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/">
+      {% assign placeholder = 'product.title' | t %}
+      {{ product.name | default: placeholder }}
+    </a>
+    <div class="price">
+      <span class="original-price">
+        {{ price | default: 0 | money }}
+      </span>
+      {% if compare_at_price %}
+        <s class="compare-at-price">
+          {{ compare_at_price | default: 0 | money }}
+        </s>
+      {% endif %}
+    </div>
+    <article class="description">
+      Discover scents similar to YSL Libre and find your perfect fragrance. Complete your collection with our curated selection of complementary
+      perfumes and colognes.
+    </article>
+    <a
+      class="cta"
+      ui-slot="button"
+      data-variant="neutral"
+      data-mode="filled"
+      data-size="lg"
+      href="{{ product.url }}"
+    >
+      Add to Cart
+    </a>
+  </div>
+</li>
