@@ -1,0 +1,40 @@
+{{ 'section.featured-collection.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="featured-collection">
+  <div class="head-area">
+    <h4 class="subheading">Explore our line</h4>
+    <h1 class="heading">Discover Radiance</h1>
+  </div>
+  <div class="core-area">
+    <div ui-block="content">
+      <div class="media">
+        {% render 'misc.image-fallback' %}
+      </div>
+      <div class="content">
+        <h4 class="subheading">Care for your skin</h4>
+        <h1 class="heading">Made for sensitive skin</h1>
+        <button
+          class="cta"
+          ui-slot="button"
+          data-variant="neutral"
+          data-mode="filled"
+          data-size="lg"
+        >
+          Shop All Products
+        </button>
+      </div>
+    </div>
+    <ul ui-block="products">
+      {% for product in (1..4) %}
+        {% render 'block.product' %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Featured Collection",
+  "templates": ["index"]
+}
+{% endschema %}
