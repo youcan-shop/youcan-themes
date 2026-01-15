@@ -1,0 +1,33 @@
+{% comment %}
+  Renders a testimonial item (Block)
+
+  Accepts:
+    - testimonial: {Object} Item info
+
+  Usage:
+  {% render 'block.testimonial' %}
+{% endcomment %}
+
+<li ui-block="testimonial" ui-slot="carousel-item" {{ testimonial.youcan_attributes }}>
+  <div class="media">
+    {% render 'misc.image-fallback' %}
+  </div>
+  <div class="content">
+    <div class="info">
+      <h5 class="author">Layla</h5>
+      <article class="review">
+        <p>
+          I've struggled with acne for years, but after using this product for just a few weeks, my skin is clear and radiant. I'm so grateful to have
+          found something that actually works!
+        </p>
+      </article>
+    </div>
+    <hr ui-slot="divider" data-variant="line">
+    <div class="product">
+      <a class="image" href="#">
+        {% render 'misc.image-fallback' %}
+      </a>
+      <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="#"> Clear Derm </a>
+    </div>
+  </div>
+</li>
