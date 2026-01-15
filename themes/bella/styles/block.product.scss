@@ -1,10 +1,13 @@
 [ui-block="product"] {
+  --product-height: 35vh;
+
   display: flex;
+  position: relative;
   flex-direction: column;
-  gap: var(--spacing-12);
+  gap: var(--spacing-16);
 
   .media {
-    height: 35vh;
+    height: var(--product-height);
     overflow: hidden;
     border: 1px solid var(--color-surface-variant);
     border-radius: var(--radius-12);
@@ -16,38 +19,71 @@
   }
 
   .content {
-    display: flex;
-    gap: var(--spacing-8);
-    justify-content: space-between;
+    display: grid;
+    gap: var(--spacing-4);
 
-    .info {
-      display: grid;
-      gap: var(--spacing-4);
+    .title {
+      display: block;
+      overflow: hidden;
+      font: var(--font-body-lg);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-      .title {
-        display: block;
-        width: auto;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+    .price {
+      font: var(--font-title-md);
 
-      .price {
-        color: var(--color-primary);
-
-        .compare-at-price {
-          opacity: 0.5;
-          text-decoration: line-through;
-        }
+      .compare-at-price {
+        opacity: 0.5;
       }
     }
   }
-}
 
-@media (width <= 769px) {
-  [ui-block="product"] {
-    .media {
-      height: 20vh;
+  .main-action {
+    visibility: hidden;
+    position: absolute;
+    left: 50%;
+    width: calc(100% - var(--spacing-48));
+    transform: translate(-50%, calc(var(--product-height) - 40px));
+    transition: var(--transition-expressive-slow-spatial);
+    opacity: 0;
+    filter: blur(2px);
+  }
+
+  .secondary-action {
+    position: absolute;
+    inset-inline-end: var(--spacing-12);
+    inset-block-start: calc(var(--product-height) - 40px - var(--spacing-12));
+  }
+
+  .badge {
+    position: absolute;
+    inset: 0;
+    margin: var(--spacing-12);
+  }
+
+  &:hover .main-action {
+    visibility: visible;
+    transform: translate(-50%, calc(var(--product-height) - 40px - var(--spacing-24)));
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  @media (width > 769px) {
+    .secondary-action {
+      display: none;
     }
+  }
+
+  @media (width <= 769px) {
+    --product-height: 30vh;
+
+    .main-action {
+      display: none;
+    }
+  }
+
+  @media (width <= 640px) {
+    --product-height: 20vh;
   }
 }
