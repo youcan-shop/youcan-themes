@@ -1,0 +1,25 @@
+{{ 'section.product-tabs.css' | asset_url | stylesheet_tag }}
+
+<div ui-section="product-tabs">
+  <div class="head-area">
+    <h1 class="heading">Our Best Sellers</h1>
+    <div class="tab-list" role="tablist">
+      <button ui-slot="link-button" data-variant="black" data-size="md" data-underline="true" role="tab">Skincare</button>
+      <button ui-slot="link-button" data-variant="gray" data-size="md" role="tab">Hair</button>
+      <button ui-slot="link-button" data-variant="gray" data-size="md" role="tab">Body</button>
+      <button ui-slot="link-button" data-variant="gray" data-size="md" role="tab">Sales & offers</button>
+    </div>
+  </div>
+  <ul class="products-area" role="tabpanel">
+    {% for product in (1..4) %}
+      {% render 'block.product' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "Product Showcase",
+  "templates": ["index"]
+}
+{% endschema %}
