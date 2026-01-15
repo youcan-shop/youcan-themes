@@ -1,10 +1,12 @@
 [ui-block=product]{
+  --product-height:35vh;
   display:flex;
+  position:relative;
   flex-direction:column;
-  gap:var(--spacing-12);
+  gap:var(--spacing-16);
 }
 [ui-block=product] .media{
-  height:35vh;
+  height:var(--product-height);
   overflow:hidden;
   border:1px solid var(--color-surface-variant);
   border-radius:var(--radius-12);
@@ -16,33 +18,67 @@
      object-fit:cover;
 }
 [ui-block=product] .content{
-  display:flex;
-  gap:var(--spacing-8);
-  justify-content:space-between;
-}
-[ui-block=product] .content .info{
   display:grid;
   grid-gap:var(--spacing-4);
   gap:var(--spacing-4);
 }
-[ui-block=product] .content .info .title{
+[ui-block=product] .content .title{
   display:block;
-  width:auto;
   overflow:hidden;
+  font:var(--font-body-lg);
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-[ui-block=product] .content .info .price{
-  color:var(--color-primary);
+[ui-block=product] .content .price{
+  font:var(--font-title-md);
 }
-[ui-block=product] .content .info .price .compare-at-price{
+[ui-block=product] .content .price .compare-at-price{
   opacity:0.5;
-  -webkit-text-decoration:line-through;
-  text-decoration:line-through;
 }
-
+[ui-block=product] .main-action{
+  visibility:hidden;
+  position:absolute;
+  left:50%;
+  width:calc(100% - var(--spacing-48));
+  transform:translate(-50%, calc(var(--product-height) - 40px));
+  transition:var(--transition-expressive-slow-spatial);
+  opacity:0;
+  filter:blur(2px);
+}
+[ui-block=product] .secondary-action{
+  position:absolute;
+  right:var(--spacing-12);
+  top:calc(var(--product-height) - 40px - var(--spacing-12));
+}
+[ui-block=product] .badge{
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  margin:var(--spacing-12);
+}
+[ui-block=product]:hover .main-action{
+  visibility:visible;
+  transform:translate(-50%, calc(var(--product-height) - 40px - var(--spacing-24)));
+  opacity:1;
+  filter:blur(0);
+}
+@media (min-width: 769.02px){
+  [ui-block=product] .secondary-action{
+    display:none;
+  }
+}
 @media (max-width: 769px){
-  [ui-block=product] .media{
-    height:20vh;
+  [ui-block=product]{
+    --product-height:30vh;
+  }
+  [ui-block=product] .main-action{
+    display:none;
+  }
+}
+@media (max-width: 640px){
+  [ui-block=product]{
+    --product-height:20vh;
   }
 }
