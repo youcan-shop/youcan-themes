@@ -1,27 +1,48 @@
 {{ 'section.single-collection.css' | asset_url | stylesheet_tag }}
 
 <div ui-section="single-collection">
-  {% paginate collection.products by 24 cod, category_id: category.id %}
-    {% if items.size > 0 %}
-      <ul class="list">
-        {% for product in items %}
-          {% render 'block.product', product: product %}
-        {% endfor %}
-      </ul>
+  {% render 'misc.breadcrumb' %}
+  <div class="head-area">
+    <h1 class="heading">{{ category.name }}</h1>
+    <p class="description">Well cared for skin is the key to clean, natural beauty</p>
+  </div>
+  <ul class="sub-collections-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+    {% for sub-collection in (1..5) %}
+      <li class="sub-collection" ui-slot="carousel-item">
+        <a href="#">
+          <div class="media">
+            {% render 'misc.image-fallback' %}
+          </div>
+          <h4 class="title">Sub Collection</h4>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <hr ui-slot="divider" data-variant="line">
+  <div class="core-area">
+    {% paginate collection.products by 24 cod, category_id: category.id %}
+      <div class="controller">
+        <h4 class="result">{{ items.size }} Products</h4>
+        <div class="sort">
+          <label for="sort">Sort by:</label>
+          {% render 'misc.sort', url: previous_page %}
+        </div>
+      </div>
+      {% if items.size > 0 %}
+        <ul class="items">
+          {% for product in items %}
+            {% render 'block.product', product: product %}
+          {% endfor %}
+        </ul>
 
-      {% render 'misc.pagination',
-        next_page_url: next_page,
-        previous_page_url: previous_page,
-        current: current,
-        last: last,
-        terms: terms
-      %}
+        {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
 
-    {% else %}
-      {% assign empty_content = 'single-collection.empty.title' | t %}
-      {% render 'misc.empty', heading: empty_content %}
-    {% endif %}
-  {% endpaginate %}
+      {% else %}
+        {% assign empty_content = 'single-collection.empty.title' | t %}
+        {% render 'misc.empty', heading: empty_content %}
+      {% endif %}
+    {% endpaginate %}
+  </div>
 </div>
 
 {% schema %}
