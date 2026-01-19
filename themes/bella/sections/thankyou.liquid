@@ -1,17 +1,28 @@
 {{ 'section.thankyou.css' | asset_url | stylesheet_tag }}
 
 <div ui-section="thankyou">
-  <div class="order-summary">
-    <div class="summary-head">
-      {% render 'const.payment-status', status: order.paymentStatusSlug %}
+  <div class="content-area">
+    <h1 class="heading">Thank you for your purchase!</h1>
+    <p class="description">Your order has been received and is being processed</p>
+  </div>
+  <div class="order-summary-area">
+    <div class="statuses">
+      <div class="item">
+        <span ui-slot="label">Status</span>
+        {% render 'const.payment-status', status: order.paymentStatusSlug %}
+      </div>
+      <div class="item">
+        <span ui-slot="label">{{ 'order.payment_method.label' | t }}:</span>
+        <span class="value">
+          {% assign payment_gateway = order.gatewayType %}
+          {% render 'const.payment-gateway', type: payment_gateway %}
+        </span>
+      </div>
     </div>
-    <div ui-slot="divider" role="separator" data-variant="solid-text">
-      {{ 'order.products' | t }}
-    </div>
-    <div class="order-info">
+    <div class="products">
       {% for product in order.order_variants %}
         <div class="product">
-          <div class="image">
+          <div class="media">
             {% if product.image %}
               <img
                 src="{{ product.image }}"
@@ -24,40 +35,36 @@
             {% endif %}
           </div>
           <div class="content">
-            <span class="title">{{ product.name }}</span>
+            <a
+              ui-slot="link-button"
+              data-variant="black"
+              data-size="md"
+              class="title"
+              href="{{ product.url }}"
+            >
+              {{ product.name }}
+            </a>
             <span class="count">x{{ product.quantity }}</span>
           </div>
-          <div class="value">{{ product.price | default: 0 | money }}</div>
+          <span class="price">{{ product.price | default: 0 | money }}</span>
         </div>
+        {% unless forloop.last %}
+          <hr ui-slot="divider" data-variant="line">
+        {% endunless %}
       {% endfor %}
     </div>
-    <div ui-slot="divider" role="separator" data-variant="solid-text">
-      {{ 'order.payment' | t }}
-    </div>
-    <div class="order-info">
+    <div class="summary">
       <div class="item">
-        <span class="label">{{ 'order.payment_method.label' | t }}:</span>
-        <span class="value">
-          {% assign payment_gateway = order.gatewayType %}
-          {% render 'const.payment-gateway', type: payment_gateway %}
-        </span>
-      </div>
-    </div>
-    <div ui-slot="divider" role="separator" data-variant="solid-text">
-      {{ 'order.order_summary' | t }}
-    </div>
-    <div class="order-info">
-      <div class="item">
-        <span class="label">{{ 'order.subtotal' | t }}</span>
+        <span ui-slot="label">{{ 'order.subtotal' | t }}</span>
         <span class="value">{{ order.sub_total | default: 0 | money }}</span>
       </div>
       {% if order.coupon != null %}
         <div class="item">
-          <span class="label">{{ 'order.coupon_code' | t }}</span>
+          <span ui-slot="label">{{ 'order.coupon_code' | t }}</span>
           <div class="value">{{ order.coupon.code }}</div>
         </div>
         <div class="item">
-          <span class="label">{{ 'order.discount_amount' | t }}</span>
+          <span ui-slot="label">{{ 'order.discount_amount' | t }}</span>
           <span class="value">
             {% render 'const.discount-value', coupon: order.coupon %}
           </span>
@@ -65,12 +72,12 @@
       {% endif %}
       {% if order.vat != 0 %}
         <div class="item">
-          <span class="label">{{ 'cart.page.summary.vat' | t }} ({{ order.vat | times: 100 | append: '%' }})</span>
+          <span ui-slot="label">{{ 'cart.page.summary.vat' | t }} ({{ order.vat | times: 100 | append: '%' }})</span>
           <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
         </div>
       {% endif %}
       <div class="item">
-        <span class="label">{{ 'order.shipping' | t }}</span>
+        <span ui-slot="label">{{ 'order.shipping' | t }}</span>
         {% if order.shippingCost == 0 or order.shippingCost == null %}
           {% assign shipping_cost = 'order.free' | t %}
         {% else %}
@@ -78,20 +85,21 @@
         {% endif %}
         <span class="value">{{ shipping_cost }}</span>
       </div>
+      <hr ui-slot="divider" data-variant="line">
       <div class="item">
-        <span class="label">{{ 'order.total' | t }}</span>
-        <span class="value total">{{ order.total | default: 0 | money }}</span>
+        <span ui-slot="label">{{ 'order.total' | t }}</span>
+        <span class="value">{{ order.total | default: 0 | money }}</span>
       </div>
-      <a
-        href="{{ routes.root_url |  default: "/" }}"
-        ui-slot="button"
-        data-variant="neutral"
-        data-mode="stroke"
-        data-size="lg"
-      >
-        {{ 'order.action' | t }}
-      </a>
     </div>
+    <a
+      ui-slot="button"
+      data-variant="neutral"
+      data-mode="filled"
+      data-size="lg"
+      href="{{ routes.root_url |  default: "/" }}"
+    >
+      {{ 'order.action' | t }}
+    </a>
   </div>
 </div>
 
