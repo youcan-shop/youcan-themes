@@ -3,13 +3,24 @@
 {% assign variants = 'primary,secondary,tertiary' %}
 {% assign slides = variants | split: ',' %}
 
-<div ui-section="slideshow">
-  <ul ui-slot="carousel" aria-orientation="vertical" data-align="center">
+<ui-carousel ui-section="slideshow">
+  <ul ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
     {% for slide in slides %}
       {% render 'block.slide' %}
     {% endfor %}
   </ul>
-</div>
+  <div class="pagination">
+    {% for marker in slides %}
+      <button
+        ui-carousel="marker"
+        aria-label="{{ marker }}"
+        {% if forloop.first %}
+          aria-selected="true"
+        {% endif %}
+      ></button>
+    {% endfor %}
+  </div>
+</ui-carousel>
 
 {% schema %}
 {

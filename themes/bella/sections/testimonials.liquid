@@ -1,6 +1,6 @@
 {{ 'section.testimonials.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="testimonials">
+<ui-carousel ui-section="testimonials">
   <div class="head-area">
     <div class="content">
       <h4 class="subheading">Explore our line</h4>
@@ -8,6 +8,7 @@
     </div>
     <div class="actions">
       <button
+        ui-carousel="arrow-previous"
         ui-slot="button"
         data-variant="neutral"
         data-mode="stroke"
@@ -18,6 +19,7 @@
         {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
       </button>
       <button
+        ui-carousel="arrow-next"
         ui-slot="button"
         data-variant="neutral"
         data-mode="stroke"
@@ -29,12 +31,12 @@
       </button>
     </div>
   </div>
-  <ul class="items-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+  <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
     {% for testimonial in (1..8) %}
       {% render 'block.testimonial' %}
     {% endfor %}
   </ul>
-</div>
+</ui-carousel>
 
 {% schema %}
 {
