@@ -1,12 +1,13 @@
 {{ 'section.collections.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="collections">
+<ui-carousel ui-section="collections">
   <div class="content-area">
     <h4 class="subheading">Our self care collections</h4>
     <h1 class="heading">A holistic wellness & beauty line</h1>
     <p class="description">We create safe products that really work and are designed to make you feel good</p>
     <div class="actions">
       <button
+        ui-carousel="arrow-previous"
         ui-slot="button"
         data-variant="neutral"
         data-mode="stroke"
@@ -17,6 +18,7 @@
         {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
       </button>
       <button
+        ui-carousel="arrow-next"
         ui-slot="button"
         data-variant="neutral"
         data-mode="stroke"
@@ -28,12 +30,12 @@
       </button>
     </div>
   </div>
-  <ul class="items-area" ui-slot="carousel" aria-orientation="vertical">
+  <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
     {% for collection in (1..4) %}
       {% render 'block.collection' %}
     {% endfor %}
   </ul>
-</div>
+</ui-carousel>
 
 {% schema %}
 {
