@@ -1,0 +1,80 @@
+{{ 'misc.search.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a search drawer
+
+  Usage:
+  {% render 'misc.search' %}
+{% endcomment %}
+
+<div ui-slot="sheet" class="search">
+  <button
+    ui-slot="button"
+    data-variant="neutral"
+    data-mode="ghost"
+    data-size="md"
+    data-as-icon
+    aria-label="Search"
+    popovertarget="search"
+  >
+    {% render 'misc.icon', name: 'hgi-search-01' %}
+  </button>
+  <div ui-slot="sheet-content" id="search" popover>
+    <div ui-slot="sheet-header">
+      <h3 ui-slot="sheet-title">Search</h3>
+      <button
+        ui-slot="button"
+        data-variant="neutral"
+        data-mode="lighter"
+        data-size="md"
+        aria-label="Close"
+        popovertarget="search"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
+    </div>
+    <div ui-slot="sheet-body">
+      <form action="/search">
+        <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
+          <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
+          <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.drawer.placeholder' | t }}">
+          <button ui-slot="input-button">{{ 'search.drawer.action' | t }}</button>
+        </fieldset>
+      </form>
+      <div class="terms">
+        <h4 class="label">Most searched terms</h4>
+        <div class="options">
+          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Skincare</a>
+          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Lipstick</a>
+          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Moisturizer</a>
+        </div>
+      </div>
+      <hr ui-slot="divider" data-variant="line">
+      <div class="products">
+        <h4 class="label">Most searched products</h4>
+        <div class="items">
+          {% for product in (1..4) %}
+            <div class="item">
+              <div class="media">
+                {% render 'misc.image-fallback' %}
+              </div>
+              <div class="content">
+                <a
+                  class="title"
+                  ui-slot="link-button"
+                  data-variant="black"
+                  data-size="md"
+                  class="title"
+                  href="#"
+                >
+                  Product item
+                </a>
+                <span class="price">{{ 0 | money }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
