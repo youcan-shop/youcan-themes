@@ -9,10 +9,32 @@
       {% render 'core.cart-form-item', product: product %}
     {% endfor %}
   </ui-cart-drawer-items>
+
   {% assign empty_cart_content = 'cart.empty.title' | t %}
   {% unless cart.count > 0 %}
     {% render 'misc.empty', heading: empty_cart_content %}
   {% else %}
     {% render 'misc.empty', heading: empty_cart_content, hidden: true %}
   {% endunless %}
+
+  {% comment %} <div class="collections">
+    <a ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" href="#">
+      Skincare
+      <div class="icon">
+        {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+      </div>
+    </a>
+    <a ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" href="#">
+      Haircare
+      <div class="icon">
+        {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+      </div>
+    </a>
+    <a ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" href="#">
+      Makeup
+      <div class="icon">
+        {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+      </div>
+    </a>
+  </div> {% endcomment %}
 </ui-cart-form>

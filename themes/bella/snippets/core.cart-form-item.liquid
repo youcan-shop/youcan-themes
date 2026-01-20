@@ -18,7 +18,17 @@
   <div class="content">
     <div class="info">
       <div class="bio">
-        <span class="title" title="{{ product.name }}" ui-cart-item="title">{{ product.name }}</span>
+        <a
+          class="title"
+          ui-slot="link-button"
+          data-variant="black"
+          data-size="md"
+          title="{{ product.name }}"
+          ui-cart-item="title"
+          href="{{ product.url }}"
+        >
+          {{ product.name }}
+        </a>
         <span
           class="variants"
           ui-cart-item="variant"
@@ -33,27 +43,27 @@
             {% endunless %}
           {% endfor %}
         </span>
+        <span class="price" ui-cart-item="price">
+          {{ product.price | default: 0 | money }}
+        </span>
       </div>
-      <span class="price" ui-cart-item="price">{{ product.price | default: 0 | money }}</span>
-    </div>
-    <div class="actions">
       {% render 'core.quantity', product: product, size: 'xs' %}
-      <ui-cart-remove
-        item="{{ product.id }}"
-        product-variant="{{ product.product_variant_id }}"
-      >
-        <button
-          ui-slot="button"
-          data-variant="error"
-          data-mode="lighter"
-          data-size="xs"
-          data-as-icon
-          aria-label="remove"
-          ui-cart-item="delete-button"
-        >
-          {% render 'misc.icon', name: 'hgi-delete-02' %}
-        </button>
-      </ui-cart-remove>
     </div>
+    <ui-cart-remove
+      item="{{ product.id }}"
+      product-variant="{{ product.product_variant_id }}"
+    >
+      <button
+        ui-slot="button"
+        data-variant="neutral"
+        data-mode="stroke"
+        data-size="md"
+        data-as-icon
+        aria-label="remove"
+        ui-cart-item="delete-button"
+      >
+        {% render 'misc.icon', name: 'hgi-delete-02' %}
+      </button>
+    </ui-cart-remove>
   </div>
 </div>
