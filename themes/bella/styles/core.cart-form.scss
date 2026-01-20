@@ -3,8 +3,10 @@ ui-cart-form {
 
   &:has(ui-empty:not([hidden])) {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: var(--spacing-48);
   }
 
   ui-cart-drawer-items {
@@ -18,52 +20,40 @@ ui-cart-form {
 
       .image {
         position: relative;
-        width: 90px;
-        height: 90px;
+        width: 100px;
+        height: 100px;
         overflow: hidden;
+        border: 1px solid var(--color-surface-container);
         border-radius: var(--radius-8);
         background-color: var(--color-surface-container);
 
         img {
-          width: 100%;
-          height: 100%;
           object-fit: cover;
-          border: 1px solid var(--color-surface-container);
         }
       }
 
       .content {
         display: flex;
         flex: 2;
-        flex-direction: column;
         justify-content: space-between;
 
         .info {
-          display: grid;
-          gap: var(--spacing-16);
-          grid-template-columns: auto auto;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
 
           .bio {
             display: grid;
             gap: var(--spacing-8);
 
             .title {
-              overflow: hidden;
-              font: var(--font-body-md);
-              text-overflow: ellipsis;
-              white-space: nowrap;
+              font: var(--font-body-lg);
             }
 
             .variants {
-              opacity: 0.8;
+              color: var(--color-on-surface-variant);
               font: var(--font-body-sm);
             }
-          }
-
-          .price {
-            display: flex;
-            justify-content: flex-end;
-            color: var(--color-primary);
           }
         }
 
@@ -71,6 +61,34 @@ ui-cart-form {
           display: flex;
           align-items: center;
           justify-content: space-between;
+        }
+      }
+    }
+  }
+
+  .collections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-16);
+    width: 100%;
+
+    [ui-slot="button"] {
+      justify-content: space-between;
+      height: 80px;
+      padding-inline: var(--spacing-24);
+      font: var(--font-title-md);
+
+      .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--color-surface-variant);
+        border-radius: var(--radius-rounded);
+
+        & > i {
+          font-size: 20px;
         }
       }
     }
