@@ -14,6 +14,10 @@ if (!customElements.get("ui-phone-validation")) {
     }
 
     async connectedCallback() {
+      await this._render();
+    }
+
+    async _render() {
       if (!this.validateElements()) return;
 
       await this.buildCountryCodeOptions();

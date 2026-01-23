@@ -1,5 +1,8 @@
 {{ 'misc.phone-validation.css' | asset_url | stylesheet_tag }}
 
+{{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
+{{ 'misc.phone-validation.js' | asset_url | script_tag_deferred }}
+
 <ui-phone-validation>
   <label ui-express-checkout-field>
     <input type="hidden" name="{{ field.name }}" ui-phone-hidden-input>
@@ -30,6 +33,3 @@
     </div>
   </label>
 </ui-phone-validation>
-
-{{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
-{{ 'misc.phone-validation.js' | asset_url | script_tag_deferred }}
