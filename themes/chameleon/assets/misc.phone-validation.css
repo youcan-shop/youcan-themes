@@ -1,0 +1,44 @@
+ui-phone-validation {
+  [ui-phone-input-wrapper] {
+    display: flex;
+    width: 100%;
+    gap: var(--spacing-12);
+
+    [ui-phone-countries-wrapper] {
+      position: relative;
+      width: 100px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    [ui-phone-displayed-country-code] {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &::after {
+        content: '';
+        width: 6px;
+        height: 6px;
+        rotate: 45deg;
+        border-block-end: 1.2px solid currentColor;
+        border-inline-end: 1.2px solid currentColor;
+      }
+    }
+
+    [ui-phone-select-country-code] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      appearance: none;
+    }
+  }
+
+  [ui-phone-error] {
+    font: var(--font-body-sm);
+    color: var(--color-error);
+  }
+}
