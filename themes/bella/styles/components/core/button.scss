@@ -25,8 +25,14 @@
   outline: none;
   box-shadow: 0 0 0 3px transparent;
   font: var(--font-body-md);
+  font-family: var(--font-button-family);
+  font-weight: var(--font-button-weight);
   text-decoration: none;
   cursor: pointer;
+
+  & > * {
+    font-family: inherit;
+  }
 
   /* Size */
   &[data-size="lg"] {
@@ -72,11 +78,7 @@
       background-color: color-mix(in srgb, var(--color-button), black 10%);
 
       &[data-variant="neutral"] {
-        background-color: color-mix(
-          in srgb,
-          var(--color-on-background),
-          var(--color-on-button) 10%
-        );
+        background-color: color-mix(in srgb, var(--color-on-background), var(--color-on-button) 10%);
       }
     }
   }
@@ -161,8 +163,7 @@
 
   /* Focus */
   &:focus-visible {
-    box-shadow: 0 0 0 3px
-      color-mix(in oklab, var(--color-button) 30%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-button) 30%, transparent);
   }
 
   /* Disabled */
@@ -187,8 +188,7 @@
       width: 16px;
       height: 16px;
       animation: spin 1s linear infinite;
-      border: 1.5px solid
-        color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      border: 1.5px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
       border-radius: var(--radius-rounded);
       border-inline-end-color: transparent;
     }

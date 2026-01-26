@@ -5,8 +5,7 @@
   display: grid;
   gap: var(--spacing-48);
 
-  .head-area {
-    display: flex;
+  [ui-slot="head"] {
     justify-content: space-between;
     gap: var(--spacing-24);
     width: 100%;
@@ -15,20 +14,6 @@
     .content {
       display: grid;
       gap: var(--spacing-16);
-
-      .subheading {
-        font: var(--font-body-lg);
-      }
-
-      .heading {
-        font: var(--font-display-md);
-      }
-
-      .description {
-        color: var(--color-on-surface-variant);
-        font: var(--font-body-lg);
-        text-wrap: balance;
-      }
     }
 
     .actions {
@@ -96,7 +81,7 @@
   @media (width <= 1028px) {
     --item-size: 100%;
 
-    .head-area {
+    [ui-slot="head"] {
       flex-direction: column;
       justify-content: center;
       text-align: center;
@@ -108,14 +93,8 @@
   }
 
   @media (width <= 769px) {
-    .head-area {
+    [ui-slot="head"] {
       padding-inline: var(--spacing-0);
-
-      .content {
-        .heading {
-          font: var(--font-headline-lg);
-        }
-      }
     }
 
     .items-area {

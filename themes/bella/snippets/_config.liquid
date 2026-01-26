@@ -5,6 +5,23 @@
   {% render '_config' %}
 {% endcomment %}
 
+{% comment %} Favicon {% endcomment %}
+{% assign slug_initial = store.slug | slice: 0, 1 %}
+{% assign favicon = "data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><rect width='100%' height='100%' cx='50' cy='50' rx='50' ry='25'/><text x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='10'>[SLUG]</text></svg>" %}
+{% assign favicon = favicon | replace: '[SLUG]', slug_initial %}
+
+{% if settings.favicon.src %}
+  {% assign favicon = settings.favicon.src %}
+{% endif %}
+
+<link
+  {% unless settings.favicon.src != null %}
+    type="image/svg+xml"
+  {% endunless %}
+  rel="shortcut icon"
+  href="{{ favicon }}"
+>
+
 {% comment %}
   Global Styles (layout + components)
 {% endcomment %}
@@ -18,19 +35,51 @@
 {% comment %}
   Font (default: DM Sans | Almarai)
 {% endcomment %}
-
-{% assign font_family = 'DM+Sans' %}
-
-{% if lang == 'ar' %}
-  {% assign font_family = 'Almarai' %}
-{% endif %}
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-  href="https://fonts.googleapis.com/css2?family={{ font_family }}:wght@400;500;600;700&display=swap"
   rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family={{ settings.font_family }}|{{ settings.font_family_headings }}|{{ settings.font_family_subheadings }}|{{ settings.font_family_buttons }}"
 >
+
+<style>
+  :root {
+    /* Base */
+    --font-family: '{{ settings.font_family | replace: '+', ' ' }}';
+
+    {% case settings.base_size %}
+      {% when 'small' %}
+        --font-base-size: var(--font-body-sm);
+      {% when 'medium' %}
+        --font-base-size: var(--font-body-md);
+      {% else %}
+        --font-base-size: var(--font-body-lg);
+    {% endcase %}
+
+    /* Heading */
+    --font-heading-scale: calc({{ settings.font_scale_headings }} / 100);
+    --font-heading-family: {{ settings.font_family_headings | replace: '+', ' ' }};
+
+    /* Subheading */
+    --font-subheading-scale: calc({{ settings.font_scale_subheadings }} / 100);
+    --font-subheading-family: {{ settings.font_family_subheadings | replace: '+', ' ' }};
+    --font-subheading-weight: {{ settings.font_weight_subheadings }};
+    --text-subheading-transform: {{ settings.text_transform_subheadings }};
+
+    /* Button */
+    --font-button-family: {{ settings.font_family_buttons | replace: '+', ' ' }};
+    --font-button-weight: {{ settings.font_weight_buttons }};
+
+    /* Colors */
+    --brand-hue: {{ settings.main_color.hue }};
+    --brand-saturation: {{ settings.main_color.saturation }}%;
+    --brand-lightness: {{ settings.main_color.lightness }}%;
+
+    /* Alignment */
+    --text-heading-alignment-desktop: {{ settings.heading_alignment_desktop }};
+    --text-heading-alignment-mobile: {{ settings.heading_alignment_mobile }};
+  }
+</style>
 
 {{ content_for_header }}
 
