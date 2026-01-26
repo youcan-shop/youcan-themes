@@ -3,9 +3,29 @@
 <div ui-layout="navbar">
   {% render 'misc.menu-drawer' %}
   <div class="logo">
-    <a class="name" ui-slot="link-button" data-variant="black" href="/">
-      {{ store.name }}
-    </a>
+    {% if settings.logo_desktop.src or settings.logo_mobile.src %}
+      <a href="/">
+        <picture>
+          {% if settings.logo_mobile.src %}
+            <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
+          {% endif %}
+          {% if settings.logo_desktop.src %}
+            <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
+          {% endif %}
+          <img
+            src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
+            alt="{{ store.name }}"
+            height="100%"
+            width="40"
+            sizes="(width > 769px) {{ settings.logo_desktop_width }}px, 40px"
+          >
+        </picture>
+      </a>
+    {% else %}
+      <a class="name" ui-slot="link-button" data-variant="black" href="/">
+        {{ store.name }}
+      </a>
+    {% endif %}
   </div>
   <ul class="links">
     {% for link in main-link-list.links %}
