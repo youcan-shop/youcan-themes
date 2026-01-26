@@ -1,10 +1,14 @@
 if (!customElements.get("ui-carousel")) {
   class Carousel extends HTMLElement {
+    static observedAttributes = ["autoplay", "interval"];
+
     constructor() {
       super();
 
       this.index = 0;
+      this.interval = null;
       this.ignoreScroll = false;
+
       this.wrapper = this.querySelector('[ui-carousel="wrapper"]');
       this.slides = this.querySelectorAll('[ui-carousel="item"]');
       this.arrows = {
@@ -14,6 +18,7 @@ if (!customElements.get("ui-carousel")) {
       this.markers = this.querySelectorAll('[ui-carousel="marker"]');
 
       this.TOTAL = this.slides.length;
+      this.INTERVAL_DURATION = parseInt(this.getAttribute("interval")) || 3000;
     }
 
     connectedCallback() {
@@ -22,8 +27,7 @@ if (!customElements.get("ui-carousel")) {
 
     _render() {
       if (this.arrows.previous && this.arrows.next) {
-        this.canGoNext();
-        this.canGoPrevious();
+        this.setArrowsState();
 
         this.arrows.previous.addEventListener("click", () => this.swipe(--this.index));
         this.arrows.next.addEventListener("click", () => this.swipe(++this.index));
@@ -34,6 +38,12 @@ if (!customElements.get("ui-carousel")) {
       });
 
       this.wrapper.addEventListener("scroll", () => this.onScroll());
+
+      if (this.hasAttribute("autoplay")) {
+        this.autoPlay();
+        this.addEventListener("mouseenter", () => clearInterval(this.interval));
+        this.addEventListener("mouseleave", () => this.autoPlay());
+      }
     }
 
     swipe(index) {
@@ -54,18 +64,20 @@ if (!customElements.get("ui-carousel")) {
         marker.setAttribute("aria-selected", index === i);
       });
 
-      if (this.arrows.previous && this.arrows.next) {
-        this.canGoNext();
-        this.canGoPrevious();
-      }
+      if (this.arrows.previous && this.arrows.next) this.setArrowsState();
+    }
+
+    setArrowsState() {
+      this.arrows.previous.disabled = !this.canGoPrevious();
+      this.arrows.next.disabled = !this.canGoNext();
     }
 
     canGoPrevious() {
-      this.arrows.previous.disabled = this.index <= 0;
+      return this.index > 0;
     }
 
     canGoNext() {
-      this.arrows.next.disabled = this.index >= this.TOTAL - 1;
+      return this.index + this.perPage < this.TOTAL;
     }
 
     onScroll() {
@@ -77,6 +89,12 @@ if (!customElements.get("ui-carousel")) {
       if (newIndex !== this.index) {
         this.setIndex(newIndex);
       }
+    }
+
+    autoPlay() {
+      this.interval = setInterval(() => {
+        this.swipe(this.canGoNext() ? ++this.index : -1);
+      }, this.INTERVAL_DURATION);
     }
 
     get perPage() {
