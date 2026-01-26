@@ -5,6 +5,23 @@
   {% render '_config' %}
 {% endcomment %}
 
+{% comment %} Favicon {% endcomment %}
+{% assign slug_initial = store.slug | slice: 0, 1 %}
+{% assign favicon = "data:image/svg+xml, <svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'><rect width='100%' height='100%' cx='50' cy='50' rx='50' ry='25'/><text x='50%' y='50%' font-size='48' fill='white' text-anchor='middle' dy='10'>[SLUG]</text></svg>" %}
+{% assign favicon = favicon | replace: '[SLUG]', slug_initial %}
+
+{% if settings.favicon.src %}
+  {% assign favicon = settings.favicon.src %}
+{% endif %}
+
+<link
+  {% unless settings.favicon.src != null %}
+    type="image/svg+xml"
+  {% endunless %}
+  rel="shortcut icon"
+  href="{{ favicon }}"
+>
+
 {% comment %}
   Global Styles (layout + components)
 {% endcomment %}
