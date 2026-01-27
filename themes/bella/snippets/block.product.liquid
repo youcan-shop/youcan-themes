@@ -12,9 +12,34 @@
 {% assign price = default_variant.price | default: product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
 
-<li ui-block="product" {{ product.youcan_attributes }}>
+<li
+  ui-block="product"
+  data-alignment="{{ settings.product_alignment }}"
+  data-image-ratio="{{ settings.product_image_ratio }}"
+  {{ product.youcan_attributes }}
+>
   <a href="{{ product.url }}" class="media">
-    {% render 'misc.image-fallback', icon_size: 40 %}
+    {% if product.preview_image %}
+      <img
+        srcset="
+          {{ product.preview_image.medium }} 480w,
+          {{ product.preview_image.large }} 800w,
+          {{ product.preview_image.original }} 1200w
+        "
+        sizes="
+          (max-width: 640px) 50vw,
+          (max-width: 768px) 33vw,
+          (max-width: 1024px) 25vw,
+          33vw
+        "
+        src="{{ product.preview_image.original }}"
+        alt="{{ product.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
   </a>
   <div class="content">
     <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/">
@@ -32,7 +57,9 @@
       {% endif %}
     </div>
   </div>
-  <div class="badge" ui-slot="badge" data-variant="filled" data-size="md" data-color="red" data-square="true">-20%</div>
+  <div class="badge" ui-slot="badge" data-variant="filled" data-size="md" data-color="red" data-square="true">
+    {% if settings.sale_badge_type == 'text' %} New {% else %} -20% {% endif %}
+  </div>
   <button class="main-action" ui-slot="button" data-variant="neutral" data-mode="filled" data-size="lg">Add to Cart</button>
   <button
     class="secondary-action"
@@ -44,5 +71,4 @@
   >
     {% render 'misc.icon', name: 'hgi-shopping-bag-01' %}
   </button>
-  {% render 'core.shop-button' %}
 </li>
