@@ -1,6 +1,28 @@
 {{ 'section.footer.css' | asset_url | stylesheet_tag }}
 
-<div ui-layout="footer">
+{% assign has_social_links = false %}
+
+{% for link in store.brand.social_links %}
+  {% if link[1] != null %}
+    {% assign has_social_links = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div
+  ui-layout="footer"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
   <div class="main-area">
     <div class="logo">
       {% if settings.logo_desktop.src or settings.logo_mobile.src %}
@@ -23,7 +45,7 @@
           </picture>
         </a>
       {% else %}
-        <a class="name" ui-slot="link-button" data-variant="black" href="/">
+        <a class="name" ui-slot="link-button" data-variant="primary" href="/">
           {{ store.name }}
         </a>
       {% endif %}
@@ -49,29 +71,43 @@
   </div>
   <hr ui-slot="divider" data-variant="line">
   <div class="secondary-area">
-    <span class="copyright"> © {{ default: 'now' | date: '%Y' }}. All Rights Reserved. </span>
-    <ul class="social-links">
-      <li class="link">
-        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Facebook">
-          {% render 'misc.icon', name: 'hgi-facebook-02' %}
-        </a>
-      </li>
-      <li class="link">
-        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Snapchat">
-          {% render 'misc.icon', name: 'hgi-snapchat' %}
-        </a>
-      </li>
-      <li class="link">
-        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Instagram">
-          {% render 'misc.icon', name: 'hgi-instagram' %}
-        </a>
-      </li>
-      <li class="link">
-        <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="TikTok">
-          {% render 'misc.icon', name: 'hgi-tiktok' %}
-        </a>
-      </li>
-    </ul>
+    <span class="copyright">{{ section.settings.copyright_content | default: '© Made by YouCan' }}</span>
+    {% if section.settings.show_social_links and has_social_links == true %}
+      <ul class="social-links">
+        {% for link in store.brand.social_links %}
+          {% assign platform = link[0] %}
+          {% assign url = link[1] %}
+
+          {% case platform %}
+            {% when 'facebook' %}
+              {% assign icon = 'hgi-facebook-01' %}
+            {% when 'twitter' %}
+              {% assign icon = 'hgi-new-twitter-rectangle' %}
+            {% when 'instagram' %}
+              {% assign icon = 'hgi-instagram' %}
+            {% when 'tiktok' %}
+              {% assign icon = 'hgi-tiktok' %}
+          {% endcase %}
+
+          {% if url != null %}
+            <li class="link">
+              <a
+                ui-slot="button"
+                data-variant="neutral"
+                data-mode="ghost"
+                data-size="lg"
+                data-as-icon
+                href="{{ url }}"
+                target="_blank"
+                title="{{ platform }}"
+              >
+                {% render 'misc.icon', name: icon %}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
 </div>
 {% schema %}
@@ -79,6 +115,82 @@
   "label": "Footer",
   "tag": "footer",
   "limit": 1,
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Social Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_links",
+      "label": "Show social media links",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "Social links can be managed from your [social media settings](https://seller-area.youcan.shop/admin/settings/general#social-media)"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "copyright_content",
+      "placeholder": " © All rights reserved.",
+      "label": "Copyright text"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "paragraph",
+      "content": "Footer links can be managed from your [menu settings](https://seller-area.youcan.shop/admin/menus)"
+    }
+  ]
 }
 {% endschema %}
