@@ -10,13 +10,16 @@
 
 <li ui-block="faq" ui-slot="accordion-item" {{ faq.youcan_attributes }}>
   <label ui-slot="accordion-trigger">
-    How long does shipping take?
-    <input type="checkbox" name="faq">
+    {{ faq.settings.faq_title }}
+    <input
+      type="checkbox"
+      name="faq"
+      {% if faq.settings.fas_open_by_default %}
+        checked
+      {% endif %}
+    >
   </label>
   <div ui-slot="accordion-content" role="region">
-    <p>
-      Our orders typically arrive within 3-7 business days, depending on your location and chosen shipping method. Please note that holidays, weather
-      conditions and peak shopping seasons can affect delivery times.
-    </p>
+    <p>{{ faq.settings.faq_content }}</p>
   </div>
 </li>
