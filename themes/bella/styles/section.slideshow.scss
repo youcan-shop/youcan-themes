@@ -1,10 +1,10 @@
 [ui-section="slideshow"] {
   --per-page: 1;
-  --gap: var(--spacing-32);
-  --item-size: 92%;
 
   display: flex;
   flex-direction: column;
+  padding-block: attr(data-top-spacing px) attr(data-bottom-spacing px) !important;
+  padding-inline: var(--spacing-0) !important;
   gap: var(--spacing-24);
 
   [ui-slot="carousel"] {
@@ -12,21 +12,29 @@
 
     [ui-slot="carousel-item"] {
       position: relative;
+      background-color: transparent;
 
       .media {
-        height: 70vh;
+        height: attr(data-width vh);
+        overflow: hidden;
         border-radius: var(--radius-slide);
+        filter: brightness(0.6);
       }
 
       .content {
         display: flex;
         position: absolute;
         flex-direction: column;
+        align-items: flex-start;
         justify-content: center;
         height: 100%;
+        padding: var(--spacing-64);
         gap: var(--spacing-16);
         inset: 0;
-        padding: var(--spacing-64);
+
+        [ui-slot="head"] {
+          align-items: inherit;
+        }
 
         .cta {
           width: fit-content;
@@ -37,32 +45,18 @@
     }
   }
 
-  @media (width <= 769px) {
-    --item-size: 100%;
-
-    [ui-slot="carousel"] {
-      padding-inline: var(--spacing-0);
-
-      [ui-slot="carousel-item"] {
-        .media {
-          height: 40vh;
-        }
-
-        .content {
-          position: static;
-          align-items: center;
-          height: auto;
-          padding: var(--spacing-48) 0 0 0;
-          text-align: center;
-        }
-      }
-    }
-  }
-
   .pagination {
     display: flex;
+    position: relative;
+    left: 50%;
     align-items: center;
     justify-content: center;
+    width: fit-content;
+    transform: translateX(-50%);
+
+    &[data-position="inside"] {
+      margin-block-start: calc(var(--spacing-64) * -1);
+    }
 
     [ui-carousel="marker"] {
       display: flex;
@@ -91,6 +85,52 @@
         &::before {
           width: inherit;
           background-color: currentcolor;
+        }
+      }
+    }
+  }
+
+  @media (width <= 769px) {
+    --item-size: 100% !important;
+
+    [ui-slot="carousel"] {
+      padding-inline: var(--spacing-0);
+
+      [ui-slot="carousel-item"] {
+        .media {
+          height: calc(attr(data-width vh) / 2);
+        }
+
+        .content {
+          padding: var(--spacing-24);
+        }
+
+        &[data-alignment="center"] {
+          .content {
+            align-items: center;
+            text-align: center;
+          }
+        }
+
+        &[data-alignment="end"] {
+          .content {
+            align-items: flex-end;
+            text-align: end;
+          }
+        }
+      }
+    }
+
+    &[data-show-content-bellow-image="1"] {
+      [ui-slot="carousel"] {
+        [ui-slot="carousel-item"] {
+          .content {
+            position: static;
+            align-items: center;
+            height: auto;
+            padding: var(--spacing-48) 0 0 0;
+            text-align: center;
+          }
         }
       }
     }

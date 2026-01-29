@@ -13,22 +13,51 @@
   ui-block="slide"
   ui-slot="carousel-item"
   {{ slide.youcan_attributes }}
+  {% if slide.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ slide.settings.main_color.hue }};
+      --brand-saturation: {{ slide.settings.main_color.saturation }}%;
+      --brand-lightness: {{ slide.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ slide.settings.color_intensity }}"
+  {% endif %}
+  data-alignment="{{ section.settings.mobile_content_alignment }}"
 >
-  <div class="media" style="background-color: var(--color-{{ slide }}-container);"></div>
+  <div class="media" data-width="{{ section.settings.height }}">
+    {% if slide.settings.slide_desktop_image.src or slide.settings.slide_mobile_image.src %}
+      <picture>
+        {% if slide.settings.slide_mobile_image.src %}
+          <source srcset="{{ slide.settings.slide_mobile_image.src }}" media="(max-width: 768px)">
+        {% endif %}
+        {% if settings.image.src %}
+          <source srcset="{{ slide.settings.slide_desktop_image.src }}" media="(min-width: 769px)">
+        {% endif %}
+        <img
+          src="{{ slide.settings.slide_desktop_image.src | default: slide.settings.slide_mobile_image.src }}"
+          alt="Slide {{forloop.index }}"
+          height="100%"
+          width="100%"
+        >
+      </picture>
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: '100' %}
+    {% endif %}
+  </div>
   <div class="content">
     <div ui-slot="head">
-      <h4 class="heading">Wellness Care</h4>
-      <h1 class="subheading">Beauty, Starts from within</h1>
+      <h4 class="heading">{{ slide.settings.slide_subheading }}</h4>
+      <h1 class="subheading">{{ slide.settings.slide_heading }}</h1>
     </div>
     <a
       class="cta"
       ui-slot="button"
-      data-variant="neutral"
+      data-variant="primary"
       data-mode="filled"
       data-size="lg"
-      href="/"
+      href="{{ slide.settings.slide_button_link }}"
     >
-      See All Collections
+      {{ slide.settings.slide_button_label }}
     </a>
   </div>
 </li>
