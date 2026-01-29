@@ -1,14 +1,174 @@
 {{ 'section.multicolumn.css' | asset_url | stylesheet_tag }}
 
-<ul ui-section="multicolumn">
-  {% for column in (1..4) %}
-    {% render 'block.column' %}
-  {% endfor %}
+<ul
+  ui-section="multicolumn"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head">
+    <h4 class="heading">{{ section.settings.heading }}</h4>
+    <h1 class="subheading">{{ section.settings.subheading }}</h1>
+  </div>
+  <div
+    class="items-area"
+    data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+  >
+    {% for column in section.blocks %}
+      {% render 'block.column' %}
+    {% endfor %}
+  </div>
 </ul>
 
 {% schema %}
 {
   "label": "Multicolumn",
-  "templates": ["index"]
+  "templates": ["index", "page"],
+  "limit": 3,
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore our line"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover Radiance"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "label": "Start", "value": "start" },
+        { "label": "Center", "value": "center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "Number of columns on Desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "label": "Column",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Media"
+        },
+        {
+          "type": "image_picker",
+          "id": "column_image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "column_image_size",
+          "label": "Image size",
+          "options": [
+            { "label": "Small", "value": "80" },
+            { "label": "Medium", "value": "120" },
+            { "label": "Large", "value": "180" }
+          ],
+          "default": "120"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "column_heading",
+          "label": "Heading",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "textarea",
+          "id": "column_description",
+          "label": "Description",
+          "default": "We offer reliable free shipping on all orders exceeding $100"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
