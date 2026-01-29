@@ -1,23 +1,37 @@
 {{ 'section.faqs.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="faqs">
+<div
+  ui-section="faqs"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-orientation="{{ section.settings.orientation }}"
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
   <div ui-slot="head" class="content-area">
-    <h4 class="heading">We got you covered</h4>
-    <h1 class="subheading">Help Center</h1>
-    <p class="description">Find quick solutions to your queries from product details, to returns and exchanges.</p>
+    <h4 class="heading">{{ section.settings.heading }}</h4>
+    <h1 class="subheading">{{ section.settings.subheading }}</h1>
+    <p class="description">{{ section.settings.description }}</p>
     <a
       class="cta"
       ui-slot="button"
-      data-variant="neutral"
+      data-variant="primary"
       data-mode="filled"
       data-size="lg"
-      href="/"
+      href="{{ section.settings.button_link }}"
     >
-      Contact Us
+      {{ section.settings.button_label }}
     </a>
   </div>
   <ul class="items-area" ui-slot="accordion">
-    {% for faq in (1..4) %}
+    {% for faq in section.blocks %}
       {% render 'block.faq' %}
     {% endfor %}
   </ul>
@@ -26,6 +40,146 @@
 {% schema %}
 {
   "label": "FAQs",
-  "templates": ["index"]
+  "templates": ["index", "product", "page", "cart"],
+  "limit": 3,
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-solid-bg"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "orientation",
+      "label": "Orientation",
+      "options": [
+        { "label": "Vertical", "value": "vertical" },
+        { "label": "Horizontal", "value": "horizontal" }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We got you covered"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Help Center"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Find quick solutions to your queries from product details, to returns and exchanges."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Label",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Link",
+      "default": "#"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        { "label": "Primary", "value": "primary" },
+        { "label": "Secondary", "value": "secondary" },
+        { "label": "Underline", "value": "underline" }
+      ],
+      "label": "Style",
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "label": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "faq_title",
+          "label": "Title",
+          "default": "How long does shipping take?"
+        },
+        {
+          "type": "richtext",
+          "id": "faq_content",
+          "label": "Content",
+          "default": "Our orders typically arrive within 3-7 business days, depending on your location and chosen shipping method. Please note that holidays, weather conditions and peak shopping seasons can affect delivery times."
+        },
+        {
+          "type": "checkbox",
+          "id": "fas_open_by_default",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
