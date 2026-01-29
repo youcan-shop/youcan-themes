@@ -1,27 +1,172 @@
 {{ 'section.rich-text.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="rich-text" ui-slot="head">
-  <h4 class="heading">Transform Your Space</h4>
-  <h1 class="subheading">Illuminate Inspiration</h1>
-  <p class="description">
-    Browse our extensive range of lighting options, from modern minimalist designs to classic ornate fixtures, and discover how you can transform your
-    living spaces into captivating havens of light and style with LuminaLux.
-  </p>
-  <a
-    class="cta"
-    ui-slot="button"
-    data-variant="neutral"
-    data-mode="filled"
-    data-size="lg"
-    href="/"
-  >
-    Discover More
-  </a>
+<div
+  ui-section="rich-text"
+  ui-slot="head"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'heading' %}
+        <h4 class="heading">{{ block.settings.content }}</h4>
+      {% when 'subheading' %}
+        <h1 class="subheading">{{ block.settings.content }}</h1>
+      {% when 'description' %}
+        <p class="description">{{ block.settings.content }}</p>
+      {% when 'button' %}
+        <a
+          class="cta"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="filled"
+          data-size="lg"
+          href="{{ block.settings.link }}"
+        >
+          {{ block.settings.label }}
+        </a>
+    {% endcase %}
+  {% endfor %}
 </div>
 
 {% schema %}
 {
   "label": "Rich Text",
-  "templates": ["index"]
+  "templates": ["index", "product", "page", "cart"],
+  "limit": 3,
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-solid-bg"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "label": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "default": "Transform Your Space"
+        }
+      ]
+    },
+    {
+      "type": "subheading",
+      "label": "Subheading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "default": "Illuminate Inspiration"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "label": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Browse our extensive range of lighting options, from modern minimalist designs to classic ornate fixtures, and discover how you can transform your living spaces into captivating havens of light and style with LuminaLux."
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "label": "Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Discover More"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "default": "#"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "options": [
+            { "label": "Primary", "value": "primary" },
+            { "label": "Secondary", "value": "secondary" },
+            { "label": "Underline", "value": "underline" }
+          ],
+          "label": "Style",
+          "default": "primary"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
