@@ -8,12 +8,21 @@
   {% render 'block.column' %}
 {% endcomment %}
 
-<li ui-block="column" {{ column.youcan_attributes }}>
-  <div class="media">
-    {% render 'misc.image-fallback', icon_size: 40 %}
+<li ui-block="column" data-alignment="{{ section.settings.alignment }}" {{ column.youcan_attributes }}>
+  <div class="media" data-size="{{ column.settings.column_image_size }}">
+    {% if column.settings.column_image.src %}
+      <img
+        src="{{ column.settings.column_image.src }}"
+        alt="{{ column.settings.column_heading }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
   </div>
   <div class="content">
-    <h3 class="heading">Free Shipping</h3>
-    <p class="description">We offer reliable free shipping on all orders exceeding $100</p>
+    <h3 class="heading">{{ column.settings.column_heading }}</h3>
+    <p class="description">{{ column.settings.column_description }}</p>
   </div>
 </li>
