@@ -2,15 +2,15 @@
   Renders a feature item (Block)
 
   Accepts:
-    - feature-item: {Object} Item info
+    - feature: {Object} Item info
 
   Usage:
   {% render 'block.feature-item' %}
 {% endcomment %}
 
-<li ui-block="feature-item" {{ feature-item.youcan_attributes }}>
-  <div class="icon">
-    {% render 'misc.icon', name: 'hgi-delivery-box-02' %}
+<li ui-block="feature-item" {{ feature.youcan_attributes }}>
+  <div class="icon" data-size="{{ section.settings.icon_size }}">
+    {% render 'misc.icon', name: feature.settings.feature_icon, size: section.settings.icon_size %}
   </div>
-  <span class="label">Feature Item</span>
+  <span class="label">{{ feature.settings.feature_content }}</span>
 </li>
