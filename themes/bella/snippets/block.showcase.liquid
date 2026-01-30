@@ -8,18 +8,38 @@
   {% render 'block.showcase', product: {...} %}
 {% endcomment %}
 
-{% assign default_variant = product.selected_or_first_available_variant %}
-{% assign price = default_variant.price | default: product.price %}
-{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+{% assign default_variant = product.settings.product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.settings.product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.settings.product.compare_at_price %}
 
 <li ui-carousel="item" ui-block="showcase" ui-slot="carousel-item" {{ product.youcan_attributes }}>
-  <a href="{{ product.url }}" class="media">
-    {% render 'misc.image-fallback', icon_size: 40 %}
+  <a href="{{ product.settings.product.url }}" class="media">
+    {% if product.settings.product.preview_image %}
+      <img
+        srcset="
+          {{ product.settings.product.preview_image.medium }} 480w,
+          {{ product.settings.product.preview_image.large }} 800w,
+          {{ product.settings.product.preview_image.original }} 1200w
+        "
+        sizes="
+          (max-width: 640px) 50vw,
+          (max-width: 768px) 33vw,
+          (max-width: 1024px) 25vw,
+          33vw
+        "
+        src="{{ product.settings.product.preview_image.original }}"
+        alt="{{ product.settings.product.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
   </a>
   <div class="content">
     <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/">
       {% assign placeholder = 'product.title' | t %}
-      {{ product.name | default: placeholder }}
+      {{ product.settings.product.name | default: placeholder }}
     </a>
     <div class="price">
       <span class="original-price">
@@ -31,17 +51,18 @@
         </s>
       {% endif %}
     </div>
-    <article class="description">
-      Discover scents similar to YSL Libre and find your perfect fragrance. Complete your collection with our curated selection of complementary
-      perfumes and colognes.
-    </article>
+    {% if product.settings.product.description %}
+      <article class="description">
+        {{ product.settings.product.description }}
+      </article>
+    {% endif %}
     <a
       class="cta"
       ui-slot="button"
-      data-variant="neutral"
+      data-variant="primary"
       data-mode="filled"
       data-size="lg"
-      href="{{ product.url }}"
+      href="{{ product.settings.product.url }}"
     >
       Add to Cart
     </a>
