@@ -9,17 +9,46 @@
 {% endcomment %}
 
 <li ui-carousel="item" ui-block="collection" ui-slot="carousel-item" {{ collection.youcan_attributes }}>
-  <a href="/collections/#" class="media">
-    {% render 'misc.image-fallback' %}
+  <a href="/collections/{{ collection.settings.collection.slug }}" class="media">
+    {% if collection.settings.collection.preview_image %}
+      <img
+        srcset="
+          {{ collection.settings.collection.preview_image.medium }} 480w,
+          {{ collection.settings.collection.preview_image.large }} 800w,
+          {{ collection.settings.collection.preview_image.original }} 1200w
+        "
+        sizes="
+          (max-width: 640px) 50vw,
+          (max-width: 768px) 33vw,
+          (max-width: 1024px) 25vw,
+          33vw
+        "
+        src="{{ collection.settings.collection.preview_image.original }}"
+        alt="{{ collection.settings.collection.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
   </a>
   <div class="content">
     <div class="info">
-      <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/collections/#"> Collection </a>
+      <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/collections/{{ collection.settings.collection.slug }}">
+        {{ collection.settings.collection.name | default: 'Collection name' }}
+      </a>
       {% if settings.collection_show_product_count %}
         <span class="total">20 Items</span>
       {% endif %}
     </div>
-    <a href="/collections/#" ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" data-as-icon>
+    <a
+      href="/collections/{{ collection.settings.collection.slug }}"
+      ui-slot="button"
+      data-variant="neutral"
+      data-mode="stroke"
+      data-size="lg"
+      data-as-icon
+    >
       {% render 'misc.icon', name: 'hgi-arrow-up-right-01' %}
     </a>
   </div>
