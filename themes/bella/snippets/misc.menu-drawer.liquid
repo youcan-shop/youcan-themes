@@ -5,10 +5,19 @@
   {% render 'misc.menu-drawer' %}
 {% endcomment %}
 
-<div ui-slot="sheet" class="menu">
+{% assign has_social_links = false %}
+
+{% for link in store.brand.social_links %}
+  {% if link[1] != null %}
+    {% assign has_social_links = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div ui-slot="sheet" class="menu" {{ block.youcan_attributes }}>
   <button
     ui-slot="button"
-    data-variant="neutral"
+    data-variant="primary"
     data-mode="ghost"
     data-size="md"
     data-as-icon
@@ -26,7 +35,7 @@
       </div>
       <button
         ui-slot="button"
-        data-variant="neutral"
+        data-variant="primary"
         data-mode="lighter"
         data-size="md"
         aria-label="Close"
@@ -47,28 +56,42 @@
       </ul>
     </div>
     <div ui-slot="sheet-footer">
-      <ul class="social-links">
-        <li class="link">
-          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Facebook">
-            {% render 'misc.icon', name: 'hgi-facebook-02' %}
-          </a>
-        </li>
-        <li class="link">
-          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Snapchat">
-            {% render 'misc.icon', name: 'hgi-snapchat' %}
-          </a>
-        </li>
-        <li class="link">
-          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="Instagram">
-            {% render 'misc.icon', name: 'hgi-instagram' %}
-          </a>
-        </li>
-        <li class="link">
-          <a ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="lg" data-as-icon href="#" target="_blank" aria-label="TikTok">
-            {% render 'misc.icon', name: 'hgi-tiktok' %}
-          </a>
-        </li>
-      </ul>
+      {% if block.settings.menu_show_social_media_links and has_social_links == true %}
+        <ul class="social-links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
+
+            {% case platform %}
+              {% when 'facebook' %}
+                {% assign icon = 'hgi-facebook-01' %}
+              {% when 'twitter' %}
+                {% assign icon = 'hgi-new-twitter-rectangle' %}
+              {% when 'instagram' %}
+                {% assign icon = 'hgi-instagram' %}
+              {% when 'tiktok' %}
+                {% assign icon = 'hgi-tiktok' %}
+            {% endcase %}
+
+            {% if url != null %}
+              <li class="link">
+                <a
+                  ui-slot="button"
+                  data-variant="neutral"
+                  data-mode="ghost"
+                  data-size="lg"
+                  data-as-icon
+                  href="{{ url }}"
+                  target="_blank"
+                  title="{{ platform }}"
+                >
+                  {% render 'misc.icon', name: icon %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
     </div>
   </div>
 </div>
