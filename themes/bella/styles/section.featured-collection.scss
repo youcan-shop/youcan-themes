@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-64);
+  padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
 
   .core-area {
     display: grid;
@@ -9,23 +10,53 @@
     grid-template-columns: repeat(2, 1fr);
 
     [ui-block="content"] {
-      position: relative;
+      position: sticky;
+      height: fit-content;
       overflow: hidden;
       border-radius: var(--radius-20);
+      inset-block-start: var(--spacing-24);
 
       .media {
         height: 70vh;
+
+        & > img {
+          object-fit: cover;
+        }
       }
 
       .content {
         display: flex;
         position: absolute;
         flex-direction: column;
-        align-items: center;
         padding: var(--spacing-48);
-        text-align: center;
         inset: 0;
         gap: var(--spacing-8);
+
+        &[data-text-alignment="start"] {
+          align-items: flex-start;
+        }
+
+        &[data-text-alignment="center"] {
+          align-items: center;
+          text-align: center;
+        }
+
+        &[data-text-alignment="end"] {
+          align-items: flex-end;
+          text-align: end;
+        }
+
+        &[data-vertical-alignment="start"] {
+          justify-content: flex-start;
+        }
+
+        &[data-vertical-alignment="center"] {
+          justify-content: center;
+        }
+
+        &[data-vertical-alignment="end"] {
+          justify-content: flex-end;
+        }
 
         .subheading {
           font: var(--font-body-lg);
@@ -55,6 +86,8 @@
       grid-template-columns: 1fr;
 
       [ui-block="content"] {
+        position: relative;
+
         .media {
           height: 35vh;
         }

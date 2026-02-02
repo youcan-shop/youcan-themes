@@ -1,40 +1,260 @@
 {{ 'section.featured-collection.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="featured-collection">
+<div
+  ui-section="featured-collection"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
   <div ui-slot="head">
-    <h4 class="heading">Explore our line</h4>
-    <h1 class="subheading">Discover Radiance</h1>
+    <h4 class="heading">{{ section.settings.heading }}</h4>
+    <h1 class="subheading">{{ section.settings.subheading }}</h1>
   </div>
   <div class="core-area">
-    <div ui-block="content">
-      <div class="media">
-        {% render 'misc.image-fallback' %}
-      </div>
-      <div class="content">
-        <h4 class="subheading">Care for your skin</h4>
-        <h1 class="heading">Made for sensitive skin</h1>
-        <button
-          class="cta"
-          ui-slot="button"
-          data-variant="neutral"
-          data-mode="filled"
-          data-size="lg"
-        >
-          Shop All Products
-        </button>
-      </div>
-    </div>
-    <ul ui-block="products">
-      {% for product in (1..4) %}
-        {% render 'block.product' %}
-      {% endfor %}
-    </ul>
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'media' %}
+          <div ui-block="content" {{ block.youcan_attributes }}>
+            <div class="media">
+              {% if block.settings.block_image.src %}
+                <img
+                  src="{{ block.settings.block_image.src }}"
+                  alt="{{ block.settings.block_heading }}"
+                  height="100%"
+                  width="100%"
+                  loading="lazy"
+                >
+              {% else %}
+                {% render 'misc.image-fallback', icon_size: 100 %}
+              {% endif %}
+            </div>
+            <div
+              class="content"
+              data-text-alignment="{{ block.settings.text_alignment }}"
+              data-vertical-alignment="{{ block.settings.vertical_alignment }}"
+            >
+              <h4 class="subheading">{{ block.settings.block_heading }}</h4>
+              <h1 class="heading">{{ block.settings.block_subheading }}</h1>
+              <a
+                class="cta"
+                ui-slot="button"
+                data-variant="primary"
+                data-mode="filled"
+                data-size="lg"
+                href="{{ block.settings.block_button_link }}"
+              >
+                {{ block.settings.block_button_label }}
+              </a>
+            </div>
+          </div>
+        {% else %}
+          {% assign max_products = section.settings.max_products_to_show %}
+          {% paginate collection.products by max_products id category_id: block.settings.collection.id %}
+            <ul ui-block="products" {{ block.youcan_attributes }}>
+              {% for product in items %}
+                {% render 'block.product' %}
+              {% endfor %}
+            </ul>
+          {% endpaginate %}
+      {% endcase %}
+    {% endfor %}
   </div>
 </div>
 
 {% schema %}
 {
   "label": "Featured Collection",
-  "templates": ["index"]
+  "templates": ["index"],
+  "limit": 3,
+  "max_blocks": 11,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore our line"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover Radiance"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_products_to_show",
+      "label": "Maximum products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "media",
+      "label": "Media",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "block_image",
+          "label": "Image"
+        },
+        {
+          "type": "header",
+          "content": "Headings"
+        },
+        {
+          "type": "text",
+          "id": "block_heading",
+          "label": "Heading",
+          "default": "Care for your skin"
+        },
+        {
+          "type": "text",
+          "id": "block_subheading",
+          "label": "Subheading",
+          "default": "Made for sensitive skin"
+        },
+        {
+          "type": "header",
+          "content": "Action"
+        },
+        {
+          "type": "text",
+          "id": "block_button_label",
+          "label": "Label",
+          "default": "Sell All Products"
+        },
+        {
+          "type": "url",
+          "id": "block_button_link",
+          "label": "Link",
+          "default": "#"
+        },
+        {
+          "type": "select",
+          "id": "block_button_style",
+          "options": [
+            { "label": "Primary", "value": "primary" },
+            { "label": "Secondary", "value": "secondary" },
+            { "label": "Underline", "value": "underline" }
+          ],
+          "label": "Style",
+          "default": "primary"
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "options": [
+            { "label": "Start", "value": "start" },
+            { "label": "Center", "value": "center" },
+            { "label": "End", "value": "end" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "vertical_alignment",
+          "label": "Vertical alignment",
+          "options": [
+            { "label": "Top", "value": "start" },
+            { "label": "Middle", "value": "center" },
+            { "label": "Bottom", "value": "end" }
+          ],
+          "default": "start"
+        }
+      ]
+    },
+    {
+      "type": "collection_item",
+      "label": "Collection",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "category",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
