@@ -1,25 +1,165 @@
 {{ 'section.product-tabs.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="product-tabs">
+<ui-carousel
+  ui-section="product-tabs"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
   <div ui-slot="head">
-    <h1 class="subheading">Our Best Sellers</h1>
+    <span class="heading">{{ section.settings.heading }}</span>
+    <h1 class="subheading">{{ section.settings.subheading }}</h1>
     <div class="tab-list" role="tablist">
-      <button ui-slot="link-button" data-variant="black" data-size="md" data-underline="true" role="tab">Skincare</button>
-      <button ui-slot="link-button" data-variant="gray" data-size="md" role="tab">Hair</button>
-      <button ui-slot="link-button" data-variant="gray" data-size="md" role="tab">Body</button>
-      <button ui-slot="link-button" data-variant="gray" data-size="md" role="tab">Sales & offers</button>
+      {% for collection in section.blocks %}
+        <button
+          class="tab-trigger"
+          ui-carousel="marker"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+        >
+          {{ collection.settings.collection.name | default: 'Collection name' }}
+        </button>
+      {% endfor %}
     </div>
   </div>
-  <ul class="products-area" role="tabpanel">
-    {% for product in (1..4) %}
-      {% render 'block.product' %}
+  <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+    {% for collection in section.blocks %}
+      {% assign max_products = section.settings.max_products_to_show %}
+      {% paginate collection.products by max_products id category_id: collection.settings.collection.id %}
+        <ul
+          class="items"
+          ui-carousel="item"
+          ui-slot="carousel-item"
+          role="tabpanel"
+          data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+        >
+          {% for product in items %}
+            {% render 'block.product' %}
+          {% endfor %}
+        </ul>
+      {% endpaginate %}
     {% endfor %}
-  </ul>
-</div>
+  </div>
+</ui-carousel>
 
 {% schema %}
 {
   "label": "Product Tabs",
-  "templates": ["index"]
+  "templates": ["index", "product", "page"],
+  "limit": 3,
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our self care collections"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "A holistic wellness & beauty line"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_products_to_show",
+      "label": "Maximum products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "Number of columns on Desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "label": "Tab",
+      "settings": [
+        {
+          "type": "category",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
