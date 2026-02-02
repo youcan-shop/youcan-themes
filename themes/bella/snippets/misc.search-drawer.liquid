@@ -10,7 +10,7 @@
 <div ui-slot="sheet" class="search">
   <button
     ui-slot="button"
-    data-variant="neutral"
+    data-variant="primary"
     data-mode="ghost"
     data-size="md"
     data-as-icon
@@ -24,7 +24,7 @@
       <h3 ui-slot="sheet-title">Search</h3>
       <button
         ui-slot="button"
-        data-variant="neutral"
+        data-variant="primary"
         data-mode="lighter"
         data-size="md"
         aria-label="Close"
@@ -52,28 +52,40 @@
       <hr ui-slot="divider" data-variant="line">
       <div class="products">
         <h4 class="label">Most searched products</h4>
-        <div class="items">
-          {% for product in (1..4) %}
-            <div class="item">
-              <div class="media">
-                {% render 'misc.image-fallback' %}
+        {% paginate collection.products by 8 id category_id: block.settings.collection.id %}
+          <div class="items">
+            {% for product in items %}
+              <div class="item">
+                <div class="media">
+                  {% if product.preview_image %}
+                    <img
+                      src="{{ product.preview_image.original }}"
+                      alt="{{ product.name }}"
+                      height="100%"
+                      width="100%"
+                    >
+                  {% else %}
+                    {% render 'misc.image-fallback' %}
+                  {% endif %}
+                </div>
+                <div class="content">
+                  <a
+                    class="title"
+                    ui-slot="link-button"
+                    data-variant="black"
+                    data-size="md"
+                    class="title"
+                    href="/products/{{ product.slug }}"
+                  >
+                    {{ product.name }}
+                  </a>
+                  {% assign price = default_variant.price | default: product.price %}
+                  <span class="price">{{ price | money }}</span>
+                </div>
               </div>
-              <div class="content">
-                <a
-                  class="title"
-                  ui-slot="link-button"
-                  data-variant="black"
-                  data-size="md"
-                  class="title"
-                  href="#"
-                >
-                  Product item
-                </a>
-                <span class="price">{{ 0 | money }}</span>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
+            {% endfor %}
+          </div>
+        {% endpaginate %}
       </div>
     </div>
   </div>
