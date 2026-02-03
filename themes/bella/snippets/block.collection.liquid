@@ -8,14 +8,16 @@
   {% render 'block.collection', collection: {...} %}
 {% endcomment %}
 
+{% assign collection = collection.settings.collection | default: collection %}
+
 <li ui-carousel="item" ui-block="collection" ui-slot="carousel-item" {{ collection.youcan_attributes }}>
-  <a href="/collections/{{ collection.settings.collection.slug }}" class="media">
-    {% if collection.settings.collection.preview_image %}
+  <a href="/collections/{{ collection.slug }}" class="media">
+    {% if collection.preview_image %}
       <img
         srcset="
-          {{ collection.settings.collection.preview_image.medium }} 480w,
-          {{ collection.settings.collection.preview_image.large }} 800w,
-          {{ collection.settings.collection.preview_image.original }} 1200w
+          {{ collection.preview_image.medium }} 480w,
+          {{ collection.preview_image.large }} 800w,
+          {{ collection.preview_image.original }} 1200w
         "
         sizes="
           (max-width: 640px) 50vw,
@@ -23,8 +25,8 @@
           (max-width: 1024px) 25vw,
           33vw
         "
-        src="{{ collection.settings.collection.preview_image.original }}"
-        alt="{{ collection.settings.collection.name }}"
+        src="{{ collection.preview_image.original }}"
+        alt="{{ collection.name }}"
         height="100%"
         width="100%"
       >
@@ -34,15 +36,15 @@
   </a>
   <div class="content">
     <div class="info">
-      <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/collections/{{ collection.settings.collection.slug }}">
-        {{ collection.settings.collection.name | default: 'Collection name' }}
+      <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/collections/{{ collection.slug }}">
+        {{ collection.name | default: 'Collection name' }}
       </a>
       {% if settings.collection_show_product_count %}
         <span class="total">20 Items</span>
       {% endif %}
     </div>
     <a
-      href="/collections/{{ collection.settings.collection.slug }}"
+      href="/collections/{{ collection.slug }}"
       ui-slot="button"
       data-variant="neutral"
       data-mode="stroke"
