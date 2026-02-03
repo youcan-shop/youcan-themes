@@ -1,26 +1,52 @@
 {{ 'section.single-collection.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="single-collection">
+<div
+  ui-section="single-collection"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
   {% render 'misc.breadcrumb' %}
   <div ui-slot="head">
     <h1 class="subheading">{{ category.name }}</h1>
-    <p class="description">Well cared for skin is the key to clean, natural beauty</p>
+    {% if category.description %}
+      <p class="description">{{ category.description }}</p>
+    {% endif %}
   </div>
-  <ul class="sub-collections-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
-    {% for sub-collection in (1..5) %}
-      <li class="sub-collection" ui-slot="carousel-item">
-        <a href="#">
-          <div class="media">
-            {% render 'misc.image-fallback' %}
-          </div>
-          <h4 class="title">Sub Collection</h4>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-  <hr ui-slot="divider" data-variant="line">
-  <div class="core-area">
-    {% paginate collection.products by 24 cod, category_id: category.id %}
+  {% paginate collection.products by 24 cod, category_id: category.id %}
+    {% if subCategories.size > 0 %}
+      <ul class="sub-collections-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+        {% for subCollection in subCategories %}
+          <li class="sub-collection" ui-slot="carousel-item">
+            <a href="/collections/{{ subCollection.slug }}">
+              <div class="media">
+                {% if subCollection.preview_image %}
+                  <img
+                    src="{{ subCollection.preview_image.original }}"
+                    alt="{{ subCollection.name }}"
+                    height="100%"
+                    width="100%"
+                  >
+                {% else %}
+                  {% render 'misc.image-fallback' %}
+                {% endif %}
+              </div>
+              <h4 class="title">{{ subCollection.name }}</h4>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <hr ui-slot="divider" data-variant="line">
+    <div class="core-area">
       <div class="controller">
         <h4 class="result">{{ items.size }} Products</h4>
         <div class="sort">
@@ -29,7 +55,7 @@
         </div>
       </div>
       {% if items.size > 0 %}
-        <ul class="items">
+        <ul class="items" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
           {% for product in items %}
             {% render 'block.product', product: product %}
           {% endfor %}
@@ -41,14 +67,80 @@
         {% assign empty_content = 'single-collection.empty.title' | t %}
         {% render 'misc.empty', heading: empty_content %}
       {% endif %}
-    {% endpaginate %}
-  </div>
+    </div>
+  {% endpaginate %}
 </div>
 
 {% schema %}
 {
   "label": "Single Collection",
   "templates": ["collection"],
-  "limit": 1
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "Number of columns on Desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
 }
 {% endschema %}
