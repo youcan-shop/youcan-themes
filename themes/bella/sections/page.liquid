@@ -1,7 +1,29 @@
 {{ 'section.page.css' | asset_url | stylesheet_tag }}
 
-{% if page.template == 'contact' %}
-  <div ui-section="page">
+<div
+  ui-section="page"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head">
+    <h1 class="subheading">
+      {% if page.template == 'contact' %}
+        Contact Us
+      {% else %}
+        {{ page.name }}
+      {% endif %}
+    </h1>
+  </div>
+  {% if page.template == 'contact' %}
     {% form 'contact' %}
       {% if form.posted_successfully %}
         <div ui-slot="alert" data-variant="lighter" data-status="success" data-size="md">
@@ -65,15 +87,68 @@
         {{ 'contact.action' | t }}
       </button>
     {% endform %}
-  </div>
-{% else %}
-  {{ page.content }}
-{% endif %}
+  {% else %}
+    {{ page.content }}
+  {% endif %}
+</div>
 
 {% schema %}
 {
   "label": "Page",
   "templates": ["page"],
-  "limit": 1
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
 }
 {% endschema %}
