@@ -38,7 +38,7 @@
       href="{{ previous_page_url }}"
       aria-label="back"
       {% if current == 1 %}
-        data-disabled
+        aria-disabled="true"
       {% endif %}
     >
       {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
@@ -58,10 +58,6 @@
       {% assign page_link = page_params | replace: '%p', 1 %}
 
       <a ui-slot="pagination-item" href="{{ page_link }}">1</a>
-      {% if start > 2 %}
-        dd
-        {% comment %} {% render 'ui-icon', name: 'chevron_forward' %} {% endcomment %}
-      {% endif %}
     {% endif %}
 
     {% for index in (start..end) %}
@@ -95,7 +91,7 @@
       href="{{ next_page_url }}"
       aria-label="next"
       {% if current >= last %}
-        data-disabled
+        aria-disabled="true"
       {% endif %}
     >
       {% render 'misc.icon', name: 'hgi-arrow-right-01"' %}
