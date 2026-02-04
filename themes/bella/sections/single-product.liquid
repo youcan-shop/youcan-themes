@@ -5,12 +5,89 @@
 {% assign price = default_variant.price | default: product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
 
-<ui-product ui-section="single-product" product-id="{{ product.id }}">
-  <div class="media">
-    <div ui-slot="carousel" aria-orientation="vertical" data-align="center" style="--per-page: 1;">
+<ui-product
+  ui-section="single-product"
+  product-id="{{ product.id }}"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-media-width-desktop="{{ section.settings.media_width_desktop }}"
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  {% if section.settings.media_desktop_layout == 'carousel' %}
+    <ui-carousel class="media" data-layout="carousel">
+      {% if product.images.size > 1 %}
+        <button
+          class="arrow"
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-size="lg"
+          data-as-icon
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+        </button>
+      {% endif %}
+      <div class="main-media" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+        {% if product.images.size %}
+          {% for image in product.images %}
+            <div ui-carousel="item" ui-slot="carousel-item">
+              <img
+                src="{{ image }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+              >
+            </div>
+          {% endfor %}
+        {% else %}
+          {% render 'misc.image-fallback', size: 60 %}
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <button
+          class="arrow"
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-size="lg"
+          data-as-icon
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+        </button>
+        <div class="markers" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+          {% for marker in product.images %}
+            <button
+              class="marker"
+              ui-carousel="marker"
+              ui-slot="carousel-item"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+            >
+              <img
+                src="{{ marker }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+              >
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </ui-carousel>
+  {% else %}
+    <div class="media" data-layout="grid">
       {% if product.images.size %}
         {% for image in product.images %}
-          <div ui-slot="carousel-item">
+          <div class="image">
             <img
               src="{{ image }}"
               alt="{{ product.name }}"
@@ -23,7 +100,7 @@
         {% render 'misc.image-fallback', size: 60 %}
       {% endif %}
     </div>
-  </div>
+  {% endif %}
   <form class="content" ui-order-form>
     <h1 class="title">{{ product.name }}</h1>
     <div class="price">
@@ -55,7 +132,8 @@
     {% render 'core.express-checkout' %}
 
     <div class="controller">
-      {% render 'core.quantity' %}
+      {% render 'core.quantity', size: 'md' %}
+      {% render 'core.shop-button', mode: 'lighter' %}
       {% render 'core.shop-button', is_express_checkout: true %}
     </div>
   </form>
@@ -73,6 +151,177 @@
 {
   "label": "Single Product",
   "templates": ["product"],
-  "limit": 1
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "select",
+      "id": "media_width_desktop",
+      "label": "Width desktop",
+      "options": [
+        { "label": "Small (1/3)", "value": "sm" },
+        { "label": "Medium (1/2)", "value": "md" },
+        { "label": "Large (2/3)", "value": "lg" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "select",
+      "id": "media_desktop_layout",
+      "label": "Layout desktop",
+      "options": [
+        { "label": "Grid", "value": "grid" },
+        { "label": "Carousel", "value": "carousel" }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block_title",
+      "label": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "price_size",
+          "label": "Size",
+          "options": [
+            { "label": "XSmall", "value": "xs" },
+            { "label": "Small", "value": "sm" },
+            { "label": "Medium", "value": "md" },
+            { "label": "Large", "value": "lg" },
+            { "label": "XLarge", "value": "xl" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "block_description",
+      "label": "Description",
+      "limit": 1
+    },
+    {
+      "type": "block_inventory_status",
+      "label": "Inventory statue",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "low_inventory_threshold",
+          "label": "Low inventory threshold",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "checkbox",
+          "id": "show_inventory_count",
+          "label": "Show inventory count"
+        }
+      ]
+    },
+    {
+      "type": "block_shop_button",
+      "label": "Shop buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "shop_buttons_layout",
+          "label": "Layout",
+          "options": [
+            { "label": "Add to cart (only)", "value": "add-to-cart" },
+            { "label": "Buy now (only)", "value": "buy-now" },
+            { "label": "Add to cart + Buy now", "value": "both" }
+          ],
+          "default": "both"
+        }
+      ]
+    },
+    {
+      "type": "block_collapsible_content",
+      "label": "Collapsible content",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Item"
+        },
+        {
+          "type": "text",
+          "id": "collapsible_trigger",
+          "label": "Trigger",
+          "default": "Overview"
+        },
+        {
+          "type": "textarea",
+          "id": "collapsible_content",
+          "label": "Content",
+          "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ab eos optio, eum facilis saepe!"
+        }
+      ]
+    },
+    {
+      "type": "block_price",
+      "label": "Price",
+      "limit": 1
+    }
+  ]
 }
 {% endschema %}
