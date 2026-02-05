@@ -1,0 +1,88 @@
+{% comment %}
+  Render a product media (images)
+
+  Usage:
+  {% render 'misc.product-media' %}
+{% endcomment %}
+
+<ui-carousel class="media" data-layout="carousel">
+  {% if product.images.size > 1 %}
+    <button
+      class="arrow"
+      ui-carousel="arrow-previous"
+      ui-slot="button"
+      data-size="lg"
+      data-as-icon
+      aria-label="Previous"
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+    </button>
+  {% endif %}
+  <div class="main-media" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+    {% if product.images.size %}
+      {% for image in product.images %}
+        <div ui-carousel="item" ui-slot="carousel-item">
+          <img
+            src="{{ image }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+          >
+        </div>
+      {% endfor %}
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 60 %}
+    {% endif %}
+  </div>
+  {% if product.images.size > 1 %}
+    <button
+      class="arrow"
+      ui-carousel="arrow-next"
+      ui-slot="button"
+      data-size="lg"
+      data-as-icon
+      aria-label="Next"
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+    </button>
+    <div class="markers" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+      {% for marker in product.images %}
+        <button
+          class="marker"
+          ui-carousel="marker"
+          ui-slot="carousel-item"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+        >
+          <img
+            src="{{ marker }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+          >
+        </button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</ui-carousel>
+{% if section.settings.media_desktop_layout == 'grid' %}
+  <div class="media" data-layout="grid">
+    {% if product.images.size %}
+      {% for image in product.images %}
+        <div class="image">
+          <img
+            src="{{ image }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+          >
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="image">
+        {% render 'misc.image-fallback', icon_size: 60 %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

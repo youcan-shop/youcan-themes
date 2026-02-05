@@ -21,122 +21,9 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  {% if section.settings.media_desktop_layout == 'carousel' %}
-    <ui-carousel class="media" data-layout="carousel">
-      {% if product.images.size > 1 %}
-        <button
-          class="arrow"
-          ui-carousel="arrow-previous"
-          ui-slot="button"
-          data-size="lg"
-          data-as-icon
-          aria-label="Previous"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-        </button>
-      {% endif %}
-      <div class="main-media" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
-        {% if product.images.size %}
-          {% for image in product.images %}
-            <div ui-carousel="item" ui-slot="carousel-item">
-              <img
-                src="{{ image }}"
-                alt="{{ product.name }}"
-                height="100%"
-                width="100%"
-              >
-            </div>
-          {% endfor %}
-        {% else %}
-          {% render 'misc.image-fallback', size: 60 %}
-        {% endif %}
-      </div>
-      {% if product.images.size > 1 %}
-        <button
-          class="arrow"
-          ui-carousel="arrow-next"
-          ui-slot="button"
-          data-size="lg"
-          data-as-icon
-          aria-label="Next"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-        </button>
-        <div class="markers" ui-slot="carousel" aria-orientation="vertical" data-align="center">
-          {% for marker in product.images %}
-            <button
-              class="marker"
-              ui-carousel="marker"
-              ui-slot="carousel-item"
-              {% if forloop.first %}
-                aria-selected="true"
-              {% endif %}
-            >
-              <img
-                src="{{ marker }}"
-                alt="{{ product.name }}"
-                height="100%"
-                width="100%"
-              >
-            </button>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </ui-carousel>
-  {% else %}
-    <div class="media" data-layout="grid">
-      {% if product.images.size %}
-        {% for image in product.images %}
-          <div class="image">
-            <img
-              src="{{ image }}"
-              alt="{{ product.name }}"
-              height="100%"
-              width="100%"
-            >
-          </div>
-        {% endfor %}
-      {% else %}
-        {% render 'misc.image-fallback', size: 60 %}
-      {% endif %}
-    </div>
-  {% endif %}
-  <form class="content" ui-order-form>
-    <h1 class="title">{{ product.name }}</h1>
-    <div class="price">
-      <span class="original-price" ui-product-item="price">
-        {{ price | default: 0 | money }}
-      </span>
-      <div
-        class="compare-at-price"
-        ui-product-item="compare-at-price"
-        {% unless compare_at_price %}
-          hidden
-        {% endunless %}
-      >
-        {{ compare_at_price | default: 0 | money }}
-      </div>
-    </div>
-    {% render 'const.inventory-status', count: default_variant.inventory, threshold: 10, show_count: true %}
-
-    {% if product.options.size > 0 %}
-      {% render 'core.variants' %}
-    {% endif %}
-
-    {% if product.description %}
-      <div class="general-info">
-        <article>{{ product.description }}</article>
-      </div>
-    {% endif %}
-
-    {% render 'core.express-checkout' %}
-
-    <div class="controller">
-      {% render 'core.quantity', size: 'md' %}
-      {% render 'core.shop-button', mode: 'lighter' %}
-      {% render 'core.shop-button', is_express_checkout: true %}
-    </div>
-  </form>
+  {% render 'misc.product-media' %}
+  {% render 'misc.product-content' %}
+  {% render 'misc.shop-bar' %}
 </ui-product>
 
 {% if product and product.options.size %}
@@ -203,7 +90,7 @@
         { "label": "Grid", "value": "grid" },
         { "label": "Carousel", "value": "carousel" }
       ],
-      "default": "carousel"
+      "default": "grid"
     },
     {
       "type": "header",
@@ -238,6 +125,31 @@
       "settings": [
         {
           "type": "select",
+          "id": "title_size",
+          "label": "Size",
+          "options": [
+            { "label": "XSmall", "value": "xs" },
+            { "label": "Small", "value": "sm" },
+            { "label": "Medium", "value": "md" },
+            { "label": "Large", "value": "lg" },
+            { "label": "XLarge", "value": "xl" }
+          ],
+          "default": "lg"
+        }
+      ]
+    },
+    {
+      "type": "block_rating",
+      "label": "Rating",
+      "limit": 1
+    },
+    {
+      "type": "block_price",
+      "label": "Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
           "id": "price_size",
           "label": "Size",
           "options": [
@@ -246,14 +158,10 @@
             { "label": "Medium", "value": "md" },
             { "label": "Large", "value": "lg" },
             { "label": "XLarge", "value": "xl" }
-          ]
+          ],
+          "default": "md"
         }
       ]
-    },
-    {
-      "type": "block_description",
-      "label": "Description",
-      "limit": 1
     },
     {
       "type": "block_inventory_status",
@@ -272,12 +180,23 @@
         {
           "type": "checkbox",
           "id": "show_inventory_count",
-          "label": "Show inventory count"
+          "label": "Show inventory count",
+          "default": true
         }
       ]
     },
     {
-      "type": "block_shop_button",
+      "type": "block_variant_picker",
+      "label": "Variant picker",
+      "limit": 1
+    },
+    {
+      "type": "block_description",
+      "label": "Description",
+      "limit": 1
+    },
+    {
+      "type": "block_shop_buttons",
       "label": "Shop buttons",
       "limit": 1,
       "settings": [
@@ -301,26 +220,381 @@
       "settings": [
         {
           "type": "header",
-          "content": "Item"
+          "content": "Item 1"
         },
         {
           "type": "text",
-          "id": "collapsible_trigger",
+          "id": "collapsible_trigger_1",
           "label": "Trigger",
-          "default": "Overview"
+          "default": "Item 1"
         },
         {
-          "type": "textarea",
-          "id": "collapsible_content",
+          "type": "richtext",
+          "id": "collapsible_content_1",
           "label": "Content",
           "default": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum ab eos optio, eum facilis saepe!"
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible_open_by_default_1",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Item 2"
+        },
+        {
+          "type": "text",
+          "id": "collapsible_trigger_2",
+          "label": "Trigger",
+          "placeholder": "Item 2"
+        },
+        {
+          "type": "richtext",
+          "id": "collapsible_content_2",
+          "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible_open_by_default_2",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Item 3"
+        },
+        {
+          "type": "text",
+          "id": "collapsible_trigger_3",
+          "label": "Trigger",
+          "placeholder": "Item 3"
+        },
+        {
+          "type": "richtext",
+          "id": "collapsible_content_3",
+          "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible_open_by_default_3",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible_open_by_default_2",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Item 4"
+        },
+        {
+          "type": "text",
+          "id": "collapsible_trigger_4",
+          "label": "Trigger",
+          "placeholder": "Item 4"
+        },
+        {
+          "type": "richtext",
+          "id": "collapsible_content_4",
+          "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible_open_by_default_4",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Item 5"
+        },
+        {
+          "type": "text",
+          "id": "collapsible_trigger_5",
+          "label": "Trigger",
+          "placeholder": "Item 5"
+        },
+        {
+          "type": "richtext",
+          "id": "collapsible_content_5",
+          "label": "Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "collapsible_open_by_default_5",
+          "label": "Open by default",
+          "default": false
         }
       ]
     },
     {
-      "type": "block_price",
-      "label": "Price",
-      "limit": 1
+      "type": "block_feature_list",
+      "label": "Feature list",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Item 1"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_1",
+          "label": "Icon",
+          "options": [
+            { "label": "Truck", "value": "hgi-shipping-truck-02" },
+            { "label": "Check mark", "value": "hgi-tick-02" },
+            { "label": "Alarm", "value": "hgi-alarm-clock" },
+            { "label": "User", "value": "hgi-user" },
+            { "label": "Dollar", "value": "hgi-dollar-circle" },
+            { "label": "Wallet", "value": " hgi-wallet-01" },
+            { "label": "Setting", "value": "hgi-settings-03" },
+            { "label": "Zap", "value": "hgi-zap" },
+            { "label": "Shield energy", "value": "hgi-shield-energy" },
+            { "label": "Percentage", "value": "hgi-percent" },
+            { "label": "Gift", "value": "hgi-gift" },
+            { "label": "Battery", "value": "hgi-battery-charging-01" },
+            { "label": "Bell", "value": "hgi-notification-01" },
+            { "label": "Open book", "value": "hgi-book-open-01" },
+            { "label": "Droplet", "value": "hgi-droplet" },
+            { "label": "Eye", "value": "hgi-view" },
+            { "label": "Glasses", "value": "hgi-glasses" },
+            { "label": "Ruler", "value": "hgi-ruler" },
+            { "label": "Handbag", "value": "hgi-hand-bag-02" },
+            { "label": "Headset", "value": "hgi-headset" },
+            { "label": "Shirt", "value": "hgi-shirt-01" },
+            { "label": "Sparkles", "value": "hgi-sparkles" },
+            { "label": "Smiley face", "value": "hgi-smile" },
+            { "label": "Smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "X", "value": "hgi-cancel-01" },
+            { "label": "Shopping bag", "value": "hgi-shopping-bag-02" },
+            { "label": "Arrow up right", "value": "hgi-arrow-up-right-03" },
+            { "label": "Arrow left", "value": "hgi-arrow-left-01" },
+            { "label": "Arrow right", "value": "hgi-arrow-right-01" },
+            { "label": "Arrow up", "value": "hgi-arrow-up-01" },
+            { "label": "Arrow down", "value": "hgi-arrow-down-01" },
+            { "label": "Filter", "value": "hgi-filter-vertical" },
+            { "label": "Search", "value": "hgi-search-01" },
+            { "label": "Tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-zap"
+        },
+        {
+          "type": "text",
+          "id": "feature_content_1",
+          "label": "Content",
+          "default": "Feature item 1"
+        },
+        {
+          "type": "header",
+          "content": "Item 2"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_2",
+          "label": "Icon",
+          "options": [
+            { "label": "Truck", "value": "hgi-shipping-truck-02" },
+            { "label": "Check mark", "value": "hgi-tick-02" },
+            { "label": "Alarm", "value": "hgi-alarm-clock" },
+            { "label": "User", "value": "hgi-user" },
+            { "label": "Dollar", "value": "hgi-dollar-circle" },
+            { "label": "Wallet", "value": " hgi-wallet-01" },
+            { "label": "Setting", "value": "hgi-settings-03" },
+            { "label": "Zap", "value": "hgi-zap" },
+            { "label": "Shield energy", "value": "hgi-shield-energy" },
+            { "label": "Percentage", "value": "hgi-percent" },
+            { "label": "Gift", "value": "hgi-gift" },
+            { "label": "Battery", "value": "hgi-battery-charging-01" },
+            { "label": "Bell", "value": "hgi-notification-01" },
+            { "label": "Open book", "value": "hgi-book-open-01" },
+            { "label": "Droplet", "value": "hgi-droplet" },
+            { "label": "Eye", "value": "hgi-view" },
+            { "label": "Glasses", "value": "hgi-glasses" },
+            { "label": "Ruler", "value": "hgi-ruler" },
+            { "label": "Handbag", "value": "hgi-hand-bag-02" },
+            { "label": "Headset", "value": "hgi-headset" },
+            { "label": "Shirt", "value": "hgi-shirt-01" },
+            { "label": "Sparkles", "value": "hgi-sparkles" },
+            { "label": "Smiley face", "value": "hgi-smile" },
+            { "label": "Smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "X", "value": "hgi-cancel-01" },
+            { "label": "Shopping bag", "value": "hgi-shopping-bag-02" },
+            { "label": "Arrow up right", "value": "hgi-arrow-up-right-03" },
+            { "label": "Arrow left", "value": "hgi-arrow-left-01" },
+            { "label": "Arrow right", "value": "hgi-arrow-right-01" },
+            { "label": "Arrow up", "value": "hgi-arrow-up-01" },
+            { "label": "Arrow down", "value": "hgi-arrow-down-01" },
+            { "label": "Filter", "value": "hgi-filter-vertical" },
+            { "label": "Search", "value": "hgi-search-01" },
+            { "label": "Tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-ruler"
+        },
+        {
+          "type": "text",
+          "id": "feature_content_2",
+          "label": "Content",
+          "default": "Feature item 2"
+        },
+        {
+          "type": "header",
+          "content": "Item 3"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_3",
+          "label": "Icon",
+          "options": [
+            { "label": "Truck", "value": "hgi-shipping-truck-02" },
+            { "label": "Check mark", "value": "hgi-tick-02" },
+            { "label": "Alarm", "value": "hgi-alarm-clock" },
+            { "label": "User", "value": "hgi-user" },
+            { "label": "Dollar", "value": "hgi-dollar-circle" },
+            { "label": "Wallet", "value": " hgi-wallet-01" },
+            { "label": "Setting", "value": "hgi-settings-03" },
+            { "label": "Zap", "value": "hgi-zap" },
+            { "label": "Shield energy", "value": "hgi-shield-energy" },
+            { "label": "Percentage", "value": "hgi-percent" },
+            { "label": "Gift", "value": "hgi-gift" },
+            { "label": "Battery", "value": "hgi-battery-charging-01" },
+            { "label": "Bell", "value": "hgi-notification-01" },
+            { "label": "Open book", "value": "hgi-book-open-01" },
+            { "label": "Droplet", "value": "hgi-droplet" },
+            { "label": "Eye", "value": "hgi-view" },
+            { "label": "Glasses", "value": "hgi-glasses" },
+            { "label": "Ruler", "value": "hgi-ruler" },
+            { "label": "Handbag", "value": "hgi-hand-bag-02" },
+            { "label": "Headset", "value": "hgi-headset" },
+            { "label": "Shirt", "value": "hgi-shirt-01" },
+            { "label": "Sparkles", "value": "hgi-sparkles" },
+            { "label": "Smiley face", "value": "hgi-smile" },
+            { "label": "Smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "X", "value": "hgi-cancel-01" },
+            { "label": "Shopping bag", "value": "hgi-shopping-bag-02" },
+            { "label": "Arrow up right", "value": "hgi-arrow-up-right-03" },
+            { "label": "Arrow left", "value": "hgi-arrow-left-01" },
+            { "label": "Arrow right", "value": "hgi-arrow-right-01" },
+            { "label": "Arrow up", "value": "hgi-arrow-up-01" },
+            { "label": "Arrow down", "value": "hgi-arrow-down-01" },
+            { "label": "Filter", "value": "hgi-filter-vertical" },
+            { "label": "Search", "value": "hgi-search-01" },
+            { "label": "Tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-glasses"
+        },
+        {
+          "type": "text",
+          "id": "feature_content_3",
+          "label": "Content"
+        },
+        {
+          "type": "header",
+          "content": "Item 4"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_4",
+          "label": "Icon",
+          "options": [
+            { "label": "Truck", "value": "hgi-shipping-truck-02" },
+            { "label": "Check mark", "value": "hgi-tick-02" },
+            { "label": "Alarm", "value": "hgi-alarm-clock" },
+            { "label": "User", "value": "hgi-user" },
+            { "label": "Dollar", "value": "hgi-dollar-circle" },
+            { "label": "Wallet", "value": " hgi-wallet-01" },
+            { "label": "Setting", "value": "hgi-settings-03" },
+            { "label": "Zap", "value": "hgi-zap" },
+            { "label": "Shield energy", "value": "hgi-shield-energy" },
+            { "label": "Percentage", "value": "hgi-percent" },
+            { "label": "Gift", "value": "hgi-gift" },
+            { "label": "Battery", "value": "hgi-battery-charging-01" },
+            { "label": "Bell", "value": "hgi-notification-01" },
+            { "label": "Open book", "value": "hgi-book-open-01" },
+            { "label": "Droplet", "value": "hgi-droplet" },
+            { "label": "Eye", "value": "hgi-view" },
+            { "label": "Glasses", "value": "hgi-glasses" },
+            { "label": "Ruler", "value": "hgi-ruler" },
+            { "label": "Handbag", "value": "hgi-hand-bag-02" },
+            { "label": "Headset", "value": "hgi-headset" },
+            { "label": "Shirt", "value": "hgi-shirt-01" },
+            { "label": "Sparkles", "value": "hgi-sparkles" },
+            { "label": "Smiley face", "value": "hgi-smile" },
+            { "label": "Smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "X", "value": "hgi-cancel-01" },
+            { "label": "Shopping bag", "value": "hgi-shopping-bag-02" },
+            { "label": "Arrow up right", "value": "hgi-arrow-up-right-03" },
+            { "label": "Arrow left", "value": "hgi-arrow-left-01" },
+            { "label": "Arrow right", "value": "hgi-arrow-right-01" },
+            { "label": "Arrow up", "value": "hgi-arrow-up-01" },
+            { "label": "Arrow down", "value": "hgi-arrow-down-01" },
+            { "label": "Filter", "value": "hgi-filter-vertical" },
+            { "label": "Search", "value": "hgi-search-01" },
+            { "label": "Tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-settings-03"
+        },
+        {
+          "type": "text",
+          "id": "feature_content_4",
+          "label": "Content"
+        },
+        {
+          "type": "header",
+          "content": "Item 5"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_5",
+          "label": "Icon",
+          "options": [
+            { "label": "Truck", "value": "hgi-shipping-truck-02" },
+            { "label": "Check mark", "value": "hgi-tick-02" },
+            { "label": "Alarm", "value": "hgi-alarm-clock" },
+            { "label": "User", "value": "hgi-user" },
+            { "label": "Dollar", "value": "hgi-dollar-circle" },
+            { "label": "Wallet", "value": " hgi-wallet-01" },
+            { "label": "Setting", "value": "hgi-settings-03" },
+            { "label": "Zap", "value": "hgi-zap" },
+            { "label": "Shield energy", "value": "hgi-shield-energy" },
+            { "label": "Percentage", "value": "hgi-percent" },
+            { "label": "Gift", "value": "hgi-gift" },
+            { "label": "Battery", "value": "hgi-battery-charging-01" },
+            { "label": "Bell", "value": "hgi-notification-01" },
+            { "label": "Open book", "value": "hgi-book-open-01" },
+            { "label": "Droplet", "value": "hgi-droplet" },
+            { "label": "Eye", "value": "hgi-view" },
+            { "label": "Glasses", "value": "hgi-glasses" },
+            { "label": "Ruler", "value": "hgi-ruler" },
+            { "label": "Handbag", "value": "hgi-hand-bag-02" },
+            { "label": "Headset", "value": "hgi-headset" },
+            { "label": "Shirt", "value": "hgi-shirt-01" },
+            { "label": "Sparkles", "value": "hgi-sparkles" },
+            { "label": "Smiley face", "value": "hgi-smile" },
+            { "label": "Smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "X", "value": "hgi-cancel-01" },
+            { "label": "Shopping bag", "value": "hgi-shopping-bag-02" },
+            { "label": "Arrow up right", "value": "hgi-arrow-up-right-03" },
+            { "label": "Arrow left", "value": "hgi-arrow-left-01" },
+            { "label": "Arrow right", "value": "hgi-arrow-right-01" },
+            { "label": "Arrow up", "value": "hgi-arrow-up-01" },
+            { "label": "Arrow down", "value": "hgi-arrow-down-01" },
+            { "label": "Filter", "value": "hgi-filter-vertical" },
+            { "label": "Search", "value": "hgi-search-01" },
+            { "label": "Tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-tag-02"
+        },
+        {
+          "type": "text",
+          "id": "feature_content_5",
+          "label": "Content"
+        }
+      ]
     }
   ]
 }

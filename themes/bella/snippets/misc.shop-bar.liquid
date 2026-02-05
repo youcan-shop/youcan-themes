@@ -1,0 +1,59 @@
+{{ 'misc.shop-bar.css' | asset_url | stylesheet_tag }}
+{{ 'misc.shop-bar.js' | asset_url | script_tag_deferred }}
+
+{% comment %}
+  Renders a shop bar (product info + shop button)
+
+  Usage:
+  {% render 'misc.misc.shop-bar' %}
+{% endcomment %}
+
+<ui-shop-bar>
+  <div class="product">
+    <div class="image">
+      {% if product.preview_image %}
+        <img src="{{ product.preview_image.medium }}" alt="{{ product.name }}" height="100%" width="100%">
+      {% else %}
+        {% render 'misc.image-fallback' %}
+      {% endif %}
+    </div>
+    <div class="info">
+      <span class="title">{{ product.name }}</span>
+      <div class="price">
+        <span class="original-price" ui-product-item="price">
+          {{ price | default: 0 | money }}
+        </span>
+        <div
+          class="compare-at-price"
+          ui-product-item="compare-at-price"
+          {% unless compare_at_price %}
+            hidden
+          {% endunless %}
+        >
+          {{ compare_at_price | default: 0 | money }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    {% render 'core.quantity', size: 'md' %}
+    {% for block in section.blocks %}
+      {% if block.type == 'block_shop_buttons' %}
+        {% if block.settings.shop_buttons_layout == 'buy-now' %}
+          <button
+            ui-slot="button"
+            data-variant="primary"
+            data-mode="filled"
+            data-size="lg"
+            type="button"
+            popovertarget="express-checkout"
+          >
+            Buy now
+          </button>
+        {% else %}
+          {% render 'core.shop-button' %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</ui-shop-bar>
