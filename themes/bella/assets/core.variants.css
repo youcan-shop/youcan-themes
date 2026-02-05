@@ -81,6 +81,11 @@ ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> inpu
   background-color:var(--color-value);
 }
 ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt{
+  display:grid;
+  grid-gap:var(--spacing-8);
+  gap:var(--spacing-8);
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image{
   display:flex;
   position:relative;
   align-items:center;
@@ -95,7 +100,7 @@ ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt{
   box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
   cursor:pointer;
 }
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .checked{
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image .checked{
   display:flex;
   position:absolute;
   align-items:center;
@@ -111,7 +116,7 @@ ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .checked{
   -webkit-backdrop-filter:blur(2px);
           backdrop-filter:blur(2px);
 }
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt > img{
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image > img{
   width:100%;
   height:100%;
   border-radius:var(--radius-8);
@@ -121,10 +126,13 @@ ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt > img{
 ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .checked{
   opacity:1;
 }
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) > img{
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled){
+  pointer-events:none;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image > img{
   filter:grayscale(1) blur(1px);
 }
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled)::before{
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image::before{
   content:"";
   position:absolute;
   z-index:2;
@@ -132,6 +140,9 @@ ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> inp
   height:140%;
   background-color:white;
   rotate:45deg;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .value{
+  opacity:0.5;
 }
 ui-variants [ui-variant][ui-variant=radio_buttons] .options{
   display:grid;

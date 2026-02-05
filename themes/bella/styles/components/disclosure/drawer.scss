@@ -5,99 +5,99 @@
     - ...
 */
 
-[ui-slot="drawer"] {
+[ui-slot="drawer-content"][popover] {
   --drawer-min-height: 40vh;
   --drawer-max-height: 80vh;
 
-  /* Content */
-  [ui-slot="drawer-content"][popover] {
+  display: flex;
+  position: fixed;
+  inset: unset;
+  bottom: var(--spacing-0);
+  left: var(--spacing-0);
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100dvw;
+  min-height: var(--drawer-min-height);
+  max-height: var(--drawer-max-height);
+  transform: translate3d(0, 100%, 0);
+  transition: var(--transition-expressive-slow-spatial);
+  border: none;
+  border-radius: var(--radius-20) var(--radius-20) 0 0;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+
+  &::before {
+    content: "";
+    display: grid;
+    position: relative;
+    left: 50%;
+    width: 80px;
+    height: 6px;
+    margin-block-start: var(--spacing-16);
+    transform: translateX(-50%);
+    border-radius: var(--radius-rounded);
+    background-color: var(--color-surface-container-high);
+  }
+
+  /* Header */
+  [ui-slot="drawer-header"] {
     display: flex;
-    position: fixed;
-    inset: unset;
-    bottom: var(--spacing-0);
-    left: var(--spacing-0);
     flex-direction: column;
-    justify-content: space-between;
-    width: 100dvw;
-    min-height: var(--drawer-min-height);
-    max-height: var(--drawer-max-height);
-    transform: translate3d(0, 100%, 0);
-    transition: var(--transition-expressive-slow-spatial);
-    border: none;
-    border-radius: var(--radius-20) var(--radius-20) 0 0;
-    background-color: var(--color-background);
-    color: var(--color-on-background);
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+    gap: var(--spacing-4);
+    border-block-end: 1px solid var(--color-surface-variant);
 
-    &::before {
-      content: "";
-      display: grid;
-      position: relative;
-      left: 50%;
-      width: 80px;
-      height: 6px;
-      margin-block-start: var(--spacing-16);
-      transform: translateX(-50%);
-      border-radius: var(--radius-rounded);
-      background-color: var(--color-surface-container-high);
-    }
-
-    /* Header */
-    [ui-slot="drawer-header"] {
-      display: flex;
-      flex-direction: column;
-      padding: calc(var(--spacing-24) - var(--spacing-4));
+    @media (width > 769px) {
       text-align: center;
-      gap: var(--spacing-4);
-      border-block-end: 1px solid var(--color-surface-variant);
-
-      /* Title */
-      [ui-slot="drawer-title"] {
-        font: var(--font-title-md);
-      }
-
-      /* Description */
-      [ui-slot="modal-description"] {
-        color: var(--color-on-surface-variant);
-        font: var(--font-body-sm);
-      }
     }
 
-    /* Body */
-    [ui-slot="drawer-body"] {
-      flex: 2;
-      padding: calc(var(--spacing-24) - var(--spacing-4));
+    /* Title */
+    [ui-slot="drawer-title"] {
+      font: var(--font-title-md);
     }
 
-    /* Body */
-    [ui-slot="drawer-footer"] {
-      display: grid;
-      gap: var(--spacing-12);
-      grid-template-columns: repeat(2, 1fr);
-      border-block-start: 1px solid var(--color-surface-variant);
-      padding: calc(var(--spacing-24) - var(--spacing-4));
+    /* Description */
+    [ui-slot="modal-description"] {
+      color: var(--color-on-surface-variant);
+      font: var(--font-body-sm);
     }
+  }
 
-    /* Backdrop */
+  /* Body */
+  [ui-slot="drawer-body"] {
+    flex: 2;
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+  }
+
+  /* Body */
+  [ui-slot="drawer-footer"] {
+    display: grid;
+    gap: var(--spacing-12);
+    grid-template-columns: repeat(2, 1fr);
+    border-block-start: 1px solid var(--color-surface-variant);
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+  }
+
+  /* Backdrop */
+  &::backdrop {
+    transition: var(--transition-standard-default-spatial);
+  }
+
+  /* State */
+  &:popover-open {
+    transform: translate3d(0, 0%, 0);
+
     &::backdrop {
-      transition: var(--transition-standard-default-spatial);
+      backdrop-filter: blur(10px);
+      background-color: color-mix(in srgb, currentcolor 15%, transparent);
     }
 
-    /* State */
-    &:popover-open {
-      transform: translate3d(0, 0%, 0);
+    @starting-style {
+      transform: translate3d(0, 100%, 0);
 
       &::backdrop {
-        backdrop-filter: blur(10px);
-        background-color: color-mix(in srgb, currentcolor 15%, transparent);
-      }
-
-      @starting-style {
-        transform: translate3d(0, 100%, 0);
-
-        &::backdrop {
-          backdrop-filter: blur(0);
-          background-color: transparent;
-        }
+        backdrop-filter: blur(0);
+        background-color: transparent;
       }
     }
   }
