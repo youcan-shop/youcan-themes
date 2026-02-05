@@ -13,69 +13,83 @@
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
 
-<ui-express-checkout>
-  {% for field in checkout.fields %}
-    {% assign field_name = field.name %}
+<form ui-slot="drawer-content" id="express-checkout" popover ui-order-form>
+  <div ui-slot="drawer-header">
+    <h2 ui-slot="drawer-title">Buy Gentle Foam</h2>
+    <p ui-slot="drawer-description">Choose contact preferences for companies.</p>
+  </div>
+  <div ui-slot="drawer-body">
+    <ui-express-checkout>
+      {% for field in checkout.fields %}
+        {% assign field_name = field.name %}
 
-    {% if field.custom %}
-      {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
-    {% endif %}
+        {% if field.custom %}
+          {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
+        {% endif %}
 
-    {% unless has_linked_fields and linked_fields contains field.name %}
-      <label ui-express-checkout="field">
-        <span ui-slot="label">{{ field.display_name }}</span>
-        {% case field.type %}
-          {% when 'text', 'number', 'hidden' %}
-            <input
-              ui-slot="input"
-              data-size="lg"
-              type="{{ field.type }}"
-              name="{{ field_name }}"
-              value="{{ field.default_value }}"
-              placeholder="{{ field.placeholder }}"
-              {% if field.required %}
-                required
-              {% endif %}
-            >
-          {% when 'textarea' %}
-            <textarea
-              ui-slot="textarea"
-              name="{{ field_name }}"
-              placeholder="{{ field.placeholder }}"
-              {% if field.required %}
-                required
-              {% endif %}
-            ></textarea>
-          {% when 'select' %}
-            <ui-select ui-slot="select" data-size="lg">
-              <button ui-slot="select-trigger" popovertarget="{{ field_name }}" type="button">
-                {{ 'general.select' | t }}
-              </button>
-
-              <div ui-slot="select-content" id="{{ field_name }}" popover>
-                {% for opt in field.options %}
-                  <button ui-slot="select-option" popovertarget="{{ field_name }}" type="button">
-                    <label>
-                      <input
-                        type="radio"
-                        name="{{ field_name }}"
-                        value="{{ opt }}"
-                        {% if opt == field.default_value %}
-                          checked
-                        {% endif %}
-                      >
-                      {{ opt }}
-                    </label>
+        {% unless has_linked_fields and linked_fields contains field.name %}
+          <label ui-express-checkout="field">
+            <span ui-slot="label">{{ field.display_name }}</span>
+            {% case field.type %}
+              {% when 'text', 'number', 'hidden' %}
+                <input
+                  ui-slot="input"
+                  data-size="lg"
+                  type="{{ field.type }}"
+                  name="{{ field_name }}"
+                  value="{{ field.default_value }}"
+                  placeholder="{{ field.placeholder }}"
+                  {% if field.required %}
+                    required
+                  {% endif %}
+                >
+              {% when 'textarea' %}
+                <textarea
+                  ui-slot="textarea"
+                  name="{{ field_name }}"
+                  placeholder="{{ field.placeholder }}"
+                  {% if field.required %}
+                    required
+                  {% endif %}
+                ></textarea>
+              {% when 'select' %}
+                <ui-select ui-slot="select" data-size="lg">
+                  <button ui-slot="select-trigger" popovertarget="{{ field_name }}" type="button">
+                    {{ 'general.select' | t }}
                   </button>
-                {% endfor %}
-              </div>
-            </ui-select>
-        {% endcase %}
-      </label>
-    {% endunless %}
-  {% endfor %}
 
-  {% if has_linked_fields %}
-    {% render 'core.linked-fields', fields: checkout.fields %}
-  {% endif %}
-</ui-express-checkout>
+                  <div ui-slot="select-content" id="{{ field_name }}" popover>
+                    {% for opt in field.options %}
+                      <button ui-slot="select-option" popovertarget="{{ field_name }}" type="button">
+                        <label>
+                          <input
+                            type="radio"
+                            name="{{ field_name }}"
+                            value="{{ opt }}"
+                            {% if opt == field.default_value %}
+                              checked
+                            {% endif %}
+                          >
+                          {{ opt }}
+                        </label>
+                      </button>
+                    {% endfor %}
+                  </div>
+                </ui-select>
+            {% endcase %}
+          </label>
+        {% endunless %}
+      {% endfor %}
+
+      {% if has_linked_fields %}
+        {% render 'core.linked-fields', fields: checkout.fields %}
+      {% endif %}
+    </ui-express-checkout>
+  </div>
+  <div ui-slot="drawer-footer">
+    <span class="label">Total</span>
+    <span class="value" ui-cart-item="subtotal">{{ product.price | money }}</span>
+    <span class="description">Taxes and shipping are calculated at checkout.</span>
+    {% render 'core.shop-button', is_express_checkout: true %}
+  </div>
+</form>

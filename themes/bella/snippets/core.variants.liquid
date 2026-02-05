@@ -7,7 +7,7 @@
   {% render 'core.variants'%}
 {% endcomment %}
 
-<ui-variants>
+<ui-variants {{ block.youcan_attributes }}>
   {% for variant in product.options %}
     {% assign default = '' %}
     {% assign name_id = 100 | rand: 2000 %}
@@ -98,16 +98,6 @@
         <div class="options">
           {% for opt in variant.values %}
             <label class="opt">
-              {% if opt.preview %}
-                <img
-                  src="{{ opt.preview }}"
-                  alt="{{ opt.value }}"
-                  height="80"
-                  width="80"
-                >
-              {% else %}
-                {% render 'misc.image-fallback' %}
-              {% endif %}
               <input
                 type="radio"
                 name="{{ unique_name }}"
@@ -116,9 +106,23 @@
                   checked
                 {% endif %}
               >
-              <div class="checked">
-                {% render 'misc.icon', name: 'hgi-tick-02', size: 24 %}
+              <div class="image">
+                {% if opt.preview %}
+                  <img
+                    src="{{ opt.preview }}"
+                    alt="{{ opt.value }}"
+                    height="80"
+                    width="80"
+                  >
+                {% else %}
+                  {% render 'misc.image-fallback' %}
+                {% endif %}
+                <div class="checked">
+                  {% render 'misc.icon', name: 'hgi-tick-02', size: 24 %}
+                </div>
               </div>
+
+              <span class="value">{{ opt.value }}</span>
             </label>
           {% endfor %}
         </div>
