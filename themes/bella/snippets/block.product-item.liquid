@@ -8,16 +8,33 @@
   {% render 'block.product-item', product: {...} %}
 {% endcomment %}
 
-{% assign default_variant = product.selected_or_first_available_variant %}
-{% assign price = default_variant.price | default: product.price %}
-{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+{% assign default_variant = product.settings.block_product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.settings.block_product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.settings.block_product.compare_at_price %}
 
 <li ui-block="product-item" {{ product.youcan_attributes }}>
-  <a class="media" href="#">
-    {% render 'misc.image-fallback' %}
+  <a class="media" href="/products/{{ product.settings.block_product.slug }}">
+    {% if product.settings.block_product.preview_image %}
+      <img
+        src="{{ product.settings.block_product.preview_image.original }}"
+        alt="{{ product.settings.block_product.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback' %}
+    {% endif %}
   </a>
   <div class="main-info">
-    <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="#">Chanel No. 5</a>
+    <a
+      class="title"
+      ui-slot="link-button"
+      data-variant="black"
+      data-size="md"
+      href="/products/{{ product.settings.block_product.slug }}"
+    >
+      {{ product.settings.block_product.name | default: 'Product name' }}
+    </a>
     <ui-select ui-slot="select" data-size="md" data-variant="compact">
       <button ui-slot="select-trigger" popovertarget="my-select-{{ forloop.index }}" type="button">
         {{ 'general.select' | t }}
@@ -37,11 +54,16 @@
   </div>
   <div class="secondary-info">
     <div class="price">
-      <s class="compare-at-price"> {{ 0 | money }} </s>
-      <span class="original-price"> {{ 0 | money }} </span>
+      {% if compare_at_price %}
+        <s class="compare-at-price"> {{ compare_at_price | default: 0 | money }} </s>
+      {% endif %}
+      <span class="original-price"> {{ price | default: 0 | money }} </span>
     </div>
-    <button ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" data-as-icon>
-      {% render 'misc.icon', name: ' hgi-shopping-bag-01' %}
-    </button>
+    {% comment %}
+      <button ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="lg" data-as-icon>
+        {% render 'misc.icon', name: ' hgi-shopping-bag-01' %}
+      </button>
+    {% endcomment %}
+    {% render 'core.shop-button', product: product.settings.block_product, as_icon: true, mode: 'lighter' %}
   </div>
 </li>
