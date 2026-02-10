@@ -1,30 +1,33 @@
-[ui-section=list-collections]{
-  display:flex;
-  gap:var(--spacing-64);
-  flex-direction:column;
-  padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
-}
-[ui-section=list-collections] .core-area .items{
-  display:grid;
-  grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
-  grid-gap:var(--spacing-32);
-  gap:var(--spacing-32);
-}
-@media (max-width: 1280px){
-  [ui-section=list-collections] .core-area .items{
-    grid-template-columns:repeat(3, 1fr);
+
+  [ui-section=list-collections]:not(#\#){
+    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
   }
-}
-@media (max-width: 1024px){
-  [ui-section=list-collections] .core-area .items{
-    grid-template-columns:repeat(2, 1fr);
-  }
-}
-@media (max-width: 769px){
   [ui-section=list-collections]{
-    gap:var(--spacing-48);
+    display:flex;
+    gap:var(--spacing-64);
+    flex-direction:column;
   }
   [ui-section=list-collections] .core-area .items{
-    grid-template-columns:1fr;
+    display:grid;
+    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+    grid-gap:var(--spacing-32);
+    gap:var(--spacing-32);
   }
-}
+  @media (max-width: 1280px){
+    [ui-section=list-collections] .core-area .items{
+      grid-template-columns:repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 1024px){
+    [ui-section=list-collections] .core-area .items{
+      grid-template-columns:repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=list-collections]{
+      gap:var(--spacing-48);
+    }
+    [ui-section=list-collections] .core-area .items{
+      grid-template-columns:1fr;
+    }
+  }

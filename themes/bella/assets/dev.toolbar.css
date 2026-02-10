@@ -1,219 +1,220 @@
-ui-dev-toolbar [data-dev-toolbar=highlight]{
-  position:fixed;
-  padding:var(--spacing-4);
-  transition:var(--transition-standard-fast-spatial);
-  border:1px dashed currentcolor;
-  background-color:color-mix(in srgb, currentcolor 15%, transparent);
-  color:var(--color-primary);
-  pointer-events:none;
-}
-ui-dev-toolbar [data-dev-toolbar=highlight] > div{
-  display:flex;
-  position:fixed;
-  align-items:center;
-  width:-moz-fit-content;
-  width:fit-content;
-  padding:var(--spacing-2) var(--spacing-8);
-  transition:var(--transition-standard-fast-spatial);
-  border:1px dashed currentcolor;
-  background-color:var(--color-primary-container);
-  color:inherit;
-  font:var(--font-body-sm);
-  font-weight:500;
-  gap:var(--spacing-4);
-}
-ui-dev-toolbar[is-global] [data-dev-toolbar=highlight][data-liquid-element=true]{
-  color:var(--color-error);
-}
-ui-dev-toolbar[is-global] [data-dev-toolbar=highlight][data-liquid-element=true] > div{
-  background-color:var(--color-error-container);
-}
-ui-dev-toolbar .toolbar{
-  position:fixed;
-  bottom:var(--spacing-24);
-  left:50%;
-  transform:translateX(-50%);
-  border-radius:var(--radius-rounded);
-}
-ui-dev-toolbar .toolbar i{
-  color:var(--color-primary);
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body]{
-  max-height:400px;
-  overflow:auto;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree{
-  display:grid;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section{
-  display:flex;
-  gap:var(--spacing-6);
-  margin-bottom:var(--spacing-12);
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:last-child{
-  justify-content:flex-start;
-  width:100%;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:last-child > i{
-  color:var(--color-primary);
-  font-size:16px;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child{
-  position:relative;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child > i{
-  transition:var(--transition-standard-fast-spatial);
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child > input[type=checkbox]{
-  position:absolute;
-  scale:0;
-  opacity:0;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child > input[type=checkbox]:checked + i{
-  rotate:90deg;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section:has(input[type=checkbox]:checked) + .blocks-wrapper{
-  grid-template-rows:1fr !important;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section:has(input[type=checkbox]:checked) + .blocks-wrapper:not(:last-child){
-  margin-bottom:var(--spacing-12);
-}
-ui-dev-toolbar #structure[ui-slot=modal-content] [ui-slot=modal-body] .tree .section:has(+ :is(.section)) [ui-slot=button]:first-child{
-  visibility:hidden;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section:last-child [ui-slot=button]:first-child{
-  visibility:hidden;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper{
-  display:grid;
-  grid-template-rows:0fr;
-  transition:var(--transition-standard-fast-spatial);
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks{
-  display:grid;
-  position:relative;
-  margin-left:38px;
-  padding-left:20px;
-  grid-gap:var(--spacing-6);
-  gap:var(--spacing-6);
-  overflow:hidden;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks::before{
-  content:"";
-  position:absolute;
-  width:1px;
-  height:76%;
-  background-color:var(--color-surface-variant);
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block{
-  position:relative;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block [ui-slot=button]{
-  justify-content:flex-start;
-  width:100%;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block [ui-slot=button] > i{
-  color:var(--color-primary);
-  font-size:16px;
-}
-ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block:last-child::before{
-  content:"";
-  position:absolute;
-  top:35%;
-  left:-21px;
-  width:23px;
-  height:1px;
-  transform:translateY(-50%) rotate(25deg);
-  background-color:var(--color-surface-variant);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body]{
-  display:grid;
-  grid-gap:var(--spacing-16);
-  gap:var(--spacing-16);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset{
-  display:grid;
-  border:none;
-  grid-gap:var(--spacing-8);
-  gap:var(--spacing-8);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset [ui-slot=label]{
-  color:var(--color-on-surface-variant);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color{
-  justify-content:flex-start;
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color > input[type=color]{
-  width:20px;
-  height:20px;
-  margin-left:calc(var(--spacing-4) * -1);
-  margin-right:calc(var(--spacing-4) * -1);
-  border:none;
-  border-radius:var(--radius-4);
-  -webkit-appearance:none;
-     -moz-appearance:none;
-          appearance:none;
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color > input[type=color]::-webkit-color-swatch-wrapper{
-  padding:0;
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color > input[type=color]::-webkit-color-swatch{
-  border:none;
-  outline:none;
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options{
-  display:flex;
-  gap:var(--spacing-12);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme{
-  display:grid;
-  grid-gap:var(--spacing-8);
-  gap:var(--spacing-8);
-  position:relative;
-  cursor:pointer;
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme > input[type=radio]{
-  position:absolute;
-  scale:0;
-  opacity:0;
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme .label{
-  margin-left:var(--spacing-2);
-  margin-right:var(--spacing-2);
-  font:var(--font-body-sm);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme .icon{
-  width:var(--spacing-64);
-  height:var(--spacing-48);
-  overflow:hidden;
-  border:1px solid var(--color-surface-variant);
-  border-radius:var(--radius-8);
-  background-color:var(--color-surface-container-low);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme .icon span{
-  display:flex;
-  height:100%;
-  margin-top:var(--spacing-12);
-  margin-left:var(--spacing-12);
-  padding-top:var(--spacing-4);
-  padding-left:var(--spacing-4);
-  border-top:1px solid var(--color-surface-variant);
-  border-left:1px solid var(--color-surface-variant);
-  background-color:var(--color-surface);
-  color:var(--color-on-surface);
-  border-top-left-radius:var(--radius-8);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme:last-child .icon{
-  background-color:var(--color-surface-container-highest);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme:last-child .icon span{
-  background-color:var(--color-on-surface);
-  color:color-mix(in srgb, var(--color-surface) 60%, transparent);
-}
-ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme:has(input[type=radio]:checked) .icon{
-  border-color:var(--color-on-surface);
-}
+
+  ui-dev-toolbar [data-dev-toolbar=highlight]{
+    position:fixed;
+    padding:var(--spacing-4);
+    transition:var(--transition-standard-fast-spatial);
+    border:1px dashed currentcolor;
+    background-color:color-mix(in srgb, currentcolor 15%, transparent);
+    color:var(--color-primary);
+    pointer-events:none;
+  }
+  ui-dev-toolbar [data-dev-toolbar=highlight] > div{
+    display:flex;
+    position:fixed;
+    align-items:center;
+    width:-moz-fit-content;
+    width:fit-content;
+    padding:var(--spacing-2) var(--spacing-8);
+    transition:var(--transition-standard-fast-spatial);
+    border:1px dashed currentcolor;
+    background-color:var(--color-primary-container);
+    color:inherit;
+    font:var(--font-body-sm);
+    font-weight:500;
+    gap:var(--spacing-4);
+  }
+  ui-dev-toolbar[is-global] [data-dev-toolbar=highlight][data-liquid-element=true]{
+    color:var(--color-error);
+  }
+  ui-dev-toolbar[is-global] [data-dev-toolbar=highlight][data-liquid-element=true] > div{
+    background-color:var(--color-error-container);
+  }
+  ui-dev-toolbar .toolbar{
+    position:fixed;
+    bottom:var(--spacing-24);
+    left:50%;
+    transform:translateX(-50%);
+    border-radius:var(--radius-rounded);
+  }
+  ui-dev-toolbar .toolbar i{
+    color:var(--color-primary);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body]{
+    max-height:400px;
+    overflow:auto;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree{
+    display:grid;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section{
+    display:flex;
+    gap:var(--spacing-6);
+    margin-bottom:var(--spacing-12);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:last-child{
+    justify-content:flex-start;
+    width:100%;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:last-child > i{
+    color:var(--color-primary);
+    font-size:16px;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child{
+    position:relative;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child > i{
+    transition:var(--transition-standard-fast-spatial);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child > input[type=checkbox]{
+    position:absolute;
+    scale:0;
+    opacity:0;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section [ui-slot=button]:first-child > input[type=checkbox]:checked + i{
+    rotate:90deg;
+  }
+  ui-dev-toolbar:not(#\#) [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section:has(input[type=checkbox]:checked) + .blocks-wrapper{
+    grid-template-rows:1fr !important;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section:has(input[type=checkbox]:checked) + .blocks-wrapper:not(:last-child){
+    margin-bottom:var(--spacing-12);
+  }
+  ui-dev-toolbar #structure[ui-slot=modal-content] [ui-slot=modal-body] .tree .section:has(+ :is(.section)) [ui-slot=button]:first-child{
+    visibility:hidden;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .section:last-child [ui-slot=button]:first-child{
+    visibility:hidden;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper{
+    display:grid;
+    grid-template-rows:0fr;
+    transition:var(--transition-standard-fast-spatial);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks{
+    display:grid;
+    position:relative;
+    margin-left:38px;
+    padding-left:20px;
+    grid-gap:var(--spacing-6);
+    gap:var(--spacing-6);
+    overflow:hidden;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks::before{
+    content:"";
+    position:absolute;
+    width:1px;
+    height:76%;
+    background-color:var(--color-surface-variant);
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block{
+    position:relative;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block [ui-slot=button]{
+    justify-content:flex-start;
+    width:100%;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block [ui-slot=button] > i{
+    color:var(--color-primary);
+    font-size:16px;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#structure [ui-slot=modal-body] .tree .blocks-wrapper .blocks .block:last-child::before{
+    content:"";
+    position:absolute;
+    top:35%;
+    left:-21px;
+    width:23px;
+    height:1px;
+    transform:translateY(-50%) rotate(25deg);
+    background-color:var(--color-surface-variant);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body]{
+    display:grid;
+    grid-gap:var(--spacing-16);
+    gap:var(--spacing-16);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset{
+    display:grid;
+    border:none;
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset [ui-slot=label]{
+    color:var(--color-on-surface-variant);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color{
+    justify-content:flex-start;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color > input[type=color]{
+    width:20px;
+    height:20px;
+    margin-left:calc(var(--spacing-4) * -1);
+    margin-right:calc(var(--spacing-4) * -1);
+    border:none;
+    border-radius:var(--radius-4);
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color > input[type=color]::-webkit-color-swatch-wrapper{
+    padding:0;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .brand-color > input[type=color]::-webkit-color-swatch{
+    border:none;
+    outline:none;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options{
+    display:flex;
+    gap:var(--spacing-12);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme{
+    display:grid;
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+    position:relative;
+    cursor:pointer;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme > input[type=radio]{
+    position:absolute;
+    scale:0;
+    opacity:0;
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme .label{
+    margin-left:var(--spacing-2);
+    margin-right:var(--spacing-2);
+    font:var(--font-body-sm);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme .icon{
+    width:var(--spacing-64);
+    height:var(--spacing-48);
+    overflow:hidden;
+    border:1px solid var(--color-surface-variant);
+    border-radius:var(--radius-8);
+    background-color:var(--color-surface-container-low);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme .icon span{
+    display:flex;
+    height:100%;
+    margin-top:var(--spacing-12);
+    margin-left:var(--spacing-12);
+    padding-top:var(--spacing-4);
+    padding-left:var(--spacing-4);
+    border-top:1px solid var(--color-surface-variant);
+    border-left:1px solid var(--color-surface-variant);
+    background-color:var(--color-surface);
+    color:var(--color-on-surface);
+    border-top-left-radius:var(--radius-8);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme:last-child .icon{
+    background-color:var(--color-surface-container-highest);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme:last-child .icon span{
+    background-color:var(--color-on-surface);
+    color:color-mix(in srgb, var(--color-surface) 60%, transparent);
+  }
+  ui-dev-toolbar [ui-slot=modal-content]#settings [ui-slot=modal-body] fieldset .theme-options .theme:has(input[type=radio]:checked) .icon{
+    border-color:var(--color-on-surface);
+  }
