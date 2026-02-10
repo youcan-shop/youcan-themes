@@ -1,34 +1,36 @@
-[ui-section="page"] {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-24);
-  padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
-
-  [ui-slot="alert"] {
-    width: fit-content;
-  }
-
-  &:has(> form) {
-    align-items: center;
-    justify-content: center;
-  }
-
-  & > form {
-    display: grid;
+@layer sections {
+  [ui-section="page"] {
+    display: flex;
+    flex-direction: column;
     gap: var(--spacing-24);
-    width: 100%;
+    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
 
-    @media (width >= 769px) {
-      width: 50%;
+    [ui-slot="alert"] {
+      width: fit-content;
     }
 
-    .fields {
-      display: grid;
-      gap: var(--spacing-12);
+    &:has(> form) {
+      align-items: center;
+      justify-content: center;
+    }
 
-      fieldset {
+    & > form {
+      display: grid;
+      gap: var(--spacing-24);
+      width: 100%;
+
+      @media (width >= 769px) {
+        width: 50%;
+      }
+
+      .fields {
         display: grid;
-        gap: var(--spacing-8);
+        gap: var(--spacing-12);
+
+        fieldset {
+          display: grid;
+          gap: var(--spacing-8);
+        }
       }
     }
   }

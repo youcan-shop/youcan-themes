@@ -1,157 +1,158 @@
-ui-variants{
-  display:grid;
-  grid-gap:var(--spacing-12);
-  gap:var(--spacing-12);
-}
-ui-variants [ui-variant]{
-  display:grid;
-  grid-gap:var(--spacing-8);
-  gap:var(--spacing-8);
-}
-ui-variants [ui-variant] .label{
-  color:var(--color-on-surface-variant);
-  font:var(--font-body-md);
-}
-ui-variants [ui-variant] .options{
-  display:flex;
-  flex-wrap:wrap;
-  gap:var(--spacing-8);
-}
-ui-variants [ui-variant] .options .opt{
-  position:relative;
-  font:var(--font-body-md);
-}
-ui-variants [ui-variant]:not([ui-variant=radio_buttons]) .options .opt > input[type=radio]{
-  position:absolute;
-  scale:0;
-  opacity:0;
-}
-ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt{
-  display:flex;
-  align-items:center;
-  min-width:36px;
-  height:36px;
-  padding-left:var(--spacing-12);
-  padding-right:var(--spacing-12);
-  transition:var(--transition-standard-default-effects);
-  border:1px solid var(--color-surface-variant);
-  border-radius:var(--radius-8);
-  cursor:pointer;
-}
-ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:checked){
-  border-color:transparent;
-  background-color:var(--color-primary);
-  color:var(--color-on-primary);
-}
-ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:disabled){
-  opacity:0.5;
-  background-color:var(--color-surface-container);
-  pointer-events:none;
-}
-ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:36px;
-  height:36px;
-  transition:var(--transition-standard-default-effects);
-  border:2px solid white;
-  border-radius:var(--radius-rounded);
-  background-color:color-mix(in srgb, var(--color-value), black 5%);
-  box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
-  cursor:pointer;
-}
-ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt > i{
-  color:transparent;
-}
-ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked) > i{
-  color:white;
-}
-ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:disabled){
-  background-color:color-mix(in srgb, var(--color-value) 50%, transparent);
-  pointer-events:none;
-}
-ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:disabled)::before{
-  content:"";
-  position:absolute;
-  width:1px;
-  height:100%;
-  rotate:35deg;
-  filter:invert(1);
-  background-color:var(--color-value);
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt{
-  display:grid;
-  grid-gap:var(--spacing-8);
-  gap:var(--spacing-8);
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image{
-  display:flex;
-  position:relative;
-  align-items:center;
-  justify-content:center;
-  width:80px;
-  height:80px;
-  overflow:hidden;
-  transition:var(--transition-standard-default-effects);
-  border:2px solid white;
-  border-radius:var(--radius-8);
-  background-color:color-mix(in srgb, var(--color-value), black 5%);
-  box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
-  cursor:pointer;
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image .checked{
-  display:flex;
-  position:absolute;
-  align-items:center;
-  justify-content:center;
-  transition:var(--transition-standard-default-effects);
-  opacity:0;
-  background-color:rgba(0, 0, 0, 0.3);
-  color:white;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-  -webkit-backdrop-filter:blur(2px);
-          backdrop-filter:blur(2px);
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image > img{
-  width:100%;
-  height:100%;
-  border-radius:var(--radius-8);
-  -o-object-fit:cover;
-     object-fit:cover;
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .checked{
-  opacity:1;
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled){
-  pointer-events:none;
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image > img{
-  filter:grayscale(1) blur(1px);
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image::before{
-  content:"";
-  position:absolute;
-  z-index:2;
-  width:1px;
-  height:140%;
-  background-color:white;
-  rotate:45deg;
-}
-ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .value{
-  opacity:0.5;
-}
-ui-variants [ui-variant][ui-variant=radio_buttons] .options{
-  display:grid;
-  grid-gap:calc(var(--spacing-16) + var(--spacing-4));
-  gap:calc(var(--spacing-16) + var(--spacing-4));
-}
-ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt{
-  display:flex;
-  align-items:center;
-  cursor:pointer;
-  gap:var(--spacing-8);
-}
+
+  ui-variants{
+    display:grid;
+    grid-gap:var(--spacing-12);
+    gap:var(--spacing-12);
+  }
+  ui-variants [ui-variant]{
+    display:grid;
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+  }
+  ui-variants [ui-variant] .label{
+    color:var(--color-on-surface-variant);
+    font:var(--font-body-md);
+  }
+  ui-variants [ui-variant] .options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:var(--spacing-8);
+  }
+  ui-variants [ui-variant] .options .opt{
+    position:relative;
+    font:var(--font-body-md);
+  }
+  ui-variants [ui-variant]:not([ui-variant=radio_buttons]) .options .opt > input[type=radio]{
+    position:absolute;
+    scale:0;
+    opacity:0;
+  }
+  ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt{
+    display:flex;
+    align-items:center;
+    min-width:36px;
+    height:36px;
+    padding-left:var(--spacing-12);
+    padding-right:var(--spacing-12);
+    transition:var(--transition-standard-default-effects);
+    border:1px solid var(--color-surface-variant);
+    border-radius:var(--radius-8);
+    cursor:pointer;
+  }
+  ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:checked){
+    border-color:transparent;
+    background-color:var(--color-primary);
+    color:var(--color-on-primary);
+  }
+  ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:disabled){
+    opacity:0.5;
+    background-color:var(--color-surface-container);
+    pointer-events:none;
+  }
+  ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;
+    height:36px;
+    transition:var(--transition-standard-default-effects);
+    border:2px solid white;
+    border-radius:var(--radius-rounded);
+    background-color:color-mix(in srgb, var(--color-value), black 5%);
+    box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+    cursor:pointer;
+  }
+  ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt > i{
+    color:transparent;
+  }
+  ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked) > i{
+    color:white;
+  }
+  ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:disabled){
+    background-color:color-mix(in srgb, var(--color-value) 50%, transparent);
+    pointer-events:none;
+  }
+  ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:disabled)::before{
+    content:"";
+    position:absolute;
+    width:1px;
+    height:100%;
+    rotate:35deg;
+    filter:invert(1);
+    background-color:var(--color-value);
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt{
+    display:grid;
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image{
+    display:flex;
+    position:relative;
+    align-items:center;
+    justify-content:center;
+    width:80px;
+    height:80px;
+    overflow:hidden;
+    transition:var(--transition-standard-default-effects);
+    border:2px solid white;
+    border-radius:var(--radius-8);
+    background-color:color-mix(in srgb, var(--color-value), black 5%);
+    box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+    cursor:pointer;
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image .checked{
+    display:flex;
+    position:absolute;
+    align-items:center;
+    justify-content:center;
+    transition:var(--transition-standard-default-effects);
+    opacity:0;
+    background-color:rgba(0, 0, 0, 0.3);
+    color:white;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    -webkit-backdrop-filter:blur(2px);
+            backdrop-filter:blur(2px);
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image > img{
+    width:100%;
+    height:100%;
+    border-radius:var(--radius-8);
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .checked{
+    opacity:1;
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled){
+    pointer-events:none;
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image > img{
+    filter:grayscale(1) blur(1px);
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image::before{
+    content:"";
+    position:absolute;
+    z-index:2;
+    width:1px;
+    height:140%;
+    background-color:white;
+    rotate:45deg;
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .value{
+    opacity:0.5;
+  }
+  ui-variants [ui-variant][ui-variant=radio_buttons] .options{
+    display:grid;
+    grid-gap:calc(var(--spacing-16) + var(--spacing-4));
+    gap:calc(var(--spacing-16) + var(--spacing-4));
+  }
+  ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt{
+    display:flex;
+    align-items:center;
+    cursor:pointer;
+    gap:var(--spacing-8);
+  }

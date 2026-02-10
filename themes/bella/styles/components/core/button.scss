@@ -85,7 +85,7 @@
 
   &[data-mode="stroke"] {
     border-color: var(--color-button-border);
-    background-color: var(--color-on-button);
+    background-color: transparent;
     color: var(--color-button);
 
     &:hover:not(:disabled, [aria-disabled="true"]) {
@@ -198,5 +198,26 @@
 @keyframes spin {
   to {
     rotate: 360deg;
+  }
+}
+
+@layer overrides {
+  [data-intensity="as-light-bg"] {
+    [ui-slot="button"] {
+      &[data-mode="lighter"] {
+        background-color: color-mix(in srgb, currentcolor 18%, transparent) !important;
+
+        &:hover:not(:disabled, [aria-disabled="true"]) {
+          background-color: transparent !important;
+        }
+      }
+
+      &[data-mode="ghost"],
+      &[data-mode="stroke"] {
+        &:hover:not(:disabled, [aria-disabled="true"]) {
+          background-color: color-mix(in srgb, currentcolor 18%, transparent) !important;
+        }
+      }
+    }
   }
 }

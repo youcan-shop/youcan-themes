@@ -1,94 +1,96 @@
-ui-cart-form {
-  flex: 1;
+@layer snippets {
+  ui-cart-form {
+    flex: 1;
 
-  &:has(ui-empty:not([hidden])) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-48);
-  }
-
-  ui-cart-drawer-items {
-    display: flex;
-    gap: var(--spacing-24);
-    flex-direction: column;
-
-    .item {
+    &:has(ui-empty:not([hidden])) {
       display: flex;
-      gap: var(--spacing-16);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-48);
+    }
 
-      .image {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-        border: 1px solid var(--color-surface-container);
-        border-radius: var(--radius-8);
-        background-color: var(--color-surface-container);
+    ui-cart-drawer-items {
+      display: flex;
+      gap: var(--spacing-24);
+      flex-direction: column;
 
-        img {
-          object-fit: cover;
-        }
-      }
-
-      .content {
+      .item {
         display: flex;
-        flex: 2;
-        justify-content: space-between;
+        gap: var(--spacing-16);
 
-        .info {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+        .image {
+          position: relative;
+          width: 100px;
+          height: 100px;
+          overflow: hidden;
+          border: 1px solid var(--color-surface-container);
+          border-radius: var(--radius-8);
+          background-color: var(--color-surface-container);
 
-          .bio {
-            display: grid;
-            gap: var(--spacing-8);
-
-            .title {
-              font: var(--font-body-lg);
-            }
-
-            .variants {
-              color: var(--color-on-surface-variant);
-              font: var(--font-body-sm);
-            }
+          img {
+            object-fit: cover;
           }
         }
 
-        .actions {
+        .content {
           display: flex;
-          align-items: center;
+          flex: 2;
           justify-content: space-between;
+
+          .info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .bio {
+              display: grid;
+              gap: var(--spacing-8);
+
+              .title {
+                font: var(--font-body-lg);
+              }
+
+              .variants {
+                color: var(--color-on-surface-variant);
+                font: var(--font-body-sm);
+              }
+            }
+          }
+
+          .actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
         }
       }
     }
-  }
 
-  .collections {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-16);
-    width: 100%;
+    .collections {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-16);
+      width: 100%;
 
-    [ui-slot="button"] {
-      justify-content: space-between;
-      height: 80px;
-      padding-inline: var(--spacing-24);
-      font: var(--font-title-md);
+      [ui-slot="button"] {
+        justify-content: space-between;
+        height: 80px;
+        padding-inline: var(--spacing-24);
+        font: var(--font-title-md);
 
-      .icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border: 1px solid var(--color-surface-variant);
-        border-radius: var(--radius-rounded);
+        .icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border: 1px solid var(--color-surface-variant);
+          border-radius: var(--radius-rounded);
 
-        & > i {
-          font-size: 20px;
+          & > i {
+            font-size: 20px;
+          }
         }
       }
     }

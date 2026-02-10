@@ -8,9 +8,7 @@ if (!customElements.get("ui-dev-toolbar")) {
       this.highlightIsActive = false;
       this.selectedElement = null;
 
-      this.highlightTrigger = this.querySelector(
-        '[data-dev-toolbar="highlight-trigger"]'
-      );
+      this.highlightTrigger = this.querySelector('[data-dev-toolbar="highlight-trigger"]');
       this.highlight = this.querySelector('[data-dev-toolbar="highlight"]');
     }
 
@@ -23,9 +21,7 @@ if (!customElements.get("ui-dev-toolbar")) {
       this.getStructureTree();
       this.onThemeChange();
 
-      this.highlightTrigger.addEventListener("click", () =>
-        this.toggleHighlight()
-      );
+      this.highlightTrigger.addEventListener("click", () => this.toggleHighlight());
 
       document.addEventListener("mousemove", this.onMouseMove.bind(this));
       document.addEventListener("click", this.onDocumentClick.bind(this));
@@ -33,10 +29,7 @@ if (!customElements.get("ui-dev-toolbar")) {
 
     toggleHighlight() {
       this.highlightIsActive = !this.highlightIsActive;
-      this.highlightTrigger.setAttribute(
-        "aria-checked",
-        String(this.highlightIsActive)
-      );
+      this.highlightTrigger.setAttribute("aria-checked", String(this.highlightIsActive));
 
       if (!this.highlightIsActive) this.clearHighlight();
     }
@@ -44,9 +37,7 @@ if (!customElements.get("ui-dev-toolbar")) {
     onMouseMove(event) {
       if (!this.highlightIsActive || this.selectedElement) return;
 
-      const target = this.hasAttribute("is-global")
-        ? event.target
-        : event.target.closest("[ui-section],[ui-block],[ui-layout]");
+      const target = this.hasAttribute("is-global") ? event.target : event.target.closest("[ui-section],[ui-block],[ui-layout]");
 
       if (!this.hasAttribute("is-global") && !target) return;
 
@@ -56,9 +47,7 @@ if (!customElements.get("ui-dev-toolbar")) {
     onDocumentClick(event) {
       if (!this.highlightIsActive) return;
 
-      const target = event.target.closest(
-        "[ui-section],[ui-block],[ui-layout]"
-      );
+      const target = event.target.closest("[ui-section],[ui-block],[ui-layout]");
 
       if (target) {
         this.selectedElement = target;
@@ -67,27 +56,17 @@ if (!customElements.get("ui-dev-toolbar")) {
         return;
       }
 
-      if (
-        this.selectedElement &&
-        !this.selectedElement.contains(event.target)
-      ) {
+      if (this.selectedElement && !this.selectedElement.contains(event.target)) {
         this.selectedElement = null;
         this.clearHighlight();
       }
     }
 
     onHighlight(element) {
-      const label =
-        element.getAttribute("ui-section") ||
-        element.getAttribute("ui-block") ||
-        element.getAttribute("ui-layout");
+      const label = element.getAttribute("ui-section") || element.getAttribute("ui-block") || element.getAttribute("ui-layout");
 
-      this.highlight.setAttribute(
-        "data-liquid-element",
-        String(this.isLiquidElement(element))
-      );
-      this.highlight.querySelector("span").textContent =
-        label?.toUpperCase() ?? `<${element.tagName.toLowerCase()}>`;
+      this.highlight.setAttribute("data-liquid-element", String(this.isLiquidElement(element)));
+      this.highlight.querySelector("span").textContent = label?.toUpperCase() ?? `<${element.tagName.toLowerCase()}>`;
 
       const updatePosition = () => {
         const rect = element.getBoundingClientRect();
@@ -104,9 +83,7 @@ if (!customElements.get("ui-dev-toolbar")) {
 
         Object.assign(this.highlight.querySelector("div").style, {
           left: `${rect.left}px`,
-          top: !isTop
-            ? `${rect.top + rect.height + 8}px`
-            : `${rect.top - this.highlight.querySelector("div").getBoundingClientRect().height - 8}px`,
+          top: !isTop ? `${rect.top + rect.height + 8}px` : `${rect.top - this.highlight.querySelector("div").getBoundingClientRect().height - 8}px`,
         });
       };
 
@@ -123,11 +100,7 @@ if (!customElements.get("ui-dev-toolbar")) {
     }
 
     isLiquidElement(element) {
-      return (
-        element.hasAttribute("ui-section") ||
-        element.hasAttribute("ui-block") ||
-        element.hasAttribute("ui-layout")
-      );
+      return element.hasAttribute("ui-section") || element.hasAttribute("ui-block") || element.hasAttribute("ui-layout");
     }
 
     getStructureTree() {
@@ -140,11 +113,11 @@ if (!customElements.get("ui-dev-toolbar")) {
         section.className = "section";
 
         section.innerHTML = `
-          <label ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="xs" data-as-icon>
+          <label ui-slot="button" data-variant="primary" data-mode="ghost" data-size="xs" data-as-icon>
             <input type="checkbox" name="collapse">
             <i class="hgi hgi-stroke hgi-arrow-right-01"></i>
           </label>
-          <button ui-slot="button" data-variant="neutral" data-mode="stroke" data-size="xs">
+          <button ui-slot="button" data-variant="primary" data-mode="stroke" data-size="xs">
             <i class="hgi hgi-stroke hgi-layers-01"></i>
             ${element.getAttribute("ui-layout") || element.getAttribute("ui-section")}
           </button>`;
@@ -166,7 +139,7 @@ if (!customElements.get("ui-dev-toolbar")) {
             block.className = "block";
 
             block.innerHTML = `
-              <button ui-slot="button" data-variant="neutral" data-mode="ghost" data-size="xs">
+              <button ui-slot="button" data-variant="primary" data-mode="ghost" data-size="xs">
                 <i class="hgi hgi-stroke hgi-layer-add"></i>
                 ${ele.getAttribute("ui-block")}
               </button>`;
@@ -181,8 +154,7 @@ if (!customElements.get("ui-dev-toolbar")) {
       const themes = this.querySelectorAll('input[name="theme"]');
 
       themes.forEach((option) => {
-        option.checked =
-          (localStorage.getItem("theme") || "light") == option.value;
+        option.checked = (localStorage.getItem("theme") || "light") == option.value;
         option.addEventListener("change", () => this.setTheme(option.value));
       });
     }
