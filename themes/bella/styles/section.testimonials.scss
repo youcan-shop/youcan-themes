@@ -1,110 +1,112 @@
-[ui-section="testimonials"] {
-  --per-page: attr(data-nbr-columns-desktop number);
-  --gap: var(--spacing-32);
-  --item-size: 75%;
+@layer sections {
+  [ui-section="testimonials"] {
+    --per-page: attr(data-nbr-columns-desktop number);
+    --gap: var(--spacing-32);
+    --item-size: 75%;
 
-  display: grid;
-  gap: var(--spacing-48);
-  padding-block: attr(data-top-spacing px) attr(data-bottom-spacing px) !important;
+    display: grid;
+    gap: var(--spacing-48);
+    padding-block: attr(data-top-spacing px) attr(data-bottom-spacing px) !important;
 
-  [ui-slot="head"] {
-    justify-content: space-between;
-    gap: var(--spacing-24);
-    width: 100%;
-    padding-inline: 8%;
-
-    .content {
-      display: grid;
-      gap: var(--spacing-16);
-    }
-
-    .actions {
-      display: flex;
-      gap: var(--spacing-16);
-    }
-  }
-
-  .items-area {
-    padding-inline: 8%;
-
-    [ui-block="testimonial"] {
-      display: grid;
-      overflow: hidden;
-      border: 1px solid var(--color-surface-variant);
-      border-radius: var(--radius-testimonial);
-
-      .media {
-        height: 30vh;
-
-        & > img {
-          object-fit: cover;
-        }
-      }
+    [ui-slot="head"] {
+      justify-content: space-between;
+      gap: var(--spacing-24);
+      width: 100%;
+      padding-inline: 8%;
 
       .content {
         display: grid;
         gap: var(--spacing-16);
-        padding: var(--spacing-24);
-        border-block-start: 1px solid var(--color-surface-variant);
-
-        .info {
-          display: grid;
-          gap: var(--spacing-16);
-
-          .author {
-            font: var(--font-title-md);
-          }
-
-          .review {
-            color: var(--color-on-surface-variant);
-            text-wrap: balance;
-          }
-        }
-
-        .product {
-          display: flex;
-          gap: var(--spacing-16);
-          align-items: center;
-
-          .image {
-            width: 56px;
-            height: 56px;
-            overflow: hidden;
-            border: 1px solid var(--color-surface-variant);
-            border-radius: calc(var(--radius-testimonial) * 0.6);
-          }
-        }
       }
-    }
-  }
-
-  @media (width <= 1280px) {
-    --per-page: 2;
-  }
-
-  @media (width <= 1028px) {
-    --per-page: 1;
-
-    [ui-slot="head"] {
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
 
       .actions {
-        justify-content: center;
+        display: flex;
+        gap: var(--spacing-16);
       }
-    }
-  }
-
-  @media (width <= 769px) {
-    --item-size: 84%;
-
-    [ui-slot="head"] {
-      padding-inline: var(--spacing-0);
     }
 
     .items-area {
-      padding-inline: var(--spacing-24);
+      padding-inline: 8%;
+
+      [ui-block="testimonial"] {
+        display: grid;
+        overflow: hidden;
+        border: 1px solid var(--color-surface-variant);
+        border-radius: var(--radius-testimonial);
+
+        .media {
+          height: 30vh;
+
+          & > img {
+            object-fit: cover;
+          }
+        }
+
+        .content {
+          display: grid;
+          gap: var(--spacing-16);
+          padding: var(--spacing-24);
+          border-block-start: 1px solid var(--color-surface-variant);
+
+          .info {
+            display: grid;
+            gap: var(--spacing-16);
+
+            .author {
+              font: var(--font-title-md);
+            }
+
+            .review {
+              color: var(--color-on-surface-variant);
+              text-wrap: balance;
+            }
+          }
+
+          .product {
+            display: flex;
+            gap: var(--spacing-16);
+            align-items: center;
+
+            .image {
+              width: 56px;
+              height: 56px;
+              overflow: hidden;
+              border: 1px solid var(--color-surface-variant);
+              border-radius: calc(var(--radius-testimonial) * 0.6);
+            }
+          }
+        }
+      }
+    }
+
+    @media (width <= 1280px) {
+      --per-page: 2;
+    }
+
+    @media (width <= 1028px) {
+      --per-page: 1;
+
+      [ui-slot="head"] {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+
+        .actions {
+          justify-content: center;
+        }
+      }
+    }
+
+    @media (width <= 769px) {
+      --item-size: 84%;
+
+      [ui-slot="head"] {
+        padding-inline: var(--spacing-0);
+      }
+
+      .items-area {
+        padding-inline: var(--spacing-24);
+      }
     }
   }
 }
