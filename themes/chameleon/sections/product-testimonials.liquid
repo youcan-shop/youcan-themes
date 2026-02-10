@@ -1,17 +1,16 @@
 {{ 'section.product-reviews.css' | asset_url | stylesheet_tag }}
-{% if product.id %}
+{% if section.settings.product.id %}
   {{ 'section.product-reviews.js' | asset_url | script_tag_deferred }}
 {% endif %}
 
-<ui-product-reviews section="product-reviews" product-id="{{ product.id }}">
+<ui-product-reviews section="product-reviews" product-id="{{ section.settings.product.id }}">
   <div class="section-head">
     <h2>{{ section.settings.title }}</h2>
-    {% render 'misc-add-review', product_id: product.id %}
   </div>
   <ul class="section-core">
     {% render 'block-review' %}
   </ul>
-  {% if product.id %}
+  {% if section.settings.product.id %}
     <ul class="section-core" ui-product-reviews-skeleton>
       {% for skeleton in (1..4) %}
         <li block="review" class="skeleton">
@@ -43,15 +42,20 @@
 
 {% schema %}
 {
-  "label": "t:sections.product_reviews.label",
-  "templates": ["product"],
+  "label": "t:sections.product_testimonials.label",
+  "templates": ["index"],
   "limit": 1,
   "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:common.product.label"
+    },
     {
       "id": "title",
       "type": "text",
       "label": "t:common.content.title",
-      "default": "Honest Reviews"
+      "default": "Product Testimonials"
     }
   ]
 }
