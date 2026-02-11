@@ -2,22 +2,23 @@
 
 <div
   ui-section="image-with-text"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div
-    class="wrapper-area"
-    {% if section.settings.override_global_colors %}
-      style="
-        --brand-hue: {{ section.settings.main_color.hue }};
-        --brand-saturation: {{ section.settings.main_color.saturation }}%;
-        --brand-lightness: {{ section.settings.main_color.lightness }}%;
-      "
-      data-scoped-color
-      data-intensity="{{ section.settings.color_intensity }}"
-    {% endif %}
-    data-height="{{ section.settings.image_height }}"
-  >
+  <div class="wrapper-area" data-height="{{ section.settings.image_height }}">
     <div ui-block="media">
       {% if section.settings.image.src %}
         <img

@@ -15,15 +15,17 @@
     padding-left:8%;
     padding-right:8%;
   }
+  [ui-section=slideshow]:not(#\#) [ui-slot=carousel] [ui-slot=carousel-item]{
+    background-color:transparent !important;
+  }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item]{
     position:relative;
-    background-color:transparent;
   }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .media{
     height:attr(data-width vh);
     overflow:hidden;
     border-radius:var(--radius-slide);
-    filter:brightness(0.6);
+    filter:brightness(0.8);
   }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
     display:flex;
@@ -45,8 +47,10 @@
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content .cta{
     width:-moz-fit-content;
     width:fit-content;
-    min-width:180px;
     margin-top:var(--spacing-24);
+  }
+  [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content .cta[ui-slot=button]{
+    min-width:180px;
   }
   [ui-section=slideshow] .pagination{
     display:flex;
@@ -70,6 +74,7 @@
     transition:var(--transition-standard-default-spatial);
     border:none;
     background-color:transparent;
+    color:var(--color-primary);
     cursor:pointer;
   }
   [ui-section=slideshow] .pagination [ui-carousel=marker]::before{
@@ -79,7 +84,7 @@
     height:var(--spacing-8);
     transition:var(--transition-standard-default-spatial);
     border-radius:var(--radius-rounded);
-    background-color:var(--color-surface-container-highest);
+    background-color:color-mix(in srgb, currentcolor 38%, transparent);
   }
   [ui-section=slideshow] .pagination [ui-carousel=marker][aria-selected=true]{
     width:var(--spacing-48);
@@ -87,6 +92,11 @@
   [ui-section=slideshow] .pagination [ui-carousel=marker][aria-selected=true]::before{
     width:inherit;
     background-color:currentcolor;
+  }
+  @media (min-width: 769.02px){
+    [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
+      color:var(--color-on-primary);
+    }
   }
   @media (max-width: 769px){
     [ui-section=slideshow]:not(#\#){

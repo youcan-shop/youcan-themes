@@ -44,6 +44,7 @@
 
 <style>
   :root {
+
     /* Base */
     --font-family: '{{ settings.font_family | replace: '+', ' ' }}';
 
@@ -91,6 +92,13 @@
     --radius-column: {{ settings.corner_radius_multicolumns }};
     --radius-media: {{ settings.corner_radius_image_with_text }};
     --radius-feature-item: {{ settings.corner_radius_feature_list }};
+  }
+
+  :root,
+  [data-scoped-color] {
+    {% if settings.main_color.hue == 0 and settings.main_color.lightness <= 20 %}
+      --brand-raw-lightness: {{ settings.main_color.lightness }}%;
+    {% endif %}
   }
 </style>
 

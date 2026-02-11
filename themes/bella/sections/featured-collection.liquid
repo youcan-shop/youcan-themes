@@ -7,6 +7,10 @@
       --brand-hue: {{ section.settings.main_color.hue }};
       --brand-saturation: {{ section.settings.main_color.saturation }}%;
       --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
@@ -45,9 +49,18 @@
               <h1 class="heading">{{ block.settings.block_subheading }}</h1>
               <a
                 class="cta"
-                ui-slot="button"
-                data-variant="primary"
-                data-mode="filled"
+                {% if block.settings.block_button_style == 'underline' %}
+                  ui-slot="link-button"
+                  data-underline="true"
+                {% else %}
+                  ui-slot="button"
+                  data-variant="primary"
+                {% endif %}
+                {% if block.settings.block_button_style == 'primary' %}
+                  data-mode="filled"
+                {% elsif block.settings.block_button_style == 'secondary' %}
+                  data-mode="lighter"
+                {% endif %}
                 data-size="lg"
                 href="{{ block.settings.block_button_link }}"
               >

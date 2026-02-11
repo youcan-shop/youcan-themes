@@ -61,8 +61,6 @@
   }
 
   body {
-    background-color: var(--color-theme);
-    color: var(--color-on-theme);
     font: var(--font-base-size);
 
     #app {
@@ -112,19 +110,15 @@
 @layer utilities {
   body,
   [data-scoped-color] {
-    &[data-intensity="as-solid-bg"] {
+    color: var(--color-primary);
+
+    &[data-intensity="as-solid-bg"],
+    &[data-intensity="as-foreground"] {
       background-color: var(--color-on-primary);
-      color: var(--color-primary);
     }
 
     &[data-intensity="as-light-bg"] {
       background-color: var(--color-primary-container);
-      color: var(--color-primary);
-    }
-
-    &[data-intensity="as-foreground"] {
-      background-color: transparent;
-      color: var(--color-primary);
     }
   }
 
