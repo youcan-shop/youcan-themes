@@ -76,14 +76,10 @@
     --primary-lightness-adjusted:calc(var(--primary-lightness) - (var(--primary-sat-safe) * 0.2));
     --primary-lightness-max:max(20%, min(var(--primary-lightness-adjusted), 50%));
     --primary-container-sat:calc(var(--primary-sat-safe) * 0.85);
-    --color-primary:hsl(var(--primary-hue) var(--primary-sat-safe) var(--primary-raw-lightness, max(20%, min(40%, var(--primary-lightness-max)))));
+    --color-primary:hsl(var(--primary-hue) var(--primary-sat-safe) var(--brand-raw-lightness, max(20%, min(40%, var(--primary-lightness-max)))));
     --color-on-primary:hsl(0, 0%, 100%);
-    --color-primary-container:hsl(var(--primary-hue) var(--primary-container-sat) max(88%, min(90%, 95%)));
-    --color-on-primary-container:hsl(var(--primary-hue) var(--primary-sat-safe) max(5%, min(10%, 15%)));
-    --color-error:hsl(0, 72%, 40%);
-    --color-on-error:hsl(0, 0%, 100%);
-    --color-error-container:hsl(0, 80%, 93%);
-    --color-on-error-container:hsl(0, 60%, 20%);
+    --color-primary-container:hsl(var(--primary-hue) var(--primary-container-sat) 90%);
+    --color-on-primary-container:hsl(var(--primary-hue) var(--primary-sat-safe) 10%);
     --color-background:hsl(var(--neutral-hue) var(--neutral-sat) 98%);
     --color-on-background:hsl(var(--neutral-hue) var(--neutral-sat) 10%);
     --color-surface:var(--color-background);
@@ -93,14 +89,18 @@
     --color-surface-container:hsl(var(--primary-hue) var(--primary-sat) 94%);
     --color-surface-container-high:hsl(var(--primary-hue) var(--primary-sat) 92%);
     --color-surface-container-highest:hsl(var(--primary-hue) var(--primary-sat) 90%);
-    --color-surface-variant:hsl(var(--primary-hue) max(2%, min(var(--neutral-variant-sat), 15%)) max(85%, min(90%, 92%)));
-    --color-on-surface-variant:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 20%)) max(25%, min(30%, 35%)));
-    --color-outline:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 15%)) max(40%, min(50%, 60%)));
-    --color-outline-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) max(70%, min(80%, 85%)));
+    --color-surface-variant:hsl(var(--primary-hue) max(2%, min(var(--neutral-variant-sat), 15%)) 90%);
+    --color-on-surface-variant:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 20%)) 30%);
+    --color-outline:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 15%)) 50%);
+    --color-outline-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) 80%);
     --color-success:hsl(146, 82%, 24%);
     --color-on-success:hsl(0, 0%, 100%);
     --color-success-container:hsl(132, 83%, 79%);
     --color-on-success-container:hsl(140, 100%, 6%);
+    --color-error:hsl(0, 72%, 40%);
+    --color-on-error:hsl(0, 0%, 100%);
+    --color-error-container:hsl(0, 80%, 93%);
+    --color-on-error-container:hsl(0, 60%, 20%);
     --color-info:hsl(236, 67%, 55%);
     --color-on-info:hsl(0, 0%, 100%);
     --color-info-container:hsl(240, 100%, 94%);
@@ -117,9 +117,9 @@
     --primary-lightness-min:calc(var(--lightness-solid-base) + (var(--primary-sat-solid) * 0.15));
     --primary-container-sat-solid:calc(var(--primary-sat-solid) * 0.55);
     --color-primary:hsl(var(--primary-hue) var(--primary-sat-solid) max(var(--primary-lightness-min), min(80%, 88%)));
-    --color-on-primary:hsl(var(--primary-hue) var(--primary-sat-solid) var(--primary-raw-lightness, max(10%, min(20%, 25%))));
-    --color-primary-container:hsl(var(--primary-hue) var(--primary-container-sat-solid) max(18%, min(30%, 35%)));
-    --color-on-primary-container:hsl(var(--primary-hue) var(--primary-sat-solid) max(82%, min(90%, 95%)));
+    --color-on-primary:hsl(var(--primary-hue) var(--primary-sat-solid) var(--brand-raw-lightness, 20%));
+    --color-primary-container:hsl(var(--primary-hue) var(--primary-container-sat-solid) 30%);
+    --color-on-primary-container:hsl(var(--primary-hue) var(--primary-sat-solid) 90%);
     --color-error:hsl(6, 100%, 84%);
     --color-on-error:hsl(359, 93%, 20%);
     --color-error-container:hsl(356, 100%, 29%);
@@ -133,10 +133,8 @@
     --color-surface-container:hsl(var(--primary-hue) var(--primary-sat) 12%);
     --color-surface-container-high:hsl(var(--primary-hue) var(--primary-sat) 17%);
     --color-surface-container-highest:hsl(var(--primary-hue) var(--primary-sat) 22%);
-    --color-surface-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) max(8%, min(12%, 16%)));
-    --color-on-surface-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) max(70%, min(80%, 88%)));
-    --color-outline:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 18%)) max(48%, min(60%, 68%)));
-    --color-outline-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 15%)) max(25%, min(30%, 38%)));
+    --color-surface-variant:hsl(var(--primary-hue) var(--primary-sat-solid) 80% / 30%);
+    --color-on-surface-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) 80%);
     --color-success:hsl(134, 53%, 68%);
     --color-on-success:hsl(145, 100%, 11%);
     --color-success-container:hsl(148, 100%, 16%);
@@ -155,15 +153,14 @@
   }
 :root:not(#\#):not(#\#) [data-intensity=as-light-bg],
   [data-scoped-color]:not(#\#):not(#\#) [data-intensity=as-light-bg]{
+    --primary-sat-light:max(5%, min(calc(var(--primary-sat) * 0.95), 90%));
     --color-surface-container-lowest:hsl(var(--primary-hue) var(--primary-sat) 98%);
     --color-surface-container-low:hsl(var(--primary-hue) var(--primary-sat) 94%);
     --color-surface-container:hsl(var(--primary-hue) var(--primary-sat) 90%);
     --color-surface-container-high:hsl(var(--primary-hue) var(--primary-sat) 86%);
     --color-surface-container-highest:hsl(var(--primary-hue) var(--primary-sat) 82%);
-    --color-surface-variant:hsl(var(--primary-hue) max(4%, min(var(--neutral-variant-sat), 18%)) max(78%, min(82%, 86%)));
-    --color-on-surface-variant:hsl(var(--primary-hue) max(6%, min(var(--neutral-variant-sat), 22%)) max(22%, min(26%, 30%)));
-    --color-outline:hsl(var(--primary-hue) max(6%, min(var(--neutral-variant-sat), 18%)) max(38%, min(45%, 52%)));
-    --color-outline-variant:hsl(var(--primary-hue) max(4%, min(var(--neutral-variant-sat), 14%)) max(65%, min(72%, 78%)));
+    --color-surface-variant:hsl(var(--primary-hue) var(--primary-sat-light) 30% / 30%);
+    --color-on-surface-variant:hsl(var(--primary-hue) max(6%, min(var(--neutral-variant-sat), 22%)) 26%);
   }
 [data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=button][data-mode=lighter]{
       background-color:color-mix(in srgb, currentcolor 18%, transparent) !important;
@@ -757,7 +754,7 @@
     background-color:color-mix(in srgb, currentcolor 15%, transparent);
   }
 [ui-slot=divider]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --color-divider:var(--color-surface-container-highest);
+    --color-divider:var(--color-surface-variant);
   }
 hr[ui-slot=divider][data-variant=line]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     width:100%;
@@ -1629,8 +1626,6 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     transition:500ms cubic-bezier(0.38, 1.21, 0.22, 1);
     transition:var(--transition-expressive-default-spatial);
     border:none;
-    background-color:var(--color-background);
-    color:var(--color-on-background);
     top:auto;
     top:initial;
     right:auto;
@@ -1639,6 +1634,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     bottom:initial;
     left:auto;
     left:initial;
+    color:inherit;
     top:0;
     top:var(--spacing-0);
     right:calc(var(--sheet-width) * -1);
@@ -1651,7 +1647,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     justify-content:space-between;
     padding:calc(24px - 4px);
     padding:calc(var(--spacing-24) - var(--spacing-4));
-    background-color:var(--color-background);
+    background-color:inherit;
     gap:12px;
     gap:var(--spacing-12);
     border-bottom:1px solid var(--color-surface-variant);
@@ -1711,6 +1707,14 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     [ui-slot=sheet]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
       --sheet-width:100%;
     }
+  }
+[data-intensity=as-solid-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet] [ui-slot=sheet-content],
+  [data-intensity=as-foreground]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet] [ui-slot=sheet-content]{
+    background-color:hsl(0, 0%, 100%);
+    background-color:var(--color-on-primary);
+  }
+[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet] [ui-slot=sheet-content]{
+    background-color:var(--color-primary-container);
   }
 [ui-slot=alert]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     display:flex;
@@ -2286,7 +2290,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     border-radius:var(--radius-input);
     outline:2px solid transparent;
     outline-offset:1px;
-    background-color:var(--color-background);
+    background-color:var(--color-surface-container-lowest);
     box-shadow:0 1px 2px 0 color-mix(in srgb, currentcolor 3%, transparent);
     color:var(--color-on-background);
     font:var(--font-body-md);
@@ -2484,7 +2488,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input-button]{
     padding-left:var(--inline-padding);
     padding-right:var(--inline-padding);
-    background-color:var(--color-background);
+    background-color:var(--color-surface-container-lowest);
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input-button]:first-child,
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input-button]:first-child{
@@ -2528,7 +2532,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     padding-right:var(--spacing-6);
     border:1px solid var(--color-surface-variant);
     border-radius:calc(var(--radius-input) * 0.5);
-    background-color:var(--color-background);
+    background-color:var(--color-surface-container-lowest);
     font:var(--font-label-sm);
   }
 [ui-slot=input]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
@@ -3371,8 +3375,6 @@ button{
     display:none !important;
   }
 body{
-    background-color:var(--color-theme);
-    color:var(--color-on-theme);
     font:var(--font-base-size);
   }
 body #app{
@@ -3421,21 +3423,17 @@ body:has([popover]:popover-open)::before{
     bottom:0;
     left:0;
   }
-body[data-intensity=as-solid-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
-  [data-scoped-color][data-intensity=as-solid-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+body:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
+  [data-scoped-color]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    color:var(--color-primary);
+  }
+body[data-intensity=as-solid-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#), body[data-intensity=as-foreground]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#), [data-scoped-color][data-intensity=as-solid-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#), [data-scoped-color][data-intensity=as-foreground]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     background-color:hsl(0, 0%, 100%);
     background-color:var(--color-on-primary);
-    color:var(--color-primary);
   }
 body[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
   [data-scoped-color][data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     background-color:var(--color-primary-container);
-    color:var(--color-primary);
-  }
-body[data-intensity=as-foreground]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
-  [data-scoped-color][data-intensity=as-foreground]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    background-color:transparent;
-    color:var(--color-primary);
   }
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     display:flex;

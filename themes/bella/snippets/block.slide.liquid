@@ -51,9 +51,18 @@
     </div>
     <a
       class="cta"
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="filled"
+      {% if slide.settings.slide_button_style == 'underline' %}
+        ui-slot="link-button"
+        data-underline="true"
+      {% else %}
+        ui-slot="button"
+        data-variant="primary"
+      {% endif %}
+      {% if slide.settings.slide_button_style == 'primary' %}
+        data-mode="filled"
+      {% elsif slide.settings.slide_button_style == 'secondary' %}
+        data-mode="lighter"
+      {% endif %}
       data-size="lg"
       href="{{ slide.settings.slide_button_link }}"
     >

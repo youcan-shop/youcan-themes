@@ -7,6 +7,10 @@
       --brand-hue: {{ section.settings.main_color.hue }};
       --brand-saturation: {{ section.settings.main_color.saturation }}%;
       --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
@@ -39,7 +43,7 @@
               </picture>
             </a>
           {% else %}
-            <a class="name" ui-slot="link-button" data-variant="black" href="/">
+            <a class="name" ui-slot="link-button" href="/">
               {{ store.name }}
             </a>
           {% endif %}
@@ -50,7 +54,7 @@
         <ul class="links" {{ block.youcan_attributes }}>
           {% for link in main-link-list.links %}
             <li class="link">
-              <a ui-slot="link-button" data-variant="black" data-size="md" href="{{ link.url }}">
+              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
                 {{ link.title }}
               </a>
             </li>
