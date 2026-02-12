@@ -9,8 +9,6 @@
   }
   [ui-section=single-collection] .sub-collections-area{
     --gap:var(--spacing-12);
-    display:grid;
-    grid-template-columns:repeat(5, 1fr);
   }
   [ui-section=single-collection] .sub-collections-area .sub-collection > a{
     display:flex;
@@ -19,7 +17,6 @@
     justify-content:center;
     height:15vh;
     overflow:hidden;
-    border:1px solid var(--color-surface-variant);
     border-radius:var(--radius-20);
   }
   [ui-section=single-collection] .sub-collections-area .sub-collection > a .media{
@@ -33,7 +30,6 @@
   }
   [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
     position:relative;
-    color:var(--color-background);
     font:var(--font-title-md);
   }
   [ui-section=single-collection] .sub-collections-area .sub-collection > a:hover .media{
@@ -63,6 +59,14 @@
     grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
     grid-gap:var(--spacing-24);
     gap:var(--spacing-24);
+  }
+  @media (min-width: 1024.02px){
+    [ui-section=single-collection]:not(#\#) .sub-collections-area{
+      display:grid !important;
+    }
+    [ui-section=single-collection] .sub-collections-area{
+      grid-template-columns:repeat(5, 1fr);
+    }
   }
   @media (max-width: 1024px){
     [ui-section=single-collection] .sub-collections-area{
@@ -99,11 +103,9 @@
       height:13vh;
       overflow:hidden;
       filter:none;
-      border:1px solid var(--color-surface-variant);
       border-radius:var(--radius-20);
     }
     [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
-      color:var(--color-on-background);
       font:var(--font-body-lg);
     }
     [ui-section=single-collection] .sub-collections-area .sub-collection > a:hover .media{
@@ -112,4 +114,19 @@
     [ui-section=single-collection] .core-area .items{
       grid-template-columns:repeat(2, 1fr);
     }
+  }
+  @media (min-width: 769.02px){
+    [data-intensity=as-foreground] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title,
+    [data-intensity=as-light-bg] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
+      color:var(--color-on-primary);
+    }
+  }
+  @media (max-width: 769px){
+    [data-intensity=as-foreground] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title,
+    [data-intensity=as-light-bg] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
+      color:var(--color-primary);
+    }
+  }
+  [data-intensity=as-solid-bg] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
+    color:var(--color-primary);
   }
