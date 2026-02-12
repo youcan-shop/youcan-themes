@@ -165,6 +165,9 @@
     --color-surface-variant:hsl(var(--primary-hue) var(--primary-sat-light) 30% / 30%);
     --color-on-surface-variant:hsl(var(--primary-hue) max(6%, min(var(--neutral-variant-sat), 22%)) 26%);
   }
+[data-intensity=as-solid-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=badge][data-color=primary][data-variant=light]{
+      background-color:color-mix(in srgb, currentcolor 18%, transparent) !important;
+    }
 [data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=button][data-mode=lighter]{
       background-color:color-mix(in srgb, currentcolor 18%, transparent) !important;
     }
@@ -173,6 +176,9 @@
     }
 [data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=button][data-mode=ghost]:hover:not(:disabled):not([aria-disabled=true]), [data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=button][data-mode=stroke]:hover:not(:disabled):not([aria-disabled=true]){
       background-color:color-mix(in srgb, currentcolor 18%, transparent) !important;
+    }
+[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=status-badge][data-status=primary]{
+      --color-status-badge-container:color-mix(in srgb, currentcolor 18%, transparent) !important;
     }
 [ui-slot=badge]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     display:flex;
@@ -299,6 +305,9 @@
   }
 [ui-slot=badge][data-color=green]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     --color-badge:#1fc16b;
+  }
+[ui-slot=badge][data-color=primary]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    --color-badge:var(--color-primary);
   }
 [ui-slot=badge]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
   }
@@ -803,6 +812,12 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     --color-on-status-badge:var(--color-on-warning);
     --color-status-badge-container:var(--color-warning-container);
     --color-on-status-badge-container:var(--color-on-warning-container);
+  }
+[ui-slot=status-badge][data-status=primary]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    --color-status-badge:var(--color-primary);
+    --color-on-status-badge:var(--color-on-primary);
+    --color-status-badge-container:var(--color-primary-container);
+    --color-on-status-badge-container:var(--color-on-primary-container);
   }
 [ui-slot=kbd]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     display:flex;

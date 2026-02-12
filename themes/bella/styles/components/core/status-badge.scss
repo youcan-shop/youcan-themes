@@ -3,7 +3,7 @@
 
   Accepts:
     - data-variant: {String}: stroke | light
-    - data-status: {String}: completed | pending | failed | disabled
+    - data-status: {String}: completed | pending | failed | disabled | primary
 
   Usage:
     - <div ui-slot="status-badge" data-variant="light" data-status="disabled">
@@ -89,5 +89,20 @@
     --color-on-status-badge: var(--color-on-warning);
     --color-status-badge-container: var(--color-warning-container);
     --color-on-status-badge-container: var(--color-on-warning-container);
+  }
+
+  &[data-status="primary"] {
+    --color-status-badge: var(--color-primary);
+    --color-on-status-badge: var(--color-on-primary);
+    --color-status-badge-container: var(--color-primary-container);
+    --color-on-status-badge-container: var(--color-on-primary-container);
+  }
+}
+
+@layer overrides {
+  [data-intensity="as-light-bg"] {
+    [ui-slot="status-badge"][data-status="primary"] {
+      --color-status-badge-container: color-mix(in srgb, currentcolor 18%, transparent) !important;
+    }
   }
 }

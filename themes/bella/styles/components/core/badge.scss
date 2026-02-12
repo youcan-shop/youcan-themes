@@ -4,7 +4,7 @@
   Accepts:
     - data-variant: {String}: filled | light | lighter | stroke
     - data-size: {String}: small | medium
-    - data-color: {String}: gray | blue | orange | red | green | yellow | purple | sky | pink | teal
+    - data-color: {String}: gray | blue | orange | red | green | yellow | purple | sky | pink | teal | primary
     - data-square: {Boolean}: true | false
     - aria-disabled: {Boolean}: true | false
 
@@ -85,20 +85,12 @@
   }
 
   &[data-variant="light"] {
-    background-color: color-mix(
-      in srgb,
-      var(--color-badge) 30%,
-      var(--color-background)
-    );
+    background-color: color-mix(in srgb, var(--color-badge) 30%, var(--color-background));
     color: color-mix(in srgb, var(--color-badge), var(--color-on-background));
   }
 
   &[data-variant="lighter"] {
-    background-color: color-mix(
-      in srgb,
-      currentcolor 15%,
-      var(--color-background)
-    );
+    background-color: color-mix(in srgb, currentcolor 15%, var(--color-background));
     color: var(--color-badge);
   }
 
@@ -148,11 +140,23 @@
     --color-badge: #1fc16b;
   }
 
+  &[data-color="primary"] {
+    --color-badge: var(--color-primary);
+  }
+
   /* Disabled */
   &[aria-disabled="true"] {
     border-color: var(--color-surface-container-highest);
     background-color: transparent;
     color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
     pointer-events: none;
+  }
+}
+
+@layer overrides {
+  [data-intensity="as-solid-bg"] {
+    [ui-slot="badge"][data-color="primary"][data-variant="light"] {
+      background-color: color-mix(in srgb, currentcolor 18%, transparent) !important;
+    }
   }
 }

@@ -37,6 +37,16 @@
     {% endif %}
   </a>
   <div class="content">
+    {% if product.settings.badge_text %}
+      <div
+        class="badge"
+        ui-slot="status-badge"
+        data-variant="light"
+        data-status="primary"
+      >
+        {{ product.settings.badge_text }}
+      </div>
+    {% endif %}
     <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/">
       {% assign placeholder = 'product.title' | t %}
       {{ product.settings.product.name | default: placeholder }}

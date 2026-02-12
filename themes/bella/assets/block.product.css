@@ -7,8 +7,10 @@
     gap:var(--spacing-16);
   }
   [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .media{
+    position:relative;
     height:var(--product-height);
     overflow:hidden;
+    transition:var(--transition-expressive-default-spatial);
     border-radius:var(--radius-product);
     -webkit-text-decoration:none;
     text-decoration:none;
@@ -35,7 +37,7 @@
   [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .content .price .compare-at-price{
     opacity:0.5;
   }
-  [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .main-action{
+  [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > ui-shop-button:first-of-type, [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > [ui-slot=button]:first-of-type{
     visibility:hidden;
     position:absolute;
     left:50%;
@@ -45,7 +47,7 @@
     opacity:0;
     filter:blur(2px);
   }
-  [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .secondary-action{
+  [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > ui-shop-button:last-of-type, [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > [ui-slot=button]:last-of-type{
     position:absolute;
     right:var(--spacing-12);
     top:calc(var(--product-height) - 40px - var(--spacing-12));
@@ -58,14 +60,17 @@
     left:0;
     margin:var(--spacing-12);
   }
-  [ui-block=product]:hover:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .main-action{
+  [ui-block=product]:hover:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .media{
+    filter:brightness(0.8);
+  }
+  [ui-block=product]:hover:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > ui-shop-button:first-of-type, [ui-block=product]:hover:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > [ui-slot=button]:first-of-type{
     visibility:visible;
     transform:translate(-50%, calc(var(--product-height) - 40px - var(--spacing-24)));
     opacity:1;
     filter:blur(0);
   }
   @media (min-width: 769.02px){
-    [ui-block=product]:not(#\#):not(#\#) .secondary-action{
+    [ui-block=product]:not(#\#):not(#\#) > ui-shop-button:last-of-type, [ui-block=product]:not(#\#):not(#\#) > [ui-slot=button]:last-of-type{
       display:none !important;
     }
   }
@@ -73,7 +78,7 @@
     [ui-block=product]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
       --product-height:30vh;
     }
-    [ui-block=product]:not(#\#):not(#\#) .main-action{
+    [ui-block=product]:not(#\#):not(#\#) > ui-shop-button:first-of-type, [ui-block=product]:not(#\#):not(#\#) > [ui-slot=button]:first-of-type{
       display:none !important;
     }
   }
