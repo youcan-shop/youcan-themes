@@ -62,7 +62,20 @@
       {% if settings.sale_badge_type == 'text' %} New {% else %} -20% {% endif %}
     </div>
   {% endcomment %}
-  <button class="main-action" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">Add to Cart</button>
+  {% if product.variants.size > 1 %}
+    <button
+      class="main-action"
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="filled"
+      data-size="lg"
+    >
+      Choose Option
+    </button>
+
+  {% else %}
+    {% render 'core.shop-button' %}
+  {% endif %}
   <button
     class="secondary-action"
     ui-slot="button"
