@@ -13,6 +13,10 @@
       --brand-hue: {{ section.settings.main_color.hue }};
       --brand-saturation: {{ section.settings.main_color.saturation }}%;
       --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"

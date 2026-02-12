@@ -16,11 +16,10 @@
   height: 36px;
   padding-inline: var(--inline-padding);
   transition: all var(--transition-standard-default-spatial);
-  border: 1px solid var(--color-surface-variant);
   border-radius: var(--radius-input);
   outline: 2px solid transparent;
   outline-offset: 1px;
-  background-color: var(--color-background);
+  background-color: var(--color-surface-container-low);
   box-shadow: 0 1px 2px 0 color-mix(in srgb, currentcolor 3%, transparent);
   color: var(--color-on-background);
   font: var(--font-body-md);
@@ -181,7 +180,7 @@
     /* Button */
     [ui-slot="input-button"] {
       padding-inline: var(--inline-padding);
-      background-color: var(--color-background);
+      background-color: var(--color-surface-container-low);
 
       &:first-child {
         border-inline-end: 1px solid var(--color-surface-variant);
@@ -196,7 +195,7 @@
       }
 
       &:hover:not(:disabled) {
-        background-color: var(--color-surface-container-low);
+        background-color: var(--color-surface-container-high);
       }
     }
 
@@ -217,17 +216,20 @@
       height: 20px;
       padding-inline: var(--spacing-6);
       border: 1px solid var(--color-surface-variant);
-      border-radius: calc(var(--radius-input) * 0.5);
-      background-color: var(--color-background);
+      border-radius: calc(var(--radius-input) * .5);
+      background-color: var(--color-surface-container-low);
       font: var(--font-label-sm);
     }
   }
 
   /* Hover */
   &:hover:not(:focus, :disabled, :has([ui-slot="input"]:focus)) {
-    background-color: var(--color-surface-container-low);
+    background-color: var(--color-surface-container-high);
 
-    &:not([aria-invalid="true"], :has([ui-slot*="input-affix"], [ui-slot="input-button"])) {
+    &:not(
+        [aria-invalid="true"],
+        :has([ui-slot*="input-affix"], [ui-slot="input-button"])
+      ) {
       border-color: transparent;
     }
 

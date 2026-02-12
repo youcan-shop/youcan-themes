@@ -48,12 +48,22 @@
     <div ui-slot="head">
       <h4 class="heading">{{ slide.settings.slide_subheading }}</h4>
       <h1 class="subheading">{{ slide.settings.slide_heading }}</h1>
+      <p class="description">{{ slide.settings.slide_description }}</p>
     </div>
     <a
       class="cta"
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="filled"
+      {% if slide.settings.slide_button_style == 'underline' %}
+        ui-slot="link-button"
+        data-underline="true"
+      {% else %}
+        ui-slot="button"
+        data-variant="primary"
+      {% endif %}
+      {% if slide.settings.slide_button_style == 'primary' %}
+        data-mode="filled"
+      {% elsif slide.settings.slide_button_style == 'secondary' %}
+        data-mode="lighter"
+      {% endif %}
       data-size="lg"
       href="{{ slide.settings.slide_button_link }}"
     >

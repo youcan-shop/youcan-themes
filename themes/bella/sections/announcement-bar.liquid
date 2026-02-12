@@ -5,13 +5,18 @@
   role="banner"
   {% if section.settings.override_global_colors %}
     style="
-      --brand-hue: {{ section.settings.main_color.hue }};
-      --brand-saturation: {{ section.settings.main_color.saturation }}%;
-      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+        --brand-hue: {{ section.settings.main_color.hue }};
+        --brand-saturation: {{ section.settings.main_color.saturation }}%;
+        --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
+  data-bottom-border="{{ section.settings.bottom_border }}"
 >
   <ui-carousel
     {% if section.settings.auto_rotate %}
@@ -120,6 +125,12 @@
       "id": "auto_rotate",
       "label": "Auto Rotate",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_border",
+      "label": "Bottom Border",
+      "default": false
     }
   ],
   "blocks": [

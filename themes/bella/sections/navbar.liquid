@@ -1,17 +1,23 @@
 {{ 'section.navbar.css' | asset_url | stylesheet_tag }}
+{{ 'section.navbar.js' | asset_url | script_tag_deferred }}
 
-<div
+<ui-navbar
   ui-layout="navbar"
   {% if section.settings.override_global_colors %}
     style="
       --brand-hue: {{ section.settings.main_color.hue }};
       --brand-saturation: {{ section.settings.main_color.saturation }}%;
       --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
   data-sticky="{{ section.settings.is_sticky }}"
+  data-bottom-border="{{ section.settings.bottom_border }}"
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
@@ -39,7 +45,7 @@
               </picture>
             </a>
           {% else %}
-            <a class="name" ui-slot="link-button" data-variant="black" href="/">
+            <a class="name" ui-slot="link-button" href="/">
               {{ store.name }}
             </a>
           {% endif %}
@@ -50,7 +56,7 @@
         <ul class="links" {{ block.youcan_attributes }}>
           {% for link in main-link-list.links %}
             <li class="link">
-              <a ui-slot="link-button" data-variant="black" data-size="md" href="{{ link.url }}">
+              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
                 {{ link.title }}
               </a>
             </li>
@@ -63,7 +69,7 @@
         </div>
     {% endcase %}
   {% endfor %}
-</div>
+</ui-navbar>
 
 {% schema %}
 {
@@ -108,6 +114,12 @@
       "id": "is_sticky",
       "label": "Sticky",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_border",
+      "label": "Bottom border",
+      "default": false
     },
     {
       "type": "header",
