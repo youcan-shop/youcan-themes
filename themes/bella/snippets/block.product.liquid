@@ -57,14 +57,19 @@
       {% endif %}
     </div>
   </div>
-  {% comment %}
-    <div class="badge" ui-slot="badge" data-variant="filled" data-size="md" data-color="red" data-square="true">
-      {% if settings.sale_badge_type == 'text' %} New {% else %} -20% {% endif %}
+  {% if compare_at_price and section.settings.show_discount_badge %}
+    <div
+      class="badge"
+      ui-slot="status-badge"
+      data-variant="light"
+      data-status="pending"
+    >
+      {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+      -{{ percentage }}%
     </div>
-  {% endcomment %}
+  {% endif %}
   {% if product.variants.size > 1 %}
     <button
-      class="main-action"
       ui-slot="button"
       data-variant="primary"
       data-mode="filled"
@@ -72,18 +77,18 @@
     >
       Choose Option
     </button>
-
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="lighter"
+      data-size="lg"
+      data-as-icon
+      aria-label="Shop now"
+    >
+      {% render 'misc.icon', name: settings.cart_icon %}
+    </button>
   {% else %}
     {% render 'core.shop-button' %}
+    {% render 'core.shop-button', mode: 'lighter', as_icon: true %}
   {% endif %}
-  <button
-    class="secondary-action"
-    ui-slot="button"
-    data-variant="primary"
-    data-mode="lighter"
-    data-size="lg"
-    data-as-icon
-  >
-    {% render 'misc.icon', name: 'hgi-shopping-bag-01' %}
-  </button>
 </li>
