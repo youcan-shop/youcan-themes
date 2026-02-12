@@ -8,9 +8,6 @@
     .sub-collections-area {
       --gap: var(--spacing-12);
 
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-
       .sub-collection > a {
         display: flex;
         position: relative;
@@ -18,7 +15,6 @@
         justify-content: center;
         height: 15vh;
         overflow: hidden;
-        border: 1px solid var(--color-surface-variant);
         border-radius: var(--radius-20);
 
         .media {
@@ -30,7 +26,6 @@
 
         .title {
           position: relative;
-          color: var(--color-background);
           font: var(--font-title-md);
         }
 
@@ -65,6 +60,13 @@
         display: grid;
         grid-template-columns: repeat(attr(data-nbr-columns-desktop number), 1fr);
         gap: var(--spacing-24);
+      }
+    }
+
+    @media (width > 1024px) {
+      .sub-collections-area {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr);
       }
     }
 
@@ -108,12 +110,10 @@
             height: 13vh;
             overflow: hidden;
             filter: none;
-            border: 1px solid var(--color-surface-variant);
             border-radius: var(--radius-20);
           }
 
           .title {
-            color: var(--color-on-background);
             font: var(--font-body-lg);
           }
 
@@ -126,6 +126,37 @@
       .core-area {
         .items {
           grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+  }
+
+  [data-intensity="as-foreground"],
+  [data-intensity="as-light-bg"] {
+    [ui-section="single-collection"] {
+      .sub-collections-area {
+        .sub-collection > a {
+          .title {
+            @media (width > 769px) {
+              color: var(--color-on-primary);
+            }
+
+            @media (width <= 769px) {
+              color: var(--color-primary);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  [data-intensity="as-solid-bg"] {
+    [ui-section="single-collection"] {
+      .sub-collections-area {
+        .sub-collection > a {
+          .title {
+            color: var(--color-primary);
+          }
         }
       }
     }
