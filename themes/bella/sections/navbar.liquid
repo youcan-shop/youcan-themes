@@ -1,6 +1,7 @@
 {{ 'section.navbar.css' | asset_url | stylesheet_tag }}
+{{ 'section.navbar.js' | asset_url | script_tag_deferred }}
 
-<div
+<ui-navbar
   ui-layout="navbar"
   {% if section.settings.override_global_colors %}
     style="
@@ -16,6 +17,7 @@
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
   data-sticky="{{ section.settings.is_sticky }}"
+  data-bottom-border="{{ section.settings.bottom_border }}"
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
@@ -67,7 +69,7 @@
         </div>
     {% endcase %}
   {% endfor %}
-</div>
+</ui-navbar>
 
 {% schema %}
 {
@@ -112,6 +114,12 @@
       "id": "is_sticky",
       "label": "Sticky",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_border",
+      "label": "Bottom border",
+      "default": false
     },
     {
       "type": "header",

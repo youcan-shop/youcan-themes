@@ -23,8 +23,7 @@
   transition: var(--transition-expressive-slow-spatial);
   border: none;
   border-radius: var(--radius-20) var(--radius-20) 0 0;
-  background-color: var(--color-background);
-  color: var(--color-on-background);
+  color: inherit;
 
   &::before {
     content: "";
@@ -100,5 +99,18 @@
         background-color: transparent;
       }
     }
+  }
+}
+
+[data-intensity="as-solid-bg"],
+[data-intensity="as-foreground"] {
+  [ui-slot="drawer-content"][popover] {
+    background-color: var(--color-on-primary);
+  }
+}
+
+[data-intensity="as-light-bg"] {
+  [ui-slot="drawer-content"][popover] {
+    background-color: var(--color-primary-container);
   }
 }

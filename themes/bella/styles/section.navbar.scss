@@ -12,12 +12,16 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px);
-    border-block-end: 1px solid var(--color-surface-variant);
+    transition: box-shadow var(--transition-standard-fast-spatial);
     background-color: inherit;
 
-    &[data-intensity="as-foreground"] {
+    &[data-shadow="true"] {
+      border-block-end: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    &[data-bottom-border="1"] {
       border-block-end: 1px solid var(--color-surface-variant);
-      background-color: var(--color-background);
     }
 
     .logo {
@@ -87,6 +91,8 @@
 
         .link {
           [ui-slot="link-button"] {
+            justify-content: space-between !important;
+            width: 100% !important;
             height: 40px;
           }
         }
