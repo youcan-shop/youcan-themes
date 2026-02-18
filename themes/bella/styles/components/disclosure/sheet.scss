@@ -17,14 +17,13 @@
     justify-content: space-between;
     width: var(--sheet-width);
     height: 100dvh;
-    padding-block: calc(var(--spacing-24) - var(--spacing-4));
     transition: var(--transition-expressive-slow-spatial);
     border: none;
+    background-color: var(--sheet-background);
     color: inherit;
     inset: unset;
     inset-block-start: var(--spacing-0);
     inset-inline-end: calc(var(--sheet-width) * -1);
-    gap: calc(var(--spacing-24) - var(--spacing-4));
 
     /* Header */
     [ui-slot="sheet-header"] {
@@ -33,8 +32,8 @@
       z-index: 2;
       align-items: center;
       justify-content: space-between;
-      padding-inline: calc(var(--spacing-24) - var(--spacing-4));
-      background-color: inherit;
+      padding: calc(var(--spacing-24) - var(--spacing-4));
+      background-image: linear-gradient(to bottom, var(--sheet-background), var(--sheet-background), transparent);
       gap: var(--spacing-12);
       inset-block-start: 0;
 
@@ -53,9 +52,19 @@
     /* Body */
     [ui-slot="sheet-footer"] {
       display: grid;
-      gap: var(--spacing-12);
+      position: sticky;
       grid-template-columns: repeat(2, 1fr);
-      padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+      padding: calc(var(--spacing-24) - var(--spacing-4));
+      gap: var(--spacing-12);
+      inset-block-end: 0;
+      background-image: linear-gradient(
+        to top,
+        var(--sheet-background),
+        var(--sheet-background),
+        var(--sheet-background),
+        var(--sheet-background),
+        transparent
+      );
     }
 
     /* Backdrop */
@@ -90,13 +99,13 @@
 
 [data-intensity="as-solid-bg"],
 [data-intensity="as-foreground"] {
-  [ui-slot="sheet"] [ui-slot="sheet-content"] {
-    background-color: var(--color-on-primary);
+  [ui-slot="sheet"] {
+    --sheet-background: var(--color-on-primary);
   }
 }
 
 [data-intensity="as-light-bg"] {
-  [ui-slot="sheet"] [ui-slot="sheet-content"] {
-    background-color: var(--color-primary-container);
+  [ui-slot="sheet"] {
+    --sheet-background: var(--color-primary-container);
   }
 }
