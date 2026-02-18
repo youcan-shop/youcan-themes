@@ -69,24 +69,7 @@
     </div>
   {% endif %}
   {% if product.variants.size > 1 %}
-    <button
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="filled"
-      data-size="lg"
-    >
-      Choose Option
-    </button>
-    <button
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="lighter"
-      data-size="lg"
-      data-as-icon
-      aria-label="Shop now"
-    >
-      {% render 'misc.icon', name: settings.cart_icon %}
-    </button>
+    {% render 'misc.product-drawer' %}
   {% else %}
     {% render 'core.shop-button' %}
     {% render 'core.shop-button', mode: 'lighter', as_icon: true %}
