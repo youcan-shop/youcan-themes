@@ -35,10 +35,15 @@ async function addToCart(snippetId) {
 
     stopLoad('#loading__cart');
 
+    const selectedVariant = response.items.find((v) => v.productVariant.id === variantId);
+
+    trackPixelEvents('add-to-cart', selectedVariant);
+
     const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
 
     if (IS_CART_SKIPED) {
       window.location.href = checkoutPageUrl;
+      trackPixelEvents('initiate-checkout', selectedVariant);
 
       return;
     }
