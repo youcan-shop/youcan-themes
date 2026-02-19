@@ -5,82 +5,108 @@
 {% assign uniqID = 100 | rand: 2000 %}
 
 <div
-  class='container yc-single-product'
-  id='s-{{ snippetId }}'
+  class="container yc-single-product"
+  id="s-{{ snippetId }}"
 >
   <input
-  id='variantId'
-  type='hidden'
+    id="variantId"
+    type="hidden"
   >
-  <input id='_inventory' type='hidden'>
+  <input id="_inventory" type="hidden">
   <input
-    type='file'
-    id='yc-upload'
-    accept='image/png, image/gif, image/jpeg'
-    style='display:none'
+    type="file"
+    id="yc-upload"
+    accept="image/png, image/gif, image/jpeg"
+    style="display:none"
   >
   <input
-    type='text'
-    id='yc-upload-link'
-    style='display: none'
+    type="text"
+    id="yc-upload-link"
+    style="display: none"
   >
   {% assign images = product.images %}
   {% assign product_name = product.name %}
   {% assign section_settings = section.settings %}
 
-  {% render 'product-images-showcase', images: images, product_name: product_name, hidden: section.settings.hide_gallery, id: uniqID , view: 'desktop', banner_settings: section_settings -%}
-  <div class='product-details'>
+  {% render 'product-images-showcase',
+    images: images,
+    product_name: product_name,
+    hidden: section.settings.hide_gallery,
+    id: uniqID,
+    view: 'desktop',
+    banner_settings: section_settings
+  -%}
+  <div class="product-details">
     {%- for block in section.blocks -%}
       <div {{ block.youcan_attributes }}>
         {%- case block.type -%}
           {%- when 'product_title' -%}
-            <h1 class='product-name'>{{ product.name }}</h1>
+            <h1 class="product-name">{{ product.name }}</h1>
           {%- when 'product_price' -%}
-            <div class='product-price-container'>
-              <h2 class='product-price'>{{ product.price | money }}</h2>
-                <div class="compare-container">
-                  {% if block.settings.show_compare_at_price %}
-                    <h3 class="compare-price">
-                      {%- for variant in product.variants -%}
-                        {% if variant.variations.default and product.compare_at_price != nil %}
-                          <del>{{ product.compare_at_price | money }}</del>
-                        {% endif %}
-                      {% endfor %}
-                    </h3>
-                  {% endif %}
-                  {% if block.settings.show_price_tag_banner and block.settings.price_tag_text %}
-                    <div
-                      class="tag"
-                      style="background: {{ block.settings.price_tag_background_color.hex }}; color: {{ block.settings.price_tag_text_color.hex }};"
-                    >
-                      {{ block.settings.price_tag_text }}
-                    </div>
-                  {% endif %}
-                </div>
+            <div class="product-price-container">
+              <h2 class="product-price">{{ product.price | money }}</h2>
+              <div class="compare-container">
+                {% if block.settings.show_compare_at_price %}
+                  <h3 class="compare-price">
+                    {%- for variant in product.variants -%}
+                      {% if variant.variations.default and product.compare_at_price != null %}
+                        <del>{{ product.compare_at_price | money }}</del>
+                      {% endif %}
+                    {% endfor %}
+                  </h3>
+                {% endif %}
+                {% if block.settings.show_price_tag_banner and block.settings.price_tag_text %}
+                  <div
+                    class="tag"
+                    style="background: {{ block.settings.price_tag_background_color.hex }}; color: {{ block.settings.price_tag_text_color.hex }};"
+                  >
+                    {{ block.settings.price_tag_text }}
+                  </div>
+                {% endif %}
+              </div>
             </div>
           {%- when 'general_review' -%}
             {%- render 'general-review' -%}
           {%- when 'product_quantity' -%}
-              {%- render 'product-quantity-input' -%}
+            {%- render 'product-quantity-input' -%}
           {%- when 'product_variants' -%}
             {% render 'product-variants', options: product.options %}
           {%- when 'product_description' -%}
-            <section class='product-description'>{{ product.description }}</section>
+            <section class="product-description">{{ product.description }}</section>
           {%- when 'countdown_timer' %}
             <div class="countdown-container">
               {%- render 'countdown', section_settings: block.settings -%}
             </div>
           {%- when 'stock' -%}
-            {% render 'stock', stock_title: block.settings.stock_title, stock_items_left: block.settings.stock_items_left, total_stock_items: block.settings.total_stock_items %}
+            {% render 'stock',
+              stock_title: block.settings.stock_title,
+              stock_items_left: block.settings.stock_items_left,
+              total_stock_items: block.settings.total_stock_items
+            %}
           {%- when 'add_to_cart' -%}
-            {% render 'add-to-cart', text: block.settings.text_content, is_sticky: block.settings.is_sticky, background_color: block.settings.background_color, text_color: block.settings.text_color, snippetId: snippetId, skip_cart: product.skip_to_checkout %}
+            {% render 'add-to-cart',
+              text: block.settings.text_content,
+              is_sticky: block.settings.is_sticky,
+              background_color: block.settings.background_color,
+              text_color: block.settings.text_color,
+              snippetId: snippetId,
+              skip_cart: product.skip_to_checkout
+            %}
           {%- when 'accordion' -%}
-              {%- render 'accordion', accordion_title: block.settings.accordion_title, accordion_details: block.settings.accordion_details, background_color: block.settings.background_color, text_color: block.settings.text_color, space_bottom: block.settings.space_bottom -%}
+            {%- render 'accordion',
+              accordion_title: block.settings.accordion_title,
+              accordion_details: block.settings.accordion_details,
+              background_color: block.settings.background_color,
+              text_color: block.settings.text_color,
+              space_bottom: block.settings.space_bottom
+            -%}
           {%- when 'express_checkout' -%}
             {% render 'express-checkout', checkout: checkout, is_sticky: block.settings.is_sticky, settings: block.settings %}
             {% if block.settings.is_sticky %}
-            {% render 'sticky-checkout', settings: block.settings %}
-            <button class="yc-btn is_sticky font-bold express-checkout-button" onclick="triggerCheckout(`s-{{ snippetId }}`)">{{ block.settings.express_checkout_cta | default: 'general.buy_now' | t }}</button>
+              {% render 'sticky-checkout', settings: block.settings %}
+              <button class="yc-btn is_sticky font-bold express-checkout-button" onclick="triggerCheckout(`s-{{ snippetId }}`)">
+                {{ block.settings.express_checkout_cta | default: 'general.buy_now' | t }}
+              </button>
             {% endif %}
         {%- endcase -%}
       </div>
@@ -92,7 +118,9 @@
   {{ product.structured_data }}
 </script>
 
-<script defer>
+<script
+  defer
+>
 (function() {
   const products = {{ product.images.size }};
   const uniqProductDesktopSlider = $('#yc_slider_{{ uniqID }}');
@@ -141,4 +169,23 @@
     desktopSlider.mount();
   }
 })();
+
+  document.addEventListener('DOMContentLoaded', function () {
+    {% if product %}
+      const payload = {
+        currency: CURRENCY_CODE,
+        items: [{
+          productVariant: {
+            name: '{{ product.name }}',
+            price: '{{ product.selected_or_first_available_variant.price }}',
+            id: '{{ product.selected_or_first_available_variant.id }}',
+            product_id: '{{ product.selected_or_first_available_variant.product_id }}',
+            sku: '{{ product.selected_or_first_available_variant.sku }}',
+          },
+        }]
+      };
+
+      trackPixelEvents('view-content', payload);
+    {% endif %}
+  });
 </script>
