@@ -90,33 +90,34 @@ function trackPixelEvents(type, data) {
   }
 
   const events = eventMap[type];
+  const dataItems = Array.isArray(data.items) ? data.items : [data];
 
   tiktokPixel(events.tiktok, {
-    contents: data.items.map(item => ({
-      content_id: makeContentIds(data.items, true),
+    contents: dataItems.map(item => ({
+      content_id: makeContentIds(dataItems, true),
       content_type: 'product',
-      content_name: item.product.name || item.name,
-      price: item.price,
+      content_name: item.productVariant.product?.name || item.productVariant.name,
+      price: item.productVariant.price,
       ...(item.quantity && { quantity: item.quantity })
     })),
-    value: type === 'initiate-checkout' ? data.sub_total : data.items[0].price,
+    value: type === 'initiate-checkout' ? data.sub_total : dataItems[0].productVariant.price,
     currency: CURRENCY_CODE,
   });
 
   snapPixel(events.snapchat, {
-    item_ids: makeContentIds(data.items),
-    price: type === 'initiate-checkout' ? data.sub_total : data.items[0].price,
+    item_ids: makeContentIds(dataItems),
+    price: type === 'initiate-checkout' ? data.sub_total : dataItems[0].productVariant.price,
     currency: CURRENCY_CODE,
     ...(data.count && { num_items: data.count })
   });
 
   googlePixel(events.google, {
     currency: CURRENCY_CODE,
-    value: type === 'initiate-checkout' ? data.sub_total : data.items[0].price,
-    items: data.items.map((item, index) => ({
-      item_name: item.product.name || item.name,
-      item_id: makeContentIds(data.items, true),
-      price: item.price,
+    value: type === 'initiate-checkout' ? data.sub_total : dataItems[0].productVariant.price,
+    items: dataItems.map((item, index) => ({
+      item_name: item.productVariant.product?.name || item.productVariant.name,
+      item_id: makeContentIds(dataItems, true),
+      price: item.productVariant.price,
       index: index,
       ...(item.quantity && { quantity: item.quantity })
     })),
@@ -124,9 +125,9 @@ function trackPixelEvents(type, data) {
   });
 
   facebookPixel(events.facebook, {
-    content_ids: makeContentIds(data.items),
+    content_ids: makeContentIds(dataItems),
     content_type: 'product',
-    value: type === 'initiate-checkout' ? data.sub_total : data.items[0].price,
+    value: type === 'initiate-checkout' ? data.sub_total : dataItems[0].productVariant.price,
     currency: CURRENCY_CODE,
     ...(data.count && { num_items: data.count })
   });
