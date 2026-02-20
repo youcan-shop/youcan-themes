@@ -39,7 +39,7 @@
         {% render 'misc.icon', name: 'hgi-cancel-01' %}
       </button>
     </div>
-    <div ui-slot="sheet-body">
+    <ui-product ui-slot="sheet-body" product-id="{{ product.id }}">
       <ui-carousel class="media-area" data-layout="carousel">
         <ul class="images" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
           {% if product.images.size %}
@@ -119,7 +119,7 @@
           {% render 'core.express-checkout' %}
         </div>
       </div>
-    </div>
+    </ui-product>
     <div ui-slot="sheet-footer">
       <a href="/products/{{ product.slug }}" ui-slot="button" data-variant="primary" data-mode="ghost" data-size="lg">
         View Full Details {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
