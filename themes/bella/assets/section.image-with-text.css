@@ -1,0 +1,68 @@
+
+  [ui-section=image-with-text]:not(#\#){
+    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+  }
+  [ui-section=image-with-text] .wrapper-area{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    height:attr(data-height vh);
+    overflow:hidden;
+    border-radius:var(--radius-media);
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=media]{
+    height:inherit;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=media] > img{
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content]{
+    display:flex;
+    flex-direction:column;
+    padding:var(--spacing-48);
+    gap:var(--spacing-32);
+    background-color:color-mix(in srgb, currentcolor 18%, transparent);
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content][data-text-alignment=start]{
+    align-items:flex-start;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content][data-text-alignment=center]{
+    align-items:center;
+    text-align:center;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content][data-text-alignment=end]{
+    align-items:flex-end;
+    text-align:right;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content][data-vertical-alignment=start]{
+    justify-content:flex-start;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content][data-vertical-alignment=center]{
+    justify-content:center;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content][data-vertical-alignment=end]{
+    justify-content:flex-end;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content] .description{
+    color:var(--color-on-surface-variant);
+    font:var(--font-body-lg);
+    text-wrap:balance;
+  }
+  [ui-section=image-with-text] .wrapper-area [ui-block=content] .cta{
+    width:-moz-fit-content;
+    width:fit-content;
+    min-width:180px;
+  }
+  @media (max-width: 1028px){
+    [ui-section=image-with-text] .wrapper-area{
+      grid-template-columns:1fr;
+      height:auto;
+    }
+    [ui-section=image-with-text] .wrapper-area [ui-block=media]{
+      height:calc(attr(data-height vh, 70vh) / 2);
+    }
+    [ui-section=image-with-text] .wrapper-area [ui-block=content]{
+      padding-left:var(--spacing-24);
+      padding-right:var(--spacing-24);
+    }
+  }

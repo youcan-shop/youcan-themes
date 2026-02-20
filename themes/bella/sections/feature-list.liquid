@@ -1,0 +1,193 @@
+{{ 'section.feature-list.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="feature-list"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head">
+    <h4 class="heading">{{ section.settings.heading }}</h4>
+    <h1 class="subheading">{{ section.settings.subheading }}</h1>
+  </div>
+  <ul
+    class="items-area"
+    data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+  >
+    {% for feature in section.blocks %}
+      {% render 'block.feature-item' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "Feature List",
+  "templates": ["index", "page"],
+  "limit": 3,
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore our line"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover Radiance"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "Number of columns on Desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "icon_size",
+      "label": "Icon size",
+      "options": [
+        { "label": "XSmall", "value": "12" },
+        { "label": "Small", "value": "16" },
+        { "label": "Medium", "value": "20" },
+        { "label": "Large", "value": "24" },
+        { "label": "XLarge", "value": "32" }
+      ],
+      "default": "20"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "label": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "feature_icon",
+          "label": "Icon",
+          "options": [
+            { "label": "Truck", "value": "hgi-shipping-truck-02" },
+            { "label": "Check mark", "value": "hgi-tick-02" },
+            { "label": "Alarm", "value": "hgi-alarm-clock" },
+            { "label": "User", "value": "hgi-user" },
+            { "label": "Dollar", "value": "hgi-dollar-circle" },
+            { "label": "Wallet", "value": " hgi-wallet-01" },
+            { "label": "Setting", "value": "hgi-settings-03" },
+            { "label": "Zap", "value": "hgi-zap" },
+            { "label": "Shield energy", "value": "hgi-shield-energy" },
+            { "label": "Percentage", "value": "hgi-percent" },
+            { "label": "Gift", "value": "hgi-gift" },
+            { "label": "Battery", "value": "hgi-battery-charging-01" },
+            { "label": "Bell", "value": "hgi-notification-01" },
+            { "label": "Open book", "value": "hgi-book-open-01" },
+            { "label": "Droplet", "value": "hgi-droplet" },
+            { "label": "Eye", "value": "hgi-view" },
+            { "label": "Glasses", "value": "hgi-glasses" },
+            { "label": "Ruler", "value": "hgi-ruler" },
+            { "label": "Handbag", "value": "hgi-hand-bag-02" },
+            { "label": "Headset", "value": "hgi-headset" },
+            { "label": "Shirt", "value": "hgi-shirt-01" },
+            { "label": "Sparkles", "value": "hgi-sparkles" },
+            { "label": "Smiley face", "value": "hgi-smile" },
+            { "label": "Smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "X", "value": "hgi-cancel-01" },
+            { "label": "Shopping bag", "value": "hgi-shopping-bag-02" },
+            { "label": "Arrow up right", "value": "hgi-arrow-up-right-03" },
+            { "label": "Arrow left", "value": "hgi-arrow-left-01" },
+            { "label": "Arrow right", "value": "hgi-arrow-right-01" },
+            { "label": "Arrow up", "value": "hgi-arrow-up-01" },
+            { "label": "Arrow down", "value": "hgi-arrow-down-01" },
+            { "label": "Filter", "value": "hgi-filter-vertical" },
+            { "label": "Search", "value": "hgi-search-01" },
+            { "label": "Tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-zap"
+        },
+        {
+          "type": "text",
+          "id": "feature_content",
+          "label": "Content",
+          "default": "Feature Item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,94 @@
+@layer sections {
+  [ui-section="image-with-text"] {
+    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+
+    .wrapper-area {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      height: attr(data-height vh);
+      overflow: hidden;
+      border-radius: var(--radius-media);
+
+      [ui-block="media"] {
+        height: inherit;
+
+        & > img {
+          object-fit: cover;
+        }
+      }
+
+      [ui-block="content"] {
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-48);
+        gap: var(--spacing-32);
+        background-color: color-mix(in srgb, currentcolor 18%, transparent);
+
+        &[data-text-alignment="start"] {
+          align-items: flex-start;
+        }
+
+        &[data-text-alignment="center"] {
+          align-items: center;
+          text-align: center;
+        }
+
+        &[data-text-alignment="end"] {
+          align-items: flex-end;
+          text-align: end;
+        }
+
+        &[data-vertical-alignment="start"] {
+          justify-content: flex-start;
+        }
+
+        &[data-vertical-alignment="center"] {
+          justify-content: center;
+        }
+
+        &[data-vertical-alignment="end"] {
+          justify-content: flex-end;
+        }
+
+        .description {
+          color: var(--color-on-surface-variant);
+          font: var(--font-body-lg);
+          text-wrap: balance;
+        }
+
+        .cta {
+          width: fit-content;
+          min-width: 180px;
+        }
+      }
+    }
+
+    @media (width <= 1028px) {
+      .wrapper-area {
+        grid-template-columns: 1fr;
+        height: auto;
+
+        [ui-block="media"] {
+          height: calc(attr(data-height vh, 70vh) / 2);
+        }
+
+        [ui-block="content"] {
+          padding-inline: var(--spacing-24);
+        }
+      }
+    }
+  }
+
+  // [data-intensity="as-solid-bg"],
+  // [data-intensity="as-foreground"] {
+  //   [ui-section="image-with-text"] {
+  //     background-color: var(--color-on-primary);background-colorbackground-color
+  //   }
+  // }
+
+  // [data-intensity="as-light-bg"] {
+  //   [ui-layout="navbar"] {
+  //     background-color: var(--color-primary-container);background-colorbackground-color
+  //   }
+  // }
+}

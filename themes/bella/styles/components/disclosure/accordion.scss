@@ -1,0 +1,98 @@
+/* 
+  Component: Accordion
+
+  Usage:
+    - <div ui-slot="accordion">
+        <div ui-slot="accordion-item">
+          <label ui-slot="accordion-trigger">
+            Accordion Trigger
+            <input type="checkbox" name="my-accordion" checked />
+          </label>
+          <div ui-slot="accordion-content" role="region">
+            <p>Accordion content </p>
+          </div>
+        </div>
+      </div>
+*/
+
+[ui-slot="accordion"] {
+  display: flex;
+  flex-direction: column;
+
+  /* Item */
+  [ui-slot="accordion-item"] {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color var(--transition-standard-default-spatial);
+    border-block-end: 1px solid var(--color-surface-variant);
+
+    /* Trigger */
+    [ui-slot="accordion-trigger"] {
+      display: flex;
+      position: relative;
+      align-items: center;
+      padding-block: var(--spacing-24);
+      font: var(--font-title-md);
+      cursor: pointer;
+      user-select: none;
+      gap: var(--spacing-10);
+
+      & > input[type="checkbox"] {
+        overflow: hidden;
+        opacity: 0;
+        scale: 0;
+      }
+
+      & > i {
+        flex-shrink: 0;
+        font-size: 20px;
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 1.5px;
+        transition: transform var(--transition-standard-default-spatial);
+        border-radius: var(--radius-rounded);
+        background-color: currentcolor;
+        inset-inline-end: 0;
+      }
+
+      &::after {
+        transform: rotate(90deg);
+      }
+    }
+
+    /* Content */
+    [ui-slot="accordion-content"] {
+      display: grid;
+      grid-template-rows: 0fr;
+      padding-block-end: var(--spacing-0);
+      transition: all var(--transition-expressive-default-spatial);
+      color: var(--color-on-surface-variant);
+      font: var(--font-body-lg);
+
+      & > * {
+        overflow: hidden;
+      }
+    }
+
+    /* Checked */
+    &:has(input[type="checkbox"]:checked) {
+      [ui-slot="accordion-trigger"] {
+        &::after {
+          transform: rotate(0deg);
+        }
+      }
+
+      [ui-slot="accordion-content"] {
+        grid-template-rows: 1fr;
+        padding-block-end: var(--spacing-14);
+      }
+    }
+  }
+}

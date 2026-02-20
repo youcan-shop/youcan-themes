@@ -1,0 +1,116 @@
+@layer sections {
+  [ui-section="featured-collection"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-64);
+    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+
+    .core-area {
+      display: grid;
+      gap: var(--spacing-32);
+      grid-template-columns: repeat(2, 1fr);
+
+      [ui-block="content"] {
+        position: sticky;
+        height: fit-content;
+        overflow: hidden;
+        border-radius: var(--radius-20);
+        inset-block-start: var(--spacing-24);
+
+        .media {
+          height: 70vh;
+          filter: brightness(0.8);
+
+          & > img {
+            object-fit: cover;
+          }
+        }
+
+        .content {
+          display: flex;
+          position: absolute;
+          flex-direction: column;
+          padding: var(--spacing-48);
+          inset: 0;
+          gap: var(--spacing-8);
+          color: var(--color-on-primary);
+
+          &[data-text-alignment="start"] {
+            align-items: flex-start;
+          }
+
+          &[data-text-alignment="center"] {
+            align-items: center;
+            text-align: center;
+          }
+
+          &[data-text-alignment="end"] {
+            align-items: flex-end;
+            text-align: end;
+          }
+
+          &[data-vertical-alignment="start"] {
+            justify-content: flex-start;
+          }
+
+          &[data-vertical-alignment="center"] {
+            justify-content: center;
+          }
+
+          &[data-vertical-alignment="end"] {
+            justify-content: flex-end;
+          }
+
+          .subheading {
+            font: var(--font-body-lg);
+          }
+
+          .heading {
+            font: var(--font-headline-lg);
+          }
+
+          .cta {
+            width: fit-content;
+            margin-block-start: var(--spacing-16);
+
+            &[ui-slot="button"] {
+              min-width: 180px;
+            }
+          }
+        }
+      }
+
+      [ui-block="products"] {
+        display: grid;
+        gap: var(--spacing-24);
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (width <= 1028px) {
+      .core-area {
+        grid-template-columns: 1fr;
+
+        [ui-block="content"] {
+          position: relative;
+
+          .media {
+            height: 35vh;
+          }
+
+          .content {
+            padding: var(--spacing-24);
+          }
+        }
+
+        [ui-block="products"] {
+          gap: var(--spacing-12);
+        }
+      }
+    }
+
+    @media (width <= 769px) {
+      gap: var(--spacing-48);
+    }
+  }
+}

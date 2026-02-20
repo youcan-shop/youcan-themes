@@ -1,0 +1,90 @@
+/* 
+  Component: Link Button
+
+  Accepts:
+    - data-variant: {String}: gray | black | primary | error
+    - data-size: {String}: md | sm
+    - data-underline: {Boolean}: true | false
+
+  Usage:
+    - <a href="#" ui-slot="link-button" data-variant="gray" data-size="md">
+        Link Button
+      </a>
+*/
+
+[ui-slot="link-button"] {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  transition: var(--transition-standard-default-spatial);
+  transition-property: color, background-size;
+  background: linear-gradient(to right, currentcolor, currentcolor) 0 1px / 0 1px no-repeat;
+  color: var(--color-link-button);
+  gap: var(--spacing-4);
+  background-position-x: right;
+  background-position-y: bottom;
+
+  &:is(a) {
+    text-decoration: none;
+  }
+
+  &:is(button) {
+    border: none;
+    background-color: transparent;
+  }
+
+  /* Icon */
+  & > i {
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+
+  /* Underline */
+  &[data-underline="true"] {
+    background-size: 100% 1px;
+  }
+
+  /* Size */
+  &[data-size="md"] {
+    font: var(--font-body-md);
+  }
+
+  &[data-size="sm"] {
+    font: var(--font-body-sm);
+  }
+
+  /* Variant */
+  &[data-variant="gray"] {
+    --color-link-button: var(--color-on-surface-variant);
+  }
+
+  &[data-variant="black"] {
+    --color-link-button: var(--color-on-surface);
+  }
+
+  &[data-variant="primary"] {
+    --color-link-button: var(--color-primary);
+  }
+
+  &[data-variant="error"] {
+    --color-link-button: var(--color-error);
+  }
+
+  /* Disabled */
+  &:disabled,
+  &[aria-disabled="true"] {
+    color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    cursor: auto;
+    pointer-events: none;
+  }
+
+  /* Hover */
+  &:hover:not(:disabled, [aria-disabled="true"]) {
+    background-size: 100% 1px;
+    color: color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
+    background-position-x: left;
+    background-position-y: bottom;
+  }
+}

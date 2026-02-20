@@ -1,0 +1,105 @@
+@layer reset, base, components, utilities, sections, snippets, overrides;
+
+@layer snippets {
+  [ui-block="product"] {
+    --product-height: 35vh;
+
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: var(--spacing-16);
+
+    .media {
+      position: relative;
+      height: var(--product-height);
+      overflow: hidden;
+      transition: var(--transition-expressive-default-spatial);
+      border-radius: var(--radius-product);
+      text-decoration: none;
+
+      & > img {
+        object-fit: cover;
+      }
+    }
+
+    .content {
+      display: grid;
+      gap: var(--spacing-4);
+
+      .title {
+        display: block;
+        overflow: hidden;
+        font: var(--font-body-lg);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .price {
+        font: var(--font-title-md);
+
+        .compare-at-price {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    & > ui-shop-button:first-of-type,
+    & > [ui-slot="button"]:first-of-type {
+      visibility: hidden;
+      position: absolute;
+      left: 50%;
+      width: calc(100% - var(--spacing-48));
+      transform: translate(-50%, calc(var(--product-height) - 40px));
+      transition: var(--transition-expressive-slow-spatial);
+      opacity: 0;
+      filter: blur(2px);
+    }
+
+    & > ui-shop-button:last-of-type,
+    & > [ui-slot="button"]:last-of-type {
+      position: absolute;
+      inset-inline-end: var(--spacing-12);
+      inset-block-start: calc(var(--product-height) - 40px - var(--spacing-12));
+    }
+
+    .badge {
+      position: absolute;
+      inset: 0;
+      margin: var(--spacing-12);
+    }
+
+    &:hover {
+      .media {
+        filter: brightness(0.8);
+      }
+
+      & > ui-shop-button:first-of-type,
+      & > [ui-slot="button"]:first-of-type {
+        visibility: visible;
+        transform: translate(-50%, calc(var(--product-height) - 40px - var(--spacing-24)));
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+
+    @media (width > 769px) {
+      & > ui-shop-button:last-of-type,
+      & > [ui-slot="button"]:last-of-type {
+        display: none !important;
+      }
+    }
+
+    @media (width <= 769px) {
+      --product-height: 30vh;
+
+      & > ui-shop-button:first-of-type,
+      & > [ui-slot="button"]:first-of-type {
+        display: none !important;
+      }
+    }
+
+    @media (width <= 640px) {
+      --product-height: 20vh;
+    }
+  }
+}
