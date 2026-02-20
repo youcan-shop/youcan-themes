@@ -115,11 +115,7 @@ class BaseCartItem extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
-    this.updateItemDeleteButtonAttributes(
-      elements.deleteButton.parentElement,
-      item.id,
-      item.productVariant.id
-    );
+    this.updateItemDeleteButtonAttributes(elements.deleteButton.parentElement, item.id, item.productVariant.id);
 
     this.additionalItemUpdates(elements, item);
 
@@ -128,8 +124,7 @@ class BaseCartItem extends HTMLElement {
       item.id,
       item.productVariant.id,
       item.quantity,
-      item.productVariant.product.track_inventory &&
-        item.productVariant.inventory
+      item.productVariant.product.track_inventory && item.productVariant.inventory,
     );
 
     return cartItem;
@@ -142,8 +137,7 @@ class BaseCartItem extends HTMLElement {
   updateItemImage(imageContainer, productVariant) {
     const img = imageContainer.querySelector("img");
     const placeholder = imageContainer.querySelector("ui-image-fallback");
-    const shouldShowImage =
-      productVariant.image.url || productVariant.product.images.length > 0;
+    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
 
     if (shouldShowImage) {
       img.src = productVariant.image.url ?? productVariant.product.thumbnail;
@@ -196,24 +190,14 @@ class BaseCartItem extends HTMLElement {
     priceElement.textContent = formatCurrency(price);
   }
 
-  updateItemDeleteButtonAttributes(
-    buttonElement,
-    cartItemId,
-    productVariantId
-  ) {
+  updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
     buttonElement.setAttribute("item", cartItemId);
     buttonElement.setAttribute("product-variant", productVariantId);
   }
 
   setIsEmpty(isEmpty = false) {}
 
-  updateItemAttributes(
-    quantityElement,
-    cartItemId,
-    productVariantId,
-    quantity,
-    inventory = null
-  ) {
+  updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
     quantityElement.setAttribute("item", cartItemId);
     quantityElement.setAttribute("product-variant", productVariantId);
     quantityElement.setAttribute("quantity", quantity);
@@ -221,7 +205,7 @@ class BaseCartItem extends HTMLElement {
   }
 
   replaceContent(fragment) {
-    this.replaceChildren(fragment);
+    this.tagName === "UI-CART-ITEMS" ? this.querySelector("table tbody").replaceChildren(fragment) : this.replaceChildren(fragment);
   }
 
   setItemIsLoading(element, isLoading) {
@@ -241,9 +225,7 @@ class CartDrawerItems extends BaseCartItem {
     const { sub_total } = payload.cartData;
 
     if (payload.source === "product-form") {
-      payload.skipCart
-        ? (window.location.href = "/cart")
-        : this.cart.showPopover();
+      payload.skipCart ? (window.location.href = "/cart") : this.cart.showPopover();
     }
 
     this.updateCartSubTotal(sub_total);
@@ -262,15 +244,12 @@ class CartDrawerItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, deleteButton] =
-      cartItem.querySelectorAll("[ui-cart-item]");
+    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
     return { image, title, variant, price, quantity, deleteButton };
   }
 
   setIsEmpty(isEmpty = false) {
-    this.cart
-      .querySelector("[ui-cart-drawer='footer']")
-      .toggleAttribute("hidden", isEmpty);
+    this.cart.querySelector("[ui-cart-drawer='footer']").toggleAttribute("hidden", isEmpty);
     this.cart.querySelector("ui-empty").toggleAttribute("hidden", !isEmpty);
   }
 }
@@ -291,8 +270,7 @@ class CartItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, deleteButton, quantity, price, subtotal] =
-      cartItem.querySelectorAll("[ui-cart-item]");
+    const [deleteButton, image, title, variant, price, quantity, subtotal] = cartItem.querySelectorAll("[ui-cart-item]");
     return { image, title, variant, price, quantity, subtotal, deleteButton };
   }
 
@@ -307,12 +285,8 @@ class CartItems extends BaseCartItem {
   }
 
   setIsEmpty(isEmpty = false) {
-    this.parentElement
-      .querySelector("ui-empty")
-      .toggleAttribute("hidden", !isEmpty);
-    this.parentElement
-      .querySelector("ui-summary-box")
-      .toggleAttribute("hidden", isEmpty);
+    this.parentElement.querySelector("ui-empty").toggleAttribute("hidden", !isEmpty);
+    this.parentElement.querySelector("ui-summary-box").toggleAttribute("hidden", isEmpty);
   }
 }
 
@@ -435,20 +409,14 @@ class Quantity extends HTMLElement {
   }
 
   updatePlusButtonState(quantity) {
-    this.plusButton.toggleAttribute(
-      "disabled",
-      quantity === this.inventoryValue
-    );
+    this.plusButton.toggleAttribute("disabled", quantity === this.inventoryValue);
   }
 
   calculateNextQuantity(buttonName) {
     if (buttonName === "plus") {
       if (this.inventoryValue < this.quantityValue) {
         const message = window.errorStrings.insufficient_inventory;
-        toast.show(
-          message.replace("[inventory]", this.inventoryValue),
-          "error"
-        );
+        toast.show(message.replace("[inventory]", this.inventoryValue), "error");
 
         return null;
       }
@@ -499,13 +467,10 @@ class CartSummary extends HTMLElement {
     this.total = this.querySelector('[ui-summary-box="total"]');
     this.couponCode = this.querySelector('[ui-summary-box="coupon-code"]');
     this.discount = this.querySelector('[ui-summary-box="discount"]');
-    this.removeCouponButton = this.querySelector(
-      '[ui-summary-box="remove-coupon"]'
-    );
+    this.removeCouponButton = this.querySelector('[ui-summary-box="remove-coupon"]');
 
     if (this.couponForm) {
-      const [couponInput, couponButton] =
-        this.couponForm.querySelectorAll("[data-coupon]");
+      const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
       this.couponInput = couponInput;
       this.couponButton = couponButton;
     }
@@ -516,26 +481,18 @@ class CartSummary extends HTMLElement {
   }
 
   _render() {
-    this.couponForm?.addEventListener(
-      "submit",
-      this.handleApplyCoupon.bind(this)
-    );
-    this.removeCouponButton?.addEventListener(
-      "click",
-      this.handleRemoveCoupon.bind(this)
-    );
+    this.couponForm?.addEventListener("submit", this.handleApplyCoupon.bind(this));
+    this.removeCouponButton?.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, discountedPrice, coupon, discounted_sub_total } =
-        payload.cartData;
+      const { sub_total, discountedPrice, coupon, discounted_sub_total } = payload.cartData;
 
       this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, discounted_sub_total);
     });
 
     subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
-      const { sub_total, discountedPrice, coupon, discounted_sub_total } =
-        payload.cartData;
+      const { sub_total, discountedPrice, coupon, discounted_sub_total } = payload.cartData;
 
       this.updateCoupon(coupon, discountedPrice);
       this.updateSummary(sub_total, discounted_sub_total);
@@ -594,23 +551,23 @@ class CartSummary extends HTMLElement {
       return;
     }
 
-    this.discount.textContent = this.getFormattedDiscountValue(
-      coupon,
-      discountedPrice
-    );
+    // this.discount.textContent = this.getFormattedDiscountValue(
+    //   coupon,
+    //   discountedPrice
+    // );
     this.couponCode.textContent = coupon.code;
 
     this.setShowCouponInSummary(true);
   }
 
   setShowCouponInSummary(shouldShow) {
-    this.discount.toggleAttribute("hidden", !shouldShow);
+    this.discount?.toggleAttribute("hidden", !shouldShow);
     this.couponCode.toggleAttribute("hidden", !shouldShow);
   }
 
   updateSummary(subTotal, total) {
     this.subtotal.textContent = formatCurrency(subTotal);
-    this.total.textContent = formatCurrency(total);
+    // this.total.textContent = formatCurrency(total);
   }
 
   getFormattedDiscountValue(coupon, discountedPrice) {
