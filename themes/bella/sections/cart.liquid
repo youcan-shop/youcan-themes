@@ -1,6 +1,23 @@
 {{ 'section.cart.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="cart">
+<div
+  ui-section="cart"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
   <div ui-slot="head">
     <h1 class="subheading">{{ 'cart.page.title' | t }}</h1>
   </div>
@@ -37,64 +54,66 @@
         hidden
       {% endunless %}
     >
-      <div ui-slot="accordion">
-        <form ui-slot="accordion-item" ui-summary-box="coupon-form">
-          <label ui-slot="accordion-trigger">
-            <i class="hgi hgi-stroke hgi-coupon-percent"></i>
-            Coupon code
-            <input type="checkbox" name="my-accordion" checked>
-          </label>
-          <div ui-slot="accordion-content" role="region">
-            <div class="coupon">
-              <div class="input">
-                <input
-                  ui-slot="input"
-                  data-size="md"
-                  type="text"
-                  placeholder="Ender code"
-                  name="coupon_code"
-                  data-coupon="coupon-input"
-                >
-                <button
-                  type="submit"
-                  ui-slot="button"
-                  data-variant="primary"
-                  data-mode="filled"
-                  data-size="md"
-                  data-coupon="coupon-button"
-                >
-                  Apply
-                </button>
-              </div>
-              <div class="output">
-                <div class="info">
-                  <span ui-slot="label">Applied code</span>
-                  <div
-                    ui-slot="status-badge"
-                    ui-summary-box="coupon-code"
-                    {% unless cart.coupon != null %}
-                      hidden
-                    {% endunless %}
+      {% if section.settings.show_coupon %}
+        <div ui-slot="accordion">
+          <form ui-slot="accordion-item" ui-summary-box="coupon-form">
+            <label ui-slot="accordion-trigger">
+              <i class="hgi hgi-stroke hgi-coupon-percent"></i>
+              Coupon code
+              <input type="checkbox" name="my-accordion" checked>
+            </label>
+            <div ui-slot="accordion-content" role="region">
+              <div class="coupon">
+                <div class="input">
+                  <input
+                    ui-slot="input"
+                    data-size="md"
+                    type="text"
+                    placeholder="Ender code"
+                    name="coupon_code"
+                    data-coupon="coupon-input"
                   >
-                    <i class="hgi hgi-stroke hgi-coupon-percent"></i>
-                    {{ cart.coupon.code }}
-                  </div>
+                  <button
+                    type="submit"
+                    ui-slot="button"
+                    data-variant="primary"
+                    data-mode="filled"
+                    data-size="md"
+                    data-coupon="coupon-button"
+                  >
+                    Apply
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  ui-slot="button"
-                  data-variant="error"
-                  data-mode="lighter"
-                  data-size="sm"
-                  ui-summary-box="remove-coupon"
-                >
-                  Remove
-                </button>
+                <div class="output">
+                  <div class="info">
+                    <span ui-slot="label">Applied code</span>
+                    <div
+                      ui-slot="status-badge"
+                      ui-summary-box="coupon-code"
+                      {% unless cart.coupon != null %}
+                        hidden
+                      {% endunless %}
+                    >
+                      <i class="hgi hgi-stroke hgi-coupon-percent"></i>
+                      {{ cart.coupon.code }}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    ui-slot="button"
+                    data-variant="error"
+                    data-mode="lighter"
+                    data-size="sm"
+                    ui-summary-box="remove-coupon"
+                  >
+                    Remove
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      {% endif %}
       <div class="details">
         <span class="label">{{ 'cart.drawer.total' | t }}</span>
         <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
@@ -118,6 +137,69 @@
 {
   "label": "Cart",
   "templates": ["cart"],
-  "limit": 1
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coupon",
+      "label": "Show coupon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
 }
 {% endschema %}
