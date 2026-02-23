@@ -1,0 +1,42 @@
+name: Changeset Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  changeset-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check for changesets
+        run: |
+          # Check if PR added any new changeset files (excluding README.md)
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          new_changesets=$(echo "$changed_files" | grep "^.changeset/.*\.md$" | grep -v "README.md" || true)
+
+          if [[ -z "$new_changesets" ]]; then
+            if [[ "${{ contains(github.event.pull_request.labels.*.name, 'skip-changeset') }}" == "false" ]]; then
+              echo "❌ No changeset found in this PR. Please run 'pnpm changeset' or add 'skip-changeset' label."
+              exit 1
+            else
+              echo "⚠️ No changeset found, but 'skip-changeset' label is present. Skipping check."
+            fi
+          else
+            echo "✅ Changeset found:"
+            echo "$new_changesets"
+          fi

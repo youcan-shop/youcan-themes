@@ -6,12 +6,16 @@
   "scripts": {
     "up": "taze major -I",
     "zip": "node ./tooling/zip.js",
-    "release": "bumpp --execute 'pnpm run zip'"
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset tag",
+    "release": "pnpm changeset:version && pnpm changeset:publish"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@eslint/js": "^9.16.0",
     "@shopify/eslint-plugin": "^46.0.0",
     "eslint": "^9.16.0",
