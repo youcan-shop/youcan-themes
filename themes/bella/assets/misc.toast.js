@@ -10,7 +10,6 @@ if (!customElements.get("ui-toast")) {
 
     connectedCallback() {
       this.message = this.querySelector('[ui-toast="message"]');
-      this.status = this.querySelector('[ui-toast="status"]');
       this.action = this.querySelector('[ui-toast="action"]');
 
       this.action.addEventListener("click", this.close);
@@ -26,12 +25,9 @@ if (!customElements.get("ui-toast")) {
       this.setState(true);
 
       this.message.textContent = message;
-      this.status.setAttribute("data-state", status);
+      this.setAttribute("data-type", status);
 
-      this.timeout = setTimeout(
-        () => this.setState(false),
-        this.CLOSE_DURATION
-      );
+      this.timeout = setTimeout(() => this.setState(false), this.CLOSE_DURATION);
     }
 
     setState(state) {
