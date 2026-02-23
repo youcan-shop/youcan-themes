@@ -24,9 +24,9 @@
   {% for block in section.blocks %}
     {% case block.type %}
       {% when 'logo_item' %}
-        <div class="logo" {{ block.youcan_attributes }}>
+        <div class="logo">
           {% if settings.logo_desktop.src or settings.logo_mobile.src %}
-            <a href="/">
+            <a href="/" {{ block.youcan_attributes }}>
               <picture>
                 {% if settings.logo_mobile.src %}
                   <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
@@ -45,7 +45,7 @@
               </picture>
             </a>
           {% else %}
-            <a class="name" ui-slot="link-button" href="/">
+            <a class="name" ui-slot="link-button" href="/" {{ block.youcan_attributes }}>
               {{ store.name }}
             </a>
           {% endif %}
@@ -63,7 +63,7 @@
           {% endfor %}
         </ul>
       {% when 'actions_item' %}
-        <div class="actions" {{ block.youcan_attributes }}>
+        <div class="actions">
           {% render 'misc.search-drawer',
             keywords: block.settings.search_most_searched_keywords,
             collection_id: block.settings.search_collection.id
