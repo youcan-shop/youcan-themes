@@ -2494,16 +2494,11 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     display:flex;
     justify-content:center;
   }
-[ui-slot=pagination][data-variant=basic]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#), [ui-slot=pagination][data-variant=rounded]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --pagination-min-width:32px;
+[ui-slot=pagination][data-variant=basic]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    --pagination-min-width:36px;
+    --pagination-border-radius:var(--radius-button);
     gap:8px;
     gap:var(--spacing-8);
-  }
-[ui-slot=pagination][data-variant=basic][data-variant=basic]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#), [ui-slot=pagination][data-variant=rounded][data-variant=basic]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --pagination-border-radius:var(--radius-8);
-  }
-[ui-slot=pagination][data-variant=basic][data-variant=rounded]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#), [ui-slot=pagination][data-variant=rounded][data-variant=rounded]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --pagination-border-radius:var(--radius-rounded);
   }
 [ui-slot=pagination][data-variant=group]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     --pagination-min-width:40px;
@@ -2532,24 +2527,30 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     align-items:center;
     justify-content:center;
     min-width:var(--pagination-min-width);
-    height:32px;
+    height:36px;
     padding-left:6px;
     padding-right:6px;
     padding-left:var(--spacing-6);
     padding-right:var(--spacing-6);
     transition:all 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
     transition:all var(--transition-standard-default-spatial);
-    border:1px solid var(--color-surface-variant);
+    border:1px solid transparent;
     border-radius:var(--pagination-border-radius);
-    background-color:var(--color-background);
-    color:var(--color-on-surface-variant);
+    background-color:var(--color-primary-container);
+    color:var(--color-primary);
     -webkit-text-decoration:none;
     text-decoration:none;
   }
 [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][ui-slot=pagination-nav],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][ui-slot=pagination-nav],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][ui-slot=pagination-nav]{
-    border-color:transparent;
+    background-color:transparent;
+  }
+[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][ui-slot=pagination-nav] > i,
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][ui-slot=pagination-nav] > i,
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][ui-slot=pagination-nav] > i{
+    flex-shrink:0;
+    font-size:20px;
   }
 [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item],
@@ -2558,23 +2559,6 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
 [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][aria-current=true],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][aria-current=true],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][aria-current=true]{
-    border-color:transparent;
-    background-color:var(--color-primary-container);
-    color:var(--color-on-primary-container);
-  }
-[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav],
-  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item],
-  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis]{
-  }
-[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav]:hover:not([aria-disabled=true]):not([aria-current=true]),
-  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item]:hover:not([aria-disabled=true]):not([aria-current=true]),
-  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis]:hover:not([aria-disabled=true]):not([aria-current=true]){
-    border-color:transparent;
-    background-color:var(--color-surface-container-high);
-  }
-[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][aria-current=true]:hover:not([aria-disabled=true]),
-  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][aria-current=true]:hover:not([aria-disabled=true]),
-  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][aria-current=true]:hover:not([aria-disabled=true]){
     background-color:var(--color-primary);
     color:hsl(0, 0%, 100%);
     color:var(--color-on-primary);
@@ -2583,13 +2567,37 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis]{
   }
+[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav]:hover:not([aria-disabled=true]):not([aria-current=true]),
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item]:hover:not([aria-disabled=true]):not([aria-current=true]),
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis]:hover:not([aria-disabled=true]):not([aria-current=true]){
+    border-color:currentcolor;
+    background-color:transparent;
+  }
+[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav]:hover:not([aria-disabled=true]):not([aria-current=true])[ui-slot=pagination-nav],
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item]:hover:not([aria-disabled=true]):not([aria-current=true])[ui-slot=pagination-nav],
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis]:hover:not([aria-disabled=true]):not([aria-current=true])[ui-slot=pagination-nav]{
+    border-color:transparent;
+    background-color:var(--color-primary-container);
+  }
+[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][aria-current=true]:hover:not([aria-disabled=true]),
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][aria-current=true]:hover:not([aria-disabled=true]),
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][aria-current=true]:hover:not([aria-disabled=true]){
+    background-color:color-mix(in srgb, var(--color-primary), black 10%);
+  }
+[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav],
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item],
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis]{
+  }
 [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][aria-disabled=true],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][aria-disabled=true],
   [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][aria-disabled=true]{
-    border-color:transparent;
-    background-color:var(--color-surface-container);
     color:color-mix(in srgb, var(--color-on-surface) 38%, transparent);
     pointer-events:none;
+  }
+[ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-nav][aria-disabled=true]:not([ui-slot=pagination-nav]),
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-item][aria-disabled=true]:not([ui-slot=pagination-nav]),
+  [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=pagination-ellipsis][aria-disabled=true]:not([ui-slot=pagination-nav]){
+    background-color:var(--color-surface-container);
   }
 *{
     box-sizing:border-box;
