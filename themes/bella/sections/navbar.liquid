@@ -64,7 +64,10 @@
         </ul>
       {% when 'actions_item' %}
         <div class="actions" {{ block.youcan_attributes }}>
-          {% render 'misc.search-drawer' %}
+          {% render 'misc.search-drawer',
+            keywords: block.settings.search_most_searched_keywords,
+            collection_id: block.settings.search_collection.id
+          %}
           {% render 'misc.cart-drawer' %}
         </div>
     {% endcase %}
@@ -181,23 +184,38 @@
           "content": "Search recommendations"
         },
         {
+          "type": "textarea",
+          "id": "search_most_searched_keywords",
+          "label": "Most searched keywords"
+        },
+        {
           "type": "category",
           "id": "search_collection",
-          "label": "Collection"
+          "label": "Products recommendation (collection)"
         },
         {
           "type": "header",
           "content": "Cart recommendations"
         },
         {
-          "type": "text",
-          "id": "cart_most_searched_keywords",
-          "label": "Most searched keywords"
+          "type": "category",
+          "id": "cart_collection_1",
+          "label": "Collection 1"
         },
         {
           "type": "category",
-          "id": "cart_collection",
-          "label": "Products recommendation (collection)"
+          "id": "cart_collection_2",
+          "label": "Collection 2"
+        },
+        {
+          "type": "category",
+          "id": "cart_collection_3",
+          "label": "Collection 3"
+        },
+        {
+          "type": "category",
+          "id": "cart_collection_4",
+          "label": "Collection 4"
         }
       ]
     }

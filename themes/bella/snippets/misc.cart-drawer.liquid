@@ -39,14 +39,14 @@
     <div ui-slot="sheet-body">
       {% render 'core.cart-form' %}
     </div>
-    <div ui-slot="sheet-footer">
-      <div
-        class="footer"
-        {% unless cart.count > 0 %}
-          hidden
-        {% endunless %}
-        ui-cart-drawer="footer"
-      >
+    <div
+      ui-slot="sheet-footer"
+      {% unless cart.count > 0 %}
+        hidden
+      {% endunless %}
+      ui-cart-drawer="footer"
+    >
+      <div class="footer">
         <span class="label">{{ 'cart.drawer.total' | t }}</span>
         <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
         <span class="description">Taxes and shipping are calculated at checkout.</span>

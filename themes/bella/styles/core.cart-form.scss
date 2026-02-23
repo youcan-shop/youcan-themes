@@ -2,14 +2,6 @@
   ui-cart-form {
     flex: 1;
 
-    &:has(ui-empty:not([hidden])) {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: var(--spacing-48);
-    }
-
     ui-cart-drawer-items {
       display: flex;
       gap: var(--spacing-24);
@@ -73,25 +65,42 @@
       gap: var(--spacing-16);
       width: 100%;
 
-      [ui-slot="button"] {
-        justify-content: space-between;
-        height: 80px;
-        padding-inline: var(--spacing-24);
-        font: var(--font-title-md);
+      .collection {
+        display: flex;
+        align-items: center;
+        padding: var(--spacing-16);
+        border-radius: var(--radius-16);
+        gap: var(--spacing-12);
+        background-color: var(--color-surface-container-low);
 
-        .icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border: 1px solid var(--color-surface-variant);
-          border-radius: var(--radius-rounded);
+        .image {
+          width: var(--spacing-64);
+          height: var(--spacing-64);
+          overflow: hidden;
+          border-radius: var(--radius-12);
 
-          & > i {
-            font-size: 20px;
+          & > img {
+            object-fit: cover;
           }
         }
+
+        .name {
+          flex: 1;
+        }
+      }
+    }
+
+    &:has(ui-empty:not([hidden])) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-48);
+    }
+
+    &:has(ui-empty[hidden]) {
+      .collections {
+        display: none;
       }
     }
   }

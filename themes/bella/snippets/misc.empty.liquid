@@ -6,6 +6,8 @@
   Accepts:
   - heading: {String} Heading text
   - subheading: {String} (optional) Subheading text
+  - action_label: {String} (optional) Button label
+  - action_url: {String} (optional) Button url
   - hidden: {Boolean} (optional) Hide element
 
   Usage:
@@ -20,5 +22,10 @@
   <span class="heading">{{ heading }}</span>
   {% if subheading %}
     <p class="subheading">{{ subheading }}</p>
+  {% endif %}
+  {% if action_label %}
+    <a href="{{ action_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
+      {{ action_label }}
+    </a>
   {% endif %}
 </ui-empty>

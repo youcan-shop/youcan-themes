@@ -3,6 +3,10 @@
 {% comment %}
   Renders a search drawer
 
+  Accepts:
+  - keywords: {String} (optional) Most searched keywords
+  - collection_id: {String} (optional) Recommended collection id
+
   Usage:
   {% render 'misc.search' %}
 {% endcomment %}
@@ -38,55 +42,66 @@
         <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
           <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
           <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.drawer.placeholder' | t }}">
-          <button ui-slot="input-button">{{ 'search.drawer.action' | t }}</button>
         </fieldset>
       </form>
-      <div class="terms">
-        <h4 class="label">Most searched terms</h4>
-        <div class="options">
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Skincare</a>
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Lipstick</a>
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Moisturizer</a>
-        </div>
-      </div>
-      <hr ui-slot="divider" data-variant="line">
-      <div class="products">
-        <h4 class="label">Most searched products</h4>
-        {% paginate collection.products by 8 id category_id: block.settings.collection.id %}
-          <div class="items">
-            {% for product in items %}
-              <div class="item">
-                <div class="media">
-                  {% if product.preview_image %}
-                    <img
-                      src="{{ product.preview_image.original }}"
-                      alt="{{ product.name }}"
-                      height="100%"
-                      width="100%"
-                    >
-                  {% else %}
-                    {% render 'misc.image-fallback' %}
-                  {% endif %}
-                </div>
-                <div class="content">
-                  <a
-                    class="title"
-                    ui-slot="link-button"
-                    data-variant="black"
-                    data-size="md"
-                    class="title"
-                    href="/products/{{ product.slug }}"
-                  >
-                    {{ product.name }}
-                  </a>
-                  {% assign price = default_variant.price | default: product.price %}
-                  <span class="price">{{ price | money }}</span>
-                </div>
-              </div>
+      {% if keywords %}
+        {% assign words = keywords | split: ',' %}
+        <div class="terms">
+          <h4 class="label">Most searched terms</h4>
+          <div class="options">
+            {% for keyword in words %}
+              <a
+                ui-slot="link-button"
+                data-variant="gray"
+                data-size="md"
+                href="/search?q={{ keyword | url_encode }}"
+              >
+                {{- keyword -}}
+              </a>
             {% endfor %}
           </div>
-        {% endpaginate %}
-      </div>
+        </div>
+      {% endif %}
+      {% if collection_id %}
+        <hr ui-slot="divider" data-variant="line">
+        <div class="products">
+          <h4 class="label">Most searched products</h4>
+          {% paginate collection.products by 8 id category_id: collection_id %}
+            <div class="items">
+              {% for product in items %}
+                <div class="item">
+                  <div class="media">
+                    {% if product.preview_image %}
+                      <img
+                        src="{{ product.preview_image.original }}"
+                        alt="{{ product.name }}"
+                        height="100%"
+                        width="100%"
+                      >
+                    {% else %}
+                      {% render 'misc.image-fallback' %}
+                    {% endif %}
+                  </div>
+                  <div class="content">
+                    <a
+                      class="title"
+                      ui-slot="link-button"
+                      data-variant="black"
+                      data-size="md"
+                      class="title"
+                      href="/products/{{ product.slug }}"
+                    >
+                      {{ product.name }}
+                    </a>
+                    {% assign price = default_variant.price | default: product.price %}
+                    <span class="price">{{ price | money }}</span>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endpaginate %}
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
