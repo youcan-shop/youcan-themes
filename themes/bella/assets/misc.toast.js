@@ -5,7 +5,7 @@ if (!customElements.get("ui-toast")) {
 
       this.timeout = null;
       this.CLOSE_DURATION = 3000;
-      this.close = () => this.setState(false);
+      this.close = () => this.setVisibility(false);
     }
 
     connectedCallback() {
@@ -22,16 +22,16 @@ if (!customElements.get("ui-toast")) {
 
     show(message, status = "info") {
       clearTimeout(this.timeout);
-      this.setState(true);
+      this.setVisibility(true);
 
       this.message.textContent = message;
-      this.setAttribute("data-type", status);
+      this.setAttribute("data-state", status);
 
-      this.timeout = setTimeout(() => this.setState(false), this.CLOSE_DURATION);
+      this.timeout = setTimeout(() => this.setVisibility(false), this.CLOSE_DURATION);
     }
 
-    setState(state) {
-      this.setAttribute("data-state", state ? "open" : "closed");
+    setVisibility(state) {
+      state ? this.showPopover() : this.hidePopover();
     }
   }
 

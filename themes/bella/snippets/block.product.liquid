@@ -15,10 +15,9 @@
 <li
   ui-block="product"
   data-alignment="{{ settings.product_alignment }}"
-  data-image-ratio="{{ settings.product_image_ratio }}"
   {{ product.youcan_attributes }}
 >
-  <a href="{{ product.url }}" class="media">
+  <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
     {% if product.preview_image %}
       <img
         srcset="
@@ -45,7 +44,29 @@
     {% else %}
       {% render 'misc.image-fallback', icon_size: 40 %}
     {% endif %}
-  </a>
+
+    {% if settings.cart_checkout_type == 'express-checkout' %}
+      {% render 'core.express-checkout' %}
+      <button
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="lighter"
+        data-size="lg"
+        type="button"
+        popovertarget="express-checkout-{{ product.id }}"
+        data-as-icon
+      >
+        {% render 'misc.icon', name: settings.cart_icon %}
+      </button>
+    {% else %}
+      {% if product.variants.size > 1 %}
+        {% render 'misc.product-drawer' %}
+      {% else %}
+        {% render 'core.shop-button' %}
+        {% render 'core.shop-button', mode: 'lighter', as_icon: true %}
+      {% endif %}
+    {% endif %}
+  </div>
   <div class="content">
     <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/">
       {% assign placeholder = 'product.title' | t %}
@@ -67,16 +88,15 @@
       class="badge"
       ui-slot="status-badge"
       data-variant="light"
-      data-status="pending"
+      data-status="{{ settings.sale_badge_status }}"
     >
-      {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
-      -{{ percentage }}%
+      {% if settings.sale_badge_type == 'percentage' %}
+        {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+        -{{ percentage }}%
+      {% else %}
+        {% assign fixed = compare_at_price | minus: price %}
+        Save {{ fixed | money }}
+      {% endif %}
     </div>
-  {% endif %}
-  {% if product.variants.size > 1 %}
-    {% render 'misc.product-drawer' %}
-  {% else %}
-    {% render 'core.shop-button' %}
-    {% render 'core.shop-button', mode: 'lighter', as_icon: true %}
   {% endif %}
 </li>

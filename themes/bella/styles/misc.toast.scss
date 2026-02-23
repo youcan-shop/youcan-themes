@@ -1,6 +1,8 @@
 @layer snippets {
   ui-toast {
+    inset: auto;
     display: flex;
+    visibility: hidden;
     position: fixed;
     z-index: 50;
     left: 50%;
@@ -11,12 +13,14 @@
     padding-inline-start: var(--spacing-12);
     transform: translateX(-50%);
     transition: var(--transition-expressive-default-spatial);
+    border: none;
     border-radius: var(--radius-toast);
+    opacity: 0;
     background-color: var(--color-toast-container);
     box-shadow: var(--shadow-lg);
     color: var(--color-on-toast-container);
-    inset-block-end: var(--spacing-12);
     gap: var(--spacing-12);
+    inset-block-end: -5%;
 
     &[data-type="success"] {
       --color-toast: var(--color-success);
@@ -70,10 +74,17 @@
       border-radius: var(--radius-toast) !important;
     }
 
-    &[data-state="closed"] {
-      visibility: hidden;
-      opacity: 0;
-      inset-block-end: -5%;
+    /* State */
+    &:popover-open {
+      visibility: visible;
+      opacity: 1;
+      inset-block-end: var(--spacing-12);
+
+      @starting-style {
+        visibility: hidden;
+        opacity: 0;
+        inset-block-end: -5%;
+      }
     }
 
     @media (width <= 769px) {
