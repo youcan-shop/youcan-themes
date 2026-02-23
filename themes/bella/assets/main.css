@@ -123,10 +123,6 @@
     --color-on-primary:hsl(var(--primary-hue) var(--primary-sat-solid) var(--brand-raw-lightness, 20%));
     --color-primary-container:hsl(var(--primary-hue) var(--primary-container-sat-solid) 30%);
     --color-on-primary-container:hsl(var(--primary-hue) var(--primary-sat-solid) 90%);
-    --color-error:hsl(6, 100%, 84%);
-    --color-on-error:hsl(359, 93%, 20%);
-    --color-error-container:hsl(356, 100%, 29%);
-    --color-on-error-container:hsl(6, 100%, 84%);
     --color-background:hsl(var(--neutral-hue) var(--neutral-sat) 6%);
     --color-on-background:hsl(var(--neutral-hue) var(--neutral-sat) 90%);
     --color-surface:var(--color-background);
@@ -142,6 +138,10 @@
     --color-on-success:hsl(145, 100%, 11%);
     --color-success-container:hsl(148, 100%, 16%);
     --color-on-success-container:hsl(132, 83%, 79%);
+    --color-error:hsl(6, 100%, 84%);
+    --color-on-error:hsl(359, 93%, 20%);
+    --color-error-container:hsl(356, 100%, 29%);
+    --color-on-error-container:hsl(6, 100%, 84%);
     --color-info:hsl(236, 100%, 87%);
     --color-on-info:hsl(238, 100%, 33%);
     --color-info-container:rgb(36, 46, 194);
@@ -2698,10 +2698,10 @@ body[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):no
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     display:flex;
     flex-direction:column;
-    justify-content:center;
+    align-items:var(--text-heading-alignment-desktop);
+    text-align:var(--text-heading-alignment-desktop);
     gap:16px;
     gap:var(--spacing-16);
-    text-align:var(--text-heading-alignment-desktop);
   }
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .heading{
     font:var(--font-subheading-weight) calc(16px * var(--font-subheading-scale))/calc(24px * var(--font-subheading-scale)) var(--font-subheading-family);
@@ -2717,6 +2717,7 @@ body[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):no
   }
 @media (max-width: 769px){
     [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+      align-items:var(--text-heading-alignment-mobile);
       text-align:var(--text-heading-alignment-mobile);
     }
     [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .subheading{
