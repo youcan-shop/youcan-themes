@@ -21,7 +21,12 @@ function hasPostCssConfig(themePath) {
 
 async function zipTheme(theme) {
   const themePath = path.join(THEMES, theme);
-  const output = path.join(DIST, `${theme}_${getCurrentDate()}.zip`);
+
+  // Read version from theme's package.json
+  const packageJson = JSON.parse(fs.readFileSync(path.join(themePath, "package.json"), "utf8"));
+  const version = packageJson.version;
+
+  const output = path.join(DIST, `${theme}-v${version}.zip`);
   const zip = new zl.Zip();
 
   for (const folder of FOLDERS) {
@@ -61,11 +66,14 @@ async function zipTheme(theme) {
   console.log(`Successfully zipped: ${theme}`);
 }
 
-function getCurrentDate() {
-  const date = new Date();
-  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-}
+// Support filtering themes via CLI args (e.g., pnpm run zip chameleon aura)
+const themesToBuild =
+  process.argv.slice(2).length > 0
+    ? process.argv.slice(2)
+    : fs.readdirSync(THEMES).filter((name) => fs.statSync(path.join(THEMES, name)).isDirectory());
 
-fs.readdirSync(THEMES)
-  .filter((name) => fs.statSync(path.join(THEMES, name)).isDirectory())
-  .forEach((theme) => zipTheme(theme));
+(async () => {
+  for (const theme of themesToBuild) {
+    await zipTheme(theme);
+  }
+})();
