@@ -36,6 +36,11 @@
         alt="{{ product.name }}"
         height="100%"
         width="100%"
+        {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
+          loading="eager"
+        {% else %}
+          loading="lazy"
+        {% endif %}
       >
     {% else %}
       {% render 'misc.image-fallback', icon_size: 40 %}
