@@ -1,6 +1,11 @@
 
   ui-toast{
+    top:auto;
+    right:auto;
+    bottom:auto;
+    left:auto;
     display:flex;
+    visibility:hidden;
     position:fixed;
     z-index:50;
     left:50%;
@@ -11,12 +16,14 @@
     padding-left:var(--spacing-12);
     transform:translateX(-50%);
     transition:var(--transition-expressive-default-spatial);
+    border:none;
     border-radius:var(--radius-toast);
+    opacity:0;
     background-color:var(--color-toast-container);
     box-shadow:var(--shadow-lg);
     color:var(--color-on-toast-container);
-    bottom:var(--spacing-12);
     gap:var(--spacing-12);
+    bottom:-5%;
   }
   ui-toast[data-type=success]{
     --color-toast:var(--color-success);
@@ -64,10 +71,19 @@
   ui-toast:not(#\#) [ui-toast=action]{
     border-radius:var(--radius-toast) !important;
   }
-  ui-toast[data-state=closed]{
-    visibility:hidden;
-    opacity:0;
-    bottom:-5%;
+  ui-toast{
+  }
+  ui-toast:popover-open{
+    visibility:visible;
+    opacity:1;
+    bottom:var(--spacing-12);
+  }
+  @starting-style{
+    ui-toast:popover-open{
+      visibility:hidden;
+      opacity:0;
+      bottom:-5%;
+    }
   }
   @media (max-width: 769px){
     ui-toast{

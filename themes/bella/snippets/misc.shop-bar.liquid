@@ -45,14 +45,14 @@
     {% render 'core.quantity', size: 'md' %}
     {% for block in section.blocks %}
       {% if block.type == 'block_shop_buttons' %}
-        {% if block.settings.shop_buttons_layout == 'buy-now' %}
+        {% if block.settings.shop_buttons_layout == 'buy-now' or settings.cart_checkout_type == 'express-checkout' %}
           <button
             ui-slot="button"
             data-variant="primary"
             data-mode="filled"
             data-size="lg"
             type="button"
-            popovertarget="express-checkout"
+            popovertarget="express-checkout-{{ product.id }}"
           >
             Buy now
           </button>

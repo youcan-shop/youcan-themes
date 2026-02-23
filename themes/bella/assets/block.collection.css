@@ -4,9 +4,18 @@
     flex-direction:column;
   }
   [ui-block=collection] .media{
-    height:35vh;
+    height:auto;
     overflow:hidden;
     border-radius:var(--radius-collection);
+  }
+  [ui-block=collection] .media[data-image-ratio=square]{
+    aspect-ratio:1/1;
+  }
+  [ui-block=collection] .media[data-image-ratio=portrait]{
+    aspect-ratio:3/4;
+  }
+  [ui-block=collection] .media[data-image-ratio=landscape]{
+    aspect-ratio:4/3;
   }
   [ui-block=collection] .media > img{
     -o-object-fit:cover;
@@ -28,9 +37,4 @@
   }
   [ui-block=collection] .content .info .total{
     color:var(--color-on-surface-variant);
-  }
-  @media (max-width: 769px){
-    [ui-block=collection] .media{
-      height:30vh;
-    }
   }
