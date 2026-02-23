@@ -2,7 +2,7 @@
   Component: Pagination
 
   Accepts:
-    - data-variant: {String}: basic | rounded | group
+    - data-variant: {String}: basic | group
 
   Usage:
     - <div ui-slot="pagination" data-variant="basic">
@@ -24,19 +24,11 @@
   justify-content: center;
 
   /* Variant */
-  &[data-variant="basic"],
-  &[data-variant="rounded"] {
-    --pagination-min-width: 32px;
+  &[data-variant="basic"] {
+    --pagination-min-width: 36px;
+    --pagination-border-radius: var(--radius-button);
 
     gap: var(--spacing-8);
-
-    &[data-variant="basic"] {
-      --pagination-border-radius: var(--radius-8);
-    }
-
-    &[data-variant="rounded"] {
-      --pagination-border-radius: var(--radius-rounded);
-    }
   }
 
   &[data-variant="group"] {
@@ -66,43 +58,53 @@
     align-items: center;
     justify-content: center;
     min-width: var(--pagination-min-width);
-    height: 32px;
+    height: 36px;
     padding-inline: var(--spacing-6);
     transition: all var(--transition-standard-default-spatial);
-    border: 1px solid var(--color-surface-variant);
+    border: 1px solid transparent;
     border-radius: var(--pagination-border-radius);
-    background-color: var(--color-background);
-    color: var(--color-on-surface-variant);
+    background-color: var(--color-primary-container);
+    color: var(--color-primary);
     text-decoration: none;
 
     &[ui-slot="pagination-nav"] {
-      border-color: transparent;
+      background-color: transparent;
+
+      & > i {
+        flex-shrink: 0;
+        font-size: 20px;
+      }
     }
 
     /* Current */
     &[aria-current="true"] {
-      border-color: transparent;
-      background-color: var(--color-primary-container);
-      color: var(--color-on-primary-container);
-    }
-
-    /* Hover */
-    &:hover:not([aria-disabled="true"], [aria-current="true"]) {
-      border-color: transparent;
-      background-color: var(--color-surface-container-high);
-    }
-
-    &[aria-current="true"]:hover:not([aria-disabled="true"]) {
       background-color: var(--color-primary);
       color: var(--color-on-primary);
     }
 
+    /* Hover */
+    &:hover:not([aria-disabled="true"], [aria-current="true"]) {
+      border-color: currentcolor;
+      background-color: transparent;
+
+      &[ui-slot="pagination-nav"] {
+        border-color: transparent;
+        background-color: var(--color-primary-container);
+      }
+    }
+
+    &[aria-current="true"]:hover:not([aria-disabled="true"]) {
+      background-color: color-mix(in srgb, var(--color-primary), black 10%);
+    }
+
     /* Disabled */
     &[aria-disabled="true"] {
-      border-color: transparent;
-      background-color: var(--color-surface-container);
       color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
       pointer-events: none;
+
+      &:not([ui-slot="pagination-nav"]) {
+        background-color: var(--color-surface-container);
+      }
     }
   }
 }
