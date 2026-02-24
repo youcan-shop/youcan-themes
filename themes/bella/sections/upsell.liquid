@@ -1,0 +1,45 @@
+{{ 'section.upsell.css' | asset_url | stylesheet_tag }}
+{{ 'section.upsell.js' | asset_url | script_tag_deferred }}
+
+{% capture product_offers %}
+{
+  {% for product in upsell.products %}
+    "{{ product.id }}": "{{ product.variants.0.id }}"
+    {% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}
+{% endcapture %}
+
+<ui-upsell
+  id="{{ upsell.id }}"
+  order-id="{{ order.id }}"
+  product-offers="{{ product_offers | strip_newlines | strip | escape }}"
+>
+  <div class="head">
+    <h3 class="title">{{ 'upsell.offer_title' | t }}</h3>
+    <div class="options">
+      <button ui-slot="button" data-variant="error" data-mode="lighter" data-size="lg" name="no">
+        {{ upsell.actions.btn_no.title }}
+      </button>
+      <button ui-slot="button" data-variant="primary" data-mode="lighter" data-size="lg" name="yes">
+        {{ upsell.actions.btn_yes.title }}
+      </button>
+    </div>
+  </div>
+  {% if upsell.description %}
+    <div class="description">
+      {{ upsell.description }}
+    </div>
+  {% endif %}
+  {% if upsell.footer %}
+    <div class="footer">{{ upsell.footer }}</div>
+  {% endif %}
+</ui-upsell>
+
+{% schema %}
+{
+  "label": "Upsell",
+  "templates": ["upsell"],
+  "limit": 1
+}
+{% endschema %}

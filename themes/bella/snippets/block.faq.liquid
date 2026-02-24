@@ -1,0 +1,25 @@
+{% comment %}
+  Renders an FAQ item (Block)
+
+  Accepts:
+    - faq: {Object} Item info
+
+  Usage:
+  {% render 'block.faq' %}
+{% endcomment %}
+
+<li ui-block="faq" ui-slot="accordion-item" {{ faq.youcan_attributes }}>
+  <label ui-slot="accordion-trigger">
+    {{ faq.settings.faq_title }}
+    <input
+      type="checkbox"
+      name="faq"
+      {% if faq.settings.fas_open_by_default %}
+        checked
+      {% endif %}
+    >
+  </label>
+  <div ui-slot="accordion-content" role="region">
+    <p>{{ faq.settings.faq_content }}</p>
+  </div>
+</li>

@@ -1,0 +1,110 @@
+/* 
+  Component: Pagination
+
+  Accepts:
+    - data-variant: {String}: basic | group
+
+  Usage:
+    - <div ui-slot="pagination" data-variant="basic">
+        <a ui-slot="pagination-item" href="/"> 1 </a>
+        <a ui-slot="pagination-item" href="/"> 2 </a>
+      </div>
+  
+  - > Component Child: Pagination Item
+
+      Accepts:
+        - aria-current: {Boolean}: true | false
+
+      Usage:
+        - <a ui-slot="pagination-item" href="/" aria-current="true"> 4 </a>
+*/
+
+[ui-slot="pagination"] {
+  display: flex;
+  justify-content: center;
+
+  /* Variant */
+  &[data-variant="basic"] {
+    --pagination-min-width: 36px;
+    --pagination-border-radius: var(--radius-button);
+
+    gap: var(--spacing-8);
+  }
+
+  &[data-variant="group"] {
+    --pagination-min-width: 40px;
+    --pagination-border-radius: var(--radius-0);
+
+    overflow: hidden;
+    border: 1px solid var(--color-surface-variant);
+    border-radius: var(--radius-8);
+
+    [ui-slot*="pagination-nav"],
+    [ui-slot*="pagination-item"],
+    [ui-slot*="pagination-ellipsis"] {
+      border-color: transparent;
+
+      &:not(:last-child) {
+        border-inline-end: 1px solid var(--color-surface-variant);
+      }
+    }
+  }
+
+  /* Nav - Item - Ellipsis */
+  [ui-slot="pagination-nav"],
+  [ui-slot="pagination-item"],
+  [ui-slot="pagination-ellipsis"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--pagination-min-width);
+    height: 36px;
+    padding-inline: var(--spacing-6);
+    transition: all var(--transition-standard-default-spatial);
+    border: 1px solid transparent;
+    border-radius: var(--pagination-border-radius);
+    background-color: var(--color-primary-container);
+    color: var(--color-primary);
+    text-decoration: none;
+
+    &[ui-slot="pagination-nav"] {
+      background-color: transparent;
+
+      & > i {
+        flex-shrink: 0;
+        font-size: 20px;
+      }
+    }
+
+    /* Current */
+    &[aria-current="true"] {
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+    }
+
+    /* Hover */
+    &:hover:not([aria-disabled="true"], [aria-current="true"]) {
+      border-color: currentcolor;
+      background-color: transparent;
+
+      &[ui-slot="pagination-nav"] {
+        border-color: transparent;
+        background-color: var(--color-primary-container);
+      }
+    }
+
+    &[aria-current="true"]:hover:not([aria-disabled="true"]) {
+      background-color: color-mix(in srgb, var(--color-primary), black 10%);
+    }
+
+    /* Disabled */
+    &[aria-disabled="true"] {
+      color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+      pointer-events: none;
+
+      &:not([ui-slot="pagination-nav"]) {
+        background-color: var(--color-surface-container);
+      }
+    }
+  }
+}

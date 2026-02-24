@@ -1,0 +1,242 @@
+{{ 'section.image-with-text.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="image-with-text"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div class="wrapper-area" data-height="{{ section.settings.image_height }}">
+    <div ui-block="media">
+      {% if section.settings.image.src %}
+        <img
+          src="{{ section.settings.image.src }}"
+          alt="Image with Text"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 100 %}
+      {% endif %}
+    </div>
+    <div
+      ui-block="content"
+      data-text-alignment="{{ section.settings.text_alignment }}"
+      data-vertical-alignment="{{ section.settings.vertical_alignment }}"
+    >
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'heading' %}
+            <h4 class="heading">{{ block.settings.content }}</h4>
+          {% when 'subheading' %}
+            <h1 class="subheading">{{ block.settings.content }}</h1>
+          {% when 'description' %}
+            <p class="description">{{ block.settings.content }}</p>
+          {% when 'button' %}
+            <a
+              class="cta"
+              ui-slot="button"
+              data-variant="primary"
+              data-mode="filled"
+              data-size="lg"
+              href="{{ block.settings.link }}"
+            >
+              {{ block.settings.label }}
+            </a>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Image with Text",
+  "templates": ["index", "product", "page", "cart"],
+  "limit": 3,
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "label": "Height",
+      "options": [
+        { "label": "Auto", "value": "auto" },
+        { "label": "Medium", "value": "55" },
+        { "label": "Large", "value": "70" }
+      ],
+      "default": "70"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "label": "Start", "value": "start" },
+        { "label": "Center", "value": "center" },
+        { "label": "End", "value": "end" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "label": "Top", "value": "start" },
+        { "label": "Middle", "value": "center" },
+        { "label": "Bottom", "value": "end" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "label": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "default": "Explore our line"
+        }
+      ]
+    },
+    {
+      "type": "subheading",
+      "label": "Subheading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "content",
+          "label": "Content",
+          "default": "Discover Radiance"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "label": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "Experience the transformative power of our meticulously crafted beauty products, designed to enhance your natural glow and reveal your most radiant self."
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "label": "Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "default": "#"
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "options": [
+            { "label": "Primary", "value": "primary" },
+            { "label": "Secondary", "value": "secondary" },
+            { "label": "Underline", "value": "underline" }
+          ],
+          "label": "Style",
+          "default": "primary"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

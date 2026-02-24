@@ -1,0 +1,99 @@
+{% comment %}
+  Renders a menu drawer
+
+  Usage:
+  {% render 'misc.menu-drawer' %}
+{% endcomment %}
+
+{% assign has_social_links = false %}
+
+{% for link in store.brand.social_links %}
+  {% if link[1] != null %}
+    {% assign has_social_links = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div ui-slot="sheet" class="menu">
+  <button
+    ui-slot="button"
+    data-variant="primary"
+    data-mode="ghost"
+    data-size="md"
+    data-as-icon
+    aria-label="Menu"
+    popovertarget="menu"
+    {{ block.youcan_attributes }}
+  >
+    {% render 'misc.icon', name: 'hgi-menu-01' %}
+  </button>
+  <div ui-slot="sheet-content" id="menu" popover>
+    <div ui-slot="sheet-header">
+      <div class="logo">
+        <a class="name" ui-slot="link-button" href="/">
+          {{ store.name }}
+        </a>
+      </div>
+      <button
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="lighter"
+        data-size="md"
+        aria-label="Close"
+        popovertarget="menu"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
+    </div>
+    <div ui-slot="sheet-body">
+      <ul class="mobile-links">
+        {% for link in main-link-list.links %}
+          <li class="link">
+            <a ui-slot="link-button" data-size="lg" href="{{ link.url }}">
+              {{ link.title }}
+              {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div ui-slot="sheet-footer">
+      {% if block.settings.menu_show_social_media_links and has_social_links == true %}
+        <ul class="social-links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
+
+            {% case platform %}
+              {% when 'facebook' %}
+                {% assign icon = 'hgi-facebook-01' %}
+              {% when 'twitter' %}
+                {% assign icon = 'hgi-new-twitter-rectangle' %}
+              {% when 'instagram' %}
+                {% assign icon = 'hgi-instagram' %}
+              {% when 'tiktok' %}
+                {% assign icon = 'hgi-tiktok' %}
+            {% endcase %}
+
+            {% if url != null %}
+              <li class="link">
+                <a
+                  ui-slot="button"
+                  data-variant="primary"
+                  data-mode="ghost"
+                  data-size="lg"
+                  data-as-icon
+                  href="{{ url }}"
+                  target="_blank"
+                  title="{{ platform }}"
+                >
+                  {% render 'misc.icon', name: icon %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</div>

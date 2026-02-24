@@ -1,0 +1,78 @@
+{% comment %}
+  Renders a slide item (Block)
+
+  Accepts:
+    - slide: {Object} Item info
+
+  Usage:
+  {% render 'block.slide' %}
+{% endcomment %}
+
+<li
+  ui-carousel="item"
+  ui-block="slide"
+  ui-slot="carousel-item"
+  {{ slide.youcan_attributes }}
+  {% if slide.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ slide.settings.main_color.hue }};
+      --brand-saturation: {{ slide.settings.main_color.saturation }}%;
+      --brand-lightness: {{ slide.settings.main_color.lightness }}%;
+    "
+    data-scoped-color
+    data-intensity="{{ slide.settings.color_intensity }}"
+  {% endif %}
+  data-alignment="{{ section.settings.mobile_content_alignment }}"
+>
+  <div class="media" data-width="{{ section.settings.height }}">
+    {% if slide.settings.slide_desktop_image.src or slide.settings.slide_mobile_image.src %}
+      <picture>
+        {% if slide.settings.slide_mobile_image.src %}
+          <source srcset="{{ slide.settings.slide_mobile_image.src }}" media="(max-width: 768px)">
+        {% endif %}
+        {% if settings.image.src %}
+          <source srcset="{{ slide.settings.slide_desktop_image.src }}" media="(min-width: 769px)">
+        {% endif %}
+        <img
+          src="{{ slide.settings.slide_desktop_image.src | default: slide.settings.slide_mobile_image.src }}"
+          alt="Slide {{forloop.index }}"
+          height="100%"
+          width="100%"
+          {% if forloop.index0 %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
+        >
+      </picture>
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: '100' %}
+    {% endif %}
+  </div>
+  <div class="content">
+    <div ui-slot="head">
+      <h4 class="heading">{{ slide.settings.slide_subheading }}</h4>
+      <h1 class="subheading">{{ slide.settings.slide_heading }}</h1>
+      <p class="description">{{ slide.settings.slide_description }}</p>
+    </div>
+    <a
+      class="cta"
+      {% if slide.settings.slide_button_style == 'underline' %}
+        ui-slot="link-button"
+        data-underline="true"
+      {% else %}
+        ui-slot="button"
+        data-variant="primary"
+      {% endif %}
+      {% if slide.settings.slide_button_style == 'primary' %}
+        data-mode="filled"
+      {% elsif slide.settings.slide_button_style == 'secondary' %}
+        data-mode="lighter"
+      {% endif %}
+      data-size="lg"
+      href="{{ slide.settings.slide_button_link }}"
+    >
+      {{ slide.settings.slide_button_label }}
+    </a>
+  </div>
+</li>

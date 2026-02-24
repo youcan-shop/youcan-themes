@@ -1,0 +1,58 @@
+{% comment %}
+  Renders a testimonial item (Block)
+
+  Accepts:
+    - testimonial: {Object} Item info
+
+  Usage:
+  {% render 'block.testimonial' %}
+{% endcomment %}
+
+<li ui-block="testimonial" ui-carousel="item" ui-slot="carousel-item" {{ testimonial.youcan_attributes }}>
+  <div class="media">
+    {% if testimonial.settings.testimonial_image.src %}
+      <img
+        src="{{ testimonial.settings.testimonial_image.src }}"
+        alt="{{ testimonial.settings.testimonial_product.name | default :testimonial.settings.testimonial_author }}"
+        height="100%"
+        width="100%"
+        loading="lazy"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
+  </div>
+  <div class="content">
+    <div class="info">
+      <h5 class="author">{{ testimonial.settings.testimonial_author }}</h5>
+      <article class="review">
+        <p>{{ testimonial.settings.testimonial_content }}</p>
+      </article>
+    </div>
+    <hr ui-slot="divider" data-variant="line">
+    <div class="product">
+      <a class="image" href="/products/{{ testimonial.settings.testimonial_product.slug }}">
+        {% if testimonial.settings.testimonial_product.preview_image %}
+          <img
+            src="{{ testimonial.settings.testimonial_product.preview_image.small }}"
+            alt="{{ testimonial.settings.testimonial_product.name }}"
+            height="100%"
+            width="100%"
+            loading="lazy"
+          >
+        {% else %}
+          {% render 'misc.image-fallback', icon_size: 20 %}
+        {% endif %}
+      </a>
+      <a
+        class="title"
+        ui-slot="link-button"
+        data-variant="black"
+        data-size="md"
+        href="/products/{{ testimonial.settings.testimonial_product.slug }}"
+      >
+        {{ testimonial.settings.testimonial_product.name | default: 'Product name' }}
+      </a>
+    </div>
+  </div>
+</li>

@@ -1,0 +1,108 @@
+/* 
+  Component: Sheet
+
+  Usage:
+    - ...
+*/
+
+[ui-slot="sheet-content"] {
+  --sheet-width: 460px;
+
+  display: flex;
+  position: fixed;
+  z-index: 50;
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--sheet-width);
+  height: 100dvh;
+  transition: var(--transition-expressive-slow-spatial);
+  border: none;
+  background-color: var(--sheet-background);
+  color: inherit;
+  inset: unset;
+  inset-block-start: var(--spacing-0);
+  inset-inline-end: calc(var(--sheet-width) * -1);
+
+  /* Header */
+  [ui-slot="sheet-header"] {
+    display: flex;
+    position: sticky;
+    z-index: 2;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+    background-image: linear-gradient(to bottom, var(--sheet-background), var(--sheet-background), transparent);
+    gap: var(--spacing-12);
+    inset-block-start: 0;
+
+    /* Title */
+    [ui-slot="sheet-title"] {
+      font: var(--font-title-lg);
+    }
+  }
+
+  /* Body */
+  [ui-slot="sheet-body"] {
+    flex: 2;
+    padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+  }
+
+  /* Body */
+  [ui-slot="sheet-footer"] {
+    display: grid;
+    position: sticky;
+    grid-template-columns: repeat(2, 1fr);
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+    gap: var(--spacing-12);
+    inset-block-end: 0;
+    background-image: linear-gradient(
+      to top,
+      var(--sheet-background),
+      var(--sheet-background),
+      var(--sheet-background),
+      var(--sheet-background),
+      transparent
+    );
+  }
+
+  /* Backdrop */
+  &::backdrop {
+    transition: var(--transition-standard-default-spatial);
+  }
+
+  /* State */
+  &:popover-open {
+    inset-inline-end: var(--spacing-0);
+
+    &::backdrop {
+      backdrop-filter: blur(10px);
+      background-color: color-mix(in srgb, currentcolor 15%, transparent);
+    }
+
+    @starting-style {
+      inset-inline-end: calc(var(--sheet-width) * -1);
+
+      &::backdrop {
+        backdrop-filter: blur(0);
+        background-color: transparent;
+      }
+    }
+  }
+
+  @media (width <= 769px) {
+    --sheet-width: 100%;
+  }
+}
+
+[data-intensity="as-solid-bg"],
+[data-intensity="as-foreground"] {
+  [ui-slot="sheet-content"] {
+    --sheet-background: var(--color-on-primary);
+  }
+}
+
+[data-intensity="as-light-bg"] {
+  [ui-slot="sheet-content"] {
+    --sheet-background: var(--color-primary-container);
+  }
+}

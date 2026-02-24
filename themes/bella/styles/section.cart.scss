@@ -1,0 +1,227 @@
+@layer sections {
+  [ui-section="cart"] {
+    display: flex;
+    gap: var(--spacing-64);
+    flex-direction: column;
+    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+
+    .core-area {
+      display: grid;
+      grid-template-columns: 65% auto;
+      align-items: flex-start;
+      gap: var(--spacing-64);
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        &:not(:has(td)) {
+          display: none;
+        }
+
+        thead {
+          height: calc(var(--spacing-32) + var(--spacing-4));
+          color: var(--color-on-surface-variant);
+          border-block-end: 1px solid var(--color-surface-variant);
+
+          th {
+            padding-inline: var(--spacing-12);
+            text-align: start;
+            white-space: nowrap;
+          }
+        }
+
+        tbody {
+          tr {
+            &:not(:last-child) {
+              border-block-end: 1px solid var(--color-surface-variant);
+            }
+
+            td {
+              padding: var(--spacing-12);
+              white-space: nowrap;
+
+              .product {
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-12);
+
+                .image {
+                  width: 120px;
+                  height: 120px;
+                  overflow: hidden;
+                  border-radius: var(--radius-12);
+
+                  & > img {
+                    object-fit: cover;
+                  }
+                }
+
+                .info {
+                  display: grid;
+                  gap: var(--spacing-4);
+
+                  .variants {
+                    color: var(--color-on-surface-variant);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .summary {
+        display: grid;
+        gap: var(--spacing-16);
+
+        [ui-slot="accordion-item"] {
+          padding: var(--spacing-16);
+          padding-block-end: var(--spacing-0);
+          border: none !important;
+          border-radius: var(--radius-28);
+          background-color: var(--color-surface-container-low);
+
+          [ui-slot="accordion-trigger"] {
+            padding-block: var(--spacing-0) var(--spacing-16) !important;
+          }
+        }
+
+        .coupon {
+          display: grid;
+          gap: var(--spacing-16);
+
+          .input {
+            display: flex;
+            gap: var(--spacing-8);
+
+            [ui-slot="input"] {
+              flex: 2;
+              background-color: color-mix(in srgb, currentcolor 18%, transparent) !important;
+
+              &::placeholder {
+                color: color-mix(in oklab, currentcolor 80%, transparent);
+              }
+            }
+
+            [ui-slot="button"] {
+              width: 75px;
+            }
+          }
+
+          .output {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .info {
+              display: flex;
+              align-items: center;
+              gap: var(--spacing-8);
+
+              [ui-slot="status-badge"] {
+                background-color: var(--color-primary-container);
+                color: var(--color-primary);
+              }
+            }
+
+            [ui-slot="button"] {
+              width: 75px;
+            }
+          }
+
+          &:has([ui-summary-box="coupon-code"][hidden]) {
+            .output {
+              display: none;
+            }
+          }
+        }
+
+        .details {
+          display: grid;
+          grid-template-columns: repeat(2, auto);
+          gap: var(--spacing-8);
+
+          .label,
+          .value {
+            font: var(--font-title-lg);
+          }
+
+          .value {
+            display: flex;
+            justify-content: flex-end;
+          }
+
+          .description {
+            grid-column: 1 / 3;
+            color: var(--color-on-surface-variant);
+          }
+
+          [ui-slot="button"] {
+            grid-column: 1 / 3;
+          }
+        }
+      }
+
+      &:has(ui-empty:not([hidden])) {
+        grid-template-columns: 1fr;
+      }
+
+      @media (width <= 1024px) {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-24);
+      }
+
+      @media (width <= 769px) {
+        table {
+          thead {
+            display: none;
+          }
+
+          tbody {
+            tr {
+              display: grid;
+              grid-template-columns: repeat(2, auto);
+              align-items: center;
+              gap: var(--spacing-12);
+
+              &:has(:last-child) {
+                margin-block-end: var(--spacing-16);
+                padding-block-end: var(--spacing-16);
+              }
+
+              td {
+                padding: var(--spacing-0);
+
+                &:first-child,
+                &:nth-child(4) {
+                  display: flex;
+                  justify-self: flex-end;
+                }
+
+                &:nth-child(2) {
+                  order: -1;
+                }
+
+                &:nth-child(3) {
+                  display: none;
+                }
+
+                &:nth-child(4) {
+                  order: 5;
+                }
+
+                .product {
+                  .image {
+                    width: 100px;
+                    height: 100px;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

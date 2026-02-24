@@ -1,0 +1,192 @@
+
+  [ui-section=cart]:not(#\#){
+    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+  }
+  [ui-section=cart]{
+    display:flex;
+    gap:var(--spacing-64);
+    flex-direction:column;
+  }
+  [ui-section=cart] .core-area{
+    display:grid;
+    grid-template-columns:65% auto;
+    align-items:flex-start;
+    grid-gap:var(--spacing-64);
+    gap:var(--spacing-64);
+  }
+  [ui-section=cart] .core-area table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  [ui-section=cart] .core-area table:not(:has(td)){
+    display:none;
+  }
+  [ui-section=cart] .core-area table thead{
+    height:calc(var(--spacing-32) + var(--spacing-4));
+    color:var(--color-on-surface-variant);
+    border-bottom:1px solid var(--color-surface-variant);
+  }
+  [ui-section=cart] .core-area table thead th{
+    padding-left:var(--spacing-12);
+    padding-right:var(--spacing-12);
+    text-align:left;
+    white-space:nowrap;
+  }
+  [ui-section=cart] .core-area table tbody tr:not(:last-child){
+    border-bottom:1px solid var(--color-surface-variant);
+  }
+  [ui-section=cart] .core-area table tbody tr td{
+    padding:var(--spacing-12);
+    white-space:nowrap;
+  }
+  [ui-section=cart] .core-area table tbody tr td .product{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-12);
+  }
+  [ui-section=cart] .core-area table tbody tr td .product .image{
+    width:120px;
+    height:120px;
+    overflow:hidden;
+    border-radius:var(--radius-12);
+  }
+  [ui-section=cart] .core-area table tbody tr td .product .image > img{
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=cart] .core-area table tbody tr td .product .info{
+    display:grid;
+    grid-gap:var(--spacing-4);
+    gap:var(--spacing-4);
+  }
+  [ui-section=cart] .core-area table tbody tr td .product .info .variants{
+    color:var(--color-on-surface-variant);
+  }
+  [ui-section=cart] .core-area .summary{
+    display:grid;
+    grid-gap:var(--spacing-16);
+    gap:var(--spacing-16);
+  }
+  [ui-section=cart]:not(#\#) .core-area .summary [ui-slot=accordion-item]{
+    border:none !important;
+  }
+  [ui-section=cart] .core-area .summary [ui-slot=accordion-item]{
+    padding:var(--spacing-16);
+    padding-bottom:var(--spacing-0);
+    border-radius:var(--radius-28);
+    background-color:var(--color-surface-container-low);
+  }
+  [ui-section=cart]:not(#\#) .core-area .summary [ui-slot=accordion-item] [ui-slot=accordion-trigger]{
+    padding-top:var(--spacing-0) !important;
+    padding-bottom:var(--spacing-16) !important;
+  }
+  [ui-section=cart] .core-area .summary .coupon{
+    display:grid;
+    grid-gap:var(--spacing-16);
+    gap:var(--spacing-16);
+  }
+  [ui-section=cart] .core-area .summary .coupon .input{
+    display:flex;
+    gap:var(--spacing-8);
+  }
+  [ui-section=cart]:not(#\#) .core-area .summary .coupon .input [ui-slot=input]{
+    background-color:color-mix(in srgb, currentcolor 18%, transparent) !important;
+  }
+  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=input]{
+    flex:2;
+  }
+  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=input]::-moz-placeholder{
+    color:color-mix(in oklab, currentcolor 80%, transparent);
+  }
+  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=input]::placeholder{
+    color:color-mix(in oklab, currentcolor 80%, transparent);
+  }
+  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=button]{
+    width:75px;
+  }
+  [ui-section=cart] .core-area .summary .coupon .output{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  [ui-section=cart] .core-area .summary .coupon .output .info{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-8);
+  }
+  [ui-section=cart] .core-area .summary .coupon .output .info [ui-slot=status-badge]{
+    background-color:var(--color-primary-container);
+    color:var(--color-primary);
+  }
+  [ui-section=cart] .core-area .summary .coupon .output [ui-slot=button]{
+    width:75px;
+  }
+  [ui-section=cart] .core-area .summary .coupon:has([ui-summary-box=coupon-code][hidden]) .output{
+    display:none;
+  }
+  [ui-section=cart] .core-area .summary .details{
+    display:grid;
+    grid-template-columns:repeat(2, auto);
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+  }
+  [ui-section=cart] .core-area .summary .details .label,
+  [ui-section=cart] .core-area .summary .details .value{
+    font:var(--font-title-lg);
+  }
+  [ui-section=cart] .core-area .summary .details .value{
+    display:flex;
+    justify-content:flex-end;
+  }
+  [ui-section=cart] .core-area .summary .details .description{
+    grid-column:1/3;
+    color:var(--color-on-surface-variant);
+  }
+  [ui-section=cart] .core-area .summary .details [ui-slot=button]{
+    grid-column:1/3;
+  }
+  [ui-section=cart] .core-area:has(ui-empty:not([hidden])){
+    grid-template-columns:1fr;
+  }
+  @media (max-width: 1024px){
+    [ui-section=cart] .core-area{
+      grid-template-columns:1fr;
+      gap:var(--spacing-24);
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=cart] .core-area table thead{
+      display:none;
+    }
+    [ui-section=cart] .core-area table tbody tr{
+      display:grid;
+      grid-template-columns:repeat(2, auto);
+      align-items:center;
+      grid-gap:var(--spacing-12);
+      gap:var(--spacing-12);
+    }
+    [ui-section=cart] .core-area table tbody tr:has(:last-child){
+      margin-bottom:var(--spacing-16);
+      padding-bottom:var(--spacing-16);
+    }
+    [ui-section=cart] .core-area table tbody tr td{
+      padding:var(--spacing-0);
+    }
+    [ui-section=cart] .core-area table tbody tr td:first-child, [ui-section=cart] .core-area table tbody tr td:nth-child(4){
+      display:flex;
+      justify-self:flex-end;
+    }
+    [ui-section=cart] .core-area table tbody tr td:nth-child(2){
+      order:-1;
+    }
+    [ui-section=cart] .core-area table tbody tr td:nth-child(3){
+      display:none;
+    }
+    [ui-section=cart] .core-area table tbody tr td:nth-child(4){
+      order:5;
+    }
+    [ui-section=cart] .core-area table tbody tr td .product .image{
+      width:100px;
+      height:100px;
+    }
+  }

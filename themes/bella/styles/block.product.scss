@@ -1,0 +1,119 @@
+@layer reset, base, components, utilities, sections, snippets, overrides;
+
+@layer snippets {
+  [ui-block="product"] {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: var(--spacing-16);
+
+    .media {
+      position: relative;
+      height: auto;
+      overflow: hidden;
+      transition: var(--transition-expressive-default-spatial);
+      border-radius: var(--radius-product);
+      text-decoration: none;
+
+      &[data-image-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-image-ratio="portrait"] {
+        aspect-ratio: 3 / 4;
+      }
+
+      &[data-image-ratio="landscape"] {
+        aspect-ratio: 4 / 3;
+      }
+
+      & > img {
+        object-fit: cover;
+        transition: var(--transition-expressive-default-spatial);
+      }
+
+      & > ui-shop-button:first-of-type,
+      & > [ui-slot="button"]:first-of-type {
+        visibility: hidden;
+        position: absolute;
+        left: 50%;
+        width: calc(100% - var(--spacing-48));
+        transform: translate(-50%, var(--spacing-12));
+        transition: var(--transition-expressive-slow-spatial);
+        opacity: 0;
+        filter: blur(2px);
+        inset-block-end: var(--spacing-12);
+      }
+
+      & > ui-shop-button:last-of-type,
+      & > [ui-slot="button"]:last-of-type {
+        position: absolute;
+        inset-inline-end: var(--spacing-12);
+        inset-block-end: var(--spacing-12);
+      }
+    }
+
+    .content {
+      display: grid;
+      gap: var(--spacing-4);
+      justify-content: var(--alignment-product);
+      text-align: var(--alignment-product);
+
+      .title {
+        display: block;
+        overflow: hidden;
+        font: var(--font-body-lg);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .price {
+        font: var(--font-title-md);
+
+        .compare-at-price {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .badge {
+      position: absolute;
+      inset: 0;
+      margin: var(--spacing-12);
+    }
+
+    &:hover {
+      .media {
+        & > img {
+          filter: brightness(0.8);
+        }
+
+        & > ui-shop-button:first-of-type,
+        & > [ui-slot="button"]:first-of-type {
+          visibility: visible;
+          transform: translate(-50%, calc(var(--spacing-12) * -1));
+          opacity: 1;
+          filter: blur(0);
+        }
+      }
+    }
+
+    @media (width > 769px) {
+      .media {
+        & > ui-shop-button:last-of-type,
+        & > [ui-slot="button"]:last-of-type {
+          display: none !important;
+        }
+      }
+    }
+
+    @media (width <= 769px) {
+      .media {
+        & > ui-shop-button:first-of-type,
+        & > [ui-slot="button"]:first-of-type {
+          display: none !important;
+        }
+      }
+    }
+  }
+}

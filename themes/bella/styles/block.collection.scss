@@ -1,0 +1,48 @@
+@layer snippets {
+  [ui-block="collection"] {
+    display: flex;
+    flex-direction: column;
+
+    .media {
+      height: auto;
+      overflow: hidden;
+      border-radius: var(--radius-collection);
+
+      &[data-image-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-image-ratio="portrait"] {
+        aspect-ratio: 3 / 4;
+      }
+
+      &[data-image-ratio="landscape"] {
+        aspect-ratio: 4 / 3;
+      }
+
+      & > img {
+        object-fit: cover;
+      }
+    }
+
+    .content {
+      display: flex;
+      gap: var(--spacing-14);
+      justify-content: space-between;
+      padding-block-start: var(--spacing-24);
+
+      .info {
+        display: grid;
+        gap: var(--spacing-8);
+
+        .title {
+          font: var(--font-title-md);
+        }
+
+        .total {
+          color: var(--color-on-surface-variant);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{{ 'misc.sort.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a sort component (search | products)
+
+  Accepts:
+  - url: {String} The collection/search URL with sorting params
+
+  Usage:
+  {% render 'misc.sort', url: "{your_store}.youcan.store?sort_field=price&sort_order=asc" %}
+{% endcomment %}
+
+{% assign sort_field = '' %}
+{% assign sort_order = '' -%}
+{% assign query_params = url | split: '?' | last | split: '&' %}
+
+{% for param in query_params %}
+  {% if param contains 'sort_field=' %}
+    {% assign sort_field = param | split: '=' | last %}
+  {% elsif param contains 'sort_order=' %}
+    {% assign sort_order = param | split: '=' | last %}
+  {% endif %}
+{% endfor %}
+
+{% assign alphabetical_asc = 'Alphabetical, A-Z' %}
+{% assign alphabetical_desc = 'Alphabetical, Z-A' %}
+{% assign oldest = 'Oldest' %}
+{% assign newest = 'Newest' %}
+{% assign price_low_high = 'Price, Low to High' %}
+{% assign price_high_low = 'Price, High to Low' %}
+
+{% capture labels %}
+  {{ alphabetical_asc }}| {{ alphabetical_desc }}| {{ oldest }}| {{ newest }}| {{ price_low_high }}| {{ price_high_low }}
+{% endcapture -%}
+
+{% assign keys = ',name,name,created_at,created_at,price,price' | split: ',' %}
+{% assign values = 'desc,asc' | split: ',' %}
+{% assign options = labels | split: '|' %}
+
+<ui-sort>
+  <button
+    ui-slot="button"
+    data-variant="primary"
+    data-mode="lighter"
+    data-size="xs"
+    popovertarget="sort"
+  >
+    {% assign placeholder = 'Sort' %}
+    {% for opt in options %}
+      {% assign index = forloop.index %}
+      {% assign field = keys[index] %}
+      {% assign order = index | modulo: 2 == 0 %}
+
+      {% if field == sort_field and values[order] == sort_order %}
+        {% assign placeholder = opt %}
+      {% endif %}
+    {% endfor %}
+
+    {{ placeholder }}
+
+    {% render 'misc.icon', name: 'hgi-unfold-more' %}
+  </button>
+
+  <div ui-slot="sheet-content" id="sort" popover>
+    <div ui-slot="sheet-header">
+      <h2 ui-slot="sheet-title">Sort by</h2>
+      <button
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="lighter"
+        data-size="md"
+        aria-label="Close"
+        popovertarget="sort"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
+    </div>
+    <div ui-slot="sheet-body">
+      <fieldset class="options">
+        {% for opt in options %}
+          {% assign index = forloop.index %}
+          {% assign field = keys[index] %}
+          {% assign order = index | modulo: 2 == 0 %}
+          {% assign href = '?sort_field=' | append: field | append: '&sort_order=' | append: values[order] %}
+          {% unless terms == null or terms == '' %}
+            {% assign href = href | append: '&q=' | append: terms %}
+          {% endunless %}
+
+          <a class="opt" ui-slot="button" data-variant="primary" data-mode="ghost" data-size="md" href="{{ href }}">
+            <input
+              ui-slot="radio"
+              type="radio"
+              name="sort"
+              {% if field == sort_field and values[order] == sort_order %}
+                checked
+              {% endif %}
+            >
+            {{ opt }}
+          </a>
+        {% endfor %}
+      </fieldset>
+    </div>
+  </div>
+</ui-sort>

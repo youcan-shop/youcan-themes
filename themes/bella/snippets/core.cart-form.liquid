@@ -1,0 +1,52 @@
+{{ 'core.cart-form.css' | asset_url | stylesheet_tag }}
+
+<ui-cart-form>
+  <template ui-cart-drawer="item">
+    {% render 'core.cart-form-item', product: product %}
+  </template>
+  <ui-cart-drawer-items>
+    {% for product in cart.items %}
+      {% render 'core.cart-form-item', product: product %}
+    {% endfor %}
+  </ui-cart-drawer-items>
+
+  {% unless cart.count > 0 %}
+    {% render 'misc.empty', heading: 'Your cart is empty', subheading: 'Not sure where to start? Try these collections:' %}
+  {% else %}
+    {% render 'misc.empty', heading: 'Your cart is empty', subheading: 'Not sure where to start? Try these collections:', hidden: true %}
+  {% endunless %}
+  <div class="collections">
+    {% for i in (1..4) %}
+      {% assign item = 'cart_collection_' | append: i %}
+      {% assign collection = block.settings[item] %}
+
+      {% if collection != blank %}
+        <a class="collection" href="/collections/{{ collection.name }}">
+          <div class="image">
+            {% if collection.preview_image %}
+              <img
+                src="{{ collection.preview_image.original }}"
+                alt="{{ collection.name }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback' %}
+            {% endif %}
+          </div>
+          <span class="name">{{ collection.name }}</span>
+          <div
+            ui-slot="button"
+            data-variant="primary"
+            data-mode="lighter"
+            data-size="lg"
+            data-as-icon
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-up-right-01' %}
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</ui-cart-form>

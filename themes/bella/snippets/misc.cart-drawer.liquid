@@ -1,0 +1,79 @@
+{{ 'misc.cart-drawer.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a cart drawer
+
+  Usage:
+  {% render 'misc.cart-drawer' %}
+{% endcomment %}
+
+<button
+  class="cart-drawer-trigger"
+  ui-slot="button"
+  data-variant="primary"
+  data-mode="ghost"
+  data-size="md"
+  data-as-icon
+  aria-label="Cart"
+  popovertarget="cart"
+  {{ block.youcan_attributes }}
+>
+  {% render 'misc.icon', name: settings.cart_icon %}
+  <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
+    <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+  </div>
+</button>
+
+<div ui-slot="sheet-content" id="cart" popover>
+  <div ui-slot="sheet-header">
+    <h2 ui-slot="sheet-title">Your Cart</h2>
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="lighter"
+      data-size="md"
+      aria-label="Close"
+      popovertarget="cart"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <div ui-slot="sheet-body">
+    {% render 'core.cart-form' %}
+  </div>
+  <div
+    ui-slot="sheet-footer"
+    {% unless cart.count > 0 %}
+      hidden
+    {% endunless %}
+    ui-cart-drawer="footer"
+  >
+    <div class="footer">
+      <span class="label">{{ 'cart.drawer.total' | t }}</span>
+      <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+      <span class="description">Taxes and shipping are calculated at checkout.</span>
+    </div>
+    <div class="navigation">
+      <a
+        href="/cart"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="stroke"
+        data-size="lg"
+        popovertarget="cart"
+      >
+        View Cart
+      </a>
+      <a
+        href="{{ cart.cart_submit_url }}"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="filled"
+        data-size="lg"
+      >
+        {% render 'misc.icon', name: 'hgi-shopping-bag-01' %}
+        Check out
+      </a>
+    </div>
+  </div>
+</div>

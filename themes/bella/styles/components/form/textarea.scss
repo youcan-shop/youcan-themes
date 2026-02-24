@@ -1,0 +1,68 @@
+/* 
+  Component: Textarea
+
+  Usage:
+    - <textarea ui-slot="textarea" name="my-textarea" />
+*/
+
+[ui-slot="textarea"] {
+  min-height: 82px;
+  padding: var(--spacing-10) var(--spacing-12);
+  transition: all var(--transition-standard-default-spatial);
+  border: 1px solid var(--color-surface-variant);
+  border-radius: var(--radius-8);
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+  background-color: var(--color-background);
+  box-shadow: 0 1px 2px 0 color-mix(in srgb, currentcolor 8%, transparent);
+  color: var(--color-on-background);
+  font: var(--font-body-md);
+  resize: vertical;
+
+  /* Placeholder */
+  &::placeholder {
+    transition: color var(--transition-standard-default-spatial);
+    color: color-mix(in oklab, currentcolor 50%, transparent);
+  }
+
+  /* Invalid */
+  &[aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+
+  /* Disabled */
+  &:disabled {
+    border-color: transparent;
+    background-color: var(--color-surface-container-low);
+    box-shadow: none;
+    color: color-mix(in srgb, currentcolor 38%, transparent);
+
+    &::placeholder {
+      color: currentcolor;
+    }
+  }
+
+  /* Focused */
+  &:focus {
+    border-color: currentcolor;
+    outline-color: color-mix(in oklab, currentcolor 10%, transparent);
+
+    &[aria-invalid="true"] {
+      border-color: var(--color-error);
+      outline-color: color-mix(in oklab, var(--color-error) 15%, transparent);
+    }
+  }
+
+  /* Hover */
+  &:hover:not(:focus, :disabled) {
+    background-color: var(--color-surface-container-low);
+
+    &:not([aria-invalid="true"]) {
+      border-color: transparent;
+    }
+
+    &::placeholder {
+      color: var(--color-on-surface-variant);
+    }
+  }
+}

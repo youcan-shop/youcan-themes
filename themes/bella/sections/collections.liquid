@@ -1,0 +1,156 @@
+{{ 'section.collections.css' | asset_url | stylesheet_tag }}
+
+<ui-carousel
+  ui-section="collections"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div class="content-area">
+    <div ui-slot="head">
+      <h4 class="heading">{{ section.settings.heading }}</h4>
+      <h1 class="subheading">{{ section.settings.subheading }}</h1>
+      <p class="description">{{ section.settings.description }}</p>
+    </div>
+    {% if section.blocks.size > 1 %}
+      <div class="actions">
+        <button
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="stroke"
+          data-size="lg"
+          data-as-icon
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+        </button>
+        <button
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="stroke"
+          data-size="lg"
+          data-as-icon
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+  <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+    {% for collection in section.blocks %}
+      {% render 'block.collection' %}
+    {% endfor %}
+  </ul>
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "Collections",
+  "templates": ["index"],
+  "limit": 3,
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our self care collections"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "A holistic wellness & beauty line"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "We create safe products that really work and are designed to make you feel good"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "label": "Collection",
+      "settings": [
+        {
+          "type": "category",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

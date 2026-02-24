@@ -1,0 +1,37 @@
+/* 
+  Component: Hint
+
+  Accepts:
+    - aria-invalid: {Boolean}: true | false
+    - aria-disabled: {Boolean}: true | false
+
+  Usage:
+    - <div ui-slot="hint">
+        <i class="hgi hgi-stroke hgi-information-circle"></i>
+        This is a hint text to help user.
+      </div>
+*/
+
+[ui-slot="hint"] {
+  display: flex;
+  align-items: center;
+  color: var(--color-on-surface-variant);
+  font: var(--font-body-sm);
+  gap: var(--spacing-4);
+
+  /* Icon */
+  & > i {
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+
+  /* Invalid */
+  &[aria-invalid="true"] {
+    color: var(--color-error);
+  }
+
+  /* Disabled */
+  &[aria-disabled="true"] {
+    color: color-mix(in srgb, currentcolor 38%, transparent);
+  }
+}

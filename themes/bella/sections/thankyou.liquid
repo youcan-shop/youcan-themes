@@ -1,0 +1,183 @@
+{{ 'section.thankyou.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="thankyou"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div class="content-area">
+    <h1 class="heading">Thank you for your purchase!</h1>
+    <p class="description">Your order has been received and is being processed</p>
+  </div>
+  <div class="order-summary-area">
+    <div class="statuses">
+      <div class="item">
+        <span ui-slot="label">Status</span>
+        {% render 'const.payment-status', status: order.paymentStatusSlug %}
+      </div>
+      <div class="item">
+        <span ui-slot="label">{{ 'order.payment_method.label' | t }}:</span>
+        <span class="value">
+          {% assign payment_gateway = order.gatewayType %}
+          {% render 'const.payment-gateway', type: payment_gateway %}
+        </span>
+      </div>
+    </div>
+    <div class="products">
+      {% for product in order.order_variants %}
+        <div class="product">
+          <div class="media">
+            {% if product.image %}
+              <img
+                src="{{ product.image }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+                loading="eager"
+              >
+            {% else %}
+              {% render 'misc.image-fallback' %}
+            {% endif %}
+          </div>
+          <div class="content">
+            <a
+              ui-slot="link-button"
+              data-variant="black"
+              data-size="md"
+              class="title"
+              href="{{ product.url }}"
+            >
+              {{ product.name }}
+            </a>
+            <span class="count">x{{ product.quantity }}</span>
+          </div>
+          <span class="price">{{ product.price | default: 0 | money }}</span>
+        </div>
+        {% unless forloop.last %}
+          <hr ui-slot="divider" data-variant="line">
+        {% endunless %}
+      {% endfor %}
+    </div>
+    <div class="summary">
+      <div class="item">
+        <span ui-slot="label">{{ 'order.subtotal' | t }}</span>
+        <span class="value">{{ order.sub_total | default: 0 | money }}</span>
+      </div>
+      {% if order.coupon != null %}
+        <div class="item">
+          <span ui-slot="label">{{ 'order.coupon_code' | t }}</span>
+          <div class="value">{{ order.coupon.code }}</div>
+        </div>
+        <div class="item">
+          <span ui-slot="label">{{ 'order.discount_amount' | t }}</span>
+          <span class="value">
+            {% render 'const.discount-value', coupon: order.coupon %}
+          </span>
+        </div>
+      {% endif %}
+      {% if order.vat != 0 %}
+        <div class="item">
+          <span ui-slot="label">{{ 'cart.page.summary.vat' | t }} ({{ order.vat | times: 100 | append: '%' }})</span>
+          <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
+        </div>
+      {% endif %}
+      <div class="item">
+        <span ui-slot="label">{{ 'order.shipping' | t }}</span>
+        {% if order.shippingCost == 0 or order.shippingCost == null %}
+          {% assign shipping_cost = 'order.free' | t %}
+        {% else %}
+          {% assign shipping_cost = order.shippingCost | default: 0 | money %}
+        {% endif %}
+        <span class="value">{{ shipping_cost }}</span>
+      </div>
+      <hr ui-slot="divider" data-variant="line">
+      <div class="item">
+        <span ui-slot="label">{{ 'order.total' | t }}</span>
+        <span class="value">{{ order.total | default: 0 | money }}</span>
+      </div>
+    </div>
+    <a
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="filled"
+      data-size="lg"
+      href="{{ routes.root_url |  default: "/" }}"
+    >
+      {{ 'order.action' | t }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "Thank You",
+  "templates": ["thankyou"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "Main Color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "Color Intensity",
+      "options": [
+        { "label": "As Solid Background", "value": "as-solid-bg" },
+        { "label": "As Light Background", "value": "as-light-bg" },
+        { "label": "As Foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "Override global colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "Top Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "Bottom Spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}
