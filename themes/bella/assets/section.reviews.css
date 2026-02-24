@@ -55,6 +55,7 @@
     display:grid;
     grid-template-columns:repeat(2, 1fr);
     overflow:hidden;
+    border-radius:var(--radius-review);
   }
   [ui-section=reviews] .items [ui-block=review] .content,
   [ui-section=reviews] .items .skeleton-item .content{
@@ -100,15 +101,17 @@
   }
   [ui-section=reviews] .items [ui-block=review] .media,
   [ui-section=reviews] .items .skeleton-item .media{
-    height:auto;
-    overflow:hidden;
-    border-radius:var(--radius-review);
+    height:100%;
     aspect-ratio:1/1;
   }
   [ui-section=reviews] .items [ui-block=review] .media > img,
   [ui-section=reviews] .items .skeleton-item .media > img{
     -o-object-fit:cover;
        object-fit:cover;
+  }
+  [ui-section=reviews] .items [ui-block=review][ui-block=review] .content,
+  [ui-section=reviews] .items .skeleton-item[ui-block=review] .content{
+    background-color:var(--color-surface-container-low);
   }
   @media (max-width: 1024px){
     [ui-section=reviews] .items{
@@ -122,11 +125,6 @@
     [ui-section=reviews] .items .skeleton-item,
     [ui-section=reviews] .items [ui-block=review]{
       display:flex;
-      gap:var(--spacing-24);
       flex-direction:column-reverse;
-    }
-    [ui-section=reviews] .items .skeleton-item .content,
-    [ui-section=reviews] .items [ui-block=review] .content{
-      padding:var(--spacing-0);
     }
   }

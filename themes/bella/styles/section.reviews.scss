@@ -65,6 +65,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         overflow: hidden;
+        border-radius: var(--radius-review);
 
         .content {
           display: flex;
@@ -108,13 +109,17 @@
         }
 
         .media {
-          height: auto;
-          overflow: hidden;
-          border-radius: var(--radius-review);
+          height: 100%;
           aspect-ratio: 1 / 1;
 
           & > img {
             object-fit: cover;
+          }
+        }
+
+        &[ui-block="review"] {
+          .content {
+            background-color: var(--color-surface-container-low);
           }
         }
       }
@@ -139,12 +144,7 @@
         .skeleton-item,
         [ui-block="review"] {
           display: flex;
-          gap: var(--spacing-24);
           flex-direction: column-reverse;
-
-          .content {
-            padding: var(--spacing-0);
-          }
         }
       }
     }
