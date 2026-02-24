@@ -10,33 +10,43 @@
     {% endfor %}
   </ui-cart-drawer-items>
 
-  {% assign empty_cart_content = 'cart.empty.title' | t %}
   {% unless cart.count > 0 %}
-    {% render 'misc.empty', heading: empty_cart_content %}
+    {% render 'misc.empty', heading: 'Your cart is empty', subheading: 'Not sure where to start? Try these collections:' %}
   {% else %}
-    {% render 'misc.empty', heading: empty_cart_content, hidden: true %}
+    {% render 'misc.empty', heading: 'Your cart is empty', subheading: 'Not sure where to start? Try these collections:', hidden: true %}
   {% endunless %}
+  <div class="collections">
+    {% for i in (1..4) %}
+      {% assign item = 'cart_collection_' | append: i %}
+      {% assign collection = block.settings[item] %}
 
-  {% comment %}
-    <div class="collections">
-      <a ui-slot="button" data-variant="primary" data-mode="stroke" data-size="lg" href="#">
-        Skincare
-        <div class="icon">
-          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-        </div>
-      </a>
-      <a ui-slot="button" data-variant="primary" data-mode="stroke" data-size="lg" href="#">
-        Haircare
-        <div class="icon">
-          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-        </div>
-      </a>
-      <a ui-slot="button" data-variant="primary" data-mode="stroke" data-size="lg" href="#">
-        Makeup
-        <div class="icon">
-          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-        </div>
-      </a>
-    </div>
-  {% endcomment %}
+      {% if collection != blank %}
+        <a class="collection" href="/collections/{{ collection.name }}">
+          <div class="image">
+            {% if collection.preview_image %}
+              <img
+                src="{{ collection.preview_image.original }}"
+                alt="{{ collection.name }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback' %}
+            {% endif %}
+          </div>
+          <span class="name">{{ collection.name }}</span>
+          <div
+            ui-slot="button"
+            data-variant="primary"
+            data-mode="lighter"
+            data-size="lg"
+            data-as-icon
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-up-right-01' %}
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
 </ui-cart-form>

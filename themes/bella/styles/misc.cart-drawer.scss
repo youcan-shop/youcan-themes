@@ -1,55 +1,53 @@
 @layer reset, base, components, utilities, sections, snippets, overrides;
 
 @layer snippets {
-  .cart-drawer {
-    & > *:first-child {
-      position: relative;
+  .cart-drawer-trigger {
+    position: relative;
 
-      [ui-slot="badge"] {
-        position: absolute;
-        inset-block-end: -25%;
-        inset-inline-end: -25%;
-      }
+    [ui-slot="badge"] {
+      position: absolute;
+      inset-block-end: -25%;
+      inset-inline-end: -25%;
+    }
+  }
+
+  #cart[popover] {
+    [ui-slot="sheet-body"] {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    #cart[popover] {
-      [ui-slot="sheet-body"] {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    [ui-slot="sheet-footer"] {
+      display: flex;
+      gap: var(--spacing-16);
+      flex-direction: column;
+
+      .footer {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        gap: var(--spacing-8);
+
+        .label,
+        .value {
+          font: var(--font-title-lg);
+        }
+
+        .value {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .description {
+          grid-column: 1 / 3;
+          color: var(--color-on-surface-variant);
+        }
       }
 
-      [ui-slot="sheet-footer"] {
-        display: flex;
+      .navigation {
+        display: grid;
         gap: var(--spacing-16);
-        flex-direction: column;
-
-        .footer {
-          display: grid;
-          grid-template-columns: repeat(2, auto);
-          gap: var(--spacing-8);
-
-          .label,
-          .value {
-            font: var(--font-title-lg);
-          }
-
-          .value {
-            display: flex;
-            justify-content: flex-end;
-          }
-
-          .description {
-            grid-column: 1 / 3;
-            color: var(--color-on-surface-variant);
-          }
-        }
-
-        .navigation {
-          display: grid;
-          gap: var(--spacing-16);
-          grid-template-columns: 30% auto;
-        }
+        grid-template-columns: 30% auto;
       }
     }
   }

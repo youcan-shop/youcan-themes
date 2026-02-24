@@ -5,12 +5,11 @@ if (!customElements.get("ui-toast")) {
 
       this.timeout = null;
       this.CLOSE_DURATION = 3000;
-      this.close = () => this.setState(false);
+      this.close = () => this.setVisibility(false);
     }
 
     connectedCallback() {
       this.message = this.querySelector('[ui-toast="message"]');
-      this.status = this.querySelector('[ui-toast="status"]');
       this.action = this.querySelector('[ui-toast="action"]');
 
       this.action.addEventListener("click", this.close);
@@ -23,19 +22,16 @@ if (!customElements.get("ui-toast")) {
 
     show(message, status = "info") {
       clearTimeout(this.timeout);
-      this.setState(true);
+      this.setVisibility(true);
 
       this.message.textContent = message;
-      this.status.setAttribute("data-state", status);
+      this.setAttribute("data-state", status);
 
-      this.timeout = setTimeout(
-        () => this.setState(false),
-        this.CLOSE_DURATION
-      );
+      this.timeout = setTimeout(() => this.setVisibility(false), this.CLOSE_DURATION);
     }
 
-    setState(state) {
-      this.setAttribute("data-state", state ? "open" : "closed");
+    setVisibility(state) {
+      state ? this.showPopover() : this.hidePopover();
     }
   }
 

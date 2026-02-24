@@ -3,56 +3,72 @@
 {% comment %}
   Renders a search drawer
 
+  Accepts:
+  - keywords: {String} (optional) Most searched keywords
+  - collection_id: {String} (optional) Recommended collection id
+
   Usage:
   {% render 'misc.search' %}
 {% endcomment %}
 
-<div ui-slot="sheet" class="search">
-  <button
-    ui-slot="button"
-    data-variant="primary"
-    data-mode="ghost"
-    data-size="md"
-    data-as-icon
-    aria-label="Search"
-    popovertarget="search"
-  >
-    {% render 'misc.icon', name: 'hgi-search-01' %}
-  </button>
-  <div ui-slot="sheet-content" id="search" popover>
-    <div ui-slot="sheet-header">
-      <h3 ui-slot="sheet-title">Search</h3>
-      <button
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="lighter"
-        data-size="md"
-        aria-label="Close"
-        popovertarget="search"
-      >
-        {% render 'misc.icon', name: 'hgi-cancel-01' %}
-      </button>
-    </div>
-    <div ui-slot="sheet-body">
-      <form action="/search">
-        <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
-          <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
-          <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.drawer.placeholder' | t }}">
-          <button ui-slot="input-button">{{ 'search.drawer.action' | t }}</button>
-        </fieldset>
-      </form>
+<button
+  class="search"
+  ui-slot="button"
+  data-variant="primary"
+  data-mode="ghost"
+  data-size="md"
+  data-as-icon
+  aria-label="Search"
+  popovertarget="search"
+  {{ block.youcan_attributes }}
+>
+  {% render 'misc.icon', name: 'hgi-search-01' %}
+</button>
+
+<div ui-slot="sheet-content" id="search" popover>
+  <div ui-slot="sheet-header">
+    <h3 ui-slot="sheet-title">Search</h3>
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="lighter"
+      data-size="md"
+      aria-label="Close"
+      popovertarget="search"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <div ui-slot="sheet-body">
+    <form action="/search">
+      <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
+        <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
+        <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.drawer.placeholder' | t }}">
+      </fieldset>
+    </form>
+    {% if keywords %}
+      {% assign words = keywords | split: ',' %}
       <div class="terms">
         <h4 class="label">Most searched terms</h4>
         <div class="options">
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Skincare</a>
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Lipstick</a>
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="#">Moisturizer</a>
+          {% for keyword in words %}
+            <a
+              ui-slot="link-button"
+              data-variant="gray"
+              data-size="md"
+              href="/search?q={{ keyword | url_encode }}"
+            >
+              {{- keyword -}}
+            </a>
+          {% endfor %}
         </div>
       </div>
+    {% endif %}
+    {% if collection_id %}
       <hr ui-slot="divider" data-variant="line">
       <div class="products">
         <h4 class="label">Most searched products</h4>
-        {% paginate collection.products by 8 id category_id: block.settings.collection.id %}
+        {% paginate collection.products by 8 id category_id: collection_id %}
           <div class="items">
             {% for product in items %}
               <div class="item">
@@ -63,6 +79,7 @@
                       alt="{{ product.name }}"
                       height="100%"
                       width="100%"
+                      loading="lazy"
                     >
                   {% else %}
                     {% render 'misc.image-fallback' %}
@@ -87,6 +104,6 @@
           </div>
         {% endpaginate %}
       </div>
-    </div>
+    {% endif %}
   </div>
 </div>

@@ -38,6 +38,7 @@
                     alt="{{ subCollection.name }}"
                     height="100%"
                     width="100%"
+                    loading="eager"
                   >
                 {% else %}
                   {% render 'misc.image-fallback' %}
@@ -51,14 +52,14 @@
     {% endif %}
     <hr ui-slot="divider" data-variant="line">
     <div class="core-area">
-      <div class="controller">
-        <h4 class="result">{{ items.size }} Products</h4>
-        <div class="sort">
-          <label for="sort">Sort by:</label>
-          {% render 'misc.sort', url: previous_page %}
-        </div>
-      </div>
       {% if items.size > 0 %}
+        <div class="controller">
+          <h4 class="result">{{ items.size }} Products</h4>
+          <div class="sort">
+            <label for="sort">Sort by:</label>
+            {% render 'misc.sort', url: previous_page %}
+          </div>
+        </div>
         <ul class="items" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
           {% for product in items %}
             {% render 'block.product', product: product %}
@@ -68,8 +69,8 @@
         {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
 
       {% else %}
-        {% assign empty_content = 'single-collection.empty.title' | t %}
-        {% render 'misc.empty', heading: empty_content %}
+        {% assign empty_content = 'Sorry, there are no products in this collection.' %}
+        {% render 'misc.empty', heading: empty_content, action_label: 'Explore Other Collections', action_url: '/collections' %}
       {% endif %}
     </div>
   {% endpaginate %}

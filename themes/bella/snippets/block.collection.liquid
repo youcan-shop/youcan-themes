@@ -11,7 +11,7 @@
 {% assign collection = collection.settings.collection | default: collection %}
 
 <li ui-carousel="item" ui-block="collection" ui-slot="carousel-item" {{ collection.youcan_attributes }}>
-  <a href="/collections/{{ collection.slug }}" class="media">
+  <a href="/collections/{{ collection.slug }}" class="media" data-image-ratio="{{ settings.collection_image_ratio }}">
     {% if collection.preview_image %}
       <img
         srcset="
@@ -29,6 +29,11 @@
         alt="{{ collection.name }}"
         height="100%"
         width="100%"
+        {% if template.name == 'list-collections' and forloop.index < 5 %}
+          loading="eager"
+        {% else %}
+          loading="lazy"
+        {% endif %}
       >
     {% else %}
       {% render 'misc.image-fallback', icon_size: 40 %}
@@ -47,7 +52,7 @@
       href="/collections/{{ collection.slug }}"
       ui-slot="button"
       data-variant="primary"
-      data-mode="stroke"
+      data-mode="lighter"
       data-size="lg"
       data-as-icon
     >

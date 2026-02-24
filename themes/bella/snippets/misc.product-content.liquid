@@ -73,7 +73,10 @@
       {% when 'block_shop_buttons' %}
         <div ui-block="controller" {{ block.youcan_attributes }}>
           {% render 'core.quantity', size: 'md' %}
-          {% if block.settings.shop_buttons_layout == 'add-to-cart' or block.settings.shop_buttons_layout == 'both' %}
+          {% if block.settings.shop_buttons_layout == 'add-to-cart'
+            or block.settings.shop_buttons_layout == 'both'
+            and settings.cart_checkout_type == 'cart'
+          %}
             {% render 'core.shop-button', mode: 'lighter' %}
           {% endif %}
           {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}

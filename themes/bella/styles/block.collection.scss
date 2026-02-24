@@ -2,12 +2,23 @@
   [ui-block="collection"] {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    border-radius: var(--radius-collection);
-    box-shadow: var(--shadow-lg);
 
     .media {
-      height: 35vh;
+      height: auto;
+      overflow: hidden;
+      border-radius: var(--radius-collection);
+
+      &[data-image-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-image-ratio="portrait"] {
+        aspect-ratio: 3 / 4;
+      }
+
+      &[data-image-ratio="landscape"] {
+        aspect-ratio: 4 / 3;
+      }
 
       & > img {
         object-fit: cover;
@@ -18,8 +29,7 @@
       display: flex;
       gap: var(--spacing-14);
       justify-content: space-between;
-      padding: var(--spacing-24);
-      background-color: var(--color-surface-container-lowest);
+      padding-block-start: var(--spacing-24);
 
       .info {
         display: grid;
@@ -32,14 +42,6 @@
         .total {
           color: var(--color-on-surface-variant);
         }
-      }
-    }
-  }
-
-  @media (width <= 769px) {
-    [ui-block="collection"] {
-      .media {
-        height: 30vh;
       }
     }
   }

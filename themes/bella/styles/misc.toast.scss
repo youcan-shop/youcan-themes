@@ -1,6 +1,8 @@
 @layer snippets {
   ui-toast {
+    inset: auto;
     display: flex;
+    visibility: hidden;
     position: fixed;
     z-index: 50;
     left: 50%;
@@ -11,12 +13,38 @@
     padding-inline-start: var(--spacing-12);
     transform: translateX(-50%);
     transition: var(--transition-expressive-default-spatial);
-    border: 1px solid var(--color-surface-variant);
-    border-radius: var(--radius-12);
-    background-color: var(--color-background);
-    color: var(--color-on-background);
-    inset-block-end: var(--spacing-12);
+    border: none;
+    border-radius: var(--radius-toast);
+    opacity: 0;
+    background-color: var(--color-toast-container);
+    box-shadow: var(--shadow-lg);
+    color: var(--color-on-toast-container);
     gap: var(--spacing-12);
+    inset-block-end: -5%;
+
+    &[data-type="success"] {
+      --color-toast: var(--color-success);
+      --color-toast-container: var(--color-success-container);
+      --color-on-toast-container: var(--color-on-success-container);
+    }
+
+    &[data-type="error"] {
+      --color-toast: var(--color-error);
+      --color-toast-container: var(--color-error-container);
+      --color-on-toast-container: var(--color-on-error-container);
+    }
+
+    &[data-type="info"] {
+      --color-toast: var(--color-info);
+      --color-toast-container: var(--color-info-container);
+      --color-on-toast-container: var(--color-on-info-container);
+    }
+
+    &[data-type="warning"] {
+      --color-toast: var(--color-warning);
+      --color-toast-container: var(--color-warning-container);
+      --color-on-toast-container: var(--color-on-warning-container);
+    }
 
     & > hr {
       width: 1px;
@@ -26,27 +54,12 @@
       background-color: currentcolor;
     }
 
-    [ui-toast="status"] {
+    [ui-toast="icon"] {
       width: 20px;
       height: 20px;
-      clip-path: circle();
       margin-inline: calc(var(--spacing-4) * -1);
-
-      &[data-state="success"] {
-        background: linear-gradient(135deg, var(--color-success), var(--color-success-container));
-      }
-
-      &[data-state="error"] {
-        background: linear-gradient(135deg, var(--color-error), var(--color-error-container));
-      }
-
-      &[data-state="info"] {
-        background: linear-gradient(135deg, var(--color-info), var(--color-info-container));
-      }
-
-      &[data-state="warning"] {
-        background: linear-gradient(135deg, var(--color-warning), var(--color-warning-container));
-      }
+      border-radius: var(--radius-toast);
+      background: linear-gradient(135deg, var(--color-toast), var(--color-toast-container));
     }
 
     [ui-toast="message"] {
@@ -57,10 +70,21 @@
       white-space: nowrap;
     }
 
-    &[data-state="closed"] {
-      visibility: hidden;
-      opacity: 0;
-      inset-block-end: -5%;
+    [ui-toast="action"] {
+      border-radius: var(--radius-toast) !important;
+    }
+
+    /* State */
+    &:popover-open {
+      visibility: visible;
+      opacity: 1;
+      inset-block-end: var(--spacing-12);
+
+      @starting-style {
+        visibility: hidden;
+        opacity: 0;
+        inset-block-end: -5%;
+      }
     }
 
     @media (width <= 769px) {
