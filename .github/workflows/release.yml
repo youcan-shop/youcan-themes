@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset:version
+          publish: pnpm changeset:publish
+          commit: "chore: version packages"
+          title: "chore: version packages"
+          createGithubReleases: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout master branch
+        run: git checkout master
+
+      - name: Detect versioned packages
+        id: versioned
+        run: |
+          # Check if any CHANGELOG files were updated (indicates version bump)
+          if git diff HEAD~1 --name-only | grep -q "CHANGELOG.md"; then
+            echo "has_versions=true" >> $GITHUB_OUTPUT
+
+            # Find all themes with updated CHANGELOGs
+            packages=$(git diff HEAD~1 --name-only | grep "CHANGELOG.md" | while read changelog; do
+              dir=$(dirname "$changelog")
+              if [ -f "$dir/package.json" ]; then
+                name=$(node -p "require('./$dir/package.json').name")
+                version=$(node -p "require('./$dir/package.json').version")
+                echo "$name@$version"
+              fi
+            done | jq -R -s -c 'split("\n") | map(select(length > 0))')
+
+            echo "packages=$packages" >> $GITHUB_OUTPUT
+          else
+            echo "has_versions=false" >> $GITHUB_OUTPUT
+            echo "packages=[]" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create tags
+        if: steps.versioned.outputs.has_versions == 'true' && github.ref == 'refs/heads/master'
+        run: |
+          echo '${{ steps.versioned.outputs.packages }}' | jq -r '.[]' | while read package; do
+            if git rev-parse "$package" >/dev/null 2>&1; then
+              echo "Tag $package already exists, skipping"
+            else
+              echo "Creating tag: $package"
+              git tag "$package"
+            fi
+          done
+          git push --tags
+
+      - name: Build Themes
+        if: steps.versioned.outputs.has_versions == 'true' && github.ref == 'refs/heads/master'
+        run: pnpm run zip
+
+      - name: Create GitHub Releases
+        if: steps.versioned.outputs.has_versions == 'true' && github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo '${{ steps.versioned.outputs.packages }}' | jq -r '.[]' | while read package; do
+            theme=$(echo $package | sed 's/@youcan\///' | sed 's/@.*//')
+            version=$(echo $package | sed 's/.*@//')
+
+            if gh release view "${theme}@${version}" >/dev/null 2>&1; then
+              echo "Release ${theme}@${version} already exists, skipping"
+            else
+              echo "Creating release for $theme v$version"
+              gh release create "${theme}@${version}" \
+                "dist/${theme}-v${version}.zip" \
+                --title "${theme^} v${version}" \
+                --notes-file "themes/${theme}/CHANGELOG.md" \
+                --target master
+            fi
+          done
