@@ -3,7 +3,7 @@ if (!customElements.get("ui-shop-bar")) {
     constructor() {
       super();
 
-      this.shopArea = document.querySelector('[ui-block="controller"]');
+      this.shopArea = document.querySelector('[ui-block="controller"]') || document.querySelector('[ui-block="express-checkout"]');
     }
 
     connectedCallback() {
