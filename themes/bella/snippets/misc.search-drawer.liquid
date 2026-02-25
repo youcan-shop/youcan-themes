@@ -64,10 +64,10 @@
         </div>
       </div>
     {% endif %}
-    {% if collection_id %}
-      <hr ui-slot="divider" data-variant="line">
-      <div class="products">
-        <h4 class="label">Most searched products</h4>
+    <hr ui-slot="divider" data-variant="line">
+    <div class="products">
+      <h4 class="label">Most searched products</h4>
+      {% if collection_id %}
         {% paginate collection.products by 8 id category_id: collection_id %}
           <div class="items">
             {% for product in items %}
@@ -103,7 +103,41 @@
             {% endfor %}
           </div>
         {% endpaginate %}
-      </div>
-    {% endif %}
+      {% else %}
+        <div class="items">
+          {% for product in (1..4) %}
+            <div class="item">
+              <div class="media">
+                {% if product.preview_image %}
+                  <img
+                    src="{{ product.preview_image.original }}"
+                    alt="{{ product.name }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
+                  >
+                {% else %}
+                  {% render 'misc.image-fallback' %}
+                {% endif %}
+              </div>
+              <div class="content">
+                <a
+                  class="title"
+                  ui-slot="link-button"
+                  data-variant="black"
+                  data-size="md"
+                  class="title"
+                  href="/products/{{ product.slug }}"
+                >
+                  {{ product.name | default: 'Product name' }}
+                </a>
+                {% assign price = default_variant.price | default: product.price | default: 0 %}
+                <span class="price">{{ price | money }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
   </div>
 </div>

@@ -70,13 +70,21 @@
           </div>
         {% else %}
           {% assign max_products = section.settings.max_products_to_show %}
-          {% paginate collection.products by max_products id category_id: block.settings.collection.id %}
+          {% if block.settings.collection.id %}
+            {% paginate collection.products by max_products id category_id: block.settings.collection.id %}
+              <ul ui-block="products" {{ block.youcan_attributes }}>
+                {% for product in items %}
+                  {% render 'block.product' %}
+                {% endfor %}
+              </ul>
+            {% endpaginate %}
+          {% else %}
             <ul ui-block="products" {{ block.youcan_attributes }}>
-              {% for product in items %}
+              {% for product in (1..max_products) %}
                 {% render 'block.product' %}
               {% endfor %}
             </ul>
-          {% endpaginate %}
+          {% endif %}
       {% endcase %}
     {% endfor %}
   </div>
