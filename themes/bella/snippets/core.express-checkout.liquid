@@ -5,6 +5,7 @@
 
   Accepts:
   - fields: {Array} Checkout fields
+  - style: {String} Checkout style (default | open-drawer)
 
   Usage:
   {% render 'core.express-checkout', fields: [...] %}
@@ -13,39 +14,143 @@
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
 
-<button
-  ui-slot="button"
-  data-variant="primary"
-  data-mode="filled"
-  data-size="lg"
-  type="button"
-  popovertarget="express-checkout-{{ product.id }}"
->
-  Buy now
-</button>
+{% if style == 'open-drawer' %}
+  <button
+    ui-slot="button"
+    data-variant="primary"
+    data-mode="filled"
+    data-size="lg"
+    type="button"
+    popovertarget="express-checkout-{{ product.id }}"
+  >
+    Buy now
+  </button>
 
-<form
-  class="express-checkout-drawer"
-  ui-slot="sheet-content"
-  id="express-checkout-{{ product.id }}"
-  popover
-  ui-order-form
->
-  <div ui-slot="sheet-header">
-    <h2 ui-slot="sheet-title">Buy it instantly</h2>
-    <button
-      type="button"
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="lighter"
-      data-size="md"
-      aria-label="Close"
-      popovertarget="express-checkout-{{ product.id }}"
-    >
-      {% render 'misc.icon', name: 'hgi-cancel-01' %}
-    </button>
-  </div>
-  <div ui-slot="sheet-body">
+  <form
+    class="express-checkout-drawer"
+    ui-slot="sheet-content"
+    id="express-checkout-{{ product.id }}"
+    popover
+    ui-order-form
+  >
+    <div ui-slot="sheet-header">
+      <h2 ui-slot="sheet-title">Buy it instantly</h2>
+      <button
+        type="button"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="lighter"
+        data-size="md"
+        aria-label="Close"
+        popovertarget="express-checkout-{{ product.id }}"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
+    </div>
+    <div ui-slot="sheet-body">
+      <ui-express-checkout>
+        {% for field in checkout.fields %}
+          {% assign field_name = field.name %}
+
+          {% if field.custom %}
+            {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
+          {% endif %}
+
+          {% unless has_linked_fields and linked_fields contains field.name %}
+            <label ui-express-checkout="field">
+              <span ui-slot="label">{{ field.display_name }}</span>
+              {% case field.type %}
+                {% when 'text', 'number', 'hidden' %}
+                  <input
+                    ui-slot="input"
+                    data-size="lg"
+                    type="{{ field.type }}"
+                    name="{{ field_name }}"
+                    value="{{ field.default_value }}"
+                    placeholder="{{ field.placeholder }}"
+                    {% if field.required %}
+                      required
+                    {% endif %}
+                  >
+                {% when 'textarea' %}
+                  <textarea
+                    ui-slot="textarea"
+                    name="{{ field_name }}"
+                    placeholder="{{ field.placeholder }}"
+                    {% if field.required %}
+                      required
+                    {% endif %}
+                  ></textarea>
+                {% when 'select' %}
+                  <select
+                    ui-slot="input"
+                    name="{{ field_name }}"
+                    {% if field.required %}
+                      required
+                    {% endif %}
+                  >
+                    {% for opt in field.options %}
+                      <option
+                        value="{{ opt }}"
+                        {% if option == field.default_value %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ opt }}
+                      </option>
+                    {% endfor %}
+                  </select>
+              {% endcase %}
+            </label>
+          {% endunless %}
+        {% endfor %}
+
+        {% if has_linked_fields %}
+          {% render 'core.linked-fields', fields: checkout.fields %}
+        {% endif %}
+      </ui-express-checkout>
+      <div class="order-box">
+        <span ui-slot="label">Your order information:</span>
+        <div class="order">
+          <div class="image">
+            {% if product.preview_image %}
+              <img
+                src="{{ product.preview_image.original }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback' %}
+            {% endif %}
+          </div>
+          <div class="detail">
+            <div class="info">
+              <span class="title">{{ product.name }}</span>
+              <p class="price">{{ price | default: 0 | money }}</p>
+            </div>
+            {% render 'core.quantity', product: product %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ui-slot="sheet-footer">
+      <button
+        type="button"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="lighter"
+        data-size="lg"
+        popovertarget="express-checkout-{{ product.id }}"
+      >
+        Cancel
+      </button>
+      {% render 'core.shop-button', is_express_checkout: true %}
+    </div>
+  </form>
+{% else %}
+  <form id="express-checkout" class="express-checkout-default" ui-order-form>
     <ui-express-checkout>
       {% for field in checkout.fields %}
         {% assign field_name = field.name %}
@@ -80,29 +185,24 @@
                   {% endif %}
                 ></textarea>
               {% when 'select' %}
-                <ui-select ui-slot="select" data-size="lg">
-                  <button ui-slot="select-trigger" popovertarget="{{ field_name }}" type="button">
-                    {{ 'general.select' | t }}
-                  </button>
-
-                  <div ui-slot="select-content" id="{{ field_name }}" popover>
-                    {% for opt in field.options %}
-                      <button ui-slot="select-option" popovertarget="{{ field_name }}" type="button">
-                        <label>
-                          <input
-                            type="radio"
-                            name="{{ field_name }}"
-                            value="{{ opt }}"
-                            {% if opt == field.default_value %}
-                              checked
-                            {% endif %}
-                          >
-                          {{ opt }}
-                        </label>
-                      </button>
-                    {% endfor %}
-                  </div>
-                </ui-select>
+                <select
+                  ui-slot="input"
+                  name="{{ field_name }}"
+                  {% if field.required %}
+                    required
+                  {% endif %}
+                >
+                  {% for opt in field.options %}
+                    <option
+                      value="{{ opt }}"
+                      {% if option == field.default_value %}
+                        selected
+                      {% endif %}
+                    >
+                      {{ opt }}
+                    </option>
+                  {% endfor %}
+                </select>
             {% endcase %}
           </label>
         {% endunless %}
@@ -112,43 +212,20 @@
         {% render 'core.linked-fields', fields: checkout.fields %}
       {% endif %}
     </ui-express-checkout>
-    <div class="order-box">
-      <span ui-slot="label">Your order information:</span>
-      <div class="order">
-        <div class="image">
-          {% if product.preview_image %}
-            <img
-              src="{{ product.preview_image.original }}"
-              alt="{{ product.name }}"
-              height="100%"
-              width="100%"
-              loading="lazy"
-            >
-          {% else %}
-            {% render 'misc.image-fallback' %}
-          {% endif %}
-        </div>
-        <div class="detail">
-          <div class="info">
-            <span class="title">{{ product.name }}</span>
-            <p class="price">{{ price | default: 0 | money }}</p>
-          </div>
-          {% render 'core.quantity', product: product %}
-        </div>
-      </div>
+
+    <div class="actions">
+      {% render 'core.quantity', size: 'md' %}
+
+      {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
+        {% render 'core.shop-button', is_express_checkout: true %}
+      {% endif %}
+
+      {% if block.settings.shop_buttons_layout == 'add-to-cart'
+        or block.settings.shop_buttons_layout == 'both'
+        and settings.cart_checkout_type == 'cart'
+      %}
+        {% render 'core.shop-button', mode: 'lighter' %}
+      {% endif %}
     </div>
-  </div>
-  <div ui-slot="sheet-footer">
-    <button
-      type="button"
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="lighter"
-      data-size="lg"
-      popovertarget="express-checkout-{{ product.id }}"
-    >
-      Cancel
-    </button>
-    {% render 'core.shop-button', is_express_checkout: true %}
-  </div>
-</form>
+  </form>
+{% endif %}

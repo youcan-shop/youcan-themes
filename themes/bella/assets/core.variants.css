@@ -36,7 +36,7 @@
     padding-right:var(--spacing-12);
     transition:var(--transition-standard-default-effects);
     border:1px solid var(--color-surface-variant);
-    border-radius:var(--radius-8);
+    border-radius:var(--radius-button);
     cursor:pointer;
   }
   ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:checked){
@@ -56,14 +56,17 @@
     width:36px;
     height:36px;
     transition:var(--transition-standard-default-effects);
-    border:2px solid white;
-    border-radius:var(--radius-rounded);
+    border:2px solid transparent;
+    border-radius:var(--radius-button);
     background-color:color-mix(in srgb, var(--color-value), black 5%);
     box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
     cursor:pointer;
   }
   ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt > i{
     color:transparent;
+  }
+  ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked){
+    border-color:white;
   }
   ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked) > i{
     color:white;
@@ -95,8 +98,8 @@
     height:80px;
     overflow:hidden;
     transition:var(--transition-standard-default-effects);
-    border:2px solid white;
-    border-radius:var(--radius-8);
+    border:2px solid transparent;
+    border-radius:var(--radius-button);
     background-color:color-mix(in srgb, var(--color-value), black 5%);
     box-shadow:rgba(99, 99, 99, 0.2) 0 2px 8px 0;
     cursor:pointer;
@@ -120,9 +123,12 @@
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image > img{
     width:100%;
     height:100%;
-    border-radius:var(--radius-8);
+    border-radius:var(--radius-button);
     -o-object-fit:cover;
        object-fit:cover;
+  }
+  ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .image{
+    border-color:white;
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .checked{
     opacity:1;

@@ -22,23 +22,39 @@
     <span class="heading">{{ section.settings.heading }}</span>
     <h1 class="subheading">{{ section.settings.subheading }}</h1>
     <div class="tab-list" role="tablist">
-      {% for collection in section.blocks %}
+      {% for collection_block in section.blocks %}
         <button
           class="tab-trigger"
           ui-carousel="marker"
           {% if forloop.first %}
             aria-selected="true"
           {% endif %}
+          {{ collection_block.youcan_attributes }}
         >
-          {{ collection.settings.collection.name | default: 'Collection name' }}
+          {% assign fallback = 'Collection tab ' | append: forloop.index %}
+          {{ collection_block.settings.collection.name | default: fallback }}
         </button>
       {% endfor %}
     </div>
   </div>
   <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
-    {% for collection in section.blocks %}
+    {% for collection_block in section.blocks %}
       {% assign max_products = section.settings.max_products_to_show %}
-      {% paginate collection.products by max_products id category_id: collection.settings.collection.id %}
+      {% if collection_block.settings.collection.id %}
+        {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
+          <ul
+            class="items"
+            ui-carousel="item"
+            ui-slot="carousel-item"
+            role="tabpanel"
+            data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+          >
+            {% for product in items %}
+              {% render 'block.product' %}
+            {% endfor %}
+          </ul>
+        {% endpaginate %}
+      {% else %}
         <ul
           class="items"
           ui-carousel="item"
@@ -46,11 +62,11 @@
           role="tabpanel"
           data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
         >
-          {% for product in items %}
+          {% for product in (1..max_products) %}
             {% render 'block.product' %}
           {% endfor %}
         </ul>
-      {% endpaginate %}
+      {% endif %}
     {% endfor %}
   </div>
 </ui-carousel>
