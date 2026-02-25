@@ -46,16 +46,28 @@
     {% for block in section.blocks %}
       {% if block.type == 'block_shop_buttons' %}
         {% if block.settings.shop_buttons_layout == 'buy-now' or settings.cart_checkout_type == 'express-checkout' %}
-          <button
-            ui-slot="button"
-            data-variant="primary"
-            data-mode="filled"
-            data-size="lg"
-            type="button"
-            popovertarget="express-checkout-{{ product.id }}"
-          >
-            Buy now
-          </button>
+          {% if block.settings.buy_button_style == 'open-drawer' %}
+            <button
+              ui-slot="button"
+              data-variant="primary"
+              data-mode="filled"
+              data-size="lg"
+              type="button"
+              popovertarget="express-checkout-{{ product.id }}"
+            >
+              Buy now
+            </button>
+          {% else %}
+            <a
+              href="#express-checkout"
+              ui-slot="button"
+              data-variant="primary"
+              data-mode="filled"
+              data-size="lg"
+            >
+              Buy now
+            </a>
+          {% endif %}
         {% else %}
           {% render 'core.shop-button' %}
         {% endif %}
