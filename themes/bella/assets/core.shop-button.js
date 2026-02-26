@@ -37,7 +37,7 @@ if (!customElements.get("ui-shop-button")) {
     }
 
     handleAvailabilityChange() {
-      this.buyButton.disabled = this.hasAttribute("not-available");
+      this.buyButton.setAttribute("aria-disabled", this.hasAttribute("not-available"));
       const label = this.buyButton.querySelector("span");
 
       if (label) {

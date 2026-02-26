@@ -9,7 +9,7 @@ if (!customElements.get("ui-product")) {
       super();
 
       this.variants = [...this.querySelectorAll("[ui-variant]")];
-      this.productForm = this.querySelector("ui-shop-button");
+      this.productForms = this.querySelectorAll("ui-shop-button");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
     }
 
@@ -40,12 +40,14 @@ if (!customElements.get("ui-product")) {
     }
 
     async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
-      this.productForm.setAttribute("variant-id", id);
-      this.productForm.toggleAttribute("not-available", !available);
+      this.productForms.forEach((productForm) => {
+        productForm.setAttribute("variant-id", id);
+        productForm.toggleAttribute("not-available", !available);
+      });
 
       const attachedImage = await this.getAttachedImage();
 
-      attachedImage && this.productForm.setAttribute("attached-image", attachedImage);
+      attachedImage && this.productForms.forEach((productForm) => productForm.setAttribute("attached-image", attachedImage));
       image && this.updateMainImage(image);
 
       this.updateProduct(price, compare_at_price);
@@ -122,14 +124,16 @@ if (!customElements.get("ui-product")) {
         if (isUnavailable) input.checked = false;
       });
 
-      this.productForm.toggleAttribute(
-        "not-available",
-        [...inputs].every((input) => input.disabled),
+      this.productForms.forEach((productForm) =>
+        productForm.toggleAttribute(
+          "not-available",
+          [...inputs].every((input) => input.disabled),
+        ),
       );
 
       const hasCheckedInput = [...inputs].some((input) => input.checked || input.value);
 
-      this.productForm.querySelector('[ui-slot="button"]').disabled = !hasCheckedInput;
+      this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = !hasCheckedInput));
     }
 
     async getAttachedImage() {
@@ -159,7 +163,7 @@ if (!customElements.get("ui-product")) {
               output.querySelector("img").alt = file.name;
 
               output.querySelector("button").addEventListener("click", () => {
-                this.productForm.removeAttribute("attached-image");
+                this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));
                 output.setAttribute("hidden", "");
                 fileInput.value = "";
               });
