@@ -10,61 +10,42 @@ if (!customElements.get("ui-product")) {
 
       this.variants = [...this.querySelectorAll("[ui-variant]")];
       this.productForm = this.querySelector("ui-shop-button");
-      this.productVariants =
-        window.productsVariants[this.getAttribute("product-id")];
+      this.productVariants = window.productsVariants[this.getAttribute("product-id")];
     }
 
     connectedCallback() {
       if (!this.productVariants) return;
 
       this.onVariantChanged();
-      this.variants.forEach((variant) =>
-        variant.addEventListener("change", () => this.onVariantChanged())
-      );
+      this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
     }
 
     get selectedOptions() {
       return Object.fromEntries(
         this.variants.flatMap((variant) =>
-          [
-            ...variant.querySelectorAll(
-              "input:checked, input[type='file'], select"
-            ),
-          ].map((input) => [
+          [...variant.querySelectorAll("input:checked, input[type='file'], select")].map((input) => [
             this.getBaseName(input.name),
             input.type === "file" ? "upload-zone" : input.value,
-          ])
-        )
+          ]),
+        ),
       );
     }
 
     async onVariantChanged() {
-      const matchedVariant = this.productVariants.find(
-        (variant) =>
-          JSON.stringify(variant.variations) ===
-          JSON.stringify(this.selectedOptions)
-      );
+      const matchedVariant = this.productVariants.find((variant) => JSON.stringify(variant.variations) === JSON.stringify(this.selectedOptions));
 
       if (matchedVariant) await this.updateVariant(matchedVariant);
 
       this.disableUnavailableOptions();
     }
 
-    async updateVariant({
-      id,
-      available,
-      inventory,
-      price,
-      compare_at_price,
-      image,
-    }) {
+    async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
       this.productForm.setAttribute("variant-id", id);
       this.productForm.toggleAttribute("not-available", !available);
 
       const attachedImage = await this.getAttachedImage();
 
-      attachedImage &&
-        this.productForm.setAttribute("attached-image", attachedImage);
+      attachedImage && this.productForm.setAttribute("attached-image", attachedImage);
       image && this.updateMainImage(image);
 
       this.updateProduct(price, compare_at_price);
@@ -73,9 +54,7 @@ if (!customElements.get("ui-product")) {
 
     updateProduct(price, compare_at_price) {
       const priceElement = this.querySelector("[ui-product-item='price']");
-      const compareAtPriceElement = this.querySelector(
-        "[ui-product-item='compare-at-price']"
-      );
+      const compareAtPriceElement = this.querySelector("[ui-product-item='compare-at-price']");
 
       if (!priceElement) return;
 
@@ -85,20 +64,15 @@ if (!customElements.get("ui-product")) {
     }
 
     updateInventoryStatus(inventory) {
-      const inventoryElement = this.querySelector(
-        "[data-product-item='inventory']"
-      );
+      const inventoryElement = this.querySelector("[data-product-item='inventory']");
 
       if (!inventoryElement) return;
 
       const statuses = window.inventoryStatuses;
-      const inventoryStatus = this.querySelector(
-        "[data-product-item='inventory']"
-      );
+      const inventoryStatus = this.querySelector("[data-product-item='inventory']");
 
       const showCount = inventoryElement.getAttribute("data-show-count");
-      const threshold =
-        Number(inventoryElement.getAttribute("data-threshold")) || 0;
+      const threshold = Number(inventoryElement.getAttribute("data-threshold")) || 0;
 
       const statusKey =
         inventory === 0
@@ -111,19 +85,10 @@ if (!customElements.get("ui-product")) {
               ? "low_stock_show_count"
               : "low_stock";
 
-      inventoryStatus.lastElementChild.textContent = statuses[
-        statusKey
-      ].replace("%", inventory);
-      inventoryElement.dataset.inventory = statusKey
-        .replace("_show_count", "")
-        .replaceAll("_", "-");
+      inventoryStatus.lastElementChild.textContent = statuses[statusKey].replace("%", inventory);
+      inventoryElement.dataset.inventory = statusKey.replace("_show_count", "").replaceAll("_", "-");
 
-      inventoryStatus.dataset.status =
-        inventory === 0
-          ? "disabled"
-          : inventory > threshold
-            ? "completed"
-            : "pending";
+      inventoryStatus.dataset.status = inventory === 0 ? "disabled" : inventory > threshold ? "completed" : "pending";
     }
 
     updateMainImage(image_src) {
@@ -137,12 +102,7 @@ if (!customElements.get("ui-product")) {
     }
 
     disableUnavailableOptions() {
-      const lastVariant = this.variants
-        .filter(
-          (variant) =>
-            variant.getAttribute("ui-variant") !== "upload_image_zone"
-        )
-        .at(-1);
+      const lastVariant = this.variants.filter((variant) => variant.getAttribute("ui-variant") !== "upload_image_zone").at(-1);
 
       if (!lastVariant) return;
 
@@ -154,9 +114,7 @@ if (!customElements.get("ui-product")) {
           [this.getBaseName(input.name)]: input.value,
         };
         const isUnavailable = this.productVariants.some(
-          (variant) =>
-            JSON.stringify(variant.variations) ===
-              JSON.stringify(compareOptions) && !variant.available
+          (variant) => JSON.stringify(variant.variations) === JSON.stringify(compareOptions) && !variant.available,
         );
 
         input.disabled = isUnavailable;
@@ -166,22 +124,17 @@ if (!customElements.get("ui-product")) {
 
       this.productForm.toggleAttribute(
         "not-available",
-        [...inputs].every((input) => input.disabled)
+        [...inputs].every((input) => input.disabled),
       );
 
-      const hasCheckedInput = [...inputs].some(
-        (input) => input.checked || input.value
-      );
-      this.productForm.querySelector("[ui-button]").disabled = !hasCheckedInput;
+      const hasCheckedInput = [...inputs].some((input) => input.checked || input.value);
+
+      this.productForm.querySelector('[ui-slot="button"]').disabled = !hasCheckedInput;
     }
 
     async getAttachedImage() {
       const fileInput = this.variants
-        .flatMap((variant) =>
-          [...variant.querySelectorAll("input[type='file']")].filter(
-            (input) => input.files.length > 0
-          )
-        )
+        .flatMap((variant) => [...variant.querySelectorAll("input[type='file']")].filter((input) => input.files.length > 0))
         .pop();
 
       if (!fileInput) return null;

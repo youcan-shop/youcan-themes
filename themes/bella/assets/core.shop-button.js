@@ -1,14 +1,6 @@
 if (!customElements.get("ui-shop-button")) {
   class ShopButton extends HTMLElement {
-    static observedAttributes = [
-      "variant-id",
-      "quantity",
-      "checkout-type",
-      "attached-image",
-      "source",
-      "not-available",
-      "skip-cart",
-    ];
+    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart"];
 
     constructor() {
       super();
@@ -23,8 +15,7 @@ if (!customElements.get("ui-shop-button")) {
     }
 
     attributeChangedCallback(name) {
-      if (name === "not-available" && this.buyButton)
-        this.handleAvailabilityChange();
+      if (name === "not-available" && this.buyButton) this.handleAvailabilityChange();
     }
 
     _render() {
@@ -32,15 +23,9 @@ if (!customElements.get("ui-shop-button")) {
 
       this.checkoutType === "express" && this.form
         ? this.form.addEventListener("submit", this.onBuyClicked.bind(this))
-        : this.buyButton.addEventListener(
-            "click",
-            this.onBuyClicked.bind(this)
-          );
+        : this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
 
-      this.previousElementSibling.addEventListener(
-        "change",
-        this.handleQuantityChange.bind(this)
-      );
+      this.previousElementSibling.addEventListener("change", this.handleQuantityChange.bind(this));
     }
 
     handleQuantityChange(event) {
@@ -56,9 +41,7 @@ if (!customElements.get("ui-shop-button")) {
       const label = this.buyButton.querySelector("span");
 
       if (label) {
-        label.textContent = this.hasAttribute("not-available")
-          ? window.actions.out_of_stock
-          : this.buyButtonLabel;
+        label.textContent = this.hasAttribute("not-available") ? window.actions.out_of_stock : this.buyButtonLabel;
       }
     }
 
@@ -132,9 +115,7 @@ if (!customElements.get("ui-shop-button")) {
               const isCustomField = field.includes("extra_fields");
 
               this.form
-                .querySelector(
-                  `input[name="${isCustomField ? field.replace(".", "[") + "]" : field}"]`
-                )
+                .querySelector(`input[name="${isCustomField ? field.replace(".", "[") + "]" : field}"]`)
                 ?.parentElement?.setAttribute("error-message", message);
             }
 

@@ -358,6 +358,7 @@ class Quantity extends HTMLElement {
   constructor() {
     super();
 
+    this.isSyncing = false;
     this.quantity = this.querySelector("[ui-quantity='value']");
     this.plusButton = this.querySelector('button[name="plus"]');
     this.minusButton = this.querySelector('button[name="minus"]');
@@ -427,6 +428,27 @@ class Quantity extends HTMLElement {
     return this.quantityValue - 1;
   }
 
+  syncQuantity(value) {
+    const itemId = this.getAttribute("item");
+    if (!itemId) return;
+
+    const quantitySiblings = document.querySelectorAll(`ui-quantity[item="${itemId}"]`);
+
+    quantitySiblings.forEach((sibling) => {
+      if (sibling !== this) {
+        sibling.setQuantityFromSync(value);
+      }
+    });
+  }
+
+  setQuantityFromSync(value) {
+    this.isSyncing = true;
+    this.quantityValue = value;
+    this.updateButtonsForQuantity(value);
+    this.dispatchEvent(this.changeEvent);
+    this.isSyncing = false;
+  }
+
   updateButtonsForQuantity(quantity) {
     this.updateMinusButtonState(quantity);
     this.updatePlusButtonState(quantity);
@@ -448,6 +470,8 @@ class Quantity extends HTMLElement {
 
     this.setAttribute("quantity", value);
     this.quantity.textContent = String(value);
+
+    if (!this.isSyncing) this.syncQuantity(parsed);
   }
 }
 
