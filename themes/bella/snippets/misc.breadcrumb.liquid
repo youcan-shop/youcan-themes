@@ -1,37 +1,39 @@
 {% comment %}
   Renders a breadcrumb component
 
+  Accepts:
+  - items: {String} Breadcrumb items
+
   Usage:
   {% render 'misc.breadcrumb'%}
 {% endcomment %}
 
+{% assign items_list = items | split: '|' %}
+
 {% unless template.name == 'index' %}
   <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb">
     <ol ui-slot="breadcrumb-group">
-      <li ui-slot="breadcrumb-item">
-        <a ui-slot="link-button" data-variant="gray" data-size="md" href="/">
-          {{ 'navigation.home' | t }}
-        </a>
-      </li>
-      {% unless category %}
+      {% for item in items_list %}
+        {% assign data = item | split: ',' %}
+
         <li ui-slot="breadcrumb-item">
-          <a ui-slot="link-button" data-variant="black" data-size="md" href="/" aria-current="page">
-            {{ 'templates.' | append: template.name | t }}
+          <a
+            ui-slot="link-button"
+            {% if forloop.last %}
+              data-variant="black"
+            {% else %}
+              data-variant="gray"
+            {% endif %}
+            data-size="md"
+            href="{{ data[1] }}"
+            {% if forloop.last %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{ data[0] }}
           </a>
         </li>
-      {% endunless %}
-      {% if category %}
-        <li ui-slot="breadcrumb-item">
-          <a ui-slot="link-button" data-variant="gray" data-size="md" href="/collections">
-            {{ 'navigation.collections' | t }}
-          </a>
-        </li>
-        <li ui-slot="breadcrumb-item">
-          <a ui-slot="link-button" data-variant="black" data-size="md" href="/" aria-current="page">
-            {{ category.name }}
-          </a>
-        </li>
-      {% endif %}
+      {% endfor %}
     </ol>
   </nav>
 {% endunless %}

@@ -17,7 +17,9 @@
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
   data-sticky="{{ section.settings.is_sticky }}"
-  data-bottom-border="{{ section.settings.bottom_border }}"
+  {% if template.name != 'index' or section.settings.bottom_border %}
+    data-bottom-border="1"
+  {% endif %}
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >

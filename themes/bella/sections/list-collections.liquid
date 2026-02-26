@@ -18,7 +18,12 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  {% render 'misc.breadcrumb' %}
+  {% capture breadcrumb_items %}
+  Home,/|
+  Collections,/collections
+  {% endcapture %}
+
+  {% render 'misc.breadcrumb', items: breadcrumb_items %}
   <div ui-slot="head">
     <h1 class="subheading">All Collections</h1>
     <p class="description">Well cared for skin is the key to clean, natural beauty</p>
