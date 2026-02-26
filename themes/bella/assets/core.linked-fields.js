@@ -8,7 +8,7 @@ class LinkedFields extends HTMLElement {
     this.regionCode = null;
 
     for (const name of LinkedFields.TYPES) {
-      this[name] = this.querySelector(`[popover]#${name}`);
+      this[name] = this.querySelector(`select[name='${name}']`);
     }
   }
 
@@ -39,31 +39,19 @@ class LinkedFields extends HTMLElement {
       const label = typeof opt === "string" ? opt : opt.name;
       const value = typeof opt === "string" ? opt : opt.code;
 
-      const option = document.createElement("button");
-      option.setAttribute("ui-slot", "select-option");
-      option.setAttribute("popovertarget", type);
-      option.setAttribute("type", "button");
+      const option = new Option(label, label, isDefault[type], isDefault[type]);
+      option.dataset.value = value;
 
-      option.innerHTML = `
-        <label>
-          <input type="radio" name="${type}" value="${label}" ${isDefault[type] ? "checked" : ""}  />
-          ${label}
-        </label>`;
-
-      option.addEventListener("click", () => this.onChange(value, type));
-      select.appendChild(option);
+      select.add(option);
     });
 
-    select.parentElement.findSelectedElement();
+    select.addEventListener("change", (e) => this.onChange(e.target.selectedOptions[0].dataset.value, type));
   }
 
   async onChange(value, type) {
     if (type === "country") this.countryCode = value;
     if (type === "region") this.regionCode = value;
-    for (const next of {
-      country: LinkedFields.TYPES.slice(1),
-      region: LinkedFields.TYPES.slice(2),
-    }[type] || []) {
+    for (const next of { country: LinkedFields.TYPES.slice(1), region: LinkedFields.TYPES.slice(2) }[type] || []) {
       this[next] && (await this.fetchLocationByType(next));
     }
   }
@@ -71,14 +59,8 @@ class LinkedFields extends HTMLElement {
   async fetchLocationByType(type) {
     const fetchMap = {
       country: () => youcanjs.misc.getStoreMarketCountries(),
-      region: () =>
-        youcanjs.misc.getCountryRegions(this.countryCode, this.locale),
-      city: () =>
-        youcanjs.misc.getCountryCities(
-          this.countryCode,
-          this.regionCode,
-          this.locale
-        ),
+      region: () => youcanjs.misc.getCountryRegions(this.countryCode, this.locale),
+      city: () => youcanjs.misc.getCountryCities(this.countryCode, this.regionCode, this.locale),
     };
 
     this.setIsLoading(type, true);
@@ -89,12 +71,8 @@ class LinkedFields extends HTMLElement {
 
       const map = {
         country: () => {
-          const customerCountryExists = response.countries.some(
-            (country) => country.code === CUSTOMER_COUNTRY_CODE
-          );
-          this.countryCode = customerCountryExists
-            ? CUSTOMER_COUNTRY_CODE
-            : response.countries[0].code;
+          const customerCountryExists = response.countries.some((country) => country.code === CUSTOMER_COUNTRY_CODE);
+          this.countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
 
           this.setUpOptions(type, response.countries);
         },
@@ -114,8 +92,9 @@ class LinkedFields extends HTMLElement {
   }
 
   setIsLoading(type, is_loading) {
-    this.querySelector(`[popover]#${type}`).previousElementSibling.disabled =
-      is_loading;
+    is_loading
+      ? this.querySelector(`select[name='${type}']`).setAttribute("disabled", true)
+      : this.querySelector(`select[name='${type}']`).removeAttribute("disabled");
   }
 }
 

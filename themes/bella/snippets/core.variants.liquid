@@ -71,29 +71,18 @@
           {% endfor %}
         </div>
       {% elsif variant.type == 'dropdown' %}
-        <ui-select ui-slot="select" data-size="md">
-          <button ui-slot="select-trigger" popovertarget="{{ unique_name }}" type="button">
-            {{ 'general.select' | t }}
-          </button>
-
-          <div ui-slot="select-content" id="{{ unique_name }}" popover>
-            {% for opt in variant.values %}
-              <button ui-slot="select-option" popovertarget="{{ unique_name }}" type="button">
-                <label>
-                  <input
-                    type="radio"
-                    name="{{ unique_name }}"
-                    value="{{ opt }}"
-                    {% if opt == default %}
-                      checked
-                    {% endif %}
-                  >
-                  {{ opt }}
-                </label>
-              </button>
-            {% endfor %}
-          </div>
-        </ui-select>
+        <select ui-slot="input" data-size="md" name="{{ unique_name }}">
+          {% for opt in variant.values %}
+            <option
+              value="{{ opt }}"
+              {% if opt == default %}
+                selected
+              {% endif %}
+            >
+              {{ opt }}
+            </option>
+          {% endfor %}
+        </select>
       {% elsif variant.type == 'image_based_buttons' %}
         <div class="options">
           {% for opt in variant.values %}

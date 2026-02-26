@@ -17,12 +17,14 @@
     {% if linked_fields contains field.name %}
       <label ui-express-checkout="field">
         <span ui-slot="label">{{ field.display_name }}</span>
-        <ui-select ui-slot="select" data-size="lg">
-          <button ui-slot="select-trigger" popovertarget="{{ field.name }}" type="button" disabled>
-            {{ 'general.select' | t }}
-          </button>
-          <div ui-slot="select-content" id="{{ field.name }}" popover></div>
-        </ui-select>
+        <select
+          ui-slot="input"
+          data-size="md"
+          name="{{ field.name }}"
+          {% if field.required %}
+            required
+          {% endif %}
+        ></select>
       </label>
     {% endif %}
   {% endfor %}
