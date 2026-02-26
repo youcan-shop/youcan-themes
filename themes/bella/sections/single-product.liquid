@@ -24,8 +24,22 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  {% render 'misc.product-media' %}
-  {% render 'misc.product-content' %}
+  {% for c in product.categories %}
+    {% assign collection_name = c.name %}
+    {% assign collection_slug = c.slug %}
+  {% endfor %}
+
+  {% capture breadcrumb_items %}
+  Home,/|
+  {{ collection_name | default: 'Collections' }},/collections/{{ collection_slug }}|
+  {{ product.name }},/products/{{ product.slug }}
+  {% endcapture %}
+
+  {% render 'misc.breadcrumb', items: breadcrumb_items %}
+  <div class="core">
+    {% render 'misc.product-media' %}
+    {% render 'misc.product-content' %}
+  </div>
   {% render 'misc.shop-bar' %}
 </ui-product>
 
@@ -107,7 +121,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 24
     },
     {
       "type": "range",
@@ -117,7 +131,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 24
     }
   ],
   "blocks": [
