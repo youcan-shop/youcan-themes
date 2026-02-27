@@ -143,7 +143,7 @@
                 <span class="total">{{ 'cart.summary.total' | t }}</span>
                 <span class="item-total-price"></span>
               </div>
-              <a href='{{ cart.cart_submit_url }}' class='yc-btn mt-5 w-full'>
+              <a href='{{ cart.cart_submit_url }}' class='yc-btn mt-5 w-full' id="checkout-button">
                 {{ 'cart.summary.checkout_cta' | t }}
               </a>
             </div>
@@ -196,11 +196,19 @@
 {% endschema %}
 
 {% javascript %}
-
   const CART_PAGE_CONTENT = {
     coupon_applied: '{{- 'cart.summary.coupon_applied' | t -}}',
     coupon_removed: '{{- 'cart.summary.coupon_removed' | t -}}',
     coupon: '{{- 'cart.summary.coupon' | t -}}'
   }
-{% endjavascript %}
 
+  document.addEventListener('DOMContentLoaded', async function () {
+    const checkoutButton = document.querySelector('#checkout-button');
+
+    checkoutButton?.addEventListener('click', async function () {
+      const cart = await youcanjs.cart.fetch();
+
+      window.Dotshop.pixels.publish('initiate-checkout', cart);
+    });
+  });
+{% endjavascript %}
