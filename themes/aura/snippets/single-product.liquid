@@ -141,23 +141,4 @@
     desktopSlider.mount();
   }
 })();
-
-document.addEventListener('DOMContentLoaded', function () {
-  {% if product %}
-    const payload = {
-      currency: CURRENCY_CODE,
-      items: [{
-        productVariant: {
-          name: '{{ product.name }}',
-          price: '{{ product.selected_or_first_available_variant.price }}',
-          id: '{{ product.selected_or_first_available_variant.id }}',
-          product_id: '{{ product.selected_or_first_available_variant.product_id }}',
-          sku: '{{ product.selected_or_first_available_variant.sku }}',
-        },
-      }]
-    };
-
-    trackPixelEvents('view-content', payload);
-  {% endif %}
-});
 </script>
