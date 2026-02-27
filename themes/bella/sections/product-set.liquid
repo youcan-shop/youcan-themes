@@ -37,15 +37,30 @@
       <h4 class="heading">{{ section.settings.heading }}</h4>
       <h1 class="subheading">{{ section.settings.subheading }}</h1>
     </div>
-    <ul class="items-box">
+    <ol class="items-box">
       {% for product in section.blocks %}
         {% render 'block.product-item' %}
       {% endfor %}
-    </ul>
+    </ol>
     {% if section.blocks.size %}
-      <div class="cta-box">
+      {% assign variant_ids = '' %}
+      {% for product in section.blocks %}
+        {% if product.settings.block_product.selected_or_first_available_variant.id %}
+          {% assign variant_ids = variant_ids | append: product.settings.block_product.selected_or_first_available_variant.id %}
+
+          {% unless forloop.last %}
+            {% assign variant_ids = variant_ids | append: ',' %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+      <ui-shop-button
+        bulk
+        quantity="1"
+        variant-id="{{ variant_ids }}"
+        class="cta-box"
+      >
         <button ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
-          {% render 'misc.icon', name: 'hgi-shopping-bag-01' %}
+          {% render 'misc.icon', name: 'hgi-plus-sign' %}
           {% assign total = 0 %}
 
           {% for product in section.blocks %}
@@ -59,12 +74,24 @@
               {% assign total = total | plus: price %}
             {% endif %}
           {% endfor %}
-          Add All to Cart - {{ total | money }}
+          Add All To Cart - {{ total | money }}
         </button>
-      </div>
+      </ui-shop-button>
     {% endif %}
   </div>
 </div>
+
+{% if section.blocks.size %}
+  {% for product in section.blocks %}
+    {% if product.settings.block_product and product.settings.block_product.options.size %}
+      {% javascript %}
+        if (!window.productsVariants["{{ product.settings.block_product.id }}"]) {
+          window.productsVariants["{{ product.settings.block_product.id }}"] = JSON.parse({{ product.settings.block_product.variants | json }});
+        }
+      {% endjavascript %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 {% schema %}
 {

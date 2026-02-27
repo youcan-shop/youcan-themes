@@ -12,7 +12,11 @@
 {% assign price = default_variant.price | default: product.settings.block_product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.settings.block_product.compare_at_price %}
 
-<li ui-block="product-item" {{ product.youcan_attributes }}>
+<ui-product
+  ui-block="product-item"
+  product-id="{{ product.settings.block_product.id }}"
+  {{ product.youcan_attributes }}
+>
   <a class="media" href="/products/{{ product.settings.block_product.slug }}">
     {% if product.settings.block_product.preview_image %}
       <img
@@ -36,22 +40,41 @@
     >
       {{ product.settings.block_product.name | default: 'Product name' }}
     </a>
-    <ui-select ui-slot="select" data-size="md" data-variant="compact">
-      <button ui-slot="select-trigger" popovertarget="my-select-{{ forloop.index }}" type="button">
-        {{ 'general.select' | t }}
-      </button>
+    <ui-variants>
+      {% for variant in product.settings.block_product.options %}
+        {% assign default = '' %}
+        {% assign name_id = 100 | rand: 2000 %}
+        {% assign unique_name = variant.name | append: '_' | append: name_id %}
 
-      <div ui-slot="select-content" id="my-select-{{ forloop.index }}" popover>
-        {% for opt in (1..4) %}
-          <button ui-slot="select-option" popovertarget="my-select-{{ forloop.index }}" type="button">
-            <label>
-              <input type="radio" name="text" value="option-{{ opt }}">
-              Option {{ opt }}
-            </label>
-          </button>
+        {% for variation in product.settings.block_product.selected_or_first_available_variant.variations %}
+          {% if variation[0] == variant.name %}
+            {% assign default = variation[1] %}
+          {% endif %}
         {% endfor %}
-      </div>
-    </ui-select>
+
+        <div ui-variant="{{ variant.type }}">
+          <select ui-slot="input" data-size="sm" name="{{ unique_name }}">
+            {% for opt in variant.values %}
+              {% assign label = opt %}
+              {% assign value = opt %}
+
+              {% if variant.type == 'color_base_buttons' or variant.type == 'image_based_buttons' %}
+                {% assign label = opt.value %}
+                {% assign value = opt.value %}
+              {% endif %}
+              <option
+                value="{{ value }}"
+                {% if value == default %}
+                  selected
+                {% endif %}
+              >
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endfor %}
+    </ui-variants>
   </div>
   <div class="secondary-info">
     <div class="price">
@@ -59,12 +82,7 @@
         <s class="compare-at-price"> {{ compare_at_price | default: 0 | money }} </s>
       {% endif %}
       <span class="original-price"> {{ price | default: 0 | money }} </span>
-    </div>
-    {% comment %}
-      <button ui-slot="button" data-variant="primary" data-mode="stroke" data-size="lg" data-as-icon>
-        {% render 'misc.icon', name: ' hgi-shopping-bag-01' %}
-      </button>
-    {% endcomment %}
+    </div>    
     {% render 'core.shop-button', product: product.settings.block_product, as_icon: true, mode: 'lighter' %}
   </div>
-</li>
+</ui-product>

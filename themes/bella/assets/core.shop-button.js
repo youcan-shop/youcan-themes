@@ -1,6 +1,6 @@
 if (!customElements.get("ui-shop-button")) {
   class ShopButton extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart"];
+    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart", "bulk"];
 
     constructor() {
       super();
@@ -56,6 +56,13 @@ if (!customElements.get("ui-shop-button")) {
 
       if (this.checkoutType === "express") {
         this.placeOrder(productVariantId, attachedImage, quantity);
+
+        return;
+      }
+
+      if (this.isBulk) {
+        const variantIds = this.productVariantId.split(",");
+        variantIds.forEach((variantId) => this.addToCart(variantId, attachedImage, quantity));
 
         return;
       }
@@ -138,6 +145,10 @@ if (!customElements.get("ui-shop-button")) {
 
     setIsBuyButtonLoading(isLoading = true) {
       this.buyButton.toggleAttribute("data-loading", isLoading);
+    }
+
+    get isBulk() {
+      return this.hasAttribute("bulk");
     }
 
     get checkoutType() {
