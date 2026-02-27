@@ -37,13 +37,14 @@ async function addToCart(snippetId) {
 
     const selectedVariant = response.items.find((v) => v.productVariant.id === variantId);
 
-    trackPixelEvents('add-to-cart', selectedVariant);
+    window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
+
 
     const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
 
     if (IS_CART_SKIPED) {
       window.location.href = checkoutPageUrl;
-      trackPixelEvents('initiate-checkout', selectedVariant);
+      window.Dotshop.pixels.publish('initiate-checkout', selectedVariant);
 
       return;
     }
