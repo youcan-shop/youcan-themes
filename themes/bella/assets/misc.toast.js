@@ -25,7 +25,7 @@ if (!customElements.get("ui-toast")) {
       this.setVisibility(true);
 
       this.message.textContent = message;
-      this.setAttribute("data-state", status);
+      this.setAttribute("data-type", status);
 
       this.timeout = setTimeout(() => this.setVisibility(false), this.CLOSE_DURATION);
     }
