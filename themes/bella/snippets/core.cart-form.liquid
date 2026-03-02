@@ -11,9 +11,11 @@
   </ui-cart-drawer-items>
 
   {% unless cart.count > 0 %}
-    {% render 'misc.empty', heading: 'Your cart is empty', subheading: 'Not sure where to start? Try these collections:' %}
+    {% assign empty_title = 'cart.empty.title' | t %}
+    {% assign empty_description = 'cart.empty.description' | t %}
+    {% render 'misc.empty', heading: empty_title, subheading: empty_description %}
   {% else %}
-    {% render 'misc.empty', heading: 'Your cart is empty', subheading: 'Not sure where to start? Try these collections:', hidden: true %}
+    {% render 'misc.empty', heading: empty_title, subheading: empty_description, hidden: true %}
   {% endunless %}
   <div class="collections">
     {% for i in (1..4) %}

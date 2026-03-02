@@ -22,12 +22,12 @@
   {% endif %}
 {% endfor %}
 
-{% assign alphabetical_asc = 'Alphabetical, A-Z' %}
-{% assign alphabetical_desc = 'Alphabetical, Z-A' %}
-{% assign oldest = 'Oldest' %}
-{% assign newest = 'Newest' %}
-{% assign price_low_high = 'Price, Low to High' %}
-{% assign price_high_low = 'Price, High to Low' %}
+{% assign alphabetical_asc = 'general.sort.options.alphabetical_asc' | t %}
+{% assign alphabetical_desc = 'general.sort.options.alphabetical_desc' | t %}
+{% assign oldest = 'general.sort.options.oldest' | t %}
+{% assign newest = 'general.sort.options.newest' | t %}
+{% assign price_low_high = 'general.sort.options.price_low_high' | t %}
+{% assign price_high_low = 'general.sort.options.price_high_low' | t %}
 
 {% capture labels %}
   {{ alphabetical_asc }}| {{ alphabetical_desc }}| {{ oldest }}| {{ newest }}| {{ price_low_high }}| {{ price_high_low }}
@@ -45,7 +45,7 @@
     data-size="xs"
     popovertarget="sort"
   >
-    {% assign placeholder = 'Sort' %}
+    {% assign placeholder = 'general.sort.title' | t %}
     {% for opt in options %}
       {% assign index = forloop.index %}
       {% assign field = keys[index] %}
@@ -63,7 +63,7 @@
 
   <div ui-slot="sheet-content" id="sort" popover>
     <div ui-slot="sheet-header">
-      <h2 ui-slot="sheet-title">Sort by</h2>
+      <h2 ui-slot="sheet-title">{{ 'general.sort.label' | t }}</h2>
       <button
         ui-slot="button"
         data-variant="primary"

@@ -29,9 +29,10 @@
     {% assign collection_slug = c.slug %}
   {% endfor %}
 
+  {% assign translated_collections = 'navigation.collections' | t %}
   {% capture breadcrumb_items %}
-  Home,/|
-  {{ collection_name | default: 'Collections' }},/collections/{{ collection_slug }}|
+  {{ 'navigation.home' | t }},/|
+  {{ collection_name | default: translated_collections }},/collections/{{ collection_slug }}|
   {{ product.name }},/products/{{ product.slug }}
   {% endcapture %}
 

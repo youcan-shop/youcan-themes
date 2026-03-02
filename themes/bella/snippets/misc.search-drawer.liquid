@@ -27,7 +27,7 @@
 
 <div ui-slot="sheet-content" id="search" popover>
   <div ui-slot="sheet-header">
-    <h3 ui-slot="sheet-title">Search</h3>
+    <h3 ui-slot="sheet-title">{{ 'search.title' | t }}</h3>
     <button
       ui-slot="button"
       data-variant="primary"
@@ -43,13 +43,13 @@
     <form action="/search">
       <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
         <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
-        <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.drawer.placeholder' | t }}">
+        <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.placeholder' | t }}">
       </fieldset>
     </form>
     {% if keywords %}
       {% assign words = keywords | split: ',' %}
       <div class="terms">
-        <h4 class="label">Most searched terms</h4>
+        <h4 class="label">{{ 'search.drawer.terms_recommendations' | t }}</h4>
         <div class="options">
           {% for keyword in words %}
             <a
@@ -66,7 +66,7 @@
     {% endif %}
     <hr ui-slot="divider" data-variant="line">
     <div class="products">
-      <h4 class="label">Most searched products</h4>
+      <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
       {% if collection_id %}
         {% paginate collection.products by 8 id category_id: collection_id %}
           <div class="items">

@@ -23,7 +23,7 @@
     type="button"
     popovertarget="express-checkout-{{ product.id }}"
   >
-    Buy now
+    {{ 'general.buy_now' | t }}
   </button>
 
   <form
@@ -34,7 +34,7 @@
     ui-order-form
   >
     <div ui-slot="sheet-header">
-      <h2 ui-slot="sheet-title">Buy it instantly</h2>
+      <h2 ui-slot="sheet-title">{{ 'express-checkout.title' | t }}</h2>
       <button
         type="button"
         ui-slot="button"
@@ -110,7 +110,7 @@
         {% endif %}
       </ui-express-checkout>
       <div class="order-box">
-        <span ui-slot="label">Your order information:</span>
+        <span ui-slot="label">{{ 'express-checkout.order_info' | t }}</span>
         <div class="order">
           <div class="image">
             {% if product.preview_image %}
@@ -144,7 +144,7 @@
         data-size="lg"
         popovertarget="express-checkout-{{ product.id }}"
       >
-        Cancel
+        {{ 'general.cancel' | t }}
       </button>
       {% render 'core.quantity', product: product %}
       {% render 'core.shop-button', is_express_checkout: true %}

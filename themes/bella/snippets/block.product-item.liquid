@@ -38,7 +38,8 @@
       data-size="md"
       href="/products/{{ product.settings.block_product.slug }}"
     >
-      {{ product.settings.block_product.name | default: 'Product name' }}
+      {% assign placeholder = 'product.title' | t %}
+      {{ product.settings.block_product.name | default: placeholder }}
     </a>
     <ui-variants>
       {% for variant in product.settings.block_product.options %}
@@ -82,7 +83,7 @@
         <s class="compare-at-price"> {{ compare_at_price | default: 0 | money }} </s>
       {% endif %}
       <span class="original-price"> {{ price | default: 0 | money }} </span>
-    </div>    
+    </div>
     {% render 'core.shop-button', product: product.settings.block_product, as_icon: true, mode: 'lighter' %}
   </div>
 </ui-product>
