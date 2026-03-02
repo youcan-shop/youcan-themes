@@ -18,7 +18,6 @@
       </div>
 */
 
-
 [ui-slot="rating-bar"] {
   --color-active-star: #f6b51e;
   --color-active-heart: #fb3748;
@@ -121,6 +120,16 @@
   &:not(:has([ui-slot="rating-item"] > input[type="radio"]:checked)) {
     [ui-slot="rating-item"] {
       color: var(--color-inactive);
+    }
+  }
+
+  @media (width <= 769px) {
+    &[data-variant="basic"] {
+      --icon-size: 24px;
+      --item-size: 48px;
+
+      justify-content: space-between;
+      width: 100%;
     }
   }
 }
