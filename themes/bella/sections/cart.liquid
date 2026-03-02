@@ -19,7 +19,7 @@
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   <div ui-slot="head">
-    <h1 class="subheading">{{ 'cart.page.title' | t }}</h1>
+    <h1 class="subheading">{{ 'cart.title' | t }}</h1>
   </div>
   <hr ui-slot="divider" data-variant="line">
   <div class="core-area">
@@ -35,10 +35,10 @@
         <thead>
           <tr>
             <th></th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
+            <th>{{ 'cart.page.table.product' | t }}</th>
+            <th>{{ 'cart.page.table.price' | t }}</th>
+            <th>{{ 'cart.page.table.quantity' | t }}</th>
+            <th>{{ 'cart.page.table.total' | t }}</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +59,7 @@
           <form ui-slot="accordion-item" ui-summary-box="coupon-form">
             <label ui-slot="accordion-trigger">
               <i class="hgi hgi-stroke hgi-coupon-percent"></i>
-              Coupon code
+              {{ 'cart.page.summary.coupon' | t }}
               <input type="checkbox" name="my-accordion" checked>
             </label>
             <div ui-slot="accordion-content" role="region">
@@ -69,7 +69,7 @@
                     ui-slot="input"
                     data-size="md"
                     type="text"
-                    placeholder="Ender code"
+                    placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
                     name="coupon_code"
                     data-coupon="coupon-input"
                   >
@@ -81,12 +81,12 @@
                     data-size="md"
                     data-coupon="coupon-button"
                   >
-                    Apply
+                    {{ 'cart.page.coupon.apply' | t }}
                   </button>
                 </div>
                 <div class="output">
                   <div class="info">
-                    <span ui-slot="label">Applied code</span>
+                    <span ui-slot="label">{{ 'cart.page.coupon.applied' | t }}</span>
                     <div
                       ui-slot="status-badge"
                       ui-summary-box="coupon-code"
@@ -106,7 +106,7 @@
                     data-size="sm"
                     ui-summary-box="remove-coupon"
                   >
-                    Remove
+                    {{ 'cart.page.coupon.remove' | t }}
                   </button>
                 </div>
               </div>
@@ -117,18 +117,20 @@
       <div class="details">
         <span class="label">{{ 'cart.drawer.total' | t }}</span>
         <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
-        <span class="description">Taxes and shipping are calculated at checkout.</span>
+        <span class="description">{{ 'cart.drawer.note' | t }}</span>
         <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="md">
-          {% render 'misc.icon', name: settings.cart_icon %} Check out
+          {% render 'misc.icon', name: settings.cart_icon %}
+          {{ 'cart.drawer.actions.checkout' | t }}
         </a>
       </div>
     </ui-summary-box>
 
-    {% assign empty_content = 'Your cart is currently empty.' %}
+    {% assign empty_content = 'cart.empty.title' | t %}
+    {% assign continue_shopping = 'order.action' | t %}
     {% if cart.items.size > 0 %}
-      {% render 'misc.empty', heading: empty_content, action_label: 'Continue Shopping', action_url: '/', hidden: true %}
+      {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/', hidden: true %}
     {% else %}
-      {% render 'misc.empty', heading: empty_content, action_label: 'Continue Shopping', action_url: '/' %}
+      {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/' %}
     {% endif %}
   </div>
 </div>

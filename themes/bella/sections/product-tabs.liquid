@@ -32,7 +32,8 @@
             {% endif %}
             {{ collection_block.youcan_attributes }}
           >
-            {% assign fallback = 'Collection tab ' | append: forloop.index %}
+            {% assign translated_trigger = 'product-tabs.tab-trigger' | t %}
+            {% assign fallback = translated_trigger | append: ' ' | append: forloop.index %}
             {{ collection_block.settings.collection.name | default: fallback }}
           </button>
         {% endfor %}

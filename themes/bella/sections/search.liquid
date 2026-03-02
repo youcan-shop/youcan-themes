@@ -20,7 +20,7 @@
 >
   {% paginate search.products by 24 cod %}
     <div ui-slot="head">
-      <h1 class="subheading">Search</h1>
+      <h1 class="subheading">{{ 'search.title' | t }}</h1>
       <form action="/search" class="search">
         <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
           <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
@@ -30,7 +30,7 @@
             name="q"
             type="text"
             value="{{ terms | escape }}"
-            placeholder="{{ 'search.drawer.placeholder' | t }}"
+            placeholder="{{ 'search.placeholder' | t }}"
           >
           <button
             ui-slot="input-inline-button"
@@ -44,9 +44,12 @@
       </form>
     </div>
     <div class="controller">
-      <h4 class="result">{{ items.size }} Products</h4>
+      <h4 class="result">
+        {{ items.size }}
+        {{ 'general.products' | t }}
+      </h4>
       <div class="sort">
-        <label for="sort">Sort by:</label>
+        <label for="sort">{{ 'general.sort.label' | t }}</label>
         {% render 'misc.sort', url: previous_page %}
       </div>
     </div>

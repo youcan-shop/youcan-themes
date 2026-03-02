@@ -14,7 +14,7 @@
   data-size="lg"
   popovertarget="add-review"
 >
-  Write a Review
+  {{ 'reviews.add_review.action' | t }}
 </button>
 
 <ui-add-review
@@ -25,7 +25,7 @@
   product-id="{{ product.id }}"
 >
   <div ui-slot="modal-header">
-    <h3 ui-slot="modal-title">Rate our product</h3>
+    <h3 ui-slot="modal-title">{{ 'reviews.add_review.title' | t }}</h3>
     <button
       ui-slot="button"
       data-variant="primary"
@@ -41,7 +41,7 @@
   <form>
     <div ui-slot="modal-body">
       <div class="field">
-        <label for="rating">Your rating</label>
+        <label for="rating">{{ 'reviews.add_review.fields.rating' | t }}</label>
         <div ui-slot="rating-bar" data-variant="basic" data-style="star" role="group">
           {% for star in (1..5) %}
             <label ui-slot="rating-item">
@@ -72,7 +72,7 @@
       </div>
       <div class="fields">
         <div class="field">
-          <label for="first-name"> First name </label>
+          <label for="first-name"> {{ 'reviews.add_review.fields.first_name.label' | t }} </label>
           <input
             ui-slot="input"
             data-size="md"
@@ -80,11 +80,11 @@
             type="text"
             id="first-name"
             name="first-name"
-            placeholder="Type your first name.."
+            placeholder="{{ 'reviews.add_review.fields.first_name.placeholder' | t }}"
           >
         </div>
         <div class="field">
-          <label for="last-name"> Last name </label>
+          <label for="last-name"> {{ 'reviews.add_review.fields.last_name.label' | t }} </label>
           <input
             ui-slot="input"
             data-size="md"
@@ -92,11 +92,11 @@
             type="text"
             id="last-name"
             name="last-name"
-            placeholder="Type your last name.."
+            placeholder="{{ 'reviews.add_review.fields.last_name.placeholder' | t }}"
           >
         </div>
         <div class="field">
-          <label for="email"> Email address </label>
+          <label for="email"> {{ 'reviews.add_review.fields.email_address.label' | t }} </label>
           <input
             ui-slot="input"
             data-size="md"
@@ -104,11 +104,11 @@
             type="email"
             id="email"
             name="email"
-            placeholder="Type your email address.."
+            placeholder="{{ 'reviews.add_review.fields.email_address.placeholder' | t }}"
           >
         </div>
         <div class="field">
-          <label for="content"> Review </label>
+          <label for="content"> {{ 'reviews.add_review.fields.review.label' | t }} </label>
           <textarea
             ui-slot="textarea"
             required
@@ -116,7 +116,7 @@
             id="content"
             name="content"
             minlength="5"
-            placeholder="Type a detailed review.."
+            placeholder="{{ 'reviews.add_review.fields.review.placeholder' | t }}"
           ></textarea>
         </div>
       </div>
@@ -130,7 +130,7 @@
         popovertarget="add-review"
         type="button"
       >
-        Cancel
+        {{ 'general.cancel' | t }}
       </button>
       <button
         ui-slot="button"
@@ -140,7 +140,7 @@
         type="submit"
         ui-add-review="submit"
       >
-        Write a Review
+        {{ 'general.submit' | t }}
       </button>
     </div>
   </form>
