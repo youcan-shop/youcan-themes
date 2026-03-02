@@ -21,21 +21,23 @@
   <div ui-slot="head">
     <span class="heading">{{ section.settings.heading }}</span>
     <h1 class="subheading">{{ section.settings.subheading }}</h1>
-    <div class="tab-list" role="tablist">
-      {% for collection_block in section.blocks %}
-        <button
-          class="tab-trigger"
-          ui-carousel="marker"
-          {% if forloop.first %}
-            aria-selected="true"
-          {% endif %}
-          {{ collection_block.youcan_attributes }}
-        >
-          {% assign fallback = 'Collection tab ' | append: forloop.index %}
-          {{ collection_block.settings.collection.name | default: fallback }}
-        </button>
-      {% endfor %}
-    </div>
+    {% if section.blocks.size > 1 %}
+      <div class="tab-list" role="tablist">
+        {% for collection_block in section.blocks %}
+          <button
+            class="tab-trigger"
+            ui-carousel="marker"
+            {% if forloop.first %}
+              aria-selected="true"
+            {% endif %}
+            {{ collection_block.youcan_attributes }}
+          >
+            {% assign fallback = 'Collection tab ' | append: forloop.index %}
+            {{ collection_block.settings.collection.name | default: fallback }}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
   <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
     {% for collection_block in section.blocks %}
@@ -74,7 +76,7 @@
 {% schema %}
 {
   "label": "Product Tabs",
-  "templates": ["index", "product", "page"],
+  "templates": ["index", "product", "page", "cart"],
   "limit": 3,
   "max_blocks": 5,
   "settings": [
