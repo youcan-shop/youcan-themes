@@ -40,36 +40,36 @@
 
 {% schema %}
 {
-  "label": "Slideshow",
+  "label": "t:sections.slideshow.label",
   "templates": ["index"],
   "limit": 3,
   "max_blocks": 6,
   "settings": [
     {
       "type": "header",
-      "content": "General"
+      "content": "t:common.headers.general"
     },
     {
       "type": "select",
       "id": "height",
-      "label": "Height",
+      "label": "t:common.globals.height",
       "options": [
-        { "label": "Small", "value": "35" },
-        { "label": "Medium", "value": "60" },
-        { "label": "Large", "value": "75" }
+        { "label": "t:common.layout.size.small", "value": "35" },
+        { "label": "t:common.layout.size.medium", "value": "60" },
+        { "label": "t:common.layout.size.large", "value": "75" }
       ],
       "default": "75"
     },
     {
       "type": "checkbox",
       "id": "auto_rotate",
-      "label": "Auto rotate",
+      "label": "t:sections.slideshow.auto_rotate",
       "default": false
     },
     {
       "type": "range",
       "id": "change_every",
-      "label": "Change every",
+      "label": "t:sections.slideshow.change_every",
       "min": 3,
       "max": 7,
       "step": 1,
@@ -79,48 +79,48 @@
     {
       "type": "checkbox",
       "id": "show_controls",
-      "label": "Show controls",
+      "label": "t:sections.slideshow.show_controls",
       "default": true
     },
     {
       "type": "select",
       "id": "controls_position",
-      "label": "Controls position",
+      "label": "t:sections.slideshow.controls_position.label",
       "options": [
-        { "label": "Inside", "value": "inside" },
-        { "label": "Outside", "value": "outside" }
+        { "label": "t:sections.slideshow.controls_position.options.inside", "value": "inside" },
+        { "label": "t:sections.slideshow.controls_position.options.outside", "value": "outside" }
       ],
       "default": "outside"
     },
     {
       "type": "header",
-      "content": "Mobile Layout"
+      "content": "t:common.headers.mobile_layout"
     },
     {
       "type": "select",
       "id": "mobile_content_alignment",
-      "label": "Content alignment",
+      "label": "t:sections.slideshow.content_alignment",
       "options": [
-        { "label": "Start", "value": "start" },
-        { "label": "Center", "value": "center" },
-        { "label": "End", "value": "end" }
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
       ],
       "default": "center"
     },
     {
       "type": "checkbox",
       "id": "show_content_below_image",
-      "label": "Show content below image",
+      "label": "t:sections.slideshow.show_content_below_image",
       "default": true
     },
     {
       "type": "header",
-      "content": "Spacing"
+      "content": "t:common.headers.spacing"
     },
     {
       "type": "range",
       "id": "top_spacing",
-      "label": "Top Spacing",
+      "label": "t:common.spacing.top_spacing",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -130,7 +130,7 @@
     {
       "type": "range",
       "id": "bottom_spacing",
-      "label": "Bottom Spacing",
+      "label": "t:common.spacing.bottom_spacing",
       "min": 0,
       "max": 64,
       "step": 4,
@@ -141,96 +141,95 @@
   "blocks": [
     {
       "type": "slide_item",
-      "label": "Slide",
+      "label": "t:sections.slideshow.blocks.slide.label",
       "settings": [
         {
           "type": "header",
-          "content": "Colors"
+          "content": "t:common.headers.colors"
         },
         {
           "type": "color",
           "id": "main_color",
-          "label": "Main Color",
+          "label": "t:common.colors.main_color",
           "default": "#121212"
         },
         {
           "type": "select",
           "id": "color_intensity",
-          "label": "Color Intensity",
+          "label": "t:common.colors.color_intensity",
           "options": [
-            { "label": "As Solid Background", "value": "as-solid-bg" },
-            { "label": "As Light Background", "value": "as-light-bg" },
-            { "label": "As Foreground", "value": "as-foreground" }
+            { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+            { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+            { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
           ],
           "default": "as-light-bg"
         },
         {
           "type": "checkbox",
           "id": "override_global_colors",
-          "label": "Override global colors",
+          "label": "t:common.colors.override_global_colors",
           "default": false
         },
         {
           "type": "header",
-          "content": "Image"
+          "content": "t:common.headers.image"
         },
         {
           "type": "image_picker",
           "id": "slide_desktop_image",
-          "label": "Desktop image"
+          "label": "t:common.globals.desktop_image"
         },
         {
           "type": "image_picker",
           "id": "slide_mobile_image",
-          "label": "Mobile image"
+          "label": "t:common.globals.mobile_image"
         },
         {
           "type": "header",
-          "content": "Content"
+          "content": "t:common.headers.content"
         },
         {
           "type": "text",
           "id": "slide_subheading",
-          "label": "Subheading",
-          "default": "Wellness Care"
+          "label": "t:common.header.subheading",
+          "default": "t:sections.slideshow.blocks.slide.default.subheading"
         },
         {
           "type": "text",
           "id": "slide_heading",
-          "label": "Heading",
-          "default": "Beauty, Starts from within"
+          "label": "t:common.header.heading",
+          "default": "t:sections.slideshow.blocks.slide.default.heading"
         },
         {
           "type": "textarea",
           "id": "slide_description",
-          "label": "Description",
-          "default": "Description"
+          "label": "t:common.header.description"
         },
         {
           "type": "header",
-          "content": "Button"
+          "content": "t:common.headers.button"
         },
         {
           "type": "text",
           "id": "slide_button_label",
-          "label": "Label",
-          "default": "See All Collections"
+          "label": "t:common.button.label",
+          "default": "t:sections.slideshow.blocks.slide.default.button"
         },
         {
           "type": "url",
           "id": "slide_button_link",
-          "label": "Link",
+          "label": "t:common.button.link",
           "default": "/collections"
         },
         {
           "type": "select",
           "id": "slide_button_style",
           "options": [
-            { "label": "Primary", "value": "primary" },
-            { "label": "Secondary", "value": "secondary" },
-            { "label": "Underline", "value": "underline" }
+            { "label": "t:common.button.style.options.primary", "value": "primary" },
+            { "label": "t:common.button.style.options.secondary", "value": "secondary" },
+            { "label": "t:common.button.style.options.underline", "value": "underline" }
           ],
-          "label": "Style",
+          "label": "t:common.button.style.label",
           "default": "primary"
         }
       ]
