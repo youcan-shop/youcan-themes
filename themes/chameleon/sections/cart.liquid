@@ -1,5 +1,17 @@
 {{ 'section.cart.css' | asset_url | stylesheet_tag }}
 
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', async function () {
+    const checkoutButton = document.querySelector('#checkout-button');
+
+    checkoutButton?.addEventListener('click', async function () {
+      const cart = await youcanjs.cart.fetch();
+
+      window.Dotshop.pixels.publish('initiate-checkout', cart);
+    });
+  });
+{% endjavascript %}
+
 <div
   section="cart"
   {% if settings.enable_global_theme_style %}
@@ -99,7 +111,7 @@
         </li>
       </ul>
       <div class="cta">
-        <a href="{{ cart.cart_submit_url }}" ui-button data-variant="secondary" data-size="md">
+        <a href="{{ cart.cart_submit_url }}" ui-button data-variant="secondary" data-size="md" id="checkout-button">
           {{ 'cart.page.summary.checkout_button' | t }}
           {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
         </a>
