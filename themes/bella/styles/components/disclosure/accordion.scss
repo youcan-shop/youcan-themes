@@ -59,11 +59,18 @@
         transition: transform var(--transition-standard-default-spatial);
         border-radius: var(--radius-rounded);
         background-color: currentcolor;
-        inset-inline-end: 0;
+        inset-inline: auto 0;
       }
 
       &::after {
         transform: rotate(90deg);
+      }
+
+      &:dir(rtl) {
+        &::before,
+        &::after {
+          inset-inline: 0 auto;
+        }
       }
     }
 

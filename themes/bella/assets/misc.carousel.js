@@ -100,6 +100,10 @@ if (!customElements.get("ui-carousel")) {
     get perPage() {
       return Number(getComputedStyle(this).getPropertyValue("--per-page")) || 1;
     }
+
+    get isRTL() {
+      return document.dir === "rtl";
+    }
   }
 
   customElements.define("ui-carousel", Carousel);
