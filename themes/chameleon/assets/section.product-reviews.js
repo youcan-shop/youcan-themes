@@ -62,7 +62,7 @@ if (!customElements.get("ui-product-reviews")) {
     }
 
     createItem(data) {
-      const template = this.querySelector("template");
+      const template = this.querySelector("[ui-product-reviews-item-template]");
       const review = template.content.cloneNode(true);
 
       const { first_name, last_name, ratings, images_urls } = data;
