@@ -97,6 +97,46 @@
           placeholder="{{ 'product.reviews.fields.review.placeholder' | t }}"
         ></textarea>
       </div>
+      <div class="field">
+        <label for="images">
+          {{ 'product.reviews.fields.upload_image.label' | t }}
+          <span class="sub-label">({{ 'product.reviews.fields.upload_image.placeholder' | t }})</span>
+        </label>
+        <div class="images">
+          <label ui-button data-variant="secondary" data-size="md" class="upload">
+            {% render 'ui-icon', name: 'add' %}
+            <input
+              multiple
+              type="file"
+              id="images"
+              name="images"
+              accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
+              ui-add-review-upload-image
+            >
+          </label>
+          <template ui-add-review-image>
+            <div class="image">
+              <img
+                alt="image"
+                width="60"
+                height="60"
+                loading="lazy"
+              >
+              <button
+                ui-button
+                data-variant="tertiary"
+                data-size="xxs"
+                as-icon
+                aria-label="Remove"
+                type="button"
+                ui-add-review-remove-image
+              >
+                {% render 'ui-icon', name: 'close' %}
+              </button>
+            </div>
+          </template>
+        </div>
+      </div>
       <div class="actions" ui-add-review-actions>
         <button ui-button data-variant="secondary" data-size="md" type="button" ui-add-review-close>
           {{ 'product.reviews.actions.cancel' | t }}
