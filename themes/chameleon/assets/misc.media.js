@@ -12,7 +12,7 @@ if (!customElements.get("ui-media")) {
 
     _render() {
       this.imgWrapper = this.querySelector("[ui-media-images]");
-      this.images = this.imgWrapper.querySelectorAll("img");
+      this.images = this.imgWrapper.querySelectorAll("img, iframe");
       this.pagination = [
         this.querySelectorAll("[ui-media-pagination='dots'] button"),
         this.querySelectorAll("[ui-media-pagination='images'] button"),

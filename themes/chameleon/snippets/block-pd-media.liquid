@@ -14,12 +14,26 @@
   <div class="images" ui-media-images>
     {% if product.images.size %}
       {% for image in product.images %}
-        <img
-          src="{{ image }}"
-          alt="{{ product.name }}"
-          height="100%"
-          width="100%"
-        >
+        {% if image contains 'youtube.com' %}
+          {% assign video_data = image | split: '/' %}
+          {% assign video_url = video_data.4 %}
+
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/{{ video_url }}"
+            title="{{ product.name }}"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        {% else %}
+          <img
+            src="{{ image }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+          >
+        {% endif %}
       {% endfor %}
     {% else %}
       {% render 'ui-icon', name: 'image', size: 60, filled: true %}
