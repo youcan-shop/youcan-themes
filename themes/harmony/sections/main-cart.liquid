@@ -148,9 +148,9 @@
               <span class="total">{{ 'cart.summary.total' | t }}</span>
               <span class="item-total-price"></span>
             </div>
-            <a href='{{ cart.cart_submit_url }}' class='yc-btn mt-5 w-full' id="checkout-button">
+            <button type="button" class='yc-btn mt-5 w-full' id="checkout-button">
               {{ 'cart.summary.checkout_cta' | t }}
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -214,6 +214,10 @@
       const cart = await youcanjs.cart.fetch();
 
       window.Dotshop.pixels.publish('initiate-checkout', cart);
+
+      setTimeout(() => {
+        window.location.href = '{{ cart.cart_submit_url }}';
+      }, 300);
     });
   });
 {% endjavascript %}
