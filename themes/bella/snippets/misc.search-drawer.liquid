@@ -74,13 +74,15 @@
               <div class="item">
                 <div class="media">
                   {% if product.preview_image %}
-                    <img
-                      src="{{ product.preview_image.original }}"
-                      alt="{{ product.name }}"
-                      height="100%"
-                      width="100%"
-                      loading="lazy"
-                    >
+                    <a href="{{product.url}}">
+                      <img
+                        src="{{ product.preview_image.original }}"
+                        alt="{{ product.name }}"
+                        height="100%"
+                        width="100%"
+                        loading="lazy"
+                      >
+                    </a>
                   {% else %}
                     {% render 'misc.image-fallback' %}
                   {% endif %}
@@ -92,7 +94,7 @@
                     data-variant="black"
                     data-size="md"
                     class="title"
-                    href="/products/{{ product.slug }}"
+                    href="{{ product.url }}"
                   >
                     {{ product.name }}
                   </a>
@@ -127,7 +129,7 @@
                   data-variant="black"
                   data-size="md"
                   class="title"
-                  href="/products/{{ product.slug }}"
+                  href="{{ product_url }}"
                 >
                   {{ product.name | default: 'product.title' | t }}
                 </a>
