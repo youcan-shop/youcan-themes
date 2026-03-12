@@ -49,20 +49,19 @@
       </a>
     {% endif %}
   </div>
+  {% render 'misc.menu-drawer' %}
+
+  <ul class="links">
+    {% for link in main-link-list.links %}
+      <li class="link">
+        <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
   {% for block in section.blocks %}
     {% case block.type %}
-      {% when 'menu_item' %}
-        {% render 'misc.menu-drawer' %}
-
-        <ul class="links" {{ block.youcan_attributes }}>
-          {% for link in main-link-list.links %}
-            <li class="link">
-              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
-                {{ link.title }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
       {% when 'actions_item' %}
         <div class="actions">
           {% render 'misc.search-drawer',
@@ -177,23 +176,6 @@
     }
   ],
   "blocks": [
-    {
-      "type": "menu_item",
-      "label": "t:sections.navbar.blocks.menu.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "header",
-          "content": "t:common.headers.mobile"
-        },
-        {
-          "type": "checkbox",
-          "id": "menu_show_social_media_links",
-          "label": "t:sections.navbar.blocks.menu.menu_show_social_media_links",
-          "default": true
-        }
-      ]
-    },
     {
       "type": "actions_item",
       "label": "t:sections.navbar.blocks.actions.label",
