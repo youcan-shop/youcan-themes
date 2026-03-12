@@ -1213,15 +1213,16 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     background-color:var(--color-primary-container);
   }
 [ui-slot=sheet-content]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --sheet-width:460px;
     --spring-width-offset:10px;
+    --sheet-width:460px;
+    --sheet-visible-width:calc(var(--sheet-width) + var(--spring-width-offset));
     display:flex;
     position:fixed;
     z-index:50;
     flex-direction:column;
     justify-content:space-between;
     width:calc(460px + 10px);
-    width:calc(var(--sheet-width) + var(--spring-width-offset));
+    width:var(--sheet-visible-width);
     height:100dvh;
     transition:650ms cubic-bezier(0.39, 1.29, 0.35, 0.98);
     transition:var(--transition-expressive-slow-spatial);
@@ -1239,7 +1240,8 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     top:0px;
     top:var(--spacing-0);
     right:calc((460px + 10px) * -1);
-    right:calc((var(--sheet-width) + var(--spring-width-offset)) * -1);
+    right:calc(calc(460px + 10px) * -1);
+    right:calc(var(--sheet-visible-width) * -1);
   }
 [ui-slot=sheet-content]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-header]{
     display:flex;
@@ -1300,7 +1302,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 @starting-style{
     [ui-slot=sheet-content]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-      right:calc((var(--sheet-width) + var(--spring-width-offset)) * -1);
+      right:calc(var(--sheet-visible-width) * -1);
     }
     [ui-slot=sheet-content]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::backdrop{
       -webkit-backdrop-filter:blur(0);
