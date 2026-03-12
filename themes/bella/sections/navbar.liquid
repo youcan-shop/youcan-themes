@@ -23,35 +23,34 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
+  <div class="logo">
+    {% if settings.logo_desktop.src or settings.logo_mobile.src %}
+      <a href="/">
+        <picture>
+          {% if settings.logo_mobile.src %}
+            <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
+          {% endif %}
+          {% if settings.logo_desktop.src %}
+            <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
+          {% endif %}
+          <img
+            src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
+            alt="{{ store.name }}"
+            loading="eager"
+            height="100%"
+            width="{{ settings.logo_desktop_width }}px"
+            data-mobile-width="{{ settings.logo_mobile_width }}"
+          >
+        </picture>
+      </a>
+    {% else %}
+      <a class="name" ui-slot="link-button" href="/">
+        {{ store.name }}
+      </a>
+    {% endif %}
+  </div>
   {% for block in section.blocks %}
     {% case block.type %}
-      {% when 'logo_item' %}
-        <div class="logo">
-          {% if settings.logo_desktop.src or settings.logo_mobile.src %}
-            <a href="/" {{ block.youcan_attributes }}>
-              <picture>
-                {% if settings.logo_mobile.src %}
-                  <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
-                {% endif %}
-                {% if settings.logo_desktop.src %}
-                  <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
-                {% endif %}
-                <img
-                  src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
-                  alt="{{ store.name }}"
-                  loading="eager"
-                  height="100%"
-                  width="{{ settings.logo_desktop_width }}px"
-                  data-mobile-width="{{ settings.logo_mobile_width }}"
-                >
-              </picture>
-            </a>
-          {% else %}
-            <a class="name" ui-slot="link-button" href="/" {{ block.youcan_attributes }}>
-              {{ store.name }}
-            </a>
-          {% endif %}
-        </div>
       {% when 'menu_item' %}
         {% render 'misc.menu-drawer' %}
 
@@ -178,12 +177,6 @@
     }
   ],
   "blocks": [
-    {
-      "type": "logo_item",
-      "label": "t:sections.navbar.blocks.logo.label",
-      "limit": 1,
-      "settings": []
-    },
     {
       "type": "menu_item",
       "label": "t:sections.navbar.blocks.menu.label",
