@@ -7,6 +7,17 @@
   {% render 'block-pd-content' %}
 </ui-product>
 
+{% if product %}
+  {% javascript %}
+    const globalProductStr = `{{ product | json }}`;
+    const globalProduct = JSON.parse(globalProductStr.slice(1, -1));
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.Dotshop.pixels.publish('view-content', globalProduct);
+    });
+  {% endjavascript %}
+{% endif %}
+
 {% if product and product.options.size %}
   {% javascript %}
     if (!window.productsVariants["{{ product.id }}"]) {

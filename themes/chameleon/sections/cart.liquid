@@ -1,5 +1,29 @@
 {{ 'section.cart.css' | asset_url | stylesheet_tag }}
 
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.querySelector('#checkout-button');
+    const cartStr = '{{ cart | json }}';
+    const cart = JSON.parse(cartStr.slice(1, -1));
+
+    let updatedCart = null;
+
+    checkoutButton?.addEventListener('click', function () {
+      subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+        updatedCart = payload.cartData;
+      });
+
+      const latestCart = updatedCart ?? cart;
+
+      window.Dotshop.pixels.publish('initiate-checkout', latestCart);
+
+      setTimeout(() => {
+        window.location.href = '{{ cart.cart_submit_url }}';
+      }, 300);
+    });
+  });
+{% endjavascript %}
+
 <div
   section="cart"
   {% if settings.enable_global_theme_style %}
@@ -99,10 +123,10 @@
         </li>
       </ul>
       <div class="cta">
-        <a href="{{ cart.cart_submit_url }}" ui-button data-variant="secondary" data-size="md">
+        <button type="button" ui-button data-variant="secondary" data-size="md" id="checkout-button">
           {{ 'cart.page.summary.checkout_button' | t }}
           {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
-        </a>
+        </button>
       </div>
     </ui-summary-box>
     {% assign empty_content = 'cart.empty.title' | t %}
