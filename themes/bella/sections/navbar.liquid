@@ -60,18 +60,10 @@
       </li>
     {% endfor %}
   </ul>
-  {% for block in section.blocks %}
-    {% case block.type %}
-      {% when 'actions_item' %}
-        <div class="actions">
-          {% render 'misc.search-drawer',
-            keywords: block.settings.search_most_searched_keywords,
-            collection_id: block.settings.search_collection.id
-          %}
-          {% render 'misc.cart-drawer' %}
-        </div>
-    {% endcase %}
-  {% endfor %}
+  <div class="actions">
+    {% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
+    {% render 'misc.cart-drawer' %}
+  </div>
 </ui-navbar>
 
 {% schema %}
@@ -173,54 +165,44 @@
       "step": 4,
       "unit": "px",
       "default": 24
-    }
-  ],
-  "blocks": [
+    },
     {
-      "type": "actions_item",
-      "label": "t:sections.navbar.blocks.actions.label",
-      "limit": 1,
-
-      "settings": [
-        {
-          "type": "header",
-          "content": "t:sections.navbar.blocks.actions.search_recommendations"
-        },
-        {
-          "type": "textarea",
-          "id": "search_most_searched_keywords",
-          "label": "t:sections.navbar.blocks.actions.search_most_searched_keywords"
-        },
-        {
-          "type": "category",
-          "id": "search_collection",
-          "label": "t:sections.navbar.blocks.actions.product_recommendations"
-        },
-        {
-          "type": "header",
-          "content": "t:sections.navbar.blocks.actions.cart_recommendations"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_1",
-          "label": "t:sections.navbar.blocks.actions.collection_1"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_2",
-          "label": "t:sections.navbar.blocks.actions.collection_2"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_3",
-          "label": "t:sections.navbar.blocks.actions.collection_3"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_4",
-          "label": "t:sections.navbar.blocks.actions.collection_4"
-        }
-      ]
+      "type": "header",
+      "content": "t:sections.navbar.blocks.actions.search_recommendations"
+    },
+    {
+      "type": "textarea",
+      "id": "search_most_searched_keywords",
+      "label": "t:sections.navbar.blocks.actions.search_most_searched_keywords"
+    },
+    {
+      "type": "category",
+      "id": "search_collection",
+      "label": "t:sections.navbar.blocks.actions.product_recommendations"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.navbar.blocks.actions.cart_recommendations"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_1",
+      "label": "t:sections.navbar.blocks.actions.collection_1"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_2",
+      "label": "t:sections.navbar.blocks.actions.collection_2"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_3",
+      "label": "t:sections.navbar.blocks.actions.collection_3"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_4",
+      "label": "t:sections.navbar.blocks.actions.collection_4"
     }
   ]
 }
