@@ -72,8 +72,8 @@
             {% for product in items %}
               <div class="item">
                 <div class="media">
-                  {% if product.preview_image %}
-                    <a href="{{product.url}}">
+                  <a href="{{product.url}}">
+                    {% if product.preview_image %}
                       <img
                         src="{{ product.preview_image.original }}"
                         alt="{{ product.name }}"
@@ -81,10 +81,10 @@
                         width="100%"
                         loading="lazy"
                       >
-                    </a>
-                  {% else %}
-                    {% render 'misc.image-fallback' %}
-                  {% endif %}
+                    {% else %}
+                      {% render 'misc.image-fallback' %}
+                    {% endif %}
+                  </a>
                 </div>
                 <div class="content">
                   <a
