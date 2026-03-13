@@ -3,7 +3,7 @@ if (!customElements.get("ui-navbar")) {
     constructor() {
       super();
 
-      this.isSticky = Boolean(this.getAttribute("data-sticky"));
+      this.stickyType = Boolean(this.getAttribute("data-sticky-mode"));
     }
 
     connectedCallback() {
@@ -11,19 +11,42 @@ if (!customElements.get("ui-navbar")) {
     }
 
     _render() {
-      if (this.isSticky) {
-        const rect = this.getBoundingClientRect();
-        this.setShadow(rect.top === 0);
+      const rect = this.getBoundingClientRect();
+      this.shouldCastShadow(rect.top === 0);
 
-        window.addEventListener("scroll", () => {
-          const rect = this.getBoundingClientRect();
-          this.setShadow(rect.top === 0);
-        });
-      }
+      this.safeArea = 400; //px
+      this.lastScrollDistance = 0;
+
+      window.addEventListener("scroll", () => {
+        const rect = this.getBoundingClientRect();
+        this.shouldCastShadow(rect.top === 0);
+
+        const { pageYOffset: scrollYOffset } = window;
+
+        if (this.stickyType === "always") {
+          return;
+        }
+
+        const isOutsideSafearea = scrollYOffset >= this.safeArea;
+
+        if (!isOutsideSafearea) {
+          this.shouldHideHeader(false);
+
+          return;
+        }
+
+        this.shouldHideHeader(this.lastScrollDistance < scrollYOffset);
+
+        this.lastScrollDistance = scrollYOffset;
+      });
     }
 
-    setShadow(state) {
-      this.setAttribute("data-shadow", state);
+    shouldHideHeader(shouldHide) {
+      this.setAttribute("aria-hidden", shouldHide);
+    }
+
+    shouldCastShadow(shouldCast) {
+      this.setAttribute("data-shadow", shouldCast);
     }
   }
 

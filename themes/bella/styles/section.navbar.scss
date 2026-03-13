@@ -1,6 +1,8 @@
 @layer sections {
   #youcan-section--navbar {
-    &:has([data-sticky="1"]) {
+    --spring-width-offset: 10px;
+
+    &:has(:not([data-sticky-mode="none"])) {
       position: sticky;
       z-index: 50;
       inset-block-start: var(--spacing-0);
@@ -12,14 +14,21 @@
     grid-template-areas: "logo menu actions";
     grid-template-columns: 1fr 4fr 1fr;
     align-items: center;
-    gap: var(--spacing-16);
     padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px);
-    transition: box-shadow var(--transition-standard-fast-spatial);
+    transform: translateY(0%);
+    transition:
+      box-shadow var(--transition-standard-fast-spatial),
+      transform var(--transition-standard-slow-spatial);
     background-color: inherit;
+    gap: var(--spacing-16);
 
     &[data-shadow="true"] {
       border-block-end: none;
       box-shadow: var(--shadow-md);
+    }
+
+    &[aria-hidden="true"] {
+      transform: translateY(-150%);
     }
 
     &[data-bottom-border="1"] {

@@ -1,5 +1,8 @@
 
-  #youcan-section--navbar:has([data-sticky="1"]){
+  #youcan-section--navbar{
+    --spring-width-offset:10px;
+  }
+  #youcan-section--navbar:has(:not([data-sticky-mode=none])){
     position:sticky;
     z-index:50;
     top:var(--spacing-0);
@@ -9,15 +12,19 @@
     grid-template-areas:"logo menu actions";
     grid-template-columns:1fr 4fr 1fr;
     align-items:center;
+    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px);
+    transform:translateY(0%);
+    transition:box-shadow var(--transition-standard-fast-spatial), transform var(--transition-standard-slow-spatial);
+    background-color:inherit;
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px);
-    transition:box-shadow var(--transition-standard-fast-spatial);
-    background-color:inherit;
   }
   [ui-layout=navbar][data-shadow=true]{
     border-bottom:none;
     box-shadow:var(--shadow-md);
+  }
+  [ui-layout=navbar][aria-hidden=true]{
+    transform:translateY(-150%);
   }
   [ui-layout=navbar][data-bottom-border="1"]{
     border-bottom:1px solid var(--color-surface-variant);

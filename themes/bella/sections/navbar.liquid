@@ -1,5 +1,14 @@
 {{ 'section.navbar.css' | asset_url | stylesheet_tag }}
-{{ 'section.navbar.js' | asset_url | script_tag_deferred }}
+
+{% assign is_sticky = false %}
+
+{% if section.settings.header_sticky_type != 'none' %}
+  {% assign is_sticky = true %}
+{% endif %}
+
+{% if is_sticky %}
+  {{ 'section.navbar.js' | asset_url | script_tag_deferred }}
+{% endif %}
 
 <ui-navbar
   ui-layout="navbar"
@@ -16,7 +25,9 @@
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-sticky="{{ section.settings.is_sticky }}"
+  {% if is_sticky %}
+    data-sticky-mode="{{ section.settings.header_sticky_type }}"
+  {% endif %}
   {% if template.name != 'index' or section.settings.bottom_border %}
     data-bottom-border="1"
   {% endif %}
@@ -113,7 +124,7 @@
     },
     {
       "type": "select",
-      "id": "header_sticky_mode",
+      "id": "header_sticky_type",
       "label": "t:sections.navbar.sticky_mode.label",
       "options": [
         { "label": "t:sections.navbar.sticky_mode.options.none", "value": "none" },
