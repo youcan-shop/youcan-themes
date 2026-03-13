@@ -1,5 +1,14 @@
 {{ 'section.navbar.css' | asset_url | stylesheet_tag }}
-{{ 'section.navbar.js' | asset_url | script_tag_deferred }}
+
+{% assign is_sticky = false %}
+
+{% if section.settings.header_sticky_type != 'none' %}
+  {% assign is_sticky = true %}
+{% endif %}
+
+{% if is_sticky %}
+  {{ 'section.navbar.js' | asset_url | script_tag_deferred }}
+{% endif %}
 
 <ui-navbar
   ui-layout="navbar"
@@ -16,64 +25,56 @@
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-sticky="{{ section.settings.is_sticky }}"
+  {% if is_sticky %}
+    data-sticky-mode="{{ section.settings.header_sticky_type }}"
+  {% endif %}
   {% if template.name != 'index' or section.settings.bottom_border %}
     data-bottom-border="1"
   {% endif %}
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  {% for block in section.blocks %}
-    {% case block.type %}
-      {% when 'logo_item' %}
-        <div class="logo">
-          {% if settings.logo_desktop.src or settings.logo_mobile.src %}
-            <a href="/" {{ block.youcan_attributes }}>
-              <picture>
-                {% if settings.logo_mobile.src %}
-                  <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
-                {% endif %}
-                {% if settings.logo_desktop.src %}
-                  <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
-                {% endif %}
-                <img
-                  src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
-                  alt="{{ store.name }}"
-                  loading="eager"
-                  height="100%"
-                  width="{{ settings.logo_desktop_width }}px"
-                  data-mobile-width="{{ settings.logo_mobile_width }}"
-                >
-              </picture>
-            </a>
-          {% else %}
-            <a class="name" ui-slot="link-button" href="/" {{ block.youcan_attributes }}>
-              {{ store.name }}
-            </a>
+  <div class="logo">
+    {% if settings.logo_desktop.src or settings.logo_mobile.src %}
+      <a href="/">
+        <picture>
+          {% if settings.logo_mobile.src %}
+            <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
           {% endif %}
-        </div>
-      {% when 'menu_item' %}
-        {% render 'misc.menu-drawer' %}
+          {% if settings.logo_desktop.src %}
+            <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
+          {% endif %}
+          <img
+            src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
+            alt="{{ store.name }}"
+            loading="eager"
+            height="100%"
+            width="{{ settings.logo_desktop_width }}px"
+            data-mobile-width="{{ settings.logo_mobile_width }}"
+          >
+        </picture>
+      </a>
+    {% else %}
+      <a class="name" ui-slot="link-button" href="/">
+        {{ store.name }}
+      </a>
+    {% endif %}
+  </div>
+  {% render 'misc.menu-drawer' %}
 
-        <ul class="links" {{ block.youcan_attributes }}>
-          {% for link in main-link-list.links %}
-            <li class="link">
-              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
-                {{ link.title }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      {% when 'actions_item' %}
-        <div class="actions">
-          {% render 'misc.search-drawer',
-            keywords: block.settings.search_most_searched_keywords,
-            collection_id: block.settings.search_collection.id
-          %}
-          {% render 'misc.cart-drawer' %}
-        </div>
-    {% endcase %}
-  {% endfor %}
+  <ul class="links">
+    {% for link in main-link-list.links %}
+      <li class="link">
+        <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+          {{ link.title }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="actions">
+    {% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
+    {% render 'misc.cart-drawer' %}
+  </div>
 </ui-navbar>
 
 {% schema %}
@@ -85,7 +86,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "t:common.headers.colors"
+      "content": "t:common.headers.general"
     },
     {
       "type": "color",
@@ -111,20 +112,46 @@
       "default": false
     },
     {
+      "type": "select",
+      "id": "header_layout",
+      "label": "t:sections.navbar.header_layout.label",
+      "options": [
+        { "label": "t:sections.navbar.header_layout.options.logo_first_menu_center", "value": "logo_first_menu_center" },
+        { "label": "t:sections.navbar.header_layout.options.logo_center_menu_first", "value": "logo_center_menu_first" },
+        { "label": "t:sections.navbar.header_layout.options.logo_center_menu_split", "value": "logo_center_menu_split" }
+      ],
+      "default": "logo_first_menu_center"
+    },
+    {
+      "type": "select",
+      "id": "header_sticky_type",
+      "label": "t:sections.navbar.sticky_mode.label",
+      "options": [
+        { "label": "t:sections.navbar.sticky_mode.options.none", "value": "none" },
+        { "label": "t:sections.navbar.sticky_mode.options.always", "value": "always" },
+        { "label": "t:sections.navbar.sticky_mode.options.on_scroll_up", "value": "on_scroll_up" }
+      ],
+      "default": "none"
+    },
+    {
       "type": "header",
-      "content": "t:common.headers.layout"
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "t:sections.navbar.logo_position",
+      "options": [
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" }
+      ],
+      "default": "start"
     },
     {
       "type": "checkbox",
-      "id": "is_sticky",
-      "label": "t:sections.navbar.sticky",
+      "id": "menu_show_social_media_links",
+      "label": "t:sections.navbar.menu.menu_show_social_media_links",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "bottom_border",
-      "label": "t:sections.navbar.bottom_border",
-      "default": false
     },
     {
       "type": "header",
@@ -149,77 +176,50 @@
       "step": 4,
       "unit": "px",
       "default": 24
-    }
-  ],
-  "blocks": [
-    {
-      "type": "logo_item",
-      "label": "t:sections.navbar.blocks.logo.label",
-      "limit": 1,
-      "settings": []
     },
     {
-      "type": "menu_item",
-      "label": "t:sections.navbar.blocks.menu.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "header",
-          "content": "t:common.headers.mobile"
-        },
-        {
-          "type": "checkbox",
-          "id": "menu_show_social_media_links",
-          "label": "t:sections.navbar.blocks.menu.menu_show_social_media_links",
-          "default": true
-        }
-      ]
+      "type": "header",
+      "content": "t:sections.navbar.actions.search_recommendations"
     },
     {
-      "type": "actions_item",
-      "label": "t:sections.navbar.blocks.actions.label",
-      "limit": 1,
-
-      "settings": [
-        {
-          "type": "header",
-          "content": "t:sections.navbar.blocks.actions.search_recommendations"
-        },
-        {
-          "type": "textarea",
-          "id": "search_most_searched_keywords",
-          "label": "t:sections.navbar.blocks.actions.search_most_searched_keywords"
-        },
-        {
-          "type": "category",
-          "id": "search_collection",
-          "label": "t:sections.navbar.blocks.actions.product_recommendations"
-        },
-        {
-          "type": "header",
-          "content": "t:sections.navbar.blocks.actions.cart_recommendations"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_1",
-          "label": "t:sections.navbar.blocks.actions.collection_1"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_2",
-          "label": "t:sections.navbar.blocks.actions.collection_2"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_3",
-          "label": "t:sections.navbar.blocks.actions.collection_3"
-        },
-        {
-          "type": "category",
-          "id": "cart_collection_4",
-          "label": "t:sections.navbar.blocks.actions.collection_4"
-        }
-      ]
+      "type": "textarea",
+      "id": "search_most_searched_keywords",
+      "label": "t:sections.navbar.actions.search_most_searched_keywords"
+    },
+    {
+      "type": "category",
+      "id": "search_collection",
+      "label": "t:sections.navbar.actions.product_recommendations"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.navbar.actions.cart_recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_recommendations",
+      "label": "t:sections.navbar.actions.show_cart_recommendations",
+      "default": false
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_1",
+      "label": "t:sections.navbar.actions.collection_1"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_2",
+      "label": "t:sections.navbar.actions.collection_2"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_3",
+      "label": "t:sections.navbar.actions.collection_3"
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_4",
+      "label": "t:sections.navbar.actions.collection_4"
     }
   ]
 }
