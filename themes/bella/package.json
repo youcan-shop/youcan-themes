@@ -1,0 +1,51 @@
+{
+  "name": "bella",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Bella Theme",
+  "author": {
+    "name": "YouCan",
+    "url": "https://youcan.shop"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/youcan-shop/theme-starter-kit"
+  },
+  "scripts": {
+    "sass": "sass ./styles:./.temp --no-source-map --watch",
+    "postcss": "postcss ./.temp/*.css --dir ./assets --no-map",
+    "watch:postcss": "onchange './.temp/*.css' -- pnpm run postcss",
+    "yc": "youcan theme:dev -p",
+    "dev": "npm-run-all --parallel sass watch:postcss yc",
+    "zip": "node ./tooling/zip.js",
+    "release": "bumpp --execute 'pnpm run zip'"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.16.0",
+    "clean-css-cli": "^5.6.1",
+    "concurrently": "^7.6.0",
+    "eslint": "^9.16.0",
+    "fs": "0.0.1-security",
+    "globals": "^15.13.0",
+    "node-watch": "^0.7.3",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.1.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-discard-comments": "^7.0.5",
+    "postcss-preset-env": "^10.5.0",
+    "prettier": "^3.7.4",
+    "prettier-plugin-css-order": "^2.1.2",
+    "sass": "^1.97.1",
+    "stylelint": "^16.26.1",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-property-sort-order-smacss": "^10.0.0",
+    "stylelint-config-standard": "^39.0.1"
+  },
+  "dependencies": {
+    "bumpp": "^10.1.0",
+    "fs-extra": "^11.2.0",
+    "zip-lib": "^1.0.4"
+  }
+}

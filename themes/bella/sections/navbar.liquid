@@ -1,0 +1,226 @@
+{{ 'section.navbar.css' | asset_url | stylesheet_tag }}
+{{ 'section.navbar.js' | asset_url | script_tag_deferred }}
+
+<ui-navbar
+  ui-layout="navbar"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-sticky="{{ section.settings.is_sticky }}"
+  {% if template.name != 'index' or section.settings.bottom_border %}
+    data-bottom-border="1"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'logo_item' %}
+        <div class="logo">
+          {% if settings.logo_desktop.src or settings.logo_mobile.src %}
+            <a href="/" {{ block.youcan_attributes }}>
+              <picture>
+                {% if settings.logo_mobile.src %}
+                  <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
+                {% endif %}
+                {% if settings.logo_desktop.src %}
+                  <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
+                {% endif %}
+                <img
+                  src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
+                  alt="{{ store.name }}"
+                  loading="eager"
+                  height="100%"
+                  width="{{ settings.logo_desktop_width }}px"
+                  data-mobile-width="{{ settings.logo_mobile_width }}"
+                >
+              </picture>
+            </a>
+          {% else %}
+            <a class="name" ui-slot="link-button" href="/" {{ block.youcan_attributes }}>
+              {{ store.name }}
+            </a>
+          {% endif %}
+        </div>
+      {% when 'menu_item' %}
+        {% render 'misc.menu-drawer' %}
+
+        <ul class="links" {{ block.youcan_attributes }}>
+          {% for link in main-link-list.links %}
+            <li class="link">
+              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% when 'actions_item' %}
+        <div class="actions">
+          {% render 'misc.search-drawer',
+            keywords: block.settings.search_most_searched_keywords,
+            collection_id: block.settings.search_collection.id
+          %}
+          {% render 'misc.cart-drawer' %}
+        </div>
+    {% endcase %}
+  {% endfor %}
+</ui-navbar>
+
+{% schema %}
+{
+  "label": "t:sections.navbar.label",
+  "tag": "header",
+  "limit": 1,
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_sticky",
+      "label": "t:sections.navbar.sticky",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_border",
+      "label": "t:sections.navbar.bottom_border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo_item",
+      "label": "t:sections.navbar.blocks.logo.label",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "menu_item",
+      "label": "t:sections.navbar.blocks.menu.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:common.headers.mobile"
+        },
+        {
+          "type": "checkbox",
+          "id": "menu_show_social_media_links",
+          "label": "t:sections.navbar.blocks.menu.menu_show_social_media_links",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "actions_item",
+      "label": "t:sections.navbar.blocks.actions.label",
+      "limit": 1,
+
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.navbar.blocks.actions.search_recommendations"
+        },
+        {
+          "type": "textarea",
+          "id": "search_most_searched_keywords",
+          "label": "t:sections.navbar.blocks.actions.search_most_searched_keywords"
+        },
+        {
+          "type": "category",
+          "id": "search_collection",
+          "label": "t:sections.navbar.blocks.actions.product_recommendations"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.navbar.blocks.actions.cart_recommendations"
+        },
+        {
+          "type": "category",
+          "id": "cart_collection_1",
+          "label": "t:sections.navbar.blocks.actions.collection_1"
+        },
+        {
+          "type": "category",
+          "id": "cart_collection_2",
+          "label": "t:sections.navbar.blocks.actions.collection_2"
+        },
+        {
+          "type": "category",
+          "id": "cart_collection_3",
+          "label": "t:sections.navbar.blocks.actions.collection_3"
+        },
+        {
+          "type": "category",
+          "id": "cart_collection_4",
+          "label": "t:sections.navbar.blocks.actions.collection_4"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

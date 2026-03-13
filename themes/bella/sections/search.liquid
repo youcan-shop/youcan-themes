@@ -1,0 +1,150 @@
+{{ 'section.search.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="search"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  {% paginate search.products by 24 cod %}
+    <div ui-slot="head">
+      <h1 class="subheading">{{ 'search.title' | t }}</h1>
+      <form action="/search" class="search">
+        <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
+          <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
+          <input
+            ui-search="clear"
+            ui-slot="input"
+            name="q"
+            type="text"
+            value="{{ terms | escape }}"
+            placeholder="{{ 'search.placeholder' | t }}"
+          >
+          <button
+            ui-slot="input-inline-button"
+            type="button"
+            aria-label="Clear"
+            onclick="document.querySelector('[ui-search=\'clear\']').value = ''"
+          >
+            {% render 'misc.icon', name: 'hgi-cancel-01' %}
+          </button>
+        </fieldset>
+      </form>
+    </div>
+    <div class="controller">
+      <h4 class="result">
+        {{ items.size }}
+        {{ 'general.products' | t }}
+      </h4>
+      <div class="sort">
+        <label for="sort">{{ 'general.sort.label' | t }}</label>
+        {% render 'misc.sort', url: previous_page %}
+      </div>
+    </div>
+    {% if items.size > 0 %}
+      <ul class="list" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
+        {% for product in items %}
+          {% render 'block.product', product: product %}
+        {% endfor %}
+      </ul>
+
+      {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+
+    {% else %}
+      {% assign empty_content = 'search.empty.title' | t %}
+      {% render 'misc.empty', heading: empty_content %}
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.search.label",
+  "templates": ["search"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "t:sections.search.show_discount_badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

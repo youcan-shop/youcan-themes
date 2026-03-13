@@ -1,0 +1,27 @@
+/* 
+  Component: Label
+
+  Usage:
+    - <label ui-slot="label" for="my-label">Label</label>
+    - <label ui-slot="label" for="my-label">
+        Label <span ui-slot="label-sub">(Optional)</span>
+      </label>
+*/
+
+[ui-slot="label"] {
+  font: var(--font-body-md);
+
+  /* Asterisk */
+  &:has(+ input:required, > input:required) {
+    &::after {
+      content: "*";
+      margin-inline: 1px;
+      color: var(--color-primary);
+    }
+  }
+
+  /* Sub */
+  & > [ui-slot="label-sub"] {
+    color: var(--color-on-surface-variant);
+  }
+}

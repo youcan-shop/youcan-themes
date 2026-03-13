@@ -1,0 +1,207 @@
+{{ 'section.cart.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="cart"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-saturation: {{ section.settings.main_color.saturation }}%;
+      --brand-lightness: {{ section.settings.main_color.lightness }}%;
+
+      {% if section.settings.main_color.hue == 0 and section.settings.main_color.lightness <= 20 %}
+        --brand-raw-lightness: {{ section.settings.main_color.lightness }}%;
+      {% endif %}
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head">
+    <h1 class="subheading">{{ 'cart.title' | t }}</h1>
+  </div>
+  <hr ui-slot="divider" data-variant="line">
+  <div class="core-area">
+    <template ui-cart-item>
+      {% render 'core.cart-item', product: product %}
+    </template>
+    <ui-cart-items
+      {% unless cart.items.size > 0 %}
+        hidden
+      {% endunless %}
+    >
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>{{ 'cart.page.table.product' | t }}</th>
+            <th>{{ 'cart.page.table.price' | t }}</th>
+            <th>{{ 'cart.page.table.quantity' | t }}</th>
+            <th>{{ 'cart.page.table.total' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in cart.items %}
+            {% render 'core.cart-item', product: product %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </ui-cart-items>
+    <ui-summary-box
+      class="summary"
+      {% unless cart.items.size > 0 %}
+        hidden
+      {% endunless %}
+    >
+      {% if section.settings.show_coupon %}
+        <div ui-slot="accordion">
+          <form ui-slot="accordion-item" ui-summary-box="coupon-form">
+            <label ui-slot="accordion-trigger">
+              <i class="hgi hgi-stroke hgi-coupon-percent"></i>
+              {{ 'cart.page.summary.coupon' | t }}
+              <input type="checkbox" name="my-accordion" checked>
+            </label>
+            <div ui-slot="accordion-content" role="region">
+              <div class="coupon">
+                <div class="input">
+                  <input
+                    ui-slot="input"
+                    data-size="md"
+                    type="text"
+                    placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
+                    name="coupon_code"
+                    data-coupon="coupon-input"
+                  >
+                  <button
+                    type="submit"
+                    ui-slot="button"
+                    data-variant="primary"
+                    data-mode="filled"
+                    data-size="md"
+                    data-coupon="coupon-button"
+                  >
+                    {{ 'cart.page.coupon.apply' | t }}
+                  </button>
+                </div>
+                <div class="output">
+                  <div class="info">
+                    <span ui-slot="label">{{ 'cart.page.coupon.applied' | t }}</span>
+                    <div
+                      ui-slot="status-badge"
+                      ui-summary-box="coupon-code"
+                      {% unless cart.coupon != null %}
+                        hidden
+                      {% endunless %}
+                    >
+                      <i class="hgi hgi-stroke hgi-coupon-percent"></i>
+                      {{ cart.coupon.code }}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    ui-slot="button"
+                    data-variant="error"
+                    data-mode="lighter"
+                    data-size="sm"
+                    ui-summary-box="remove-coupon"
+                  >
+                    {{ 'cart.page.coupon.remove' | t }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      {% endif %}
+      <div class="details">
+        <span class="label">{{ 'cart.drawer.total' | t }}</span>
+        <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
+        <span class="description">{{ 'cart.drawer.note' | t }}</span>
+        <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="md">
+          {% render 'misc.icon', name: settings.cart_icon %}
+          {{ 'cart.drawer.actions.checkout' | t }}
+        </a>
+      </div>
+    </ui-summary-box>
+
+    {% assign empty_content = 'cart.empty.title' | t %}
+    {% assign continue_shopping = 'order.action' | t %}
+    {% if cart.items.size > 0 %}
+      {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/', hidden: true %}
+    {% else %}
+      {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/' %}
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.cart.label",
+  "templates": ["cart"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_coupon",
+      "label": "t:sections.cart.show_coupon",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

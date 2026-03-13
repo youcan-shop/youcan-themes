@@ -1,0 +1,142 @@
+:root,
+[data-scoped-color] {
+  /* BRAND COLOR */
+  --primary-hue: var(--brand-hue);
+  --primary-sat: var(--brand-saturation);
+  --primary-lightness: var(--brand-lightness, 50%);
+  --neutral-hue: var(--brand-hue);
+  --neutral-sat: 5%;
+  --neutral-variant-sat: 15%;
+
+  /* WCAG */
+  --primary-sat-safe: clamp(5%, var(--primary-sat), 75%);
+  --primary-lightness-adjusted: calc(var(--primary-lightness) - (var(--primary-sat-safe) * 0.2));
+  --primary-lightness-max: clamp(20%, var(--primary-lightness-adjusted), 50%);
+  --primary-container-sat: calc(var(--primary-sat-safe) * 0.85);
+
+  /* PRIMARY */
+  --color-primary: hsl(var(--primary-hue) var(--primary-sat-safe) var(--brand-raw-lightness, clamp(20%, 40%, var(--primary-lightness-max))));
+  --color-on-primary: hsl(0deg 0% 100%);
+  --color-primary-container: hsl(var(--primary-hue) var(--primary-container-sat) 90%);
+  --color-on-primary-container: hsl(var(--primary-hue) var(--primary-sat-safe) 10%);
+
+  /* SURFACE */
+  --color-background: hsl(var(--neutral-hue) var(--neutral-sat) 98%);
+  --color-on-background: hsl(var(--neutral-hue) var(--neutral-sat) 10%);
+  --color-surface: var(--color-background);
+  --color-on-surface: var(--color-on-background);
+
+  /* SURFACE CONTAINERS */
+  --color-surface-container-lowest: hsl(var(--primary-hue) var(--primary-sat) 100%);
+  --color-surface-container-low: hsl(var(--primary-hue) var(--primary-sat) 96%);
+  --color-surface-container: hsl(var(--primary-hue) var(--primary-sat) 94%);
+  --color-surface-container-high: hsl(var(--primary-hue) var(--primary-sat) 92%);
+  --color-surface-container-highest: hsl(var(--primary-hue) var(--primary-sat) 90%);
+
+  /* SURFACE VARIANT & OUTLINE */
+  --color-surface-variant: hsl(var(--primary-hue) clamp(2%, var(--neutral-variant-sat), 15%) 90%);
+  --color-on-surface-variant: hsl(var(--primary-hue) clamp(5%, var(--neutral-variant-sat), 20%) 30%);
+  --color-outline: hsl(var(--primary-hue) clamp(5%, var(--neutral-variant-sat), 15%) 50%);
+  --color-outline-variant: hsl(var(--primary-hue) clamp(3%, var(--neutral-variant-sat), 10%) 80%);
+
+  /* SUCCESS */
+  --color-success: hsl(146deg 82% 24%);
+  --color-on-success: hsl(0deg 0% 100%);
+  --color-success-container: hsl(132deg 83% 79%);
+  --color-on-success-container: hsl(140deg 100% 6%);
+
+  /* ERROR */
+  --color-error: hsl(0deg 72% 40%);
+  --color-on-error: hsl(0deg 0% 100%);
+  --color-error-container: hsl(0deg 80% 93%);
+  --color-on-error-container: hsl(0deg 60% 20%);
+
+  /* INFO */
+  --color-info: hsl(236deg 67% 55%);
+  --color-on-info: hsl(0deg 0% 100%);
+  --color-info-container: hsl(240deg 100% 94%);
+  --color-on-info-container: hsl(238deg 100% 21%);
+
+  /* WARNING */
+  --color-warning: hsl(25deg 100% 31%);
+  --color-on-warning: hsl(0deg 0% 100%);
+  --color-warning-container: hsl(18deg 100% 90%);
+  --color-on-warning-container: hsl(20deg 100% 10%);
+
+  /* ─────────────────────────── SOLID ─────────────────────────── */
+
+  [data-intensity="as-solid-bg"] {
+    --shadow-md: 0 4px 48px rgb(255 255 255 / 10%);
+
+    /* SOLID: WCAG */
+    --primary-sat-solid: clamp(5%, calc(var(--primary-sat) * 0.95), 90%);
+    --lightness-solid-base: calc(100% - var(--primary-lightness));
+    --primary-lightness-min: calc(var(--lightness-solid-base) + (var(--primary-sat-solid) * 0.15));
+    --primary-container-sat-solid: calc(var(--primary-sat-solid) * 0.55);
+
+    /* PRIMARY */
+    --color-primary: hsl(var(--primary-hue) var(--primary-sat-solid) clamp(var(--primary-lightness-min), 80%, 88%));
+    --color-on-primary: hsl(var(--primary-hue) var(--primary-sat-solid) var(--brand-raw-lightness, 20%));
+    --color-primary-container: hsl(var(--primary-hue) var(--primary-container-sat-solid) 30%);
+    --color-on-primary-container: hsl(var(--primary-hue) var(--primary-sat-solid) 90%);
+
+    /* SURFACE */
+    --color-background: hsl(var(--neutral-hue) var(--neutral-sat) 6%);
+    --color-on-background: hsl(var(--neutral-hue) var(--neutral-sat) 90%);
+    --color-surface: var(--color-background);
+    --color-on-surface: var(--color-on-background);
+
+    /* SURFACE CONTAINERS */
+    --color-surface-container-lowest: hsl(var(--primary-hue) var(--primary-sat) 4%);
+    --color-surface-container-low: hsl(var(--primary-hue) var(--primary-sat) 10%);
+    --color-surface-container: hsl(var(--primary-hue) var(--primary-sat) 12%);
+    --color-surface-container-high: hsl(var(--primary-hue) var(--primary-sat) 17%);
+    --color-surface-container-highest: hsl(var(--primary-hue) var(--primary-sat) 22%);
+
+    /* SURFACE VARIANT & OUTLINE */
+    --color-surface-variant: hsl(var(--primary-hue) var(--primary-sat-solid) 80% / 30%);
+    --color-on-surface-variant: hsl(var(--primary-hue) clamp(3%, var(--neutral-variant-sat), 10%) 80%);
+
+    /* SUCCESS */
+    --color-success: hsl(134deg 53% 68%);
+    --color-on-success: hsl(145deg 100% 11%);
+    --color-success-container: hsl(148deg 100% 16%);
+    --color-on-success-container: hsl(132deg 83% 79%);
+
+    /* ERROR */
+    --color-error: hsl(6deg 100% 84%);
+    --color-on-error: hsl(359deg 93% 20%);
+    --color-error-container: hsl(356deg 100% 29%);
+    --color-on-error-container: hsl(6deg 100% 84%);
+
+    /* INFO */
+    --color-info: hsl(236deg 100% 87%);
+    --color-on-info: hsl(238deg 100% 33%);
+    --color-info-container: hwb(236deg 14% 24%);
+    --color-on-info-container: #e0e0ff;
+
+    /* WARNING */
+    --color-warning: hsl(20deg 100% 78%);
+    --color-on-warning: hsl(23deg 100% 17%);
+    --color-warning-container: hsl(25deg 100% 24%);
+    --color-on-warning-container: hsl(18deg 100% 90%);
+  }
+
+  /* ─────────────────────────── Light ─────────────────────────── */
+
+  [data-intensity="as-light-bg"] {
+    /* LIGHT: WCAG */
+    --primary-sat-light: clamp(5%, calc(var(--primary-sat) * 0.95), 90%);
+
+    /* SURFACE CONTAINERS */
+    --color-surface-container-lowest: hsl(var(--primary-hue) var(--primary-sat) 98%);
+    --color-surface-container-low: hsl(var(--primary-hue) var(--primary-sat) 94%);
+    --color-surface-container: hsl(var(--primary-hue) var(--primary-sat) 90%);
+    --color-surface-container-high: hsl(var(--primary-hue) var(--primary-sat) 86%);
+    --color-surface-container-highest: hsl(var(--primary-hue) var(--primary-sat) 82%);
+
+    /* SURFACE VARIANT */
+    --color-surface-variant: hsl(var(--primary-hue) var(--primary-sat-light) 30% / 30%);
+    --color-on-surface-variant: hsl(var(--primary-hue) clamp(6%, var(--neutral-variant-sat), 22%) 26%);
+  }
+}
