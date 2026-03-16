@@ -3,7 +3,7 @@ if (!customElements.get("ui-navbar")) {
     constructor() {
       super();
 
-      this.stickyType = Boolean(this.getAttribute("data-sticky-mode"));
+      this.stickyType = this.getAttribute("data-sticky-mode");
     }
 
     connectedCallback() {
