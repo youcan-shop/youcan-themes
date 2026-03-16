@@ -20,7 +20,6 @@
   data-as-icon
   aria-label="Search"
   popovertarget="search"
-  {{ block.youcan_attributes }}
 >
   {% render 'misc.icon', name: 'hgi-search-01' %}
 </button>
@@ -64,15 +63,15 @@
         </div>
       </div>
     {% endif %}
-    <hr ui-slot="divider" data-variant="line">
-    <div class="products">
-      <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
-      {% if collection_id %}
+    {% if collection_id %}
+      <hr ui-slot="divider" data-variant="line">
+      <div class="products">
+        <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
         {% paginate collection.products by 8 id category_id: collection_id %}
           <div class="items">
             {% for product in items %}
               <div class="item">
-                <div class="media">
+                <a href="{{product.url}}" class="media">
                   {% if product.preview_image %}
                     <img
                       src="{{ product.preview_image.original }}"
@@ -84,7 +83,7 @@
                   {% else %}
                     {% render 'misc.image-fallback' %}
                   {% endif %}
-                </div>
+                </a>
                 <div class="content">
                   <a
                     class="title"
@@ -92,7 +91,7 @@
                     data-variant="black"
                     data-size="md"
                     class="title"
-                    href="/products/{{ product.slug }}"
+                    href="{{ product.url }}"
                   >
                     {{ product.name }}
                   </a>
@@ -103,41 +102,7 @@
             {% endfor %}
           </div>
         {% endpaginate %}
-      {% else %}
-        <div class="items">
-          {% for product in (1..4) %}
-            <div class="item">
-              <div class="media">
-                {% if product.preview_image %}
-                  <img
-                    src="{{ product.preview_image.original }}"
-                    alt="{{ product.name }}"
-                    height="100%"
-                    width="100%"
-                    loading="lazy"
-                  >
-                {% else %}
-                  {% render 'misc.image-fallback' %}
-                {% endif %}
-              </div>
-              <div class="content">
-                <a
-                  class="title"
-                  ui-slot="link-button"
-                  data-variant="black"
-                  data-size="md"
-                  class="title"
-                  href="/products/{{ product.slug }}"
-                >
-                  {{ product.name | default: 'product.title' | t }}
-                </a>
-                {% assign price = default_variant.price | default: product.price | default: 0 %}
-                <span class="price">{{ price | money }}</span>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div>
 </div>

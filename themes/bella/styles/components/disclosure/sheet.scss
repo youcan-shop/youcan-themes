@@ -6,14 +6,16 @@
 */
 
 [ui-slot="sheet-content"] {
+  --spring-width-offset: 10px; /* This is so that we don't see a gap when the drawer overshoots on it's enter animation */
   --sheet-width: 460px;
+  --sheet-visible-width: calc(var(--sheet-width) + var(--spring-width-offset));
 
   display: flex;
   position: fixed;
   z-index: 50;
   flex-direction: column;
   justify-content: space-between;
-  width: var(--sheet-width);
+  width: var(--sheet-visible-width);
   height: 100dvh;
   transition: var(--transition-expressive-slow-spatial);
   border: none;
@@ -21,7 +23,7 @@
   color: inherit;
   inset: unset;
   inset-block-start: var(--spacing-0);
-  inset-inline-end: calc(var(--sheet-width) * -1);
+  inset-inline-end: calc(var(--sheet-visible-width) * -1);
 
   /* Header */
   [ui-slot="sheet-header"] {
@@ -72,7 +74,7 @@
 
   /* State */
   &:popover-open {
-    inset-inline-end: var(--spacing-0);
+    inset-inline-end: calc(var(--spacing-0) - var(--spring-width-offset));
 
     &::backdrop {
       backdrop-filter: blur(10px);
@@ -80,7 +82,7 @@
     }
 
     @starting-style {
-      inset-inline-end: calc(var(--sheet-width) * -1);
+      inset-inline-end: calc(var(--sheet-visible-width) * -1);
 
       &::backdrop {
         backdrop-filter: blur(0);

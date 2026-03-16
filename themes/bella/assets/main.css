@@ -10,7 +10,7 @@
     }
   }@charset "UTF-8";
 :root:not(#\#):not(#\#){
-    --spacing-0:0;
+    --spacing-0:0px;
     --spacing-2:2px;
     --spacing-4:4px;
     --spacing-6:6px;
@@ -1065,7 +1065,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
 [ui-slot=accordion]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=accordion-item] [ui-slot=accordion-content]{
     display:grid;
     grid-template-rows:0fr;
-    padding-bottom:0;
+    padding-bottom:0px;
     padding-bottom:var(--spacing-0);
     transition:all 500ms cubic-bezier(0.38, 1.21, 0.22, 1);
     transition:all var(--transition-expressive-default-spatial);
@@ -1098,9 +1098,9 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     bottom:initial;
     left:auto;
     left:initial;
-    bottom:0;
+    bottom:0px;
     bottom:var(--spacing-0);
-    left:0;
+    left:0px;
     left:var(--spacing-0);
     flex-direction:column;
     justify-content:space-between;
@@ -1213,14 +1213,16 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     background-color:var(--color-primary-container);
   }
 [ui-slot=sheet-content]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    --spring-width-offset:10px;
     --sheet-width:460px;
+    --sheet-visible-width:calc(var(--sheet-width) + var(--spring-width-offset));
     display:flex;
     position:fixed;
     z-index:50;
     flex-direction:column;
     justify-content:space-between;
-    width:460px;
-    width:var(--sheet-width);
+    width:calc(460px + 10px);
+    width:var(--sheet-visible-width);
     height:100dvh;
     transition:650ms cubic-bezier(0.39, 1.29, 0.35, 0.98);
     transition:var(--transition-expressive-slow-spatial);
@@ -1235,10 +1237,11 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     bottom:initial;
     left:auto;
     left:initial;
-    top:0;
+    top:0px;
     top:var(--spacing-0);
-    right:calc(460px * -1);
-    right:calc(var(--sheet-width) * -1);
+    right:calc((460px + 10px) * -1);
+    right:calc(calc(460px + 10px) * -1);
+    right:calc(var(--sheet-visible-width) * -1);
   }
 [ui-slot=sheet-content]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-header]{
     display:flex;
@@ -1289,8 +1292,8 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
 [ui-slot=sheet-content]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
   }
 [ui-slot=sheet-content]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    right:0;
-    right:var(--spacing-0);
+    right:calc(0px - var(--spring-width-offset));
+    right:calc(var(--spacing-0) - var(--spring-width-offset));
   }
 [ui-slot=sheet-content]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::backdrop{
     -webkit-backdrop-filter:blur(10px);
@@ -1299,7 +1302,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 @starting-style{
     [ui-slot=sheet-content]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-      right:calc(var(--sheet-width) * -1);
+      right:calc(var(--sheet-visible-width) * -1);
     }
     [ui-slot=sheet-content]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::backdrop{
       -webkit-backdrop-filter:blur(0);
@@ -1761,12 +1764,12 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=input][ui-slot=input-wrapper]:has([ui-slot=input-button]:first-child):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:has([ui-slot=input-button]:first-child):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    padding-left:0;
+    padding-left:0px;
     padding-left:var(--spacing-0);
   }
 [ui-slot=input][ui-slot=input-wrapper]:has([ui-slot=input-button]:last-child):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#),
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:has([ui-slot=input-button]:last-child):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    padding-right:0;
+    padding-right:0px;
     padding-right:var(--spacing-0);
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input],
@@ -1782,12 +1785,12 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input]:first-child,
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input]:first-child{
-    padding-left:0;
+    padding-left:0px;
     padding-left:var(--spacing-0);
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input]:last-child,
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=input]:last-child{
-    padding-right:0;
+    padding-right:0px;
     padding-right:var(--spacing-0);
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot*=input-affix],
@@ -1843,7 +1846,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot*=input-affix]:first-child:not([ui-slot*=select]),
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot*=input-affix]:first-child:not([ui-slot*=select]){
-    margin-left:0;
+    margin-left:0px;
     margin-left:var(--spacing-0);
     padding-right:var(--inline-padding);
   }
@@ -1854,7 +1857,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=input][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot*=input-affix]:last-child:not([ui-slot*=select]),
   [ui-slot=input-wrapper][ui-slot=input-wrapper]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot*=input-affix]:last-child:not([ui-slot*=select]){
-    margin-right:0;
+    margin-right:0px;
     margin-right:var(--spacing-0);
     padding-left:var(--inline-padding);
   }
@@ -2206,8 +2209,8 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
 [ui-slot*=select][data-variant=inline]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=select-trigger]{
     height:-moz-fit-content;
     height:fit-content;
-    padding-left:0;
-    padding-right:0;
+    padding-left:0px;
+    padding-right:0px;
     padding-left:var(--spacing-0);
     padding-right:var(--spacing-0);
     border:none;
@@ -2641,7 +2644,7 @@ body #app{
     flex-direction:column;
     justify-content:space-between;
     min-height:100vh;
-    overflow:hidden;
+    overflow:clip;
   }
 body #app > main{
     flex:2;
@@ -2651,19 +2654,19 @@ body #app > main [ui-section]{
     padding:calc(var(--spacing-64) + var(--spacing-16)) 8%;
   }
 body #app > main [ui-section][ui-section=product-showcase]{
-    padding-left:0;
-    padding-right:0;
+    padding-left:0px;
+    padding-right:0px;
     padding-left:var(--spacing-0);
     padding-right:var(--spacing-0);
   }
 body:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) #app > main [ui-section][ui-section=testimonials]{
-    padding-left:0 !important;
-    padding-right:0 !important;
+    padding-left:0px !important;
+    padding-right:0px !important;
     padding-left:var(--spacing-0) !important;
     padding-right:var(--spacing-0) !important;
   }
 body:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) #app > main [ui-section][ui-section=collections]{
-    padding-right:0 !important;
+    padding-right:0px !important;
     padding-right:var(--spacing-0) !important;
   }
 @media (max-width: 769px){
@@ -2721,6 +2724,7 @@ body[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):no
     font:400 calc(45px * var(--font-heading-scale))/calc(52px * var(--font-heading-scale)) var(--font-heading-family);
   }
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .description{
+    max-width:800px;
     color:var(--color-on-surface-variant);
     font:var(--font-body-lg);
     text-wrap:balance;
