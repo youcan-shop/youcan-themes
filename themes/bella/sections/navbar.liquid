@@ -31,6 +31,8 @@
   {% if template.name != 'index' or section.settings.bottom_border %}
     data-bottom-border="1"
   {% endif %}
+  data-header-layout="{{ section.settings.header_layout }}"
+  data-mobile-logo-position="{{ section.settings.mobile_logo_position }}"
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
@@ -62,19 +64,62 @@
   </div>
   {% render 'misc.menu-drawer' %}
 
-  <ul class="links">
-    {% for link in main-link-list.links %}
-      <li class="link">
-        <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
-          {{ link.title }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-  <div class="actions">
-    {% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
-    {% render 'misc.cart-drawer' %}
-  </div>
+  {% if section.settings.header_layout == 'logo_center_menu_split' %}
+    <div class="left-split">
+      <ul class="links" data-split-menu="first-half">
+        {% assign second_half_first_index = main-link-list.links.size | divided_by: 2 | floor %}
+        {% assign first_half_last_index = second_half_first_index | minus: 1 %}
+
+        {% for index in (0..first_half_last_index) %}
+          {% assign link = main-link-list.links[index] %}
+          <li class="link">
+            <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="right-split">
+      <ul class="links" data-split-menu="second-half">
+        {% assign second_half_last_index = main-link-list.links.size | minus: 1 %}
+        {% assign second_half_first_index = main-link-list.links.size | divided_by: 2 | floor %}
+
+        {% for index in (second_half_first_index..second_half_last_index) %}
+          {% assign link = main-link-list.links[index] %}
+          <li class="link">
+            <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="actions">
+        {% render 'misc.search-drawer',
+          keywords: section.settings.search_most_searched_keywords,
+          collection_id: section.settings.search_collection.id
+        %}
+        {% render 'misc.cart-drawer' %}
+      </div>
+    </div>
+  {% else %}
+    <ul class="links">
+      {% for link in main-link-list.links %}
+        <li class="link">
+          <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+            {{ link.title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="actions">
+      {% render 'misc.search-drawer',
+        keywords: section.settings.search_most_searched_keywords,
+        collection_id: section.settings.search_collection.id
+      %}
+      {% render 'misc.cart-drawer' %}
+    </div>
+  {% endif %}
 </ui-navbar>
 
 {% schema %}
@@ -145,7 +190,7 @@
     },
     {
       "type": "select",
-      "id": "logo_position",
+      "id": "mobile_logo_position",
       "label": "t:sections.navbar.logo_position",
       "options": [
         { "label": "t:common.layout.alignment.start", "value": "start" },
