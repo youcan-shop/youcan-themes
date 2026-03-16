@@ -27,9 +27,9 @@ if (!customElements.get("ui-navbar")) {
           return;
         }
 
-        const isOutsideSafearea = scrollYOffset >= this.safeArea;
+        const isOutsideSafeArea = scrollYOffset >= this.safeArea;
 
-        if (!isOutsideSafearea) {
+        if (!isOutsideSafeArea) {
           this.shouldHideHeader(false);
 
           return;

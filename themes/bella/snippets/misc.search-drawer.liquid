@@ -71,21 +71,19 @@
           <div class="items">
             {% for product in items %}
               <div class="item">
-                <div class="media">
-                  <a href="{{product.url}}">
-                    {% if product.preview_image %}
-                      <img
-                        src="{{ product.preview_image.original }}"
-                        alt="{{ product.name }}"
-                        height="100%"
-                        width="100%"
-                        loading="lazy"
-                      >
-                    {% else %}
-                      {% render 'misc.image-fallback' %}
-                    {% endif %}
-                  </a>
-                </div>
+                <a href="{{product.url}}" class="media">
+                  {% if product.preview_image %}
+                    <img
+                      src="{{ product.preview_image.original }}"
+                      alt="{{ product.name }}"
+                      height="100%"
+                      width="100%"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'misc.image-fallback' %}
+                  {% endif %}
+                </a>
                 <div class="content">
                   <a
                     class="title"
