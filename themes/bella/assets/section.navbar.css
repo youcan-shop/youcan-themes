@@ -29,27 +29,9 @@
   [ui-layout=navbar][data-bottom-border="1"]{
     border-bottom:1px solid var(--color-surface-variant);
   }
-  [ui-layout=navbar][data-header-layout=logo_first_menu_center]{
-    grid-template-areas:"logo menu actions";
-    grid-template-columns:1fr 4fr 1fr;
-  }
-  [ui-layout=navbar][data-header-layout=logo_first_menu_center] .links{
-    justify-content:center;
-  }
   [ui-layout=navbar][data-header-layout=logo_center_menu_first]{
     grid-template-areas:"menu logo actions";
     grid-template-columns:1fr auto 1fr;
-  }
-  [ui-layout=navbar][data-header-layout=logo_center_menu_split]{
-    grid-template-areas:"menu-left logo split-right";
-    grid-template-columns:1fr auto 1fr;
-  }
-  [ui-layout=navbar][data-header-layout=logo_center_menu_split] .right-split{
-    display:flex;
-    grid-area:split-right;
-    align-items:center;
-    justify-content:flex-end;
-    gap:var(--spacing-32);
   }
   [ui-layout=navbar] .logo{
     grid-area:logo;
@@ -77,9 +59,6 @@
     align-items:center;
     gap:var(--spacing-32);
   }
-  [ui-layout=navbar] .links:not([data-split-menu]){
-    flex-shrink:0;
-  }
   [ui-layout=navbar] .links[data-split-menu=first-half]{
     grid-area:menu-left;
   }
@@ -100,6 +79,9 @@
   }
   [ui-layout=navbar] > .logo:last-child, [ui-layout=navbar] > .links:last-child, [ui-layout=navbar] > .actions:last-child{
     justify-content:flex-end;
+  }
+  [ui-layout=navbar] .links:not([data-split-menu]){
+    flex-shrink:0;
   }
   [ui-layout=navbar] .menu{
     display:flex;
@@ -123,6 +105,24 @@
   [ui-layout=navbar] .menu [ui-slot=sheet-footer] .social-links{
     display:flex;
     justify-content:center;
+  }
+  [ui-layout=navbar][data-header-layout=logo_first_menu_center]{
+    grid-template-areas:"logo menu actions";
+    grid-template-columns:1fr 4fr 1fr;
+  }
+  [ui-layout=navbar][data-header-layout=logo_first_menu_center] .links{
+    justify-content:center;
+  }
+  [ui-layout=navbar][data-header-layout=logo_center_menu_split]{
+    grid-template-areas:"menu-left logo split-right";
+    grid-template-columns:1fr auto 1fr;
+  }
+  [ui-layout=navbar][data-header-layout=logo_center_menu_split] .right-split{
+    display:flex;
+    grid-area:split-right;
+    align-items:center;
+    justify-content:flex-end;
+    gap:var(--spacing-32);
   }
   @media (min-width: 769.02px){
     [ui-layout=navbar] .menu{
