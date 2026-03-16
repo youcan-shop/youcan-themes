@@ -41,7 +41,9 @@
   <form>
     <div ui-slot="modal-body">
       <div class="field">
-        <label for="rating">{{ 'reviews.add_review.fields.rating' | t }}</label>
+        <label ui-slot="label" for="rating">
+          {{ 'reviews.add_review.fields.rating' | t }}
+        </label>
         <div ui-slot="rating-bar" data-variant="basic" data-style="star" role="group">
           {% for star in (1..5) %}
             <label ui-slot="rating-item">
@@ -72,7 +74,9 @@
       </div>
       <div class="fields">
         <div class="field">
-          <label for="first-name"> {{ 'reviews.add_review.fields.first_name.label' | t }} </label>
+          <label ui-slot="label" for="first-name">
+            {{ 'reviews.add_review.fields.first_name.label' | t }}
+          </label>
           <input
             ui-slot="input"
             data-size="md"
@@ -84,7 +88,9 @@
           >
         </div>
         <div class="field">
-          <label for="last-name"> {{ 'reviews.add_review.fields.last_name.label' | t }} </label>
+          <label ui-slot="label" for="last-name">
+            {{ 'reviews.add_review.fields.last_name.label' | t }}
+          </label>
           <input
             ui-slot="input"
             data-size="md"
@@ -96,7 +102,9 @@
           >
         </div>
         <div class="field">
-          <label for="email"> {{ 'reviews.add_review.fields.email_address.label' | t }} </label>
+          <label ui-slot="label" for="email">
+            {{ 'reviews.add_review.fields.email_address.label' | t }}
+          </label>
           <input
             ui-slot="input"
             data-size="md"
@@ -108,7 +116,9 @@
           >
         </div>
         <div class="field">
-          <label for="content"> {{ 'reviews.add_review.fields.review.label' | t }} </label>
+          <label ui-slot="label" for="content">
+            {{ 'reviews.add_review.fields.review.label' | t }}
+          </label>
           <textarea
             ui-slot="textarea"
             required
@@ -118,6 +128,49 @@
             minlength="5"
             placeholder="{{ 'reviews.add_review.fields.review.placeholder' | t }}"
           ></textarea>
+        </div>
+        <div class="field">
+          <label for="images">
+            {{ 'reviews.add_review.fields.images.label' | t }}
+          </label>
+          <div class="images">
+            <label
+              ui-slot="button"
+              data-variant="primary"
+              data-mode="lighter"
+              data-size="md"
+              class="upload"
+            >
+              {% render 'misc.icon', name: 'hgi-add-01' %}
+              <input
+                multiple
+                type="file"
+                id="images"
+                name="images"
+                accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
+                ui-add-review="upload-image"
+              >
+            </label>
+            <template ui-add-review="image">
+              <div class="image">
+                <img
+                  alt="image"
+                  width="60"
+                  height="60"
+                  loading="lazy"
+                >
+                <button
+                  ui-slot="compact-button"
+                  data-size="md"
+                  aria-label="Remove"
+                  type="button"
+                  ui-add-review="remove-image"
+                >
+                  {% render 'misc.icon', name: 'hgi-cancel-01' %}
+                </button>
+              </div>
+            </template>
+          </div>
         </div>
       </div>
     </div>
