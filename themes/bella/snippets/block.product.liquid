@@ -18,6 +18,9 @@
   {{ product.youcan_attributes }}
 >
   <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+    {% if product.url %}
+      <a href="{{ product.url }}">
+    {% endif %}
     {% if product.preview_image %}
       <img
         srcset="
@@ -43,6 +46,9 @@
       >
     {% else %}
       {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
+    {% if product.url %}
+      </a>
     {% endif %}
 
     {% if settings.cart_checkout_type == 'express-checkout' %}
