@@ -45,9 +45,15 @@
     >
       {% for item in section.blocks %}
         <li class="item" ui-carousel="item" ui-slot="carousel-item">
-          <a ui-slot="link-button" data-size="md" href="{{ item.settings.link }}">
-            {{ item.settings.text }}
-          </a>
+          {% if item.settings.link %}
+            <a ui-slot="link-button" data-size="md" href="{{ item.settings.link }}">
+              {{ item.settings.text }}
+            </a>
+          {% else %}
+            <span>
+              {{ item.settings.text }}
+            </span>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>
