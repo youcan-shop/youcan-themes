@@ -11,9 +11,9 @@
           </span>
         </div>
         <div class="checkout_cta">
-          <a href='{{ cart.cart_submit_url }}' class='yc-btn'>
+          <button class='yc-btn' data-checkout-button>
             {{ 'cart.summary.checkout_cta' | t }}
-          </a>
+          </button>
         </div>
       </div>
       <div class="table-container">
@@ -134,7 +134,7 @@
               <span class="total">{{ 'cart.summary.total' | t }}</span>
               <span class="item-total-price"></span>
             </div>
-            <button type="button" class='yc-btn' id="checkout-button">
+            <button class='yc-btn' data-checkout-button>
               {{ 'cart.summary.checkout_cta' | t }}
             </button>
           </div>
@@ -184,17 +184,21 @@
     coupon: '{{- 'cart.summary.coupon' | t -}}'
   }
 
-  document.addEventListener('DOMContentLoaded', async function () {
-    const checkoutButton = document.querySelector('#checkout-button');
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButtons = document.querySelectorAll('[data-checkout-button]');
 
-    checkoutButton?.addEventListener('click', async function () {
-      const cart = await youcanjs.cart.fetch();
+    if (checkoutButtons.length > 0) {
+      checkoutButtons.forEach(button => {
+        button.addEventListener('click', async function () {
+          const cart = await youcanjs.cart.fetch();
 
-      window.Dotshop.pixels.publish('initiate-checkout', cart);
+          window.Dotshop.pixels.publish('initiate-checkout', cart);
 
-      setTimeout(() => {
-        window.location.href = '{{ cart.cart_submit_url }}';
-      }, 300);
-    });
+          setTimeout(() => {
+            window.location.href = '{{ cart.cart_submit_url }}';
+          }, 100);
+        });
+      });
+    }
   });
 {% endjavascript %}
