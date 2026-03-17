@@ -16,10 +16,6 @@
       const latestCart = updatedCart ?? cart;
 
       window.Dotshop.pixels.publish('initiate-checkout', latestCart);
-
-      setTimeout(() => {
-        window.location.href = '{{ cart.cart_submit_url }}';
-      }, 300);
     });
   });
 {% endjavascript %}
@@ -123,10 +119,10 @@
         </li>
       </ul>
       <div class="cta">
-        <button type="button" ui-button data-variant="secondary" data-size="md" id="checkout-button">
+        <a href="{{ cart.cart_submit_url }}" ui-button data-variant="secondary" data-size="md" id="checkout-button">
           {{ 'cart.page.summary.checkout_button' | t }}
           {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
-        </button>
+        </a>
       </div>
     </ui-summary-box>
     {% assign empty_content = 'cart.empty.title' | t %}
