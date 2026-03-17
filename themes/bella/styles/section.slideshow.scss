@@ -19,7 +19,7 @@
           height: attr(data-width vh);
           overflow: hidden;
           border-radius: var(--radius-slide);
-          filter: brightness(0.8);
+          filter: brightness(attr(data-overlay number));
         }
 
         .content {
@@ -36,6 +36,22 @@
           [ui-slot="head"] {
             align-items: inherit !important;
             width: 100%;
+
+            .heading,
+            .subheading {
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              text-overflow: ellipsis;
+
+              &.heading {
+                -webkit-line-clamp: 2;
+              }
+
+              &.subheading {
+                -webkit-line-clamp: 3;
+              }
+            }
           }
 
           .description {
@@ -111,6 +127,10 @@
         [ui-slot="carousel-item"] {
           .content {
             color: var(--color-on-primary);
+
+            [ui-slot="head"] {
+              text-align: start !important;
+            }
           }
         }
       }
