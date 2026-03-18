@@ -72,7 +72,7 @@ if (!customElements.get("ui-product-button")) {
           cartData: newCart,
         });
 
-        const selectedVariant = newCart.items.find((v) => v.productVariant.id === productVariantId);
+        const selectedVariant = newCart.items.find((variant) => variant.productVariant.id === productVariantId);
 
         window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
       } catch (error) {

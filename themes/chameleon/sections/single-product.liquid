@@ -9,8 +9,7 @@
 
 {% if product %}
   {% javascript %}
-    const globalProductStr = `{{ product | json }}`;
-    const globalProduct = JSON.parse(globalProductStr.slice(1, -1));
+    const globalProduct = JSON.parse({{ product | json }});
 
     document.addEventListener('DOMContentLoaded', () => {
       window.Dotshop.pixels.publish('view-content', globalProduct);
