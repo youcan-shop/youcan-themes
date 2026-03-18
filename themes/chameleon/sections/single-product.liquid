@@ -7,16 +7,6 @@
   {% render 'block-pd-content' %}
 </ui-product>
 
-{% if product %}
-  {% javascript %}
-    const globalProduct = JSON.parse({{ product | json }});
-
-    document.addEventListener('DOMContentLoaded', () => {
-      window.Dotshop.pixels.publish('view-content', globalProduct);
-    });
-  {% endjavascript %}
-{% endif %}
-
 {% if product and product.options.size %}
   {% javascript %}
     if (!window.productsVariants["{{ product.id }}"]) {
@@ -28,6 +18,16 @@
 <script type="application/ld+json">
   {{ product.structured_data }}
 </script>
+
+{% if product %}
+  {% javascript %}
+    const globalProduct = JSON.parse({{ product | json }});
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.Dotshop.pixels.publish('view-content', globalProduct);
+    });
+  {% endjavascript %}
+{% endif %}
 
 {% schema %}
 {
