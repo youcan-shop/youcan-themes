@@ -35,7 +35,7 @@ async function addToCart(snippetId) {
 
     stopLoad('#loading__cart');
 
-    const selectedVariant = response.items.find((v) => v.productVariant.id === variantId);
+    const selectedVariant = response.items.find((variant) => variant.productVariant.id === variantId);
 
     window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
 

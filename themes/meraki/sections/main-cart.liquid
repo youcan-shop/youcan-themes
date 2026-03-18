@@ -187,18 +187,18 @@
   document.addEventListener('DOMContentLoaded', function () {
     const checkoutButtons = document.querySelectorAll('[data-checkout-button]');
 
-    if (checkoutButtons.length > 0) {
-      checkoutButtons.forEach(button => {
-        button.addEventListener('click', async function () {
-          const cart = await youcanjs.cart.fetch();
+    if (!checkoutButtons.length) return;
 
-          window.Dotshop.pixels.publish('initiate-checkout', cart);
+    checkoutButtons.forEach(button => {
+      button.addEventListener('click', async function () {
+        const cart = await youcanjs.cart.fetch();
 
-          setTimeout(() => {
-            window.location.href = '{{ cart.cart_submit_url }}';
-          }, 100);
-        });
+        window.Dotshop.pixels.publish('initiate-checkout', cart);
+
+        setTimeout(() => {
+          window.location.href = '{{ cart.cart_submit_url }}';
+        }, 100);
       });
-    }
+    });
   });
 {% endjavascript %}
