@@ -1,25 +1,5 @@
 {{ 'section.cart.css' | asset_url | stylesheet_tag }}
 
-{% javascript %}
-  document.addEventListener('DOMContentLoaded', function () {
-    const checkoutButton = document.querySelector('#checkout-button');
-
-    if (!checkoutButton) return;
-
-    const cart = JSON.parse({{ cart | json }});
-
-    let updatedCart = cart;
-
-    subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
-      updatedCart = payload.cartData;
-    });
-
-    checkoutButton.addEventListener('click', function () {
-      window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
-    });
-  });
-{% endjavascript %}
-
 <div
   section="cart"
   {% if settings.enable_global_theme_style %}
@@ -133,6 +113,26 @@
     {% endif %}
   </div>
 </div>
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.querySelector('#checkout-button');
+
+    if (!checkoutButton) return;
+
+    const cart = JSON.parse({{ cart | json }});
+
+    let updatedCart = cart;
+
+    subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+      updatedCart = payload.cartData;
+    });
+
+    checkoutButton.addEventListener('click', function () {
+      window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
+    });
+  });
+{% endjavascript %}
 
 {% schema %}
 {
