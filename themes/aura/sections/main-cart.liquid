@@ -205,18 +205,20 @@
   document.addEventListener('DOMContentLoaded', function () {
     const checkoutButtons = document.querySelectorAll('[data-checkout-button]');
 
-    if (checkoutButtons.length > 0) {
-      checkoutButtons.forEach(button => {
-        button.addEventListener('click', async function () {
-          const cart = await youcanjs.cart.fetch();
-
-          window.Dotshop.pixels.publish('initiate-checkout', cart);
-
-          setTimeout(() => {
-            window.location.href = '{{ cart.cart_submit_url }}';
-          }, 100);
-        });
-      });
+    if (!checkoutButtons.length) {
+      return;
     }
+
+    checkoutButtons.forEach(button => {
+      button.addEventListener('click', async function () {
+        const cart = await youcanjs.cart.fetch();
+
+        window.Dotshop.pixels.publish('initiate-checkout', cart);
+
+        setTimeout(() => {
+          window.location.href = '{{ cart.cart_submit_url }}';
+        }, 100);
+      });
+    });
   });
 {% endjavascript %}
