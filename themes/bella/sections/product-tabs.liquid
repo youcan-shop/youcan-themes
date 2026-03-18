@@ -34,7 +34,7 @@
           >
             {% assign translated_trigger = 'product-tabs.tab-trigger' | t %}
             {% assign fallback = translated_trigger | append: ' ' | append: forloop.index %}
-            {{ collection_block.settings.collection.name | default: fallback }}
+            {{ collection_block.settings.collection_name | default: collection_block.settings.collection.name | default: fallback }}
           </button>
         {% endfor %}
       </div>
@@ -51,6 +51,7 @@
             ui-slot="carousel-item"
             role="tabpanel"
             data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+            data-nbr-columns-mobile="{{ section.settings.nbr_columns_mobile }}"
           >
             {% for product in items %}
               {% render 'block.product' %}
@@ -64,6 +65,7 @@
           ui-slot="carousel-item"
           role="tabpanel"
           data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+          data-nbr-columns-mobile="{{ section.settings.nbr_columns_mobile }}"
         >
           {% for product in (1..max_products) %}
             {% render 'block.product' %}
@@ -154,6 +156,20 @@
     },
     {
       "type": "header",
+      "content": "t:common.headers.mobile_layout"
+    },
+    {
+      "type": "select",
+      "id": "nbr_columns_mobile",
+      "label": "t:common.globals.number_per_column_mobile",
+      "options": [
+        { "label": "t:common.layout.column.one", "value": "1" },
+        { "label": "t:common.layout.column.two", "value": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
       "content": "t:common.headers.spacing"
     },
     {
@@ -182,6 +198,11 @@
       "type": "collection_item",
       "label": "t:sections.product_tabs.blocks.tab.label",
       "settings": [
+        {
+          "type": "text",
+          "id": "collection_name",
+          "label": "Collection name"
+        },
         {
           "type": "category",
           "id": "collection",
