@@ -210,7 +210,9 @@
   document.addEventListener('DOMContentLoaded', async function () {
     const checkoutButton = document.querySelector('#checkout-button');
 
-    checkoutButton?.addEventListener('click', async function () {
+    if(!checkoutButton) return;
+
+    checkoutButton.addEventListener('click', async function () {
       const cart = await youcanjs.cart.fetch();
 
       window.Dotshop.pixels.publish('initiate-checkout', cart);
