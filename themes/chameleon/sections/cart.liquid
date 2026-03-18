@@ -99,7 +99,7 @@
         </li>
       </ul>
       <div class="cta">
-        <a href="{{ cart.cart_submit_url }}" ui-button data-variant="secondary" data-size="md">
+        <a href="{{ cart.cart_submit_url }}" ui-button data-variant="secondary" data-size="md" id="checkout-button">
           {{ 'cart.page.summary.checkout_button' | t }}
           {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
         </a>
@@ -113,6 +113,26 @@
     {% endif %}
   </div>
 </div>
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.querySelector('#checkout-button');
+
+    if (!checkoutButton) return;
+
+    const cart = JSON.parse({{ cart | json }});
+
+    let updatedCart = cart;
+
+    subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+      updatedCart = payload.cartData;
+    });
+
+    checkoutButton.addEventListener('click', function () {
+      window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
+    });
+  });
+{% endjavascript %}
 
 {% schema %}
 {
