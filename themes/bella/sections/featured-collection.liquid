@@ -23,57 +23,59 @@
     <h1 class="subheading">{{ section.settings.subheading }}</h1>
   </div>
   <div class="core-area">
-    {% for block in section.blocks %}
-      {% case block.type %}
-        {% when 'media' %}
-          <div ui-block="content" {{ block.youcan_attributes }} data-image-ratio="{{ block.settings.image_ratio }}">
-            <div class="media">
-              {% if block.settings.block_image.src %}
-                <img
-                  src="{{ block.settings.block_image.src }}"
-                  alt="{{ block.settings.block_heading }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                >
-              {% else %}
-                {% render 'misc.image-fallback', icon_size: 100 %}
-              {% endif %}
-            </div>
-            <div
-              class="content"
-              data-text-alignment="{{ block.settings.text_alignment }}"
-              data-vertical-alignment="{{ block.settings.vertical_alignment }}"
-            >
-              <h4 class="subheading">{{ block.settings.block_heading }}</h4>
-              <h1 class="heading">{{ block.settings.block_subheading }}</h1>
-              <a
-                class="cta"
-                {% if block.settings.block_button_style == 'underline' %}
-                  ui-slot="link-button"
-                  data-underline="true"
+    {% if section.settings.show_image %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'media' %}
+            <div ui-block="content" {{ block.youcan_attributes }} data-image-ratio="{{ block.settings.image_ratio }}">
+              <div class="media">
+                {% if block.settings.block_image.src %}
+                  <img
+                    src="{{ block.settings.block_image.src }}"
+                    alt="{{ block.settings.block_heading }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
+                  >
                 {% else %}
-                  ui-slot="button"
-                  data-variant="primary"
+                  {% render 'misc.image-fallback', icon_size: 100 %}
                 {% endif %}
-                {% if block.settings.block_button_style == 'primary' %}
-                  data-mode="filled"
-                {% elsif block.settings.block_button_style == 'secondary' %}
-                  data-mode="lighter"
-                {% endif %}
-                data-size="lg"
-                href="{{ block.settings.block_button_link }}"
+              </div>
+              <div
+                class="content"
+                data-text-alignment="{{ block.settings.text_alignment }}"
+                data-vertical-alignment="{{ block.settings.vertical_alignment }}"
               >
-                {{ block.settings.block_button_label }}
-              </a>
+                <h4 class="subheading">{{ block.settings.block_heading }}</h4>
+                <h1 class="heading">{{ block.settings.block_subheading }}</h1>
+                <a
+                  class="cta"
+                  {% if block.settings.block_button_style == 'underline' %}
+                    ui-slot="link-button"
+                    data-underline="true"
+                  {% else %}
+                    ui-slot="button"
+                    data-variant="primary"
+                  {% endif %}
+                  {% if block.settings.block_button_style == 'primary' %}
+                    data-mode="filled"
+                  {% elsif block.settings.block_button_style == 'secondary' %}
+                    data-mode="lighter"
+                  {% endif %}
+                  data-size="lg"
+                  href="{{ block.settings.block_button_link }}"
+                >
+                  {{ block.settings.block_button_label }}
+                </a>
+              </div>
             </div>
-          </div>
-      {% endcase %}
-    {% endfor %}
+        {% endcase %}
+      {% endfor %}
+    {% endif %}
     {% assign max_products = section.settings.max_products_to_show %}
     {% if section.settings.collection.id %}
       {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
-        <ul ui-block="products">
+        <ul ui-block="products" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
           {% for product in items %}
             {% render 'block.product', product: product %}
           {% endfor %}
@@ -149,6 +151,18 @@
       "content": "t:common.headers.layout"
     },
     {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.featured_collection.show_image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "t:sections.featured_collection.show_discount_badge",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "max_products_to_show",
       "label": "t:common.globals.max_products",
@@ -156,6 +170,19 @@
       "max": 12,
       "step": 1,
       "default": 8
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.featured_collection.columns_notice"
     },
     {
       "type": "select",
@@ -166,12 +193,6 @@
         { "label": "t:common.layout.column.two", "value": "2" }
       ],
       "default": "2"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_discount_badge",
-      "label": "t:sections.featured_collection.show_discount_badge",
-      "default": true
     },
     {
       "type": "header",

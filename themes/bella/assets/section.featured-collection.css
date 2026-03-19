@@ -90,6 +90,12 @@
     gap:var(--spacing-24);
     grid-template-columns:repeat(2, 1fr);
   }
+  [ui-section=featured-collection] .core-area:not(:has([ui-block=content])){
+    grid-template-columns:1fr;
+  }
+  [ui-section=featured-collection] .core-area:not(:has([ui-block=content])) [ui-block=products]{
+    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+  }
   @media (max-width: 1028px){
     [ui-section=featured-collection] .core-area{
       grid-template-columns:1fr;
