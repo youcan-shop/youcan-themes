@@ -17,8 +17,20 @@
         border-radius: var(--radius-20);
         inset-block-start: var(--spacing-24);
 
+        &[data-image-ratio="square"] {
+          aspect-ratio: 1 / 1;
+        }
+
+        &[data-image-ratio="portrait"] {
+          aspect-ratio: 3 / 4;
+        }
+
+        &[data-image-ratio="landscape"] {
+          aspect-ratio: 4 / 3;
+        }
+
         .media {
-          height: 70vh;
+          height: 100%;
           filter: brightness(0.8);
 
           & > img {
@@ -93,10 +105,6 @@
 
         [ui-block="content"] {
           position: relative;
-
-          .media {
-            height: 35vh;
-          }
 
           .content {
             padding: var(--spacing-24);

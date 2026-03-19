@@ -26,7 +26,7 @@
     {% for block in section.blocks %}
       {% case block.type %}
         {% when 'media' %}
-          <div ui-block="content" {{ block.youcan_attributes }}>
+          <div ui-block="content" {{ block.youcan_attributes }} data-image-ratio="{{ block.settings.image_ratio }}">
             <div class="media">
               {% if block.settings.block_image.src %}
                 <img
@@ -214,6 +214,43 @@
           "label": "t:common.globals.image"
         },
         {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "t:common.globals.image_ratio",
+          "options": [
+            { "label": "t:common.layout.ratio.square", "value": "square" },
+            { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
+            { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
+          ],
+          "default": "square"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.layout"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "t:common.globals.text_alignment",
+          "options": [
+            { "label": "t:common.layout.alignment.start", "value": "start" },
+            { "label": "t:common.layout.alignment.center", "value": "center" },
+            { "label": "t:common.layout.alignment.end", "value": "end" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "vertical_alignment",
+          "label": "t:common.globals.vertical_alignment",
+          "options": [
+            { "label": "t:common.layout.vertical_alignment.top", "value": "start" },
+            { "label": "t:common.layout.vertical_alignment.middle", "value": "center" },
+            { "label": "t:common.layout.vertical_alignment.bottom", "value": "end" }
+          ],
+          "default": "center"
+        },
+        {
           "type": "header",
           "content": "t:common.headers.header"
         },
@@ -255,32 +292,6 @@
           ],
           "label": "t:common.button.style.label",
           "default": "primary"
-        },
-        {
-          "type": "header",
-          "content": "t:common.headers.layout"
-        },
-        {
-          "type": "select",
-          "id": "text_alignment",
-          "label": "t:common.globals.text_alignment",
-          "options": [
-            { "label": "t:common.layout.alignment.start", "value": "start" },
-            { "label": "t:common.layout.alignment.center", "value": "center" },
-            { "label": "t:common.layout.alignment.end", "value": "end" }
-          ],
-          "default": "center"
-        },
-        {
-          "type": "select",
-          "id": "vertical_alignment",
-          "label": "t:common.globals.vertical_alignment",
-          "options": [
-            { "label": "t:common.layout.vertical_alignment.top", "value": "start" },
-            { "label": "t:common.layout.vertical_alignment.middle", "value": "center" },
-            { "label": "t:common.layout.vertical_alignment.bottom", "value": "end" }
-          ],
-          "default": "start"
         }
       ]
     }
