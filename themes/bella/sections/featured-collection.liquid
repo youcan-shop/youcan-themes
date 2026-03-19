@@ -68,25 +68,24 @@
               </a>
             </div>
           </div>
-        {% else %}
-          {% assign max_products = section.settings.max_products_to_show %}
-          {% if block.settings.collection.id %}
-            {% paginate collection.products by max_products id category_id: block.settings.collection.id %}
-              <ul ui-block="products" {{ block.youcan_attributes }}>
-                {% for product in items %}
-                  {% render 'block.product' %}
-                {% endfor %}
-              </ul>
-            {% endpaginate %}
-          {% else %}
-            <ul ui-block="products" {{ block.youcan_attributes }}>
-              {% for product in (1..max_products) %}
-                {% render 'block.product' %}
-              {% endfor %}
-            </ul>
-          {% endif %}
       {% endcase %}
     {% endfor %}
+    {% assign max_products = section.settings.max_products_to_show %}
+    {% if section.settings.collection.id %}
+      {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
+        <ul ui-block="products">
+          {% for product in items %}
+            {% render 'block.product', product: product %}
+          {% endfor %}
+        </ul>
+      {% endpaginate %}
+    {% else %}
+      <ul ui-block="products">
+        {% for product in (1..max_products) %}
+          {% render 'block.product' %}
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
 </div>
 
@@ -99,7 +98,12 @@
   "settings": [
     {
       "type": "header",
-      "content": "t:common.headers.colors"
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "category",
+      "id": "collection",
+      "label": "t:common.globals.collection"
     },
     {
       "type": "color",
@@ -152,6 +156,16 @@
       "max": 12,
       "step": 1,
       "default": 8
+    },
+    {
+      "type": "select",
+      "id": "nbr_columns_mobile",
+      "label": "t:common.globals.number_per_column_mobile",
+      "options": [
+        { "label": "t:common.layout.column.one", "value": "1" },
+        { "label": "t:common.layout.column.two", "value": "2" }
+      ],
+      "default": "2"
     },
     {
       "type": "checkbox",
@@ -267,18 +281,6 @@
             { "label": "t:common.layout.vertical_alignment.bottom", "value": "end" }
           ],
           "default": "start"
-        }
-      ]
-    },
-    {
-      "type": "collection_item",
-      "label": "t:sections.featured_collection.blocks.collection.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "category",
-          "id": "collection",
-          "label": "t:common.globals.collection"
         }
       ]
     }
