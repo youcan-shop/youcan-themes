@@ -34,10 +34,16 @@ if (!customElements.get("ui-carousel")) {
       }
 
       this.markers?.forEach((marker, i) => {
-        marker.addEventListener("click", () => this.swipe(i));
+        marker.addEventListener("click", () => {
+          const targetIndex = Math.min(i * this.perPage, Math.max(0, this.TOTAL - this.perPage));
+          this.swipe(targetIndex);
+        });
       });
 
       this.wrapper.addEventListener("scroll", () => this.onScroll());
+
+      this.updateMarkers();
+      window.addEventListener("resize", () => this.updateMarkers());
 
       if (this.hasAttribute("autoplay")) {
         this.autoPlay();
@@ -60,11 +66,32 @@ if (!customElements.get("ui-carousel")) {
     setIndex(index) {
       this.index = index;
 
+      const totalPages = Math.ceil(this.TOTAL / this.perPage);
+      let currentPage;
+
+      if (this.perPage >= this.TOTAL) {
+        currentPage = 0;
+      } else if (index >= this.TOTAL - this.perPage) {
+        currentPage = totalPages - 1;
+      } else {
+        currentPage = Math.floor(index / this.perPage);
+      }
+
       this.markers?.forEach((marker, i) => {
-        marker.setAttribute("aria-selected", index === i);
+        marker.setAttribute("aria-selected", currentPage === i);
       });
 
       if (this.arrows.previous && this.arrows.next) this.setArrowsState();
+    }
+
+    updateMarkers() {
+      const totalPages = Math.ceil(this.TOTAL / this.perPage);
+
+      this.markers?.forEach((marker, i) => {
+        marker.style.display = i < totalPages ? "" : "none";
+      });
+
+      this.setIndex(this.index);
     }
 
     setArrowsState() {

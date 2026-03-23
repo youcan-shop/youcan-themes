@@ -1,25 +1,21 @@
-
-  [ui-section=slideshow]:not(#\#){
-    padding-top:attr(data-top-spacing px) !important;
-    padding-bottom:attr(data-bottom-spacing px) !important;
-    padding-left:var(--spacing-0) !important;
-    padding-right:var(--spacing-0) !important;
-  }
+@layer sections{
   [ui-section=slideshow]{
     --per-page:1;
     display:flex;
     flex-direction:column;
+    padding-top:attr(data-top-spacing px) !important;
+    padding-bottom:attr(data-bottom-spacing px) !important;
+    padding-left:var(--spacing-0) !important;
+    padding-right:var(--spacing-0) !important;
     gap:var(--spacing-24);
   }
   [ui-section=slideshow] [ui-slot=carousel]{
     padding-left:8%;
     padding-right:8%;
   }
-  [ui-section=slideshow]:not(#\#) [ui-slot=carousel] [ui-slot=carousel-item]{
-    background-color:transparent !important;
-  }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item]{
     position:relative;
+    background-color:transparent !important;
   }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .media{
     height:attr(data-width vh);
@@ -41,13 +37,11 @@
     bottom:0;
     left:0;
   }
-  [ui-section=slideshow]:not(#\#) [ui-slot=carousel] [ui-slot=carousel-item] .content [ui-slot=head]{
-    align-items:inherit !important;
-  }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content [ui-slot=head]{
+    align-items:inherit !important;
     width:100%;
   }
-  [ui-section=slideshow]:not(#\#) [ui-slot=carousel] [ui-slot=carousel-item] .content .description{
+  [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content .description{
     color:color-mix(in hsl, currentcolor 80%, transparent) !important;
   }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content .cta{
@@ -110,7 +104,7 @@
     }
   }
   @media (max-width: 769px){
-    [ui-section=slideshow]:not(#\#){
+    [ui-section=slideshow]{
       --item-size:100% !important;
     }
     [ui-section=slideshow] [ui-slot=carousel]{
@@ -139,8 +133,9 @@
       text-align:center;
     }
   }
+}
 @media (min-width: 769.02px){
-  [data-intensity=as-solid-bg]:not(#\#) [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
+  [data-intensity=as-solid-bg] [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
     color:var(--color-primary);
   }
 }
