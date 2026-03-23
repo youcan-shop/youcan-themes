@@ -7,6 +7,14 @@
     gap: var(--spacing-48);
     padding-block: attr(data-top-spacing px) attr(data-bottom-spacing px) !important;
 
+    &[data-orientation="vertical"] {
+      grid-template-columns: 1fr;
+    }
+
+    &[data-orientation="horizontal"] {
+      grid-template-columns: 40% auto;
+    }
+
     [ui-slot="head"] {
       justify-content: space-between;
       gap: var(--spacing-24);
@@ -25,6 +33,8 @@
     }
 
     .items-area {
+      --gap: var(--spacing-16);
+
       padding-inline: 8%;
 
       [ui-block="showcase"] {
@@ -32,9 +42,9 @@
         grid-template-columns: repeat(2, 1fr);
 
         .media {
-          height: 60vh;
           overflow: hidden;
           border-radius: var(--radius-20);
+          aspect-ratio: 1 / 1;
 
           & > img {
             object-fit: cover;
