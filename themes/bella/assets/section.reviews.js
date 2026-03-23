@@ -61,8 +61,6 @@ class Reviews extends HTMLElement {
 
   setItems(items) {
     items.forEach((item) => {
-      if (!item.first_name && !item.last_name) return;
-
       const review = this.item.content.cloneNode(true);
       const filledStar = review.querySelector('[ui-reviews="filled-star"]');
       const strokeStar = review.querySelector('[ui-reviews="stroke-star"]');
@@ -74,7 +72,10 @@ class Reviews extends HTMLElement {
       const image = review.querySelector('[ui-reviews="item-image"]');
 
       content.innerHTML = item.content;
-      author.textContent = `${item.first_name || ""} ${item.last_name || ""}`.trim();
+
+      if (item.first_name || item.last_name) {
+        author.textContent = `${item.first_name || ""} ${item.last_name || ""}`.trim();
+      }
 
       for (let index = 0; index < 5; index++) {
         rating.appendChild(item.ratings > index ? filledStar.content.cloneNode(true) : strokeStar.content.cloneNode(true));
