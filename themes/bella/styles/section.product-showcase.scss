@@ -44,7 +44,18 @@
         .media {
           overflow: hidden;
           border-radius: var(--radius-20);
-          aspect-ratio: 1 / 1;
+
+          &[data-image-ratio="square"] {
+            aspect-ratio: 1 / 1;
+          }
+
+          &[data-image-ratio="portrait"] {
+            aspect-ratio: 3 / 4;
+          }
+
+          &[data-image-ratio="landscape"] {
+            aspect-ratio: 4 / 3;
+          }
 
           & > img {
             object-fit: cover;
