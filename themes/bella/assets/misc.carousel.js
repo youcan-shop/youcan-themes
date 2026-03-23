@@ -33,8 +33,8 @@ if (!customElements.get("ui-carousel")) {
         this.arrows.next.addEventListener("click", () => this.swipe(++this.index));
       }
 
-      this.markers?.forEach((marker, i) => {
-        marker.addEventListener("click", () => {
+      [...this.markers, ...this.slides].forEach((slide, i) => {
+        slide.addEventListener("click", () => {
           const targetIndex = Math.min(i * this.perPage, Math.max(0, this.TOTAL - this.perPage));
           this.swipe(targetIndex);
         });
@@ -60,7 +60,19 @@ if (!customElements.get("ui-carousel")) {
       });
 
       this.setIndex(index);
-      setTimeout(() => (this.ignoreScroll = false), 300);
+
+      const scrollEnd = () => {
+        const slideWidth = this.wrapper.scrollWidth / this.TOTAL;
+        const currentIndex = Math.round(this.wrapper.scrollLeft / slideWidth);
+
+        if (currentIndex === index) {
+          this.ignoreScroll = false;
+        } else {
+          requestAnimationFrame(scrollEnd);
+        }
+      };
+
+      requestAnimationFrame(scrollEnd);
     }
 
     setIndex(index) {

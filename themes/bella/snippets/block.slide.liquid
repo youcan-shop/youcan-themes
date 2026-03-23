@@ -8,6 +8,8 @@
   {% render 'block.slide' %}
 {% endcomment %}
 
+{% assign overlay_opacity = slide.settings.overlay_opacity | divided_by: 100 %}
+
 <li
   ui-carousel="item"
   ui-block="slide"
@@ -24,7 +26,11 @@
   {% endif %}
   data-alignment="{{ section.settings.mobile_content_alignment }}"
 >
-  <div class="media" data-width="{{ section.settings.height }}">
+  <div
+    class="media"
+    data-height="{{ section.settings.height }}"
+    data-overlay="{{ 1 | minus: overlay_opacity }}"
+  >
     {% if slide.settings.slide_desktop_image.src or slide.settings.slide_mobile_image.src %}
       <picture>
         {% if slide.settings.slide_mobile_image.src %}
@@ -50,7 +56,7 @@
     {% endif %}
   </div>
   <div class="content">
-    <div ui-slot="head">
+    <div ui-slot="head" data-height="{{ section.settings.height }}">
       {% if slide.settings.slide_subheading %}
         <h4 class="heading">{{ slide.settings.slide_subheading }}</h4>
       {% endif %}
