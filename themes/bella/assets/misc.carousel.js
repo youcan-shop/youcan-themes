@@ -33,11 +33,16 @@ if (!customElements.get("ui-carousel")) {
         this.arrows.next.addEventListener("click", () => this.swipe(++this.index));
       }
 
-      [...this.markers, ...this.slides].forEach((slide, i) => {
-        slide.addEventListener("click", () => {
+      this.markers.forEach((marker, i) => {
+        marker.addEventListener("click", () => {
           const targetIndex = Math.min(i * this.perPage, Math.max(0, this.TOTAL - this.perPage));
+
           this.swipe(targetIndex);
         });
+      });
+
+      this.slides.forEach((slide, i) => {
+        slide.addEventListener("click", () => this.swipe(i));
       });
 
       this.wrapper.addEventListener("scroll", () => this.onScroll());
@@ -100,7 +105,11 @@ if (!customElements.get("ui-carousel")) {
       const totalPages = Math.ceil(this.TOTAL / this.perPage);
 
       this.markers?.forEach((marker, i) => {
-        marker.style.display = i < totalPages ? "" : "none";
+        marker.setAttribute("aria-hidden", i >= totalPages);
+      });
+
+      this.slides.forEach((slide, i) => {
+        slide.toggleAttribute("data-snap", i % this.perPage === 0);
       });
 
       this.setIndex(this.index);
