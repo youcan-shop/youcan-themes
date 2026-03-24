@@ -72,9 +72,9 @@
     --font-button-weight: {{ settings.font_weight_buttons }};
 
     /* Colors */
+    --brand-lightness: {{ settings.main_color.lightness | divided_by: 100 }};
+    --brand-chroma: {{ settings.main_color.chroma }};
     --brand-hue: {{ settings.main_color.hue }};
-    --brand-saturation: {{ settings.main_color.saturation }}%;
-    --brand-lightness: {{ settings.main_color.lightness }}%;
 
     /* Alignment */
     --text-heading-alignment-desktop: {{ settings.heading_alignment_desktop }};
@@ -94,13 +94,6 @@
     --radius-column: {{ settings.corner_radius_multicolumns }};
     --radius-media: {{ settings.corner_radius_image_with_text }};
     --radius-feature-item: {{ settings.corner_radius_feature_list }};
-  }
-
-  :root,
-  [data-scoped-color] {
-    {% if settings.main_color.hue == 0 and settings.main_color.lightness <= 20 %}
-      --brand-raw-lightness: {{ settings.main_color.lightness }}%;
-    {% endif %}
   }
 </style>
 

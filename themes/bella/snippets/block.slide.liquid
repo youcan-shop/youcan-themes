@@ -17,9 +17,9 @@
   {{ slide.youcan_attributes }}
   {% if slide.settings.override_global_colors %}
     style="
+      --brand-lightness: {{ slide.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ slide.settings.main_color.chroma }};
       --brand-hue: {{ slide.settings.main_color.hue }};
-      --brand-saturation: {{ slide.settings.main_color.saturation }}%;
-      --brand-lightness: {{ slide.settings.main_color.lightness }}%;
     "
     data-scoped-color
     data-intensity="{{ slide.settings.color_intensity }}"
