@@ -18,32 +18,34 @@
   {{ product.youcan_attributes }}
 >
   <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
-    {% if product.preview_image %}
-      <img
-        srcset="
-          {{ product.preview_image.medium }} 480w,
-          {{ product.preview_image.large }} 800w,
-          {{ product.preview_image.original }} 1200w
-        "
-        sizes="
-          (max-width: 640px) 50vw,
-          (max-width: 768px) 33vw,
-          (max-width: 1024px) 25vw,
-          33vw
-        "
-        src="{{ product.preview_image.original }}"
-        alt="{{ product.name }}"
-        height="100%"
-        width="100%"
-        {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
-          loading="eager"
-        {% else %}
-          loading="lazy"
-        {% endif %}
-      >
-    {% else %}
-      {% render 'misc.image-fallback', icon_size: 40 %}
-    {% endif %}
+    <a href="{{ product.url }}">
+      {% if product.preview_image %}
+        <img
+          srcset="
+            {{ product.preview_image.medium }} 480w,
+            {{ product.preview_image.large }} 800w,
+            {{ product.preview_image.original }} 1200w
+          "
+          sizes="
+            (max-width: 640px) 50vw,
+            (max-width: 768px) 33vw,
+            (max-width: 1024px) 25vw,
+            33vw
+          "
+          src="{{ product.preview_image.original }}"
+          alt="{{ product.name }}"
+          height="100%"
+          width="100%"
+          {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 40 %}
+      {% endif %}
+    </a>
 
     {% if settings.cart_checkout_type == 'express-checkout' %}
       {% render 'core.express-checkout' %}

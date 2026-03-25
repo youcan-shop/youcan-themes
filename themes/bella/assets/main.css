@@ -78,31 +78,13 @@
     --color-on-background:hsl(var(--neutral-hue) var(--neutral-sat) 10%);
     --color-surface:var(--color-background);
     --color-on-surface:var(--color-on-background);
-    --color-surface-container-lowest:hsl(var(--primary-hue) var(--primary-sat) 100%);
-    --color-surface-container-low:hsl(var(--primary-hue) var(--primary-sat) 96%);
-    --color-surface-container:hsl(var(--primary-hue) var(--primary-sat) 94%);
-    --color-surface-container-high:hsl(var(--primary-hue) var(--primary-sat) 92%);
-    --color-surface-container-highest:hsl(var(--primary-hue) var(--primary-sat) 90%);
-    --color-surface-variant:hsl(var(--primary-hue) max(2%, min(var(--neutral-variant-sat), 15%)) 90%);
-    --color-on-surface-variant:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 20%)) 30%);
-    --color-outline:hsl(var(--primary-hue) max(5%, min(var(--neutral-variant-sat), 15%)) 50%);
-    --color-outline-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) 80%);
-    --color-success:hsl(146, 82%, 24%);
-    --color-on-success:hsl(0, 0%, 100%);
-    --color-success-container:hsl(132, 83%, 79%);
-    --color-on-success-container:hsl(140, 100%, 6%);
-    --color-error:hsl(0, 72%, 40%);
-    --color-on-error:hsl(0, 0%, 100%);
-    --color-error-container:hsl(0, 80%, 93%);
-    --color-on-error-container:hsl(0, 60%, 20%);
-    --color-info:hsl(236, 67%, 55%);
-    --color-on-info:hsl(0, 0%, 100%);
-    --color-info-container:hsl(240, 100%, 94%);
-    --color-on-info-container:hsl(238, 100%, 21%);
-    --color-warning:hsl(25, 100%, 31%);
-    --color-on-warning:hsl(0, 0%, 100%);
-    --color-warning-container:hsl(18, 100%, 90%);
-    --color-on-warning-container:hsl(20, 100%, 10%);
+    --color-surface-container-lowest:oklch(100% var(--primary-ch) / 30%);
+    --color-surface-container-low:oklch(96% var(--primary-ch) / 30%);
+    --color-surface-container:oklch(94% var(--primary-ch) / 30%);
+    --color-surface-container-high:oklch(92% var(--primary-ch) / 30%);
+    --color-surface-container-highest:oklch(90% var(--primary-ch) / 30%);
+    --color-surface-variant:oklch(90% var(--neutral-c) var(--primary-h));
+    --color-on-surface-variant:oklch(30% var(--neutral-c) var(--primary-h));
   }
   :root [data-intensity=as-solid-bg],
   [data-scoped-color] [data-intensity=as-solid-bg]{
@@ -119,29 +101,13 @@
     --color-on-background:hsl(var(--neutral-hue) var(--neutral-sat) 90%);
     --color-surface:var(--color-background);
     --color-on-surface:var(--color-on-background);
-    --color-surface-container-lowest:hsl(var(--primary-hue) var(--primary-sat) 4%);
-    --color-surface-container-low:hsl(var(--primary-hue) var(--primary-sat) 10%);
-    --color-surface-container:hsl(var(--primary-hue) var(--primary-sat) 12%);
-    --color-surface-container-high:hsl(var(--primary-hue) var(--primary-sat) 17%);
-    --color-surface-container-highest:hsl(var(--primary-hue) var(--primary-sat) 22%);
-    --color-surface-variant:hsl(var(--primary-hue) var(--primary-sat-solid) 80% / 30%);
-    --color-on-surface-variant:hsl(var(--primary-hue) max(3%, min(var(--neutral-variant-sat), 10%)) 80%);
-    --color-success:hsl(134, 53%, 68%);
-    --color-on-success:hsl(145, 100%, 11%);
-    --color-success-container:hsl(148, 100%, 16%);
-    --color-on-success-container:hsl(132, 83%, 79%);
-    --color-error:hsl(6, 100%, 84%);
-    --color-on-error:hsl(359, 93%, 20%);
-    --color-error-container:hsl(356, 100%, 29%);
-    --color-on-error-container:hsl(6, 100%, 84%);
-    --color-info:hsl(236, 100%, 87%);
-    --color-on-info:hsl(238, 100%, 33%);
-    --color-info-container:rgb(36, 46, 194);
-    --color-on-info-container:#e0e0ff;
-    --color-warning:hsl(20, 100%, 78%);
-    --color-on-warning:hsl(23, 100%, 17%);
-    --color-warning-container:hsl(25, 100%, 24%);
-    --color-on-warning-container:hsl(18, 100%, 90%);
+    --color-surface-container-lowest:oklch(4% var(--primary-ch) / 30%);
+    --color-surface-container-low:oklch(10% var(--primary-ch) / 30%);
+    --color-surface-container:oklch(12% var(--primary-ch) / 30%);
+    --color-surface-container-high:oklch(17% var(--primary-ch) / 30%);
+    --color-surface-container-highest:oklch(22% var(--primary-ch) / 30%);
+    --color-surface-variant:oklch(80% var(--primary-c) var(--primary-h) / 30%);
+    --color-on-surface-variant:oklch(80% var(--primary-ch));
   }
   :root,
   [data-scoped-color]{
@@ -609,7 +575,7 @@
   }
   [ui-slot=compact-button]:focus-visible{
     background-color:var(--color-primary);
-    color:hsl(0, 0%, 100%);
+    color:rgb(255, 255, 255);
     color:var(--color-on-primary);
   }
   [ui-slot=compact-button]{
@@ -1800,6 +1766,7 @@
     border-radius:0px;
     border-radius:var(--radius-0);
     outline:none;
+    background-color:transparent;
     box-shadow:none;
   }
   [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input]:first-child,
@@ -1986,7 +1953,7 @@
     border:2px solid var(--color-surface-container-high);
     border-radius:calc(1px * infinity);
     border-radius:var(--radius-rounded);
-    background-color:hsl(0, 0%, 100%);
+    background-color:rgb(255, 255, 255);
     background-color:var(--color-on-primary);
     cursor:pointer;
     -webkit-appearance:none;
@@ -2262,7 +2229,7 @@
     height:4px;
     transition:left 350ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
     transition:left var(--transition-expressive-fast-spatial);
-    border:4px solid hsl(0, 0%, 100%);
+    border:4px solid rgb(255, 255, 255);
     border:4px solid var(--color-on-primary);
     border-radius:calc(1px * infinity);
     border-radius:var(--radius-rounded);
@@ -2583,7 +2550,7 @@
   [ui-slot=pagination] [ui-slot=pagination-item][aria-current=true],
   [ui-slot=pagination] [ui-slot=pagination-ellipsis][aria-current=true]{
     background-color:var(--color-primary);
-    color:hsl(0, 0%, 100%);
+    color:rgb(255, 255, 255);
     color:var(--color-on-primary);
   }
   [ui-slot=pagination] [ui-slot=pagination-nav],
