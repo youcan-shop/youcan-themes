@@ -114,25 +114,27 @@
   </div>
 </div>
 
-{% javascript %}
-  document.addEventListener('DOMContentLoaded', function () {
-    const checkoutButton = document.querySelector('#checkout-button');
+{% if cart %}
+  {% javascript %}
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkoutButton = document.querySelector('#checkout-button');
 
-    if (!checkoutButton) return;
+      if (!checkoutButton) return;
 
-    const cart = JSON.parse({{ cart | json }});
+      const cart = JSON.parse({{ cart | json }});
 
-    let updatedCart = cart;
+      let updatedCart = cart;
 
-    subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
-      updatedCart = payload.cartData;
+      subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+        updatedCart = payload.cartData;
+      });
+
+      checkoutButton.addEventListener('click', function () {
+        window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
+      });
     });
-
-    checkoutButton.addEventListener('click', function () {
-      window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
-    });
-  });
-{% endjavascript %}
+  {% endjavascript %}
+{% endif %}
 
 {% schema %}
 {
