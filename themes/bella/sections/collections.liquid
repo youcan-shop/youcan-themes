@@ -6,7 +6,7 @@
     style="
       --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
@@ -68,6 +68,12 @@
       "content": "t:common.headers.colors"
     },
     {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
       "type": "color",
       "id": "main_color",
       "label": "t:common.colors.main_color",
@@ -83,12 +89,6 @@
         { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
       ],
       "default": "as-foreground"
-    },
-    {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": false
     },
     {
       "type": "header",

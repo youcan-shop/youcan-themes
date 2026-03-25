@@ -20,10 +20,12 @@
 [ui-slot="breadcrumb"] {
   --separator-arrow-rotate: -45deg;
   --separator-splash-rotate: 15deg;
+  --separator-arrow-translate: 0;
 
   &:dir(rtl) {
-    --separator-arrow-rotate: -45deg;
+    --separator-arrow-rotate: 135deg;
     --separator-splash-rotate: -15deg;
+    --separator-arrow-translate: -4px;
   }
 
   /* Group */
@@ -70,7 +72,7 @@
         width: 6px;
         height: 6px;
         margin-inline-start: 0;
-        transform: rotate(var(--separator-arrow-rotate));
+        transform: rotate(var(--separator-arrow-rotate)) translate(var(--separator-arrow-translate), var(--separator-arrow-translate));
         border-block-end: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
       }
     }

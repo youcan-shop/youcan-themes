@@ -16,7 +16,7 @@
     style="
       --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.hue }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
     "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
@@ -91,11 +91,33 @@
         {% endfor %}
       </ul>
       <div class="actions">
-        {% render 'misc.search-drawer',
-          keywords: section.settings.search_most_searched_keywords,
-          collection_id: section.settings.search_collection.id
-        %}
-        {% render 'misc.cart-drawer' %}
+        <button
+          class="search"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="ghost"
+          data-size="md"
+          data-as-icon
+          aria-label="Search"
+          popovertarget="search"
+        >
+          {% render 'misc.icon', name: 'hgi-search-01' %}
+        </button>
+        <button
+          class="cart-drawer-trigger"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="ghost"
+          data-size="md"
+          data-as-icon
+          aria-label="Cart"
+          popovertarget="cart"
+        >
+          {% render 'misc.icon', name: settings.cart_icon %}
+          <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
+            <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+          </div>
+        </button>
       </div>
     </div>
   {% else %}
@@ -109,14 +131,39 @@
       {% endfor %}
     </ul>
     <div class="actions">
-      {% render 'misc.search-drawer',
-        keywords: section.settings.search_most_searched_keywords,
-        collection_id: section.settings.search_collection.id
-      %}
-      {% render 'misc.cart-drawer' %}
+      <button
+        class="search"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="ghost"
+        data-size="md"
+        data-as-icon
+        aria-label="Search"
+        popovertarget="search"
+      >
+        {% render 'misc.icon', name: 'hgi-search-01' %}
+      </button>
+      <button
+        class="cart-drawer-trigger"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="ghost"
+        data-size="md"
+        data-as-icon
+        aria-label="Cart"
+        popovertarget="cart"
+      >
+        {% render 'misc.icon', name: settings.cart_icon %}
+        <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
+          <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+        </div>
+      </button>
     </div>
   {% endif %}
 </ui-navbar>
+
+{% render 'misc.cart-drawer' %}
+{% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
 
 {% schema %}
 {
@@ -127,7 +174,13 @@
   "settings": [
     {
       "type": "header",
-      "content": "t:common.headers.general"
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
     },
     {
       "type": "color",
@@ -147,10 +200,8 @@
       "default": "as-foreground"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": false
+      "type": "header",
+      "content": "t:common.headers.general"
     },
     {
       "type": "select",
