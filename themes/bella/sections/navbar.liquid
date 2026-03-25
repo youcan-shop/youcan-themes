@@ -91,11 +91,33 @@
         {% endfor %}
       </ul>
       <div class="actions">
-        {% render 'misc.search-drawer',
-          keywords: section.settings.search_most_searched_keywords,
-          collection_id: section.settings.search_collection.id
-        %}
-        {% render 'misc.cart-drawer' %}
+        <button
+          class="search"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="ghost"
+          data-size="md"
+          data-as-icon
+          aria-label="Search"
+          popovertarget="search"
+        >
+          {% render 'misc.icon', name: 'hgi-search-01' %}
+        </button>
+        <button
+          class="cart-drawer-trigger"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="ghost"
+          data-size="md"
+          data-as-icon
+          aria-label="Cart"
+          popovertarget="cart"
+        >
+          {% render 'misc.icon', name: settings.cart_icon %}
+          <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
+            <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+          </div>
+        </button>
       </div>
     </div>
   {% else %}
@@ -109,14 +131,39 @@
       {% endfor %}
     </ul>
     <div class="actions">
-      {% render 'misc.search-drawer',
-        keywords: section.settings.search_most_searched_keywords,
-        collection_id: section.settings.search_collection.id
-      %}
-      {% render 'misc.cart-drawer' %}
+      <button
+        class="search"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="ghost"
+        data-size="md"
+        data-as-icon
+        aria-label="Search"
+        popovertarget="search"
+      >
+        {% render 'misc.icon', name: 'hgi-search-01' %}
+      </button>
+      <button
+        class="cart-drawer-trigger"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="ghost"
+        data-size="md"
+        data-as-icon
+        aria-label="Cart"
+        popovertarget="cart"
+      >
+        {% render 'misc.icon', name: settings.cart_icon %}
+        <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
+          <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+        </div>
+      </button>
     </div>
   {% endif %}
 </ui-navbar>
+
+{% render 'misc.cart-drawer' %}
+{% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
 
 {% schema %}
 {

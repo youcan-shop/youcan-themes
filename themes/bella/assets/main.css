@@ -2437,10 +2437,12 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
 [ui-slot=breadcrumb]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     --separator-arrow-rotate:-45deg;
     --separator-splash-rotate:15deg;
+    --separator-arrow-translate:0;
   }
 [dir="rtl"]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=breadcrumb]{
-    --separator-arrow-rotate:-45deg;
+    --separator-arrow-rotate:135deg;
     --separator-splash-rotate:-15deg;
+    --separator-arrow-translate:-4px;
   }
 [ui-slot=breadcrumb]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
   }
@@ -2485,7 +2487,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     width:6px;
     height:6px;
     margin-left:0;
-    transform:rotate(var(--separator-arrow-rotate));
+    transform:rotate(var(--separator-arrow-rotate)) translate(var(--separator-arrow-translate), var(--separator-arrow-translate));
     border-bottom:1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
   }
 [ui-slot=pagination]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
@@ -2651,7 +2653,9 @@ body #app{
     overflow:clip;
   }
 body #app > main{
+    display:flex;
     flex:2;
+    flex-direction:column;
   }
 body #app > main [ui-section]{
     padding:calc(64px + 16px) 8%;
