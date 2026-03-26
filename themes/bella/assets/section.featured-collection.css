@@ -1,11 +1,9 @@
-
-  [ui-section=featured-collection]:not(#\#){
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
-  }
+@layer sections{
   [ui-section=featured-collection]{
     display:flex;
     flex-direction:column;
     gap:var(--spacing-64);
+    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
   }
   [ui-section=featured-collection] .core-area{
     display:grid;
@@ -21,8 +19,17 @@
     border-radius:var(--radius-20);
     top:var(--spacing-24);
   }
+  [ui-section=featured-collection] .core-area [ui-block=content][data-image-ratio=square]{
+    aspect-ratio:1/1;
+  }
+  [ui-section=featured-collection] .core-area [ui-block=content][data-image-ratio=portrait]{
+    aspect-ratio:3/4;
+  }
+  [ui-section=featured-collection] .core-area [ui-block=content][data-image-ratio=landscape]{
+    aspect-ratio:4/3;
+  }
   [ui-section=featured-collection] .core-area [ui-block=content] .media{
-    height:70vh;
+    height:100%;
     filter:brightness(0.8);
   }
   [ui-section=featured-collection] .core-area [ui-block=content] .media > img{
@@ -81,15 +88,18 @@
     gap:var(--spacing-24);
     grid-template-columns:repeat(2, 1fr);
   }
+  [ui-section=featured-collection] .core-area:not(:has([ui-block=content])){
+    grid-template-columns:1fr;
+  }
+  [ui-section=featured-collection] .core-area:not(:has([ui-block=content])) [ui-block=products]{
+    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+  }
   @media (max-width: 1028px){
     [ui-section=featured-collection] .core-area{
       grid-template-columns:1fr;
     }
     [ui-section=featured-collection] .core-area [ui-block=content]{
       position:relative;
-    }
-    [ui-section=featured-collection] .core-area [ui-block=content] .media{
-      height:35vh;
     }
     [ui-section=featured-collection] .core-area [ui-block=content] .content{
       padding:var(--spacing-24);
@@ -102,7 +112,11 @@
     [ui-section=featured-collection]{
       gap:var(--spacing-48);
     }
+    [ui-section=featured-collection] .core-area:not(:has([ui-block=content])) [ui-block=products]{
+      grid-template-columns:repeat(attr(data-nbr-columns-mobile number), 1fr);
+    }
   }
-[data-intensity=as-solid-bg]:not(#\#) [ui-section=featured-collection] .core-area [ui-block=content] .content{
+}
+[data-intensity=as-solid-bg] [ui-section=featured-collection] .core-area [ui-block=content] .content{
   color:var(--color-primary);
 }

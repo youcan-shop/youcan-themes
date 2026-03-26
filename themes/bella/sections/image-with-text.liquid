@@ -15,7 +15,7 @@
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   <div class="wrapper-area" data-height="{{ section.settings.image_height }}">
-    <div ui-block="media">
+    <div ui-block="media" data-image-placement="{{ section.settings.image_placement }}">
       {% if section.settings.image.src %}
         <img
           src="{{ section.settings.image.src }}"
@@ -112,6 +112,16 @@
         { "label": "t:common.layout.size.large", "value": "70" }
       ],
       "default": "70"
+    },
+    {
+      "type": "select",
+      "id": "image_placement",
+      "label": "t:common.globals.image_placement",
+      "options": [
+        { "label": "t:common.layout.image_placement.image_first", "value": "first" },
+        { "label": "t:common.layout.image_placement.image_second", "value": "second" }
+      ],
+      "default": "first"
     },
     {
       "type": "header",

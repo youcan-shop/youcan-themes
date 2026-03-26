@@ -1,6 +1,6 @@
 {{ 'section.multicolumn.css' | asset_url | stylesheet_tag }}
 
-<ul
+<ui-carousel
   ui-section="multicolumn"
   {% if section.settings.override_global_colors %}
     style="
@@ -14,19 +14,37 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div ui-slot="head">
-    <h4 class="heading">{{ section.settings.heading }}</h4>
-    <h1 class="subheading">{{ section.settings.subheading }}</h1>
+  <div class="content-area">
+    <div ui-slot="head">
+      <h4 class="heading">{{ section.settings.heading }}</h4>
+      <h1 class="subheading">{{ section.settings.subheading }}</h1>
+    </div>
   </div>
-  <div
+  <ul
     class="items-area"
+    ui-carousel="wrapper"
+    ui-slot="carousel"
+    aria-orientation="vertical"
     data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
   >
     {% for column in section.blocks %}
       {% render 'block.column' %}
     {% endfor %}
-  </div>
-</ul>
+  </ul>
+  {% if section.blocks.size > 1 %}
+    <div class="pagination">
+      {% for marker in section.blocks %}
+        <button
+          ui-carousel="marker"
+          aria-label="Slide {{ forloop.index }}"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</ui-carousel>
 
 {% schema %}
 {

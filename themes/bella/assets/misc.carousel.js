@@ -29,15 +29,26 @@ if (!customElements.get("ui-carousel")) {
       if (this.arrows.previous && this.arrows.next) {
         this.setArrowsState();
 
-        this.arrows.previous.addEventListener("click", () => this.swipe(--this.index));
-        this.arrows.next.addEventListener("click", () => this.swipe(++this.index));
+        this.arrows.previous.addEventListener("click", () => this.swipe(Math.max(0, this.index - this.perPage)));
+        this.arrows.next.addEventListener("click", () => this.swipe(Math.min(this.TOTAL - this.perPage, this.index + this.perPage)));
       }
 
-      [...this.markers, ...this.slides].forEach((slide, i) => {
-        slide.addEventListener("click", () => this.swipe(i % this.TOTAL));
+      this.markers.forEach((marker, i) => {
+        marker.addEventListener("click", () => {
+          const targetIndex = Math.min(i * this.perPage, Math.max(0, this.TOTAL - this.perPage));
+
+          this.swipe(targetIndex);
+        });
+      });
+
+      this.slides.forEach((slide, i) => {
+        slide.addEventListener("click", () => this.swipe(i));
       });
 
       this.wrapper.addEventListener("scroll", () => this.onScroll());
+
+      this.updateMarkers();
+      window.addEventListener("resize", () => this.updateMarkers());
 
       if (this.hasAttribute("autoplay")) {
         this.autoPlay();
@@ -72,11 +83,36 @@ if (!customElements.get("ui-carousel")) {
     setIndex(index) {
       this.index = index;
 
+      const totalPages = Math.ceil(this.TOTAL / this.perPage);
+      let currentPage;
+
+      if (this.perPage >= this.TOTAL) {
+        currentPage = 0;
+      } else if (index >= this.TOTAL - this.perPage) {
+        currentPage = totalPages - 1;
+      } else {
+        currentPage = Math.floor(index / this.perPage);
+      }
+
       this.markers?.forEach((marker, i) => {
-        marker.setAttribute("aria-selected", index === i);
+        marker.setAttribute("aria-selected", currentPage === i);
       });
 
       if (this.arrows.previous && this.arrows.next) this.setArrowsState();
+    }
+
+    updateMarkers() {
+      const totalPages = Math.ceil(this.TOTAL / this.perPage);
+
+      this.markers?.forEach((marker, i) => {
+        marker.setAttribute("aria-hidden", i >= totalPages);
+      });
+
+      this.slides.forEach((slide, i) => {
+        slide.toggleAttribute("data-snap", i % this.perPage === 0);
+      });
+
+      this.setIndex(this.index);
     }
 
     setArrowsState() {

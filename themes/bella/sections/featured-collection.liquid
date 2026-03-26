@@ -19,70 +19,75 @@
     <h1 class="subheading">{{ section.settings.subheading }}</h1>
   </div>
   <div class="core-area">
-    {% for block in section.blocks %}
-      {% case block.type %}
-        {% when 'media' %}
-          <div ui-block="content" {{ block.youcan_attributes }}>
-            <div class="media">
-              {% if block.settings.block_image.src %}
-                <img
-                  src="{{ block.settings.block_image.src }}"
-                  alt="{{ block.settings.block_heading }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                >
-              {% else %}
-                {% render 'misc.image-fallback', icon_size: 100 %}
-              {% endif %}
-            </div>
-            <div
-              class="content"
-              data-text-alignment="{{ block.settings.text_alignment }}"
-              data-vertical-alignment="{{ block.settings.vertical_alignment }}"
-            >
-              <h4 class="subheading">{{ block.settings.block_heading }}</h4>
-              <h1 class="heading">{{ block.settings.block_subheading }}</h1>
-              <a
-                class="cta"
-                {% if block.settings.block_button_style == 'underline' %}
-                  ui-slot="link-button"
-                  data-underline="true"
+    {% if section.settings.show_image %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'media' %}
+            <div ui-block="content" {{ block.youcan_attributes }} data-image-ratio="{{ block.settings.image_ratio }}">
+              <div class="media">
+                {% if block.settings.block_image.src %}
+                  <img
+                    src="{{ block.settings.block_image.src }}"
+                    alt="{{ block.settings.block_heading }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
+                  >
                 {% else %}
-                  ui-slot="button"
-                  data-variant="primary"
+                  {% render 'misc.image-fallback', icon_size: 100 %}
                 {% endif %}
-                {% if block.settings.block_button_style == 'primary' %}
-                  data-mode="filled"
-                {% elsif block.settings.block_button_style == 'secondary' %}
-                  data-mode="lighter"
-                {% endif %}
-                data-size="lg"
-                href="{{ block.settings.block_button_link }}"
+              </div>
+              <div
+                class="content"
+                data-text-alignment="{{ block.settings.text_alignment }}"
+                data-vertical-alignment="{{ block.settings.vertical_alignment }}"
               >
-                {{ block.settings.block_button_label }}
-              </a>
+                <h4 class="subheading">{{ block.settings.block_heading }}</h4>
+                <h1 class="heading">{{ block.settings.block_subheading }}</h1>
+                <a
+                  class="cta"
+                  {% if block.settings.block_button_style == 'underline' %}
+                    ui-slot="link-button"
+                    data-underline="true"
+                  {% else %}
+                    ui-slot="button"
+                    data-variant="primary"
+                  {% endif %}
+                  {% if block.settings.block_button_style == 'primary' %}
+                    data-mode="filled"
+                  {% elsif block.settings.block_button_style == 'secondary' %}
+                    data-mode="lighter"
+                  {% endif %}
+                  data-size="lg"
+                  href="{{ block.settings.block_button_link }}"
+                >
+                  {{ block.settings.block_button_label }}
+                </a>
+              </div>
             </div>
-          </div>
-        {% else %}
-          {% assign max_products = section.settings.max_products_to_show %}
-          {% if block.settings.collection.id %}
-            {% paginate collection.products by max_products id category_id: block.settings.collection.id %}
-              <ul ui-block="products" {{ block.youcan_attributes }}>
-                {% for product in items %}
-                  {% render 'block.product' %}
-                {% endfor %}
-              </ul>
-            {% endpaginate %}
-          {% else %}
-            <ul ui-block="products" {{ block.youcan_attributes }}>
-              {% for product in (1..max_products) %}
-                {% render 'block.product' %}
-              {% endfor %}
-            </ul>
-          {% endif %}
-      {% endcase %}
-    {% endfor %}
+        {% endcase %}
+      {% endfor %}
+    {% endif %}
+    {% assign max_products = section.settings.max_products_to_show %}
+    {% if section.settings.collection.id %}
+      {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
+        <ul ui-block="products" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
+          {% for product in items %}
+            {% render 'block.product', product: product %}
+          {% endfor %}
+        </ul>
+      {% endpaginate %}
+    {% else %}
+      <ul
+        ui-block="products"
+        data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+        data-nbr-columns-mobile="{{ section.settings.nbr_columns_mobile }}"
+      >
+        {% for product in (1..max_products) %}
+          {% render 'block.product' %}
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
 </div>
 
@@ -95,7 +100,12 @@
   "settings": [
     {
       "type": "header",
-      "content": "t:common.headers.colors"
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "category",
+      "id": "collection",
+      "label": "t:common.globals.collection"
     },
     {
       "type": "checkbox",
@@ -141,6 +151,18 @@
       "content": "t:common.headers.layout"
     },
     {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.featured_collection.show_image",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "t:sections.featured_collection.show_discount_badge",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "max_products_to_show",
       "label": "t:common.globals.max_products",
@@ -150,10 +172,27 @@
       "default": 8
     },
     {
-      "type": "checkbox",
-      "id": "show_discount_badge",
-      "label": "t:sections.featured_collection.show_discount_badge",
-      "default": true
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.featured_collection.columns_notice"
+    },
+    {
+      "type": "select",
+      "id": "nbr_columns_mobile",
+      "label": "t:common.globals.number_per_column_mobile",
+      "options": [
+        { "label": "t:common.layout.column.one", "value": "1" },
+        { "label": "t:common.layout.column.two", "value": "2" }
+      ],
+      "default": "2"
     },
     {
       "type": "header",
@@ -194,6 +233,43 @@
           "type": "image_picker",
           "id": "block_image",
           "label": "t:common.globals.image"
+        },
+        {
+          "type": "select",
+          "id": "image_ratio",
+          "label": "t:common.globals.image_ratio",
+          "options": [
+            { "label": "t:common.layout.ratio.square", "value": "square" },
+            { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
+            { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
+          ],
+          "default": "square"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.layout"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "t:common.globals.text_alignment",
+          "options": [
+            { "label": "t:common.layout.alignment.start", "value": "start" },
+            { "label": "t:common.layout.alignment.center", "value": "center" },
+            { "label": "t:common.layout.alignment.end", "value": "end" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "vertical_alignment",
+          "label": "t:common.globals.vertical_alignment",
+          "options": [
+            { "label": "t:common.layout.vertical_alignment.top", "value": "start" },
+            { "label": "t:common.layout.vertical_alignment.middle", "value": "center" },
+            { "label": "t:common.layout.vertical_alignment.bottom", "value": "end" }
+          ],
+          "default": "center"
         },
         {
           "type": "header",
@@ -237,44 +313,6 @@
           ],
           "label": "t:common.button.style.label",
           "default": "primary"
-        },
-        {
-          "type": "header",
-          "content": "t:common.headers.layout"
-        },
-        {
-          "type": "select",
-          "id": "text_alignment",
-          "label": "t:common.globals.text_alignment",
-          "options": [
-            { "label": "t:common.layout.alignment.start", "value": "start" },
-            { "label": "t:common.layout.alignment.center", "value": "center" },
-            { "label": "t:common.layout.alignment.end", "value": "end" }
-          ],
-          "default": "center"
-        },
-        {
-          "type": "select",
-          "id": "vertical_alignment",
-          "label": "t:common.globals.vertical_alignment",
-          "options": [
-            { "label": "t:common.layout.vertical_alignment.top", "value": "start" },
-            { "label": "t:common.layout.vertical_alignment.middle", "value": "center" },
-            { "label": "t:common.layout.vertical_alignment.bottom", "value": "end" }
-          ],
-          "default": "start"
-        }
-      ]
-    },
-    {
-      "type": "collection_item",
-      "label": "t:sections.featured_collection.blocks.collection.label",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "category",
-          "id": "collection",
-          "label": "t:common.globals.collection"
         }
       ]
     }

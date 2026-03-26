@@ -32,9 +32,20 @@
         grid-template-columns: repeat(2, 1fr);
 
         .media {
-          height: 60vh;
           overflow: hidden;
           border-radius: var(--radius-20);
+
+          &[data-image-ratio="square"] {
+            aspect-ratio: 1 / 1;
+          }
+
+          &[data-image-ratio="portrait"] {
+            aspect-ratio: 3 / 4;
+          }
+
+          &[data-image-ratio="landscape"] {
+            aspect-ratio: 4 / 3;
+          }
 
           & > img {
             object-fit: cover;
@@ -84,6 +95,10 @@
     @media (width <= 1028px) {
       --item-size: 100%;
 
+      &[data-orientation="horizontal"] {
+        grid-template-columns: 1fr;
+      }
+
       [ui-slot="head"] {
         flex-direction: column;
         justify-content: center;
@@ -105,10 +120,6 @@
 
         [ui-block="showcase"] {
           grid-template-columns: 1fr;
-
-          .media {
-            height: 40vh;
-          }
 
           .content {
             padding: var(--spacing-48) var(--spacing-0);

@@ -11,11 +11,10 @@
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-orientation="{{ section.settings.orientation }}"
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="media-area">
+  <div class="media-area" data-image-placement="{{ section.settings.image_placement }}">
     {% if section.settings.image %}
       <img
         src="{{ section.settings.image.src }}"
@@ -133,6 +132,16 @@
       "label": "t:common.globals.image"
     },
     {
+      "type": "select",
+      "id": "image_placement",
+      "label": "t:common.globals.image_placement",
+      "options": [
+        { "label": "t:common.layout.image_placement.image_first", "value": "first" },
+        { "label": "t:common.layout.image_placement.image_second", "value": "second" }
+      ],
+      "default": "first"
+    },
+    {
       "type": "header",
       "content": "t:common.headers.header"
     },
@@ -147,20 +156,6 @@
       "id": "subheading",
       "label": "t:common.header.subheading",
       "default": "t:sections.product_set.default.subheading"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.layout"
-    },
-    {
-      "type": "select",
-      "id": "orientation",
-      "label": "t:common.globals.orientation",
-      "options": [
-        { "label": "t:common.layout.orientation.vertical", "value": "vertical" },
-        { "label": "t:common.layout.orientation.horizontal", "value": "horizontal" }
-      ],
-      "default": "horizontal"
     },
     {
       "type": "header",

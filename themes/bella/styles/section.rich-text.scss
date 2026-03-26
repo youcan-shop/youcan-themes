@@ -2,10 +2,22 @@
   [ui-section="rich-text"] {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: var(--text-heading-alignment-desktop);
     padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
-    text-align: center;
+    text-align: var(--text-heading-alignment-desktop);
     gap: var(--spacing-16);
+
+    &[data-text-alignment="start"] {
+      --text-heading-alignment-desktop: start;
+    }
+
+    &[data-text-alignment="center"] {
+      --text-heading-alignment-desktop: center;
+    }
+
+    &[data-text-alignment="end"] {
+      --text-heading-alignment-desktop: end;
+    }
 
     .description {
       width: 50%;
