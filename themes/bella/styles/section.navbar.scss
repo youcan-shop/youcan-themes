@@ -105,29 +105,6 @@
     .menu {
       display: flex;
       grid-area: menu;
-
-      .mobile-links {
-        display: flex;
-        flex-direction: column;
-        gap: var(--spacing-14);
-
-        .link {
-          [ui-slot="link-button"] {
-            justify-content: space-between !important;
-            width: 100% !important;
-            height: 40px;
-          }
-        }
-      }
-
-      [ui-slot="sheet-footer"] {
-        grid-template-columns: 1fr !important;
-
-        .social-links {
-          display: flex;
-          justify-content: center;
-        }
-      }
     }
 
     &[data-header-layout="logo-first-menu-center"] {
@@ -198,6 +175,33 @@
       .actions {
         gap: var(--spacing-0);
         justify-content: flex-end;
+      }
+    }
+  }
+
+  #menu {
+    [ui-slot="sheet-body"] {
+      .mobile-links {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-14);
+
+        .link {
+          [ui-slot="link-button"] {
+            justify-content: space-between !important;
+            width: 100% !important;
+            height: 40px;
+          }
+        }
+      }
+    }
+
+    [ui-slot="sheet-footer"] {
+      grid-template-columns: 1fr !important;
+
+      .social-links {
+        display: flex;
+        justify-content: center;
       }
     }
   }

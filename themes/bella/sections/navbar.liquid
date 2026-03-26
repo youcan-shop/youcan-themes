@@ -58,7 +58,19 @@
       </a>
     {% endif %}
   </div>
-  {% render 'misc.menu-drawer' %}
+  <div class="menu">
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="ghost"
+      data-size="md"
+      data-as-icon
+      aria-label="Menu"
+      popovertarget="menu"
+    >
+      {% render 'misc.icon', name: 'hgi-menu-01' %}
+    </button>
+  </div>
 
   {% if section.settings.header_layout == 'logo-center-menu-split' %}
     <div class="left-split">
@@ -162,6 +174,7 @@
   {% endif %}
 </ui-navbar>
 
+{% render 'misc.menu-drawer' %}
 {% render 'misc.cart-drawer' %}
 {% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
 
