@@ -1,6 +1,8 @@
 @layer sections{
   [ui-section=slideshow]{
     --per-page:1;
+    --gap:attr(data-gap px);
+    --item-size:attr(data-item-size %);
     display:flex;
     flex-direction:column;
     padding-top:attr(data-top-spacing px) !important;
@@ -162,8 +164,12 @@
     }
   }
 }
-@media (min-width: 769.02px){
-  [data-intensity=as-solid-bg] [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
-    color:var(--color-primary);
+@layer overrides{
+  @media (min-width: 769.02px){
+    [data-intensity=as-solid-bg] [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content,
+    [data-intensity=as-solid-bg][ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content,
+    [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
+      color:var(--color-primary);
+    }
   }
 }

@@ -1,6 +1,8 @@
 @layer sections {
   [ui-section="slideshow"] {
     --per-page: 1;
+    --gap: attr(data-gap px);
+    --item-size: attr(data-item-size %);
 
     display: flex;
     flex-direction: column;
@@ -208,7 +210,9 @@
   }
 }
 
-[data-intensity="as-solid-bg"] {
+@layer overrides {
+  [data-intensity="as-solid-bg"] [ui-section="slideshow"],
+  [data-intensity="as-solid-bg"][ui-section="slideshow"],
   [ui-section="slideshow"] {
     @media (width > 769px) {
       [ui-slot="carousel"] {
