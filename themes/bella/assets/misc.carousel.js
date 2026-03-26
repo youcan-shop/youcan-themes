@@ -29,8 +29,8 @@ if (!customElements.get("ui-carousel")) {
       if (this.arrows.previous && this.arrows.next) {
         this.setArrowsState();
 
-        this.arrows.previous.addEventListener("click", () => this.swipe(--this.index));
-        this.arrows.next.addEventListener("click", () => this.swipe(++this.index));
+        this.arrows.previous.addEventListener("click", () => this.swipe(Math.max(0, this.index - this.perPage)));
+        this.arrows.next.addEventListener("click", () => this.swipe(Math.min(this.TOTAL - this.perPage, this.index + this.perPage)));
       }
 
       this.markers.forEach((marker, i) => {
