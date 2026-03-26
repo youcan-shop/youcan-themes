@@ -10,7 +10,7 @@
         display: flex;
         position: relative;
         flex-wrap: wrap;
-        justify-content: inherit;
+        justify-content: var(--text-heading-alignment-desktop);
         column-gap: var(--spacing-24);
 
         &::before {
@@ -71,9 +71,15 @@
     @media (width <= 769px) {
       gap: var(--spacing-48);
 
-      .products-area {
-        .items {
-          grid-template-columns: repeat(attr(data-nbr-columns-mobile number), 1fr);
+      [ui-slot="head"] {
+        .tab-list {
+          justify-content: var(--text-heading-alignment-mobile);
+        }
+
+        .products-area {
+          .items {
+            grid-template-columns: repeat(attr(data-nbr-columns-mobile number), 1fr);
+          }
         }
       }
     }
