@@ -21,9 +21,18 @@
     <p class="description">{{ section.settings.description }}</p>
     <a
       class="cta"
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="filled"
+      {% if section.settings.button_style == 'underline' %}
+        ui-slot="link-button"
+        data-underline="true"
+      {% else %}
+        ui-slot="button"
+        data-variant="primary"
+      {% endif %}
+      {% if section.settings.button_style == 'primary' %}
+        data-mode="filled"
+      {% elsif section.settings.button_style == 'secondary' %}
+        data-mode="lighter"
+      {% endif %}
       data-size="lg"
       href="{{ section.settings.button_link }}"
     >

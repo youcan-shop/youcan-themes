@@ -44,9 +44,18 @@
           {% when 'button' %}
             <a
               class="cta"
-              ui-slot="button"
-              data-variant="primary"
-              data-mode="filled"
+              {% if block.settings.style == 'underline' %}
+                ui-slot="link-button"
+                data-underline="true"
+              {% else %}
+                ui-slot="button"
+                data-variant="primary"
+              {% endif %}
+              {% if block.settings.style == 'primary' %}
+                data-mode="filled"
+              {% elsif block.settings.style == 'secondary' %}
+                data-mode="lighter"
+              {% endif %}
               data-size="lg"
               href="{{ block.settings.link }}"
               {{ block.youcan_attributes }}
