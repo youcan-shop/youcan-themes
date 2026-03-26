@@ -78,7 +78,14 @@
 
     /* Alignment */
     --text-heading-alignment-desktop: {{ settings.heading_alignment_desktop }};
-    --text-heading-alignment-mobile: {{ settings.heading_alignment_mobile | default: settings.heading_alignment_desktop }};
+
+    {% assign mobile_alignment = settings.heading_alignment_desktop %}
+
+    {% unless settings.heading_alignment_mobile == 'inherit' %}
+      {% assign mobile_alignment = settings.heading_alignment_mobile %}
+    {% endunless %}
+
+    --text-heading-alignment-mobile: {{ mobile_alignment }};
     --alignment-product: {{ settings.product_alignment  }};
 
     /* Corner */
