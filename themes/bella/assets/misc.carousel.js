@@ -33,7 +33,7 @@ if (!customElements.get("ui-carousel")) {
         this.arrows.next.addEventListener("click", () => this.swipe(Math.min(this.TOTAL - this.perPage, this.index + this.perPage)));
       }
 
-      this.markers.forEach((marker, i) => {
+      this.markers?.forEach((marker, i) => {
         marker.addEventListener("click", () => {
           const targetIndex = Math.min(i * this.perPage, Math.max(0, this.TOTAL - this.perPage));
 
@@ -60,15 +60,14 @@ if (!customElements.get("ui-carousel")) {
     swipe(index) {
       this.ignoreScroll = true;
       this.wrapper.scrollTo({
-        left: (this.wrapper.scrollWidth * index) / this.TOTAL,
+        left: ((this.wrapper.scrollWidth * index) / this.TOTAL) * this.isRTL,
         behavior: "smooth",
       });
 
       this.setIndex(index);
 
       const scrollEnd = () => {
-        const slideWidth = this.wrapper.scrollWidth / this.TOTAL;
-        const currentIndex = Math.round(this.wrapper.scrollLeft / slideWidth);
+        const currentIndex = Math.round(this.wrapper.scrollLeft / this.slideWidth);
 
         if (currentIndex === index) {
           this.ignoreScroll = false;
@@ -131,8 +130,7 @@ if (!customElements.get("ui-carousel")) {
     onScroll() {
       if (this.ignoreScroll) return;
 
-      const slideWidth = this.wrapper.scrollWidth / this.TOTAL;
-      const newIndex = Math.round(this.wrapper.scrollLeft / slideWidth);
+      const newIndex = Math.round(this.wrapper.scrollLeft / this.slideWidth);
 
       if (newIndex !== this.index) {
         this.setIndex(newIndex);
@@ -150,7 +148,11 @@ if (!customElements.get("ui-carousel")) {
     }
 
     get isRTL() {
-      return document.dir === "rtl";
+      return document.dir === "rtl" ? -1 : 1;
+    }
+
+    get slideWidth() {
+      return (this.wrapper.scrollWidth / this.TOTAL) * this.isRTL;
     }
   }
 
