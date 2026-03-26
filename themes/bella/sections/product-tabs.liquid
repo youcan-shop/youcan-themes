@@ -30,7 +30,7 @@
           >
             {% assign translated_trigger = 'product-tabs.tab-trigger' | t %}
             {% assign fallback = translated_trigger | append: ' ' | append: forloop.index %}
-            {{ collection_block.settings.collection_name | default: collection_block.settings.collection.name | default: fallback }}
+            {{ collection_block.settings.tab_name | default: collection_block.settings.collection.name | default: fallback }}
           </button>
         {% endfor %}
       </div>
@@ -196,8 +196,8 @@
       "settings": [
         {
           "type": "text",
-          "id": "collection_name",
-          "label": "Collection name"
+          "id": "tab_name",
+          "label": "t:sections.product_tabs.tab_name"
         },
         {
           "type": "category",
