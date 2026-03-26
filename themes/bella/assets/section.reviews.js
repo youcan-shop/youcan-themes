@@ -5,7 +5,7 @@ class Reviews extends HTMLElement {
     super();
     this.productId = this.getAttribute("product-id");
 
-    this.total = this.querySelector('[ui-reviews="total"]');
+    this.totals = document.querySelectorAll('[ui-reviews="total"]');
     this.states = this.querySelector('[ui-reviews="states"]');
     this.item = this.querySelector('[ui-reviews="item"]');
     this.skeleton = this.querySelector('[ui-reviews="skeleton"]');
@@ -48,7 +48,7 @@ class Reviews extends HTMLElement {
   }
 
   setTotal(total) {
-    this.total.textContent = total;
+    this.totals?.forEach((t) => (t.textContent = total));
   }
 
   setStates(reviews) {
