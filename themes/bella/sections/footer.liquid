@@ -73,7 +73,10 @@
   </div>
   <hr ui-slot="divider" data-variant="line">
   <div class="secondary-area">
-    <span class="copyright">{{ section.settings.copyright_content | default: '© Made by YouCan' }}</span>
+    {% assign copyright_fallback = 'footer.copyright' | t %}
+    <span class="copyright">
+      {{ section.settings.copyright_content | default: copyright_fallback }}
+    </span>
     {% if section.settings.show_social_links and has_social_links == true %}
       <ul class="social-links">
         {% for link in store.brand.social_links %}
