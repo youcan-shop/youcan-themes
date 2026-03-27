@@ -1,0 +1,78 @@
+/* 
+  Component: Button Group
+
+  Accepts:
+    - data-size: {String}: sm | xs | xxs
+
+  Usage:
+    - <div ui-slot="button-group" data-size="xxs" role="group">
+        <button ui-slot="button-group-item">Item 1</button>
+        <button ui-slot="button-group-item">Item 2</button>
+        <button ui-slot="button-group-item">Item 3</button>
+      </div>
+*/
+
+[ui-slot="button-group"] {
+  display: flex;
+  width: fit-content;
+  overflow: hidden;
+  border: 1px solid var(--color-surface-variant);
+  border-radius: var(--radius-8);
+  font: var(--font-body-md);
+
+  /* Size */
+  &[data-size="sm"] {
+    --icon-size: 20px;
+    --item-spacing: var(--spacing-16);
+
+    height: 36px;
+  }
+
+  &[data-size="xs"] {
+    --icon-size: 20px;
+    --item-spacing: var(--spacing-14);
+
+    height: 32px;
+  }
+
+  &[data-size="xxs"] {
+    --icon-size: 16px;
+    --item-spacing: var(--spacing-12);
+
+    height: 24px;
+    border-radius: calc(var(--radius-8) - var(--spacing-2));
+    font: var(--font-body-sm);
+  }
+
+  /* Item */
+  & > [ui-slot="button-group-item"] {
+    display: flex;
+    align-items: center;
+    padding-inline: var(--item-spacing);
+    transition: all var(--transition-standard-default-spatial);
+    border: none;
+    background-color: var(--color-background);
+    color: var(--color-on-surface-variant);
+    font: inherit;
+    cursor: pointer;
+    gap: var(--item-spacing);
+
+    &:not(:last-child) {
+      border-inline-end: 1px solid var(--color-surface-variant);
+    }
+
+    /* Icon */
+    & > i {
+      flex-shrink: 0;
+      margin-inline: calc(var(--spacing-8) * -1);
+      font-size: var(--icon-size);
+    }
+
+    /* Hover & Checked */
+    &:hover:not(:disabled),
+    &[aria-checked="true"] {
+      background-color: var(--color-surface-container-high);
+      color: var(--color-on-surface);
+    }
+  }
+}
