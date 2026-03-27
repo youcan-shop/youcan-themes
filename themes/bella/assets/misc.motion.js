@@ -10,6 +10,12 @@ class Motion extends HTMLElement {
   }
 
   _render() {
+    if (this.inIframe()) {
+      this.dataset.status = "ignore";
+
+      return;
+    }
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -19,6 +25,10 @@ class Motion extends HTMLElement {
     });
 
     this.sections.forEach((section) => observer.observe(section));
+  }
+
+  inIframe() {
+    return window.self != window.top;
   }
 }
 
