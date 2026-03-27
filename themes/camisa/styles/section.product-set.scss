@@ -1,0 +1,114 @@
+@layer sections {
+  [ui-section="product-set"] {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    gap: var(--spacing-32);
+
+    .media-area {
+      height: 70vh;
+      overflow: hidden;
+      border-radius: var(--radius-20);
+
+      & > img {
+        object-fit: cover;
+      }
+
+      &[data-image-placement="first"] {
+        order: -1;
+      }
+
+      &[data-image-placement="second"] {
+        order: 1;
+      }
+    }
+
+    .core-area {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-32);
+
+      .cta-box {
+        display: flex;
+        justify-content: center;
+
+        [ui-slot="button"] {
+          width: fit-content;
+        }
+      }
+
+      .items-box {
+        display: grid;
+        gap: var(--spacing-24);
+
+        [ui-block="product-item"] {
+          display: flex;
+          gap: var(--spacing-16);
+
+          .media {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: var(--radius-12);
+
+            & > img {
+              object-fit: cover;
+            }
+          }
+
+          .main-info {
+            display: flex;
+            flex: 2;
+            flex-direction: column;
+            gap: var(--spacing-12);
+
+            .title {
+              width: fit-content;
+              font: var(--font-body-lg);
+            }
+
+            ui-variants {
+              display: flex;
+              flex-wrap: wrap;
+              gap: var(--spacing-12);
+            }
+          }
+
+          .secondary-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-12);
+            align-items: end;
+            justify-content: space-between;
+
+            .price {
+              display: grid;
+              color: var(--color-on-surface-variant);
+              font: var(--font-title-sm);
+              gap: var(--spacing-8);
+
+              .compare-at-price {
+                opacity: 0.5;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media (width > 1028px) {
+      .media-area {
+        position: sticky;
+        inset-block-start: 0;
+      }
+    }
+
+    @media (width <= 1028px) {
+      grid-template-columns: 1fr;
+
+      .media-area {
+        height: 35vh;
+      }
+    }
+  }
+}
