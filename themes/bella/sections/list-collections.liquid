@@ -15,14 +15,13 @@
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   {% capture breadcrumb_items %}
-  Home,/|
-  Collections,/collections
+  {{ 'navigation.home' | t }},/|
+  {{ 'navigation.collections' | t }},/collections
   {% endcapture %}
 
   {% render 'misc.breadcrumb', items: breadcrumb_items %}
   <div ui-slot="head">
-    <h1 class="heading">All Collections</h1>
-    <p class="description">Well cared for skin is the key to clean, natural beauty</p>
+    <h1 class="heading">{{ 'navigation.collections' | t }}</h1>
   </div>
   <div class="core-area">
     {% paginate collections by 24 cod %}
