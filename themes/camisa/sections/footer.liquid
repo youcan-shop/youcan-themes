@@ -24,95 +24,83 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="main-area">
-    <div class="logo">
-      {% if settings.logo_desktop.src or settings.logo_mobile.src %}
-        <a href="/">
-          <picture>
-            {% if settings.logo_mobile.src %}
-              <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
-            {% endif %}
-            {% if settings.logo_desktop.src %}
-              <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
-            {% endif %}
-            <img
-              src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
-              alt="{{ store.name }}"
-              loading="eager"
-              height="100%"
-              loading="lazy"
-              width="{{ settings.logo_desktop_width }}px"
-              data-mobile-width="{{ settings.logo_mobile_width }}"
-            >
-          </picture>
-        </a>
-      {% else %}
-        <a class="name" ui-slot="link-button" data-variant="primary" href="/">
-          {{ store.name }}
-        </a>
+  <div class="groups">
+    {% for list in link-lists %}
+      {% if list.links | count > 0  and list != main-link-list %}
+        <div class="group">
+          <h4 class="title">{{ list.title }}</h4>
+          <ul class="links">
+            {% for link in list.links %}
+              <li class="link">
+                <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
+                  {{ link.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
       {% endif %}
-    </div>
-    <div class="groups">
-      {% for list in link-lists %}
-        {% if list.links | count > 0  and list != main-link-list %}
-          <div class="group">
-            <h4 class="title">{{ list.title }}</h4>
-            <ul class="links">
-              {% for link in list.links %}
-                <li class="link">
-                  <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
-                    {{ link.title }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
+    {% endfor %}
+    {% if section.settings.show_social_links and has_social_links == true %}
+      <div class="group">
+        <h3 class="title">Socials</h3>
+        <ul class="links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
+
+            {% if url != null %}
+              <li class="link">
+                <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
+                  {% case platform %}
+                    {% when 'facebook' %}
+                      Facebook
+                    {% when 'twitter' %}
+                      Twitter
+                    {% when 'instagram' %}
+                      Instagram
+                    {% when 'tiktok' %}
+                      Tiktok
+                  {% endcase %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
   </div>
-  <hr ui-slot="divider" data-variant="line">
-  <div class="secondary-area">
+  <div class="logo">
+    {% if settings.logo_desktop.src or settings.logo_mobile.src %}
+      <a href="/">
+        <picture>
+          {% if settings.logo_mobile.src %}
+            <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
+          {% endif %}
+          {% if settings.logo_desktop.src %}
+            <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
+          {% endif %}
+          <img
+            src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
+            alt="{{ store.name }}"
+            loading="eager"
+            height="100%"
+            loading="lazy"
+            width="{{ settings.logo_desktop_width }}px"
+            data-mobile-width="{{ settings.logo_mobile_width }}"
+          >
+        </picture>
+      </a>
+    {% else %}
+      <a class="name" ui-slot="link-button" data-variant="primary" href="/">
+        {{ store.name }}
+      </a>
+    {% endif %}
+
     {% assign copyright_fallback = 'footer.copyright' | t %}
     <span class="copyright">
       {{ section.settings.copyright_content | default: copyright_fallback }}
     </span>
-    {% if section.settings.show_social_links and has_social_links == true %}
-      <ul class="social-links">
-        {% for link in store.brand.social_links %}
-          {% assign platform = link[0] %}
-          {% assign url = link[1] %}
-
-          {% case platform %}
-            {% when 'facebook' %}
-              {% assign icon = 'hgi-facebook-01' %}
-            {% when 'twitter' %}
-              {% assign icon = 'hgi-new-twitter-rectangle' %}
-            {% when 'instagram' %}
-              {% assign icon = 'hgi-instagram' %}
-            {% when 'tiktok' %}
-              {% assign icon = 'hgi-tiktok' %}
-          {% endcase %}
-
-          {% if url != null %}
-            <li class="link">
-              <a
-                ui-slot="button"
-                data-variant="primary"
-                data-mode="ghost"
-                data-size="lg"
-                data-as-icon
-                href="{{ url }}"
-                target="_blank"
-                title="{{ platform }}"
-              >
-                {% render 'misc.icon', name: icon %}
-              </a>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endif %}
   </div>
 </div>
 {% schema %}
@@ -129,7 +117,7 @@
       "type": "checkbox",
       "id": "override_global_colors",
       "label": "t:common.colors.override_global_colors",
-      "default": true
+      "default": false
     },
     {
       "type": "color",
@@ -146,7 +134,7 @@
         { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
         { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
       ],
-      "default": "as-light-bg"
+      "default": "as-foreground"
     },
     {
       "type": "header",
@@ -176,7 +164,7 @@
       "type": "checkbox",
       "id": "top_border",
       "label": "t:sections.footer.top_border",
-      "default": false
+      "default": true
     },
     {
       "type": "range",
