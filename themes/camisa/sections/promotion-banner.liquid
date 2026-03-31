@@ -1,0 +1,80 @@
+{{ 'section.promotion-banner.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="promotion-banner"
+  role="banner"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-pause-on-hover="{{ section.settings.pause_on_hover }}"
+>
+  <div class="items-wrapper">
+    {% for _ in (1..2) %}
+      <ul class="items">
+        {% for item in (1..6) %}
+          <li class="item">{{ section.settings.content }}</li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.promotion_banner.label",
+  "templates": ["index", "product", "page", "cart"],
+  "tag": "header",
+  "limit": 2,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Content",
+      "default": "t:sections.promotion_banner.default"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.motion"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:sections.promotion_banner.pause_on_hover",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
