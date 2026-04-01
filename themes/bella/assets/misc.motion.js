@@ -2,7 +2,7 @@ class Motion extends HTMLElement {
   constructor() {
     super();
 
-    this.sections = this.querySelectorAll(".youcan-section");
+    this.sections = this.querySelectorAll('.youcan-section, [ui-motion="custom"]');
   }
 
   connectedCallback() {
