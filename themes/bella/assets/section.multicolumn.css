@@ -1,12 +1,11 @@
 @layer sections{
   [ui-section=multicolumn]{
-    --per-page:attr(data-nbr-columns-desktop number);
     --gap:var(--spacing-32);
     --item-size:100%;
     display:flex;
     flex-direction:column;
     gap:var(--spacing-64);
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding:var(--top-spacing) 8% var(--bottom-spacing) !important;
   }
   [ui-section=multicolumn] .content-area{
     display:flex;
@@ -21,7 +20,7 @@
   }
   [ui-section=multicolumn] .items-area{
     display:grid;
-    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+    grid-template-columns:repeat(var(--nbr-columns-desktop), 1fr);
     align-items:flex-start;
     width:100%;
     grid-gap:var(--spacing-64);
@@ -34,8 +33,8 @@
     gap:var(--spacing-32);
   }
   [ui-section=multicolumn] .items-area [ui-block=column] .media{
-    width:attr(data-size px);
-    height:attr(data-size px);
+    width:var(--size);
+    height:var(--size);
     overflow:hidden;
     border-radius:var(--radius-column);
   }

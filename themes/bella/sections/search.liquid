@@ -2,17 +2,19 @@
 
 <div
   ui-section="search"
-  {% if section.settings.override_global_colors %}
-    style="
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
       --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
       --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   {% paginate search.products by 24 cod %}
     <div ui-slot="head">
@@ -57,7 +59,7 @@
       </div>
     </div>
     {% if items.size > 0 %}
-      <ul class="list" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
+      <ul class="list" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
         {% for product in items %}
           {% render 'block.product', product: product %}
         {% endfor %}

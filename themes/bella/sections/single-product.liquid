@@ -7,18 +7,20 @@
 <ui-product
   ui-section="single-product"
   product-id="{{ product.id }}"
-  {% if section.settings.override_global_colors %}
-    style="
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
       --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
       --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
   data-media-width-desktop="{{ section.settings.media_width_desktop }}"
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   {% for c in product.categories %}
     {% assign collection_name = c.name %}

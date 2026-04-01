@@ -28,8 +28,10 @@
 >
   <div
     class="media"
-    data-height="{{ section.settings.height }}"
-    data-overlay="{{ 1 | minus: overlay_opacity }}"
+    style="
+      --height: {{ section.settings.height }}vh;
+      --overlay: {{ 1 | minus: overlay_opacity }};
+    "
   >
     {% if slide.settings.slide_desktop_image.src or slide.settings.slide_mobile_image.src %}
       <picture>

@@ -12,12 +12,16 @@
 
 <ui-navbar
   ui-layout="navbar"
-  {% if section.settings.override_global_colors %}
-    style="
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
       --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
       --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
@@ -29,8 +33,6 @@
   {% endif %}
   data-header-layout="{{ section.settings.header_layout }}"
   data-mobile-logo-position="{{ section.settings.mobile_logo_position }}"
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   <div class="logo">
     {% if settings.logo_desktop.src or settings.logo_mobile.src %}
@@ -48,7 +50,7 @@
             loading="eager"
             height="100%"
             width="{{ settings.logo_desktop_width }}px"
-            data-mobile-width="{{ settings.logo_mobile_width }}"
+            style="--mobile-width: {{ settings.logo_mobile_width }}px;"
           >
         </picture>
       </a>

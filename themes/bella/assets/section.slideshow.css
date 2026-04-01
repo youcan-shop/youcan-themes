@@ -1,12 +1,10 @@
 @layer sections{
   [ui-section=slideshow]{
     --per-page:1;
-    --gap:attr(data-gap px);
-    --item-size:attr(data-item-size %);
     display:flex;
     flex-direction:column;
-    padding-top:attr(data-top-spacing px) !important;
-    padding-bottom:attr(data-bottom-spacing px) !important;
+    padding-top:var(--top-spacing) !important;
+    padding-bottom:var(--bottom-spacing) !important;
     padding-left:var(--spacing-0) !important;
     padding-right:var(--spacing-0) !important;
     gap:var(--spacing-24);
@@ -20,10 +18,10 @@
     background-color:transparent !important;
   }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .media{
-    height:attr(data-height vh);
+    height:var(--height);
     overflow:hidden;
     border-radius:var(--radius-slide);
-    filter:brightness(attr(data-overlay number));
+    filter:brightness(var(--overlay));
   }
   [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
     display:flex;
@@ -142,7 +140,7 @@
       padding-right:var(--spacing-0);
     }
     [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .media{
-      height:calc(attr(data-height vh) / 2);
+      height:calc(var(--height) / 2);
     }
     [ui-section=slideshow] [ui-slot=carousel] [ui-slot=carousel-item] .content{
       padding:var(--spacing-24);

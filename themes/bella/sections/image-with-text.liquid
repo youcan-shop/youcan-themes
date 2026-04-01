@@ -2,19 +2,21 @@
 
 <div
   ui-section="image-with-text"
-  {% if section.settings.override_global_colors %}
-    style="
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
       --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
       --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="wrapper-area" data-height="{{ section.settings.image_height }}">
+  <div class="wrapper-area" style="--height: {{ section.settings.image_height }}vh;">
     <div ui-block="media" data-image-placement="{{ section.settings.image_placement }}">
       {% if section.settings.image.src %}
         <img
