@@ -1,0 +1,207 @@
+{{ 'section.footer.css' | asset_url | stylesheet_tag }}
+
+{% assign has_social_links = false %}
+
+{% for link in store.brand.social_links %}
+  {% if link[1] != null %}
+    {% assign has_social_links = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div
+  ui-layout="footer"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-border="{{ section.settings.top_border }}"
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div class="main-area">
+    <div class="logo">
+      {% if settings.logo_desktop.src or settings.logo_mobile.src %}
+        <a href="/">
+          <picture>
+            {% if settings.logo_mobile.src %}
+              <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
+            {% endif %}
+            {% if settings.logo_desktop.src %}
+              <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
+            {% endif %}
+            <img
+              src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
+              alt="{{ store.name }}"
+              loading="eager"
+              height="100%"
+              loading="lazy"
+              width="{{ settings.logo_desktop_width }}px"
+              data-mobile-width="{{ settings.logo_mobile_width }}"
+            >
+          </picture>
+        </a>
+      {% else %}
+        <a class="name" ui-slot="link-button" data-variant="primary" href="/">
+          {{ store.name }}
+        </a>
+      {% endif %}
+    </div>
+    <div class="groups">
+      {% for list in link-lists %}
+        {% if list.links | count > 0  and list != main-link-list %}
+          <div class="group">
+            <h4 class="title">{{ list.title }}</h4>
+            <ul class="links">
+              {% for link in list.links %}
+                <li class="link">
+                  <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  <hr ui-slot="divider" data-variant="line">
+  <div class="secondary-area">
+    {% assign copyright_fallback = 'footer.copyright' | t %}
+    <span class="copyright">
+      {{ section.settings.copyright_content | default: copyright_fallback }}
+    </span>
+    {% if section.settings.show_social_links and has_social_links == true %}
+      <ul class="social-links">
+        {% for link in store.brand.social_links %}
+          {% assign platform = link[0] %}
+          {% assign url = link[1] %}
+
+          {% case platform %}
+            {% when 'facebook' %}
+              {% assign icon = 'hgi-facebook-01' %}
+            {% when 'twitter' %}
+              {% assign icon = 'hgi-new-twitter-rectangle' %}
+            {% when 'instagram' %}
+              {% assign icon = 'hgi-instagram' %}
+            {% when 'tiktok' %}
+              {% assign icon = 'hgi-tiktok' %}
+          {% endcase %}
+
+          {% if url != null %}
+            <li class="link">
+              <a
+                ui-slot="button"
+                data-variant="primary"
+                data-mode="ghost"
+                data-size="lg"
+                data-as-icon
+                href="{{ url }}"
+                target="_blank"
+                title="{{ platform }}"
+              >
+                {% render 'misc.icon', name: icon %}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+{
+  "label": "t:sections.footer.label",
+  "tag": "footer",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-light-bg"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.social_media"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_links",
+      "label": "t:sections.footer.show_social_links",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.about_social_links"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "text",
+      "id": "copyright_content",
+      "placeholder": " © All rights reserved.",
+      "label": "t:sections.footer.copyright_text"
+    },
+    {
+      "type": "checkbox",
+      "id": "top_border",
+      "label": "t:sections.footer.top_border",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.about_menu_links"
+    }
+  ]
+}
+{% endschema %}
