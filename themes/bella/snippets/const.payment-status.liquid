@@ -1,0 +1,59 @@
+{% comment %}
+  Renders a payment status
+
+  Accepts:
+  - status: {String} Status ('paid' | 'unpaid' | 'captured' | 'refunded' | 'pending')
+
+  Usage:
+  {% render 'const-payment-status', status: 'paid' %}
+{% endcomment %}
+
+{% case status %}
+  {% when 'paid' %}
+    <div
+      ui-slot="status-badge"
+      data-variant="light"
+      data-status="completed"
+    >
+      {% render 'misc.icon', name: ' hgi-checkmark-circle-02' %}
+      {{ 'order.status.paid' | t }}
+    </div>
+  {% when 'unpaid' %}
+    <div
+      ui-slot="status-badge"
+      data-variant="light"
+      data-status="disabled"
+    >
+      {% render 'misc.icon', name: 'hgi-time-quarter-pass' %}
+      {{ 'order.status.unpaid' | t }}
+    </div>
+  {% when 'captured' %}
+    <div
+      ui-slot="status-badge"
+      data-variant="light"
+      data-status="disabled"
+    >
+      {% render 'misc.icon', name: 'hgi-package' %}
+      {{ 'order.status.captured' | t }}
+    </div>
+  {% when 'refunded' %}
+    <div
+      ui-slot="status-badge"
+      data-variant="light"
+      data-status="failed"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-circle-half-dot' %}
+      {{ 'order.status.refunded' | t }}
+    </div>
+  {% when 'pending' %}
+    <div
+      ui-slot="status-badge"
+      data-variant="light"
+      data-status="pending"
+    >
+      {% render 'misc.icon', name: 'hgi-stroke hgi-alert-02' %}
+      {{ 'order.status.pending' | t }}
+    </div>
+  {% else %}
+    </div>
+{% endcase %}

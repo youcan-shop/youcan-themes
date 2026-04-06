@@ -1,0 +1,292 @@
+{{ 'section.slideshow.css' | asset_url | stylesheet_tag }}
+
+<ui-carousel
+  ui-section="slideshow"
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    {% endif %}
+    {% if section.blocks.size > 1 %}
+      --gap: 32px;
+      --item-size: 92%
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-show-content-bellow-image="{{ section.settings.show_content_below_image }}"
+>
+  <ul
+    ui-carousel="wrapper"
+    ui-slot="carousel"
+    aria-orientation="vertical"
+    data-align="center"
+    {% if section.settings.auto_rotate %}
+      autoplay
+      interval="{{ section.settings.change_every | times: 1000 }}"
+    {% endif %}
+  >
+    {% for slide in section.blocks %}
+      {% render 'block.slide' %}
+    {% endfor %}
+  </ul>
+  {% if section.settings.show_controls and section.blocks.size > 1 %}
+    <div class="pagination" data-position="{{ section.settings.controls_position }}">
+      {% for marker in section.blocks %}
+        <button
+          ui-carousel="marker"
+          aria-label="Slide {{ forloop.index }}"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "t:sections.slideshow.label",
+  "templates": ["index"],
+  "limit": 3,
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:common.globals.height",
+      "options": [
+        { "label": "t:common.layout.size.small", "value": "35" },
+        { "label": "t:common.layout.size.medium", "value": "60" },
+        { "label": "t:common.layout.size.large", "value": "75" }
+      ],
+      "default": "75"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "t:sections.slideshow.auto_rotate",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "change_every",
+      "label": "t:sections.slideshow.change_every",
+      "min": 3,
+      "max": 7,
+      "step": 1,
+      "unit": "s",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "t:sections.slideshow.show_controls",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "controls_position",
+      "label": "t:sections.slideshow.controls_position.label",
+      "options": [
+        { "label": "t:sections.slideshow.controls_position.options.inside", "value": "inside" },
+        { "label": "t:sections.slideshow.controls_position.options.outside", "value": "outside" }
+      ],
+      "default": "outside"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.mobile_layout"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_alignment",
+      "label": "t:sections.slideshow.content_alignment",
+      "options": [
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content_below_image",
+      "label": "t:sections.slideshow.show_content_below_image",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide_item",
+      "label": "t:sections.slideshow.blocks.slide.label",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:common.headers.colors"
+        },
+        {
+          "type": "checkbox",
+          "id": "override_global_colors",
+          "label": "t:common.colors.override_global_colors",
+          "default": false
+        },
+        {
+          "type": "color",
+          "id": "main_color",
+          "label": "t:common.colors.main_color",
+          "default": "#121212"
+        },
+        {
+          "type": "select",
+          "id": "color_intensity",
+          "label": "t:common.colors.color_intensity",
+          "options": [
+            { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+            { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+            { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+          ],
+          "default": "as-light-bg"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.image"
+        },
+        {
+          "type": "image_picker",
+          "id": "slide_desktop_image",
+          "label": "t:common.globals.desktop_image"
+        },
+        {
+          "type": "image_picker",
+          "id": "slide_mobile_image",
+          "label": "t:common.globals.mobile_image"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.overlay"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "t:common.globals.opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 20
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.content"
+        },
+        {
+          "type": "text",
+          "id": "slide_subheading",
+          "label": "t:common.header.subheading",
+          "default": "t:sections.slideshow.blocks.slide.default.subheading"
+        },
+        {
+          "type": "text",
+          "id": "slide_heading",
+          "label": "t:common.header.heading",
+          "default": "t:sections.slideshow.blocks.slide.default.heading"
+        },
+        {
+          "type": "textarea",
+          "id": "slide_description",
+          "label": "t:common.header.description"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.button"
+        },
+        {
+          "type": "text",
+          "id": "slide_button_label",
+          "label": "t:common.button.label",
+          "default": "t:sections.slideshow.blocks.slide.default.button"
+        },
+        {
+          "type": "url",
+          "id": "slide_button_link",
+          "label": "t:common.button.link",
+          "default": "/collections"
+        },
+        {
+          "type": "select",
+          "id": "slide_button_style",
+          "options": [
+            { "label": "t:common.button.style.options.primary", "value": "primary" },
+            { "label": "t:common.button.style.options.secondary", "value": "secondary" },
+            { "label": "t:common.button.style.options.underline", "value": "underline" }
+          ],
+          "label": "t:common.button.style.label",
+          "default": "primary"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

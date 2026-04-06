@@ -1,0 +1,52 @@
+/* 
+  Component: Radio
+
+  Usage:
+    - <input ui-slot="radio" name="my-radio" type="radio" />
+*/
+
+[ui-slot="radio"] {
+  --radio-size: 16px;
+
+  position: relative;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  padding: var(--spacing-2);
+  transition: all 0.1s ease-out;
+  border: 2px solid var(--color-surface-container-high);
+  border-radius: var(--radius-rounded);
+  background-color: var(--color-on-primary);
+  cursor: pointer;
+  appearance: none;
+
+  /* Dead Area */
+  &::after {
+    content: "";
+    position: absolute;
+    width: calc(var(--radio-size) + 4px);
+    height: calc(var(--radio-size) + 4px);
+    inset-inline-start: -4px;
+    inset-block-start: -4px;
+  }
+
+  /* Checked */
+  &:checked {
+    border-width: 4px;
+    border-color: var(--color-primary);
+  }
+
+  /* Disabled */
+  &:disabled {
+    border-color: var(--color-surface-variant);
+    pointer-events: none;
+
+    &:not(:checked) {
+      background-color: var(--color-surface-variant);
+    }
+  }
+
+  /* Hover */
+  &:hover:not(:disabled, :checked) {
+    border-color: var(--color-surface-container-highest);
+  }
+}

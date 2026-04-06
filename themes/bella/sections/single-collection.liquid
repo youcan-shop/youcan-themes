@@ -1,0 +1,164 @@
+{{ 'section.single-collection.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="single-collection"
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+>
+  {% capture breadcrumb_items %}
+  {{ 'navigation.home' | t }},/|
+  {{ 'navigation.collections' | t }},/collections|
+  {{ category.name }},/collections/{{ category.slug }}
+  {% endcapture %}
+
+  {% render 'misc.breadcrumb', items: breadcrumb_items %}
+  <div ui-slot="head">
+    <h1 class="heading">{{ category.name }}</h1>
+    {% if category.description %}
+      <p class="description">{{ category.description }}</p>
+    {% endif %}
+  </div>
+  {% paginate collection.products by 24 cod, category_id: category.id %}
+    {% if subCategories.size > 0 %}
+      <ul class="sub-collections-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+        {% for subCollection in subCategories %}
+          <li class="sub-collection" ui-slot="carousel-item">
+            <a href="/collections/{{ subCollection.slug }}">
+              <div class="media">
+                {% if subCollection.preview_image %}
+                  <img
+                    src="{{ subCollection.preview_image.original }}"
+                    alt="{{ subCollection.name }}"
+                    height="100%"
+                    width="100%"
+                    loading="eager"
+                  >
+                {% else %}
+                  {% render 'misc.image-fallback' %}
+                {% endif %}
+              </div>
+              <h4 class="title">{{ subCollection.name }}</h4>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <hr ui-slot="divider" data-variant="line">
+    <div class="core-area">
+      {% if items.size > 0 %}
+        <div class="controller">
+          <h4 class="result">
+            {{ items.size }}
+            {{ 'general.products' | t }}
+          </h4>
+          <div class="sort">
+            <label for="sort">{{ 'general.sort.label' | t }}</label>
+            {% render 'misc.sort', url: previous_page %}
+          </div>
+        </div>
+        <ul class="items" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
+          {% for product in items %}
+            {% render 'block.product', product: product %}
+          {% endfor %}
+        </ul>
+
+        {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+
+      {% else %}
+        {% assign empty_content = 'Sorry, there are no products in this collection.' %}
+        {% render 'misc.empty', heading: empty_content, action_label: 'Explore Other Collections', action_url: '/collections' %}
+      {% endif %}
+    </div>
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.collection.label",
+  "templates": ["collection"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "t:sections.collection.show_discount_badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}
