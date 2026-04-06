@@ -8,10 +8,10 @@
     flex-direction: column;
     padding-block: attr(data-top-spacing px) attr(data-bottom-spacing px) !important;
     padding-inline: var(--spacing-0) !important;
-    gap: var(--spacing-24);
+    gap: var(--spacing-8);
 
     [ui-slot="carousel"] {
-      padding-inline: 8%;
+      padding-inline: var(--spacing-24);
 
       [ui-slot="carousel-item"] {
         position: relative;
@@ -31,9 +31,10 @@
           align-items: flex-start;
           justify-content: center;
           height: 100%;
-          padding: var(--spacing-64);
+          padding: var(--spacing-24);
           gap: var(--spacing-16);
           inset: 0;
+          color: var(--color-primary);
 
           [ui-slot="head"] {
             align-items: inherit !important;
@@ -132,10 +133,7 @@
         }
 
         &[aria-selected="true"] {
-          width: var(--spacing-48);
-
           &::before {
-            width: inherit;
             background-color: currentcolor;
           }
         }
@@ -146,8 +144,6 @@
       [ui-slot="carousel"] {
         [ui-slot="carousel-item"] {
           .content {
-            color: var(--color-on-primary);
-
             [ui-slot="head"] {
               text-align: start !important;
             }
@@ -157,26 +153,16 @@
 
       .pagination {
         &[data-position="inside"] {
-          margin-block-start: calc(var(--spacing-64) * -1);
+          margin-block-start: calc(var(--spacing-48) * -1);
         }
       }
     }
 
     @media (width <= 769px) {
-      --item-size: 100% !important;
-
       [ui-slot="carousel"] {
         padding-inline: var(--spacing-0);
 
         [ui-slot="carousel-item"] {
-          .media {
-            height: calc(attr(data-height vh) / 2);
-          }
-
-          .content {
-            padding: var(--spacing-24);
-          }
-
           &[data-alignment="center"] {
             .content {
               align-items: center !important;
@@ -189,36 +175,6 @@
               align-items: flex-end !important;
               text-align: end !important;
             }
-          }
-        }
-      }
-
-      &[data-show-content-bellow-image="1"] {
-        [ui-slot="carousel"] {
-          [ui-slot="carousel-item"] {
-            .content {
-              position: static;
-              align-items: center;
-              height: auto;
-              padding: var(--spacing-48) 0 0 0;
-              text-align: center;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-@layer overrides {
-  [data-intensity="as-solid-bg"] [ui-section="slideshow"],
-  [data-intensity="as-solid-bg"][ui-section="slideshow"],
-  [ui-section="slideshow"] {
-    @media (width > 769px) {
-      [ui-slot="carousel"] {
-        [ui-slot="carousel-item"] {
-          .content {
-            color: var(--color-primary);
           }
         }
       }
