@@ -78,15 +78,17 @@
   <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
 {% endif %}
 
-{% if store.brand.social_links.twitter != null %}
-  {% if store.brand.social_links.twitter contains 'twitter.com/' %}
-    {% assign twitter_site = store.brand.social_links.twitter | split: 'twitter.com/' | last | prepend: '@' %}
-  {% endif %}
-  {% if store.brand.social_links.twitter contains 'x.com/' %}
-    {% assign twitter_site = store.brand.social_links.twitter | split: 'x.com/' | last | prepend: '@' %}
-  {% endif %}
+{% if store.brand.social_links.twitter contains 'twitter.com/' %}
+  {% assign twitter_site = store.brand.social_links.twitter | split: 'twitter.com/' | last | prepend: '@' %}
+{% endif %}
+{% if store.brand.social_links.twitter contains 'x.com/' %}
+  {% assign twitter_site = store.brand.social_links.twitter | split: 'x.com/' | last | prepend: '@' %}
+{% endif %}
+
+{% if twitter_site %}
   <meta name="twitter:site" content="{{ twitter_site }}">
 {% endif %}
+
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ og_title | escape }}">
 <meta name="twitter:description" content="{{ meta_description | escape }}">
