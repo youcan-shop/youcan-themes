@@ -4,33 +4,30 @@
     flex-direction: column;
     justify-content: center;
     gap: var(--spacing-64);
-    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
 
     .items-area {
       display: grid;
+      column-gap: var(--spacing-32);
       grid-template-columns: repeat(attr(data-nbr-columns-desktop number), 1fr);
 
       [ui-block="feature-item"] {
         display: flex;
         align-items: center;
-        padding: var(--spacing-16);
+        padding: var(--spacing-32);
         gap: var(--spacing-12);
         overflow: hidden;
+        border-block-end: 1px dashed var(--color-surface-variant);
 
         .icon {
           display: flex;
           flex-shrink: 0;
           align-items: center;
           justify-content: center;
-          width: calc(attr(data-size px) * 2);
-          height: calc(attr(data-size px) * 2);
-          border-radius: var(--radius-feature-item);
-          background-color: var(--color-surface-container-low);
         }
 
         .label {
           overflow: hidden;
-          font: var(--font-body-lg);
           text-overflow: ellipsis;
           white-space: nowrap;
         }
@@ -47,11 +44,10 @@
       gap: var(--spacing-48);
 
       .items-area {
-        gap: var(--spacing-32);
         grid-template-columns: 1fr;
 
         [ui-block="feature-item"] {
-          padding: var(--spacing-0);
+          padding-inline: var(--spacing-16);
         }
       }
     }
