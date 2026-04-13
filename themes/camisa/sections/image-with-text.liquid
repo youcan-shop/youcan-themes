@@ -35,8 +35,6 @@
     >
       {% for block in section.blocks %}
         {% case block.type %}
-          {% when 'subheading' %}
-            <h4 class="subheading" {{ block.youcan_attributes }}>{{ block.settings.content }}</h4>
           {% when 'heading' %}
             <h1 class="heading" {{ block.youcan_attributes }}>{{ block.settings.content }}</h1>
           {% when 'description' %}
@@ -130,7 +128,7 @@
         { "label": "t:common.layout.image_placement.image_first", "value": "first" },
         { "label": "t:common.layout.image_placement.image_second", "value": "second" }
       ],
-      "default": "first"
+      "default": "second"
     },
     {
       "type": "header",
@@ -185,19 +183,6 @@
   ],
   "blocks": [
     {
-      "type": "subheading",
-      "label": "t:common.header.subheading",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "content",
-          "label": "t:common.headers.content",
-          "default": "t:sections.image_with_text.default.subheading"
-        }
-      ]
-    },
-    {
       "type": "heading",
       "label": "t:common.header.heading",
       "limit": 1,
@@ -249,7 +234,7 @@
             { "label": "t:common.button.style.options.underline", "value": "underline" }
           ],
           "label": "t:common.button.style.label",
-          "default": "primary"
+          "default": "underline"
         }
       ]
     }

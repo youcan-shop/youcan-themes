@@ -1,13 +1,20 @@
 @layer sections {
   [ui-section="image-with-text"] {
-    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
 
     .wrapper-area {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
       height: attr(data-height vh);
       overflow: hidden;
-      border-radius: var(--radius-media);
+      gap: var(--spacing-32);
+
+      &:has([data-image-placement="first"]) {
+        grid-template-columns: 70% auto;
+      }
+
+      &:has([data-image-placement="second"]) {
+        grid-template-columns: auto 70%;
+      }
 
       [ui-block="media"] {
         height: inherit;
@@ -28,9 +35,7 @@
       [ui-block="content"] {
         display: flex;
         flex-direction: column;
-        padding: var(--spacing-48);
         gap: var(--spacing-32);
-        background-color: var(--color-surface-container-low);
 
         &[data-text-alignment="start"] {
           align-items: flex-start;
@@ -76,7 +81,7 @@
 
     @media (width <= 1028px) {
       .wrapper-area {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
         height: auto;
 
         [ui-block="media"] {
