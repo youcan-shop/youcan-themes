@@ -1,5 +1,11 @@
 # aura
 
+## 4.4.11
+
+### Patch Changes
+
+- 7a5f55e: Fix empty meta description if product has no description
+
 ## 4.4.10
 
 ### Patch Changes
