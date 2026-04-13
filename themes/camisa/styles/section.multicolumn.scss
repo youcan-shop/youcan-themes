@@ -1,13 +1,12 @@
 @layer sections {
   [ui-section="multicolumn"] {
     --per-page: attr(data-nbr-columns-desktop number);
-    --gap: var(--spacing-32);
     --item-size: 100%;
 
     display: flex;
     flex-direction: column;
     gap: var(--spacing-64);
-    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
 
     .content-area {
       display: flex;
@@ -23,17 +22,21 @@
     }
 
     .items-area {
-      display: grid;
+      display: grid !important;
       grid-template-columns: repeat(attr(data-nbr-columns-desktop number), 1fr);
-      align-items: flex-start;
       width: 100%;
-      gap: var(--spacing-64);
+      border: 1px solid var(--color-surface-variant);
 
       [ui-block="column"] {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: var(--spacing-32);
+        gap: var(--spacing-24);
+        padding: var(--spacing-48);
+
+        &:not(:first-child) {
+          border-inline-start: 1px solid var(--color-surface-variant);
+        }
 
         .media {
           width: attr(data-size px);
@@ -52,10 +55,10 @@
 
           .heading {
             font: var(--font-title-md);
+            color: var(--color-on-surface-variant);
           }
 
           .description {
-            color: var(--color-on-surface-variant);
             font: var(--font-body-lg);
           }
         }
@@ -102,10 +105,7 @@
         }
 
         &[aria-selected="true"] {
-          width: var(--spacing-48);
-
           &::before {
-            width: inherit;
             background-color: currentcolor;
           }
         }
@@ -117,7 +117,7 @@
 
       .pagination,
       .items-area {
-        display: flex;
+        display: flex !important;
       }
     }
 
