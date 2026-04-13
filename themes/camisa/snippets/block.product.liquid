@@ -3,6 +3,7 @@
 
   Accepts:
   - product: {Object} Item info
+  - youcan_attributes: {String} YouCan attributes
 
   Usage:
   {% render 'block.product', product: {...} %}
@@ -15,7 +16,7 @@
 <li
   ui-block="product"
   data-alignment="{{ settings.product_alignment }}"
-  {{ product.youcan_attributes }}
+  {{ youcan_attributes }}
 >
   <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
     <a href="{{ product.url }}">
@@ -46,14 +47,31 @@
         {% render 'misc.image-fallback', icon_size: 40 %}
       {% endif %}
     </a>
-
+  </div>
+  <div class="content">
+    <div class="detail">
+      <a class="title" ui-slot="link-button" data-variant="gray" data-size="md" href="/products/{{ product.slug }}">
+        {% assign placeholder = 'product.title' | t %}
+        {{ product.name | default: placeholder }}
+      </a>
+      <div class="price">
+        <span class="original-price">
+          {{ price | default: 0 | money }}
+        </span>
+        {% if compare_at_price %}
+          <s class="compare-at-price">
+            {{ compare_at_price | default: 0 | money }}
+          </s>
+        {% endif %}
+      </div>
+    </div>
     {% if settings.cart_checkout_type == 'express-checkout' %}
       {% render 'core.express-checkout' %}
       <button
         ui-slot="button"
         data-variant="primary"
-        data-mode="lighter"
-        data-size="lg"
+        data-mode="stroke"
+        data-size="sm"
         type="button"
         popovertarget="express-checkout-{{ product.id }}"
         data-as-icon
@@ -64,32 +82,15 @@
       {% if product.variants.size > 1 %}
         {% render 'misc.product-drawer' %}
       {% else %}
-        {% render 'core.shop-button' %}
-        {% render 'core.shop-button', mode: 'lighter', as_icon: true %}
+        {% render 'core.shop-button', size: 'sm', mode: 'stroke', as_icon: true %}
       {% endif %}
     {% endif %}
-  </div>
-  <div class="content">
-    <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/products/{{ product.slug }}">
-      {% assign placeholder = 'product.title' | t %}
-      {{ product.name | default: placeholder }}
-    </a>
-    <div class="price">
-      <span class="original-price">
-        {{ price | default: 0 | money }}
-      </span>
-      {% if compare_at_price %}
-        <s class="compare-at-price">
-          {{ compare_at_price | default: 0 | money }}
-        </s>
-      {% endif %}
-    </div>
   </div>
   {% if compare_at_price and section.settings.show_discount_badge %}
     <div
       class="badge"
       ui-slot="status-badge"
-      data-variant="light"
+      data-variant="stroke"
       data-status="{{ settings.sale_badge_status }}"
     >
       {% if settings.sale_badge_type == 'percentage' %}
