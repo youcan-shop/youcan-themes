@@ -1,0 +1,211 @@
+{{ 'section.product-tabs.css' | asset_url | stylesheet_tag }}
+
+<ui-carousel
+  ui-section="product-tabs"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head">
+    <span class="subheading">{{ section.settings.subheading }}</span>
+    <h1 class="heading">{{ section.settings.heading }}</h1>
+    {% if section.blocks.size > 1 %}
+      <div class="tab-list" role="tablist">
+        {% for collection_block in section.blocks %}
+          <button
+            class="tab-trigger"
+            ui-carousel="marker"
+            {% if forloop.first %}
+              aria-selected="true"
+            {% endif %}
+            {{ collection_block.youcan_attributes }}
+          >
+            {% assign translated_trigger = 'product-tabs.tab-trigger' | t %}
+            {% assign fallback = translated_trigger | append: ' ' | append: forloop.index %}
+            {{ collection_block.settings.tab_name | default: collection_block.settings.collection.name | default: fallback }}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+    {% for collection_block in section.blocks %}
+      {% assign max_products = section.settings.max_products_to_show %}
+      {% if collection_block.settings.collection.id %}
+        {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
+          <ul
+            class="items"
+            ui-carousel="item"
+            ui-slot="carousel-item"
+            role="tabpanel"
+            data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+            data-nbr-columns-mobile="{{ section.settings.nbr_columns_mobile }}"
+          >
+            {% for product in items %}
+              {% render 'block.product' %}
+            {% endfor %}
+          </ul>
+        {% endpaginate %}
+      {% else %}
+        <ul
+          class="items"
+          ui-carousel="item"
+          ui-slot="carousel-item"
+          role="tabpanel"
+          data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+          data-nbr-columns-mobile="{{ section.settings.nbr_columns_mobile }}"
+        >
+          {% for product in (1..max_products) %}
+            {% render 'block.product' %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endfor %}
+  </div>
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "t:sections.product_tabs.label",
+  "templates": ["index", "product", "page", "cart"],
+  "limit": 3,
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:common.header.subheading",
+      "default": "t:sections.product_tabs.default.subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.product_tabs.default.heading"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "t:sections.product_tabs.show_discount_badge",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "max_products_to_show",
+      "label": "t:common.globals.max_products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.mobile_layout"
+    },
+    {
+      "type": "select",
+      "id": "nbr_columns_mobile",
+      "label": "t:common.globals.number_per_column_mobile",
+      "options": [
+        { "label": "t:common.layout.column.one", "value": "1" },
+        { "label": "t:common.layout.column.two", "value": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "label": "t:sections.product_tabs.blocks.tab.label",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_name",
+          "label": "t:sections.product_tabs.tab_name"
+        },
+        {
+          "type": "category",
+          "id": "collection",
+          "label": "t:common.globals.collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

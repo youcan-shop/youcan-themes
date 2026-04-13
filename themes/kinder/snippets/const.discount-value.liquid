@@ -1,0 +1,22 @@
+{% comment %}
+  Renders the discount value
+
+  Accepts:
+  - coupon: {String} Valid coupon
+
+  Usage:
+  {% render 'const-discount-value', coupon: {...} %}
+{% endcomment %}
+
+{% assign percentage_coupon_type = '1' %}
+{% assign fixed_coupon_type = '2' %}
+
+{% assign coupon_value = coupon.value %}
+{% assign deducted_amount = coupon.deducted_amount | default: 0 | money %}
+
+{% if coupon.type == percentage_coupon_type %}
+  {% assign coupon_template = '-' | append: '[value] (%[percentage])' %}
+  {{ coupon_template | replace: '[value]', deducted_amount | replace: '[percentage]', coupon_value }}
+{% elsif coupon.type == fixed_coupon_type %}
+  {{ '-' | append: coupon_value | default: 0 | money }}
+{% endif %}

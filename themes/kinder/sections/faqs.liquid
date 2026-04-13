@@ -1,0 +1,198 @@
+{{ 'section.faqs.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="faqs"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-orientation="{{ section.settings.orientation }}"
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head" class="content-area">
+    <h4 class="subheading">{{ section.settings.subheading }}</h4>
+    <h1 class="heading">{{ section.settings.heading }}</h1>
+    <p class="description">{{ section.settings.description }}</p>
+    <a
+      class="cta"
+      {% if section.settings.button_style == 'underline' %}
+        ui-slot="link-button"
+        data-underline="true"
+      {% else %}
+        ui-slot="button"
+        data-variant="primary"
+      {% endif %}
+      {% if section.settings.button_style == 'primary' %}
+        data-mode="filled"
+      {% elsif section.settings.button_style == 'secondary' %}
+        data-mode="lighter"
+      {% endif %}
+      data-size="lg"
+      href="{{ section.settings.button_link }}"
+    >
+      {{ section.settings.button_label }}
+    </a>
+  </div>
+  <ul class="items-area" ui-slot="accordion">
+    {% for faq in section.blocks %}
+      {% render 'block.faq' %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.faqs.label",
+  "templates": ["index", "product", "page", "cart"],
+  "limit": 3,
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "select",
+      "id": "orientation",
+      "label": "t:common.globals.orientation",
+      "options": [
+        { "label": "t:common.layout.orientation.vertical", "value": "vertical" },
+        { "label": "t:common.layout.orientation.horizontal", "value": "horizontal" }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:common.header.subheading",
+      "default": "t:sections.faqs.default.subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.faqs.default.heading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.header.description",
+      "default": "t:sections.faqs.default.description"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:common.button.label",
+      "default": "t:sections.faqs.default.button"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:common.button.link",
+      "default": "#"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        { "label": "t:common.button.style.options.primary", "value": "primary" },
+        { "label": "t:common.button.style.options.secondary", "value": "secondary" },
+        { "label": "t:common.button.style.options.underline", "value": "underline" }
+      ],
+      "label": "t:common.button.style.label",
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "label": "t:sections.faqs.blocks.faq.label",
+      "settings": [
+        {
+          "type": "text",
+          "id": "faq_title",
+          "label": "t:sections.faqs.blocks.faq.title",
+          "default": "t:sections.faqs.blocks.faq.default.title"
+        },
+        {
+          "type": "richtext",
+          "id": "faq_content",
+          "label": "t:common.headers.content",
+          "default": "t:sections.faqs.blocks.faq.default.content"
+        },
+        {
+          "type": "checkbox",
+          "id": "faq_open_by_default",
+          "label": "t:sections.faqs.blocks.faq.open_by_default",
+          "default": false
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

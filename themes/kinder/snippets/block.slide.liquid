@@ -1,0 +1,92 @@
+{% comment %}
+  Renders a slide item (Block)
+
+  Accepts:
+    - slide: {Object} Item info
+
+  Usage:
+  {% render 'block.slide' %}
+{% endcomment %}
+
+{% assign overlay_opacity = slide.settings.overlay_opacity | divided_by: 100 %}
+
+<li
+  ui-carousel="item"
+  ui-block="slide"
+  ui-slot="carousel-item"
+  {{ slide.youcan_attributes }}
+  {% if slide.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ slide.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ slide.settings.main_color.chroma }};
+      --brand-hue: {{ slide.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ slide.settings.color_intensity }}"
+  {% endif %}
+  data-alignment="{{ section.settings.mobile_content_alignment }}"
+>
+  <div
+    class="media"
+    data-height="{{ section.settings.height }}"
+    data-overlay="{{ 1 | minus: overlay_opacity }}"
+  >
+    {% if slide.settings.slide_desktop_image.src or slide.settings.slide_mobile_image.src %}
+      <picture>
+        {% if slide.settings.slide_mobile_image.src %}
+          <source srcset="{{ slide.settings.slide_mobile_image.src }}" media="(max-width: 768px)">
+        {% endif %}
+        {% if settings.image.src %}
+          <source srcset="{{ slide.settings.slide_desktop_image.src }}" media="(min-width: 769px)">
+        {% endif %}
+        <img
+          src="{{ slide.settings.slide_desktop_image.src | default: slide.settings.slide_mobile_image.src }}"
+          alt="Slide {{forloop.index }}"
+          height="100%"
+          width="100%"
+          {% if forloop.index0 %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
+        >
+      </picture>
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: '100' %}
+    {% endif %}
+  </div>
+  <div class="content">
+    <div ui-slot="head" data-height="{{ section.settings.height }}">
+      {% if slide.settings.slide_subheading %}
+        <h4 class="subheading">{{ slide.settings.slide_subheading }}</h4>
+      {% endif %}
+      {% if slide.settings.slide_heading %}
+        <h1 class="heading">{{ slide.settings.slide_heading }}</h1>
+      {% endif %}
+      {% if slide.settings.slide_description %}
+        <p class="description">{{ slide.settings.slide_description }}</p>
+      {% endif %}
+    </div>
+    {% if slide.settings.slide_button_label %}
+      <a
+        class="cta"
+        {% if slide.settings.slide_button_style == 'underline' %}
+          ui-slot="link-button"
+          data-underline="true"
+        {% else %}
+          ui-slot="button"
+          data-variant="primary"
+        {% endif %}
+        {% if slide.settings.slide_button_style == 'primary' %}
+          data-mode="filled"
+        {% elsif slide.settings.slide_button_style == 'secondary' %}
+          data-mode="lighter"
+        {% endif %}
+        data-size="lg"
+        href="{{ slide.settings.slide_button_link }}"
+      >
+        {{ slide.settings.slide_button_label }}
+      </a>
+    {% endif %}
+  </div>
+</li>
