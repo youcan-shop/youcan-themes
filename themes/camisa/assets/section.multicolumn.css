@@ -1,10 +1,9 @@
 
   [ui-section=multicolumn]:not(#\#){
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding:attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
   }
   [ui-section=multicolumn]{
     --per-page:attr(data-nbr-columns-desktop number);
-    --gap:var(--spacing-32);
     --item-size:100%;
     display:flex;
     flex-direction:column;
@@ -21,19 +20,23 @@
     gap:var(--spacing-24);
     flex-shrink:0;
   }
+  [ui-section=multicolumn]:not(#\#) .items-area{
+    display:grid !important;
+  }
   [ui-section=multicolumn] .items-area{
-    display:grid;
     grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
-    align-items:flex-start;
     width:100%;
-    grid-gap:var(--spacing-64);
-    gap:var(--spacing-64);
+    border:1px solid var(--color-surface-variant);
   }
   [ui-section=multicolumn] .items-area [ui-block=column]{
     display:flex;
     flex-direction:column;
     justify-content:center;
-    gap:var(--spacing-32);
+    gap:var(--spacing-24);
+    padding:var(--spacing-48);
+  }
+  [ui-section=multicolumn] .items-area [ui-block=column]:not(:first-child){
+    border-left:1px solid var(--color-surface-variant);
   }
   [ui-section=multicolumn] .items-area [ui-block=column] .media{
     width:attr(data-size px);
@@ -52,9 +55,9 @@
   }
   [ui-section=multicolumn] .items-area [ui-block=column] .content .heading{
     font:var(--font-title-md);
+    color:var(--color-on-surface-variant);
   }
   [ui-section=multicolumn] .items-area [ui-block=column] .content .description{
-    color:var(--color-on-surface-variant);
     font:var(--font-body-lg);
   }
   [ui-section=multicolumn] .items-area [ui-block=column][data-alignment=center]{
@@ -92,20 +95,16 @@
     border-radius:var(--radius-rounded);
     background-color:color-mix(in srgb, currentcolor 38%, transparent);
   }
-  [ui-section=multicolumn] .pagination [ui-carousel=marker][aria-selected=true]{
-    width:var(--spacing-48);
-  }
   [ui-section=multicolumn] .pagination [ui-carousel=marker][aria-selected=true]::before{
-    width:inherit;
     background-color:currentcolor;
   }
   @media (max-width: 1028px){
     [ui-section=multicolumn]{
       --per-page:2;
     }
-    [ui-section=multicolumn] .pagination,
-    [ui-section=multicolumn] .items-area{
-      display:flex;
+    [ui-section=multicolumn]:not(#\#) .pagination,
+    [ui-section=multicolumn]:not(#\#) .items-area{
+      display:flex !important;
     }
   }
   @media (max-width: 769px){
