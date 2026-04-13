@@ -19,25 +19,6 @@
     <h4 class="subheading">{{ section.settings.subheading }}</h4>
     <h1 class="heading">{{ section.settings.heading }}</h1>
     <p class="description">{{ section.settings.description }}</p>
-    <a
-      class="cta"
-      {% if section.settings.button_style == 'underline' %}
-        ui-slot="link-button"
-        data-underline="true"
-      {% else %}
-        ui-slot="button"
-        data-variant="primary"
-      {% endif %}
-      {% if section.settings.button_style == 'primary' %}
-        data-mode="filled"
-      {% elsif section.settings.button_style == 'secondary' %}
-        data-mode="lighter"
-      {% endif %}
-      data-size="lg"
-      href="{{ section.settings.button_link }}"
-    >
-      {{ section.settings.button_label }}
-    </a>
   </div>
   <ul class="items-area" ui-slot="accordion">
     {% for faq in section.blocks %}
@@ -115,33 +96,6 @@
       "id": "description",
       "label": "t:common.header.description",
       "default": "t:sections.faqs.default.description"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.button"
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "t:common.button.label",
-      "default": "t:sections.faqs.default.button"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "t:common.button.link",
-      "default": "#"
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "options": [
-        { "label": "t:common.button.style.options.primary", "value": "primary" },
-        { "label": "t:common.button.style.options.secondary", "value": "secondary" },
-        { "label": "t:common.button.style.options.underline", "value": "underline" }
-      ],
-      "label": "t:common.button.style.label",
-      "default": "primary"
     },
     {
       "type": "header",
