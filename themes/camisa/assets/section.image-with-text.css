@@ -1,13 +1,19 @@
 
   [ui-section=image-with-text]:not(#\#){
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding:attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
   }
   [ui-section=image-with-text] .wrapper-area{
     display:grid;
-    grid-template-columns:repeat(2, 1fr);
     height:attr(data-height vh);
     overflow:hidden;
-    border-radius:var(--radius-media);
+    grid-gap:var(--spacing-32);
+    gap:var(--spacing-32);
+  }
+  [ui-section=image-with-text] .wrapper-area:has([data-image-placement=first]){
+    grid-template-columns:70% auto;
+  }
+  [ui-section=image-with-text] .wrapper-area:has([data-image-placement=second]){
+    grid-template-columns:auto 70%;
   }
   [ui-section=image-with-text] .wrapper-area [ui-block=media]{
     height:inherit;
@@ -25,9 +31,7 @@
   [ui-section=image-with-text] .wrapper-area [ui-block=content]{
     display:flex;
     flex-direction:column;
-    padding:var(--spacing-48);
     gap:var(--spacing-32);
-    background-color:var(--color-surface-container-low);
   }
   [ui-section=image-with-text] .wrapper-area [ui-block=content][data-text-alignment=start]{
     align-items:flex-start;
@@ -62,8 +66,10 @@
     min-width:180px;
   }
   @media (max-width: 1028px){
+    [ui-section=image-with-text]:not(#\#) .wrapper-area{
+      grid-template-columns:1fr !important;
+    }
     [ui-section=image-with-text] .wrapper-area{
-      grid-template-columns:1fr;
       height:auto;
     }
     [ui-section=image-with-text] .wrapper-area [ui-block=media]{
