@@ -14,8 +14,8 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="content-area">
-    <h1 class="heading">{{ 'order.title' | t }}</h1>
+  <div ui-slot="head" class="content-area">
+    <h3 class="heading">{{ 'order.title' | t }}</h3>
     <p class="description">{{ 'order.description' | t }}</p>
   </div>
   <div class="order-summary-area">
@@ -99,7 +99,6 @@
         {% endif %}
         <span class="value">{{ shipping_cost }}</span>
       </div>
-      <hr ui-slot="divider" data-variant="line">
       <div class="item">
         <span ui-slot="label">{{ 'order.total' | t }}</span>
         <span class="value">{{ order.total | default: 0 | money }}</span>
@@ -108,7 +107,7 @@
     <a
       ui-slot="button"
       data-variant="primary"
-      data-mode="filled"
+      data-mode="stroke"
       data-size="lg"
       href="{{ routes.root_url |  default: "/" }}"
     >
