@@ -1,77 +1,79 @@
 @layer sections {
   [ui-section="testimonials"] {
     --per-page: attr(data-nbr-columns-desktop number);
-    --gap: var(--spacing-32);
+    --gap: var(--spacing-24);
 
     display: grid;
-    gap: var(--spacing-48);
-    padding-block: attr(data-top-spacing px) attr(data-bottom-spacing px) !important;
+    gap: var(--spacing-32);
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
 
     [ui-slot="head"] {
-      justify-content: space-between;
       gap: var(--spacing-24);
       width: 100%;
-      padding-inline: 8%;
 
       .content {
         display: grid;
-        gap: var(--spacing-16);
+        gap: var(--spacing-8);
       }
 
       .actions {
         display: flex;
-        gap: var(--spacing-16);
+        gap: var(--spacing-8);
         justify-content: var(--text-heading-alignment-desktop);
       }
     }
 
-    .items-area {
-      padding-inline: 8%;
+    .core-area {
+      display: grid;
+      gap: var(--spacing-24);
+      height: 30vh;
+      grid-template-columns: 30% auto;
 
-      [ui-block="testimonial"] {
-        display: grid;
-        overflow: hidden;
-        border-radius: var(--radius-testimonial);
+      [ui-block="media"] {
+        height: inherit;
 
-        .media {
-          height: 100%;
-          aspect-ratio: 4 / 3;
-
-          & > img {
-            object-fit: cover;
-          }
+        & > img {
+          object-fit: cover;
         }
+      }
 
-        .content {
-          display: grid;
-          gap: var(--spacing-16);
-          padding: var(--spacing-24);
-          background-color: var(--color-surface-container-low);
+      [ui-block="items"] {
+        [ui-block="testimonial"] {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          overflow: hidden;
+          height: 100%;
+          border-radius: var(--radius-testimonial);
+          padding: var(--spacing-32) var(--spacing-24);
+          border: 1px solid var(--color-surface-variant);
 
-          .info {
-            display: grid;
-            gap: var(--spacing-16);
-
-            .author {
-              font: var(--font-title-md);
-            }
-
-            .review {
-              color: var(--color-on-surface-variant);
-              text-wrap: balance;
-            }
+          .review {
+            opacity: 0.8;
           }
 
           .product {
             display: flex;
-            gap: var(--spacing-16);
             align-items: center;
+            gap: var(--spacing-8);
 
             .image {
-              width: 56px;
-              height: 56px;
+              width: 60px;
+              height: 60px;
               overflow: hidden;
-              border-radius: calc(var(--radius-testimonial) * 0.6);
+
+              & > img {
+                object-fit: cover;
+              }
+            }
+
+            .info {
+              display: grid;
+              gap: var(--spacing-8);
+
+              .price {
+                opacity: 0.8;
+              }
             }
           }
         }
@@ -95,10 +97,20 @@
     }
 
     @media (width <= 769px) {
-      --item-size: 84%;
+      .core-area {
+        height: auto;
+        grid-template-columns: 1fr;
 
-      .items-area {
-        padding-inline: var(--spacing-24);
+        [ui-block="media"] {
+          height: 100%;
+          aspect-ratio: 16 / 9;
+        }
+
+        [ui-block="items"] {
+          [ui-block="testimonial"] {
+            gap: var(--spacing-64);
+          }
+        }
       }
     }
   }
