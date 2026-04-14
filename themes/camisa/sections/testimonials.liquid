@@ -17,8 +17,8 @@
 >
   <div ui-slot="head">
     <div class="content">
-      <h4 class="subheading">{{ section.settings.subheading }}</h4>
       <h1 class="heading">{{ section.settings.heading }}</h1>
+      <p class="description">{{ section.settings.description }}</p>
     </div>
     {% assign min_items = section.settings.nbr_columns_desktop | plus: 0 %}
     {% if section.blocks.size > min_items %}
@@ -50,11 +50,26 @@
       </div>
     {% endif %}
   </div>
-  <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
-    {% for testimonial in section.blocks %}
-      {% render 'block.testimonial' %}
-    {% endfor %}
-  </ul>
+  <div class="core-area">
+    <div ui-block="media">
+      {% if section.settings.image.src %}
+        <img
+          src="{{ section.settings.image.src }}"
+          alt="Testimonials"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 40 %}
+      {% endif %}
+    </div>
+    <ul ui-block="items" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+      {% for testimonial in section.blocks %}
+        {% render 'block.testimonial' %}
+      {% endfor %}
+    </ul>
+  </div>
 </ui-carousel>
 
 {% schema %}
@@ -97,15 +112,24 @@
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:common.header.subheading",
-      "default": "t:sections.testimonials.default.subheading"
-    },
-    {
-      "type": "text",
       "id": "heading",
       "label": "t:common.header.heading",
       "default": "t:sections.testimonials.default.heading"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:common.header.description",
+      "default": "t:sections.testimonials.default.description"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:common.headers.image"
     },
     {
       "type": "header",
@@ -118,7 +142,7 @@
       "min": 2,
       "max": 4,
       "step": 1,
-      "default": 3
+      "default": 2
     },
     {
       "type": "header",
@@ -150,25 +174,6 @@
       "type": "testimonial_item",
       "label": "t:sections.testimonials.blocks.testimonial.label",
       "settings": [
-        {
-          "type": "header",
-          "content": "t:common.headers.media"
-        },
-        {
-          "type": "image_picker",
-          "id": "testimonial_image",
-          "label": "t:common.headers.image"
-        },
-        {
-          "type": "header",
-          "content": "t:common.headers.content"
-        },
-        {
-          "type": "text",
-          "id": "testimonial_author",
-          "label": "t:sections.testimonials.blocks.testimonial.author.label",
-          "default": "t:sections.testimonials.blocks.testimonial.author.default"
-        },
         {
           "type": "textarea",
           "id": "testimonial_content",
