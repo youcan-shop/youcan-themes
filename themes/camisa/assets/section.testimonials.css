@@ -1,78 +1,76 @@
 
   [ui-section=testimonials]:not(#\#){
-    padding-top:attr(data-top-spacing px) !important;
-    padding-bottom:attr(data-bottom-spacing px) !important;
+    padding:attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
   }
   [ui-section=testimonials]{
     --per-page:attr(data-nbr-columns-desktop number);
-    --gap:var(--spacing-32);
+    --gap:var(--spacing-24);
     display:grid;
-    grid-gap:var(--spacing-48);
-    gap:var(--spacing-48);
+    grid-gap:var(--spacing-32);
+    gap:var(--spacing-32);
   }
   [ui-section=testimonials] [ui-slot=head]{
-    justify-content:space-between;
     gap:var(--spacing-24);
     width:100%;
-    padding-left:8%;
-    padding-right:8%;
   }
   [ui-section=testimonials] [ui-slot=head] .content{
     display:grid;
-    grid-gap:var(--spacing-16);
-    gap:var(--spacing-16);
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
   }
   [ui-section=testimonials] [ui-slot=head] .actions{
     display:flex;
-    gap:var(--spacing-16);
+    gap:var(--spacing-8);
     justify-content:var(--text-heading-alignment-desktop);
   }
-  [ui-section=testimonials] .items-area{
-    padding-left:8%;
-    padding-right:8%;
-  }
-  [ui-section=testimonials] .items-area [ui-block=testimonial]{
+  [ui-section=testimonials] .core-area{
     display:grid;
-    overflow:hidden;
-    border-radius:var(--radius-testimonial);
+    grid-gap:var(--spacing-24);
+    gap:var(--spacing-24);
+    height:30vh;
+    grid-template-columns:30% auto;
   }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .media{
-    height:100%;
-    aspect-ratio:4/3;
+  [ui-section=testimonials] .core-area [ui-block=media]{
+    height:inherit;
   }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .media > img{
+  [ui-section=testimonials] .core-area [ui-block=media] > img{
     -o-object-fit:cover;
        object-fit:cover;
   }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .content{
-    display:grid;
-    grid-gap:var(--spacing-16);
-    gap:var(--spacing-16);
-    padding:var(--spacing-24);
-    background-color:var(--color-surface-container-low);
-  }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .content .info{
-    display:grid;
-    grid-gap:var(--spacing-16);
-    gap:var(--spacing-16);
-  }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .content .info .author{
-    font:var(--font-title-md);
-  }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .content .info .review{
-    color:var(--color-on-surface-variant);
-    text-wrap:balance;
-  }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .content .product{
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial]{
     display:flex;
-    gap:var(--spacing-16);
-    align-items:center;
-  }
-  [ui-section=testimonials] .items-area [ui-block=testimonial] .content .product .image{
-    width:56px;
-    height:56px;
+    flex-direction:column;
+    justify-content:space-between;
     overflow:hidden;
-    border-radius:calc(var(--radius-testimonial) * 0.6);
+    height:100%;
+    border-radius:var(--radius-testimonial);
+    padding:var(--spacing-32) var(--spacing-24);
+    border:1px solid var(--color-surface-variant);
+  }
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial] .review{
+    opacity:0.8;
+  }
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial] .product{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-8);
+  }
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial] .product .image{
+    width:60px;
+    height:60px;
+    overflow:hidden;
+  }
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial] .product .image > img{
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial] .product .info{
+    display:grid;
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+  }
+  [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial] .product .info .price{
+    opacity:0.8;
   }
   @media (max-width: 1280px){
     [ui-section=testimonials]{
@@ -91,11 +89,15 @@
     }
   }
   @media (max-width: 769px){
-    [ui-section=testimonials]{
-      --item-size:84%;
+    [ui-section=testimonials] .core-area{
+      height:auto;
+      grid-template-columns:1fr;
     }
-    [ui-section=testimonials] .items-area{
-      padding-left:var(--spacing-24);
-      padding-right:var(--spacing-24);
+    [ui-section=testimonials] .core-area [ui-block=media]{
+      height:100%;
+      aspect-ratio:16/9;
+    }
+    [ui-section=testimonials] .core-area [ui-block=items] [ui-block=testimonial]{
+      gap:var(--spacing-64);
     }
   }
