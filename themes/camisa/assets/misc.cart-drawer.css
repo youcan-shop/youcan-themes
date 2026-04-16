@@ -11,33 +11,74 @@
     display:flex;
     flex-direction:column;
     justify-content:space-between;
+    gap:var(--spacing-64);
   }
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer]{
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products{
+    --per-page:2;
+    --item-size:85%;
+    --gap:var(--spacing-8);
     display:flex;
-    gap:var(--spacing-16);
     flex-direction:column;
+    gap:var(--spacing-16);
   }
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .footer{
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .label{
+    font:var(--font-title-sm);
+    text-transform:uppercase;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item{
+    display:flex;
+    flex-direction:column;
+    gap:var(--spacing-10);
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .media{
+    overflow:hidden;
+    height:auto;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .media[data-image-ratio=square]{
+    aspect-ratio:1/1;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .media[data-image-ratio=portrait]{
+    aspect-ratio:3/4;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .media[data-image-ratio=landscape]{
+    aspect-ratio:4/3;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .media > img{
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .content{
     display:grid;
-    grid-template-columns:repeat(2, auto);
     grid-gap:var(--spacing-8);
     gap:var(--spacing-8);
   }
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .footer .label,
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .footer .value{
-    font:var(--font-title-lg);
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-body] .products .items .item .content .title{
+    width:-moz-fit-content;
+    width:fit-content;
   }
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .footer .value{
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer]{
     display:flex;
-    justify-content:flex-end;
+    flex-direction:column;
   }
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .footer .description{
-    grid-column:1/3;
-    color:var(--color-on-surface-variant);
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .main-footer{
+    display:flex;
+    gap:var(--spacing-8);
+    flex-direction:column;
   }
-  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .navigation{
-    display:grid;
-    grid-gap:var(--spacing-16);
-    gap:var(--spacing-16);
-    grid-template-columns:auto 1fr;
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .main-footer .subtotal{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .main-footer .subtotal .label{
+    text-transform:uppercase;
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .main-footer .subtotal .value{
+    font:var(--font-title-sm);
+  }
+  #cart[popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .secondary-footer [ui-slot=button]{
+    width:100%;
+  }
+  #cart[popover]:has(ui-empty[hidden]):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=sheet-footer] .secondary-footer{
+    display:none;
   }

@@ -1,0 +1,62 @@
+@layer snippets {
+  #menu[popover] {
+    [ui-slot="sheet-header"] {
+      border-block-end: 1px solid var(--color-surface-variant);
+
+      .logo {
+        .name {
+          font: var(--font-title-md);
+          text-transform: uppercase;
+        }
+
+        a:has(img) {
+          display: flex;
+
+          img {
+            object-fit: contain;
+
+            @media (width <= 769px) {
+              width: attr(data-mobile-width px);
+            }
+          }
+        }
+      }
+    }
+
+    form {
+      border-block-end: 1px solid var(--color-surface-variant);
+
+      fieldset {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        i {
+          font-size: 20px;
+          position: absolute;
+          inset-inline-start: var(--spacing-24);
+        }
+
+        input {
+          height: 50px;
+          font: var(--font-body-lg);
+          flex: 1;
+          font: var(--font-body-md);
+          padding-inline: 56px var(--spacing-24);
+        }
+      }
+    }
+
+    [ui-slot="sheet-body"] {
+      padding: var(--spacing-24);
+
+      .links {
+        .link {
+          [ui-slot="button"] {
+            justify-content: space-between !important;
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,16 +11,10 @@ if (!customElements.get("ui-navbar")) {
     }
 
     _render() {
-      const rect = this.getBoundingClientRect();
-      this.shouldCastShadow(rect.top === 0);
-
       this.safeArea = 400; //px
       this.lastScrollDistance = 0;
 
       window.addEventListener("scroll", () => {
-        const rect = this.getBoundingClientRect();
-        this.shouldCastShadow(rect.top === 0);
-
         const { pageYOffset: scrollYOffset } = window;
 
         if (this.stickyType === "always") {
@@ -43,10 +37,6 @@ if (!customElements.get("ui-navbar")) {
 
     shouldHideHeader(shouldHide) {
       this.setAttribute("aria-hidden", shouldHide);
-    }
-
-    shouldCastShadow(shouldCast) {
-      this.setAttribute("data-shadow", shouldCast);
     }
   }
 

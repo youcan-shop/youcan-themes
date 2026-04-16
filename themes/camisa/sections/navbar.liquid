@@ -24,7 +24,7 @@
   {% if is_sticky %}
     data-sticky-mode="{{ section.settings.header_sticky_type }}"
   {% endif %}
-  {% if template.name != 'index' or section.settings.bottom_border %}
+  {% if section.settings.bottom_border %}
     data-bottom-border="1"
   {% endif %}
   data-header-layout="{{ section.settings.header_layout }}"
@@ -58,19 +58,6 @@
       </a>
     {% endif %}
   </div>
-  <div class="menu">
-    <button
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="ghost"
-      data-size="md"
-      data-as-icon
-      aria-label="Menu"
-      popovertarget="menu"
-    >
-      {% render 'misc.icon', name: 'hgi-menu-01' %}
-    </button>
-  </div>
 
   {% if section.settings.header_layout == 'logo-center-menu-split' %}
     <div class="left-split">
@@ -88,7 +75,7 @@
         {% endfor %}
       </ul>
     </div>
-    
+
     <div class="right-split">
       <ul class="links" data-split-menu="second-half">
         {% assign second_half_last_index = main-link-list.links.size | minus: 1 %}
@@ -105,16 +92,17 @@
       </ul>
       <div class="actions">
         <button
-          class="search"
+          class="menu"
           ui-slot="button"
           data-variant="primary"
           data-mode="ghost"
           data-size="md"
           data-as-icon
-          aria-label="Search"
-          popovertarget="search"
+          aria-label="Menu"
+          popovertarget="menu"
         >
           {% render 'misc.icon', name: 'hgi-search-01' %}
+          {% render 'misc.icon', name: 'hgi-menu-01' %}
         </button>
         <button
           class="cart-drawer-trigger"
@@ -122,14 +110,13 @@
           data-variant="primary"
           data-mode="ghost"
           data-size="md"
-          data-as-icon
           aria-label="Cart"
           popovertarget="cart"
         >
           {% render 'misc.icon', name: settings.cart_icon %}
-          <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
-            <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
-          </div>
+          <span>
+            [<ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>]
+          </span>
         </button>
       </div>
     </div>
@@ -145,16 +132,17 @@
     </ul>
     <div class="actions">
       <button
-        class="search"
+        class="menu"
         ui-slot="button"
         data-variant="primary"
         data-mode="ghost"
         data-size="md"
         data-as-icon
-        aria-label="Search"
-        popovertarget="search"
+        aria-label="Menu"
+        popovertarget="menu"
       >
         {% render 'misc.icon', name: 'hgi-search-01' %}
+        {% render 'misc.icon', name: 'hgi-menu-01' %}
       </button>
       <button
         class="cart-drawer-trigger"
@@ -162,22 +150,20 @@
         data-variant="primary"
         data-mode="ghost"
         data-size="md"
-        data-as-icon
         aria-label="Cart"
         popovertarget="cart"
       >
         {% render 'misc.icon', name: settings.cart_icon %}
-        <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
-          <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
-        </div>
+        <span>
+          [<ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>]
+        </span>
       </button>
     </div>
   {% endif %}
 </ui-navbar>
 
 {% render 'misc.menu-drawer' %}
-{% render 'misc.cart-drawer' %}
-{% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
+{% render 'misc.cart-drawer', collection_id: section.settings.cart_collection.id, show_products: section.settings.show_cart_recommendations %}
 
 {% schema %}
 {
@@ -226,7 +212,7 @@
         { "label": "t:sections.navbar.header_layout.options.logo_center_menu_first", "value": "logo-center-menu-first" },
         { "label": "t:sections.navbar.header_layout.options.logo_center_menu_split", "value": "logo-center-menu-split" }
       ],
-      "default": "logo-first-menu-center"
+      "default": "logo-center-menu-split"
     },
     {
       "type": "select",
@@ -260,26 +246,6 @@
       "default": "start"
     },
     {
-      "type": "checkbox",
-      "id": "menu_show_social_media_links",
-      "label": "t:sections.navbar.menu.menu_show_social_media_links",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "t:sections.navbar.actions.search_recommendations"
-    },
-    {
-      "type": "textarea",
-      "id": "search_most_searched_keywords",
-      "label": "t:sections.navbar.actions.search_most_searched_keywords"
-    },
-    {
-      "type": "category",
-      "id": "search_collection",
-      "label": "t:sections.navbar.actions.product_recommendations"
-    },
-    {
       "type": "header",
       "content": "t:sections.navbar.actions.cart_recommendations"
     },
@@ -291,23 +257,8 @@
     },
     {
       "type": "category",
-      "id": "cart_collection_1",
-      "label": "t:sections.navbar.actions.collection_1"
-    },
-    {
-      "type": "category",
-      "id": "cart_collection_2",
-      "label": "t:sections.navbar.actions.collection_2"
-    },
-    {
-      "type": "category",
-      "id": "cart_collection_3",
-      "label": "t:sections.navbar.actions.collection_3"
-    },
-    {
-      "type": "category",
-      "id": "cart_collection_4",
-      "label": "t:sections.navbar.actions.collection_4"
+      "id": "cart_collection",
+      "label": "t:sections.navbar.actions.product_recommendations"
     },
     {
       "type": "header",

@@ -3,18 +3,27 @@
 {% comment %}
   Renders a cart drawer
 
+   Accepts:
+  - collection_id: {String} (optional) Recommended collection id
+  - show_products: {String} (optional) Control recommend products visibility
+
   Usage:
   {% render 'misc.cart-drawer' %}
 {% endcomment %}
 
 <div ui-slot="sheet-content" id="cart" popover>
   <div ui-slot="sheet-header">
-    <h2 ui-slot="sheet-title">{{ 'cart.title' | t }}</h2>
+    <h2 ui-slot="sheet-title">
+      {{ 'cart.title' | t }}
+      <span>
+        [<ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>]
+      </span>
+    </h2>
     <button
       ui-slot="button"
       data-variant="primary"
-      data-mode="lighter"
-      data-size="md"
+      data-mode="ghost"
+      data-size="sm"
       aria-label="Close"
       popovertarget="cart"
     >
@@ -23,20 +32,77 @@
   </div>
   <div ui-slot="sheet-body">
     {% render 'core.cart-form' %}
+    {% if show_products and collection_id %}
+      <ui-carousel class="products">
+        <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
+        {% paginate collection.products by 8 id category_id: collection_id %}
+          <div
+            ui-carousel="wrapper"
+            ui-slot="carousel"
+            aria-orientation="vertical"
+            class="items"
+          >
+            {% for product in items %}
+              <div
+                ui-carousel="item"
+                ui-slot="carousel-item"
+                class="item"
+              >
+                <a href="{{product.url}}" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+                  {% if product.preview_image %}
+                    <img
+                      src="{{ product.preview_image.original }}"
+                      alt="{{ product.name }}"
+                      height="100%"
+                      width="100%"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'misc.image-fallback' %}
+                  {% endif %}
+                </a>
+                <div class="content">
+                  <a
+                    class="title"
+                    ui-slot="link-button"
+                    data-variant="gray"
+                    data-size="md"
+                    class="title"
+                    href="{{ product.url }}"
+                  >
+                    {{ product.name }}
+                  </a>
+                  {% assign price = default_variant.price | default: product.price %}
+                  <span class="price">{{ price | money }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endpaginate %}
+      </ui-carousel>
+    {% endif %}
   </div>
-  <div
-    ui-slot="sheet-footer"
-    {% unless cart.count > 0 %}
-      hidden
-    {% endunless %}
-    ui-cart-drawer="footer"
-  >
-    <div class="footer">
-      <span class="label">{{ 'cart.drawer.total' | t }}</span>
-      <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
-      <span class="description">{{ 'cart.drawer.note' | t }}</span>
-    </div>
-    <div class="navigation">
+  <div ui-slot="sheet-footer">
+    <div
+      class="main-footer"
+      {% unless cart.count > 0 %}
+        hidden
+      {% endunless %}
+      ui-cart-drawer="footer"
+    >
+      <div class="subtotal">
+        <span class="label">{{ 'cart.drawer.total' | t }}</span>
+        <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+      </div>
+      <a
+        href="{{ cart.cart_submit_url }}"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="filled"
+        data-size="lg"
+      >
+        {{ 'cart.drawer.actions.checkout' | t }}
+      </a>
       <a
         href="/cart"
         ui-slot="button"
@@ -47,16 +113,18 @@
       >
         {{ 'cart.drawer.actions.view_cart' | t }}
       </a>
-      <a
-        href="{{ cart.cart_submit_url }}"
+    </div>
+    <div class="secondary-footer">
+      <button
         ui-slot="button"
         data-variant="primary"
-        data-mode="filled"
+        data-mode="stroke"
         data-size="lg"
+        aria-label="Close"
+        popovertarget="cart"
       >
-        {% render 'misc.icon', name: settings.cart_icon %}
-        {{ 'cart.drawer.actions.checkout' | t }}
-      </a>
+        {{ 'cart.drawer.actions.continue_shopping' | t }}
+      </button>
     </div>
   </div>
 </div>
