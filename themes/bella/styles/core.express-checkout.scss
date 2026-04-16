@@ -1,6 +1,7 @@
 @layer snippets {
   ui-express-checkout {
     display: grid;
+    align-items: start;
     gap: var(--spacing-12);
 
     ui-linked-fields {
@@ -94,6 +95,79 @@
       ui-quantity {
         display: none;
       }
+    }
+  }
+
+  ui-phone-validation {
+    [ui-phone-input-wrapper] {
+      display: flex;
+      width: 100%;
+      height: 40px;
+      overflow: hidden;
+      transition: all var(--transition-standard-default-spatial);
+      border-radius: var(--radius-input);
+      outline: 2px solid transparent;
+      outline-offset: 1px;
+      background-color: var(--color-surface-container-low);
+
+      &:has([ui-phone-number]:focus) {
+        outline-color: color-mix(in oklab, currentcolor 10%, transparent);
+      }
+
+      [ui-phone-countries-wrapper] {
+        position: relative;
+        flex-shrink: 0;
+        width: 75px;
+        border-inline-end: 1px solid var(--color-surface-container-highest);
+
+        [ui-phone-displayed-country-code] {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: var(--spacing-8);
+          width: 100%;
+          height: 100%;
+          padding-inline: var(--spacing-12) var(--spacing-8);
+          color: var(--color-primary);
+          font: var(--font-body-md);
+          pointer-events: none;
+
+          &::after {
+            content: '';
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            transform: translate(-1.5px, -1.5px) rotate(45deg);
+            border-right: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+            border-bottom: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+          }
+        }
+
+        [ui-phone-select-country-code] {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+          appearance: none;
+        }
+      }
+
+      [ui-phone-number] {
+        flex: 1;
+        height: 100%;
+        border: none;
+        border-radius: var(--radius-0);
+        outline: none;
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
+
+    [ui-phone-error] {
+      color: var(--color-error);
+      font: var(--font-body-sm);
     }
   }
 }
