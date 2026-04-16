@@ -32,20 +32,21 @@
     z-index: 2;
     align-items: center;
     justify-content: space-between;
-    padding: calc(var(--spacing-24) - var(--spacing-4));
+    padding: var(--spacing-24);
     gap: var(--spacing-12);
     inset-block-start: 0;
 
     /* Title */
     [ui-slot="sheet-title"] {
-      font: var(--font-title-lg);
+      font: var(--font-label-lg);
+      text-transform: uppercase;
     }
   }
 
   /* Body */
   [ui-slot="sheet-body"] {
     flex: 2;
-    padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+    padding-inline: var(--spacing-24);
   }
 
   /* Body */
@@ -53,17 +54,10 @@
     display: grid;
     position: sticky;
     grid-template-columns: repeat(2, 1fr);
-    padding: calc(var(--spacing-24) - var(--spacing-4));
+    padding: var(--spacing-24);
     gap: var(--spacing-12);
     inset-block-end: 0;
-    background-image: linear-gradient(
-      to top,
-      var(--sheet-background),
-      var(--sheet-background),
-      var(--sheet-background),
-      var(--sheet-background),
-      transparent
-    );
+    background-color: var(--sheet-background);
   }
 
   /* Backdrop */
@@ -76,15 +70,13 @@
     inset-inline-end: calc(var(--spacing-0) - var(--spring-width-offset));
 
     &::backdrop {
-      backdrop-filter: blur(10px);
-      background-color: color-mix(in srgb, currentcolor 15%, transparent);
+      background-color: color-mix(in srgb, black 30%, transparent);
     }
 
     @starting-style {
       inset-inline-end: calc(var(--sheet-visible-width) * -1);
 
       &::backdrop {
-        backdrop-filter: blur(0);
         background-color: transparent;
       }
     }

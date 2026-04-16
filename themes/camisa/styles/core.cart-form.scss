@@ -1,7 +1,5 @@
 @layer snippets {
   ui-cart-form {
-    flex: 1;
-
     ui-cart-drawer-items {
       display: flex;
       gap: var(--spacing-24);
@@ -14,11 +12,22 @@
         .image {
           position: relative;
           flex-shrink: 0;
-          width: 100px;
-          height: 100px;
+          width: 120px;
+          height: auto;
           overflow: hidden;
-          border-radius: var(--radius-12);
           background-color: var(--color-surface-container);
+
+          &[data-image-ratio="square"] {
+            aspect-ratio: 1 / 1;
+          }
+
+          &[data-image-ratio="portrait"] {
+            aspect-ratio: 3 / 4;
+          }
+
+          &[data-image-ratio="landscape"] {
+            aspect-ratio: 4 / 3;
+          }
 
           img {
             object-fit: cover;
@@ -28,64 +37,47 @@
         .content {
           display: flex;
           flex: 2;
+          flex-direction: column;
           justify-content: space-between;
 
-          .info {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            .bio {
-              display: grid;
-              gap: var(--spacing-8);
-
-              .title {
-                font: var(--font-body-lg);
-              }
-
-              .variants {
-                color: var(--color-on-surface-variant);
-                font: var(--font-body-sm);
-              }
-            }
-          }
-
-          .actions {
+          .head {
             display: flex;
             align-items: center;
             justify-content: space-between;
           }
-        }
-      }
-    }
 
-    .collections {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-16);
-      width: 100%;
+          .core {
+            .variants {
+              display: flex;
+              flex-wrap: wrap;
+              gap: var(--spacing-12);
 
-      .collection {
-        display: flex;
-        align-items: center;
-        padding: var(--spacing-16);
-        border-radius: var(--radius-16);
-        gap: var(--spacing-12);
-        background-color: var(--color-surface-container-low);
+              .variant {
+                display: flex;
+                gap: var(--spacing-8);
+                font: var(--font-label-sm);
 
-        .image {
-          width: var(--spacing-64);
-          height: var(--spacing-64);
-          overflow: hidden;
-          border-radius: var(--radius-12);
-
-          & > img {
-            object-fit: cover;
+                .label {
+                  opacity: 0.8;
+                  text-transform: uppercase;
+                }
+              }
+            }
           }
-        }
 
-        .name {
-          flex: 1;
+          .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-block-start: var(--spacing-12);
+            border-block-start: 1px solid var(--color-surface-variant);
+
+            .qty {
+              display: flex;
+              align-items: center;
+              gap: var(--spacing-16);
+            }
+          }
         }
       }
     }
@@ -96,16 +88,6 @@
       align-items: center;
       justify-content: center;
       gap: var(--spacing-48);
-    }
-
-    &:has(ui-empty:not([hidden]) + .collections) {
-      justify-content: flex-start;
-    }
-
-    &:has(ui-empty[hidden]) {
-      .collections {
-        display: none;
-      }
     }
   }
 }
