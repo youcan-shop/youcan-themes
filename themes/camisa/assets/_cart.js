@@ -165,18 +165,16 @@ class BaseCartItem extends HTMLElement {
 
   createVariantFragment(variations) {
     const fragment = new DocumentFragment();
-    const values = Object.values(variations);
 
-    values.forEach((variation, index) => {
-      const valueSpan = document.createElement("span");
-      valueSpan.textContent = variation;
-      fragment.append(valueSpan);
+    Object.entries(variations).forEach(([key, value]) => {
+      const v = document.createElement("div");
+      v.innerHTML = `
+        <div class="variant">
+          <span class="label">${key}:</span>
+          <p class="value">${value}</p>
+        </div>`;
 
-      if (index < values.length - 1) {
-        const separatorSpan = document.createElement("span");
-        separatorSpan.textContent = " / ";
-        fragment.append(separatorSpan);
-      }
+      fragment.append(v);
     });
 
     return fragment;
@@ -244,7 +242,7 @@ class CartDrawerItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
+    const [image, title, deleteButton, variant, quantity, price] = cartItem.querySelectorAll("[ui-cart-item]");
     return { image, title, variant, price, quantity, deleteButton };
   }
 
@@ -296,7 +294,7 @@ class CartRemove extends HTMLElement {
   constructor() {
     super();
 
-    this.button = this.querySelector('[ui-slot="button"]');
+    this.button = this.querySelector('[ui-slot="link-button"]');
   }
 
   connectedCallback() {
