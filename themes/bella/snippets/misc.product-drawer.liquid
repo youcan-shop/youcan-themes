@@ -118,7 +118,11 @@
       <div ui-block="controller">
         {% render 'core.quantity', size: 'md' %}
         {% render 'core.shop-button', mode: 'lighter' %}
-        {% render 'core.express-checkout', style: 'open-drawer' %}
+        {% if settings.cart_checkout_type == 'cart' %}
+          {% render 'core.shop-button', skip_to_checkout: true %}
+        {% else %}
+          {% render 'core.express-checkout', style: 'open-drawer' %}
+        {% endif %}
       </div>
     </div>
   </ui-product>
