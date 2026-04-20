@@ -6,11 +6,11 @@ if (!customElements.get("ui-phone-validation")) {
     constructor() {
       super();
 
-      this.phoneSelectCountryCode = this.querySelector("[ui-phone-select-country-code]");
-      this.phoneDisplayedCountryCode = this.querySelector("[ui-phone-displayed-country-code]");
-      this.phoneNumber = this.querySelector("[ui-phone-number]");
+      this.phoneSelectCountryCode = this.querySelector('[ui-phone-validator="select-country-code"]');
+      this.phoneDisplayedCountryCode = this.querySelector('[ui-phone-validator="displayed-country-code"]');
+      this.phoneNumber = this.querySelector('[ui-phone-validator="number"]');
       this.phoneHiddenInput = this.querySelector("[ui-phone-hidden-input]");
-      this.phoneErrorElement = this.querySelector("[ui-phone-error]");
+      this.phoneErrorElement = this.querySelector('[ui-phone-validator="error"]');
     }
 
     async connectedCallback() {
@@ -85,7 +85,11 @@ if (!customElements.get("ui-phone-validation")) {
 
     toggleError(show) {
       if (this.phoneErrorElement) {
-        this.phoneErrorElement.style.display = show ? "block" : "none";
+        if (show) {
+          this.phoneErrorElement.removeAttribute("data-hidden");
+        } else {
+          this.phoneErrorElement.setAttribute("data-hidden", "true");
+        }
       }
     }
 

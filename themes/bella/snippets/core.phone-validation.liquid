@@ -5,13 +5,13 @@
   <label ui-express-checkout="field">
     <input type="hidden" name="{{ field.name }}" ui-phone-hidden-input>
     <span ui-slot="label">{{ field.display_name }}</span>
-    <div ui-phone-input-wrapper dir="ltr">
-      <div ui-phone-countries-wrapper>
-        <span ui-phone-displayed-country-code></span>
+    <div ui-phone-validator="input-wrapper" dir="ltr">
+      <div ui-phone-validator="countries">
+        <span ui-phone-validator="displayed-country-code"></span>
         <select
           name="phone_country_code"
           autocomplete="tel-country-code"
-          ui-phone-select-country-code
+          ui-phone-validator="select-country-code"
         ></select>
       </div>
       <input
@@ -21,14 +21,14 @@
         placeholder="{{ field.placeholder }}"
         autocomplete="tel-national"
         data-size="lg"
-        ui-phone-number
+        ui-phone-validator="number"
         ui-slot="input"
         {% if field.required %}
           required
         {% endif %}
       >
     </div>
-    <div style="display: none;" ui-phone-error>
+    <div data-hidden="true" ui-phone-validator="error">
       {{ 'error_messages.invalid_phone_number' | t }}
     </div>
   </label>
