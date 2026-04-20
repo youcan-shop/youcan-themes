@@ -47,10 +47,29 @@ async function onChange(type) {
 }
 
 async function fetchLocationByType(type) {
+  window.storeRegions = window.storeRegions || {};
+  window.storeCities = window.storeCities || {};
+
   const fetchMap = {
     country: () => window.storeMarketCountries,
-    region: () => youcanjs.misc.getCountryRegions(countryCode, locale),
-    city: () => youcanjs.misc.getCountryCities(countryCode, regionCode, locale),
+    region: () => {
+      const key = `${countryCode}_${locale}`;
+
+      if (!window.storeRegions[key]) {
+        window.storeRegions[key] = youcanjs.misc.getCountryRegions(countryCode, locale);
+      }
+
+      return window.storeRegions[key];
+    },
+    city: () => {
+      const key = `${countryCode}_${regionCode}_${locale}`;
+
+      if (!window.storeCities[key]) {
+        window.storeCities[key] = youcanjs.misc.getCountryCities(countryCode, regionCode, locale);
+      }
+
+      return window.storeCities[key];
+    },
   };
 
   try {

@@ -234,12 +234,14 @@
 
 {% if has_linked_fields or has_phone_validation %}
   {% javascript %}
-    window.storeMarketCountries = new Promise((resolve) => {
-      document.addEventListener('DOMContentLoaded', async () => {
-        const data = await youcanjs.misc.getStoreMarketCountries();
-        resolve(data);
+    if (!window.storeMarketCountries) {
+      window.storeMarketCountries = new Promise((resolve) => {
+        document.addEventListener('DOMContentLoaded', async () => {
+          const data = await youcanjs.misc.getStoreMarketCountries();
+          resolve(data);
+        });
       });
-    });
+    }
   {% endjavascript %}
 {% endif %}
 
