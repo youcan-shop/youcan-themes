@@ -1,5 +1,15 @@
 # bella
 
+## 1.1.0
+
+### Minor Changes
+
+- b39e9a5: Fix inventory condition when tracking is disabled
+
+### Patch Changes
+
+- 1d698ed: Add pixels
+
 ## 1.0.2
 
 ### Patch Changes
