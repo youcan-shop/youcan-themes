@@ -59,7 +59,7 @@ if (!customElements.get("ui-linked-fields")) {
 
     async fetchLocationByType(type) {
       const fetchMap = {
-        country: () => youcanjs.misc.getStoreMarketCountries(),
+        country: () => window.storeMarketCountries,
         region: () => youcanjs.misc.getCountryRegions(this.countryCode, this.locale),
         city: () => youcanjs.misc.getCountryCities(this.countryCode, this.regionCode, this.locale),
       };
