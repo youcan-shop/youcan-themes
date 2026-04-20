@@ -115,7 +115,7 @@
         <span class="label">{{ 'cart.drawer.total' | t }}</span>
         <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
         <span class="description">{{ 'cart.drawer.note' | t }}</span>
-        <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
+        <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg" id="checkout-button">
           {% render 'misc.icon', name: settings.cart_icon %}
           {{ 'cart.drawer.actions.checkout' | t }}
         </a>
@@ -131,6 +131,28 @@
     {% endif %}
   </div>
 </div>
+
+{% if cart %}
+  {% javascript %}
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkoutButton = document.querySelector('#checkout-button');
+
+      if (!checkoutButton) return;
+
+      const cart = JSON.parse({{ cart | json }});
+
+      let updatedCart = cart;
+
+      subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+        updatedCart = payload.cartData;
+      });
+
+      checkoutButton.addEventListener('click', function () {
+        window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
+      });
+    });
+  {% endjavascript %}
+{% endif %}
 
 {% schema %}
 {
