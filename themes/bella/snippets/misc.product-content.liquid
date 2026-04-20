@@ -63,11 +63,13 @@
         </div>
 
       {% when 'block_inventory_status' %}
-        {% render 'const.inventory-status',
-          count: default_variant.inventory,
-          threshold: block.settings.low_inventory_threshold,
-          show_count: block.settings.show_inventory_count
-        %}
+        {% if product.isTrackingInventory %}
+          {% render 'const.inventory-status',
+            count: default_variant.inventory,
+            threshold: block.settings.low_inventory_threshold,
+            show_count: block.settings.show_inventory_count
+          %}
+        {% endif %}
 
       {% when 'block_variant_picker' %}
         {% if product.options.size > 0 %}

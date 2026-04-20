@@ -111,7 +111,9 @@
           {{ compare_at_price | default: 0 | money }}
         </div>
       </div>
-      {% render 'const.inventory-status', count: default_variant.inventory %}
+      {% if product.isTrackingInventory %}
+        {% render 'const.inventory-status', count: default_variant.inventory %}
+      {% endif %}
       {% if product.options.size > 0 %}
         {% render 'core.variants' %}
       {% endif %}
