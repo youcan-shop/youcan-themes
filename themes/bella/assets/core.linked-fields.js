@@ -58,10 +58,29 @@ if (!customElements.get("ui-linked-fields")) {
     }
 
     async fetchLocationByType(type) {
+      window.storeRegions = window.storeRegions || {};
+      window.storeCities = window.storeCities || {};
+
       const fetchMap = {
         country: () => window.storeMarketCountries,
-        region: () => youcanjs.misc.getCountryRegions(this.countryCode, this.locale),
-        city: () => youcanjs.misc.getCountryCities(this.countryCode, this.regionCode, this.locale),
+        region: () => {
+          const key = `${this.countryCode}_${this.locale}`;
+
+          if (!window.storeRegions[key]) {
+            window.storeRegions[key] = youcanjs.misc.getCountryRegions(this.countryCode, this.locale);
+          }
+
+          return window.storeRegions[key];
+        },
+        city: () => {
+          const key = `${this.countryCode}_${this.regionCode}_${this.locale}`;
+
+          if (!window.storeCities[key]) {
+            window.storeCities[key] = youcanjs.misc.getCountryCities(this.countryCode, this.regionCode, this.locale);
+          }
+          
+          return window.storeCities[key];
+        },
       };
 
       this.setIsLoading(type, true);
