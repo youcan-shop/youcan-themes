@@ -90,7 +90,13 @@
           <div ui-block="controller" {{ block.youcan_attributes }}>
             {% render 'core.quantity', size: 'md' %}
             {% if settings.cart_checkout_type == 'cart' %}
-              {% render 'core.shop-button', mode: 'lighter' %}
+              {% assign button_mode = 'filled' %}
+
+              {% if block.settings.show_buy_button %}
+                {% assign button_mode = 'lighter' %}
+              {% endif %}
+
+              {% render 'core.shop-button', mode: button_mode %}
             {% endif %}
             {% if settings.cart_checkout_type == 'cart' and block.settings.show_buy_button %}
               {% render 'core.shop-button', skip_to_checkout: true %}
