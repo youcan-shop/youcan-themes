@@ -8,35 +8,49 @@
       display: flex;
       flex: 1;
       flex-direction: column;
-      padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+      padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
       gap: var(--spacing-32);
 
-      [ui-slot="head"] {
-        align-items: center;
-
-        .search {
-          width: 500px;
+      .head-area {
+        .heading {
+          font: var(--font-title-md);
+          text-transform: uppercase;
         }
       }
 
-      .controller {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+      .control-area {
+        display: grid;
+        gap: var(--spacing-8);
 
         .result {
-          color: var(--color-on-surface-variant);
-          font: var(--font-body-lg);
+          display: flex;
+          gap: var(--spacing-12);
+
+          .terms {
+            font: var(--font-headline-lg);
+          }
+
+          .total {
+            opacity: 0.7;
+          }
         }
 
-        .sort {
-          display: flex;
-          align-items: center;
-          gap: var(--spacing-12);
+        .search {
+          fieldset {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-8);
+            border-block-end: 1px solid var(--color-surface-variant);
+
+            input {
+              flex: 1;
+              height: var(--spacing-64);
+            }
+          }
         }
       }
 
-      .list {
+      .list-area {
         display: grid;
         grid-template-columns: repeat(attr(data-nbr-columns-desktop number), 1fr);
         width: 100%;
@@ -44,21 +58,13 @@
       }
 
       @media (width <= 1024px) {
-        .list {
+        .list-area {
           grid-template-columns: repeat(3, 1fr);
         }
       }
 
       @media (width <= 769px) {
-        [ui-slot="head"] {
-          align-items: center;
-
-          .search {
-            width: 100%;
-          }
-        }
-
-        .list {
+        .list-area {
           grid-template-columns: repeat(2, 1fr);
         }
       }
