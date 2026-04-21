@@ -47,9 +47,6 @@ async function onChange(type) {
 }
 
 async function fetchLocationByType(type) {
-  window.storeRegions = window.storeRegions || {};
-  window.storeCities = window.storeCities || {};
-
   const fetchMap = {
     country: () => window.storeMarketCountries,
     region: () => {
