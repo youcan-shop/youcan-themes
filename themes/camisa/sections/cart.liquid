@@ -14,7 +14,7 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div ui-slot="head">
+  <div class="head-area">
     <h1 class="heading">{{ 'cart.title' | t }}</h1>
   </div>
   <div class="core-area">
@@ -29,9 +29,7 @@
       <table>
         <thead>
           <tr>
-            <th></th>
             <th>{{ 'cart.page.table.product' | t }}</th>
-            <th>{{ 'cart.page.table.price' | t }}</th>
             <th>{{ 'cart.page.table.quantity' | t }}</th>
             <th>{{ 'cart.page.table.total' | t }}</th>
           </tr>
@@ -49,83 +47,80 @@
         hidden
       {% endunless %}
     >
-      {% if section.settings.show_coupon %}
-        <div ui-slot="accordion">
-          <form ui-slot="accordion-item" ui-summary-box="coupon-form">
-            <label ui-slot="accordion-trigger">
-              <i class="hgi hgi-stroke hgi-coupon-percent"></i>
+      <div class="summary-box">
+        {% if section.settings.show_coupon %}
+          <form ui-summary-box="coupon-form">
+            <label class="label">
+              {% render 'misc.icon', name: 'hgi-coupon-percent' %}
               {{ 'cart.page.summary.coupon' | t }}
-              <input type="checkbox" name="my-accordion" checked>
             </label>
-            <div ui-slot="accordion-content" role="region">
-              <div class="coupon">
-                <div class="input">
-                  <input
-                    ui-slot="input"
-                    data-size="md"
-                    type="text"
-                    placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
-                    name="coupon_code"
-                    data-coupon="coupon-input"
-                  >
-                  <button
-                    type="submit"
-                    ui-slot="button"
-                    data-variant="primary"
-                    data-mode="filled"
-                    data-size="md"
-                    data-coupon="coupon-button"
-                  >
-                    {{ 'cart.page.coupon.apply' | t }}
-                  </button>
-                </div>
-                <div class="output">
-                  <div class="info">
-                    <span ui-slot="label">{{ 'cart.page.coupon.applied' | t }}</span>
-                    <div
-                      ui-slot="status-badge"
-                      ui-summary-box="coupon-code"
-                      {% unless cart.coupon != null %}
-                        hidden
-                      {% endunless %}
-                    >
-                      <i class="hgi hgi-stroke hgi-coupon-percent"></i>
-                      {{ cart.coupon.code }}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    ui-slot="button"
-                    data-variant="error"
-                    data-mode="lighter"
-                    data-size="sm"
-                    ui-summary-box="remove-coupon"
-                  >
-                    {{ 'cart.page.coupon.remove' | t }}
-                  </button>
+            <fieldset class="input">
+              <input
+                data-size="md"
+                type="text"
+                placeholder="{{ 'cart.page.coupon.placeholder' | t }}"
+                name="coupon_code"
+                data-coupon="coupon-input"
+              >
+              <button
+                type="submit"
+                ui-slot="button"
+                data-variant="primary"
+                data-mode="filled"
+                data-size="md"
+                data-coupon="coupon-button"
+              >
+                {{ 'cart.page.coupon.apply' | t }}
+              </button>
+            </fieldset>
+            <div class="output">
+              <div class="info">
+                <span ui-slot="label">{{ 'cart.page.coupon.applied' | t }}</span>
+                <div
+                  ui-slot="status-badge"
+                  data-variant="stroke"
+                  data-status="primary"
+                  ui-summary-box="coupon-code"
+                  {% unless cart.coupon != null %}
+                    hidden
+                  {% endunless %}
+                >
+                  {{ cart.coupon.code }}
                 </div>
               </div>
+              <button
+                type="button"
+                ui-slot="button"
+                data-variant="error"
+                data-mode="lighter"
+                data-size="sm"
+                ui-summary-box="remove-coupon"
+              >
+                {{ 'cart.page.coupon.remove' | t }}
+              </button>
             </div>
           </form>
+        {% endif %}
+        <hr ui-slot="divider" data-variant="line">
+        <div class="details">
+          <span class="label">{{ 'cart.drawer.total' | t }}</span>
+          <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
+          <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
+            {% render 'misc.icon', name: settings.cart_icon %}
+            {{ 'cart.drawer.actions.checkout' | t }}
+          </a>
         </div>
-      {% endif %}
-      <div class="details">
-        <span class="label">{{ 'cart.drawer.total' | t }}</span>
-        <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
-        <span class="description">{{ 'cart.drawer.note' | t }}</span>
-        <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
-          {% render 'misc.icon', name: settings.cart_icon %}
-          {{ 'cart.drawer.actions.checkout' | t }}
-        </a>
       </div>
     </ui-summary-box>
 
-    {% assign empty_content = 'cart.empty.title' | t %}
+    {% assign empty_title = 'cart.empty.title' | t | append: ' [0]' %}
+    {% assign empty_description = 'cart.empty.description' | t %}
     {% assign continue_shopping = 'order.action' | t %}
+
     {% if cart.items.size > 0 %}
-      {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/', hidden: true %}
+      {% render 'misc.empty', heading: empty_title, subheading: empty_description, action_label: continue_shopping, action_url: '/', hidden: true %}
     {% else %}
-      {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/' %}
+      {% render 'misc.empty', heading: empty_title, subheading: empty_description, action_label: continue_shopping, action_url: '/' %}
     {% endif %}
   </div>
 </div>
