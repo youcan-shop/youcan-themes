@@ -5,17 +5,17 @@
 
     [ui-variant] {
       display: grid;
-      gap: var(--spacing-8);
+      gap: var(--spacing-16);
 
       .label {
         color: var(--color-on-surface-variant);
-        font: var(--font-body-md);
+        font: var(--font-body-sm);
+        text-transform: uppercase;
       }
 
       .options {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--spacing-8);
 
         .opt {
           position: relative;
@@ -37,6 +37,23 @@
 
       &[ui-variant="textual_buttons"] {
         .options {
+          width: fit-content;
+          border: 1px solid var(--color-surface-variant);
+          position: relative;
+
+          &::before {
+            content: "";
+            inset: 0;
+            position: absolute;
+            box-shadow: 0 0 0 1px currentColor;
+            height: anchor-size(height);
+            width: anchor-size(width);
+            bottom: anchor(bottom);
+            left: anchor(left);
+            z-index: 2;
+            position-anchor: --selected;
+          }
+
           .opt {
             display: flex;
             align-items: center;
@@ -44,14 +61,15 @@
             height: 36px;
             padding-inline: var(--spacing-12);
             transition: var(--transition-standard-default-effects);
-            border: 1px solid var(--color-surface-variant);
             border-radius: var(--radius-button);
             cursor: pointer;
 
+            &:not(:first-child) {
+              border-inline-start: 1px solid var(--color-surface-variant);
+            }
+
             &:has(> input[type="radio"]:checked) {
-              border-color: transparent;
-              background-color: var(--color-primary);
-              color: var(--color-on-primary);
+              anchor-name: --selected;
             }
 
             &:has(> input[type="radio"]:disabled) {
@@ -65,33 +83,50 @@
 
       &[ui-variant="color_base_buttons"] {
         .options {
+          width: fit-content;
+          border: 1px solid var(--color-surface-variant);
+          position: relative;
+
+          &::before {
+            content: "";
+            inset: 0;
+            position: absolute;
+            box-shadow: 0 0 0 1px currentColor;
+            height: anchor-size(height);
+            width: anchor-size(width);
+            bottom: anchor(bottom);
+            left: anchor(left);
+            z-index: 2;
+            position-anchor: --selected;
+          }
+
           .opt {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: 26px;
+            height: 26px;
             transition: var(--transition-standard-default-effects);
-            border: 2px solid transparent;
             border-radius: var(--radius-button);
-            background-color: color-mix(in srgb, var(--color-value), black 5%);
-            box-shadow: rgb(99 99 99 / 20%) 0 2px 8px 0;
             cursor: pointer;
 
-            & > i {
-              color: transparent;
+            &:not(:first-child) {
+              border-inline-start: 1px solid var(--color-surface-variant);
+            }
+
+            &::after {
+              content: "";
+              display: flex;
+              width: 18px;
+              height: 18px;
+              background-color: var(--color-value);
             }
 
             &:has(> input[type="radio"]:checked) {
-              border-color: white;
-
-              & > i {
-                color: white;
-              }
+              anchor-name: --selected;
             }
 
             &:has(> input[type="radio"]:disabled) {
-              background-color: color-mix(in srgb, var(--color-value) 50%, transparent);
               pointer-events: none;
 
               &::before {
@@ -103,6 +138,10 @@
                 filter: invert(1);
                 background-color: var(--color-value);
               }
+
+              &::after {
+                background-color: color-mix(in srgb, var(--color-value) 50%, transparent);
+              }
             }
           }
         }
@@ -110,37 +149,43 @@
 
       &[ui-variant="image_based_buttons"] {
         .options {
+          width: fit-content;
+          border: 1px solid var(--color-surface-variant);
+          position: relative;
+
+          &::before {
+            content: "";
+            inset: 0;
+            position: absolute;
+            box-shadow: 0 0 0 1px currentColor;
+            height: anchor-size(height);
+            width: anchor-size(width);
+            bottom: anchor(bottom);
+            left: anchor(left);
+            z-index: 2;
+            position-anchor: --selected;
+          }
+
           .opt {
             display: grid;
             gap: var(--spacing-8);
+            border-radius: var(--radius-button);
+            padding: var(--spacing-6);
+            cursor: pointer;
+            font: var(--font-body-sm);
+
+            &:not(:first-child) {
+              border-inline-start: 1px solid var(--color-surface-variant);
+            }
 
             .image {
               display: flex;
               position: relative;
               align-items: center;
               justify-content: center;
-              width: 80px;
-              height: 80px;
+              width: 60px;
+              height: 60px;
               overflow: hidden;
-              transition: var(--transition-standard-default-effects);
-              border: 2px solid transparent;
-              border-radius: var(--radius-button);
-              outline: 1px solid var(--color-surface-variant);
-              background-color: color-mix(in srgb, var(--color-value), black 5%);
-              cursor: pointer;
-
-              .checked {
-                display: flex;
-                position: absolute;
-                align-items: center;
-                justify-content: center;
-                transition: var(--transition-standard-default-effects);
-                opacity: 0;
-                background-color: rgb(0 0 0 / 30%);
-                color: white;
-                inset: 0;
-                backdrop-filter: blur(2px);
-              }
 
               & > img {
                 width: 100%;
@@ -151,37 +196,12 @@
             }
 
             &:has(> input[type="radio"]:checked) {
-              .image {
-                border-color: white;
-              }
-
-              .checked {
-                opacity: 1;
-              }
+              anchor-name: --selected;
             }
 
             &:has(> input[type="radio"]:disabled) {
               pointer-events: none;
-
-              .image {
-                & > img {
-                  filter: grayscale(1) blur(1px);
-                }
-
-                &::before {
-                  content: "";
-                  position: absolute;
-                  z-index: 2;
-                  width: 1px;
-                  height: 140%;
-                  background-color: white;
-                  rotate: 45deg;
-                }
-              }
-
-              .value {
-                opacity: 0.5;
-              }
+              opacity: 0.5;
             }
           }
         }
@@ -189,14 +209,23 @@
 
       &[ui-variant="radio_buttons"] {
         .options {
-          display: grid;
-          gap: calc(var(--spacing-16) + var(--spacing-4));
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--spacing-8);
 
           .opt {
             display: flex;
             align-items: center;
             cursor: pointer;
             gap: var(--spacing-8);
+            padding: var(--spacing-8);
+            border: 1px solid var(--color-surface-variant);
+            color: var(--color-on-surface-variant);
+
+            &:has(> input[type="radio"]:checked) {
+              color: var(--color-primary);
+              border-color: currentColor;
+            }
 
             &:has(> input[type="radio"]:disabled) {
               opacity: 0.5;

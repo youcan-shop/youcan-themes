@@ -59,15 +59,19 @@ if (!customElements.get("ui-carousel")) {
 
     swipe(index) {
       this.ignoreScroll = true;
+
       this.wrapper.scrollTo({
-        left: ((this.wrapper.scrollWidth * index) / this.TOTAL) * this.isRTL,
+        [this.orientation === "vertical" ? "left" : "top"]:
+          ((this.wrapper[this.orientation === "vertical" ? "scrollWidth" : "scrollHeight"] * index) / this.TOTAL) * this.isRTL,
         behavior: "smooth",
       });
 
       this.setIndex(index);
 
       const scrollEnd = () => {
-        const currentIndex = Math.round(this.wrapper.scrollLeft / this.slideWidth);
+        const currentIndex = Math.round(
+          this.orientation === "vertical" ? this.wrapper.scrollLeft / this.slideWidth : this.wrapper.scrollTop / this.slideHeight,
+        );
 
         if (currentIndex === index) {
           this.ignoreScroll = false;
@@ -130,7 +134,9 @@ if (!customElements.get("ui-carousel")) {
     onScroll() {
       if (this.ignoreScroll) return;
 
-      const newIndex = Math.round(this.wrapper.scrollLeft / this.slideWidth);
+      const newIndex = Math.round(
+        this.orientation === "vertical" ? this.wrapper.scrollLeft / this.slideWidth : this.wrapper.scrollTop / this.slideHeight,
+      );
 
       if (newIndex !== this.index) {
         this.setIndex(newIndex);
@@ -153,6 +159,14 @@ if (!customElements.get("ui-carousel")) {
 
     get slideWidth() {
       return (this.wrapper.scrollWidth / this.TOTAL) * this.isRTL;
+    }
+
+    get slideHeight() {
+      return (this.wrapper.scrollHeight / this.TOTAL) * this.isRTL;
+    }
+
+    get orientation() {
+      return this.wrapper.getAttribute("aria-orientation");
     }
   }
 
