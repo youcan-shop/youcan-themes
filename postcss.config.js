@@ -7,6 +7,7 @@ export default {
       "nesting-rules": true,
       features: {
         "cascade-layers": false,
+        'logical-properties-and-values': false
       },
     }),
     postcssDiscardComments({
