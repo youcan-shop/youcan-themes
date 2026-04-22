@@ -1,5 +1,17 @@
 # chameleon
 
+## 4.6.2
+
+### Patch Changes
+
+- 7a5f55e: Fix empty meta description if product has no description
+
+## 4.6.1
+
+### Patch Changes
+
+- a05bdc4: Fix meta description not showing product description
+
 ## 4.6.0
 
 ### Minor Changes
