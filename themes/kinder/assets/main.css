@@ -2,6 +2,7 @@
 @layer reset, base, components, utilities, sections, snippets, overrides;
 @layer base{
   :root{
+    --page-width:1400px;
     --spacing-0:0px;
     --spacing-2:2px;
     --spacing-4:4px;
@@ -2348,6 +2349,30 @@
   }
   [ui-slot=carousel][data-align=center] [ui-slot=carousel-item]{
     scroll-snap-align:center;
+  }
+  [ui-slot=marquee]{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    max-width:1400px;
+    max-width:var(--page-width);
+    overflow:hidden;
+  }
+  [ui-slot=marquee] [ui-slot=marquee-cloud]{
+    display:flex;
+    min-width:100%;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  [ui-slot=marquee] [ui-slot=marquee-cloud] [ui-slot=marquee-item]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+    padding-inline:24px;
+    padding-inline:var(--spacing-24);
+    gap:8px;
+    gap:var(--spacing-8);
   }
   [ui-slot=skeleton]{
     position:relative;
