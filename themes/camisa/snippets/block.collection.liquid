@@ -2,6 +2,7 @@
   Renders a collection item (Block)
 
   Accepts:
+  - variant: {String} "stroke" | "underline"
   - collection: {Object} Item info
 
   Usage:
@@ -40,16 +41,28 @@
     {% endif %}
   </a>
   <div class="content">
-    <a
-      href="/collections/{{ collection.slug }}"
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="stroke"
-      data-size="lg"
-      data-flip-icon-in-rtl
-    >
-      {{ collection.name | default: 'collection.title' | t }}
-      {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-    </a>
+    {% if variant == 'stroke' %}
+      <a
+        href="/collections/{{ collection.slug }}"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="stroke"
+        data-size="lg"
+        data-flip-icon-in-rtl
+      >
+        {{ collection.name | default: 'collection.title' | t }}
+        {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+      </a>
+    {% else %}
+      <a
+        href="/collections/{{ collection.slug }}"
+        ui-slot="link-button"
+        data-variant="black"
+        data-size="md"
+        data-flip-icon-in-rtl
+      >
+        {{ collection.name | default: 'collection.title' | t }}
+      </a>
+    {% endif %}
   </div>
 </li>
