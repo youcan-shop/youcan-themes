@@ -10,7 +10,7 @@ if (!customElements.get("ui-carousel")) {
       this.ignoreScroll = false;
 
       this.wrapper = this.querySelector('[ui-carousel="wrapper"]');
-      this.slides = this.querySelectorAll('[ui-carousel="item"]');
+      this.slides = this.wrapper.querySelectorAll('& > [ui-carousel="item"]');
       this.arrows = {
         previous: this.querySelector('[ui-carousel="arrow-previous"]'),
         next: this.querySelector('[ui-carousel="arrow-next"]'),

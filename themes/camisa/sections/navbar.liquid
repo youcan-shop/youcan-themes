@@ -101,8 +101,19 @@
           aria-label="Menu"
           popovertarget="menu"
         >
-          {% render 'misc.icon', name: 'hgi-search-01' %}
           {% render 'misc.icon', name: 'hgi-menu-01' %}
+        </button>
+        <button
+          class="search"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="ghost"
+          data-size="md"
+          data-as-icon
+          aria-label="Search"
+          popovertarget="search"
+        >
+          {% render 'misc.icon', name: 'hgi-search-01' %}
         </button>
         <button
           class="cart-drawer-trigger"
@@ -141,9 +152,21 @@
         aria-label="Menu"
         popovertarget="menu"
       >
-        {% render 'misc.icon', name: 'hgi-search-01' %}
         {% render 'misc.icon', name: 'hgi-menu-01' %}
       </button>
+      <button
+        class="search"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="ghost"
+        data-size="md"
+        data-as-icon
+        aria-label="Search"
+        popovertarget="search"
+      >
+        {% render 'misc.icon', name: 'hgi-search-01' %}
+      </button>
+
       <button
         class="cart-drawer-trigger"
         ui-slot="button"
@@ -163,6 +186,10 @@
 </ui-navbar>
 
 {% render 'misc.menu-drawer' %}
+{% render 'misc.search-drawer',
+  recently_viewed_id: section.settings.search_recently_viewed.id,
+  show_cart_recommendations: section.settings.show_search_recommendations
+%}
 {% render 'misc.cart-drawer', collection_id: section.settings.cart_collection.id, show_products: section.settings.show_cart_recommendations %}
 
 {% schema %}
@@ -247,13 +274,43 @@
     },
     {
       "type": "header",
+      "content": "t:sections.navbar.actions.search_recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search_recommendations",
+      "label": "t:sections.navbar.actions.show_cart_recommendations",
+      "default": true
+    },
+    {
+      "type": "category",
+      "id": "search_collection_1",
+      "label": "Collection 1"
+    },
+    {
+      "type": "category",
+      "id": "search_collection_2",
+      "label": "Collection 2"
+    },
+    {
+      "type": "category",
+      "id": "search_collection_3",
+      "label": "Collection 3"
+    },
+    {
+      "type": "category",
+      "id": "search_recently_viewed",
+      "label": "Recently viewed products"
+    },
+    {
+      "type": "header",
       "content": "t:sections.navbar.actions.cart_recommendations"
     },
     {
       "type": "checkbox",
       "id": "show_cart_recommendations",
       "label": "t:sections.navbar.actions.show_cart_recommendations",
-      "default": false
+      "default": true
     },
     {
       "type": "category",
