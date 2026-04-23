@@ -41,23 +41,11 @@
   <button
     ui-slot="button"
     data-variant="primary"
-    data-mode="lighter"
+    data-mode="ghost"
     data-size="xs"
     popovertarget="sort"
   >
-    {% assign placeholder = 'general.sort.title' | t %}
-    {% for opt in options %}
-      {% assign index = forloop.index %}
-      {% assign field = keys[index] %}
-      {% assign order = index | modulo: 2 == 0 %}
-
-      {% if field == sort_field and values[order] == sort_order %}
-        {% assign placeholder = opt %}
-      {% endif %}
-    {% endfor %}
-
-    {{ placeholder }}
-
+    {{ 'general.sort.label' | t }}
     {% render 'misc.icon', name: 'hgi-unfold-more' %}
   </button>
 
@@ -67,7 +55,7 @@
       <button
         ui-slot="button"
         data-variant="primary"
-        data-mode="lighter"
+        data-mode="ghost"
         data-size="md"
         aria-label="Close"
         popovertarget="sort"

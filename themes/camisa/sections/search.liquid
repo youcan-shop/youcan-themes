@@ -24,7 +24,7 @@
         <span class="total">[{{ items.size }}]</span>
       </div>
       <form action="/search" class="search">
-        <fieldset role="group">
+        <label class="field" role="group">
           {% render 'misc.icon', name: 'hgi-search-01' %}
           <input
             ui-search="input"
@@ -51,8 +51,11 @@
           >
             Remove
           </button>
-        </fieldset>
+        </label>
       </form>
+    </div>
+    <div class="filter-area">
+      {% render 'misc.sort' %}
     </div>
     {% if items.size > 0 %}
       <ul class="list-area" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
@@ -134,7 +137,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 0
     },
     {
       "type": "range",
