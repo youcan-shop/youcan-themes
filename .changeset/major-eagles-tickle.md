@@ -1,5 +1,0 @@
----
-"bella": patch
----
-
-Add pixels
