@@ -115,5 +115,5 @@ if (!customElements.get("ui-linked-fields")) {
     }
   }
 
-customElements.define("ui-linked-fields", LinkedFields);
+  customElements.define("ui-linked-fields", LinkedFields);
 }
