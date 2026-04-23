@@ -78,14 +78,15 @@
 
   /* Disabled */
   &:disabled,
-  &[aria-disabled="true"] {
+  &[aria-disabled="true"],
+  &[data-loading] {
     color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
     cursor: auto;
     pointer-events: none;
   }
 
   /* Hover */
-  &:hover:not(:disabled, [aria-disabled="true"]) {
+  &:hover:not(:disabled, [aria-disabled="true"], [data-loading]) {
     background-size: 100% 1px;
     color: color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
     background-position-x: left;

@@ -346,6 +346,7 @@ class CartRemove extends HTMLElement {
   }
 
   set isLoading(value) {
+    this.button.textContent = window.actions.loading ?? "Loading...";
     this.button.toggleAttribute("data-loading", value);
   }
 }
