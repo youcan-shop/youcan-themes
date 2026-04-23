@@ -6,7 +6,17 @@
 >
   <ul>
     {% for item in section.blocks %}
-      <li class="item">Announcement</li>
+      <li class="item">
+        {% if item.settings.link %}
+          <a ui-slot="link-button" data-size="md" href="{{ item.settings.link }}">
+            {{ item.settings.text }}
+          </a>
+        {% else %}
+          <span>
+            {{ item.settings.text }}
+          </span>
+        {% endif %}
+      </li>
     {% endfor %}
   </ul>
 </div>
@@ -23,27 +33,16 @@
       "content": "t:common.headers.colors"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": true
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#E14A43"
     },
     {
       "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
-    },
-    {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-solid-bg"
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#FAFAFA"
     },
     {
       "type": "header",
