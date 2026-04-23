@@ -1,13 +1,10 @@
 # bella
 
-## 2.0.0
-
-### Major Changes
-
-- 5a7f92b: Update the way how we control shop buttons
+## 1.1.0
 
 ### Minor Changes
 
+- 5a7f92b: Update the way how we control shop buttons
 - b39e9a5: Fix inventory condition when tracking is disabled
 
 ### Patch Changes
