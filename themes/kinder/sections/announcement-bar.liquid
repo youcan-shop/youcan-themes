@@ -1,33 +1,35 @@
-{{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
+{% unless section.settings.homepage_only and template.name != 'index' %}
+  {{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="announcement-bar"
-  role="banner"
->
-  <div ui-slot="marquee">
-    <ul ui-slot="marquee-cloud">
-      {% for item in section.blocks %}
-        <li ui-slot="marquee-item">
-          <span>{{ item.settings.heading }}:</span>
-          {% if item.settings.link %}
-            <a
-              ui-slot="link-button"
-              data-size="md"
-              data-underline="true"
-              href="{{ item.settings.link }}"
-            >
-              {{ item.settings.text }}
-            </a>
-          {% else %}
-            <span>
-              {{ item.settings.text }}
-            </span>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+  <div
+    ui-section="announcement-bar"
+    role="banner"
+  >
+    <div ui-slot="marquee">
+      <ul ui-slot="marquee-cloud">
+        {% for item in section.blocks %}
+          <li ui-slot="marquee-item">
+            <span>{{ item.settings.heading }}:</span>
+            {% if item.settings.link %}
+              <a
+                ui-slot="link-button"
+                data-size="md"
+                data-underline="true"
+                href="{{ item.settings.link }}"
+              >
+                {{ item.settings.text }}
+              </a>
+            {% else %}
+              <span>
+                {{ item.settings.text }}
+              </span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-</div>
+{% endunless %}
 
 {% schema %}
 {
