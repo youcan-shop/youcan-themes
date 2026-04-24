@@ -5,29 +5,31 @@
     ui-section="announcement-bar"
     role="banner"
   >
-    <div ui-slot="marquee">
-      <ul ui-slot="marquee-cloud">
-        {% for item in section.blocks %}
-          <li ui-slot="marquee-item">
-            <span>{{ item.settings.heading }}:</span>
-            {% if item.settings.link %}
-              <a
-                ui-slot="link-button"
-                data-size="md"
-                data-underline="true"
-                href="{{ item.settings.link }}"
-              >
-                {{ item.settings.text }}
-              </a>
-            {% else %}
-              <span>
-                {{ item.settings.text }}
-              </span>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+    <ui-marquee>
+      <div ui-marquee="track">
+        <ul ui-marquee="cloud">
+          {% for item in section.blocks %}
+            <li ui-marquee="item">
+              <span>{{ item.settings.heading }}:</span>
+              {% if item.settings.link %}
+                <a
+                  ui-slot="link-button"
+                  data-size="md"
+                  data-underline="true"
+                  href="{{ item.settings.link }}"
+                >
+                  {{ item.settings.text }}
+                </a>
+              {% else %}
+                <span>
+                  {{ item.settings.text }}
+                </span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </ui-marquee>
   </div>
 {% endunless %}
 
