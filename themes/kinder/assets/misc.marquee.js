@@ -19,7 +19,7 @@ if (!customElements.get("ui-marquee")) {
       const copiesToMake = Math.ceil(marqueeWidth / totalItemsWidth);
 
       for (let i = 0; i < copiesToMake; i++) {
-        this.cloud.appendChild(items[i].cloneNode(true));
+        items.forEach((item) => this.cloud.appendChild(item.cloneNode(true)));
       }
 
       this.track.appendChild(this.cloud.cloneNode(true));
