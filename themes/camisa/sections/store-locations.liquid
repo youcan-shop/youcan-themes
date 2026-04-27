@@ -1,0 +1,146 @@
+{{ 'section.store-locations.css' | asset_url | stylesheet_tag }}
+
+<ui-carousel
+  ui-section="store-locations"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div ui-slot="head">
+    <div class="content">
+      <h1 class="heading">Visit us</h1>
+      {% comment %} <p class="description">{{ section.settings.description }}</p> {% endcomment %}
+    </div>
+    {% assign min_items = section.settings.nbr_columns_desktop | plus: 0 %}
+    {% if section.blocks.size > min_items %}
+      <div class="actions">
+        <button
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="stroke"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+        </button>
+        <button
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-variant="primary"
+          data-mode="stroke"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+  <ul class="core-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+    {% for location in section.blocks %}
+      {% render 'block.location', location: location %}
+    {% endfor %}
+  </ul>
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "Store Locations",
+  "templates": ["index", "cart", "product", "page"],
+  "limit": 1,
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "location_item",
+      "label": "Location",
+      "settings": [
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
