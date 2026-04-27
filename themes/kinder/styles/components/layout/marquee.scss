@@ -1,0 +1,51 @@
+ui-marquee {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding-block: var(--spacing-8);
+  overflow: hidden;
+
+  [ui-marquee="track"] {
+    display: flex;
+    min-width: max-content;
+    animation: marquee var(--playback-speed, 27s) linear infinite;
+    animation-play-state: paused;
+  }
+
+  [ui-marquee="cloud"] {
+    display: flex;
+    min-width: max-content;
+
+    [ui-marquee="item"] {
+      display: flex;
+      min-width: max-content;
+      padding-inline: var(--spacing-24);
+      gap: var(--spacing-8);
+    }
+  }
+
+  &[play-state="paused"] {
+    [ui-marquee="track"] {
+      animation-play-state: paused;
+    }
+  }
+
+  &[play-state="running"] {
+    [ui-marquee="track"] {
+      animation-play-state: running;
+    }
+  }
+
+  &[data-pause-on-hover]:hover {
+    [ui-marquee="track"] {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}

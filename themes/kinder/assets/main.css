@@ -2349,6 +2349,51 @@
   [ui-slot=carousel][data-align=center] [ui-slot=carousel-item]{
     scroll-snap-align:center;
   }
+  ui-marquee{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    width:100%;
+    padding-block:8px;
+    padding-block:var(--spacing-8);
+    overflow:hidden;
+  }
+  ui-marquee [ui-marquee=track]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+    animation:marquee 27s linear infinite;
+    animation:marquee var(--playback-speed, 27s) linear infinite;
+    animation-play-state:paused;
+  }
+  ui-marquee [ui-marquee=cloud]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+  }
+  ui-marquee [ui-marquee=cloud] [ui-marquee=item]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+    padding-inline:24px;
+    padding-inline:var(--spacing-24);
+    gap:8px;
+    gap:var(--spacing-8);
+  }
+  ui-marquee[play-state=paused] [ui-marquee=track]{
+    animation-play-state:paused;
+  }
+  ui-marquee[play-state=running] [ui-marquee=track]{
+    animation-play-state:running;
+  }
+  ui-marquee[data-pause-on-hover]:hover [ui-marquee=track]{
+    animation-play-state:paused;
+  }
+  @keyframes marquee{
+    to{
+      transform:translateX(-50%);
+    }
+  }
   [ui-slot=skeleton]{
     position:relative;
     overflow:hidden;
@@ -2677,16 +2722,5 @@
     [ui-slot=head] .heading{
       font:400 calc(32px * var(--font-heading-scale))/calc(40px * var(--font-heading-scale)) var(--font-heading-family);
     }
-  }
-  ui-motion .youcan-section{
-    transition:transform 1.5s cubic-bezier(0.075, 0.82, 0.165, 1), opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1);
-  }
-  ui-motion .youcan-section:not([data-motion=in-view]){
-    transform:scale(1.2) translateY(15%);
-    opacity:0;
-  }
-  ui-motion[data-status=ignore] .youcan-section{
-    transform:scale(1) translateY(0%);
-    opacity:1;
   }
 }

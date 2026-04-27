@@ -1,158 +1,135 @@
-{{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
+{% unless section.settings.homepage_only and template.name != 'index' %}
+  {% if section.blocks.size > 0 %}
+    {{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="announcement-bar"
-  role="banner"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
+    <div
+      ui-section="announcement-bar"
+      role="banner"
+      style="
+        --bg-color: {{ section.settings.bg_color.hex }};
+        --fg-color: {{ section.settings.fg_color.hex }};
+      "
+    >
+      <ui-marquee
+        {% if section.settings.pause_on_hover %}
+          data-pause-on-hover
+        {% endif %}
+        speed="{{ section.settings.speed }}"
+      >
+        <div ui-marquee="track">
+          <ul ui-marquee="cloud">
+            {% for item in section.blocks %}
+              <li ui-marquee="item" {{ item.youcan_attributes }}>
+                <span>{{ item.settings.heading }}:</span>
+                {% if item.settings.link %}
+                  <a
+                    ui-slot="link-button"
+                    data-size="md"
+                    data-underline="true"
+                    href="{{ item.settings.link }}"
+                  >
+                    {{ item.settings.text }}
+                  </a>
+                {% else %}
+                  <span>
+                    {{ item.settings.text }}
+                  </span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </ui-marquee>
+    </div>
   {% endif %}
-  data-bottom-border="{{ section.settings.bottom_border }}"
->
-  <ui-carousel
-    {% if section.settings.auto_rotate %}
-      autoplay
-      interval="{{ section.settings.change_every | times: 1000 }}"
-    {% endif %}
-  >
-    <button
-      class="arrow"
-      ui-carousel="arrow-previous"
-      ui-slot="compact-button"
-      data-size="lg"
-      data-flip-icon-in-rtl
-      aria-label="Previous"
-    >
-      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-    </button>
-    <ul
-      class="items"
-      ui-carousel="wrapper"
-      ui-slot="carousel"
-      aria-orientation="vertical"
-      data-align="center"
-      style="--per-page: 1;"
-      data-width="{{ section.settings.desktop_content_width }}"
-    >
-      {% for item in section.blocks %}
-        <li class="item" ui-carousel="item" ui-slot="carousel-item">
-          {% if item.settings.link %}
-            <a ui-slot="link-button" data-size="md" href="{{ item.settings.link }}">
-              {{ item.settings.text }}
-            </a>
-          {% else %}
-            <span>
-              {{ item.settings.text }}
-            </span>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    <button
-      class="arrow"
-      ui-carousel="arrow-next"
-      ui-slot="compact-button"
-      data-size="lg"
-      data-flip-icon-in-rtl
-      aria-label="Next"
-    >
-      {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-    </button>
-  </ui-carousel>
-</div>
+{% endunless %}
 
 {% schema %}
 {
   "label": "t:sections.announcement_bar.label",
   "tag": "header",
   "limit": 1,
-  "max_blocks": 5,
+  "max_blocks": 10,
   "settings": [
     {
       "type": "header",
       "content": "t:common.headers.colors"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": true
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#E14A43"
     },
     {
       "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
-    },
-    {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-solid-bg"
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#FAFAFA"
     },
     {
       "type": "header",
       "content": "t:common.headers.general"
     },
     {
-      "type": "range",
-      "id": "desktop_content_width",
-      "label": "t:sections.announcement_bar.desktop_content_width",
-      "min": 20,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "change_every",
-      "label": "t:sections.announcement_bar.change_every",
-      "min": 3,
-      "max": 7,
-      "step": 1,
-      "unit": "s",
-      "default": 3
-    },
-    {
       "type": "checkbox",
-      "id": "auto_rotate",
-      "label": "t:sections.announcement_bar.auto_rotate",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "bottom_border",
-      "label": "t:sections.announcement_bar.bottom_border",
+      "id": "homepage_only",
+      "label": "t:sections.announcement_bar.homepage_only",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.motion"
+    },
+    {
+      "type": "select",
+      "id": "speed",
+      "label": "t:sections.announcement_bar.speed.label",
+      "options": [
+        {
+          "value": "20",
+          "label": "t:sections.announcement_bar.speed.slow"
+        },
+        {
+          "value": "60",
+          "label": "t:sections.announcement_bar.speed.normal"
+        },
+        {
+          "value": "80",
+          "label": "t:sections.announcement_bar.speed.fast"
+        }
+      ],
+      "default": "60"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:sections.announcement_bar.pause_on_hover",
+      "default": true
     }
   ],
   "blocks": [
     {
       "type": "announcement_item",
-      "label": "t:sections.announcement_bar.blocks.announcement_item.label",
+      "label": "t:sections.announcement_bar.blocks.announcement.label",
       "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:sections.announcement_bar.blocks.announcement.heading",
+          "default": ""
+        },
         {
           "type": "textarea",
           "id": "text",
-          "label": "t:sections.announcement_bar.blocks.announcement_item.text",
-          "default": "t:sections.announcement_bar.blocks.announcement_item.default"
+          "label": "t:sections.announcement_bar.blocks.announcement.text",
+          "default": ""
         },
         {
           "type": "url",
           "id": "link",
-          "label": "t:sections.announcement_bar.blocks.announcement_item.link",
-          "default": "#"
+          "label": "t:sections.announcement_bar.blocks.announcement.link",
+          "default": ""
         }
       ]
     }
