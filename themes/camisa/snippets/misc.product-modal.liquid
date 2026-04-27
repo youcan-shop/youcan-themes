@@ -1,0 +1,139 @@
+{% comment %}
+  Render a product modal (Choose Options)
+
+  Usage:
+  {% render 'misc.product-modal' %}
+{% endcomment %}
+
+{% comment %}
+  <button
+    ui-slot="button"
+    data-variant="primary"
+    data-mode="filled"
+    data-size="lg"
+    popovertarget="product-drawer-{{ product.id }}"
+  >
+    {{ 'general.choose_options' | t }}
+  </button>
+{% endcomment %}
+<button
+  ui-slot="button"
+  data-variant="primary"
+  data-mode="stroke"
+  data-size="sm"
+  data-as-icon
+  popovertarget="product-modal-{{ product.id }}"
+>
+  {% render 'misc.icon', name: settings.cart_icon %}
+</button>
+
+<div class="product-modal" ui-slot="modal-content" id="product-modal-{{ product.id }}" popover>
+  <div ui-slot="modal-header">
+    <h3 ui-slot="modal-title">Quick Shop</h3>
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="ghost"
+      data-size="sm"
+      aria-label="Close"
+      popovertarget="product-modal-{{ product.id }}"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <ui-product ui-slot="modal-body" product-id="{{ product.id }}">
+    <ui-carousel ui-box="media" data-layout="carousel">
+      <div
+        class="items"
+        ui-carousel="wrapper"
+        ui-slot="carousel"
+        aria-orientation="horizontal"
+        data-align="center"
+        data-image-ratio="{{ settings.product_image_ratio }}"
+      >
+        {% if product.images.size %}
+          {% for image in product.images %}
+            <div class="item" ui-carousel="item" ui-slot="carousel-item">
+              <img
+                src="{{ image }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            </div>
+          {% endfor %}
+        {% else %}
+          {% render 'misc.image-fallback', icon_size: 60 %}
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="markers">
+          {% for marker in product.images %}
+            <button
+              class="marker"
+              ui-carousel="marker"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+              data-image-ratio="{{ settings.product_image_ratio }}"
+            >
+              <img
+                src="{{ marker }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </ui-carousel>
+    <div ui-box="content">
+      <div
+        class="badge"
+        ui-slot="status-badge"
+        data-variant="stroke"
+        data-status="{{ settings.sale_badge_status }}"
+      >
+        New
+      </div>
+      <a ui-block="title" ui-slot="link-button" href="/products/{{ product.slug }}">{{ product.name }}</a>
+      <div ui-block="price">
+        <span class="original-price" ui-product-item="price">
+          {{ price | default: 0 | money }}
+        </span>
+        <div
+          class="compare-at-price"
+          ui-product-item="compare-at-price"
+          {% unless compare_at_price %}
+            hidden
+          {% endunless %}
+        >
+          {{ compare_at_price | default: 0 | money }}
+        </div>
+      </div>
+      {% render 'const.inventory-status', count: default_variant.inventory %}
+      {% if product.options.size > 0 %}
+        {% render 'core.variants' %}
+      {% endif %}
+      <div ui-block="controller">
+        <div class="quantity-control">
+          <span class="label">Quantity</span>
+          {% render 'core.quantity', size: 'md' %}
+        </div>
+        {% render 'core.shop-button', mode: 'stroke' %}
+        {% render 'core.express-checkout', style: 'open-drawer' %}
+      </div>
+    </div>
+  </ui-product>
+</div>
+
+{% if product and product.options.size %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
