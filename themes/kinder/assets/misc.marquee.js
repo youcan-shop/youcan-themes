@@ -20,7 +20,9 @@ if (!customElements.get("ui-marquee")) {
       const marqueeWidth = this.offsetWidth;
       const totalItemsWidth = items.reduce((sum, el) => sum + el.offsetWidth, 0);
 
-      const copiesToMake = Math.ceil(marqueeWidth / totalItemsWidth);
+      console.log(marqueeWidth, totalItemsWidth, marqueeWidth / totalItemsWidth);
+
+      const copiesToMake = Math.floor(marqueeWidth / totalItemsWidth);
 
       const fragment = new DocumentFragment();
 
