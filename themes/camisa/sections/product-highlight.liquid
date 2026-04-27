@@ -1,0 +1,359 @@
+{{ 'section.product-highlight.css' | asset_url | stylesheet_tag }}
+
+{% assign product = section.settings.product %}
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<ui-product
+  ui-section="product-highlight"
+  product-id="{{ product.id }}"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-media-width-desktop="{{ section.settings.media_width_desktop }}"
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div class="content-area">
+    <div ui-slot="head">
+      <h1 class="heading">Item of the week</h1>
+      {% comment %} <p class="description">{{ section.settings.description }}</p> {% endcomment %}
+    </div>
+  </div>
+  <div class="core-area">
+    <ui-carousel ui-box="media" data-layout="carousel">
+      <div
+        class="items"
+        ui-carousel="wrapper"
+        ui-slot="carousel"
+        aria-orientation="horizontal"
+        data-image-ratio="{{ settings.product_image_ratio }}"
+      >
+        {% if product.images.size %}
+          {% for image in product.images %}
+            <div class="item" ui-carousel="item" ui-slot="carousel-item">
+              <img
+                src="{{ image }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+                {% if forloop.index0 %}
+                  loading="eager"
+                {% else %}
+                  loading="lazy"
+                {% endif %}
+              >
+            </div>
+          {% endfor %}
+        {% else %}
+          {% render 'misc.image-fallback', icon_size: 60 %}
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="markers">
+          {% for marker in product.images %}
+            <button
+              class="marker"
+              ui-carousel="marker"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </ui-carousel>
+    <div ui-box="content">
+      <div
+        class="badge"
+        ui-slot="status-badge"
+        data-variant="stroke"
+        data-status="{{ settings.sale_badge_status }}"
+      >
+        New
+      </div>
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'block_title' %}
+            <h1 ui-block="title" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
+              {{ product.name }}
+            </h1>
+
+          {% when 'block_price' %}
+            <div ui-block="price" data-size="{{ block.settings.price_size }}" {{ block.youcan_attributes }}>
+              <span class="original-price" ui-product-item="price">
+                {{ price | default: 0 | money }}
+              </span>
+              <div
+                class="compare-at-price"
+                ui-product-item="compare-at-price"
+                {% unless compare_at_price %}
+                  hidden
+                {% endunless %}
+              >
+                {{ compare_at_price | default: 0 | money }}
+              </div>
+            </div>
+
+          {% when 'block_inventory_status' %}
+            {% render 'const.inventory-status',
+              count: default_variant.inventory,
+              threshold: block.settings.low_inventory_threshold,
+              show_count: block.settings.show_inventory_count
+            %}
+
+          {% when 'block_description' %}
+            {% if product.description %}
+              <div ui-block="description" {{ block.youcan_attributes }}>
+                <article>{{ product.description }}</article>
+              </div>
+            {% endif %}
+
+          {% when 'block_variant_picker' %}
+            {% if product.options.size > 0 %}
+              {% render 'core.variants' %}
+            {% endif %}
+
+          {% when 'block_shop_buttons' %}
+            {% if block.settings.buy_button_style == 'open-drawer' %}
+              <div ui-block="controller" {{ block.youcan_attributes }}>
+                <div class="quantity-control">
+                  <span class="label">Quantity</span>
+                  {% render 'core.quantity', size: 'md' %}
+                </div>
+                {% if block.settings.shop_buttons_layout == 'add-to-cart'
+                  or block.settings.shop_buttons_layout == 'both'
+                  and settings.cart_checkout_type == 'cart'
+                %}
+                  {% render 'core.shop-button', mode: 'stroke' %}
+                {% endif %}
+                {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
+                  {% render 'core.express-checkout', style: 'open-drawer' %}
+                {% endif %}
+              </div>
+            {% else %}
+              <div ui-block="express-checkout" {{ block.youcan_attributes }}>
+                {% render 'core.express-checkout', style: 'default' %}
+              </div>
+            {% endif %}
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</ui-product>
+
+{% if product and product.options.size %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
+
+{% schema %}
+{
+  "label": "Product Highlight",
+  "templates": ["index", "cart", "page"],
+  "limit": 3,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.media"
+    },
+    {
+      "type": "select",
+      "id": "media_width_desktop",
+      "label": "t:sections.single_product.width_desktop.label",
+      "options": [
+        { "label": "t:sections.single_product.width_desktop.options.small", "value": "sm" },
+        { "label": "t:sections.single_product.width_desktop.options.medium", "value": "md" },
+        { "label": "t:sections.single_product.width_desktop.options.large", "value": "lg" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "select",
+      "id": "media_desktop_layout",
+      "label": "t:sections.single_product.layout_desktop.label",
+      "options": [
+        { "label": "t:sections.single_product.layout_desktop.options.grid", "value": "grid" },
+        { "label": "t:sections.single_product.layout_desktop.options.carousel", "value": "carousel" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block_title",
+      "label": "t:sections.single_product.blocks.title.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "title_size",
+          "label": "t:common.globals.size",
+          "options": [
+            { "label": "t:common.layout.size.x_small", "value": "xs" },
+            { "label": "t:common.layout.size.small", "value": "sm" },
+            { "label": "t:common.layout.size.medium", "value": "md" },
+            { "label": "t:common.layout.size.large", "value": "lg" },
+            { "label": "t:common.layout.size.x_small", "value": "xl" }
+          ],
+          "default": "md"
+        }
+      ]
+    },
+    {
+      "type": "block_price",
+      "label": "t:sections.single_product.blocks.price.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "price_size",
+          "label": "t:common.globals.size",
+          "options": [
+            { "label": "t:common.layout.size.x_small", "value": "xs" },
+            { "label": "t:common.layout.size.small", "value": "sm" },
+            { "label": "t:common.layout.size.medium", "value": "md" },
+            { "label": "t:common.layout.size.large", "value": "lg" },
+            { "label": "t:common.layout.size.x_small", "value": "xl" }
+          ],
+          "default": "md"
+        }
+      ]
+    },
+    {
+      "type": "block_inventory_status",
+      "label": "t:sections.single_product.blocks.inventory_status.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "low_inventory_threshold",
+          "label": "t:sections.single_product.blocks.inventory_status.low_inventory_threshold",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "checkbox",
+          "id": "show_inventory_count",
+          "label": "t:sections.single_product.blocks.inventory_status.show_inventory_count",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "block_variant_picker",
+      "label": "t:sections.single_product.blocks.variant_picker.label",
+      "limit": 1
+    },
+    {
+      "type": "block_description",
+      "label": "t:sections.single_product.blocks.description.label",
+      "limit": 1
+    },
+    {
+      "type": "block_shop_buttons",
+      "label": "t:sections.single_product.blocks.shop_buttons.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.single_product.blocks.shop_buttons.all_buttons.label"
+        },
+        {
+          "type": "select",
+          "id": "shop_buttons_layout",
+          "label": "t:common.headers.layout",
+          "options": [
+            { "label": "t:sections.single_product.blocks.shop_buttons.all_buttons.options.add_only", "value": "add-to-cart" },
+            { "label": "t:sections.single_product.blocks.shop_buttons.all_buttons.options.buy_only", "value": "buy-now" },
+            { "label": "t:sections.single_product.blocks.shop_buttons.all_buttons.options.both", "value": "both" }
+          ],
+          "default": "both"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.single_product.blocks.shop_buttons.buy_button.label"
+        },
+        {
+          "type": "select",
+          "id": "buy_button_style",
+          "label": "t:common.headers.style",
+          "options": [
+            { "label": "t:sections.single_product.blocks.shop_buttons.buy_button.options.default", "value": "default" },
+            { "label": "t:sections.single_product.blocks.shop_buttons.buy_button.options.open_drawer", "value": "open-drawer" }
+          ],
+          "default": "open-drawer"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
