@@ -1,45 +1,47 @@
 {% unless section.settings.homepage_only and template.name != 'index' %}
-  {{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
+  {% if section.blocks.size > 0 %}
+    {{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
 
-  <div
-    ui-section="announcement-bar"
-    role="banner"
-    style="
-      --bg-color: {{ section.settings.bg_color.hex }};
-      --fg-color: {{ section.settings.fg_color.hex }};
-    "
-  >
-    <ui-marquee
-      {% if section.settings.pause_on_hover %}
-        data-pause-on-hover
-      {% endif %}
-      style="--playback-speed: {{ section.settings.speed }}s"
+    <div
+      ui-section="announcement-bar"
+      role="banner"
+      style="
+        --bg-color: {{ section.settings.bg_color.hex }};
+        --fg-color: {{ section.settings.fg_color.hex }};
+      "
     >
-      <div ui-marquee="track">
-        <ul ui-marquee="cloud">
-          {% for item in section.blocks %}
-            <li ui-marquee="item">
-              <span>{{ item.settings.heading }}:</span>
-              {% if item.settings.link %}
-                <a
-                  ui-slot="link-button"
-                  data-size="md"
-                  data-underline="true"
-                  href="{{ item.settings.link }}"
-                >
-                  {{ item.settings.text }}
-                </a>
-              {% else %}
-                <span>
-                  {{ item.settings.text }}
-                </span>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </ui-marquee>
-  </div>
+      <ui-marquee
+        {% if section.settings.pause_on_hover %}
+          data-pause-on-hover
+        {% endif %}
+        speed="{{ section.settings.speed }}"
+      >
+        <div ui-marquee="track">
+          <ul ui-marquee="cloud">
+            {% for item in section.blocks %}
+              <li ui-marquee="item">
+                <span>{{ item.settings.heading }}:</span>
+                {% if item.settings.link %}
+                  <a
+                    ui-slot="link-button"
+                    data-size="md"
+                    data-underline="true"
+                    href="{{ item.settings.link }}"
+                  >
+                    {{ item.settings.text }}
+                  </a>
+                {% else %}
+                  <span>
+                    {{ item.settings.text }}
+                  </span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </ui-marquee>
+    </div>
+  {% endif %}
 {% endunless %}
 
 {% schema %}
@@ -80,14 +82,24 @@
       "content": "t:common.headers.motion"
     },
     {
-      "type": "range",
+      "type": "select",
       "id": "speed",
-      "label": "t:sections.announcement_bar.speed",
-      "min": 10,
-      "max": 30,
-      "step": 1,
-      "unit": "s",
-      "default": 25
+      "label": "t:sections.announcement_bar.speed.label",
+      "options": [
+        {
+          "value": "20",
+          "label": "t:sections.announcement_bar.speed.slow"
+        },
+        {
+          "value": "60",
+          "label": "t:sections.announcement_bar.speed.normal"
+        },
+        {
+          "value": "80",
+          "label": "t:sections.announcement_bar.speed.fast"
+        }
+      ],
+      "default": "60"
     },
     {
       "type": "checkbox",
