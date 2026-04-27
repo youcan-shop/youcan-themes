@@ -9,7 +9,7 @@ if (!customElements.get("ui-marquee")) {
     }
 
     connectedCallback() {
-      requestAnimationFrame(() => this._render());
+      this._render();
     }
 
     _render() {
