@@ -16,12 +16,13 @@
   display: flex;
   position: relative;
   transition: var(--transition-standard-default-spatial);
-  transition-property: color, background-size;
+  transition-property: color, background-size, box-shadow;
   background: linear-gradient(to right, currentcolor, currentcolor) 0 1px / 0 1px no-repeat;
   color: var(--color-link-button);
   gap: var(--spacing-4);
   background-position-x: right;
   background-position-y: bottom;
+  outline: none;
 
   &:is(a) {
     text-decoration: none;
@@ -91,5 +92,14 @@
     color: color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
     background-position-x: left;
     background-position-y: bottom;
+  }
+
+  /* Focus */
+  &:focus-visible {
+    box-shadow:
+      0 0 transparent,
+      0 0 transparent,
+      0 0 0 2px var(--color-surface),
+      0 0 0 4px currentColor;
   }
 }

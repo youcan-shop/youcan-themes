@@ -23,7 +23,6 @@
   border: 1px solid;
   border-radius: var(--radius-button);
   outline: none;
-  box-shadow: 0 0 0 3px transparent;
   font: var(--font-body-md);
   font-family: var(--font-button-family);
   font-weight: var(--font-button-weight);
@@ -164,7 +163,11 @@
 
   /* Focus */
   &:focus-visible {
-    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-button) 30%, transparent);
+    box-shadow:
+      0 0 transparent,
+      0 0 transparent,
+      0 0 0 2px var(--color-on-button),
+      0 0 0 4px var(--color-button);
   }
 
   /* Disabled */

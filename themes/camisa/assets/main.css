@@ -420,7 +420,6 @@
     border:1px solid;
     border-radius:var(--radius-button);
     outline:none;
-    box-shadow:0 0 0 3px transparent;
     font:var(--font-body-md);
     font-family:var(--font-button-family);
     font-weight:var(--font-button-weight);
@@ -561,7 +560,7 @@
 [ui-slot=button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
   }
 [ui-slot=button]:focus-visible:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    box-shadow:0 0 0 3px color-mix(in oklab, var(--color-button) 30%, transparent);
+    box-shadow:0 0 transparent, 0 0 transparent, 0 0 0 2px var(--color-on-button), 0 0 0 4px var(--color-button);
   }
 [ui-slot=button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
   }
@@ -686,13 +685,14 @@ hr[ui-slot=divider][data-variant=line]:not(#\#):not(#\#):not(#\#):not(#\#):not(#
     position:relative;
     transition:500ms cubic-bezier(0.27, 1.06, 0.18, 1);
     transition:var(--transition-standard-default-spatial);
-    transition-property:color, background-size;
+    transition-property:color, background-size, box-shadow;
     background:linear-gradient(to right, currentcolor, currentcolor) 0 1px/0 1px no-repeat;
     color:var(--color-link-button);
     gap:4px;
     gap:var(--spacing-4);
     background-position-x:right;
     background-position-y:bottom;
+    outline:none;
   }
 a[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     -webkit-text-decoration:none;
@@ -754,6 +754,11 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     color:color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
     background-position-x:left;
     background-position-y:bottom;
+  }
+[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+  }
+[ui-slot=link-button]:focus-visible:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    box-shadow:0 0 transparent, 0 0 transparent, 0 0 0 2px var(--color-surface), 0 0 0 4px currentColor;
   }
 [ui-slot=status-badge]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     --icon-size:16px;
