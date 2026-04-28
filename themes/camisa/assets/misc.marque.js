@@ -14,7 +14,6 @@ if (!customElements.get("ui-marquee")) {
 
     _render() {
       const items = Array.from(this.cloud.children);
-      console.log(items);
 
       if (items.length < 1) return;
 
