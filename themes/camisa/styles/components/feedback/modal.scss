@@ -27,14 +27,14 @@
   /* Header */
   [ui-slot="modal-header"] {
     display: flex;
+    position: sticky;
+    z-index: 99;
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-24);
-    gap: var(--spacing-12);
-    position: sticky;
     background-color: var(--modal-background);
+    gap: var(--spacing-12);
     inset-block-start: var(--spacing-0);
-    z-index: 99;
 
     /* Title */
     [ui-slot="modal-title"] {
@@ -74,7 +74,7 @@
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     visibility: hidden;
     filter: blur(2px);
     opacity: 0;
@@ -94,14 +94,13 @@
     }
   }
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
+    left: var(--spacing-0);
     width: 100%;
     max-height: 80vh;
     overflow: auto;
-    inset-block-start: auto;
     transform: translate3d(0, 100%, 0);
-    inset-block-end: var(--spacing-0);
-    left: var(--spacing-0);
+    inset-block: auto var(--spacing-0);
 
     &:popover-open {
       transform: translate3d(0, 0%, 0);
