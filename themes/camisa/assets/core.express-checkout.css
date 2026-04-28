@@ -55,9 +55,17 @@
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .image{
     width:100px;
-    height:100px;
+    height:auto;
     overflow:hidden;
-    border-radius:var(--radius-12);
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .image[data-image-ratio=square]{
+    aspect-ratio:1/1;
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .image[data-image-ratio=portrait]{
+    aspect-ratio:3/4;
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .image[data-image-ratio=landscape]{
+    aspect-ratio:4/3;
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .image > img{
     -o-object-fit:cover;
@@ -67,8 +75,6 @@
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    padding-top:var(--spacing-4);
-    padding-bottom:var(--spacing-4);
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .info{
     display:grid;
@@ -77,7 +83,6 @@
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .info .price{
     color:var(--color-primary);
-    font:var(--font-body-lg);
   }
   .express-checkout-drawer [ui-slot=sheet-footer] ui-quantity{
     display:none;

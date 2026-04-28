@@ -61,9 +61,20 @@
 
           .image {
             width: 100px;
-            height: 100px;
+            height: auto;
             overflow: hidden;
-            border-radius: var(--radius-12);
+
+            &[data-image-ratio="square"] {
+              aspect-ratio: 1 / 1;
+            }
+
+            &[data-image-ratio="portrait"] {
+              aspect-ratio: 3 / 4;
+            }
+
+            &[data-image-ratio="landscape"] {
+              aspect-ratio: 4 / 3;
+            }
 
             & > img {
               object-fit: cover;
@@ -74,7 +85,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding-block: var(--spacing-4);
 
             .info {
               display: grid;
@@ -82,7 +92,6 @@
 
               .price {
                 color: var(--color-primary);
-                font: var(--font-body-lg);
               }
             }
           }
