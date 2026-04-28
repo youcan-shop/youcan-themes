@@ -9,7 +9,8 @@
     }
 
     [ui-express-checkout="field"] {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: var(--spacing-8);
 
       &::after {
@@ -101,6 +102,62 @@
 
     [ui-slot="sheet-footer"] {
       ui-quantity {
+        display: none;
+      }
+    }
+  }
+
+  ui-phone-validation {
+    [ui-phone-validator="input-wrapper"] {
+      display: flex;
+
+      [ui-phone-validator="countries"] {
+        position: relative;
+        flex-shrink: 0;
+        width: 75px;
+        display: flex;
+        align-items: center;
+
+        [ui-phone-validator="displayed-country-code"] {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+          flex: 1;
+
+          &::after {
+            content: "";
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            transform: translate(-1.5px, -1.5px) rotate(45deg);
+            border-right: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+            border-bottom: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+          }
+        }
+
+        [ui-phone-validator="select-country-code"] {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          cursor: pointer;
+          appearance: none;
+        }
+      }
+
+      [ui-phone-validator="number"] {
+        flex: 1;
+        border-inline-start: none !important;
+      }
+    }
+
+    [ui-phone-validator="error"] {
+      color: var(--color-error);
+      font: var(--font-body-sm);
+
+      &[data-hidden="true"] {
         display: none;
       }
     }
