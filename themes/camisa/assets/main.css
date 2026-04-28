@@ -4,6 +4,11 @@
       rotate:360deg;
     }
   }
+  @keyframes marquee{
+    to{
+      transform:translateX(-50%);
+    }
+  }
   @keyframes pulse{
     100%{
       transform:translateX(100%);
@@ -2351,6 +2356,50 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=textarea]:hover:not(:focus):not(:disabled):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::placeholder{
     color:var(--color-on-surface-variant);
+  }
+ui-marquee:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    width:100%;
+    padding-top:16px;
+    padding-bottom:16px;
+    padding-top:var(--spacing-16);
+    padding-bottom:var(--spacing-16);
+    overflow:hidden;
+  }
+ui-marquee:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-marquee=track]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+    animation:marquee 27s linear infinite;
+    animation:marquee var(--playback-speed, 27s) linear infinite;
+    animation-play-state:paused;
+  }
+ui-marquee:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-marquee=cloud]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+  }
+ui-marquee:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-marquee=cloud] [ui-marquee=item]{
+    display:flex;
+    min-width:-moz-max-content;
+    min-width:max-content;
+    padding-left:16px;
+    padding-right:16px;
+    padding-left:var(--spacing-16);
+    padding-right:var(--spacing-16);
+    gap:8px;
+    gap:var(--spacing-8);
+  }
+ui-marquee[play-state=paused]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-marquee=track]{
+    animation-play-state:paused;
+  }
+ui-marquee[play-state=running]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-marquee=track]{
+    animation-play-state:running;
+  }
+ui-marquee[data-pause-on-hover]:hover:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-marquee=track]{
+    animation-play-state:paused;
   }
 [ui-slot=carousel]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     display:flex;

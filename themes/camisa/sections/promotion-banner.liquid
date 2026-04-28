@@ -12,17 +12,36 @@
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-pause-on-hover="{{ section.settings.pause_on_hover }}"
 >
-  <div class="items-wrapper">
-    {% for _ in (1..2) %}
-      <ul class="items">
-        {% for item in (1..6) %}
-          <li class="item">{{ section.settings.content }}</li>
+  <ui-marquee
+    {% if section.settings.pause_on_hover %}
+      data-pause-on-hover
+    {% endif %}
+    speed="{{ section.settings.speed }}"
+  >
+    <div ui-marquee="track">
+      <ul ui-marquee="cloud">
+        {% for item in section.blocks %}
+          <li ui-marquee="item" {{ item.youcan_attributes }}>
+            {% if item.settings.link %}
+              <a
+                ui-slot="link-button"
+                data-size="md"
+                data-underline="true"
+                href="{{ item.settings.link }}"
+              >
+                {{ item.settings.text }}
+              </a>
+            {% else %}
+              <span>
+                {{ item.settings.text }}
+              </span>
+            {% endif %}
+          </li>
         {% endfor %}
       </ul>
-    {% endfor %}
-  </div>
+    </div>
+  </ui-marquee>
 </div>
 
 {% schema %}
@@ -31,6 +50,7 @@
   "templates": ["index", "product", "page", "cart"],
   "tag": "header",
   "limit": 2,
+  "max_blocks": 10,
   "settings": [
     {
       "type": "textarea",
@@ -70,10 +90,50 @@
       "content": "t:common.headers.motion"
     },
     {
+      "type": "select",
+      "id": "speed",
+      "label": "t:sections.announcement_bar.speed.label",
+      "options": [
+        {
+          "value": "20",
+          "label": "t:sections.announcement_bar.speed.slow"
+        },
+        {
+          "value": "60",
+          "label": "t:sections.announcement_bar.speed.normal"
+        },
+        {
+          "value": "80",
+          "label": "t:sections.announcement_bar.speed.fast"
+        }
+      ],
+      "default": "60"
+    },
+    {
       "type": "checkbox",
       "id": "pause_on_hover",
-      "label": "t:sections.promotion_banner.pause_on_hover",
+      "label": "t:sections.announcement_bar.pause_on_hover",
       "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "label": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Content",
+          "default": ""
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "default": ""
+        }
+      ]
     }
   ]
 }
