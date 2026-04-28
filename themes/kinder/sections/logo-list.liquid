@@ -1,4 +1,38 @@
-<h1>Logo list</h1>
+{{ 'section.logo-list.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="logo-list"
+  role="banner"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
+>
+  <ui-marquee speed="{{ section.settings.speed }}">
+    <div ui-marquee="track">
+      <ul ui-marquee="cloud">
+        {% for item in section.blocks %}
+          <li ui-marquee="item" {{ item.youcan_attributes }}>
+            <div ui-block="logo">
+              {% if item.settings.logo %}
+                <img
+                  src="{{ item.settings.logo.src }}"
+                  alt="logo-{{ forloop.index }}"
+                  height="100%"
+                  width="100%"
+                >
+              {% else %}
+                {% render 'misc.image-fallback', icon_size: 142 %}
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </ui-marquee>
+</div>
 
 {% schema %}
 {
@@ -13,13 +47,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "t:common.colors.bg_color",
-      "default": "#E14A43"
-    },
-    {
-      "type": "color",
-      "id": "fg_color",
-      "label": "t:common.colors.fg_color",
-      "default": "#FAFAFA"
+      "default": "#FEFEFE"
     },
     {
       "type": "header",
@@ -80,6 +108,30 @@
         "setting_id": "scrolling",
         "value": true
       }
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
     }
   ],
   "blocks": [
