@@ -54,6 +54,22 @@
         {% assign placeholder = 'product.title' | t %}
         {{ product.name | default: placeholder }}
       </a>
+      {% if product.options.size > 0 %}
+        {% for variant in product.options %}
+          {% if variant.type == 'color_base_buttons' %}
+            <div class="variants">
+              {% for opt in variant.values %}
+                {% if forloop.index < 4 %}
+                  <span class="option" style="background-color: {{ opt.preview }};"></span>
+                {% endif %}
+              {% endfor %}
+              {% if variant.values.size > 3 %}
+                <span class="rest">+{{ variant.values.size | minus: 3 }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
       <div class="price">
         <span class="original-price">
           {{ price | default: 0 | money }}
