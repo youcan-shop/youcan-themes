@@ -28,7 +28,6 @@
     data-bottom-border="1"
   {% endif %}
   data-header-layout="{{ section.settings.header_layout }}"
-  data-mobile-logo-position="{{ section.settings.mobile_logo_position }}"
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
@@ -260,20 +259,6 @@
     },
     {
       "type": "header",
-      "content": "Mobile Layout"
-    },
-    {
-      "type": "select",
-      "id": "mobile_logo_position",
-      "label": "t:sections.navbar.logo_position",
-      "options": [
-        { "label": "t:common.layout.alignment.start", "value": "start" },
-        { "label": "t:common.layout.alignment.center", "value": "center" }
-      ],
-      "default": "start"
-    },
-    {
-      "type": "header",
       "content": "t:sections.navbar.actions.search_recommendations"
     },
     {
@@ -285,22 +270,38 @@
     {
       "type": "category",
       "id": "search_collection_1",
-      "label": "Collection 1"
+      "label": "t:sections.navbar.actions.collection_1",
+      "visible_if": {
+        "setting_id": "show_search_recommendations",
+        "value": true
+      }
     },
     {
       "type": "category",
       "id": "search_collection_2",
-      "label": "Collection 2"
+      "label": "t:sections.navbar.actions.collection_2",
+      "visible_if": {
+        "setting_id": "show_search_recommendations",
+        "value": true
+      }
     },
     {
       "type": "category",
       "id": "search_collection_3",
-      "label": "Collection 3"
+      "label": "t:sections.navbar.actions.collection_3",
+      "visible_if": {
+        "setting_id": "show_search_recommendations",
+        "value": true
+      }
     },
     {
       "type": "category",
       "id": "search_recently_viewed",
-      "label": "Recently viewed products"
+      "label": "t:sections.navbar.actions.recently_viewed_products",
+      "visible_if": {
+        "setting_id": "show_search_recommendations",
+        "value": true
+      }
     },
     {
       "type": "header",
@@ -315,7 +316,11 @@
     {
       "type": "category",
       "id": "cart_collection",
-      "label": "t:sections.navbar.actions.product_recommendations"
+      "label": "t:sections.navbar.actions.collection_recommendations",
+      "visible_if": {
+        "setting_id": "show_cart_recommendations",
+        "value": true
+      }
     },
     {
       "type": "header",
