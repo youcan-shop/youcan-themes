@@ -3,6 +3,9 @@
 <div
   ui-section="logo-list"
   role="banner"
+  {% if section.settings.fullscreen %}
+    data-fullscreen
+  {% endif %}
   style="
     --bg-color: {{ section.settings.bg_color.hex }};
 
@@ -22,6 +25,7 @@
                   alt="logo-{{ forloop.index }}"
                   height="100%"
                   width="100%"
+                  loading="lazy"
                 >
               {% else %}
                 {% render 'misc.image-fallback', icon_size: 142 %}
