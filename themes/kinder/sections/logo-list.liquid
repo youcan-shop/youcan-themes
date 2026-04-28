@@ -16,34 +16,36 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
-  <ui-marquee
-    {% if section.settings.pause_on_hover %}
-      data-pause-on-hover
-    {% endif %}
-    speed="{{ section.settings.speed }}"
-  >
-    <div ui-marquee="track">
-      <ul ui-marquee="cloud">
-        {% for item in section.blocks %}
-          <li ui-marquee="item" {{ item.youcan_attributes }}>
-            <div ui-block="logo">
-              {% if item.settings.logo %}
-                <img
-                  src="{{ item.settings.logo.src }}"
-                  alt="logo-{{ forloop.index }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                >
-              {% else %}
-                {% render 'misc.image-fallback', icon_size: 142 %}
-              {% endif %}
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </ui-marquee>
+  <div class="logos-container">
+    <ui-marquee
+      {% if section.settings.pause_on_hover %}
+        data-pause-on-hover
+      {% endif %}
+      speed="{{ section.settings.speed }}"
+    >
+      <div ui-marquee="track">
+        <ul ui-marquee="cloud">
+          {% for item in section.blocks %}
+            <li ui-marquee="item" {{ item.youcan_attributes }}>
+              <div ui-block="logo">
+                {% if item.settings.logo %}
+                  <img
+                    src="{{ item.settings.logo.src }}"
+                    alt="logo-{{ forloop.index }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
+                  >
+                {% else %}
+                  {% render 'misc.image-fallback', icon_size: 142 %}
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </ui-marquee>
+  </div>
 </div>
 
 {% schema %}
@@ -59,7 +61,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "t:common.colors.bg_color",
-      "default": "#FEFEFE"
+      "default": "#fef7ee"
     },
     {
       "type": "header",
