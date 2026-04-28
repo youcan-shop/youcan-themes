@@ -13,30 +13,31 @@
 /* Content */
 [ui-slot="modal-content"][popover] {
   display: flex;
-  visibility: hidden;
   inset: auto;
   left: 50%;
   flex-direction: column;
   width: 70%;
-  transform: translate(-50%, -50%) scale(0.94);
-  transition: var(--transition-expressive-fast-spatial);
+  transform: translate(-50%, -45%);
+  transition: var(--transition-expressive-default-spatial);
   border: none;
-  opacity: 0;
   background-color: var(--modal-background);
   color: inherit;
   inset-block-start: 50%;
-  filter: blur(2px);
 
   /* Header */
   [ui-slot="modal-header"] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--spacing-16);
+    padding: var(--spacing-24);
     gap: var(--spacing-12);
+    position: sticky;
+    background-color: var(--modal-background);
+    inset-block-start: var(--spacing-0);
+    z-index: 99;
 
     /* Title */
-    [ui-slot="sheet-title"] {
+    [ui-slot="modal-title"] {
       font: var(--font-label-lg);
       text-transform: uppercase;
     }
@@ -44,7 +45,7 @@
 
   /* Body */
   [ui-slot="modal-body"] {
-    padding: var(--spacing-16);
+    padding-inline: var(--spacing-24);
   }
 
   /* Body */
@@ -52,7 +53,7 @@
     display: grid;
     gap: var(--spacing-12);
     grid-template-columns: repeat(2, 1fr);
-    padding: var(--spacing-16);
+    padding: var(--spacing-24);
   }
 
   /* Backdrop */
@@ -62,29 +63,53 @@
 
   /* State */
   &:popover-open {
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    filter: blur(0);
-
     &::backdrop {
       background-color: color-mix(in srgb, black 30%, transparent);
     }
 
     @starting-style {
-      visibility: hidden;
-      transform: translate(-50%, -50%) scale(0.94);
-      opacity: 0;
-      filter: blur(2px);
-
       &::backdrop {
         background-color: transparent;
       }
     }
   }
 
-  @media (max-width: 769px) {
-    width: calc(100% - var(--spacing-16));
+  @media (min-width: 1024px) {
+    visibility: hidden;
+    filter: blur(2px);
+    opacity: 0;
+
+    &:popover-open {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      filter: blur(0);
+
+      @starting-style {
+        visibility: hidden;
+        transform: translate(-50%, -45%);
+        opacity: 0;
+        filter: blur(2px);
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    inset-block-start: auto;
+    transform: translate3d(0, 100%, 0);
+    inset-block-end: var(--spacing-0);
+    left: var(--spacing-0);
+
+    &:popover-open {
+      transform: translate3d(0, 0%, 0);
+
+      @starting-style {
+        transform: translate3d(0, 100%, 0);
+      }
+    }
   }
 }
 
