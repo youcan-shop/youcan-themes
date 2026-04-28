@@ -35,6 +35,16 @@
   {% endjavascript %}
 {% endif %}
 
+{% if product %}
+  {% javascript %}
+    const product = JSON.parse({{ product | json }});
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.Dotshop.pixels.publish('view-content', product);
+    });
+  {% endjavascript %}
+{% endif %}
+
 {% schema %}
 {
   "label": "t:sections.single_product.label",
