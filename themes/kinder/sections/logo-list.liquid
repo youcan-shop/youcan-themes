@@ -13,7 +13,12 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
-  <ui-marquee speed="{{ section.settings.speed }}">
+  <ui-marquee
+    {% if section.settings.pause_on_hover %}
+      data-pause-on-hover
+    {% endif %}
+    speed="{{ section.settings.speed }}"
+  >
     <div ui-marquee="track">
       <ul ui-marquee="cloud">
         {% for item in section.blocks %}
