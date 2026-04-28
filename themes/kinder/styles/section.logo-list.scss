@@ -7,6 +7,7 @@
     .logos-container {
       --logos-container-bg: #fefefe;
 
+      padding-block: var(--spacing-24);
       overflow: hidden;
       border-radius: var(--radius-28);
       background-color: var(--logos-container-bg);
@@ -21,6 +22,17 @@
         img {
           object-fit: contain;
           transition: filter var(--transition-standard-default-effects);
+        }
+      }
+    }
+
+    &[data-list] {
+      .logos-container {
+        .logo-list {
+          display: grid;
+          grid-template-columns: repeat(var(--nbr-columns-desktop), minmax(142px, 1fr));
+          gap: var(--spacing-40);
+          justify-items: center;
         }
       }
     }
