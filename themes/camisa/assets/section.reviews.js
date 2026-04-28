@@ -60,46 +60,71 @@ class Reviews extends HTMLElement {
   }
 
   setItems(items) {
-    items.forEach((item) => {
+    const createStars = (count, filledTpl, emptyTpl) => {
+      const frag = document.createDocumentFragment();
+      for (let i = 0; i < 5; i++) {
+        frag.appendChild((count > i ? filledTpl : emptyTpl).content.cloneNode(true));
+      }
+      return frag;
+    };
+
+    const setAuthor = (element, item) => {
+      if (item.first_name || item.last_name) {
+        element.textContent = `${item.first_name || ""} ${item.last_name || ""}`.trim();
+      }
+    };
+
+    const renderImages = (tpl, container, urls = []) => {
+      urls.forEach((src) => {
+        const img = tpl.content.cloneNode(true);
+        img.querySelector("img").src = src;
+        container.appendChild(img);
+      });
+    };
+
+    items.forEach((item, i) => {
       const review = this.item.content.cloneNode(true);
-      const filledStar = review.querySelector('[ui-reviews="filled-star"]');
-      const strokeStar = review.querySelector('[ui-reviews="stroke-star"]');
 
       const rating = review.querySelector('[ui-reviews="item-rating"]');
       const content = review.querySelector('[ui-reviews="item-content"]');
       const author = review.querySelector('[ui-reviews="item-author"]');
-      const media = review.querySelector('[ui-reviews="item-media"]');
-      const image = review.querySelector('[ui-reviews="item-image"]');
+      const imageTpl = review.querySelector('[ui-reviews="item-image"]');
+
+      const filledStar = review.querySelector('[ui-reviews="filled-star"]');
+      const strokeStar = review.querySelector('[ui-reviews="stroke-star"]');
 
       content.innerHTML = item.content;
+      setAuthor(author, item);
+      rating.appendChild(createStars(item.ratings, filledStar, strokeStar));
 
-      if (item.first_name || item.last_name) {
-        author.textContent = `${item.first_name || ""} ${item.last_name || ""}`.trim();
-      }
+      renderImages(imageTpl, imageTpl.parentElement, item.images_urls);
 
-      for (let index = 0; index < 5; index++) {
-        rating.appendChild(item.ratings > index ? filledStar.content.cloneNode(true) : strokeStar.content.cloneNode(true));
-      }
+      const modal = review.querySelector("[popover]");
+      const trigger = review.querySelector("[popovertarget]");
 
-      item.images_urls?.forEach((src, i) => {
-        if (i === 0) {
-          const img = media.content.cloneNode(true);
-          img.querySelector("img").src = src;
-          img.querySelector("img")?.removeAttribute("hidden");
-          media.parentElement.appendChild(img);
-        }
+      const id = `review-${i + 1}`;
+      modal.id = id;
+      trigger.setAttribute("popovertarget", id);
 
-        const img = image.content.cloneNode(true);
-        img.querySelector("img").src = src;
+      const detailTpl = modal.querySelector('[ui-reviews="item-detail"]');
+      const detail = detailTpl.content.cloneNode(true);
 
-        image.parentElement.appendChild(img);
-      });
+      const ratingDetail = detail.querySelector('[ui-reviews="item-detail-rating"]');
+      const contentDetail = detail.querySelector('[ui-reviews="item-detail-content"]');
+      const authorDetail = detail.querySelector('[ui-reviews="item-detail-author"]');
 
-      if (!item.images_urls.length) {
-        const img = media.content.cloneNode(true);
-        img.querySelector("ui-image-fallback")?.removeAttribute("hidden");
-        media.parentElement.appendChild(img);
-      }
+      const filledStarDetail = detail.querySelector('[ui-reviews="detail-filled-star"]');
+      const strokeStarDetail = detail.querySelector('[ui-reviews="detail-stroke-star"]');
+
+      const imageDetailTpl = modal.querySelector('[ui-reviews="item-detail-image"]');
+
+      contentDetail.innerHTML = item.content;
+      setAuthor(authorDetail, item);
+      ratingDetail.appendChild(createStars(item.ratings, filledStarDetail, strokeStarDetail));
+
+      modal.querySelector(".content").appendChild(detail);
+
+      renderImages(imageDetailTpl, imageDetailTpl.parentElement, item.images_urls);
 
       this.item.parentElement.appendChild(review);
     });

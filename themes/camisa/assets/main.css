@@ -893,10 +893,10 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     background-color:var(--color-progress, var(--color-primary));
   }
 [ui-slot=rating-bar]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --color-active-star:#f6b51e;
+    --color-active-star:currentColor;
     --color-active-heart:#fb3748;
     --color-active:var(--color-on-surface);
-    --color-inactive:var(--color-surface-container-highest);
+    --color-inactive:color-mix(in srgb, currentColor 15%, transparent);
     display:flex;
     width:-moz-fit-content;
     width:fit-content;
@@ -913,8 +913,6 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     padding-left:var(--spacing-16);
     padding-right:var(--spacing-16);
     border:1px solid var(--color-surface-variant);
-    border-radius:calc(12px - 2px);
-    border-radius:calc(var(--radius-12) - var(--spacing-2));
   }
 [ui-slot=rating-bar][data-variant=basic]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=rating-item]:not(:has(> svg)){
     width:var(--item-size);
@@ -984,7 +982,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=rating-bar]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=rating-item]:hover{
     border-color:transparent;
-    background-color:var(--color-surface-container-low);
+    background-color:var(--color-surface-container);
   }
 [ui-slot=rating-bar]:not(:has([ui-slot=rating-item] > input[type=radio]:checked)):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=rating-item]{
     color:var(--color-inactive);
@@ -998,21 +996,21 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     }
   }
 [ui-slot=rating-review]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
-    --color-star:#f6b51e;
+    --color-star:currentColor;
     --color-heart:#fb3748;
     display:flex;
-    gap:2px;
-    gap:var(--spacing-2);
-    color:color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    align-items:center;
+    gap:4px;
+    gap:var(--spacing-4);
   }
 [ui-slot=rating-review]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > i{
     flex-shrink:0;
-    font-size:20px;
+    font-size:16px;
   }
 [ui-slot=rating-review]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) > svg{
     flex-shrink:0;
-    width:20px;
-    height:20px;
+    width:16px;
+    height:16px;
   }
 [ui-slot=rating-review]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
   }
@@ -2300,7 +2298,6 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
     outline:2px solid transparent;
     outline-offset:1px;
     background-color:transparent;
-    box-shadow:0 1px 2px 0 color-mix(in srgb, currentcolor 8%, transparent);
     color:var(--color-primary);
     font:var(--font-body-md);
     resize:vertical;
@@ -2327,7 +2324,6 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
 [ui-slot=textarea]:disabled:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     border-color:transparent;
     background-color:var(--color-surface-container-low);
-    box-shadow:none;
     color:color-mix(in srgb, currentcolor 38%, transparent);
   }
 [ui-slot=textarea]:disabled:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::-moz-placeholder{
@@ -2457,8 +2453,6 @@ ui-marquee[data-pause-on-hover]:hover:not(#\#):not(#\#):not(#\#):not(#\#):not(#\
 [ui-slot=skeleton]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
     position:relative;
     overflow:hidden;
-    border-radius:12px;
-    border-radius:var(--radius-12);
     background-color:var(--color-surface-container);
   }
 [ui-slot=skeleton]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::before{

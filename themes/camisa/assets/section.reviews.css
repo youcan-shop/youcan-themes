@@ -1,162 +1,79 @@
 
+  [ui-section=reviews]:not(#\#){
+    padding:attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
+  }
   [ui-section=reviews]{
     display:flex;
     flex-direction:column;
-    align-items:center;
-    justify-content:center;
     gap:var(--spacing-32);
   }
-  [ui-section=reviews] .items{
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    width:100%;
-    grid-gap:var(--spacing-24);
-    gap:var(--spacing-24);
+  [ui-section=reviews] .head-area .heading{
+    font:var(--font-title-md);
+    text-transform:uppercase;
   }
-  [ui-section=reviews] .items [ui-block=review],
-  [ui-section=reviews] .items .skeleton-item{
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    overflow:hidden;
-    border-radius:var(--radius-review);
+  [ui-section=reviews] .overview-area{
+    display:flex;
+    gap:var(--spacing-64);
   }
-  [ui-section=reviews] .items [ui-block=review] .media,
-  [ui-section=reviews] .items .skeleton-item .media{
-    height:100%;
-    aspect-ratio:1/1;
-  }
-  [ui-section=reviews] .items [ui-block=review] .media > img,
-  [ui-section=reviews] .items .skeleton-item .media > img{
-    -o-object-fit:cover;
-       object-fit:cover;
-  }
-  [ui-section=reviews] .items [ui-block=review] .content,
-  [ui-section=reviews] .items .skeleton-item .content{
+  [ui-section=reviews] .overview-area .rating{
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    padding:var(--spacing-24);
-    gap:var(--spacing-16);
   }
-  [ui-section=reviews] .items [ui-block=review] .content .core,
-  [ui-section=reviews] .items .skeleton-item .content .core{
-    display:flex;
-    flex-direction:column;
-    gap:var(--spacing-16);
-  }
-  [ui-section=reviews] .items [ui-block=review] .content .core article,
-  [ui-section=reviews] .items .skeleton-item .content .core article{
-    display:-webkit-box;
-    overflow:hidden;
-    color:var(--color-on-surface-variant);
-    word-break:break-all;
-    -webkit-box-orient:vertical;
-    -webkit-line-clamp:8;
-    line-clamp:8;
-  }
-  [ui-section=reviews] .items [ui-block=review] .content .core .images,
-  [ui-section=reviews] .items .skeleton-item .content .core .images{
-    display:flex;
-    flex-wrap:wrap;
-    gap:var(--spacing-8);
-  }
-  [ui-section=reviews] .items [ui-block=review] .content .core .images .image,
-  [ui-section=reviews] .items .skeleton-item .content .core .images .image{
-    width:var(--spacing-48);
-    height:var(--spacing-48);
-    overflow:hidden;
-    border-radius:calc(var(--radius-testimonial) * 0.6);
-  }
-  [ui-section=reviews] .items [ui-block=review] .content .core .images .image > img,
-  [ui-section=reviews] .items .skeleton-item .content .core .images .image > img{
-    -o-object-fit:cover;
-       object-fit:cover;
-  }
-  [ui-section=reviews] .items [ui-block=review] .content .author,
-  [ui-section=reviews] .items .skeleton-item .content .author{
-    padding-top:var(--spacing-16);
-    border-top:1px solid var(--color-surface-variant);
-  }
-  [ui-section=reviews] .items [ui-block=review][ui-block=review] .content,
-  [ui-section=reviews] .items .skeleton-item[ui-block=review] .content{
-    background-color:var(--color-surface-container-low);
-  }
-  [ui-section=reviews] [ui-slot=head]{
-    width:100%;
-  }
-  [ui-section=reviews] [ui-slot=head] .overview{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:var(--spacing-16);
-    margin-top:var(--spacing-16);
-  }
-  [ui-section=reviews] [ui-slot=head] .overview .rating .total{
-    font:var(--font-display-md);
-  }
-  [ui-section=reviews] [ui-slot=head] .overview .rating .stars{
+  [ui-section=reviews] .overview-area .rating .avg{
     display:grid;
-    grid-gap:var(--spacing-4);
-    gap:var(--spacing-4);
-  }
-  [ui-section=reviews] [ui-slot=head] .overview .states{
-    display:flex;
-    flex-direction:column-reverse;
+    grid-gap:var(--spacing-8);
     gap:var(--spacing-8);
-    width:380px;
-  }
-  [ui-section=reviews] [ui-slot=head] .overview .states .state{
-    display:flex;
     align-items:center;
-    gap:var(--spacing-8);
+    grid-template-columns:repeat(2, max-content);
   }
-  [ui-section=reviews] [ui-slot=head] .overview .states .state svg{
-    color:#f6b51e;
+  [ui-section=reviews] .overview-area .rating .avg .nbr{
+    font:var(--font-headline-lg);
   }
-  [ui-section=reviews] [ui-slot=head] .overview .states .state span{
-    width:10px;
+  [ui-section=reviews] .overview-area .rating .avg .total{
+    grid-column:1/3;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .states .state progress{
-    width:100%;
+  [ui-section=reviews] .overview-area .rating [ui-slot=link-button]{
+    width:-moz-fit-content;
+    width:fit-content;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body]{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body]{
     display:grid;
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .field{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field{
     display:flex;
     flex-direction:column;
     align-items:flex-start;
     gap:var(--spacing-8);
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .field [ui-slot=input],
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .field [ui-slot=textarea]{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field [ui-slot=input],
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field [ui-slot=textarea]{
     width:100%;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields{
     display:grid;
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
     grid-template-columns:repeat(2, 1fr);
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field:last-child, [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field:nth-last-child(2), [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field:nth-last-child(3){
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field:last-child, [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field:nth-last-child(2), [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field:nth-last-child(3){
     grid-column:1/3;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images{
     display:flex;
     flex-wrap:wrap;
     gap:var(--spacing-8);
   }
-  [ui-section=reviews]:not(#\#) [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .upload{
+  [ui-section=reviews]:not(#\#) .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .upload{
     height:60px !important;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .upload{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .upload{
     position:relative;
     width:60px;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .upload > input[type=file]{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .upload > input[type=file]{
     position:absolute;
     border-radius:var(--radius-sm);
     opacity:0;
@@ -165,44 +82,158 @@
        -moz-appearance:none;
             appearance:none;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .image{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .image{
     position:relative;
     height:60px;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .image > img{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .image > img{
     border-radius:var(--radius-button);
     -o-object-fit:cover;
        object-fit:cover;
-    box-shadow:var(--shadow-lg);
   }
-  [ui-section=reviews]:not(#\#) [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .image > button{
+  [ui-section=reviews]:not(#\#) .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .image > button{
     background-color:color-mix(in srgb, currentcolor 15%, transparent) !important;
   }
-  [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields .field .images .image > button{
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .image > button{
     position:absolute;
     z-index:2;
     right:calc(var(--spacing-4) * -1);
     top:calc(var(--spacing-4) * -1);
   }
-  @media (max-width: 1280px){
-    [ui-section=reviews] .items{
-      grid-template-columns:1fr;
+  [ui-section=reviews] .overview-area .states{
+    width:300px;
+    display:flex;
+    flex-direction:column-reverse;
+    gap:var(--spacing-8);
+  }
+  [ui-section=reviews] .overview-area .states .state{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-8);
+  }
+  [ui-section=reviews] .overview-area .states .state span{
+    width:10px;
+  }
+  [ui-section=reviews] .overview-area .states .state progress{
+    width:100%;
+  }
+  [ui-section=reviews] .items-area{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    width:100%;
+    align-items:flex-start;
+    grid-gap:var(--spacing-32);
+    gap:var(--spacing-32);
+  }
+  [ui-section=reviews] .items-area [ui-block=review],
+  [ui-section=reviews] .items-area .skeleton-item{
+    display:flex;
+    flex-direction:column;
+    gap:var(--spacing-16);
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .head,
+  [ui-section=reviews] .items-area .skeleton-item .head{
+    display:flex;
+    flex-direction:column;
+    gap:var(--spacing-8);
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .head .author,
+  [ui-section=reviews] .items-area .skeleton-item .head .author{
+    color:var(--color-on-surface-variant);
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .content,
+  [ui-section=reviews] .items-area .skeleton-item .content{
+    display:grid;
+    grid-gap:var(--spacing-8);
+    gap:var(--spacing-8);
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .content article,
+  [ui-section=reviews] .items-area .skeleton-item .content article{
+    display:-webkit-box;
+    overflow:hidden;
+    word-break:break-all;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:8;
+    line-clamp:8;
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .content [ui-slot=link-button],
+  [ui-section=reviews] .items-area .skeleton-item .content [ui-slot=link-button]{
+    width:-moz-fit-content;
+    width:fit-content;
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .media .images,
+  [ui-section=reviews] .items-area .skeleton-item .media .images{
+    display:flex;
+    flex-wrap:wrap;
+    gap:var(--spacing-16);
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .media .images .image,
+  [ui-section=reviews] .items-area .skeleton-item .media .images .image{
+    overflow:hidden;
+    aspect-ratio:1/1;
+    width:var(--spacing-64);
+    height:auto;
+  }
+  [ui-section=reviews] .items-area [ui-block=review] .media .images .image > img,
+  [ui-section=reviews] .items-area .skeleton-item .media .images .image > img{
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=reviews] .actions-area{
+    display:flex;
+    justify-content:center;
+  }
+  @media (max-width: 1024px){
+    [ui-section=reviews] .items-area{
+      grid-template-columns:repeat(2, 1fr);
     }
   }
   @media (max-width: 769px){
-    [ui-section=reviews] [ui-slot=head] .overview .rating{
-      width:100%;
+    [ui-section=reviews] .overview-area{
+      gap:var(--spacing-32);
     }
-    [ui-section=reviews] [ui-slot=head] .overview .states{
-      width:100%;
+    [ui-section=reviews] .overview-area .states{
+      flex:1;
     }
-    [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields{
-      display:flex;
-      flex-direction:column;
-    }
-    [ui-section=reviews] .items .skeleton-item,
-    [ui-section=reviews] .items [ui-block=review]{
-      display:flex;
-      flex-direction:column-reverse;
+    [ui-section=reviews] .items-area{
+      grid-template-columns:1fr;
     }
   }
+.review-modal [ui-slot=modal-body]{
+  padding-top:var(--spacing-0) !important;
+}
+.review-modal:not(#\#) [ui-slot=modal-body]{
+  display:grid;
+  grid-gap:var(--spacing-32);
+  gap:var(--spacing-32);
+  grid-template-columns:repeat(2, 1fr);
+}
+.review-modal:not(#\#) [ui-slot=modal-body] .media{
+  display:grid;
+  grid-gap:var(--spacing-16);
+  gap:var(--spacing-16);
+  grid-template-columns:repeat(5, 1fr);
+}
+.review-modal:not(#\#) [ui-slot=modal-body] .media:has(.image:nth-of-type(2)) .image:first-of-type{
+  display:none;
+}
+.review-modal:not(#\#) [ui-slot=modal-body] .media:has(.image:nth-of-type(2)) .image:nth-of-type(2){
+  grid-column:1/6;
+}
+.review-modal:not(#\#) [ui-slot=modal-body] .media .image{
+  height:auto;
+  aspect-ratio:1/1;
+  overflow:hidden;
+}
+.review-modal:not(#\#) [ui-slot=modal-body] .media .image:first-of-type{
+  grid-column:1/6;
+}
+.review-modal:not(#\#) [ui-slot=modal-body] .media .image > img{
+  -o-object-fit:cover;
+     object-fit:cover;
+}
+@media (max-width: 769px){
+  .review-modal:not(#\#) [ui-slot=modal-body]{
+    grid-template-columns:1fr;
+  }
+}

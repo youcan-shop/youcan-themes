@@ -8,10 +8,10 @@
 {% endcomment %}
 
 <button
-  ui-slot="button"
-  data-variant="primary"
-  data-mode="lighter"
-  data-size="lg"
+  ui-slot="link-button"
+  data-variant="gray"
+  data-size="md"
+  data-underline="true"
   popovertarget="add-review"
 >
   {{ 'reviews.add_review.action' | t }}
@@ -29,7 +29,7 @@
     <button
       ui-slot="button"
       data-variant="primary"
-      data-mode="lighter"
+      data-mode="ghost"
       data-size="md"
       aria-label="Close"
       popovertarget="add-review"
@@ -44,7 +44,7 @@
         <label ui-slot="label" for="rating">
           {{ 'reviews.add_review.fields.rating' | t }}
         </label>
-        <div ui-slot="rating-bar" data-variant="basic" data-style="star" role="group">
+        <div ui-slot="rating-bar" data-variant="group" data-style="star" role="group">
           {% for star in (1..5) %}
             <label ui-slot="rating-item">
               <span ui-slot="sr">{{ star }}</span>
@@ -137,11 +137,11 @@
             <label
               ui-slot="button"
               data-variant="primary"
-              data-mode="lighter"
+              data-mode="stroke"
               data-size="md"
               class="upload"
             >
-              {% render 'misc.icon', name: 'hgi-add-01' %}
+              {% render 'misc.icon', name: 'hgi-cloud-upload' %}
               <input
                 multiple
                 type="file"
