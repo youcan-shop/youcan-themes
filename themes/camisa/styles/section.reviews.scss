@@ -41,6 +41,10 @@
         }
 
         .add-review-modal {
+          @media (width > 769px) {
+            width: 500px !important;
+          }
+
           [ui-slot="modal-body"] {
             display: grid;
             gap: var(--spacing-16);
@@ -54,6 +58,13 @@
               [ui-slot="input"],
               [ui-slot="textarea"] {
                 width: 100%;
+              }
+
+              .rating-bar {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-block: var(--spacing-24) var(--spacing-32);
               }
             }
 
@@ -224,8 +235,12 @@
 }
 
 .review-modal {
+  @media (width > 769px) {
+    width: 50% !important;
+  }
+
   [ui-slot="modal-body"] {
-    padding-block-start: var(--spacing-0) !important;
+    padding-block-end: var(--spacing-24);
     display: grid;
     gap: var(--spacing-32);
     grid-template-columns: repeat(2, 1fr);

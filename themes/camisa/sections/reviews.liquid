@@ -17,9 +17,16 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="head-area">
-    <h3 class="heading">Customer reviews</h3>
-  </div>
+  {% if section.settings.heading or section.settings.description %}
+    <div class="head-area">
+      {% if section.settings.heading %}
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.description %}
+        <p class="description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
   <div class="overview-area">
     <div class="rating">
       <div class="avg">
@@ -91,7 +98,8 @@
       data-size="md"
       data-underline="true"
     >
-      Show all <span ui-reviews="total">-</span> reviews
+      {{ 'reviews.show_all' | t }}
+      (<span ui-reviews="total">-</span>)
     </button>
   </div>
 </ui-reviews>
@@ -140,6 +148,12 @@
       "default": "t:sections.reviews.default.heading"
     },
     {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.header.description",
+      "default": "t:sections.reviews.default.description"
+    },
+    {
       "type": "header",
       "content": "t:common.headers.spacing"
     },
@@ -151,7 +165,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     },
     {
       "type": "range",
@@ -161,7 +175,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     }
   ]
 }
