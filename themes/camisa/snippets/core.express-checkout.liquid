@@ -223,17 +223,7 @@
 
     <div class="actions">
       {% render 'core.quantity', size: 'md' %}
-
-      {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
-        {% render 'core.shop-button', is_express_checkout: true %}
-      {% endif %}
-
-      {% if block.settings.shop_buttons_layout == 'add-to-cart'
-        or block.settings.shop_buttons_layout == 'both'
-        and settings.cart_checkout_type == 'cart'
-      %}
-        {% render 'core.shop-button', mode: 'lighter' %}
-      {% endif %}
+      {% render 'core.shop-button', is_express_checkout: true %}
     </div>
   </form>
 {% endif %}

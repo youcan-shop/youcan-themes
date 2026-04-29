@@ -1,6 +1,16 @@
 if (!customElements.get("ui-shop-button")) {
   class ShopButton extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart", "bulk"];
+    static observedAttributes = [
+      "variant-id",
+      "quantity",
+      "checkout-type",
+      "attached-image",
+      "source",
+      "not-available",
+      "skip-cart",
+      "bulk",
+      "skip-to-checkout",
+    ];
 
     constructor() {
       super();
@@ -81,6 +91,7 @@ if (!customElements.get("ui-shop-button")) {
         publish(PUB_SUB_EVENTS.cartUpdate, {
           source: this.getAttribute("source") ?? "product-form",
           skipCart: this.hasAttribute("skip-cart"),
+          skipToCheckout: this.hasAttribute("skip-to-checkout"),
           productVariantId,
           cartData: newCart,
         });
