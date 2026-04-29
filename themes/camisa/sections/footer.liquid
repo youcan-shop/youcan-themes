@@ -43,7 +43,7 @@
     {% endfor %}
     {% if section.settings.show_social_links and has_social_links == true %}
       <div class="group">
-        <h3 class="title">Socials</h3>
+        <h3 class="title">{{ 'footer.social_media.label' | t }}</h3>
         <ul class="links">
           {% for link in store.brand.social_links %}
             {% assign platform = link[0] %}
@@ -54,13 +54,13 @@
                 <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
                   {% case platform %}
                     {% when 'facebook' %}
-                      Facebook
+                      {{ 'footer.social_media.facebook' | t }}
                     {% when 'twitter' %}
-                      Twitter
+                      {{ 'footer.social_media.x' | t }}
                     {% when 'instagram' %}
-                      Instagram
+                      {{ 'footer.social_media.instagram' | t }}
                     {% when 'tiktok' %}
-                      Tiktok
+                      {{ 'footer.social_media.tiktok' | t }}
                   {% endcase %}
                 </a>
               </li>
@@ -157,8 +157,8 @@
     {
       "type": "text",
       "id": "copyright_content",
-      "placeholder": " © All rights reserved.",
-      "label": "t:sections.footer.copyright_text"
+      "placeholder": "t:sections.footer.copyright.placeholder",
+      "label": "t:sections.footer.copyright.label"
     },
     {
       "type": "checkbox",
@@ -174,7 +174,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 32
     },
     {
       "type": "range",
