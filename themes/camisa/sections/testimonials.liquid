@@ -16,10 +16,17 @@
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   <div ui-slot="head">
-    <div class="content">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
+    {% if section.settings.heading or section.settings.description %}
+      <div class="content">
+        {% if section.settings.heading %}
+          <h1 class="heading">{{ section.settings.heading }}</h1>
+        {% endif %}
+        {% if section.settings.description %}
+          <p class="description">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
     {% assign min_items = section.settings.nbr_columns_desktop | plus: 0 %}
     {% if section.blocks.size > min_items %}
       <div class="actions">
@@ -28,7 +35,7 @@
           ui-slot="button"
           data-variant="primary"
           data-mode="stroke"
-          data-size="lg"
+          data-size="md"
           data-as-icon
           data-flip-icon-in-rtl
           aria-label="Previous"
@@ -40,7 +47,7 @@
           ui-slot="button"
           data-variant="primary"
           data-mode="stroke"
-          data-size="lg"
+          data-size="md"
           data-as-icon
           data-flip-icon-in-rtl
           aria-label="Next"
@@ -156,7 +163,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     },
     {
       "type": "range",
@@ -166,7 +173,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     }
   ],
   "blocks": [
