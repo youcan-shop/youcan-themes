@@ -36,25 +36,32 @@
           inset: 0;
           color: var(--color-primary);
 
-          [ui-slot="head"] {
+          .head {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-8);
             align-items: inherit !important;
             width: 100%;
 
-            .heading,
-            .subheading {
+            .heading {
               display: -webkit-box;
               -webkit-box-orient: vertical;
               overflow: hidden;
               text-overflow: ellipsis;
+              text-transform: uppercase;
+              font: 400 calc(22px * var(--font-heading-scale))/calc(28px * var(--font-heading-scale)) var(--font-heading-family);
+            }
+
+            .description {
+              color: color-mix(in hsl, currentcolor 80%, transparent) !important;
+              font: var(--font-body-md);
+              text-wrap: balance;
+              text-align: inherit;
             }
 
             &[data-height="75"] {
               .heading {
                 -webkit-line-clamp: 2;
-              }
-
-              .subheading {
-                -webkit-line-clamp: 3;
               }
             }
 
@@ -62,25 +69,13 @@
               .heading {
                 -webkit-line-clamp: 1;
               }
-
-              .subheading {
-                -webkit-line-clamp: 2;
-              }
             }
 
             &[data-height="35"] {
               .heading {
                 -webkit-line-clamp: 1;
               }
-
-              .subheading {
-                -webkit-line-clamp: 1;
-              }
             }
-          }
-
-          .description {
-            color: color-mix(in hsl, currentcolor 80%, transparent) !important;
           }
 
           .cta {
@@ -144,20 +139,12 @@
       [ui-slot="carousel"] {
         [ui-slot="carousel-item"] {
           .content {
-            [ui-slot="head"] {
-              text-align: start !important;
-
+            .head {
               .description {
                 width: 50%;
               }
             }
           }
-        }
-      }
-
-      .pagination {
-        &[data-position="inside"] {
-          margin-block-start: calc(var(--spacing-48) * -1);
         }
       }
     }
