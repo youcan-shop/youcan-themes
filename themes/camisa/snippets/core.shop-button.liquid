@@ -8,6 +8,7 @@
   - as_icon: {Boolean} (Optional) Button style
   - source: {String} (Optional) Shopping flow (product-form | quick-view)
   - is_express_checkout: {Boolean} (Optional) Checkout type (express checkout)
+  - skip_to_checkout: {Boolean} (Optional) Skip cart (drawer) -> Go directly to checkout or thankyou page
 
   Usage:
   {% render 'core-product-button', product: {...} %}
@@ -29,6 +30,9 @@
   {% endif %}
   {% if is_express_checkout %}
     checkout-type="express"
+  {% endif %}
+  {% if skip_to_checkout %}
+    skip-to-checkout
   {% endif %}
 >
   {% if is_express_checkout %}
@@ -57,7 +61,7 @@
         <span>{{ 'general.place_order' | t }}</span>
       </button>
     {% endif %}
-  {% elsif product.skip_to_checkout %}
+  {% elsif product.skip_to_checkout or skip_to_checkout %}
     <button
       ui-slot="button"
       data-variant="primary"

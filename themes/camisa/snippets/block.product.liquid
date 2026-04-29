@@ -81,20 +81,7 @@
         {% endif %}
       </div>
     </div>
-    {% if settings.cart_checkout_type == 'express-checkout' %}
-      {% render 'core.express-checkout' %}
-      <button
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
-        data-size="sm"
-        type="button"
-        popovertarget="express-checkout-{{ product.id }}"
-        data-as-icon
-      >
-        {% render 'misc.icon', name: settings.cart_icon %}
-      </button>
-    {% else %}
+    {% if settings.cart_checkout_type == 'cart' %}
       {% if product.variants.size > 1 %}
         {% render 'misc.product-modal' %}
       {% else %}
