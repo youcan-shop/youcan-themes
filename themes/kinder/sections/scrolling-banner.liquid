@@ -8,6 +8,7 @@
   {% endif %}
   style="
     --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
     --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
@@ -23,7 +24,7 @@
       <ul ui-marquee="cloud">
         {% for item in section.blocks %}
           <li ui-marquee="item" {{ item.youcan_attributes }}>
-            <div ui-block="logo">
+            <div ui-block="text">
               {% if item.settings.image %}
                 <img
                   src="{{ item.settings.image.src }}"
@@ -32,9 +33,10 @@
                   width="100%"
                   loading="lazy"
                 >
-              {% else %}
-                {% render 'misc.image-fallback', icon_size: 142 %}
               {% endif %}
+              <span>
+                {{ item.settings.text }}
+              </span>
             </div>
           </li>
         {% endfor %}
