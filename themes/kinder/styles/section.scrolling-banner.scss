@@ -48,13 +48,23 @@
       }
 
       img {
-        --size: 56px;
-
-        width: var(--size);
+        width: 56px;
+        height: 56px;
         transition: filter var(--transition-standard-default-effects);
-        border-radius: var(--radius-16);
         aspect-ratio: 1 / 1;
-        object-fit: contain;
+        object-fit: cover;
+
+        &[data-shape="circle"] {
+          border-radius: var(--radius-rounded);
+        }
+
+        &[data-shape="square"] {
+          border-radius: var(--radius-16);
+        }
+
+        &[data-shape="pill"] {
+          width: 102px;
+        }
       }
     }
 

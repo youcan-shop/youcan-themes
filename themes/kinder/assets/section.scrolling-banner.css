@@ -42,14 +42,21 @@
     background:var(--fg-color);
   }
   [ui-section=scrolling-banner] [ui-block=text] img{
-    --size:56px;
     width:56px;
-    width:var(--size);
+    height:56px;
     transition:filter var(--transition-standard-default-effects);
-    border-radius:var(--radius-16);
     aspect-ratio:1/1;
-    -o-object-fit:contain;
-       object-fit:contain;
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img[data-shape=circle]{
+    border-radius:var(--radius-rounded);
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img[data-shape=square]{
+    border-radius:var(--radius-16);
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img[data-shape=pill]{
+    width:102px;
   }
   [ui-section=scrolling-banner][data-fullscreen]{
     padding-inline:var(--spacing-0);
