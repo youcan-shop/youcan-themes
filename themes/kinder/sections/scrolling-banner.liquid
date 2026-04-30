@@ -24,10 +24,10 @@
         {% for item in section.blocks %}
           <li ui-marquee="item" {{ item.youcan_attributes }}>
             <div ui-block="logo">
-              {% if item.settings.logo %}
+              {% if item.settings.image %}
                 <img
-                  src="{{ item.settings.logo.src }}"
-                  alt="logo-{{ forloop.index }}"
+                  src="{{ item.settings.image.src }}"
+                  alt="image-{{ forloop.index }}"
                   height="100%"
                   width="100%"
                   loading="lazy"
@@ -135,10 +135,36 @@
       "label": "t:sections.scrolling_banner.blocks.text.label",
       "settings": [
         {
+          "type": "text",
+          "id": "text",
+          "label": "t:sections.scrolling_banner.blocks.text.label",
+          "default": ""
+        },
+        {
           "type": "image_picker",
-          "id": "logo",
+          "id": "image",
           "label": "t:common.globals.image",
           "default": ""
+        },
+        {
+          "type": "select",
+          "id": "image_shape",
+          "label": "t:sections.scrolling_banner.blocks.text.image_shape.label",
+          "options": [
+            {
+              "value": "circle",
+              "label": "t:sections.scrolling_banner.blocks.text.image_shape.circle"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.scrolling_banner.blocks.text.image_shape.square"
+            },
+            {
+              "value": "pill",
+              "label": "t:sections.scrolling_banner.blocks.text.image_shape.pill"
+            }
+          ],
+          "default": "circle"
         }
       ]
     }
