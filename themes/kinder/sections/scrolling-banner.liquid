@@ -1,14 +1,8 @@
-{{ 'section.logo-list.css' | asset_url | stylesheet_tag }}
+{{ 'section.scrolling-banner.css' | asset_url | stylesheet_tag }}
 
 <div
-  ui-section="logo-list"
+  ui-section="scrolling-banner"
   role="banner"
-  {% unless section.settings.scrolling %}
-    data-list
-  {% endunless %}
-  {% if section.settings.grayscale %}
-    data-grayscale
-  {% endif %}
   {% if section.settings.fullscreen %}
     data-fullscreen
   {% endif %}
@@ -19,40 +13,16 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
-  <div class="logos-container">
-    {% if section.settings.scrolling %}
-      <ui-marquee
-        {% if section.settings.pause_on_hover %}
-          data-pause-on-hover
-        {% endif %}
-        speed="{{ section.settings.speed }}"
-      >
-        <div ui-marquee="track">
-          <ul ui-marquee="cloud">
-            {% for item in section.blocks %}
-              <li ui-marquee="item" {{ item.youcan_attributes }}>
-                <div ui-block="logo">
-                  {% if item.settings.logo %}
-                    <img
-                      src="{{ item.settings.logo.src }}"
-                      alt="logo-{{ forloop.index }}"
-                      height="100%"
-                      width="100%"
-                      loading="lazy"
-                    >
-                  {% else %}
-                    {% render 'misc.image-fallback', icon_size: 142 %}
-                  {% endif %}
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </ui-marquee>
-    {% else %}
-      <ul class="logo-list">
+  <ui-marquee
+    {% if section.settings.pause_on_hover %}
+      data-pause-on-hover
+    {% endif %}
+    speed="{{ section.settings.speed }}"
+  >
+    <div ui-marquee="track">
+      <ul ui-marquee="cloud">
         {% for item in section.blocks %}
-          <li class="logo-item" {{ item.youcan_attributes }}>
+          <li ui-marquee="item" {{ item.youcan_attributes }}>
             <div ui-block="logo">
               {% if item.settings.logo %}
                 <img
@@ -69,13 +39,13 @@
           </li>
         {% endfor %}
       </ul>
-    {% endif %}
-  </div>
+    </div>
+  </ui-marquee>
 </div>
 
 {% schema %}
 {
-  "label": "t:sections.logo_list.label",
+  "label": "t:sections.scrolling_banner.label",
   "limit": 2,
   "settings": [
     {
@@ -86,7 +56,13 @@
       "type": "color",
       "id": "bg_color",
       "label": "t:common.colors.bg_color",
-      "default": "#fef7ee"
+      "default": "#49AB6A"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#FEFEFE"
     },
     {
       "type": "header",
@@ -99,43 +75,14 @@
       "default": false
     },
     {
-      "type": "checkbox",
-      "id": "grayscale",
-      "label": "t:sections.logo_list.grayscale",
-      "default": false
-    },
-    {
       "type": "header",
       "content": "t:common.headers.motion"
     },
     {
       "type": "checkbox",
-      "id": "scrolling",
-      "label": "t:sections.logo_list.scrolling",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "nbr_columns_desktop",
-      "label": "t:common.globals.number_per_column",
-      "min": 2,
-      "max": 6,
-      "step": 1,
-      "default": 4,
-      "visible_if": {
-        "setting_id": "scrolling",
-        "value": false
-      }
-    },
-    {
-      "type": "checkbox",
       "id": "pause_on_hover",
       "label": "t:common.marquee.pause_on_hover",
-      "default": true,
-      "visible_if": {
-        "setting_id": "scrolling",
-        "value": true
-      }
+      "default": false
     },
     {
       "type": "select",
@@ -155,11 +102,7 @@
           "label": "t:common.marquee.speed.fast"
         }
       ],
-      "default": "60",
-      "visible_if": {
-        "setting_id": "scrolling",
-        "value": true
-      }
+      "default": "60"
     },
     {
       "type": "header",
@@ -188,8 +131,8 @@
   ],
   "blocks": [
     {
-      "type": "logo_item",
-      "label": "t:sections.logo_list.blocks.logo.label",
+      "type": "text_item",
+      "label": "t:sections.scrolling_banner.blocks.text.label",
       "settings": [
         {
           "type": "image_picker",
