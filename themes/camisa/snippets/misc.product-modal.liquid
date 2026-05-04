@@ -5,17 +5,6 @@
   {% render 'misc.product-modal' %}
 {% endcomment %}
 
-{% comment %}
-  <button
-    ui-slot="button"
-    data-variant="primary"
-    data-mode="filled"
-    data-size="lg"
-    popovertarget="product-drawer-{{ product.id }}"
-  >
-    {{ 'general.choose_options' | t }}
-  </button>
-{% endcomment %}
 <button
   ui-slot="button"
   data-variant="primary"
@@ -29,7 +18,7 @@
 
 <div class="product-modal" ui-slot="modal-content" id="product-modal-{{ product.id }}" popover>
   <div ui-slot="modal-header">
-    <h3 ui-slot="modal-title">Quick Shop</h3>
+    <h3 ui-slot="modal-title">{{ 'general.quick_shop' | t }}</h3>
     <button
       ui-slot="button"
       data-variant="primary"
@@ -97,7 +86,14 @@
         data-variant="stroke"
         data-status="{{ settings.sale_badge_status }}"
       >
-        New
+        {% if settings.sale_badge_type == 'percentage' %}
+          {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+          -{{ percentage }}%
+        {% else %}
+          {% assign fixed = compare_at_price | minus: price %}
+          {{ 'general.save' | t }}
+          {{ fixed | money }}
+        {% endif %}
       </div>
       <a ui-block="title" ui-slot="link-button" href="/products/{{ product.slug }}">{{ product.name }}</a>
       <div ui-block="price">
@@ -120,11 +116,15 @@
       {% endif %}
       <div ui-block="controller">
         <div class="quantity-control">
-          <span class="label">Quantity</span>
+          <span class="label">{{ 'general.quantity' | t }}</span>
           {% render 'core.quantity', size: 'md' %}
         </div>
         {% render 'core.shop-button', mode: 'stroke' %}
-        {% render 'core.express-checkout', style: 'open-drawer' %}
+        {% if settings.cart_checkout_type == 'cart' %}
+          {% render 'core.shop-button', skip_to_checkout: true %}
+        {% else %}
+          {% render 'core.express-checkout', style: 'open-drawer' %}
+        {% endif %}
       </div>
     </div>
   </ui-product>

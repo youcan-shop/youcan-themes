@@ -37,6 +37,11 @@
     width:-moz-fit-content;
     width:fit-content;
   }
+  @media (min-width: 769.02px){
+    [ui-section=reviews]:not(#\#) .overview-area .rating .add-review-modal{
+      width:500px !important;
+    }
+  }
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body]{
     display:grid;
     grid-gap:var(--spacing-16);
@@ -51,6 +56,12 @@
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field [ui-slot=input],
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field [ui-slot=textarea]{
     width:100%;
+  }
+  [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field .rating-bar{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-block:var(--spacing-24) var(--spacing-32);
   }
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields{
     display:grid;
@@ -97,8 +108,8 @@
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields .field .images .image > button{
     position:absolute;
     z-index:2;
-    right:calc(var(--spacing-4) * -1);
-    top:calc(var(--spacing-4) * -1);
+    inset-inline-end:calc(var(--spacing-4) * -1);
+    inset-block-start:calc(var(--spacing-4) * -1);
   }
   [ui-section=reviews] .overview-area .states{
     width:300px;
@@ -199,10 +210,13 @@
       grid-template-columns:1fr;
     }
   }
-.review-modal [ui-slot=modal-body]{
-  padding-top:var(--spacing-0) !important;
+@media (min-width: 769.02px){
+  .review-modal{
+    width:50% !important;
+  }
 }
 .review-modal:not(#\#) [ui-slot=modal-body]{
+  padding-block-end:var(--spacing-24);
   display:grid;
   grid-gap:var(--spacing-32);
   gap:var(--spacing-32);

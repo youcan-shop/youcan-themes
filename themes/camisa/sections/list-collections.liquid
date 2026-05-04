@@ -27,8 +27,9 @@
         </ul>
         {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
       {% else %}
-        {% assign empty_content = 'single-collection.empty.title' | t %}
-        {% render 'misc.empty', heading: empty_content %}
+        {% assign empty_content = 'collections.empty.title' | t %}
+        {% assign empty_action = 'collections.empty.action' | t %}
+        {% render 'misc.empty', heading: empty_content, action_label: empty_action, action_url: '/' %}
       {% endif %}
     {% endpaginate %}
   </div>

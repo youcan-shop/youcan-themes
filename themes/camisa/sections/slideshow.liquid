@@ -17,23 +17,23 @@
     data-gap="8"
     data-item-size="85"
   {% endif %}
+  {% if section.settings.auto_rotate %}
+    autoplay
+    interval="{{ section.settings.change_every | times: 1000 }}"
+  {% endif %}
 >
   <ul
     ui-carousel="wrapper"
     ui-slot="carousel"
     aria-orientation="vertical"
     data-align="center"
-    {% if section.settings.auto_rotate %}
-      autoplay
-      interval="{{ section.settings.change_every | times: 1000 }}"
-    {% endif %}
   >
     {% for slide in section.blocks %}
       {% render 'block.slide' %}
     {% endfor %}
   </ul>
   {% if section.settings.show_controls and section.blocks.size > 1 %}
-    <div class="pagination" data-position="{{ section.settings.controls_position }}">
+    <div class="pagination">
       {% for marker in section.blocks %}
         <button
           ui-carousel="marker"
@@ -50,7 +50,7 @@
 {% schema %}
 {
   "label": "t:sections.slideshow.label",
-  "templates": ["index"],
+  "templates": ["index", "cart", "product", "page"],
   "limit": 3,
   "max_blocks": 6,
   "settings": [
@@ -90,16 +90,6 @@
       "id": "show_controls",
       "label": "t:sections.slideshow.show_controls",
       "default": true
-    },
-    {
-      "type": "select",
-      "id": "controls_position",
-      "label": "t:sections.slideshow.controls_position.label",
-      "options": [
-        { "label": "t:sections.slideshow.controls_position.options.inside", "value": "inside" },
-        { "label": "t:sections.slideshow.controls_position.options.outside", "value": "outside" }
-      ],
-      "default": "outside"
     },
     {
       "type": "header",

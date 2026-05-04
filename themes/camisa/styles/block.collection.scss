@@ -2,43 +2,49 @@
   [ui-block="collection"] {
     display: flex;
     flex-direction: column;
-    position: relative;
 
-    .media {
-      height: auto;
-      overflow: hidden;
-      border-radius: var(--radius-collection);
+    a {
+      position: relative;
 
-      &[data-image-ratio="square"] {
-        aspect-ratio: 1 / 1;
+      &:hover {
+        .media {
+          filter: brightness(0.8);
+        }
       }
 
-      &[data-image-ratio="portrait"] {
-        aspect-ratio: 3 / 4;
+      .media {
+        height: auto;
+        overflow: hidden;
+        border-radius: var(--radius-collection);
+        transition: var(--transition-standard-fast-effects);
+
+        &[data-image-ratio="square"] {
+          aspect-ratio: 1 / 1;
+        }
+
+        &[data-image-ratio="portrait"] {
+          aspect-ratio: 3 / 4;
+        }
+
+        &[data-image-ratio="landscape"] {
+          aspect-ratio: 4 / 3;
+        }
+
+        & > img {
+          object-fit: cover;
+        }
       }
 
-      &[data-image-ratio="landscape"] {
-        aspect-ratio: 4 / 3;
-      }
-
-      & > img {
-        object-fit: cover;
-      }
-    }
-
-    .content {
-      display: flex;
-      flex-direction: column;
-      padding-block-start: var(--spacing-8);
-      gap: var(--spacing-16);
-
-      [ui-slot="button"] {
-        justify-content: space-between !important;
-      }
-
-      [ui-slot="link-button"] {
-        width: fit-content;
+      .name {
+        position: absolute;
         text-transform: uppercase;
+        inset-inline-start: var(--spacing-16);
+        inset-block-end: var(--spacing-16);
+        padding: var(--spacing-4) var(--spacing-12);
+        border-radius: calc(var(--radius-collection) * 0.5);
+        color: var(--color-on-primary);
+        backdrop-filter: blur(8px);
+        background-color: color-mix(in oklch, var(--color-on-surface) 30%, transparent);
       }
     }
   }

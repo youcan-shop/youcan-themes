@@ -14,10 +14,16 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div ui-slot="head">
-    <h4 class="subheading">{{ section.settings.subheading }}</h4>
-    <h1 class="heading">{{ section.settings.heading }}</h1>
-  </div>
+  {% if section.settings.heading or section.settings.description %}
+    <div ui-slot="head">
+      {% if section.settings.heading %}
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.description %}
+        <p class="description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
   <ul
     class="items-area"
     data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
@@ -68,15 +74,15 @@
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "t:common.header.subheading",
-      "default": "t:sections.feature_list.default.subheading"
-    },
-    {
-      "type": "text",
       "id": "heading",
       "label": "t:common.header.heading",
       "default": "t:sections.feature_list.default.heading"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "t:common.header.description",
+      "default": "t:sections.feature_list.default.description"
     },
     {
       "type": "header",
@@ -116,7 +122,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     },
     {
       "type": "range",
@@ -126,7 +132,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     }
   ],
   "blocks": [

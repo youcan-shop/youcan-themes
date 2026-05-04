@@ -14,12 +14,18 @@
   data-top-spacing="{{ section.settings.top_spacing }}"
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="content-area">
-    <div ui-slot="head">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
+  {% if section.settings.heading or section.settings.description %}
+    <div class="content-area">
+      <div ui-slot="head">
+        {% if section.settings.heading %}
+          <h1 class="heading">{{ section.settings.heading }}</h1>
+        {% endif %}
+        {% if section.settings.description %}
+          <p class="description">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
     </div>
-  </div>
+  {% endif %}
   <ul
     class="items-area"
     data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
@@ -120,7 +126,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     },
     {
       "type": "range",
@@ -130,7 +136,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 48
     }
   ],
   "blocks": [

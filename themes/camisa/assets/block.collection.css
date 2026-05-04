@@ -2,37 +2,40 @@
   [ui-block=collection]{
     display:flex;
     flex-direction:column;
+  }
+  [ui-block=collection] a{
     position:relative;
   }
-  [ui-block=collection] .media{
+  [ui-block=collection] a:hover .media{
+    filter:brightness(0.8);
+  }
+  [ui-block=collection] a .media{
     height:auto;
     overflow:hidden;
     border-radius:var(--radius-collection);
+    transition:var(--transition-standard-fast-effects);
   }
-  [ui-block=collection] .media[data-image-ratio=square]{
+  [ui-block=collection] a .media[data-image-ratio=square]{
     aspect-ratio:1/1;
   }
-  [ui-block=collection] .media[data-image-ratio=portrait]{
+  [ui-block=collection] a .media[data-image-ratio=portrait]{
     aspect-ratio:3/4;
   }
-  [ui-block=collection] .media[data-image-ratio=landscape]{
+  [ui-block=collection] a .media[data-image-ratio=landscape]{
     aspect-ratio:4/3;
   }
-  [ui-block=collection] .media > img{
+  [ui-block=collection] a .media > img{
     -o-object-fit:cover;
        object-fit:cover;
   }
-  [ui-block=collection] .content{
-    display:flex;
-    flex-direction:column;
-    padding-top:var(--spacing-8);
-    gap:var(--spacing-16);
-  }
-  [ui-block=collection]:not(#\#) .content [ui-slot=button]{
-    justify-content:space-between !important;
-  }
-  [ui-block=collection] .content [ui-slot=link-button]{
-    width:-moz-fit-content;
-    width:fit-content;
+  [ui-block=collection] a .name{
+    position:absolute;
     text-transform:uppercase;
+    inset-inline-start:var(--spacing-16);
+    inset-block-end:var(--spacing-16);
+    padding:var(--spacing-4) var(--spacing-12);
+    border-radius:calc(var(--radius-collection) * 0.5);
+    color:var(--color-on-primary);
+    backdrop-filter:blur(8px);
+    background-color:color-mix(in oklch, var(--color-on-surface) 30%, transparent);
   }

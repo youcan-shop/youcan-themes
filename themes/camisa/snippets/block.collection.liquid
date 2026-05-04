@@ -12,57 +12,38 @@
 {% assign collection = collection.settings.collection | default: collection %}
 
 <li ui-block="collection" {{ collection.youcan_attributes }}>
-  <a href="/collections/{{ collection.slug }}" class="media" data-image-ratio="{{ settings.collection_image_ratio }}">
-    {% if collection.preview_image %}
-      <img
-        srcset="
-          {{ collection.preview_image.medium }} 480w,
-          {{ collection.preview_image.large }} 800w,
-          {{ collection.preview_image.original }} 1200w
-        "
-        sizes="
-          (max-width: 640px) 50vw,
-          (max-width: 768px) 33vw,
-          (max-width: 1024px) 25vw,
-          33vw
-        "
-        src="{{ collection.preview_image.original }}"
-        alt="{{ collection.name }}"
-        height="100%"
-        width="100%"
-        {% if template.name == 'list-collections' and forloop.index < 5 %}
-          loading="eager"
-        {% else %}
-          loading="lazy"
-        {% endif %}
-      >
-    {% else %}
-      {% render 'misc.image-fallback', icon_size: 40 %}
-    {% endif %}
+  <a href="/collections/{{ collection.slug }}">
+    <div class="media" data-image-ratio="{{ settings.collection_image_ratio }}">
+      {% if collection.preview_image %}
+        <img
+          srcset="
+            {{ collection.preview_image.medium }} 480w,
+            {{ collection.preview_image.large }} 800w,
+            {{ collection.preview_image.original }} 1200w
+          "
+          sizes="
+            (max-width: 640px) 50vw,
+            (max-width: 768px) 33vw,
+            (max-width: 1024px) 25vw,
+            33vw
+          "
+          src="{{ collection.preview_image.original }}"
+          alt="{{ collection.name }}"
+          height="100%"
+          width="100%"
+          {% if template.name == 'list-collections' and forloop.index < 5 %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 40 %}
+      {% endif %}
+    </div>
+
+    <span class="name">
+      {{ collection.name | default: 'collection.title' | t }}
+    </span>
   </a>
-  <div class="content">
-    {% if variant == 'stroke' %}
-      <a
-        href="/collections/{{ collection.slug }}"
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
-        data-size="lg"
-        data-flip-icon-in-rtl
-      >
-        {{ collection.name | default: 'collection.title' | t }}
-        {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-      </a>
-    {% else %}
-      <a
-        href="/collections/{{ collection.slug }}"
-        ui-slot="link-button"
-        data-variant="black"
-        data-size="md"
-        data-flip-icon-in-rtl
-      >
-        {{ collection.name | default: 'collection.title' | t }}
-      </a>
-    {% endif %}
-  </div>
 </li>

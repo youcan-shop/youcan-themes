@@ -37,56 +37,55 @@
 {% assign values = 'desc,asc' | split: ',' %}
 {% assign options = labels | split: '|' %}
 
-<ui-sort>
-  <button
-    ui-slot="button"
-    data-variant="primary"
-    data-mode="ghost"
-    data-size="xs"
-    popovertarget="sort"
-  >
-    {{ 'general.sort.label' | t }}
-    {% render 'misc.icon', name: 'hgi-unfold-more' %}
-  </button>
+<button
+  ui-slot="button"
+  data-variant="primary"
+  data-mode="filled"
+  data-size="lg"
+  data-as-icon
+  popovertarget="sort"
+  aria-label="{{ 'general.sort.label' | t }}"
+>
+  {% render 'misc.icon', name: 'hgi-filter' %}
+</button>
 
-  <div ui-slot="sheet-content" id="sort" popover>
-    <div ui-slot="sheet-header">
-      <h2 ui-slot="sheet-title">{{ 'general.sort.label' | t }}</h2>
-      <button
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="ghost"
-        data-size="md"
-        aria-label="Close"
-        popovertarget="sort"
-      >
-        {% render 'misc.icon', name: 'hgi-cancel-01' %}
-      </button>
-    </div>
-    <div ui-slot="sheet-body">
-      <fieldset class="options">
-        {% for opt in options %}
-          {% assign index = forloop.index %}
-          {% assign field = keys[index] %}
-          {% assign order = index | modulo: 2 == 0 %}
-          {% assign href = '?sort_field=' | append: field | append: '&sort_order=' | append: values[order] %}
-          {% unless terms == null or terms == '' %}
-            {% assign href = href | append: '&q=' | append: terms %}
-          {% endunless %}
-
-          <a class="opt" ui-slot="button" data-variant="primary" data-mode="ghost" data-size="md" href="{{ href }}">
-            <input
-              ui-slot="radio"
-              type="radio"
-              name="sort"
-              {% if field == sort_field and values[order] == sort_order %}
-                checked
-              {% endif %}
-            >
-            {{ opt }}
-          </a>
-        {% endfor %}
-      </fieldset>
-    </div>
+<div ui-slot="sheet-content" id="sort" popover>
+  <div ui-slot="sheet-header">
+    <h2 ui-slot="sheet-title">{{ 'general.sort.label' | t }}</h2>
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="ghost"
+      data-size="md"
+      aria-label="Close"
+      popovertarget="sort"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
   </div>
-</ui-sort>
+  <div ui-slot="sheet-body">
+    <fieldset class="options">
+      {% for opt in options %}
+        {% assign index = forloop.index %}
+        {% assign field = keys[index] %}
+        {% assign order = index | modulo: 2 == 0 %}
+        {% assign href = '?sort_field=' | append: field | append: '&sort_order=' | append: values[order] %}
+        {% unless terms == null or terms == '' %}
+          {% assign href = href | append: '&q=' | append: terms %}
+        {% endunless %}
+
+        <a class="opt" ui-slot="button" data-variant="primary" data-mode="ghost" data-size="md" href="{{ href }}">
+          <input
+            ui-slot="radio"
+            type="radio"
+            name="sort"
+            {% if field == sort_field and values[order] == sort_order %}
+              checked
+            {% endif %}
+          >
+          {{ opt }}
+        </a>
+      {% endfor %}
+    </fieldset>
+  </div>
+</div>
