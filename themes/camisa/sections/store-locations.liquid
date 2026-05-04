@@ -16,10 +16,16 @@
   data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
   <div ui-slot="head">
-    <div class="content">
-      <h1 class="heading">Visit us</h1>
-      {% comment %} <p class="description">{{ section.settings.description }}</p> {% endcomment %}
-    </div>
+    {% if section.settings.heading or section.settings.description %}
+      <div class="content">
+        {% if section.settings.heading %}
+          <h1 class="heading">{{ section.settings.heading }}</h1>
+        {% endif %}
+        {% if section.settings.description %}
+          <p class="description">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
     {% assign min_items = section.settings.nbr_columns_desktop | plus: 0 %}
     {% if section.blocks.size > min_items %}
       <div class="actions">
@@ -51,15 +57,15 @@
     {% endif %}
   </div>
   <ul class="core-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
-    {% for location in section.blocks %}
-      {% render 'block.location', location: location %}
+    {% for l in section.blocks %}
+      {% render 'block.location', location: l.settings, youcan_attributes: l.youcan_attributes %}
     {% endfor %}
   </ul>
 </ui-carousel>
 
 {% schema %}
 {
-  "label": "Store Locations",
+  "label": "t:sections.store_locations.label",
   "templates": ["index", "cart", "product", "page"],
   "limit": 1,
   "max_blocks": 6,
@@ -93,6 +99,22 @@
     },
     {
       "type": "header",
+      "content": "t:common.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.store_locations.default.heading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.header.description",
+      "default": "t:sections.store_locations.default.description"
+    },
+    {
+      "type": "header",
       "content": "t:common.headers.layout"
     },
     {
@@ -116,7 +138,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 24
+      "default": 48
     },
     {
       "type": "range",
@@ -126,18 +148,51 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 24
+      "default": 48
     }
   ],
   "blocks": [
     {
-      "type": "location_item",
-      "label": "Location",
+      "type": "location",
+      "label": "t:sections.store_locations.blocks.location.label",
       "settings": [
         {
           "type": "text",
-          "id": "location",
-          "label": "Location"
+          "id": "title",
+          "label": "t:sections.store_locations.blocks.location.title",
+          "default": "t:sections.store_locations.blocks.location.default.title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "t:sections.store_locations.blocks.location.description",
+          "placeholder": "17 Allen Street, 5fl, New York, NY 10002 \n Mon - Fri: 12pm - 7pm \n Sat - Sun: 11am - 7pm",
+          "default": "t:sections.store_locations.blocks.location.default.description"
+        },
+        {
+          "type": "textarea",
+          "id": "iframe",
+          "label": "t:sections.store_locations.blocks.location.iframe_code",
+          "placeholder": "<iframe src='...'></iframe>"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.store_locations.blocks.location.directions.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_directions",
+          "label": "t:sections.store_locations.blocks.location.directions.show",
+          "default": true
+        },
+        {
+          "type": "url",
+          "id": "link_directions",
+          "label": "t:sections.store_locations.blocks.location.directions.url",
+          "visible_if": {
+            "setting_id": "show_directions",
+            "value": true
+          }
         }
       ]
     }
