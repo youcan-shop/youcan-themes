@@ -6,8 +6,8 @@
       ui-section="announcement-bar"
       role="banner"
       style="
-        --bg-color: {{ settings.brand_color.hex }};
-        --fg-color: {{ section.settings.fg_color.hex }};
+        --brand-color: {{ settings.brand_color.hex }};
+        --brand-lightness: {{ settings.brand_color.lightness | divided_by: 100.0 }};
       "
     >
       <ui-marquee
@@ -53,16 +53,6 @@
   "settings": [
     {
       "type": "header",
-      "content": "t:common.headers.colors"
-    },
-    {
-      "type": "color",
-      "id": "fg_color",
-      "label": "t:common.colors.fg_color",
-      "default": "#FAFAFA"
-    },
-    {
-      "type": "header",
       "content": "t:common.headers.general"
     },
     {
@@ -74,6 +64,12 @@
     {
       "type": "header",
       "content": "t:common.headers.motion"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:common.marquee.pause_on_hover",
+      "default": true
     },
     {
       "type": "select",
@@ -94,12 +90,6 @@
         }
       ],
       "default": "60"
-    },
-    {
-      "type": "checkbox",
-      "id": "pause_on_hover",
-      "label": "t:common.marquee.pause_on_hover",
-      "default": true
     }
   ],
   "blocks": [
