@@ -1,0 +1,39 @@
+{% comment %}
+  Renders a breadcrumb component
+
+  Accepts:
+  - items: {String} Breadcrumb items
+
+  Usage:
+  {% render 'misc.breadcrumb'%}
+{% endcomment %}
+
+{% assign items_list = items | split: '|' %}
+
+{% unless template.name == 'index' %}
+  <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb">
+    <ol ui-slot="breadcrumb-group">
+      {% for item in items_list %}
+        {% assign data = item | split: ',' %}
+
+        <li ui-slot="breadcrumb-item">
+          <a
+            ui-slot="link-button"
+            {% if forloop.last %}
+              data-variant="black"
+            {% else %}
+              data-variant="gray"
+            {% endif %}
+            data-size="md"
+            href="{{ data[1] }}"
+            {% if forloop.last %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{ data[0] }}
+          </a>
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
+{% endunless %}

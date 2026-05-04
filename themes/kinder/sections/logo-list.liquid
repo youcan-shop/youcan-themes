@@ -1,0 +1,204 @@
+{{ 'section.logo-list.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="logo-list"
+  role="banner"
+  {% unless section.settings.scrolling %}
+    data-list
+  {% endunless %}
+  {% if section.settings.grayscale %}
+    data-grayscale
+  {% endif %}
+  {% if section.settings.fullscreen %}
+    data-fullscreen
+  {% endif %}
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
+>
+  <div class="logos-container">
+    {% if section.settings.scrolling %}
+      <ui-marquee
+        {% if section.settings.pause_on_hover %}
+          data-pause-on-hover
+        {% endif %}
+        speed="{{ section.settings.speed }}"
+      >
+        <div ui-marquee="track">
+          <ul ui-marquee="cloud">
+            {% for item in section.blocks %}
+              <li ui-marquee="item" {{ item.youcan_attributes }}>
+                <div ui-block="logo">
+                  {% if item.settings.logo %}
+                    <img
+                      src="{{ item.settings.logo.src }}"
+                      alt="logo-{{ forloop.index }}"
+                      height="100%"
+                      width="100%"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'misc.image-fallback', icon_size: 142 %}
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </ui-marquee>
+    {% else %}
+      <ul class="logo-list">
+        {% for item in section.blocks %}
+          <li class="logo-item" {{ item.youcan_attributes }}>
+            <div ui-block="logo">
+              {% if item.settings.logo %}
+                <img
+                  src="{{ item.settings.logo.src }}"
+                  alt="logo-{{ forloop.index }}"
+                  height="100%"
+                  width="100%"
+                  loading="lazy"
+                >
+              {% else %}
+                {% render 'misc.image-fallback', icon_size: 142 %}
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.logo_list.label",
+  "limit": 2,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "checkbox",
+      "id": "fullscreen",
+      "label": "t:common.marquee.fullscreen",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale",
+      "label": "t:sections.logo_list.grayscale",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.motion"
+    },
+    {
+      "type": "checkbox",
+      "id": "scrolling",
+      "label": "t:sections.logo_list.scrolling",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4,
+      "visible_if": {
+        "setting_id": "scrolling",
+        "value": false
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "t:common.marquee.pause_on_hover",
+      "default": true,
+      "visible_if": {
+        "setting_id": "scrolling",
+        "value": true
+      }
+    },
+    {
+      "type": "select",
+      "id": "speed",
+      "label": "t:common.marquee.speed.label",
+      "options": [
+        {
+          "value": "20",
+          "label": "t:common.marquee.speed.slow"
+        },
+        {
+          "value": "60",
+          "label": "t:common.marquee.speed.normal"
+        },
+        {
+          "value": "80",
+          "label": "t:common.marquee.speed.fast"
+        }
+      ],
+      "default": "60",
+      "visible_if": {
+        "setting_id": "scrolling",
+        "value": true
+      }
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo_item",
+      "label": "t:sections.logo_list.blocks.logo.label",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "t:common.globals.image",
+          "default": ""
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

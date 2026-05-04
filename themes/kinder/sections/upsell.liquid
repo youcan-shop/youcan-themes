@@ -1,0 +1,109 @@
+{{ 'section.upsell.css' | asset_url | stylesheet_tag }}
+{{ 'section.upsell.js' | asset_url | script_tag_deferred }}
+
+{% capture product_offers %}
+{
+  {% for product in upsell.products %}
+    "{{ product.id }}": "{{ product.variants.0.id }}"
+    {% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}
+{% endcapture %}
+
+<ui-upsell
+  id="{{ upsell.id }}"
+  order-id="{{ order.id }}"
+  product-offers="{{ product_offers | strip_newlines | strip | escape }}"
+  {% if section.settings.override_global_colors %}
+    style="
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    "
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+  data-top-spacing="{{ section.settings.top_spacing }}"
+  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+>
+  <div class="head">
+    <h3 class="title">{{ 'upsell.offer_title' | t }}</h3>
+    <div class="options">
+      <button ui-slot="button" data-variant="error" data-mode="lighter" data-size="lg" name="no">
+        {{ upsell.actions.btn_no.title }}
+      </button>
+      <button ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg" name="yes">
+        {{ upsell.actions.btn_yes.title }}
+      </button>
+    </div>
+  </div>
+  {% if upsell.description %}
+    <div class="description">
+      {{ upsell.description }}
+    </div>
+  {% endif %}
+  {% if upsell.footer %}
+    <div class="footer">{{ upsell.footer }}</div>
+  {% endif %}
+</ui-upsell>
+
+{% schema %}
+{
+  "label": "t:sections.upsell.label",
+  "templates": ["upsell"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ]
+}
+{% endschema %}

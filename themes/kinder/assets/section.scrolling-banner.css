@@ -1,0 +1,69 @@
+@layer sections{
+  [ui-section=scrolling-banner]{
+    padding-block:var(--top-spacing) var(--bottom-spacing);
+    padding-inline:10%;
+    background-color:var(--bg-color);
+    color:var(--fg-color);
+  }
+  [ui-section=scrolling-banner] [ui-marquee=item]{
+    padding-inline:var(--spacing-0);
+  }
+  [ui-section=scrolling-banner] [ui-marquee=item]:first-of-type{
+    margin-inline-start:var(--spacing-0);
+  }
+  [ui-section=scrolling-banner] [ui-block=text]{
+    --banner-gap:var(--spacing-64);
+    --separator-width:8px;
+    display:flex;
+    position:relative;
+    align-items:center;
+    margin-inline:8px var(--banner-gap);
+    margin-inline:var(--separator-width) var(--banner-gap);
+    gap:var(--banner-gap);
+  }
+  [ui-section=scrolling-banner] [ui-block=text]:has(img){
+    margin-inline-start:var(--spacing-0);
+  }
+  [ui-section=scrolling-banner] [ui-block=text] span{
+    font:var(--font-body-lg);
+  }
+  [ui-section=scrolling-banner] [ui-block=text]:not(:has(img)){
+    padding-inline-start:var(--banner-gap);
+  }
+  [ui-section=scrolling-banner] [ui-block=text]:not(:has(img))::before{
+    content:"";
+    position:absolute;
+    inset-block-start:50%;
+    inset-inline-start:-3px;
+    width:12px;
+    height:2px;
+    transform:translate(-50%);
+    border-radius:var(--radius-4);
+    background:var(--fg-color);
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img{
+    width:56px;
+    height:56px;
+    transition:filter var(--transition-standard-default-effects);
+    aspect-ratio:1/1;
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img[data-shape=circle]{
+    border-radius:var(--radius-rounded);
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img[data-shape=square]{
+    border-radius:var(--radius-16);
+  }
+  [ui-section=scrolling-banner] [ui-block=text] img[data-shape=pill]{
+    width:102px;
+  }
+  [ui-section=scrolling-banner][data-fullscreen]{
+    padding-inline:var(--spacing-0);
+  }
+  @media (max-width: 769px){
+    [ui-section=scrolling-banner]{
+      padding-inline:var(--spacing-16);
+    }
+  }
+}

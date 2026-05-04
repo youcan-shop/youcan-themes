@@ -1,0 +1,145 @@
+{{ 'section.footer.css' | asset_url | stylesheet_tag }}
+
+{% assign has_social_links = false %}
+
+{% for link in store.brand.social_links %}
+  {% if link[1] != null %}
+    {% assign has_social_links = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div
+  ui-layout="footer"
+  style="
+    --brand-color: {{ settings.brand_color.hex }};
+    --brand-lightness: {{ settings.brand_color.lightness | divided_by: 100.0 }};
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
+>
+  <div class="brand-card">
+    <span class="brand-name">{{ store.slug }}</span>
+    {% if section.settings.show_social_links and has_social_links == true %}
+      <div class="social-links">
+        <span class="label">
+          {{ 'footer.follow_us' | t }}
+        </span>
+        <ul class="links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
+
+            {% if url != null %}
+              <li class="link">
+                <a
+                  href="{{ url }}"
+                  target="_blank"
+                  title="{{ platform }}"
+                >
+                  {% render 'misc.social.icon', platform: platform %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="menu">
+    <div class="groups">
+      {% for list in link-lists %}
+        {% if list.links | count > 0  and list != main-link-list %}
+          <div class="group">
+            <h4 class="title">{{ list.title }}</h4>
+            <ul class="links">
+              {% for link in list.links %}
+                <li class="link">
+                  <a ui-slot="link-button" data-variant="gray" data-size="md" href="{{ link.url }}">
+                    {{ link.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="copyright">
+      {% assign currentYear = default: 'now' | date: '%Y' %}
+
+      {{ 'footer.copyright' | t | replace: '%', currentYear }}
+      {{ store.slug }}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "label": "t:sections.footer.label",
+  "tag": "footer",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_links",
+      "label": "t:sections.footer.show_social_links",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.about_social_links"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.footer.about_menu_links"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ]
+}
+{% endschema %}

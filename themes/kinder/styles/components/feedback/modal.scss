@@ -1,0 +1,101 @@
+/* 
+  Component: Modal
+
+  Usage:
+    - <div ui-slot="modal">
+        <button popovertarget="my-modal">  Click to Open </button>
+
+        <div ui-slot="modal-content" id="my-modal" popover> My Modal Content </div>
+      </div>
+    
+*/
+
+/* Content */
+[ui-slot="modal-content"][popover] {
+  display: flex;
+  visibility: hidden;
+  inset: auto;
+  left: 50%;
+  flex-direction: column;
+  width: calc(100% - var(--spacing-32));
+  max-width: 402px;
+  transform: translate(-50%, -50%) scale(0.94);
+  transition: var(--transition-expressive-fast-spatial);
+  border: none;
+  border-radius: var(--radius-20);
+  opacity: 0;
+  background-color: var(--modal-background);
+  color: inherit;
+  inset-block-start: 50%;
+  filter: blur(2px);
+
+  /* Header */
+  [ui-slot="modal-header"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+    gap: var(--spacing-12);
+
+    /* Title */
+    [ui-slot="sheet-title"] {
+      font: var(--font-title-lg);
+    }
+  }
+
+  /* Body */
+  [ui-slot="modal-body"] {
+    padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+  }
+
+  /* Body */
+  [ui-slot="modal-footer"] {
+    display: grid;
+    gap: var(--spacing-12);
+    grid-template-columns: repeat(2, 1fr);
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+  }
+
+  /* Backdrop */
+  &::backdrop {
+    transition: var(--transition-standard-default-spatial);
+  }
+
+  /* State */
+  &:popover-open {
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    filter: blur(0);
+
+    &::backdrop {
+      backdrop-filter: blur(10px);
+      background-color: color-mix(in srgb, currentcolor 15%, transparent);
+    }
+
+    @starting-style {
+      visibility: hidden;
+      transform: translate(-50%, -50%) scale(0.94);
+      opacity: 0;
+      filter: blur(2px);
+
+      &::backdrop {
+        backdrop-filter: blur(0);
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+[data-intensity="as-solid-bg"],
+[data-intensity="as-foreground"] {
+  [ui-slot="modal-content"] {
+    --modal-background: var(--color-on-primary);
+  }
+}
+
+[data-intensity="as-light-bg"] {
+  [ui-slot="modal-content"] {
+    --modal-background: var(--color-primary-container);
+  }
+}
