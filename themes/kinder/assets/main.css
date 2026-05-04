@@ -68,7 +68,7 @@
     --info-h:260;
     --warning-h:48;
     --neutral-c:0;
-    --primary-c:max(0, min(var(--brand-chroma), 0.32));
+    --primary-c:clamp(0, var(--brand-chroma), 0.32);
     --success-c:0.19;
     --error-c:0.21;
     --info-c:0.19;
@@ -79,7 +79,7 @@
     --success-ch:var(--success-c) var(--success-h);
     --info-ch:var(--info-c) var(--info-h);
     --warning-ch:var(--warning-c) var(--warning-h);
-    --_l-max:max(0.25, min(calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55));
+    --_l-max:clamp(0.25, calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55);
     --_c:var(--primary-c);
     --primary-l-max:var(--_l-max);
     --_c:var(--error-c);
@@ -127,7 +127,7 @@
   }
   :root [data-intensity=as-solid-bg],
   [data-scoped-color] [data-intensity=as-solid-bg]{
-    --primary-c:max(0.01, min(calc(var(--brand-chroma) * 0.95), 0.36));
+    --primary-c:clamp(0.01, calc(var(--brand-chroma) * 0.95), 0.36);
     --_l-min:calc(1 - var(--brand-lightness) + var(--_c) * 0.4);
     --_c:var(--primary-c);
     --primary-l-min:var(--_l-min);
@@ -145,7 +145,7 @@
     --color-success:oklch(clamp(var(--success-l-min), var(--_l-clamp)) var(--success-ch));
     --color-info:oklch(clamp(var(--info-l-min), var(--_l-clamp)) var(--info-ch));
     --color-warning:oklch(clamp(var(--warning-l-min), var(--_l-clamp)) var(--warning-ch));
-    --_on-l:max(0, min(var(--brand-lightness), 0.22));
+    --_on-l:clamp(0, var(--brand-lightness), 0.22);
     --color-on-primary:oklch(var(--_on-l) var(--primary-ch));
     --color-on-error:oklch(var(--_on-l) var(--error-ch));
     --color-on-success:oklch(var(--_on-l) var(--success-ch));
@@ -174,7 +174,7 @@
   }
   :root [data-intensity=as-light-bg],
   [data-scoped-color] [data-intensity=as-light-bg]{
-    --scc:max(0, min(0.15, var(--primary-c)));
+    --scc:clamp(0, 0.15, var(--primary-c));
     --color-surface-container-lowest:oklch(98% var(--scc) var(--primary-h));
     --color-surface-container-low:oklch(98% var(--scc) var(--primary-h));
     --color-surface-container:oklch(90% var(--scc) var(--primary-h));
