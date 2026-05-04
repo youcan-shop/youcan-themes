@@ -11,47 +11,45 @@
 
 <div
   ui-layout="footer"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
-  data-top-border="{{ section.settings.top_border }}"
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+  style="
+    --brand-color: {{ settings.brand_color.hex }};
+    --brand-lightness: {{ settings.brand_color.lightness | divided_by: 100.0 }};
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
 >
-  <div class="main-area">
-    <div class="logo">
-      {% if settings.logo_desktop.src or settings.logo_mobile.src %}
-        <a href="/">
-          <picture>
-            {% if settings.logo_mobile.src %}
-              <source srcset="{{ settings.logo_mobile.src }}" media="(max-width: 768px)">
+  <div class="brand-card">
+    <span class="brand-name">{{ store.slug }}</span>
+    {% if section.settings.show_social_links and has_social_links == true %}
+      <div class="social-links">
+        <span class="label">
+          {{ 'footer.follow_us' | t }}
+        </span>
+        <ul class="links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
+
+            {% if url != null %}
+              <li class="link">
+                <a
+                  href="{{ url }}"
+                  target="_blank"
+                  title="{{ platform }}"
+                >
+                  {% render 'misc.social.icon', platform: platform %}
+                </a>
+              </li>
             {% endif %}
-            {% if settings.logo_desktop.src %}
-              <source srcset="{{ settings.logo_desktop.src }}" media="(min-width: 769px)">
-            {% endif %}
-            <img
-              src="{{ settings.logo_desktop.src | default: settings.logo_mobile.src }}"
-              alt="{{ store.name }}"
-              loading="eager"
-              height="100%"
-              loading="lazy"
-              width="{{ settings.logo_desktop_width }}px"
-              data-mobile-width="{{ settings.logo_mobile_width }}"
-            >
-          </picture>
-        </a>
-      {% else %}
-        <a class="name" ui-slot="link-button" data-variant="primary" href="/">
-          {{ store.name }}
-        </a>
-      {% endif %}
-    </div>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="menu">
     <div class="groups">
       {% for list in link-lists %}
         {% if list.links | count > 0  and list != main-link-list %}
@@ -70,49 +68,12 @@
         {% endif %}
       {% endfor %}
     </div>
-  </div>
-  <hr ui-slot="divider" data-variant="line">
-  <div class="secondary-area">
-    {% assign copyright_fallback = 'footer.copyright' | t %}
-    <span class="copyright">
-      {{ section.settings.copyright_content | default: copyright_fallback }}
-    </span>
-    {% if section.settings.show_social_links and has_social_links == true %}
-      <ul class="social-links">
-        {% for link in store.brand.social_links %}
-          {% assign platform = link[0] %}
-          {% assign url = link[1] %}
+    <div class="copyright">
+      {% assign currentYear = default: 'now' | date: '%Y' %}
 
-          {% case platform %}
-            {% when 'facebook' %}
-              {% assign icon = 'hgi-facebook-01' %}
-            {% when 'twitter' %}
-              {% assign icon = 'hgi-new-twitter-rectangle' %}
-            {% when 'instagram' %}
-              {% assign icon = 'hgi-instagram' %}
-            {% when 'tiktok' %}
-              {% assign icon = 'hgi-tiktok' %}
-          {% endcase %}
-
-          {% if url != null %}
-            <li class="link">
-              <a
-                ui-slot="button"
-                data-variant="primary"
-                data-mode="ghost"
-                data-size="lg"
-                data-as-icon
-                href="{{ url }}"
-                target="_blank"
-                title="{{ platform }}"
-              >
-                {% render 'misc.icon', name: icon %}
-              </a>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    {% endif %}
+      {{ 'footer.copyright' | t | replace: '%', currentYear }}
+      {{ store.slug }}
+    </div>
   </div>
 </div>
 {% schema %}
@@ -126,31 +87,20 @@
       "content": "t:common.headers.colors"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": true
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
     },
     {
       "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
-    },
-    {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-light-bg"
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
     },
     {
       "type": "header",
-      "content": "t:common.headers.social_media"
+      "content": "t:common.headers.general"
     },
     {
       "type": "checkbox",
@@ -163,20 +113,12 @@
       "content": "t:sections.footer.about_social_links"
     },
     {
+      "type": "paragraph",
+      "content": "t:sections.footer.about_menu_links"
+    },
+    {
       "type": "header",
-      "content": "t:common.headers.general"
-    },
-    {
-      "type": "text",
-      "id": "copyright_content",
-      "placeholder": " © All rights reserved.",
-      "label": "t:sections.footer.copyright_text"
-    },
-    {
-      "type": "checkbox",
-      "id": "top_border",
-      "label": "t:sections.footer.top_border",
-      "default": false
+      "content": "t:common.headers.spacing"
     },
     {
       "type": "range",
@@ -186,7 +128,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 40
     },
     {
       "type": "range",
@@ -196,11 +138,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 32
-    },
-    {
-      "type": "paragraph",
-      "content": "t:sections.footer.about_menu_links"
+      "default": 40
     }
   ]
 }
