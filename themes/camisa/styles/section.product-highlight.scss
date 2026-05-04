@@ -15,10 +15,6 @@
         flex-direction: column;
         gap: var(--spacing-16);
 
-        [ui-block="collection"] {
-          width: fit-content;
-        }
-
         [ui-block="title"] {
           text-transform: uppercase;
 
@@ -88,6 +84,18 @@
             .label {
               text-transform: uppercase;
               font: var(--font-body-sm);
+            }
+          }
+
+          &:not(:has(> ui-shop-button)) {
+            & > [ui-slot="button"] {
+              grid-column: 1 / 3;
+            }
+          }
+
+          &:not(:has(> [ui-slot="button"]), :has(> ui-shop-button:nth-of-type(2))) {
+            & > ui-shop-button {
+              grid-column: 1 / 3;
             }
           }
         }

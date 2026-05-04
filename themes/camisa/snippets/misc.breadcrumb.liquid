@@ -3,6 +3,7 @@
 
   Accepts:
   - items: {String} Breadcrumb items
+  - last_link_active: {Boolean}
 
   Usage:
   {% render 'misc.breadcrumb'%}
@@ -11,7 +12,7 @@
 {% assign items_list = items | split: '|' %}
 
 {% unless template.name == 'index' %}
-  <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb">
+  <nav ui-slot="breadcrumb" data-separator="separator" aria-label="Breadcrumb" {{ block.youcan_attributes }}>
     <ol ui-slot="breadcrumb-group">
       {% for item in items_list %}
         {% assign data = item | split: ',' %}
@@ -26,9 +27,11 @@
             {% endif %}
             data-size="md"
             href="{{ data[1] }}"
-            {% if forloop.last %}
-              aria-current="page"
-            {% endif %}
+            {% unless last_link_active %}
+              {% if forloop.last %}
+                aria-current="page"
+              {% endif %}
+            {% endunless %}
           >
             {{ data[0] }}
           </a>

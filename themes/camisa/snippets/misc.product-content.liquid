@@ -6,26 +6,42 @@
 {% endcomment %}
 
 <div ui-box="content">
-  <div
-    class="badge"
-    ui-slot="status-badge"
-    data-variant="stroke"
-    data-status="{{ settings.sale_badge_status }}"
-  >
-    New
-  </div>
+  {% for c in product.categories %}
+    {% assign collection_name = c.name %}
+    {% assign collection_slug = c.slug %}
+  {% endfor %}
 
-  {% if product.categories %}
-    <div ui-block="collection">
-      <a ui-slot="link-button" data-variant="gray" data-size="md" href="#" {{ block.youcan_attributes }}>
-        {% comment %} {{ product.categories.first.name }} {% endcomment %}
-        Men
-      </a>
-    </div>
+  {% assign translated_collections = 'navigation.collections' | t %}
+  {% capture breadcrumb_items %}
+  {{ 'navigation.home' | t }},/|
+  {{ translated_collections }},/collections
+  {% if collection_name %}
+    |{{ collection_name }},/collections/{{ collection_slug }}
   {% endif %}
+  {% endcapture %}
 
   {% for block in section.blocks %}
     {% case block.type %}
+      {% when 'block_breadcrumb' %}
+        {% render 'misc.breadcrumb', items: breadcrumb_items, last_link_active: true %}
+
+      {% when 'block_badge' %}
+        <div
+          class="badge"
+          ui-slot="status-badge"
+          data-variant="stroke"
+          data-status="{{ settings.sale_badge_status }}"
+        >
+          {% if settings.sale_badge_type == 'percentage' %}
+            {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+            -{{ percentage }}%
+          {% else %}
+            {% assign fixed = compare_at_price | minus: price %}
+            {{ 'general.save' | t }}
+            {{ fixed | money }}
+          {% endif %}
+        </div>
+
       {% when 'block_title' %}
         <h1 ui-block="title" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
           {{ product.name }}
