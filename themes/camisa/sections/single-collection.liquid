@@ -24,22 +24,18 @@
     {% endif %}
   </div>
   {% paginate collection.products by 24 cod, category_id: category.id %}
-    <div class="controls-area">
-      {% if subCategories.size > 0 %}
-        <ul class="sub-collections">
-          {% for subCollection in subCategories %}
-            <li class="sub-collection">
-              <a ui-slot="link-button" data-size="md" href="/collections/{{ subCollection.slug }}">
-                {{ subCollection.name }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      <div class="sort">
-        {% render 'misc.sort', url: previous_page %}
-      </div>
-    </div>
+    {% if subCategories.size > 0 %}
+      <ul class="sub-collections-area">
+        {% for subCollection in subCategories %}
+          <li class="sub-collection">
+            <a ui-slot="link-button" data-size="md" href="/collections/{{ subCollection.slug }}">
+              {{ subCollection.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% render 'misc.sort', url: previous_page %}
     <div class="core-area">
       {% if items.size > 0 %}
         <ul class="items" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
@@ -51,8 +47,9 @@
         {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
 
       {% else %}
-        {% assign empty_content = 'Sorry, there are no products in this collection.' %}
-        {% render 'misc.empty', heading: empty_content, action_label: 'Explore Other Collections', action_url: '/collections' %}
+        {% assign empty_content = 'single-collection.empty.title' | t %}
+        {% assign empty_action = 'single-collection.empty.action' | t %}
+        {% render 'misc.empty', heading: empty_content, action_label: empty_action, action_url: '/search' %}
       {% endif %}
     </div>
   {% endpaginate %}
