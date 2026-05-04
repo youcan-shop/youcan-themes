@@ -19,7 +19,7 @@
   {{ youcan_attributes }}
 >
   <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
-    <a href="{{ product.url }}">
+    <a href="{{ product.url | default: "#" }}">
       {% if product.preview_image %}
         <img
           srcset="
@@ -50,7 +50,7 @@
   </div>
   <div class="content">
     <div class="detail">
-      <a class="title" ui-slot="link-button" data-variant="gray" data-size="md" href="/products/{{ product.slug }}">
+      <a class="title" ui-slot="link-button" data-variant="gray" data-size="md" href="{{ product.url | default: "#" }}">
         {% assign placeholder = 'product.title' | t %}
         {{ product.name | default: placeholder }}
       </a>
