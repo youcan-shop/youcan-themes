@@ -32,34 +32,128 @@
   </div>
   <div ui-slot="sheet-body">
     {% render 'core.cart-form' %}
-    {% if show_products and collection_id %}
+    {% if show_products %}
       <ui-carousel class="products">
-        <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
-        {% paginate collection.products by 8 id category_id: collection_id %}
+        {% if collection_id %}
+          {% paginate collection.products by 8 id category_id: collection_id %}
+            <div class="head">
+              <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
+              {% if items.size > 1 %}
+                <div class="arrows">
+                  <button
+                    ui-carousel="arrow-previous"
+                    ui-slot="button"
+                    data-variant="primary"
+                    data-mode="stroke"
+                    data-size="xs"
+                    data-as-icon
+                    data-flip-icon-in-rtl
+                    aria-label="Previous"
+                  >
+                    {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                  </button>
+                  <button
+                    ui-carousel="arrow-next"
+                    ui-slot="button"
+                    data-variant="primary"
+                    data-mode="stroke"
+                    data-size="xs"
+                    data-as-icon
+                    data-flip-icon-in-rtl
+                    aria-label="Next"
+                  >
+                    {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+            <div
+              ui-carousel="wrapper"
+              ui-slot="carousel"
+              aria-orientation="vertical"
+              class="items"
+            >
+              {% for product in items %}
+                <div
+                  ui-carousel="item"
+                  ui-slot="carousel-item"
+                  class="item"
+                >
+                  <a href="{{product.url}}" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+                    {% if product.preview_image %}
+                      <img
+                        src="{{ product.preview_image.original }}"
+                        alt="{{ product.name }}"
+                        height="100%"
+                        width="100%"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      {% render 'misc.image-fallback' %}
+                    {% endif %}
+                  </a>
+                  <div class="content">
+                    <a
+                      class="title"
+                      ui-slot="link-button"
+                      data-variant="gray"
+                      data-size="md"
+                      class="title"
+                      href="{{ product.url }}"
+                    >
+                      {{ product.name }}
+                    </a>
+                    {% assign price = default_variant.price | default: product.price %}
+                    <span class="price">{{ price | money }}</span>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endpaginate %}
+        {% else %}
+          <div class="head">
+            <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
+            <div class="arrows">
+              <button
+                ui-carousel="arrow-previous"
+                ui-slot="button"
+                data-variant="primary"
+                data-mode="stroke"
+                data-size="xs"
+                data-as-icon
+                data-flip-icon-in-rtl
+                aria-label="Previous"
+              >
+                {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+              </button>
+              <button
+                ui-carousel="arrow-next"
+                ui-slot="button"
+                data-variant="primary"
+                data-mode="stroke"
+                data-size="xs"
+                data-as-icon
+                data-flip-icon-in-rtl
+                aria-label="Next"
+              >
+                {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+              </button>
+            </div>
+          </div>
           <div
             ui-carousel="wrapper"
             ui-slot="carousel"
             aria-orientation="vertical"
             class="items"
           >
-            {% for product in items %}
+            {% for product in (1..4) %}
               <div
                 ui-carousel="item"
                 ui-slot="carousel-item"
                 class="item"
               >
-                <a href="{{product.url}}" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
-                  {% if product.preview_image %}
-                    <img
-                      src="{{ product.preview_image.original }}"
-                      alt="{{ product.name }}"
-                      height="100%"
-                      width="100%"
-                      loading="lazy"
-                    >
-                  {% else %}
-                    {% render 'misc.image-fallback' %}
-                  {% endif %}
+                <a href="#" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+                  {% render 'misc.image-fallback' %}
                 </a>
                 <div class="content">
                   <a
@@ -68,17 +162,17 @@
                     data-variant="gray"
                     data-size="md"
                     class="title"
-                    href="{{ product.url }}"
+                    href="#"
                   >
-                    {{ product.name }}
+                    {{ 'product.title' | t }}
+                    {{ product }}
                   </a>
-                  {% assign price = default_variant.price | default: product.price %}
-                  <span class="price">{{ price | money }}</span>
+                  <span class="price">{{ 0 | money }}</span>
                 </div>
               </div>
             {% endfor %}
           </div>
-        {% endpaginate %}
+        {% endif %}
       </ui-carousel>
     {% endif %}
   </div>
