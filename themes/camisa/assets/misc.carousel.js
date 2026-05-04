@@ -62,7 +62,8 @@ if (!customElements.get("ui-carousel")) {
 
       this.wrapper.scrollTo({
         [this.orientation === "vertical" ? "left" : "top"]:
-          ((this.wrapper[this.orientation === "vertical" ? "scrollWidth" : "scrollHeight"] * index) / this.TOTAL) * this.isRTL,
+          ((this.wrapper[this.orientation === "vertical" ? "scrollWidth" : "scrollHeight"] * index) / this.TOTAL) *
+          (this.orientation === "vertical" ? this.isRTL : 1),
         behavior: "smooth",
       });
 
@@ -162,7 +163,7 @@ if (!customElements.get("ui-carousel")) {
     }
 
     get slideHeight() {
-      return (this.wrapper.scrollHeight / this.TOTAL) * this.isRTL;
+      return this.wrapper.scrollHeight / this.TOTAL;
     }
 
     get orientation() {
