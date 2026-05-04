@@ -76,26 +76,30 @@
       {% endif %}
     </ui-carousel>
     <div ui-box="content">
-      <div
-        class="badge"
-        ui-slot="status-badge"
-        data-variant="stroke"
-        data-status="{{ settings.sale_badge_status }}"
-      >
-        {% if settings.sale_badge_type == 'percentage' %}
-          {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
-          -{{ percentage }}%
-        {% else %}
-          {% assign fixed = compare_at_price | minus: price %}
-          {{ 'general.save' | t }}
-          {{ fixed | money }}
-        {% endif %}
-      </div>
       {% for block in section.blocks %}
         {% case block.type %}
+          {% when 'block_badge' %}
+            <div
+              class="badge"
+              ui-slot="status-badge"
+              data-variant="stroke"
+              data-status="{{ settings.sale_badge_status }}"
+              {{ block.youcan_attributes }}
+            >
+              {% if settings.sale_badge_type == 'percentage' %}
+                {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+                -{{ percentage }}%
+              {% else %}
+                {% assign fixed = compare_at_price | minus: price %}
+                {{ 'general.save' | t }}
+                {{ fixed | money }}
+              {% endif %}
+            </div>
+
           {% when 'block_title' %}
             <h1 ui-block="title" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
-              {{ product.name }}
+              {% assign placeholder = 'product.title' | t %}
+              {{ product.name | default: placeholder }}
             </h1>
 
           {% when 'block_price' %}
@@ -184,7 +188,7 @@
     {
       "type": "product",
       "id": "product",
-      "label": "Product"
+      "label": "t:common.globals.product"
     },
     {
       "type": "header",
@@ -255,6 +259,12 @@
     }
   ],
   "blocks": [
+    {
+      "type": "block_badge",
+      "label": "t:sections.single_product.blocks.badge.label",
+      "limit": 1,
+      "settings": []
+    },
     {
       "type": "block_title",
       "label": "t:sections.single_product.blocks.title.label",
