@@ -48,8 +48,8 @@
         }
 
         .media {
-          width: 40px;
-          height: 40px;
+          width: var(--image-width);
+          aspect-ratio: var(--image-ratio);
           overflow: hidden;
           border-radius: var(--radius-column);
 
@@ -74,7 +74,31 @@
       }
     }
 
-    @media (width <= 769px) {
+    &[data-image-width="third"] {
+      --image-width: 30%;
+    }
+
+    &[data-image-width="half"] {
+      --image-width: 50%;
+    }
+
+    &[data-image-width="full"] {
+      --image-width: 100%;
+    }
+
+    &[data-image-ratio="square"] {
+      --image-ratio: 1 / 1;
+    }
+
+    &[data-image-ratio="portrait"] {
+      --image-ratio: 3 / 4;
+    }
+
+    &[data-image-ratio="landscape"] {
+      --image-ratio: 4 / 3;
+    }
+
+    @media (width <= 1024px) {
       padding-inline: var(--spacing-24);
     }
   }

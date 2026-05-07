@@ -5,6 +5,8 @@
   {% if section.settings.borders_enabled %}
     data-has-borders
   {% endif %}
+  data-image-width="{{ section.settings.image_width }}"
+  data-image-ratio="{{ section.settings.image_ratio }}"
   style="
     --columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --bg-color: {{ section.settings.bg_color.hex }};
@@ -106,17 +108,6 @@
     },
     {
       "type": "select",
-      "id": "image_ratio",
-      "label": "t:common.globals.image_ratio",
-      "options": [
-        { "label": "t:common.layout.ratio.square", "value": "square" },
-        { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
-        { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
-      ],
-      "default": "square"
-    },
-    {
-      "type": "select",
       "id": "image_width",
       "label": "t:sections.multicolumn.columns.image_width.label",
       "options": [
@@ -125,6 +116,17 @@
         { "label": "t:sections.multicolumn.columns.image_width.full", "value": "full" }
       ],
       "default": "third"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:common.globals.image_ratio",
+      "options": [
+        { "label": "t:common.layout.ratio.square", "value": "square" },
+        { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
+        { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
+      ],
+      "default": "square"
     },
     {
       "type": "select",
