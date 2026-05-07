@@ -2,6 +2,9 @@
 
 <div
   ui-section="multicolumn"
+  {% if section.settings.borders_enabled %}
+    data-has-borders
+  {% endif %}
   style="
     --columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --bg-color: {{ section.settings.bg_color.hex }};
@@ -93,7 +96,7 @@
     },
     {
       "type": "checkbox",
-      "id": "enable_borders",
+      "id": "borders_enabled",
       "label": "t:sections.multicolumn.enable_borders",
       "default": true
     },
