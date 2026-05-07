@@ -1,7 +1,6 @@
 @layer sections {
   [ui-section="multicolumn"] {
     --item-size: 100%;
-    --columns-mobile: 2;
 
     display: flex;
     flex-direction: column;
@@ -18,6 +17,14 @@
       gap: var(--spacing-32);
       padding-block: var(--spacing-40);
       border-block: 1px solid transparent;
+
+      @media (width < 768px) {
+        --columns-desktop: 2;
+      }
+
+      @media (width < 640px) {
+        --columns-desktop: 1;
+      }
 
       [ui-block="column"] {
         display: flex;
