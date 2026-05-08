@@ -1,59 +1,83 @@
 @layer sections{
-  [ui-section=logo-list]{
+  [ui-section=countdown-timer]{
     padding-block:var(--top-spacing) var(--bottom-spacing);
     padding-inline:10%;
     background-color:var(--bg-color);
+    color:var(--fg-color);
   }
-  [ui-section=logo-list] .timer-container{
-    --timer-container-bg:#fefefe;
-    padding-block:var(--spacing-24);
-    overflow:hidden;
-    border-radius:var(--radius-28);
-    background-color:#fefefe;
-    background-color:var(--timer-container-bg);
-  }
-  [ui-section=logo-list] .timer-container [ui-block=logo]{
-    --size:142px;
-    width:142px;
-    width:var(--size);
-    height:142px;
-    height:var(--size);
-    margin:var(--spacing-8) var(--spacing-16);
-  }
-  [ui-section=logo-list] .timer-container [ui-block=logo] img{
-    -o-object-fit:contain;
-       object-fit:contain;
-    transition:filter var(--transition-standard-default-effects);
-  }
-  @media (max-width: 769px){
-    [ui-section=logo-list] .timer-container [ui-block=logo]{
-      --size:80px;
-    }
-  }
-  [ui-section=logo-list][data-list] .timer-container .logo-list{
+  [ui-section=countdown-timer] .timer-container{
     display:grid;
-    grid-template-columns:repeat(var(--nbr-columns-desktop), minmax(142px, 1fr));
-    grid-gap:var(--spacing-40);
-    gap:var(--spacing-40);
-    justify-items:center;
+    grid-template-columns:repeat(3, 1fr);
+    align-items:center;
+    justify-content:space-between;
+    padding:var(--spacing-32);
+    overflow:hidden;
+    border-radius:var(--radius-32);
+    background-color:var(--timer-bg);
+    grid-gap:var(--spacing-16);
+    gap:var(--spacing-16);
   }
-  [ui-section=logo-list][data-fullscreen]{
-    padding-inline:0;
+  [ui-section=countdown-timer] .timer-container .title{
+    font:var(--font-heading-xl);
   }
-  [ui-section=logo-list][data-fullscreen] .timer-container{
-    margin-inline:var(--spacing-0);
-    border-radius:var(--radius-0);
-    background-color:transparent;
+  [ui-section=countdown-timer] .timer-container .timer{
+    display:flex;
+    flex:1;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:var(--spacing-16);
   }
-  [ui-section=logo-list][data-grayscale] .timer-container [ui-block=logo] img{
-    filter:grayscale(1);
+  [ui-section=countdown-timer] .timer-container .timer .digits{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:var(--spacing-16);
   }
-  [ui-section=logo-list][data-grayscale] .timer-container [ui-block=logo] img:hover{
-    filter:grayscale(0);
+  [ui-section=countdown-timer] .timer-container .timer .digits .segment{
+    display:flex;
+    flex-direction:column;
+    align-content:start;
+    justify-content:center;
+    place-content:start center;
+    justify-content:center;
+    gap:var(--spacing-8);
+  }
+  [ui-section=countdown-timer] .timer-container .timer .digits .segment [ui-countdown]{
+    --size:80px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:80px;
+    width:var(--size);
+    height:80px;
+    height:var(--size);
+    padding:var(--spacing-16);
+    border-radius:var(--radius-16);
+    background-color:oklch(from var(--timer-bg) calc(l - 0.058) calc(c + 0.03) h);
+    font:var(--font-heading-lg);
+  }
+  [ui-section=countdown-timer] .timer-container .timer .label,
+  [ui-section=countdown-timer] .timer-container .timer [ui-countdown=message]{
+    font:var(--font-label-md);
+  }
+  [ui-section=countdown-timer] .timer-container .action{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
   }
   @media (max-width: 1024px){
-    [ui-section=logo-list]{
+    [ui-section=countdown-timer]{
       padding-inline:var(--spacing-16);
+    }
+    [ui-section=countdown-timer] .timer-container{
+      grid-template-columns:1fr;
+      text-align:center;
+      gap:var(--spacing-32);
+    }
+    [ui-section=countdown-timer] .timer-container .action{
+      justify-content:center;
     }
   }
 }

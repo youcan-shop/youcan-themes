@@ -12,7 +12,29 @@
   "
 >
   <div class="timer-container">
-    <span>Hey</span>
+    <h1 class="title">{{ section.settings.heading }}</h1>
+    <ui-countdown class="timer" hide-after-end="{{ section.settings.hide_counter_after_end }}">
+      <div class="digits" role="timer" aria-live="polite" aria-atomic="true">
+        <div class="segment">
+          <span ui-countdown="days">--</span>
+          <span class="label">{{ 'countdown-timer.days' | t }}</span>
+        </div>
+        <div class="segment">
+          <span ui-countdown="hours">--</span>
+          <span class="label">{{ 'countdown-timer.hours' | t }}</span>
+        </div>
+        <div class="segment">
+          <span ui-countdown="minutes">--</span>
+          <span class="label">{{ 'countdown-timer.minutes' | t }}</span>
+        </div>
+      </div>
+      <p hidden ui-countdown="message">{{ section.settings.message_after_end }}</p>
+    </ui-countdown>
+    <div class="action">
+      <button>
+        {{ section.settings.button_label }}
+      </button>
+    </div>
   </div>
 </div>
 
