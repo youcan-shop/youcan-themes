@@ -1,4 +1,5 @@
 {{ 'section.countdown-timer.css' | asset_url | stylesheet_tag }}
+{{ 'section.countdown-timer.js' | asset_url | script_tag_deferred }}
 
 <div
   ui-section="countdown-timer"
@@ -31,9 +32,12 @@
       <p hidden ui-countdown="message">{{ section.settings.message_after_end }}</p>
     </ui-countdown>
     <div class="action">
-      <button>
+      <a
+        ui-slot="button"
+        data-variant="primary"
+      >
         {{ section.settings.button_label }}
-      </button>
+      </a>
     </div>
   </div>
 </div>
