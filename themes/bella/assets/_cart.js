@@ -222,9 +222,15 @@ class CartDrawerItems extends BaseCartItem {
   }
 
   handleCartUpdate(payload) {
-    const { sub_total } = payload.cartData;
+    const { sub_total, one_page_checkout, all_in_one_checkout_url, checkout_info_url } = payload.cartData;
 
     if (payload.source === "product-form") {
+      if (payload.skipToCheckout) {
+        window.location.href = one_page_checkout ? all_in_one_checkout_url : checkout_info_url;
+
+        return;
+      }
+
       payload.skipCart ? (window.location.href = "/cart") : this.cart.showPopover();
     }
 

@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.6.3
+
+### Patch Changes
+
+- 2c10f39: Fix multiple call of linked fields & location api
+
 ## 4.6.2
 
 ### Patch Changes

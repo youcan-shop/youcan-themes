@@ -74,6 +74,10 @@ const themesToBuild =
 
 (async () => {
   for (const theme of themesToBuild) {
-    await zipTheme(theme);
+    try {
+      await zipTheme(theme);
+    } catch (err) {
+      console.error(`Failed to zip: ${theme} — ${err.message}`);
+    }
   }
 })();

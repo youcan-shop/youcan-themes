@@ -1,5 +1,11 @@
 # aura
 
+## 4.4.12
+
+### Patch Changes
+
+- 2c10f39: Fix multiple call of linked fields & location api
+
 ## 4.4.11
 
 ### Patch Changes

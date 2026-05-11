@@ -58,9 +58,6 @@ if (!customElements.get("ui-linked-fields")) {
     }
 
     async fetchLocationByType(type) {
-      window.storeRegions = window.storeRegions || {};
-      window.storeCities = window.storeCities || {};
-
       const fetchMap = {
         country: () => window.storeMarketCountries,
         region: () => {
