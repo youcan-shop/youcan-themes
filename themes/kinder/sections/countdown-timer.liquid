@@ -14,16 +14,24 @@
 >
   <div class="timer-container">
     <h1 class="title">{{ section.settings.heading }}</h1>
-    <ui-countdown class="timer" hide-after-end="{{ section.settings.hide_counter_after_end }}">
-      <div class="digits" role="timer" aria-live="polite" aria-atomic="true">
+    <ui-countdown
+      class="timer"
+      end-datetime="{{ section.settings.end_datetime }}"
+      {% if section.settings.hide_counter_after_end %}
+        hide-after-end
+      {% endif %}
+    >
+      <div class="segments" ui-countdown="segments" role="timer" aria-live="polite" aria-atomic="true">
         <div class="segment">
           <span ui-countdown="days">--</span>
           <span class="label">{{ 'countdown-timer.days' | t }}</span>
         </div>
+        <span class="divider">:</span>
         <div class="segment">
           <span ui-countdown="hours">--</span>
           <span class="label">{{ 'countdown-timer.hours' | t }}</span>
         </div>
+        <span class="divider">:</span>
         <div class="segment">
           <span ui-countdown="minutes">--</span>
           <span class="label">{{ 'countdown-timer.minutes' | t }}</span>
@@ -36,6 +44,9 @@
         ui-slot="button"
         data-variant="primary"
         data-size="lg"
+        {% if section.setting.button_link %}
+          href="{{ section.setting.button_link }}"
+        {% endif %}
       >
         <span ui-slot="button-front">
           {{ section.settings.button_label }}
@@ -83,13 +94,13 @@
     },
     {
       "type": "text",
-      "id": "end_time",
-      "label": "t:sections.countdown_timer.end_time",
+      "id": "end_datetime",
+      "label": "t:sections.countdown_timer.end-datetime",
       "placeholder": "yyyy-mm-dd hh:mm"
     },
     {
       "type": "paragraph",
-      "content": "t:sections.countdown_timer.end_time_hint"
+      "content": "t:sections.countdown_timer.end-datetime_hint"
     },
     {
       "type": "textarea",

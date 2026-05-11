@@ -21,6 +21,7 @@
     font:var(--font-heading-xl);
   }
   [ui-section=countdown-timer] .timer-container .timer{
+    --segment-size:80px;
     display:flex;
     flex:1;
     flex-direction:column;
@@ -29,30 +30,35 @@
     text-align:center;
     gap:var(--spacing-16);
   }
-  [ui-section=countdown-timer] .timer-container .timer .digits{
+  [ui-section=countdown-timer] .timer-container .timer .segments{
     display:flex;
     align-items:center;
     justify-content:center;
     gap:var(--spacing-16);
   }
-  [ui-section=countdown-timer] .timer-container .timer .digits .segment{
+  [ui-section=countdown-timer] .timer-container .timer .segments .divider{
+    display:block;
+    position:relative;
+    animation:blink 2s step-end infinite;
+    font-size:24px;
+    inset-block-end:var(--spacing-16);
+  }
+  [ui-section=countdown-timer] .timer-container .timer .segments .segment{
     display:flex;
     flex-direction:column;
     align-content:start;
     justify-content:center;
     place-content:start center;
+    align-items:center;
     justify-content:center;
     gap:var(--spacing-8);
   }
-  [ui-section=countdown-timer] .timer-container .timer .digits .segment [ui-countdown]{
-    --size:80px;
+  [ui-section=countdown-timer] .timer-container .timer .segments .segment [ui-countdown]{
     display:flex;
     align-items:center;
     justify-content:center;
-    width:80px;
-    width:var(--size);
-    height:80px;
-    height:var(--size);
+    width:var(--segment-size);
+    height:var(--segment-size);
     padding:var(--spacing-16);
     border-radius:var(--radius-16);
     background-color:oklch(from var(--timer-bg) calc(l - 0.058) calc(c + 0.03) h);
@@ -83,6 +89,20 @@
     }
     [ui-section=countdown-timer] .timer-container .action{
       justify-content:center;
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=countdown-timer] .timer-container .timer .segments .segment [ui-countdown]{
+      --segment-size:64px;
+      padding:var(--spacing-8);
+    }
+  }
+  @keyframes blink{
+    0%, 100%{
+      opacity:1;
+    }
+    50%{
+      opacity:0;
     }
   }
 }
