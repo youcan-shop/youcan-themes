@@ -1,4 +1,4 @@
-/* 
+/*
   Component: Button
 
   Accepts:
@@ -14,132 +14,27 @@
       </button>
 */
 
-[ui-slot="button"] {
+/* stylelint-disable nesting-selector-no-missing-scoping-root */
+@mixin button-surface {
   display: flex;
   align-items: center;
   justify-content: center;
   height: var(--button-size);
-  transition: all var(--transition-standard-default-spatial);
+  padding: var(--spacing-12) var(--spacing-16);
+  padding-inline: var(--button-padding-inline, var(--spacing-16));
+  gap: var(--button-gap);
   border: 1px solid;
-  border-radius: var(--radius-button);
+  border-radius: var(--radius-8);
+  border-color: var(--button-border);
   outline: none;
-  box-shadow: 0 0 0 3px transparent;
-  font: var(--font-body-md);
-  font-family: var(--font-button-family);
-  font-weight: var(--font-button-weight);
+  background-color: var(--button-bg);
+  color: var(--button-fg);
+  font: var(--font-label-md);
   text-decoration: none;
   cursor: pointer;
 
   & > * {
     font-family: inherit;
-  }
-
-  /* Size */
-  &[data-size="lg"] {
-    --button-size: 40px;
-
-    padding-inline: calc(var(--spacing-12) + var(--spacing-2));
-    border-radius: calc(var(--radius-button) * 1.5);
-    gap: var(--spacing-12);
-  }
-
-  &[data-size="md"] {
-    --button-size: 36px;
-
-    padding-inline: var(--spacing-12);
-    gap: var(--spacing-12);
-  }
-
-  &[data-size="sm"] {
-    --button-size: 32px;
-
-    padding-inline: var(--spacing-10);
-    gap: var(--spacing-10);
-  }
-
-  &[data-size="xs"] {
-    --button-size: 28px;
-
-    padding-inline: var(--spacing-8);
-    gap: var(--spacing-10);
-  }
-
-  /* Mode */
-  &[data-mode="filled"] {
-    border-color: transparent;
-    background-color: var(--color-button);
-    color: var(--color-on-button);
-
-    &[data-variant="neutral"] {
-      background-color: var(--color-on-background);
-    }
-
-    &:hover:not(:disabled, [aria-disabled="true"]) {
-      background-color: color-mix(in srgb, var(--color-button), black 10%);
-
-      &[data-variant="neutral"] {
-        background-color: color-mix(in srgb, var(--color-on-background), var(--color-on-button) 10%);
-      }
-    }
-  }
-
-  &[data-mode="stroke"] {
-    border-color: var(--color-button-border);
-    background-color: transparent;
-    color: var(--color-button);
-
-    &:hover:not(:disabled, [aria-disabled="true"]) {
-      border-color: transparent;
-      background-color: var(--color-button-container);
-    }
-  }
-
-  &[data-mode="lighter"] {
-    border-color: transparent;
-    background-color: var(--color-button-container);
-    color: var(--color-button);
-
-    &:hover:not(:disabled, [aria-disabled="true"]) {
-      border-color: var(--color-button-border);
-      background-color: transparent;
-    }
-  }
-
-  &[data-mode="ghost"] {
-    border-color: transparent;
-    background-color: transparent;
-    color: var(--color-button);
-
-    &:hover:not(:disabled, [aria-disabled="true"]) {
-      background-color: var(--color-button-container);
-    }
-  }
-
-  /* Variant */
-  &[data-variant="primary"] {
-    --color-button: var(--color-primary);
-    --color-on-button: var(--color-on-primary);
-    --color-button-border: var(--color-primary);
-    --color-button-container: var(--color-primary-container);
-  }
-
-  &[data-variant="neutral"] {
-    --color-button: var(--color-on-surface-variant);
-    --color-on-button: var(--color-background);
-    --color-button-border: var(--color-surface-variant);
-    --color-button-container: var(--color-surface-container-high);
-  }
-
-  &[data-variant="error"] {
-    --color-button: var(--color-error);
-    --color-on-button: var(--color-on-error);
-    --color-button-border: var(--color-error);
-    --color-button-container: var(--color-error-container);
-  }
-
-  /* As Icon */
-  &[data-as-icon] {
-    width: var(--button-size);
   }
 
   /* Icon */
@@ -149,49 +44,143 @@
     font-size: 20px;
   }
 
-  /* Flip Icon In RTL */
-  &[data-flip-icon-in-rtl]:dir(rtl) {
-    & > i {
-      rotate: 180deg;
-    }
-  }
-
-  /* Active */
-  &:active {
-    scale: 0.98;
-  }
-
   /* Focus */
   &:focus-visible {
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-button) 30%, transparent);
+  }
+}
+/* stylelint-enable nesting-selector-no-missing-scoping-root */
+
+[ui-slot="button"] {
+  user-select: none;
+
+  /* Non-primary only (no button-front child) */
+  &:not(:has([ui-slot="button-front"])) {
+    @include button-surface;
+
+    transition: all var(--transition-standard-default-spatial);
+  }
+
+  /* Primary button-front child */
+  &:has([ui-slot="button-front"]) [ui-slot="button-front"] {
+    @include button-surface;
+  }
+
+  /* Size */
+  &[data-size="lg"] {
+    --button-size: 48px;
+    --button-padding-inline: var(--spacing-16);
+    --button-padding-block: var(--spacing-12);
+    --button-border-radius: calc(var(--radius-button) * 1.5);
+    --button-gap: var(--spacing-12);
+  }
+
+  &[data-size="md"] {
+    --button-size: 36px;
+    --button-padding-inline: var(--spacing-12);
+    --button-padding-block: var(--spacing-8);
+    --button-gap: var(--spacing-12);
+  }
+
+  &[data-size="sm"] {
+    --button-size: 32px;
+    --button-padding-inline: var(--spacing-10);
+    --button-padding-block: var(--spacing-8);
+    --button-gap: var(--spacing-10);
+  }
+
+  &[data-size="xs"] {
+    --button-size: 28px;
+    --button-padding-inline: var(--spacing-8);
+    --button-padding-block: var(--spacing-4);
+    --button-gap: var(--spacing-10);
+  }
+
+  /* Variant */
+  &[data-variant="primary"] {
+    --button-bg: var(--brand-color);
+    --button-border: transparent;
+    --button-fg: var(--on-brand);
+    --button-elevation: 4px;
+
+    height: calc(var(--button-size) - var(--button-elevation));
+    margin-block-start: var(--button-elevation);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+    border-radius: var(--radius-8);
+    background-color: oklch(from var(--button-bg) calc(l - 0.08) c h);
+
+    [ui-slot="button-front"] {
+      display: flex;
+      height: calc(var(--button-size) - var(--button-elevation));
+      padding-block: var(--button-padding-block);
+      padding-inline: var(--button-padding-inline);
+      transform: translateY(calc(-1 * var(--button-elevation)));
+      transition: transform 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
+      border-radius: var(--radius-8);
+      background-color: var(--button-bg);
+    }
+
+    &:hover [ui-slot="button-front"] {
+      transform: translateY(-6px);
+      transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+    }
+
+    &:active [ui-slot="button-front"] {
+      transform: translateY(-2px);
+    }
+  }
+
+  &[data-variant="neutral"] {
+    --button-bg: transparent;
+    --button-border: var(--on-brand);
+    --button-fg: var(--on-brand);
+  }
+
+  /* As Icon */
+  &[data-as-icon] {
+    width: var(--button-size);
+  }
+
+  /* Flip Icon In RTL — descendant selector reaches icons inside button-front too */
+  &[data-flip-icon-in-rtl]:dir(rtl) i {
+    rotate: 180deg;
   }
 
   /* Disabled */
   &:disabled,
   &[data-loading],
   &[aria-disabled="true"] {
-    border-color: transparent;
-    background-color: transparent;
-    color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    --button-border: transparent;
+    --button-bg: transparent;
+    --button-fg: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+
     pointer-events: none;
+  }
+
+  /* Active press effect — placed after disabled so specificity order is correct */
+  &:not(:has([ui-slot="button-front"])):active {
+    scale: 0.98;
   }
 
   /* Loading */
   &[data-loading] {
-    position: relative;
-    overflow: hidden;
-    background-color: var(--color-surface-container);
-    color: transparent;
+    --button-bg: var(--color-surface-container);
+    --button-fg: transparent;
 
-    &::before {
-      content: "";
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      animation: spin 1s linear infinite;
-      border: 1.5px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
-      border-radius: var(--radius-rounded);
-      border-inline-end-color: transparent;
+    &:not(:has([ui-slot="button-front"])),
+    &:has([ui-slot="button-front"]) [ui-slot="button-front"] {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+        border: 1.5px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+        border-radius: var(--radius-rounded);
+        border-inline-end-color: transparent;
+      }
     }
   }
 }
@@ -206,17 +195,17 @@
   [data-intensity="as-light-bg"] {
     [ui-slot="button"] {
       &[data-mode="lighter"] {
-        background-color: color-mix(in srgb, currentcolor 18%, transparent) !important;
+        --button-bg: color-mix(in srgb, currentcolor 18%, transparent) !important;
 
         &:hover:not(:disabled, [aria-disabled="true"]) {
-          background-color: transparent !important;
+          --button-bg: transparent !important;
         }
       }
 
       &[data-mode="ghost"],
       &[data-mode="stroke"] {
         &:hover:not(:disabled, [aria-disabled="true"]) {
-          background-color: color-mix(in srgb, currentcolor 18%, transparent) !important;
+          --button-bg: color-mix(in srgb, currentcolor 18%, transparent) !important;
         }
       }
     }
