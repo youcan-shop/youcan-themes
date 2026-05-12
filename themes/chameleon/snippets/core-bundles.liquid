@@ -1,0 +1,86 @@
+{{ 'core.bundles.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a bundle(s) component
+
+  Accepts:
+  - bundles: {Array} Bundles list
+
+  Usage:
+  {% render 'core-bundles', bundles: [] %}
+{% endcomment %}
+
+{% for bundle in product.bundles.single %}
+  <ui-bundles type="single">
+    <div class="head">
+      <div class="bio">
+        <h4 class="title">{{ bundle.title }}</h4>
+        {% if bundle.saving_percentage %}
+          <span class="saving">You saved {{ bundle.saving_percentage }}%</span>
+        {% endif %}
+      </div>
+      <div class="price">
+        <span class="original">{{ bundle.total_price | money }}</span>
+        {% if bundle.compare_price %}
+          <span class="compare-at">{{ bundle.compare_price | money }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="core">
+      <div class="products">
+        {% for item in bundle.bundle_products %}
+          {% assign p = item.selected_variant %}
+
+          <div class="product">
+            {% if forloop.first %}
+              <span class="total">x{{ forloop.length }}</span>
+            {% endif %}
+            <div class="media">
+              {% if p.image %}
+                <img src="https://cdn.youcan.shop/{{ p.image }}" alt="{{ item.product.name }}" width="180" height="180">
+              {% elsif item.thumbnail %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="180" height="180">
+              {% else %}
+                {% render 'ui-icon', name: 'image', size: 40, filled: true %}
+              {% endif %}
+            </div>
+            <div class="content">
+              <span class="title">{{ item.product.name }}</span>
+              <div class="price">
+                <span class="original">{{ item.price | money }}</span>
+                {% if item.discount_value %}
+                  <span class="compare-at">{{ item.product.price | money }}</span>
+                {% endif %}
+              </div>
+              {% unless p.variations == null or p.variations.default %}
+                <div class="variants">
+                  {% for variant in p.variations %}
+                    <span class="variant">{{ variant[1] }}</span>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <ui-product-button
+      class="footer"
+      quantity="1"
+      bundle-id="{{ bundle.id }}"
+    >
+      <button
+        ui-button
+        data-variant="primary"
+        data-size="md"
+      >
+        Add bundle
+        {% if bundle.saving_percentage %}
+          (Save {{ bundle.saving_percentage }}%)
+        {% endif %}
+      </button>
+    </ui-product-button>
+  </ui-bundles>
+{% endfor %}
