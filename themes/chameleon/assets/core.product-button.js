@@ -1,6 +1,6 @@
 if (!customElements.get("ui-product-button")) {
   class ProductButton extends HTMLElement {
-    static observedAttributes = ["variant-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart"];
+    static observedAttributes = ["variant-id", "bundle-id", "quantity", "checkout-type", "attached-image", "source", "not-available", "skip-cart"];
 
     constructor() {
       super();
@@ -45,24 +45,24 @@ if (!customElements.get("ui-product-button")) {
       this.setIsBuyButtonLoading(true);
 
       const productVariantId = this.productVariantId;
+      const bundleId = this.bundleId;
       const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
       if (this.checkoutType === "express") {
-        this.placeOrder(productVariantId, attachedImage, quantity);
+        this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
 
         return;
       }
 
-      this.addToCart(productVariantId, attachedImage, quantity);
+      this.addToCart(productVariantId, bundleId, attachedImage, quantity);
     }
 
-    async addToCart(productVariantId, attachedImage, quantity) {
+    async addToCart(productVariantId, bundleId, attachedImage, quantity) {
       try {
         const newCart = await youcanjs.cart.addItem({
-          attachedImage,
-          productVariantId,
           quantity,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
@@ -74,7 +74,7 @@ if (!customElements.get("ui-product-button")) {
 
         const selectedVariant = newCart.items.find((variant) => variant.productVariant.id === productVariantId);
 
-        window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
+        window.Dotshop.pixels.publish("add-to-cart", selectedVariant);
       } catch (error) {
         console.error(error);
 
@@ -90,7 +90,7 @@ if (!customElements.get("ui-product-button")) {
       }
     }
 
-    async placeOrder(productVariantId, attachedImage, quantity) {
+    async placeOrder(productVariantId, bundleId, attachedImage, quantity) {
       const formData = new FormData(this.form);
       const fields = Object.fromEntries(formData);
 
@@ -148,6 +148,10 @@ if (!customElements.get("ui-product-button")) {
 
     get productVariantId() {
       return this.getAttribute("variant-id");
+    }
+
+    get bundleId() {
+      return this.getAttribute("bundle-id");
     }
 
     get quantityValue() {
