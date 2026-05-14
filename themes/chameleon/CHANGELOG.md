@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.6.4
+
+### Patch Changes
+
+- b9e2ca3: Add footer layout object
+
 ## 4.6.3
 
 ### Patch Changes
