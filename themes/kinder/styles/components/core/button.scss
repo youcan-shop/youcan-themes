@@ -1,0 +1,213 @@
+/*
+  Component: Button
+
+  Accepts:
+    - data-variant: {String}: primary | neutral | error
+    - data-mode: {String}: filled | stroke | lighter | ghost
+    - data-size: {String}: lg | md | sm | xs
+    - data-as-icon: {Boolean}: true | false
+    - data-flip-icon-in-rtl: {Boolean}: true | false
+
+  Usage:
+    - <button ui-slot="button" data-variant="primary" data-mode="filled" data-size="md">
+        My Button
+      </button>
+*/
+
+/* stylelint-disable nesting-selector-no-missing-scoping-root */
+@mixin button-surface {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--button-size);
+  padding: var(--spacing-12) var(--spacing-16);
+  padding-inline: var(--button-padding-inline, var(--spacing-16));
+  gap: var(--button-gap);
+  border: 1px solid;
+  border-radius: var(--radius-8);
+  border-color: var(--button-border);
+  outline: none;
+  background-color: var(--button-bg);
+  color: var(--button-fg);
+  font: var(--font-label-md);
+  text-decoration: none;
+  cursor: pointer;
+
+  & > * {
+    font-family: inherit;
+  }
+
+  /* Icon */
+  & > i {
+    flex-shrink: 0;
+    margin-inline: calc(var(--spacing-4) * -1);
+    font-size: 20px;
+  }
+
+  /* Focus */
+  &:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-button) 30%, transparent);
+  }
+}
+/* stylelint-enable nesting-selector-no-missing-scoping-root */
+
+[ui-slot="button"] {
+  user-select: none;
+
+  /* Non-primary only (no button-front child) */
+  &:not(:has([ui-slot="button-front"])) {
+    @include button-surface;
+
+    transition: all var(--transition-standard-default-spatial);
+  }
+
+  /* Primary button-front child */
+  &:has([ui-slot="button-front"]) [ui-slot="button-front"] {
+    @include button-surface;
+  }
+
+  /* Size */
+  &[data-size="lg"] {
+    --button-size: 48px;
+    --button-padding-inline: var(--spacing-16);
+    --button-padding-block: var(--spacing-12);
+    --button-border-radius: calc(var(--radius-button) * 1.5);
+    --button-gap: var(--spacing-12);
+  }
+
+  &[data-size="md"] {
+    --button-size: 36px;
+    --button-padding-inline: var(--spacing-12);
+    --button-padding-block: var(--spacing-8);
+    --button-gap: var(--spacing-12);
+  }
+
+  &[data-size="sm"] {
+    --button-size: 32px;
+    --button-padding-inline: var(--spacing-10);
+    --button-padding-block: var(--spacing-8);
+    --button-gap: var(--spacing-10);
+  }
+
+  &[data-size="xs"] {
+    --button-size: 28px;
+    --button-padding-inline: var(--spacing-8);
+    --button-padding-block: var(--spacing-4);
+    --button-gap: var(--spacing-10);
+  }
+
+  /* Variant */
+  &[data-variant="primary"] {
+    --button-bg: var(--brand-color);
+    --button-border: transparent;
+    --button-fg: var(--on-brand);
+    --button-elevation: 4px;
+
+    height: calc(var(--button-size) - var(--button-elevation));
+    margin-block-start: var(--button-elevation);
+    transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+    border-radius: var(--radius-8);
+    background-color: oklch(from var(--button-bg) calc(l - 0.08) c h);
+
+    [ui-slot="button-front"] {
+      display: flex;
+      height: calc(var(--button-size) - var(--button-elevation));
+      padding-block: var(--button-padding-block);
+      padding-inline: var(--button-padding-inline);
+      transform: translateY(calc(-1 * var(--button-elevation)));
+      transition: transform 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
+      border-radius: var(--radius-8);
+      background-color: var(--button-bg);
+    }
+
+    &:hover [ui-slot="button-front"] {
+      transform: translateY(-6px);
+      transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+    }
+
+    &:active [ui-slot="button-front"] {
+      transform: translateY(-2px);
+    }
+  }
+
+  &[data-variant="neutral"] {
+    --button-bg: transparent;
+    --button-border: var(--on-brand);
+    --button-fg: var(--on-brand);
+  }
+
+  /* As Icon */
+  &[data-as-icon] {
+    width: var(--button-size);
+  }
+
+  /* Flip Icon In RTL — descendant selector reaches icons inside button-front too */
+  &[data-flip-icon-in-rtl]:dir(rtl) i {
+    rotate: 180deg;
+  }
+
+  /* Disabled */
+  &:disabled,
+  &[data-loading],
+  &[aria-disabled="true"] {
+    --button-border: transparent;
+    --button-bg: transparent;
+    --button-fg: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+
+    pointer-events: none;
+  }
+
+  /* Active press effect — placed after disabled so specificity order is correct */
+  &:not(:has([ui-slot="button-front"])):active {
+    scale: 0.98;
+  }
+
+  /* Loading */
+  &[data-loading] {
+    --button-bg: var(--color-surface-container);
+    --button-fg: transparent;
+
+    &:not(:has([ui-slot="button-front"])),
+    &:has([ui-slot="button-front"]) [ui-slot="button-front"] {
+      position: relative;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        animation: spin 1s linear infinite;
+        border: 1.5px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+        border-radius: var(--radius-rounded);
+        border-inline-end-color: transparent;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@layer overrides {
+  [data-intensity="as-light-bg"] {
+    [ui-slot="button"] {
+      &[data-mode="lighter"] {
+        --button-bg: color-mix(in srgb, currentcolor 18%, transparent) !important;
+
+        &:hover:not(:disabled, [aria-disabled="true"]) {
+          --button-bg: transparent !important;
+        }
+      }
+
+      &[data-mode="ghost"],
+      &[data-mode="stroke"] {
+        &:hover:not(:disabled, [aria-disabled="true"]) {
+          --button-bg: color-mix(in srgb, currentcolor 18%, transparent) !important;
+        }
+      }
+    }
+  }
+}

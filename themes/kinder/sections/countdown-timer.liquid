@@ -1,0 +1,158 @@
+{{ 'section.countdown-timer.css' | asset_url | stylesheet_tag }}
+{{ 'section.countdown-timer.js' | asset_url | script_tag_deferred }}
+
+<div
+  ui-section="countdown-timer"
+  role="banner"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --timer-bg: {{ section.settings.timer_bg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
+>
+  <div class="timer-container">
+    <h1 class="title">{{ section.settings.heading }}</h1>
+    <ui-countdown
+      class="timer"
+      end-datetime="{{ section.settings.end_datetime }}"
+      {% if section.settings.hide_counter_after_end %}
+        hide-after-end
+      {% endif %}
+    >
+      <div class="segments" ui-countdown="segments" role="timer" aria-live="polite" aria-atomic="true">
+        <div class="segment">
+          <span ui-countdown="days">--</span>
+          <span class="label">{{ 'countdown-timer.days' | t }}</span>
+        </div>
+        <span class="divider">:</span>
+        <div class="segment">
+          <span ui-countdown="hours">--</span>
+          <span class="label">{{ 'countdown-timer.hours' | t }}</span>
+        </div>
+        <span class="divider">:</span>
+        <div class="segment">
+          <span ui-countdown="minutes">--</span>
+          <span class="label">{{ 'countdown-timer.minutes' | t }}</span>
+        </div>
+      </div>
+      <p hidden ui-countdown="message">{{ section.settings.message_after_end }}</p>
+    </ui-countdown>
+    <div class="action">
+      <a
+        ui-slot="button"
+        data-variant="primary"
+        data-size="lg"
+        {% if section.setting.button_link %}
+          href="{{ section.setting.button_link }}"
+        {% endif %}
+      >
+        <span ui-slot="button-front">
+          {{ section.settings.button_label }}
+        </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.countdown_timer.label",
+  "limit": 2,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "color",
+      "id": "timer_bg_color",
+      "label": "t:sections.countdown_timer.timer_bg_color",
+      "default": "#B565EB"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#FEFEFE"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading"
+    },
+    {
+      "type": "text",
+      "id": "end_datetime",
+      "label": "t:sections.countdown_timer.end-datetime",
+      "placeholder": "yyyy-mm-dd hh:mm"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.countdown_timer.end-datetime_hint"
+    },
+    {
+      "type": "textarea",
+      "id": "message_after_end",
+      "label": "t:sections.countdown_timer.message_after_end"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_counter_after_end",
+      "label": "t:sections.countdown_timer.hide_counter_after_end",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:common.button.label",
+      "default": "t:sections.countdown_timer.default.button"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:common.button.link",
+      "default": "#"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ]
+}
+{% endschema %}
