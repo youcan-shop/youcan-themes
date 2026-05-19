@@ -33,7 +33,7 @@
   }
   [ui-section=image-banners] .banners .image-item [ui-block=button]{
     z-index:1;
-    min-width:200px;
+    min-width:min(200px, 100%);
   }
   [ui-section=image-banners][data-fullscreen]{
     padding-inline:0;
@@ -41,6 +41,18 @@
   @media (max-width: 1024px){
     [ui-section=image-banners]{
       padding-inline:var(--spacing-16);
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=image-banners] .banners{
+      grid-template-columns:1fr;
+    }
+    [ui-section=image-banners] .banners .image-item{
+      padding:var(--spacing-16);
+    }
+    [ui-section=image-banners] .banners .image-item [ui-block=button]{
+      z-index:1;
+      width:100%;
     }
   }
 }

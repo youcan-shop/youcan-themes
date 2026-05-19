@@ -34,7 +34,7 @@
 
         [ui-block="button"] {
           z-index: 1;
-          min-width: 200px;
+          min-width: min(200px, 100%);
         }
       }
     }
@@ -45,6 +45,21 @@
 
     @media (width <= 1024px) {
       padding-inline: var(--spacing-16);
+    }
+
+    @media (width <= 769px) {
+      .banners {
+        grid-template-columns: 1fr;
+
+        .image-item {
+          padding: var(--spacing-16);
+
+          [ui-block="button"] {
+            z-index: 1;
+            width: 100%;
+          }
+        }
+      }
     }
   }
 }
