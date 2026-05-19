@@ -9,7 +9,38 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
-  Banners
+  <ul class="banners">
+    {% for item in section.blocks %}
+      <li class="image-item" {{ item.youcan_attributes }}>
+        <div ui-block="image">
+          {% if item.settings.image %}
+            <img
+              src="{{ item.settings.image.src }}"
+              alt="image-{{ forloop.index }}"
+              height="100%"
+              width="100%"
+              loading="lazy"
+            >
+          {% else %}
+            {% render 'misc.image-fallback', icon_size: 80 %}
+          {% endif %}
+        </div>
+        <a
+          ui-slot="button"
+          ui-block="button"
+          data-variant="primary"
+          data-size="lg"
+          {% if item.settings.button_link %}
+            href="{{ item.settings.button_link }}"
+          {% endif %}
+        >
+          <span ui-slot="button-front">
+            {{ item.settings.button_label }}
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
 </div>
 
 {% schema %}
