@@ -3,8 +3,13 @@
 <div
   ui-section="image-banners"
   role="banner"
+  {% if section.settings.fullscreen %}
+    data-fullscreen
+  {% endif %}
   style="
     --bg-color: {{ section.settings.bg_color.hex }};
+    --desktop-height: {{ section.settings.desktop_height }}px;
+    --mobile-height: {{ section.settings.mobile_height }}px;
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
@@ -47,6 +52,7 @@
 {
   "label": "t:sections.image_banners.label",
   "limit": 2,
+  "max_blocks": 10,
   "settings": [
     {
       "type": "header",
@@ -78,7 +84,30 @@
       ],
       "default": "primary"
     },
-
+    {
+      "type": "header",
+      "content": "t:sections.image_banners.grid"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "t:sections.image_banners.desktop_height",
+      "min": 200,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "t:sections.image_banners.mobile_height",
+      "min": 150,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 300
+    },
     {
       "type": "header",
       "content": "t:common.headers.spacing"

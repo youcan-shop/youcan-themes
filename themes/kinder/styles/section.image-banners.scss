@@ -13,11 +13,12 @@
         display: flex;
         position: relative;
         align-items: flex-end;
+        width: 100%;
+        height: var(--desktop-height);
         padding: var(--spacing-32);
         overflow: hidden;
         border-radius: var(--radius-20);
         background-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
-        aspect-ratio: 4 / 3;
 
         [ui-block="image"] {
           position: absolute;
@@ -35,17 +36,12 @@
         [ui-block="button"] {
           z-index: 1;
           min-width: min(200px, 100%);
-
-          span {
-            display: inline-block;
-            width: 100%;
-          }
         }
       }
     }
 
     &[data-fullscreen] {
-      padding-inline: 0;
+      padding-inline: var(--spacing-16);
     }
 
     @media (width <= 1024px) {
@@ -57,6 +53,7 @@
         grid-template-columns: 1fr;
 
         .image-item {
+          height: var(--mobile-height);
           padding: var(--spacing-16);
 
           [ui-block="button"] {
