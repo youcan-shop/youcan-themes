@@ -383,6 +383,9 @@
     color:var(--color-on-surface);
   }
   [ui-slot=button]{
+    line-height:1;
+    text-overflow:ellipsis;
+    white-space:nowrap;
     -webkit-user-select:none;
        -moz-user-select:none;
             user-select:none;
@@ -402,7 +405,7 @@
     border-radius:var(--radius-8);
     border-color:var(--button-border);
     outline:none;
-    background-color:var(--button-bg);
+    background-color:var(--button-bg, var(--brand-color));
     color:var(--button-fg);
     font:var(--font-label-md);
     -webkit-text-decoration:none;
@@ -446,7 +449,7 @@
     border-radius:var(--radius-8);
     border-color:var(--button-border);
     outline:none;
-    background-color:var(--button-bg);
+    background-color:var(--button-bg, var(--brand-color));
     color:var(--button-fg);
     font:var(--font-label-md);
     -webkit-text-decoration:none;
@@ -514,6 +517,8 @@
   }
   [ui-slot=button][data-variant=primary] [ui-slot=button-front]{
     display:flex;
+    display:inline-block;
+    width:100%;
     height:calc(var(--button-size) - var(--button-elevation));
     padding-block:var(--button-padding-block);
     padding-inline:var(--button-padding-inline);
@@ -522,6 +527,8 @@
     border-radius:8px;
     border-radius:var(--radius-8);
     background-color:var(--button-bg);
+    line-height:1;
+    text-align:center;
   }
   [ui-slot=button][data-variant=primary]:hover [ui-slot=button-front]{
     transform:translateY(-6px);
