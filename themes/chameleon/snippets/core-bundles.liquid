@@ -16,7 +16,10 @@
       <div class="bio">
         <h4 class="title">{{ bundle.title }}</h4>
         {% if bundle.saving_percentage %}
-          <span class="saving">You saved {{ bundle.saving_percentage }}%</span>
+          <span class="saving">
+            {{ 'bundle.save' | t }}
+            {{ bundle.saving_percentage }}%</span
+          >
         {% endif %}
       </div>
       <div class="price">
@@ -76,9 +79,10 @@
         data-variant="primary"
         data-size="md"
       >
-        Add bundle
+        {{ 'bundle.add' | t }}
         {% if bundle.saving_percentage %}
-          (Save {{ bundle.saving_percentage }}%)
+          ({{ 'bundle.save' | t }}
+          {{ bundle.saving_percentage }}%)
         {% endif %}
       </button>
     </ui-product-button>
