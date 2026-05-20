@@ -24,7 +24,7 @@
     ui-slot="carousel"
     aria-orientation="vertical"
     data-align="center"
-    {% if section.settings.auto_rotate %}
+    {% if section.settings.auto_play %}
       autoplay
       interval="{{ section.settings.change_every | times: 1000 }}"
     {% endif %}
@@ -34,7 +34,7 @@
     {% endfor %}
   </ul>
   {% if section.settings.show_controls and section.blocks.size > 1 %}
-    <div class="pagination" data-position="{{ section.settings.controls_position }}">
+    <div class="pagination" data-position="{{ section.settings.arrows_position }}">
       {% for marker in section.blocks %}
         <button
           ui-carousel="marker"
@@ -72,8 +72,8 @@
     },
     {
       "type": "checkbox",
-      "id": "auto_rotate",
-      "label": "t:sections.slideshow.auto_rotate",
+      "id": "auto_play",
+      "label": "t:sections.slideshow.auto_play",
       "default": false
     },
     {
@@ -88,67 +88,25 @@
     },
     {
       "type": "checkbox",
-      "id": "show_controls",
-      "label": "t:sections.slideshow.show_controls",
+      "id": "show_dots",
+      "label": "t:sections.slideshow.show_dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:sections.slideshow.show_arrows",
       "default": true
     },
     {
       "type": "select",
-      "id": "controls_position",
-      "label": "t:sections.slideshow.controls_position.label",
+      "id": "arrows_position",
+      "label": "t:sections.slideshow.arrows_position.label",
       "options": [
-        { "label": "t:sections.slideshow.controls_position.options.inside", "value": "inside" },
-        { "label": "t:sections.slideshow.controls_position.options.outside", "value": "outside" }
+        { "label": "t:sections.slideshow.arrows_position.options.centered", "value": "centered" },
+        { "label": "t:sections.slideshow.arrows_position.options.edges", "value": "edges" }
       ],
-      "default": "outside"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.mobile_layout"
-    },
-    {
-      "type": "select",
-      "id": "mobile_content_alignment",
-      "label": "t:sections.slideshow.content_alignment",
-      "options": [
-        { "label": "t:common.layout.alignment.start", "value": "start" },
-        { "label": "t:common.layout.alignment.center", "value": "center" },
-        { "label": "t:common.layout.alignment.end", "value": "end" }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_content_below_image",
-      "label": "t:sections.slideshow.show_content_below_image",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.colors"
-    },
-    {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": false
-    },
-    {
-      "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
-    },
-    {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-foreground"
+      "default": "edges"
     },
     {
       "type": "header",
