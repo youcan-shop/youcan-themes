@@ -110,7 +110,10 @@
     margin-block-start: var(--button-elevation);
     transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
     border-radius: var(--radius-8);
-    background-color: oklch(from var(--button-bg) calc(l - 0.08) c h);
+
+    &:has([ui-slot="button-front"]) {
+      background-color: oklch(from var(--button-bg) calc(l - 0.08) c h);
+    }
 
     [ui-slot="button-front"] {
       display: flex;
