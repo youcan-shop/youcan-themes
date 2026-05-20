@@ -99,12 +99,19 @@
       }
 
       .summary-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         font: var(--font-body-sm);
         text-transform: uppercase;
         padding: var(--spacing-4) var(--spacing-24);
         color: var(--color-on-surface-variant);
         border-block: 1px dashed var(--color-surface-container-high);
         background-color: var(--color-surface-container-lowest);
+
+        .count {
+          text-transform: lowercase;
+        }
       }
 
       .order-info {
@@ -165,6 +172,31 @@
 
             .count {
               opacity: 0.8;
+            }
+
+            .variants {
+              display: flex;
+              flex-wrap: wrap;
+              gap: var(--spacing-8);
+
+              .variant {
+                font: var(--font-body-sm);
+                border-radius: var(--radius-xs);
+                padding: var(--spacing-4) var(--spacing-6);
+                color: var(--color-on-surface-variant);
+                background-color: var(--color-surface-container);
+              }
+            }
+          }
+
+          .price {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-8);
+
+            .compare-at {
+              opacity: 0.5;
+              text-decoration: line-through;
             }
           }
         }

@@ -16,17 +16,67 @@
       {% render 'misc-cart-item', product: product %}
     </template>
     <ui-cart-items
-      {% unless cart.items.size > 0 %}
+      {% unless cart.items.size > 0 or cart.bundles %}
         hidden
       {% endunless %}
     >
       {% for product in cart.items %}
         {% render 'misc-cart-item', product: product %}
       {% endfor %}
+
+      {% if cart.bundles %}
+        {% for bundle in cart.bundles.single %}
+          <div class="bundle-group">
+            <div class="head">
+              <span class="title" ui-bundle-title>{{ bundle.title }}</span>
+              <ui-cart-remove
+                item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+              >
+                <button
+                  ui-button
+                  data-variant="secondary"
+                  data-size="xs"
+                  as-icon
+                  class="remove"
+                  aria-label="remove"
+                  ui-cart-item="delete-button"
+                >
+                  {% render 'ui-icon', name: 'delete' %}
+                </button>
+              </ui-cart-remove>
+            </div>
+            <div class="group" ui-bundle-group>
+              {% for bundle_item in bundle.items %}
+                {% render 'misc-cart-bundle-item', bundle_item: bundle_item %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </ui-cart-items>
+
+    <template ui-cart-bundle-group>
+      <div class="bundle-group">
+        <div class="head">
+          <span class="title" ui-bundle-title></span>
+          <ui-cart-remove>
+            <button ui-button data-variant="secondary" data-size="xs" as-icon class="remove" aria-label="remove">
+              {% render 'ui-icon', name: 'delete' %}
+            </button>
+          </ui-cart-remove>
+        </div>
+        <div class="group" ui-bundle-group></div>
+      </div>
+    </template>
+
+    <template ui-cart-bundle-item>
+      {% render 'misc-cart-bundle-item' %}
+    </template>
+
     <ui-summary-box
       class="summary"
-      {% unless cart.items.size > 0 %}
+      {% unless cart.items.size > 0 or cart.bundles %}
         hidden
       {% endunless %}
     >
@@ -106,7 +156,7 @@
       </div>
     </ui-summary-box>
     {% assign empty_content = 'cart.empty.title' | t %}
-    {% if cart.items.size > 0 %}
+    {% if cart.items.size > 0 or cart.bundles %}
       {% render 'ui-empty', content: empty_content, hidden: true %}
     {% else %}
       {% render 'ui-empty', content: empty_content %}

@@ -41,6 +41,53 @@
           </div>
         {% endfor %}
       </div>
+      {% if order.bundles %}
+        {% for bundle in order.bundles.single %}
+          <div class="summary-title">
+            <span class="title">{{ bundle.title }}</span>
+            <span class="count">(x{{ bundle.items.size }})</span>
+          </div>
+          <div class="order-info">
+            {% for bundle_item in bundle.items %}
+              {% if forloop.first %}
+                <div class="product">
+                  <div class="image">
+                    {% if bundle_item.image %}
+                      <img
+                        src="{{ bundle_item.image }}"
+                        alt="{{ bundle_item.name }}"
+                        height="100%"
+                        width="100%"
+                        loading="eager"
+                      >
+                    {% else %}
+                      {% render 'ui-icon', name: 'image', filled: true %}
+                    {% endif %}
+                  </div>
+                  <div class="content">
+                    <div class="title">
+                      {{ bundle_item.name }}
+                    </div>
+                    {% unless bundle_item.variations == null or bundle_item.variations.default %}
+                      <div class="variants">
+                        {% for variant in bundle_item.variations %}
+                          <span class="variant">{{ variant[1] }}</span>
+                        {% endfor %}
+                      </div>
+                    {% endunless %}
+                  </div>
+                  <div class="price">
+                    <span class="total">{{ bundle.total_price | default: 0 | money }}</span>
+                    {% if bundle.compare_price %}
+                      <span class="compare-at">{{ bundle.compare_price | default: 0 | money }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+      {% endif %}
       <div class="summary-title">{{ 'order.payment' | t }}</div>
       <div class="order-info">
         <div class="item">
