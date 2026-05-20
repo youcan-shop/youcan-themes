@@ -39,17 +39,23 @@
             {% if forloop.first %}
               <span class="total">x{{ forloop.length }}</span>
             {% endif %}
-            <div class="media">
+            <a class="media" href="{{ item.product.url }}">
               {% if p.image %}
-                <img src="https://cdn.youcan.shop/{{ p.image }}" alt="{{ item.product.name }}" width="180" height="180">
+                <img
+                  src="https://cdn.youcan.shop/{{ p.image }}"
+                  alt="{{ item.product.name }}"
+                  width="180"
+                  height="180"
+                  loading="lazy"
+                >
               {% elsif item.thumbnail %}
-                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="180" height="180">
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="180" height="180" loading="lazy">
               {% else %}
                 {% render 'ui-icon', name: 'image', size: 40, filled: true %}
               {% endif %}
-            </div>
+            </a>
             <div class="content">
-              <span class="title">{{ item.product.name }}</span>
+              <a class="title" href="{{ item.product.url }}">{{ item.product.name }}</a>
               <div class="price">
                 <span class="original">{{ item.price | money }}</span>
                 {% if item.discount_value %}
@@ -64,6 +70,122 @@
                 </div>
               {% endunless %}
             </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <form ui-order-form>
+      {% if settings.checkout_type == 'express' %}
+        {% render 'core-express-checkout' %}
+      {% endif %}
+      <ui-product-button
+        class="footer"
+        quantity="1"
+        bundle-id="{{ bundle.id }}"
+        {% if settings.checkout_type == 'express' %}
+          checkout-type="express"
+        {% endif %}
+      >
+        <button
+          ui-button
+          data-variant="primary"
+          data-size="md"
+        >
+          {% if settings.checkout_type == 'express' %}
+            {{ 'general.buy_now' | t }}
+          {% else %}
+            {{ 'bundle.add' | t }}
+          {% endif %}
+          {% if bundle.saving_percentage %}
+            ({{ 'bundle.save' | t }}
+            {{ bundle.saving_percentage }}%)
+          {% endif %}
+        </button>
+      </ui-product-button>
+    </form>
+  </ui-bundles>
+{% endfor %}
+
+{% for bundle in product.bundles.multi %}
+  <ui-bundles type="multiple">
+    <div class="head">
+      <div class="images">
+        {% for item in bundle.bundle_products %}
+          {% assign p = item.selected_variant %}
+
+          <div class="image">
+            {% if p.image %}
+              <img src="https://cdn.youcan.shop/{{ p.image }}" alt="{{ item.product.name }}" width="54" height="54" loading="lazy">
+            {% elsif item.thumbnail %}
+              <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="54" height="54" loading="lazy">
+            {% else %}
+              {% render 'ui-icon', name: 'image', filled: true %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="bio">
+        <h4 class="title">{{ bundle.title }}</h4>
+        {% if bundle.saving_percentage %}
+          <span class="saving">
+            {{ 'bundle.save' | t }}
+            {{ bundle.saving_percentage }}%</span
+          >
+        {% endif %}
+      </div>
+      <div class="price">
+        <span class="original">{{ bundle.total_price | money }}</span>
+        {% if bundle.compare_price %}
+          <span class="compare-at">{{ bundle.compare_price | money }}</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="core">
+      <div class="products">
+        {% for item in bundle.bundle_products %}
+          {% assign p = item.selected_variant %}
+
+          <div class="product">
+            <a class="media" href="{{ item.product.url }}">
+              {% if p.image %}
+                <img
+                  src="https://cdn.youcan.shop/{{ p.image }}"
+                  alt="{{ item.product.name }}"
+                  width="100%"
+                  height="100%"
+                  loading="lazy"
+                >
+              {% elsif item.thumbnail %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="100%" height="100%" loading="lazy">
+              {% else %}
+                {% render 'ui-icon', name: 'image', size: 40, filled: true %}
+              {% endif %}
+            </a>
+            <div class="content">
+              <a class="title" href="{{ item.product.url }}">{{ item.product.name }}</a>
+              <div class="price">
+                <span class="original">{{ item.price | money }}</span>
+                {% if item.discount_value %}
+                  <span class="compare-at">{{ item.product.price | money }}</span>
+                {% endif %}
+              </div>
+              {% unless p.variations == null or p.variations.default %}
+                <div class="variants">
+                  {% for variant in p.variations %}
+                    <span class="variant">{{ variant[1] }}</span>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+            </div>
+            {% if item.discount_value %}
+              <span class="discount">
+                {% if item.discount_type == 2 %}
+                  -{{ item.discount_value | money }}
+                {% else %}
+                  -{{ item.discount_value }}%
+                {% endif %}
+              </span>
+            {% endif %}
           </div>
         {% endfor %}
       </div>

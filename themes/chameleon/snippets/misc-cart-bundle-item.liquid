@@ -28,7 +28,13 @@
   </a>
   <div class="info">
     <a class="name" href="{{ bundle_item.url }}" ui-cart-item="title">{{ bundle_item.name }}</a>
-    <div class="variants" ui-cart-item="variant">
+    <div
+      class="variants"
+      ui-cart-item="variant"
+      {% if bundle_item.variations == null or bundle_item.variations.default %}
+        hidden
+      {% endif %}
+    >
       {% for variant in bundle_item.variations %}
         <span>{{ variant[1] }}</span>
         {% unless forloop.index == bundle_item.variations.size - 1 %}

@@ -129,8 +129,19 @@
         display: flex;
         gap: var(--spacing-16);
         flex-direction: column;
-        padding-block: var(--spacing-24);
 
+        &:not(:last-child) {
+          padding-block: var(--spacing-24);
+          border-block-end: 1px solid var(--color-surface-container);
+        }
+
+        &:first-child {
+          padding-block-start: var(--spacing-0);
+        }
+
+        &:last-child {
+          padding-block-start: var(--spacing-24);
+        }
         .head {
           display: flex;
           align-items: center;
@@ -157,6 +168,19 @@
               overflow: hidden;
               aspect-ratio: 1 / 1;
               border-radius: var(--radius-sm);
+              position: relative;
+
+              img {
+                object-fit: cover;
+              }
+
+              & > [ui-icon] {
+                opacity: 0.3;
+                position: absolute;
+                translate: -50% -50%;
+                left: 50%;
+                inset-block-start: 50%;
+              }
             }
 
             .info {
