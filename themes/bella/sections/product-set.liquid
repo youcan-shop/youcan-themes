@@ -1,0 +1,202 @@
+{{ 'section.product-set.css' | asset_url | stylesheet_tag }}
+
+<div
+  ui-section="product-set"
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+>
+  <div class="media-area" data-image-placement="{{ section.settings.image_placement }}">
+    {% if section.settings.image %}
+      <img
+        src="{{ section.settings.image.src }}"
+        alt="{{ section.settings.heading |  default: section.settings.subheading }}"
+        height="100%"
+        width="100%"
+        loading="lazy"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 100 %}
+    {% endif %}
+  </div>
+  <div class="core-area">
+    <div ui-slot="head">
+      <h4 class="subheading">{{ section.settings.subheading }}</h4>
+      <h1 class="heading">{{ section.settings.heading }}</h1>
+    </div>
+    <ol class="items-box">
+      {% for product in section.blocks %}
+        {% render 'block.product-item' %}
+      {% endfor %}
+    </ol>
+    {% if section.blocks.size %}
+      {% assign variant_ids = '' %}
+      {% for product in section.blocks %}
+        {% if product.settings.block_product.selected_or_first_available_variant.id %}
+          {% assign variant_ids = variant_ids | append: product.settings.block_product.selected_or_first_available_variant.id %}
+
+          {% unless forloop.last %}
+            {% assign variant_ids = variant_ids | append: ',' %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+      <ui-shop-button
+        bulk
+        quantity="1"
+        variant-id="{{ variant_ids }}"
+        class="cta-box"
+      >
+        <button ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
+          {% render 'misc.icon', name: 'hgi-plus-sign' %}
+          {% assign total = 0 %}
+
+          {% for product in section.blocks %}
+            {% assign default_variant = product.settings.block_product.selected_or_first_available_variant %}
+            {% assign price = default_variant.price | default: product.settings.block_product.price %}
+            {% assign compare_at_price = default_variant.compare_at_price | default: product.settings.block_product.compare_at_price %}
+
+            {% if compare_at_price %}
+              {% assign total = total | plus: compare_at_price %}
+            {% else %}
+              {% assign total = total | plus: price %}
+            {% endif %}
+          {% endfor %}
+          {{ 'general.add_all_to_cart' | t }} - {{ total | money }}
+        </button>
+      </ui-shop-button>
+    {% endif %}
+  </div>
+</div>
+
+{% if section.blocks.size %}
+  {% for product in section.blocks %}
+    {% if product.settings.block_product and product.settings.block_product.options.size %}
+      {% javascript %}
+        if (!window.productsVariants["{{ product.settings.block_product.id }}"]) {
+          window.productsVariants["{{ product.settings.block_product.id }}"] = JSON.parse({{ product.settings.block_product.variants | json }});
+        }
+      {% endjavascript %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% schema %}
+{
+  "label": "t:sections.product_set.label",
+  "templates": ["index", "product", "page"],
+  "limit": 3,
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:common.globals.image"
+    },
+    {
+      "type": "select",
+      "id": "image_placement",
+      "label": "t:common.globals.image_placement",
+      "options": [
+        { "label": "t:common.layout.image_placement.image_first", "value": "first" },
+        { "label": "t:common.layout.image_placement.image_second", "value": "second" }
+      ],
+      "default": "first"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:common.header.subheading",
+      "default": "t:sections.product_set.default.subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.product_set.default.heading"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "label": "t:sections.product_set.blocks.product_item.label",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "product",
+          "id": "block_product",
+          "label": "t:common.globals.product"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

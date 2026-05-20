@@ -1,0 +1,35 @@
+@layer sections {
+  [ui-section="announcement-bar"] {
+    --per-page: 1;
+
+    padding-inline: var(--spacing-24);
+
+    &[data-bottom-border="1"] {
+      border-block-end: 1px solid var(--color-surface-variant);
+    }
+
+    ui-carousel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(var(--spacing-32) + var(--spacing-8));
+      gap: var(--spacing-12);
+
+      & > .items {
+        width: var(--bar-width);
+
+        .item {
+          display: flex;
+          justify-content: center;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        @media (width <= 760px) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,41 @@
 # chameleon
 
+## 4.6.4
+
+### Patch Changes
+
+- b9e2ca3: Add footer layout object
+
+## 4.6.3
+
+### Patch Changes
+
+- 2c10f39: Fix multiple call of linked fields & location api
+
+## 4.6.2
+
+### Patch Changes
+
+- 7a5f55e: Fix empty meta description if product has no description
+
+## 4.6.1
+
+### Patch Changes
+
+- a05bdc4: Fix meta description not showing product description
+
+## 4.6.0
+
+### Minor Changes
+
+- 00ad585: Add ability to upload images when drafting a product review
+- e17f47b: Add ability to control announcement bar animation speed
+
+### Patch Changes
+
+- 77fa8fc: implement missing pixel events
+- 196d403: Check cart liquid data before passing it as JS variable
+
 ## 4.4.9
 
 ### Patch Changes
