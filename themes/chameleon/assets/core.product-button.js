@@ -96,10 +96,9 @@ if (!customElements.get("ui-product-button")) {
 
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
-          productVariantId,
-          attachedImage,
           quantity,
           fields,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         response

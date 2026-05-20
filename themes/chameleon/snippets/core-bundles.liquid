@@ -68,23 +68,34 @@
         {% endfor %}
       </div>
     </div>
-
-    <ui-product-button
-      class="footer"
-      quantity="1"
-      bundle-id="{{ bundle.id }}"
-    >
-      <button
-        ui-button
-        data-variant="primary"
-        data-size="md"
-      >
-        {{ 'bundle.add' | t }}
-        {% if bundle.saving_percentage %}
-          ({{ 'bundle.save' | t }}
-          {{ bundle.saving_percentage }}%)
+    <form ui-order-form>
+      {% if settings.checkout_type == 'express' %}
+        {% render 'core-express-checkout' %}
+      {% endif %}
+      <ui-product-button
+        class="footer"
+        quantity="1"
+        bundle-id="{{ bundle.id }}"
+        {% if settings.checkout_type == 'express' %}
+          checkout-type="express"
         {% endif %}
-      </button>
-    </ui-product-button>
+      >
+        <button
+          ui-button
+          data-variant="primary"
+          data-size="md"
+        >
+          {% if settings.checkout_type == 'express' %}
+            {{ 'general.buy_now' | t }}
+          {% else %}
+            {{ 'bundle.add' | t }}
+          {% endif %}
+          {% if bundle.saving_percentage %}
+            ({{ 'bundle.save' | t }}
+            {{ bundle.saving_percentage }}%)
+          {% endif %}
+        </button>
+      </ui-product-button>
+    </form>
   </ui-bundles>
 {% endfor %}
