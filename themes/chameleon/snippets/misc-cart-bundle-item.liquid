@@ -44,7 +44,23 @@
     </div>
   </div>
   <div class="price">
-    <span class="original" ui-cart-item="price">{{ bundle_item.price | default: 0 | money }}</span>
+    <div class="original" ui-cart-item="price">
+      <span
+        class="free"
+        {% if bundle_item.price %}
+          hidden
+        {% endif %}
+      >
+        {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 16 %} Free
+      </span>
+      <span
+        {% unless bundle_item.price %}
+          hidden
+        {% endunless %}
+      >
+        {{ bundle_item.price | default: 0 | money }}
+      </span>
+    </div>
     <span
       class="compare-at"
       ui-cart-item="compare-price"

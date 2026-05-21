@@ -50,11 +50,17 @@
           {% for bundle in type %}
             <div class="summary-title">
               <span class="title">{{ bundle.title }}</span>
-              <span class="count">(x{{ bundle.items.size }})</span>
+              <span class="count">
+                {% if t == 'single' %}
+                  (x{{ bundle.items.size }})
+                {% else %}
+                  {{ bundle.total_price | money }}
+                {% endif %}
+              </span>
             </div>
             <div class="order-info">
               {% for bundle_item in bundle.items %}
-                {% if forloop.first %}
+                {% if forloop.first and t == 'single' or t == 'multi' or t == 'buyxgety' %}
                   <div class="product">
                     <div class="image">
                       {% if bundle_item.image %}
@@ -82,12 +88,31 @@
                       {% endunless %}
                     </div>
                     <div class="price">
-                      <span class="total">{{ bundle.total_price | default: 0 | money }}</span>
-                      {% if bundle.compare_price %}
-                        <span class="compare-at">{{ bundle.compare_price | default: 0 | money }}</span>
+                      {% if t == 'single' %}
+                        <span class="total">{{ bundle.total_price | default: 0 | money }}</span>
+                        {% if bundle.compare_price %}
+                          <span class="compare-at">{{ bundle.compare_price | default: 0 | money }}</span>
+                        {% endif %}
+                      {% else %}
+                        {% unless bundle_item.price %}
+                          <span class="free">
+                            {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 16 %}
+                            Free
+                          </span>
+                        {% else %}
+                          <span class="total">{{ bundle_item.price | default: 0 | money }}</span>
+                          {% if bundle_item.compare_at_price %}
+                            <span class="compare-at">{{ bundle_item.compare_at_price | default: 0 | money }}</span>
+                          {% endif %}
+                        {% endunless %}
                       {% endif %}
                     </div>
                   </div>
+                  {% if t == 'buyxgety' and bundle_item.price and forloop.index != bundle.items.size %}
+                    <div class="operation">
+                      {% render 'ui-icon', name: 'add' %}
+                    </div>
+                  {% endif %}
                 {% endif %}
               {% endfor %}
             </div>

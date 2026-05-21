@@ -140,6 +140,10 @@
           gap: var(--spacing-12);
           justify-content: space-between;
 
+          &:not(:has(.free)) {
+            order: -1;
+          }
+
           .image {
             width: 80px;
             height: 80px;
@@ -198,6 +202,31 @@
               opacity: 0.5;
               text-decoration: line-through;
             }
+
+            .free {
+              color: var(--color-primary);
+              background-color: var(--color-primary-container);
+              padding: var(--spacing-4) var(--spacing-6);
+              font: var(--font-body-sm);
+              border-radius: var(--radius-xs);
+              display: flex;
+              align-items: center;
+              gap: var(--spacing-4);
+            }
+          }
+        }
+
+        .operation {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          order: -1;
+
+          [ui-icon] {
+            border: 1px dashed var(--color-surface-variant);
+            border-radius: var(--radius-rounded);
+            padding: var(--spacing-4);
+            background-color: var(--color-surface-container-lowest);
           }
         }
       }
