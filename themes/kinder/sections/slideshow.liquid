@@ -8,6 +8,10 @@
 
 <ui-carousel
   ui-section="slideshow"
+  {% if section.settings.auto_play %}
+    autoplay
+    interval="{{ section.settings.change_every | times: 1000 }}"
+  {% endif %}
   style="
     --bg-color: {{ section.settings.bg_color.hex }};
     --height: {{ section.settings.height }}vh;
@@ -20,10 +24,6 @@
     ui-slot="carousel"
     aria-orientation="vertical"
     data-align="center"
-    {% if section.settings.auto_play %}
-      autoplay
-      interval="{{ section.settings.change_every | times: 1000 }}"
-    {% endif %}
   >
     {% for slide in section.blocks %}
       {% render 'block.slide' %}
@@ -112,7 +112,7 @@
       "id": "height",
       "label": "t:common.globals.height",
       "options": [
-        { "label": "t:common.layout.size.small", "value": "32" },
+        { "label": "t:common.layout.size.small", "value": "40" },
         { "label": "t:common.layout.size.medium", "value": "64" },
         { "label": "t:common.layout.size.large", "value": "80" }
       ],
