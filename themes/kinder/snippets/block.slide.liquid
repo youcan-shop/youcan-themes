@@ -55,31 +55,33 @@
           {% endif %}
         </div>
         <div class="actions">
-          <a
-            ui-slot="button"
-            data-variant="primary"
-            data-size="lg"
-            {% if slide.setting.first_button_link %}
-              href="{{ slide.setting.first_button_link }}"
-            {% endif %}
-          >
-            <span ui-slot="button-front">
-              {{ slide.settings.first_button_label }}
-            </span>
-          </a>
-          <a
-            ui-slot="button"
-            data-variant="tertiary"
-            data-size="lg"
-            {% if slide.setting.second_button_link %}
-              href="{{ slide.setting.second_button_link }}"
-            {% endif %}
-          >
-            <span ui-slot="button-front">
+          {% if slide.settings.first_button_label %}
+            <a
+              ui-slot="button"
+              data-variant="primary"
+              data-size="lg"
+              {% if slide.settings.first_button_link %}
+                href="{{ slide.settings.first_button_link }}"
+              {% endif %}
+            >
+              <span ui-slot="button-front">
+                {{ slide.settings.first_button_label }}
+              </span>
+            </a>
+          {% endif %}
+          {% if slide.settings.second_button_label %}
+            <a
+              ui-slot="button"
+              data-variant="neutral"
+              data-size="lg"
+              {% if slide.settings.second_button_link %}
+                href="{{ slide.settings.second_button_link }}"
+              {% endif %}
+            >
               {{ slide.settings.second_button_label }}
               <i class="hgi hgi-stroke hgi-rounded hgi-arrow-right-02"></i>
-            </span>
-          </a>
+            </a>
+          {% endif %}
         </div>
       </div>
       <div class="media"></div>

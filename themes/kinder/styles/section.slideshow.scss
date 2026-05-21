@@ -40,8 +40,22 @@
           color: var(--slide-fg);
 
           [ui-slot="button"] {
-            --button-bg: var(--fg-color);
-            --button-fg: var(--bg-color);
+            &[data-variant="primary"] {
+              --button-bg: var(--fg-color);
+              --button-fg: var(--bg-color);
+            }
+
+            &[data-variant="neutral"] {
+              i {
+                transition: transform var(--transition-bouncy-default-effects);
+              }
+
+              &:hover {
+                i {
+                  transform: translateX(var(--spacing-4));
+                }
+              }
+            }
           }
 
           .content {
