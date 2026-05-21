@@ -154,9 +154,21 @@
     }
 
     .controls {
+      --controls-fg-color: oklch(from var(--bg-color) clamp(0, (0.6 - l) * 99999, 1) 0 0deg);
+
       display: flex;
       justify-content: space-between;
+      height: 48px;
       padding-inline: 10%;
+      gap: var(--spacing-24);
+
+      &:not([data-show-arrows]) {
+        justify-content: center;
+      }
+
+      [ui-slot="button"][data-variant="neutral"] {
+        --button-fg: var(--controls-fg-color);
+      }
 
       @media (width <= 1024px) {
         padding-inline: var(--spacing-16);
@@ -165,6 +177,7 @@
 
     .pagination {
       display: flex;
+      gap: var(--spacing-8);
       position: relative;
       align-items: center;
       justify-content: center;
@@ -185,22 +198,20 @@
         transition: var(--transition-standard-default-spatial);
         border: none;
         background-color: transparent;
-        color: var(--color-primary);
+        color: var(--controls-fg-color);
         cursor: pointer;
 
         &::before {
           content: "";
           display: flex;
-          width: var(--spacing-8);
-          height: var(--spacing-8);
+          width: 20px;
+          height: 4px;
           transition: var(--transition-standard-default-spatial);
           border-radius: var(--radius-rounded);
           background-color: color-mix(in srgb, currentcolor 38%, transparent);
         }
 
         &[aria-selected="true"] {
-          width: var(--spacing-48);
-
           &::before {
             width: inherit;
             background-color: currentcolor;
