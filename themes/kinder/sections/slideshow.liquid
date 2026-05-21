@@ -2,22 +2,12 @@
 
 <ui-carousel
   ui-section="slideshow"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
-  data-show-content-bellow-image="{{ section.settings.show_content_below_image }}"
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
-  {% if section.blocks.size > 1 %}
-    data-gap="32"
-    data-item-size="92"
-  {% endif %}
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --height: {{ section.settings.height }}vh;
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
 >
   <ul
     ui-carousel="wrapper"
@@ -33,7 +23,23 @@
       {% render 'block.slide' %}
     {% endfor %}
   </ul>
-  {% if section.settings.show_controls and section.blocks.size > 1 %}
+  {% comment %}
+    TODO:
+    Pagination settings
+  {% endcomment %}
+  <div class="controls">
+    <button
+      ui-carousel="arrow-previous"
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="stroke"
+      data-size="lg"
+      data-as-icon
+      data-flip-icon-in-rtl
+      aria-label="Previous"
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+    </button>
     <div class="pagination" data-position="{{ section.settings.arrows_position }}">
       {% for marker in section.blocks %}
         <button
@@ -45,7 +51,19 @@
         ></button>
       {% endfor %}
     </div>
-  {% endif %}
+    <button
+      ui-carousel="arrow-next"
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="stroke"
+      data-size="lg"
+      data-as-icon
+      data-flip-icon-in-rtl
+      aria-label="Next"
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+    </button>
+  </div>
 </ui-carousel>
 
 {% schema %}
@@ -57,6 +75,16 @@
   "settings": [
     {
       "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "header",
       "content": "t:common.headers.general"
     },
     {
@@ -64,11 +92,11 @@
       "id": "height",
       "label": "t:common.globals.height",
       "options": [
-        { "label": "t:common.layout.size.small", "value": "35" },
-        { "label": "t:common.layout.size.medium", "value": "60" },
-        { "label": "t:common.layout.size.large", "value": "75" }
+        { "label": "t:common.layout.size.small", "value": "32" },
+        { "label": "t:common.layout.size.medium", "value": "64" },
+        { "label": "t:common.layout.size.large", "value": "80" }
       ],
-      "default": "75"
+      "default": "64"
     },
     {
       "type": "checkbox",
@@ -120,7 +148,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 0
+      "default": 40
     },
     {
       "type": "range",
@@ -130,7 +158,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 24
+      "default": 40
     }
   ],
   "blocks": [
@@ -181,11 +209,11 @@
           "id": "content_order",
           "label": "t:sections.slideshow.imags.content_order.label",
           "options": [
-            { "label": "t:sections.slideshow.imags.content_order.first", "value": "first" },
-            { "label": "t:sections.slideshow.imags.content_order.middle", "value": "middle" },
-            { "label": "t:sections.slideshow.imags.content_order.last", "value": "last" }
+            { "label": "t:sections.slideshow.imags.content_order.first", "value": "-1" },
+            { "label": "t:sections.slideshow.imags.content_order.middle", "value": "0" },
+            { "label": "t:sections.slideshow.imags.content_order.last", "value": "1" }
           ],
-          "default": "center"
+          "default": "0"
         },
         {
           "type": "select",
@@ -215,13 +243,13 @@
         },
         {
           "type": "color",
-          "id": "bg_color",
+          "id": "slide_bg_color",
           "label": "t:common.colors.bg_color",
           "default": "#49AB6A"
         },
         {
           "type": "color",
-          "id": "fg_color",
+          "id": "slide_fg_color",
           "label": "t:common.colors.fg_color",
           "default": "#FEFEFE"
         },
@@ -249,7 +277,7 @@
           "type": "text",
           "id": "first_button_label",
           "label": "t:common.button.label",
-          "default": "t:sections.slideshow.blocks.slide.default.button"
+          "default": "Shop Now"
         },
         {
           "type": "url",
@@ -265,7 +293,7 @@
           "type": "text",
           "id": "second_button_label",
           "label": "t:common.button.label",
-          "default": ""
+          "default": "Learn more"
         },
         {
           "type": "url",

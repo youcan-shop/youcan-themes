@@ -15,78 +15,65 @@
   ui-block="slide"
   ui-slot="carousel-item"
   {{ slide.youcan_attributes }}
-  {% if slide.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ slide.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ slide.settings.main_color.chroma }};
-      --brand-hue: {{ slide.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ slide.settings.color_intensity }}"
-  {% endif %}
   data-alignment="{{ section.settings.mobile_content_alignment }}"
+  style="
+    --slide-bg: {{ slide.settings.slide_bg_color.hex }};
+    --slide-fg: {{ slide.settings.slide_fg_color.hex }};
+  "
 >
-  <div
-    class="media"
-    data-height="{{ section.settings.height }}"
-    data-overlay="{{ 1 | minus: overlay_opacity }}"
-  >
-    {% if slide.settings.slide_desktop_image.src or slide.settings.slide_mobile_image.src %}
-      <picture>
-        {% if slide.settings.slide_mobile_image.src %}
-          <source srcset="{{ slide.settings.slide_mobile_image.src }}" media="(max-width: 768px)">
-        {% endif %}
-        {% if settings.image.src %}
-          <source srcset="{{ slide.settings.slide_desktop_image.src }}" media="(min-width: 769px)">
-        {% endif %}
-        <img
-          src="{{ slide.settings.slide_desktop_image.src | default: slide.settings.slide_mobile_image.src }}"
-          alt="Slide {{forloop.index }}"
-          height="100%"
-          width="100%"
-          {% if forloop.index0 %}
-            loading="eager"
-          {% else %}
-            loading="lazy"
-          {% endif %}
-        >
-      </picture>
-    {% else %}
-      {% render 'misc.image-fallback', icon_size: '100' %}
-    {% endif %}
-  </div>
-  <div class="content">
-    <div ui-slot="head" data-height="{{ section.settings.height }}">
-      {% if slide.settings.slide_subheading %}
-        <h4 class="subheading">{{ slide.settings.slide_subheading }}</h4>
-      {% endif %}
-      {% if slide.settings.slide_heading %}
-        <h1 class="heading">{{ slide.settings.slide_heading }}</h1>
-      {% endif %}
-      {% if slide.settings.slide_description %}
-        <p class="description">{{ slide.settings.slide_description }}</p>
-      {% endif %}
-    </div>
-    {% if slide.settings.slide_button_label %}
-      <a
-        class="cta"
-        {% if slide.settings.slide_button_style == 'underline' %}
-          ui-slot="link-button"
-          data-underline="true"
-        {% else %}
-          ui-slot="button"
-          data-variant="primary"
-        {% endif %}
-        {% if slide.settings.slide_button_style == 'primary' %}
-          data-mode="filled"
-        {% elsif slide.settings.slide_button_style == 'secondary' %}
-          data-mode="lighter"
-        {% endif %}
-        data-size="lg"
-        href="{{ slide.settings.slide_button_link }}"
+  <div class="slide-wrapper">
+    <div class="first-img">img1</div>
+    <div
+      class="main-content"
+      style="
+        --fg-color: {{ slide.settings.slide_fg_color.hex }};
+        --bg-color: {{ slide.settings.slide_bg_color.hex }};
+        --content-order: {{ slide.settings.content_order }};
+      "
+    >
+      <div
+        class="content"
+        data-y-alignment="{{ slide.settings.vertical_alignment }}"
+        data-x-alignment="{{ slide.settings.content_alignment }}"
       >
-        {{ slide.settings.slide_button_label }}
-      </a>
-    {% endif %}
+        <div ui-slot="head">
+          {% if slide.settings.slide_heading %}
+            <h1 class="heading">{{ slide.settings.slide_heading }}</h1>
+          {% endif %}
+          {% if slide.settings.slide_description %}
+            <p class="description">{{ slide.settings.slide_description }}</p>
+          {% endif %}
+        </div>
+        <div class="actions">
+          <a
+            ui-slot="button"
+            data-variant="primary"
+            data-size="lg"
+            {% if slide.setting.first_button_link %}
+              href="{{ slide.setting.first_button_link }}"
+            {% endif %}
+          >
+            <span ui-slot="button-front">
+              {{ slide.settings.first_button_label }}
+            </span>
+          </a>
+          <a
+            ui-slot="button"
+            data-variant="tertiary"
+            data-size="lg"
+            {% if slide.setting.second_button_link %}
+              href="{{ slide.setting.second_button_link }}"
+            {% endif %}
+          >
+            <span ui-slot="button-front">
+              {{ slide.settings.second_button_label }}
+              <i class="hgi hgi-stroke hgi-rounded hgi-arrow-right-02"></i>
+            </span>
+          </a>
+        </div>
+      </div>
+      <div class="media"></div>
+    </div>
+    <div class="second-img">img2</div>
   </div>
 </li>
