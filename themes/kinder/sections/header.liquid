@@ -12,15 +12,13 @@
 
 <ui-header
   ui-layout="header"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
+
   {% if is_sticky %}
     data-sticky-mode="{{ section.settings.header_sticky_type }}"
   {% endif %}
@@ -139,29 +137,32 @@
       <button
         class="search"
         ui-slot="button"
-        data-variant="primary"
-        data-mode="ghost"
-        data-size="md"
-        data-as-icon
+        data-variant="secondary"
+        data-size="lg"
         aria-label="Search"
         popovertarget="search"
       >
-        {% render 'misc.icon', name: 'hgi-search-01' %}
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: 'hgi-search-02', size: 24 %}
+          <span>{{ 'header.search' | t }}</span>
+        </span>
       </button>
       <button
         class="cart-drawer-trigger"
         ui-slot="button"
-        data-variant="primary"
-        data-mode="ghost"
-        data-size="md"
-        data-as-icon
+        data-variant="secondary"
+        data-size="lg"
+        p
         aria-label="Cart"
         popovertarget="cart"
       >
-        {% render 'misc.icon', name: settings.cart_icon %}
-        <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
-          <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
-        </div>
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: settings.cart_icon, size: 24 %}
+          <span>{{ 'header.cart' | t }}</span>
+          <div ui-slot="badge" data-variant="filled" data-size="md" data-color="primary" data-square="true">
+            <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+          </div>
+        </span>
       </button>
     </div>
   {% endif %}

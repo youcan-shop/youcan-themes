@@ -12,12 +12,21 @@
     grid-template-areas:"logo menu actions";
     grid-template-columns:1fr 4fr 1fr;
     align-items:center;
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px);
+    padding-block:var(--top-spacing) var(--bottom-spacing);
+    padding-inline:10%;
     transform:translateY(0%);
     transition:box-shadow var(--transition-standard-fast-spatial), transform var(--transition-standard-slow-spatial);
-    background-color:inherit;
+    background-color:var(--bg-color);
+    color:var(--fg-color);
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
+  }
+  [ui-layout=header] .actions [ui-slot=button-front]{
+    background-color:oklch(from var(--button-bg) calc(l - 0.03) c h);
+    color:var(--fg-color);
+  }
+  [ui-layout=header] .actions .cart-drawer-trigger [ui-slot=button-front]{
+    padding-inline-end:var(--spacing-12);
   }
   [ui-layout=header][data-shadow=true]{
     border-block-end:none;
