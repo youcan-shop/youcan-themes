@@ -85,24 +85,26 @@
           {% endif %}
         </div>
       </div>
-      <div class="media">
-        <picture>
-          {% if slide.settings.mobile_content_image.src %}
-            <source srcset="{{ slide.settings.mobile_content_image.src }}" media="(max-width: 768px)">
-          {% endif %}
-          {% if slide.settings.desktop_content_image.src %}
-            <source srcset="{{ slide.settings.desktop_content_image.src }}" media="(min-width: 769px)">
-          {% endif %}
-          <img
-            src="{{ slide.settings.desktop_content_image.src | default: slide.settings.mobile_content_image.src }}"
-            alt="content-image"
-            loading="lazy"
-            width="100%"
-            height="100%"
-            loading="lazy"
-          >
-        </picture>
-      </div>
+      {% if slide.settings.desktop_content_image.src or slide.settings.mobile_content_image.src %}
+        <div class="media">
+          <picture>
+            {% if slide.settings.mobile_content_image.src %}
+              <source srcset="{{ slide.settings.mobile_content_image.src }}" media="(max-width: 768px)">
+            {% endif %}
+            {% if slide.settings.desktop_content_image.src %}
+              <source srcset="{{ slide.settings.desktop_content_image.src }}" media="(min-width: 769px)">
+            {% endif %}
+            <img
+              src="{{ slide.settings.desktop_content_image.src | default: slide.settings.mobile_content_image.src }}"
+              alt="content-image"
+              loading="lazy"
+              width="100%"
+              height="100%"
+              loading="lazy"
+            >
+          </picture>
+        </div>
+      {% endif %}
     </div>
     {% if slide.settings.second_image %}
       <div class="first-img">
