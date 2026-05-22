@@ -1,5 +1,5 @@
-if (!customElements.get("ui-navbar")) {
-  class Navbar extends HTMLElement {
+if (!customElements.get("ui-header")) {
+  class Header extends HTMLElement {
     constructor() {
       super();
 
@@ -50,5 +50,5 @@ if (!customElements.get("ui-navbar")) {
     }
   }
 
-  customElements.define("ui-navbar", Navbar);
+  customElements.define("ui-header", Header);
 }
