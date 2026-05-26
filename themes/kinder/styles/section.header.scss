@@ -1,6 +1,9 @@
 @layer sections {
   #youcan-section--header {
-    --spring-width-offset: 10px;
+    .header-root {
+      --spring-width-offset: 10px;
+      --sheet-background: var(--bg-color);
+    }
 
     &:has([data-sticky-mode]:not([data-sticky-mode="none"])) {
       position: sticky;
@@ -25,16 +28,16 @@
     color: var(--fg-color);
     gap: var(--spacing-16);
 
+    [ui-slot="button-front"] {
+      background-color: oklch(from var(--button-bg) calc(l - 0.03) c h);
+      color: var(--fg-color);
+    }
+
     .actions {
       display: flex;
       grid-area: actions;
       flex-shrink: 0;
       gap: var(--spacing-8);
-
-      [ui-slot="button-front"] {
-        background-color: oklch(from var(--button-bg) calc(l - 0.03) c h);
-        color: var(--fg-color);
-      }
 
       .cart-drawer-trigger {
         [ui-slot="button-front"] {

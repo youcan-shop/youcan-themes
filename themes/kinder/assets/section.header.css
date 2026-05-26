@@ -1,6 +1,7 @@
 @layer sections{
-  #youcan-section--header{
+  #youcan-section--header .header-root{
     --spring-width-offset:10px;
+    --sheet-background:var(--bg-color);
   }
   #youcan-section--header:has([data-sticky-mode]:not([data-sticky-mode=none])){
     position:sticky;
@@ -22,15 +23,15 @@
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
   }
+  [ui-layout=header] [ui-slot=button-front]{
+    background-color:oklch(from var(--button-bg) calc(l - 0.03) c h);
+    color:var(--fg-color);
+  }
   [ui-layout=header] .actions{
     display:flex;
     grid-area:actions;
     flex-shrink:0;
     gap:var(--spacing-8);
-  }
-  [ui-layout=header] .actions [ui-slot=button-front]{
-    background-color:oklch(from var(--button-bg) calc(l - 0.03) c h);
-    color:var(--fg-color);
   }
   [ui-layout=header] .actions .cart-drawer-trigger [ui-slot=button-front]{
     padding-inline-end:var(--spacing-12);
