@@ -52,7 +52,7 @@
     {% if keywords %}
       {% assign words = keywords | split: ',' %}
       <div class="terms">
-        <h4 class="label">{{ 'search.drawer.terms_recommendations' | t }}</h4>
+        <h4 class="label">{{ 'search.drawer.search_terms' | t }}:</h4>
         <div class="options">
           {% for keyword in words %}
             <a
@@ -68,9 +68,8 @@
       </div>
     {% endif %}
     {% if collection_id %}
-      <hr ui-slot="divider" data-variant="line">
       <div class="products">
-        <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
+        <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}:</h4>
         {% paginate collection.products by 8 id category_id: collection_id %}
           <div class="items">
             {% for product in items %}
