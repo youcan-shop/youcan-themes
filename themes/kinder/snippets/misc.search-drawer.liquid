@@ -29,8 +29,24 @@
   <div ui-slot="sheet-body">
     <form action="/search">
       <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
-        <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
-        <input ui-slot="input" name="q" type="text" placeholder="{{ 'search.placeholder' | t }}">
+        <input
+          ui-slot="input"
+          name="q"
+          type="text"
+          minlength="3"
+          required
+          placeholder="{{ 'search.placeholder' | t }}"
+        >
+        <button
+          aria-label="search"
+          ui-slot="input-button"
+          data-variant="ghost"
+          data-size="lg"
+          aria-label="Search"
+          popovertarget="search"
+        >
+          <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-02"></i>
+        </button>
       </fieldset>
     </form>
     {% if keywords %}
