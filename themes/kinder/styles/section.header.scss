@@ -1,8 +1,14 @@
 @layer sections {
   #youcan-section--header {
     .header-root {
-      --spring-width-offset: 10px;
+      --spring-width-offset: 0px;
       --sheet-background: var(--bg-color);
+
+      [ui-slot="button"] {
+        --button-bg: oklch(from var(--bg-color) calc(l - 0.03) c h) !important;
+        --button-fg: var(--fg-color) !important
+      ;
+      }
     }
 
     &:has([data-sticky-mode]:not([data-sticky-mode="none"])) {
@@ -27,11 +33,6 @@
     background-color: var(--bg-color);
     color: var(--fg-color);
     gap: var(--spacing-16);
-
-    [ui-slot="button-front"] {
-      background-color: oklch(from var(--button-bg) calc(l - 0.03) c h);
-      color: var(--fg-color);
-    }
 
     .actions {
       display: flex;
