@@ -47,40 +47,43 @@
   </div>
   <div ui-slot="sheet-footer">
     {% if section.settings.menu_show_social_media_links and has_social_links == true %}
-      <ul class="social-links">
-        {% for link in store.brand.social_links %}
-          {% assign platform = link[0] %}
-          {% assign url = link[1] %}
+      <div class="social-links">
+        <span class="label">{{ 'footer.follow_us' | t }}</span>
+        <ul class="links">
+          {% for link in store.brand.social_links %}
+            {% assign platform = link[0] %}
+            {% assign url = link[1] %}
 
-          {% case platform %}
-            {% when 'facebook' %}
-              {% assign icon = 'hgi-facebook-01' %}
-            {% when 'twitter' %}
-              {% assign icon = 'hgi-new-twitter-rectangle' %}
-            {% when 'instagram' %}
-              {% assign icon = 'hgi-instagram' %}
-            {% when 'tiktok' %}
-              {% assign icon = 'hgi-tiktok' %}
-          {% endcase %}
+            {% case platform %}
+              {% when 'facebook' %}
+                {% assign icon = 'hgi-facebook-01' %}
+              {% when 'instagram' %}
+                {% assign icon = 'hgi-instagram' %}
+              {% when 'twitter' %}
+                {% assign icon = 'hgi-new-twitter-rectangle' %}
+              {% when 'tiktok' %}
+                {% assign icon = 'hgi-tiktok' %}
+            {% endcase %}
 
-          {% if url != null %}
-            <li class="link">
-              <a
-                ui-slot="button"
-                data-variant="primary"
-                data-mode="ghost"
-                data-size="lg"
-                data-as-icon
-                href="{{ url }}"
-                target="_blank"
-                title="{{ platform }}"
-              >
-                {% render 'misc.icon', name: icon %}
-              </a>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
+            {% if url != null %}
+              <li class="link">
+                <a
+                  ui-slot="button"
+                  data-variant="primary"
+                  data-mode="ghost"
+                  data-size="lg"
+                  data-as-icon
+                  href="{{ url }}"
+                  target="_blank"
+                  title="{{ platform }}"
+                >
+                  {% render 'misc.icon', name: icon, size: 32 %}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
     {% endif %}
   </div>
 </div>
