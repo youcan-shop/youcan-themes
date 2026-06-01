@@ -1,0 +1,108 @@
+{{ 'misc.add-ons.css' | asset_url | stylesheet_tag }}
+
+<ui-carousel class="add-ons" {{ block.youcan_attributes }}>
+  <div class="head">
+    {% if block.settings.heading or block.settings.description %}
+      <div class="group">
+        {% if block.settings.heading %}
+          <h3 class="title">{{ block.settings.heading }}</h3>
+        {% endif %}
+        {% if block.settings.description %}
+          <p class="description">{{ block.settings.description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if product.related_products.size > 1 and block.settings.style == 'slider' %}
+      <div class="arrows">
+        <button
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-mode="stroke"
+          data-size="xs"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+        </button>
+        <button
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-mode="stroke"
+          data-size="xs"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+  {% if product.related_products.size %}
+    <ul
+      class="list"
+      data-type="{{ block.settings.style }}"
+      ui-carousel="wrapper"
+      ui-slot="carousel"
+      aria-orientation="vertical"
+    >
+      {% for p in product.related_products %}
+        {% assign default_variant = p.selected_or_first_available_variant %}
+        {% assign price = default_variant.price | default: p.price %}
+        {% assign compare_at_price = default_variant.compare_at_price | default: p.compare_at_price %}
+
+        <li class="product-item" ui-carousel="item" ui-slot="carousel-item">
+          {% assign default_title = 'general.product' | t | append: ' ' | append: forloop.index %}
+          {% assign title = p.name | default: default_title %}
+
+          <a class="media" href="{{ p.url }}" title="{{ title }}">
+            {% if p.preview_image %}
+              <img
+                src="{{ p.preview_image.original }}"
+                alt="{{ title }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
+            {% endif %}
+            {% unless default_variant.available %}
+              <div class="sold-out">
+                <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
+              </div>
+            {% endunless %}
+          </a>
+          <div class="info">
+            <a class="name" href="{{ p.url }}" title="{{ title }}">{{ title }}</a>
+            <div class="price">
+              <span class="original">{{ price | default: 0 | money }}</span>
+              {% if compare_at_price %}
+                <span class="compare-at">{{ compare_at_price | default: 0 | money }}</span>
+              {% endif %}
+            </div>
+            {% unless default_variant.variations == null or default_variant.variations.default %}
+              <div class="variants">
+                {% for variant in default_variant.variations %}
+                  <span class="variant">{{ variant[1] }}</span>
+                {% endfor %}
+              </div>
+            {% endunless %}
+          </div>
+          <input
+            ui-slot="checkbox"
+            type="checkbox"
+            value="{{ default_variant.id }}"
+            {% unless default_variant.available %}
+              disabled
+            {% endunless %}
+            ui-add-on
+          >
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {% render 'misc.empty', type: 'block' %}
+  {% endif %}
+</ui-carousel>

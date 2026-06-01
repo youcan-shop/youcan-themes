@@ -1,0 +1,165 @@
+{{ 'section.video-reviews.css' | asset_url | stylesheet_tag }}
+{{ 'section.video-reviews.js' | asset_url | script_tag_deferred }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="video-reviews"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+{% assign has_video = false %}
+
+<ui-video-reviews>
+  <ui-carousel
+    ui-section="video-reviews"
+    {% if section.settings.custom_color %}
+      data-custom-color
+      data-theme="{{ section.settings.theme }}"
+    {% endif %}
+  >
+    {% if section.settings.heading %}
+      <div class="head">
+        <h2 class="title">{{ section.settings.heading }}</h2>
+        {% if section.blocks.size > 1 and section.settings.arrows %}
+          <div class="arrows">
+            <button
+              ui-carousel="arrow-previous"
+              ui-slot="button"
+              data-mode="stroke"
+              data-size="xs"
+              data-as-icon
+              data-flip-icon-in-rtl
+              aria-label="Previous"
+            >
+              {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+            </button>
+            <button
+              ui-carousel="arrow-next"
+              ui-slot="button"
+              data-mode="stroke"
+              data-size="xs"
+              data-as-icon
+              data-flip-icon-in-rtl
+              aria-label="Next"
+            >
+              {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+            </button>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if section.blocks.size %}
+      <ul class="list" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+        {% for block in section.blocks %}
+          {% if block.settings.url %}
+            {% assign has_video = true %}
+          {% endif %}
+
+          <li ui-carousel="item" ui-slot="carousel-item" {{ block.youcan_attributes }}>
+            <button
+              class="video-item"
+              data-aspect-ratio="{{ section.settings.aspect_ratio }}"
+              {% if has_video == true %}
+                ui-video-reviews="item"
+                data-video-src="{{ block.settings.url }}"
+              {% endif %}
+            >
+              {% if block.settings.thumbnail %}
+                <img
+                  src="{{ block.settings.thumbnail.src }}"
+                  alt="Video {{ forloop.index }}"
+                  height="100%"
+                  width="100%"
+                  loading="lazy"
+                >
+                <span class="play" ui-slot="button" data-mode="3d" data-size="md">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" height="20" width="20">
+                    <path d="M21.4086 9.35258c2.1219 1.15392 2.1219 4.14092 0 5.29482L8.59662 21.6145C6.53435 22.736 4 21.2763 4 18.9671L4 5.0329c0 -2.30922 2.53435 -3.76888 4.59661 -2.64742l12.81199 6.9671Z" fill="currentColor" stroke-width="1"></path>
+                  </svg>
+                </span>
+              {% else %}
+                {% render 'misc.image-fallback', type: 'video', icon_size: 40 %}
+              {% endif %}
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+
+      {% render 'misc.video-player' %}
+    {% else %}
+      {% render 'misc.empty', type: 'block' %}
+    {% endif %}
+  </ui-carousel>
+</ui-video-reviews>
+
+{% schema %}
+{
+  "label": "t:sections.video_reviews.label",
+  "limit": 3,
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.header" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.video_reviews.default.heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "arrows",
+      "label": "t:common.header.show_arrows",
+      "default": true
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "portrait"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "label": "t:sections.video_reviews.blocks.video.label",
+      "settings": [
+        { "type": "url", "id": "url", "label": "t:sections.video_reviews.blocks.video.video_url" },
+        {
+          "type": "paragraph",
+          "content": "t:sections.video_reviews.blocks.video.hint"
+        },
+        { "type": "image_picker", "id": "thumbnail", "label": "t:sections.video_reviews.blocks.video.thumbnail_image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

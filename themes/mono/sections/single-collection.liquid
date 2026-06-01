@@ -1,0 +1,290 @@
+{{ 'section.single-collection.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="single-collection"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="single-collection"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% paginate collection.products by 24 cod, category_id: category.id %}
+    <div class="head">
+      <a
+        ui-slot="button"
+        data-mode="3d"
+        data-size="md"
+        data-as-icon
+        data-flip-icon-in-rtl
+        aria-label="Back to collections"
+        href="/collections"
+      >
+        {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+      </a>
+      <form action="">
+        <input
+          ui-slot="input"
+          type="search"
+          name="q"
+          placeholder="{{ 'header.navigate.search.placeholder' | t }}"
+        >
+      </form>
+      {% render 'misc.sort', url: previous_page %}
+    </div>
+    {% if subCategories.size > 0 %}
+      <ul class="sub-collections-list" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+        {% for subCollection in subCategories %}
+          <li ui-carousel="item" ui-slot="carousel-item">
+            <a class="sub-collection-item" href="/collections/{{ subCollection.slug }}">
+              {{ subCollection.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <div class="results">
+      <span class="title">{{ category.name }}</span>
+      <span class="count">
+        {{- items.size }}
+        {{ 'general.products' | t -}}
+      </span>
+    </div>
+    {% if items.size > 0 %}
+      <ul class="collections-list">
+        {% for product in items %}
+          {% assign default_variant = product.selected_or_first_available_variant %}
+          {% assign price = default_variant.price | default: product.price %}
+          {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+          <li class="product-item">
+            <a
+              class="media"
+              href="{{ product.url }}"
+              title="{{ product.name }}"
+              data-aspect-ratio="{{ section.settings.image_aspect_ratio }}"
+            >
+              {% if product.preview_image %}
+                <img
+                  src="{{ product.preview_image.original }}"
+                  alt="{{ product.name }}"
+                  height="100%"
+                  width="100%"
+                  {% if forloop.index < 5 %}
+                    loading="eager"
+                  {% else %}
+                    loading="lazy"
+                  {% endif %}
+                >
+              {% else %}
+                {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
+              {% endif %}
+              {% unless default_variant.available %}
+                <div class="sold-out">
+                  <span ui-slot="status-badge" data-variant="stroke" data-status="failed">{{ 'general.sold_out' | t }}</span>
+                </div>
+              {% endunless %}
+              {% if section.settings.custom_badge %}
+                {% render 'misc.product-badge',
+                  type: section.settings.badge_type,
+                  style: section.settings.badge_style,
+                  position: section.settings.badge_position,
+                  custom_text: section.settings.badge_text,
+                  threshold: section.settings.badge_threshold
+                %}
+              {% else %}
+                {% render 'misc.product-badge' %}
+              {% endif %}
+            </a>
+            <div class="content">
+              <a class="name" href="{{ product.url }}" title="{{ product.name }}">
+                {{ product.name }}
+              </a>
+              <div class="price">
+                <span class="original">{{ price | money }}</span>
+                {% if compare_at_price %}
+                  <span class="compare-at">{{ compare_at_price | money }}</span>
+                {% endif %}
+              </div>
+              {% if section.settings.inventory_tracking and product.isTrackingInventory %}
+                {% render 'misc.inventory-badge', count: default_variant.inventory, threshold: section.settings.inventory_threshold %}
+              {% endif %}
+              {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
+                {% if product.variants.size > 1 %}
+                  <button
+                    ui-slot="button"
+                    data-mode="stroke"
+                    data-size="sm"
+                    popovertarget="product-{{ product.id }}"
+                  >
+                    {{ 'general.quick_look' | t }}
+                  </button>
+                {% else %}
+                  {% render 'core.shop-button', size: 'sm' %}
+                {% endif %}
+              {% else %}
+                {% if default_variant.available %}
+                  {% if product.variants.size > 1 %}
+                    <a ui-slot="button" data-mode="stroke" data-size="sm" href="{{ product.url }}">
+                      {{ 'general.view' | t }}
+                    </a>
+                  {% else %}
+                    <button
+                      ui-slot="button"
+                      data-mode="filled"
+                      data-size="sm"
+                      type="button"
+                      popovertarget="express-checkout-{{ product.id }}"
+                    >
+                      {{ 'general.buy_now' | t }}
+                    </button>
+                  {% endif %}
+                {% else %}
+                  <button ui-slot="button" data-mode="filled" data-size="sm" disabled>
+                    {{ 'general.out_of_stock' | t }}
+                  </button>
+                {% endif %}
+              {% endif %}
+            </div>
+          </li>
+
+          {% if default_variant.available %}
+            {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
+              {% if product.variants.size > 1 %}
+                {% render 'misc.product-detail' %}
+              {% endif %}
+            {% else %}
+              {% unless product.variants.size > 1 %}
+                {% render 'core.express-checkout', style: 'open-drawer' %}
+              {% endunless %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% render 'misc.pagination' %}
+    {% else %}
+      {% render 'misc.empty', type: 'collection' %}
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.single_collection.label",
+  "settings": [
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:common.aspect_ratio.with_image",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "inventory_tracking", "label": "t:common.inventory.tracking", "default": true },
+    {
+      "type": "range",
+      "id": "inventory_threshold",
+      "label": "t:common.inventory.threshold",
+      "step": 1,
+      "min": 2,
+      "max": 100,
+      "default": 10,
+      "visible_if": { "setting_id": "inventory_tracking", "value": true }
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    { "type": "header", "content": "t:common.headers.badge" },
+    { "type": "checkbox", "id": "custom_badge", "label": "t:common.custom_badge.label" },
+    {
+      "type": "select",
+      "id": "badge_type",
+      "label": "t:common.custom_badge.type.label",
+      "options": [
+        { "label": "t:common.custom_badge.type.options.discount", "value": "discount-percentage" },
+        { "label": "t:common.custom_badge.type.options.discount_amount", "value": "discount-amount" },
+        { "label": "t:common.custom_badge.type.options.low_stock", "value": "low-stock" },
+        { "label": "t:common.custom_badge.type.options.custom_text", "value": "custom-text" },
+        { "label": "t:common.custom_badge.type.options.none", "value": "none" }
+      ],
+      "default": "discount-percentage",
+      "visible_if": { "setting_id": "custom_badge", "value": true }
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "t:common.custom_badge.text.label",
+      "default": "t:common.custom_badge.text.default",
+      "visible_if": [
+        { "setting_id": "custom_badge", "value": true },
+        { "setting_id": "badge_type", "value": "custom-text" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "badge_threshold",
+      "label": "t:common.custom_badge.low_inventory_threshold",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 10,
+      "visible_if": [
+        { "setting_id": "custom_badge", "value": true },
+        { "setting_id": "badge_type", "value": "low-stock" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "badge_style",
+      "label": "t:common.custom_badge.style.label",
+      "options": [
+        { "label": "t:common.custom_badge.style.options.default", "value": "default" },
+        { "label": "t:common.custom_badge.style.options.circle", "value": "circle" }
+      ],
+      "default": "default",
+      "visible_if": { "setting_id": "custom_badge", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "badge_position",
+      "label": "t:common.custom_badge.position.label",
+      "options": [
+        { "label": "t:common.custom_badge.position.options.top_left", "value": "top-left" },
+        { "label": "t:common.custom_badge.position.options.top_right", "value": "top-right" },
+        { "label": "t:common.custom_badge.position.options.bottom_left", "value": "bottom-left" },
+        { "label": "t:common.custom_badge.position.options.bottom_right", "value": "bottom-right" }
+      ],
+      "default": "top-left",
+      "visible_if": { "setting_id": "custom_badge", "value": true }
+    }
+  ]
+}
+{% endschema %}

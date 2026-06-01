@@ -1,0 +1,159 @@
+{{ 'section.countdown.css' | asset_url | stylesheet_tag }}
+{{ 'misc.countdown.js' | asset_url | script_tag_deferred }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="countdown"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<a
+  ui-section="countdown"
+  href="{{ section.settings.link | default: '#' }}"
+  target="{{ section.settings.link_target }}"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% if section.settings.show_image %}
+    <div class="media" data-aspect-ratio="{{ section.settings.aspect_ratio }}">
+      {% if section.settings.image %}
+        <img
+          src="{{ section.settings.image.src }}"
+          alt="{{ section.settings.title | default: "Media" }}"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      {% else %}
+        {% render 'misc.image-fallback' %}
+      {% endif %}
+    </div>
+  {% endif %}
+  <div class="info">
+    {% if section.settings.title %}
+      <span class="heading">{{ section.settings.title }}</span>
+    {% endif %}
+    {% if section.settings.description %}
+      <p class="description">{{ section.settings.description }}</p>
+    {% endif %}
+  </div>
+  <ui-countdown
+    class="timer"
+    date="{{ section.settings.days }}"
+    time="{{ section.settings.hours }}:{{ section.settings.minutes }}:{{ section.settings.seconds }}"
+  >
+    <span class="time" data-days="{{ section.settings.days }}">--</span>
+    <span>:</span>
+    <span class="time" data-hours="{{ section.settings.hours }}">--</span>
+    <span>:</span>
+    <span class="time" data-minutes="{{ section.settings.minutes }}">--</span>
+    <span>:</span>
+    <span class="time" data-seconds="{{ section.settings.seconds }}">--</span>
+  </ui-countdown>
+</a>
+
+{% schema %}
+{
+  "label": "t:sections.countdown.label",
+  "limit": 3,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.media" },
+    { "type": "image_picker", "id": "image", "label": "t:common.media.image" },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "show_image", "label": "t:common.media.show_image", "default": true },
+    { "type": "header", "content": "t:common.headers.content" },
+    { "type": "text", "id": "title", "label": "t:common.content.title", "default": "t:sections.countdown.default.title" },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.content.description",
+      "default": "t:sections.countdown.default.description"
+    },
+    { "type": "header", "content": "t:common.headers.link" },
+    { "type": "url", "id": "link", "label": "t:common.link.url", "default": "#" },
+    {
+      "type": "select",
+      "id": "link_target",
+      "label": "t:common.link.open_link_in.label",
+      "options": [
+        { "label": "t:common.link.open_link_in.options.same_tab", "value": "_self" },
+        { "label": "t:common.link.open_link_in.options.new_tab", "value": "_blank" }
+      ],
+      "default": "_self"
+    },
+    { "type": "header", "content": "t:sections.countdown.offer_ends_at.label" },
+    {
+      "type": "range",
+      "id": "days",
+      "label": "t:sections.countdown.offer_ends_at.days_remaining",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "hours",
+      "label": "t:sections.countdown.offer_ends_at.hours",
+      "min": 0,
+      "max": 23,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "minutes",
+      "label": "t:sections.countdown.offer_ends_at.minutes",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "seconds",
+      "label": "t:sections.countdown.offer_ends_at.seconds",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 0
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,161 @@
+ui-variants{
+  display:grid;
+  grid-gap:var(--spacing-12);
+  gap:var(--spacing-12);
+}
+ui-variants [ui-variant]{
+  display:grid;
+  grid-gap:var(--spacing-8);
+  gap:var(--spacing-8);
+}
+ui-variants [ui-variant] .label{
+  font:var(--font-body-md);
+}
+ui-variants [ui-variant] .options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--spacing-8);
+}
+ui-variants [ui-variant] .options .opt{
+  position:relative;
+  font:var(--font-body-md);
+}
+ui-variants [ui-variant]:not([ui-variant=radio_buttons]) .options .opt > input[type=radio]{
+  position:absolute;
+  scale:0;
+  opacity:0;
+}
+ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt{
+  display:flex;
+  align-items:center;
+  min-width:36px;
+  height:36px;
+  padding-inline:var(--spacing-12);
+  transition:var(--transition-standard-default-effects);
+  border:1px solid var(--color-primary);
+  border-radius:var(--radius-button);
+  box-shadow:3px 3px 0 var(--color-primary);
+  cursor:pointer;
+}
+ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:checked){
+  border-color:transparent;
+  background-color:var(--color-primary);
+  color:var(--color-on-primary);
+}
+ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:has(> input[type=radio]:disabled){
+  opacity:0.5;
+  background-color:var(--color-surface-container);
+  pointer-events:none;
+}
+ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:36px;
+  height:36px;
+  transition:var(--transition-standard-fast-effects);
+  border:1px solid var(--color-primary);
+  border-radius:var(--radius-button);
+  background-color:var(--color-value);
+  box-shadow:3px 3px 0 var(--color-primary);
+  cursor:pointer;
+}
+ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt > i{
+  color:transparent;
+}
+ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked){
+  transform:translate(2px, 2px);
+  box-shadow:1.5px 1.5px 0 var(--color-primary);
+}
+ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked) > i{
+  color:white;
+}
+ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:disabled){
+  background-color:color-mix(in srgb, var(--color-value) 50%, transparent);
+  pointer-events:none;
+}
+ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:disabled)::before{
+  content:"";
+  position:absolute;
+  width:1px;
+  height:100%;
+  rotate:35deg;
+  filter:invert(1);
+  background-color:var(--color-value);
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt{
+  display:grid;
+  grid-gap:var(--spacing-8);
+  gap:var(--spacing-8);
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image{
+  display:flex;
+  position:relative;
+  align-items:center;
+  justify-content:center;
+  width:65px;
+  height:auto;
+  aspect-ratio:1/1;
+  overflow:hidden;
+  transition:var(--transition-standard-fast-effects);
+  border:1px solid var(--color-primary);
+  border-radius:var(--radius-button);
+  background-color:transparent;
+  box-shadow:3px 3px 0 var(--color-primary);
+  cursor:pointer;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image .checked{
+  display:flex;
+  position:absolute;
+  align-items:center;
+  justify-content:center;
+  transition:var(--transition-standard-default-effects);
+  opacity:0;
+  background-color:rgba(0, 0, 0, 0.3);
+  color:white;
+  inset:0;
+  backdrop-filter:blur(2px);
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image > img{
+  -o-object-fit:cover;
+     object-fit:cover;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .image{
+  transform:translate(2px, 2px);
+  box-shadow:1.5px 1.5px 0 var(--color-primary);
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:checked) .checked{
+  opacity:1;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled){
+  pointer-events:none;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image > img{
+  filter:grayscale(1) blur(1px);
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .image::before{
+  content:"";
+  position:absolute;
+  z-index:2;
+  width:1px;
+  height:140%;
+  background-color:white;
+  rotate:45deg;
+}
+ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled) .value{
+  opacity:0.5;
+}
+ui-variants [ui-variant][ui-variant=radio_buttons] .options{
+  display:flex;
+  flex-wrap:wrap;
+}
+ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt{
+  display:flex;
+  align-items:center;
+  cursor:pointer;
+  gap:var(--spacing-8);
+}
+ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt:has(> input[type=radio]:disabled){
+  opacity:0.5;
+  pointer-events:none;
+}

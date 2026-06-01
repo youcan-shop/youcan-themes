@@ -1,0 +1,181 @@
+{{ 'section.order-summary.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="order-summary"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="order-summary"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="summary">
+    <div class="head">
+      {% if section.settings.icon == 'red-heart_2764-fe0f' or section.settings.icon == 'victory-hand_light-skin-tone_270c-1f3fb_1f3fb' %}
+        {% assign source_provider = 'animated-noto-color-emoji' %}
+      {% else %}
+        {% assign source_provider = 'noto-emoji-animations' %}
+      {% endif %}
+      <img
+        class="icon"
+        src="https://em-content.zobj.net/source/{{ source_provider }}/344/{{ section.settings.icon }}.gif"
+        alt="Tada"
+        height="60"
+        width="60"
+        loading="eager"
+      >
+      <h2 class="heading">{{ 'order_summary.heading' | t }}</h2>
+      <p class="description">{{ 'order_summary.description' | t }}</p>
+    </div>
+    <ul class="products">
+      {% for product in order.order_variants %}
+        <li class="product">
+          <div class="media">
+            {% if product.image %}
+              <img
+                src="{{ product.image }}"
+                alt="{{ product.name }}"
+                height="60"
+                width="60"
+                loading="eager"
+              >
+            {% else %}
+              {% render 'misc.image-fallback', type: 'product' %}
+            {% endif %}
+            <span class="count">{{ product.quantity }}</span>
+          </div>
+          <div class="info">
+            <a class="title" href="/products/{{ product.slug }}" title="{{ product.name }}">{{ product.name }}</a>
+            <span class="price">{{ product.price | default: 0 | money }}</span>
+          </div>
+          <a
+            ui-slot="button"
+            data-mode="3d"
+            data-size="xs"
+            href="/products/{{ product.slug }}"
+            target="_blank"
+          >
+            {{ 'order_summary.buy_again' | t }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="core">
+      <div class="field">
+        <span class="label">{{ 'order_summary.status.label' | t }}:</span>
+        {% render 'const.payment-status', status: order.paymentStatusSlug %}
+      </div>
+      <div class="field">
+        <span class="label">{{ 'order_summary.payment_method.label' | t }}:</span>
+        <span class="value">
+          {% render 'const.payment-gateway', type: order.gatewayType %}
+        </span>
+      </div>
+      <div class="field">
+        <span class="label">{{ 'order_summary.subtotal' | t }}:</span>
+        <span class="value">{{ order.sub_total | default: 0 | money }}</span>
+      </div>
+      {% if order.vat != 0 %}
+        <div class="field">
+          <span class="label">VAT ({{ order.vat | times: 100 | append: '%' }}):</span>
+          <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
+        </div>
+      {% endif %}
+      <div class="field">
+        <span class="label">{{ 'order_summary.shipping' | t }}:</span>
+        {% if order.shippingCost == 0 or order.shippingCost == null %}
+          {% assign shipping_cost = 'order_summary.free' | t %}
+        {% else %}
+          {% assign shipping_cost = order.shippingCost | default: 0 | money %}
+        {% endif %}
+        <span class="value">{{ shipping_cost }}</span>
+      </div>
+      <div class="field total">
+        <span class="label">{{ 'order_summary.total' | t }}:</span>
+        <span class="value">{{ order.total | default: 0 | money }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <a ui-slot="button" data-mode="3d" data-size="md" href="/">
+      {{ 'order_summary.continue_shopping' | t }}
+    </a>
+
+    {% capture wa_message %}
+Hey, just ordered from {{ store.name }}
+Looks really good, you should check them out
+{{ store.domain }}/orders/{{ order.id }}
+{% endcapture %}
+
+    <a
+      ui-slot="button"
+      data-mode="3d"
+      data-size="md"
+      href="https://wa.me/?text={{ wa_message | strip | url_encode }}"
+      target="_blank"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+        <path fill="currentColor" fill-rule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11c-1.936 0-3.757-.5-5.338-1.38L1.4 22.6l.98-5.262A10.95 10.95 0 0 1 1 12m6.147-5.353c.654-.655 1.527-.713 1.998-.69c.435.02.776.272.984.564l.952 1.334a1.5 1.5 0 0 1-.16 1.932l-.674.673c.223.544.67 1.42 1.272 2.021s1.477 1.05 2.02 1.273l.675-.674a1.5 1.5 0 0 1 1.931-.16l1.335.951c.291.209.544.55.984.564c.022.471-.036 1.344-.69 1.999c-1.067 1.066-2.741 1.077-4.264.659c-1.55-.426-3.13-1.34-4.197-2.406c-1.065-1.066-1.98-2.646-2.406-4.197c-.418-1.523-.407-3.197.66-4.263" clip-rule="evenodd"/>
+      </svg>
+      {{ 'order_summary.share_via_whatsapp' | t }}
+    </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.order_summary.label",
+  "settings": [
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:sections.order_summary.animated_icon",
+      "options": [
+        { "label": "Party popper", "value": "party-popper_1f389" },
+        { "label": "Confetti ball", "value": "confetti-ball_1f38a" },
+        { "label": "Gem stone", "value": "gem-stone_1f48e" },
+        { "label": "Balloon", "value": "balloon_1f388" },
+        { "label": "Fire", "value": "fire_1f525" },
+        { "label": "Rose", "value": "rose_1f339" },
+        { "label": "Heart", "value": "red-heart_2764-fe0f" },
+        { "label": "Money", "value": "money-with-wings_1f4b8" },
+        { "label": "Glowing star", "value": "glowing-star_1f31f" },
+        { "label": "Waving hand", "value": "waving-hand_light-skin-tone_1f44b-1f3fb_1f3fb" },
+        { "label": "Raising hands", "value": "raising-hands_light-skin-tone_1f64c-1f3fb_1f3fb" },
+        { "label": "Flexed Biceps", "value": "flexed-biceps_light-skin-tone_1f4aa-1f3fb_1f3fb" },
+        { "label": "Thumbs up", "value": "thumbs-up_light-skin-tone_1f44d-1f3fb_1f3fb" },
+        { "label": "Victory hand", "value": "victory-hand_light-skin-tone_270c-1f3fb_1f3fb" }
+      ],
+      "default": "party-popper_1f389"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

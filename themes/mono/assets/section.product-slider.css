@@ -1,0 +1,85 @@
+[ui-section=product-slider]{
+  --per-page:2;
+  --item-size:85%;
+  --gap:var(--spacing-12);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid var(--color-primary);
+  border-radius:var(--radius-section);
+  box-shadow:3px 3px 0 var(--color-primary);
+}
+[ui-section=product-slider] .head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:var(--spacing-8) var(--spacing-12);
+  background-color:var(--color-surface-container);
+  color:var(--color-primary);
+  border-block-end:1px solid var(--color-primary);
+}
+[ui-section=product-slider] .head .title{
+  font:var(--font-title-md);
+}
+[ui-section=product-slider] .head .arrows{
+  display:flex;
+  gap:var(--spacing-8);
+}
+[ui-section=product-slider] .list{
+  margin:var(--spacing-12);
+}
+[ui-section=product-slider] .list .product-item{
+  display:flex;
+  gap:var(--spacing-8);
+  flex-direction:column;
+  height:100%;
+}
+[ui-section=product-slider] .list .product-item .media{
+  position:relative;
+  width:100%;
+  height:auto;
+  overflow:hidden;
+}
+[ui-section=product-slider] .list .product-item .media[data-aspect-ratio=square]{
+  aspect-ratio:1/1;
+}
+[ui-section=product-slider] .list .product-item .media[data-aspect-ratio=portrait]{
+  aspect-ratio:3/4;
+}
+[ui-section=product-slider] .list .product-item .media[data-aspect-ratio=landscape]{
+  aspect-ratio:16/9;
+}
+[ui-section=product-slider] .list .product-item .media > img{
+  -o-object-fit:cover;
+     object-fit:cover;
+}
+[ui-section=product-slider] .list .product-item .content{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:var(--spacing-8);
+}
+[ui-section=product-slider] .list .product-item .content .name{
+  overflow:hidden;
+  font:var(--font-title-sm);
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+[ui-section=product-slider] .list .product-item .content .price{
+  display:flex;
+  flex:1;
+  gap:var(--spacing-4);
+}
+[ui-section=product-slider] .list .product-item .content .price .compare-at{
+  opacity:0.5;
+  -webkit-text-decoration:line-through;
+  text-decoration:line-through;
+}
+[ui-section=product-slider] ui-empty{
+  padding:var(--spacing-12);
+}
+@media (max-width: 769px){
+  [ui-section=product-slider]{
+    --per-page:1;
+  }
+}

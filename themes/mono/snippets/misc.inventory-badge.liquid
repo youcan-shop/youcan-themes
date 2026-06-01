@@ -1,0 +1,24 @@
+{% comment %}
+  Renders an inventory badge
+
+  Accepts:
+  - count: {Number} Inventory number
+  - threshold: {Number} Inventory threshold
+
+  Usage:
+  {% render 'misc.inventory-badge', count: 10, threshold: 5  %}
+{% endcomment %}
+
+{% if count == 0 or count == null %}
+  <span class="inventory-badge" data-status="sold-out">{{ 'inventory_badge.sold_out' | t }}</span>
+{% elsif count == 1 %}
+  <span class="inventory-badge" data-status="last-item">{{ 'inventory_badge.last_item' | t }}</span>
+{% elsif count <= threshold %}
+  <span class="inventory-badge" data-status="low-stock">
+    {{ 'inventory_badge.low_stock' | t | replace: '[count]', count }}
+  </span>
+{% else %}
+  <span class="inventory-badge" data-status="high-stock">
+    {{ 'inventory_badge.high_stock' | t }}
+  </span>
+{% endif %}

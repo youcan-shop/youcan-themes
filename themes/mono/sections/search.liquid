@@ -1,0 +1,192 @@
+{{ 'section.search.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="search"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="search"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% paginate search.products by 24 cod %}
+    <div class="head">
+      <a
+        ui-slot="button"
+        data-mode="3d"
+        data-size="md"
+        data-as-icon
+        data-flip-icon-in-rtl
+        aria-label="Back to home"
+        href="/"
+      >
+        {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+      </a>
+      <form action="">
+        <input
+          ui-slot="input"
+          type="search"
+          name="q"
+          placeholder="{{ 'header.navigate.search.placeholder' | t }}"
+          value="{{ terms | escape }}"
+        >
+      </form>
+      {% render 'misc.sort', url: previous_page %}
+    </div>
+    <div class="results">
+      <span class="title">{{ 'search.results_of' | t }} "{{ terms | escape }}"</span>
+      <span class="count">
+        {{- items.size }}
+        {{ 'general.products' | t -}}
+      </span>
+    </div>
+    {% if items.size > 0 %}
+      <ul class="list">
+        {% for product in items %}
+          {% assign default_variant = product.selected_or_first_available_variant %}
+          {% assign price = default_variant.price | default: product.price %}
+          {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+          <li class="product-item">
+            <a
+              class="image"
+              href="{{ product.url }}"
+              title="{{ product.name }}"
+              data-aspect-ratio="{{ section.settings.image_aspect_ratio }}"
+            >
+              {% if product.preview_image %}
+                <img
+                  src="{{ product.preview_image.original }}"
+                  alt="{{ product.name }}"
+                  height="100%"
+                  width="100%"
+                  {% if forloop.index < 5 %}
+                    loading="eager"
+                  {% else %}
+                    loading="lazy"
+                  {% endif %}
+                >
+              {% else %}
+                {% render 'misc.image-fallback', type: 'product' %}
+              {% endif %}
+              {% unless default_variant.available %}
+                <div class="sold-out">
+                  <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
+                </div>
+              {% endunless %}
+            </a>
+            <div class="info">
+              <a class="name" href="{{ product.url }}" title="{{ product.name }}">
+                {{ product.name }}
+              </a>
+              <div class="price">
+                <span class="original">{{ price | money }}</span>
+                {% if compare_at_price %}
+                  <span class="compare-at">{{ compare_at_price | money }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
+              {% if product.variants.size > 1 %}
+                <button
+                  ui-slot="button"
+                  data-mode="stroke"
+                  data-size="sm"
+                  popovertarget="product-{{ product.id }}"
+                >
+                  {{ 'general.quick_look' | t }}
+                </button>
+              {% else %}
+                {% render 'core.shop-button' %}
+              {% endif %}
+            {% else %}
+              {% if default_variant.available %}
+                {% if product.variants.size > 1 %}
+                  <a ui-slot="button" data-mode="stroke" data-size="sm" href="{{ product.url }}">
+                    {{ 'general.view' | t }}
+                  </a>
+                {% else %}
+                  <button
+                    ui-slot="button"
+                    data-mode="filled"
+                    data-size="sm"
+                    type="button"
+                    popovertarget="express-checkout-{{ product.id }}"
+                  >
+                    {{ 'general.buy_now' | t }}
+                  </button>
+                {% endif %}
+              {% else %}
+                <button ui-slot="button" data-mode="filled" data-size="sm" disabled>
+                  {{ 'general.out_of_stock' | t }}
+                </button>
+              {% endif %}
+            {% endif %}
+          </li>
+
+          {% if default_variant.available %}
+            {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
+              {% if product.variants.size > 1 %}
+                {% render 'misc.product-detail' %}
+              {% endif %}
+            {% else %}
+              {% unless product.variants.size > 1 %}
+                {% render 'core.express-checkout', style: 'open-drawer' %}
+              {% endunless %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% render 'misc.pagination' %}
+    {% else %}
+      {% render 'misc.empty', type: 'product' %}
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.search.label",
+  "settings": [
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:common.aspect_ratio.with_image",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

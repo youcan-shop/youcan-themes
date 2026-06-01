@@ -1,0 +1,44 @@
+{% comment %}
+  Renders an inventory counter
+
+  Accepts:
+  - count: {Number} Inventory number
+  - threshold: {Number} Inventory threshold
+
+  Usage:
+  {% render 'misc.inventory-counter', count: 10, threshold: 5  %}
+{% endcomment %}
+
+{% if count == 0 or count == null %}
+  <div class="inventory-counter" data-status="sold-out" {{ block.youcan_attributes }}>
+    <div class="icon">
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </div>
+    <span>{{ 'inventory_badge.sold_out' | t }}</span>
+    <progress value="0" max="100"></progress>
+  </div>
+{% elsif count == 1 %}
+  <div class="inventory-counter" data-status="last-item" {{ block.youcan_attributes }}>
+    <div class="icon">
+      {% render 'misc.icon', name: 'hgi-fire' %}
+    </div>
+    <span>{{ 'inventory_badge.last_item' | t }}</span>
+    <progress value="1" max="100"></progress>
+  </div>
+{% elsif count <= threshold %}
+  <div class="inventory-counter" data-status="low-stock" {{ block.youcan_attributes }}>
+    <div class="icon">
+      {% render 'misc.icon', name: 'hgi-flash' %}
+    </div>
+    {{ 'inventory_badge.low_stock' | t | replace: '[count]', count }}
+    <progress value="{{ count }}" max="100"></progress>
+  </div>
+{% else %}
+  <div class="inventory-counter" data-status="high-stock" {{ block.youcan_attributes }}>
+    <div class="icon">
+      {% render 'misc.icon', name: 'hgi-checkmark-circle-04' %}
+    </div>
+    {{ 'inventory_badge.high_stock' | t }}
+    <progress value="{{ count }}" max="100"></progress>
+  </div>
+{% endif %}

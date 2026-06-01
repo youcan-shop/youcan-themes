@@ -1,0 +1,203 @@
+{{ 'misc.cart-drawer.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a cart drawer
+
+  Usage:
+  {% render 'misc.cart-drawer' %}
+{% endcomment %}
+
+{% assign total_notes = 0 %}
+
+<button
+  class="cart-trigger"
+  ui-slot="button"
+  data-mode="3d"
+  data-size="md"
+  data-as-icon
+  aria-label="Cart"
+  popovertarget="cart"
+>
+  {% render 'misc.icon', name: 'hgi-shopping-cart-02' %}
+  <ui-cart-bubble
+    class="badge"
+    {% unless cart.count %}
+      hidden
+    {% endunless %}
+  >
+    {{ cart.count }}
+  </ui-cart-bubble>
+</button>
+
+<div ui-slot="drawer-content" id="cart" popover>
+  <div ui-slot="drawer-header">
+    <h3 ui-slot="drawer-title">{{ 'header.cart.title' | t }}</h3>
+    <button
+      ui-slot="button"
+      data-mode="ghost"
+      data-size="md"
+      data-as-icon
+      aria-label="Close"
+      popovertarget="cart"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <div ui-slot="drawer-body">
+    <ui-carousel class="notes">
+      <ul class="group" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+        {% for i in (1..3) %}
+          {% assign title = 'note_title_' | append: i %}
+          {% assign description = 'note_description_' | append: i %}
+
+          {% if section.settings[title] != blank or section.settings[description] != blank %}
+            {% assign total_notes = total_notes | plus: 1 %}
+
+            <li class="note-item" ui-carousel="item" ui-slot="carousel-item">
+              {% if section.settings[title] %}
+                <span class="title">{{ section.settings[title] }}</span>
+              {% endif %}
+              {% if section.settings[description] %}
+                <p class="description">{{ section.settings[description] }}</p>
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% if total_notes > 1 %}
+        <div class="markers">
+          {% for marker in (1..total_notes) %}
+            <button
+              ui-carousel="marker"
+              aria-label="Note {{ forloop.index }}"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </ui-carousel>
+
+    <template ui-cart-drawer="item">
+      {% render 'core.cart-drawer-item' %}
+    </template>
+    <ui-cart-drawer-items class="list">
+      {% for product in cart.items %}
+        {% render 'core.cart-drawer-item', product: product %}
+      {% endfor %}
+    </ui-cart-drawer-items>
+
+    {% unless cart.count %}
+      {% render 'misc.empty', type: 'cart' %}
+    {% else %}
+      {% render 'misc.empty', type: 'cart', hidden: true %}
+    {% endunless %}
+
+    {% if section.settings.recommended_collection %}
+      {% paginate collection.products by 8 cod, category_id: section.settings.recommended_collection.id %}
+        <ui-carousel class="recommendation">
+          {% if section.settings.recommendations_header %}
+            <div class="head">
+              <h4 class="title">{{ section.settings.recommendations_header }}</h4>
+              {% if items.size > 1 %}
+                <div class="arrows">
+                  <button
+                    ui-carousel="arrow-previous"
+                    ui-slot="button"
+                    data-mode="stroke"
+                    data-size="xs"
+                    data-as-icon
+                    data-flip-icon-in-rtl
+                    aria-label="Previous"
+                  >
+                    {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                  </button>
+                  <button
+                    ui-carousel="arrow-next"
+                    ui-slot="button"
+                    data-mode="stroke"
+                    data-size="xs"
+                    data-as-icon
+                    data-flip-icon-in-rtl
+                    aria-label="Next"
+                  >
+                    {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                  </button>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if items.size %}
+            <ul class="group" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+              {% for item in items %}
+                {% assign default_variant = item.selected_or_first_available_variant %}
+                {% assign price = default_variant.price | default: item.price %}
+                {% assign compare_at_price = default_variant.compare_at_price | default: item.compare_at_price %}
+
+                <li ui-carousel="item" ui-slot="carousel-item">
+                  <a class="product-item" href="{{ item.url }}">
+                    <div class="media">
+                      {% if item.preview_image %}
+                        <img
+                          src="{{ item.preview_image.original }}"
+                          alt="{{ item.name }}"
+                          height="65"
+                          width="65"
+                          loading="lazy"
+                        >
+                      {% else %}
+                        {% render 'misc.image-fallback', type: 'product', icon_size: 20 %}
+                      {% endif %}
+                      {% unless default_variant.available %}
+                        <div class="sold-out">
+                          <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
+                        </div>
+                      {% endunless %}
+                    </div>
+                    <div class="info">
+                      <span class="name">{{ item.name }}</span>
+                      <div class="price">
+                        <span class="original">{{ price | money }}</span>
+                        {% if compare_at_price %}
+                          <span class="compare-at">{{ compare_at_price | money }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </ui-carousel>
+      {% endpaginate %}
+    {% endif %}
+  </div>
+  <div
+    ui-slot="drawer-footer"
+    {% unless cart.count %}
+      hidden
+    {% endunless %}
+    ui-cart-drawer="footer"
+  >
+    <div class="summary">
+      <div class="header">
+        <h3 class="title">{{ 'header.cart.summary.label' | t }}</h3>
+      </div>
+      <div class="core">
+        <div class="field">
+          <span class="label">{{ 'header.cart.summary.subtotal' | t }}</span>
+          <span class="subtotal" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+        </div>
+        <div class="events">
+          <a ui-slot="button" data-mode="ghost" data-size="lg" href="/cart">
+            {{ 'header.cart.summary.go_to_cart' | t }}
+          </a>
+          <a ui-slot="button" data-mode="filled" data-size="lg" href="{{ cart.cart_submit_url }}">
+            {{ 'header.cart.summary.checkout' | t }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

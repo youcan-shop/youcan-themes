@@ -1,0 +1,280 @@
+@use "sass:meta";
+
+@include meta.load-css("base/tokens");
+@include meta.load-css("base/colors");
+@include meta.load-css("components");
+
+* {
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+fieldset {
+  border: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+input {
+  border: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-primary-container);
+  color: var(--color-primary);
+  font: var(--font-body-md);
+
+  & > div:first-child {
+    display: none !important;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 580px;
+    min-height: calc(100vh - var(--spacing-48));
+    margin: var(--spacing-24);
+    overflow: hidden;
+    border-radius: var(--radius-section);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+
+    #app {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    [ui-section] {
+      background-color: var(--color-surface-container);
+    }
+
+    .youcan-section {
+      background-color: var(--color-on-primary);
+      border-block: calc(var(--section-spacing) / 2) solid var(--color-surface-container);
+      border-inline: var(--spacing-16) solid var(--color-surface-container);
+    }
+
+    &:has([popover]:popover-open) {
+      &::before {
+        content: "";
+        position: fixed;
+        z-index: 52;
+        inset: 0;
+      }
+    }
+
+    @media (width <= 769px) {
+      width: 100%;
+      margin: var(--spacing-0);
+      border-radius: var(--radius-none);
+    }
+  }
+}
+
+[data-custom-color] {
+  background-color: var(--color-surface-container);
+  color: var(--color-primary);
+}
+
+[ui-slot="sr"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border-width: 0;
+  white-space: nowrap;
+}
+
+.media {
+  border-radius: var(--radius-section);
+}
+
+.sold-out {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255 255 255 / 30%);
+  inset: 0;
+}
+
+.inventory-badge {
+  display: flex;
+  position: relative;
+  align-items: center;
+  font: var(--font-body-sm);
+  gap: var(--spacing-10);
+
+  &::before {
+    content: "";
+    display: flex;
+    width: var(--spacing-8);
+    height: var(--spacing-8);
+    border-radius: calc(var(--radius-button) * 0.5);
+    background-color: currentcolor;
+    box-shadow: 0 0 0 4px color-mix(in oklch, currentcolor 15%, transparent);
+  }
+
+  &[data-status="high-stock"] {
+    color: var(--color-success);
+  }
+
+  &[data-status="last-item"],
+  &[data-status="low-stock"] {
+    color: var(--color-warning);
+  }
+
+  &[data-status="sold-out"] {
+    color: var(--color-error);
+  }
+}
+
+.inventory-counter {
+  display: grid;
+  grid-template-columns: 20px auto;
+  align-items: center;
+  padding: var(--spacing-12);
+  border: 1px solid currentcolor;
+  border-radius: var(--radius-section);
+  box-shadow: 3px 3px 0 currentcolor;
+  gap: var(--spacing-12);
+
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    border-radius: calc(var(--radius-button) * 0.5);
+  }
+
+  progress {
+    grid-column: 1 / 3;
+    width: 100%;
+    height: 5px;
+    background-color: transparent;
+
+    &::-webkit-progress-bar {
+      border-radius: calc(var(--radius-button) * 0.5);
+      background-color: color-mix(in oklch, currentcolor 30%, transparent);
+    }
+
+    &::-webkit-progress-value {
+      border-radius: calc(var(--radius-button) * 0.5);
+      background-color: currentcolor;
+    }
+  }
+
+  &[data-status="high-stock"] {
+    background-color: var(--color-success-container);
+    color: var(--color-success);
+
+    .icon {
+      background-color: var(--color-success);
+      color: var(--color-success-container);
+    }
+  }
+
+  &[data-status="last-item"],
+  &[data-status="low-stock"] {
+    background-color: var(--color-warning-container);
+    color: var(--color-warning);
+
+    .icon {
+      background-color: var(--color-warning);
+      color: var(--color-warning-container);
+    }
+  }
+
+  &[data-status="sold-out"] {
+    background-color: var(--color-error-container);
+    color: var(--color-error);
+
+    .icon {
+      background-color: var(--color-error);
+      color: var(--color-error-container);
+    }
+  }
+}
+
+.product-badge {
+  position: absolute;
+
+  &:not(:has(span)) {
+    display: none;
+  }
+
+  &[data-style="circle"] {
+    width: fit-content;
+    max-width: 80px;
+    height: auto;
+    border-radius: var(--radius-rounded);
+    text-align: center;
+    overflow-wrap: break-word;
+    aspect-ratio: 1 / 1;
+  }
+
+  &[data-position="top-left"] {
+    inset-block-start: var(--spacing-8);
+    inset-inline-start: var(--spacing-8);
+  }
+
+  &[data-position="top-right"] {
+    inset-block-start: var(--spacing-8);
+    inset-inline-end: var(--spacing-8);
+  }
+
+  &[data-position="bottom-left"] {
+    inset-inline-start: var(--spacing-8);
+    inset-block-end: var(--spacing-8);
+  }
+
+  &[data-position="bottom-right"] {
+    inset-inline-end: var(--spacing-8);
+    inset-block-end: var(--spacing-8);
+  }
+}

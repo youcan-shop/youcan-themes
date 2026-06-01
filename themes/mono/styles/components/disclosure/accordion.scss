@@ -1,0 +1,108 @@
+/* 
+  Component: Accordion
+
+  Usage:
+    - <div ui-slot="accordion">
+        <div ui-slot="accordion-item">
+          <label ui-slot="accordion-trigger">
+            Accordion Trigger
+            <input type="checkbox" name="my-accordion" checked />
+          </label>
+          <div ui-slot="accordion-content" role="region">
+            <p>Accordion content </p>
+          </div>
+        </div>
+      </div>
+*/
+
+[ui-slot="accordion"] {
+  display: flex;
+  gap: var(--spacing-12);
+  flex-direction: column;
+
+  /* Item */
+  [ui-slot="accordion-item"] {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    padding: var(--spacing-12);
+    overflow: hidden;
+    transition: var(--transition-standard-fast-spatial);
+    transition-property: transform, box-shadow;
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-section);
+    box-shadow: 3px 3px 0 var(--color-primary);
+
+    &:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0 var(--color-primary);
+    }
+
+    /* Trigger */
+    [ui-slot="accordion-trigger"] {
+      display: flex;
+      position: relative;
+      align-items: center;
+      font: var(--font-title-sm);
+      cursor: pointer;
+      user-select: none;
+      gap: var(--spacing-12);
+
+      & > input[type="checkbox"] {
+        overflow: hidden;
+        opacity: 0;
+        scale: 0;
+      }
+
+      & > i {
+        flex-shrink: 0;
+        font-size: 20px;
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 1.5px;
+        transition: transform var(--transition-standard-default-spatial);
+        border-radius: var(--radius-rounded);
+        background-color: currentcolor;
+        inset-inline: auto var(--spacing-12);
+      }
+
+      &::after {
+        transform: rotate(90deg);
+      }
+    }
+
+    /* Content */
+    [ui-slot="accordion-content"] {
+      display: grid;
+      grid-template-rows: 0fr;
+      padding-block-end: var(--spacing-0);
+      transition: all var(--transition-expressive-default-spatial);
+
+      & > * {
+        overflow: hidden;
+      }
+    }
+
+    /* Checked */
+    &:has(input[type="checkbox"]:checked) {
+      transform: translate(2px, 2px);
+      box-shadow: 1.5px 1.5px 0 var(--color-primary);
+
+      [ui-slot="accordion-trigger"] {
+        &::after {
+          transform: rotate(0deg);
+        }
+      }
+
+      [ui-slot="accordion-content"] {
+        grid-template-rows: 1fr;
+        padding-block-start: var(--spacing-14);
+      }
+    }
+  }
+}

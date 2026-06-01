@@ -1,0 +1,85 @@
+ui-toast {
+  inset: auto;
+  display: flex;
+  visibility: hidden;
+  position: fixed;
+  z-index: 50;
+  left: 50%;
+  align-items: center;
+  width: 548px;
+  padding: var(--spacing-8);
+  padding-inline-start: var(--spacing-12);
+  transform: translateX(-50%);
+  transition: var(--transition-expressive-default-spatial);
+  border: 1px solid var(--color-toast);
+  border-radius: var(--radius-button);
+  opacity: 0;
+  background-color: var(--color-toast-container);
+  box-shadow: 3px 3px 0 var(--color-toast);
+  color: var(--color-on-toast-container);
+  gap: var(--spacing-12);
+  inset-block-end: -5%;
+
+  &[data-type="success"] {
+    --color-toast: var(--color-success);
+    --color-toast-container: var(--color-success-container);
+    --color-on-toast-container: var(--color-on-success-container);
+  }
+
+  &[data-type="error"] {
+    --color-toast: var(--color-error);
+    --color-toast-container: var(--color-error-container);
+    --color-on-toast-container: var(--color-on-error-container);
+  }
+
+  &[data-type="info"] {
+    --color-toast: var(--color-info);
+    --color-toast-container: var(--color-info-container);
+    --color-on-toast-container: var(--color-on-info-container);
+  }
+
+  &[data-type="warning"] {
+    --color-toast: var(--color-warning);
+    --color-toast-container: var(--color-warning-container);
+    --color-on-toast-container: var(--color-on-warning-container);
+  }
+
+  [ui-toast="content"] {
+    display: grid;
+    flex: 1;
+
+    [ui-toast="type"] {
+      text-transform: capitalize;
+    }
+
+    [ui-toast="message"] {
+      flex: 2;
+      width: max-content;
+      overflow: hidden;
+      opacity: 0.8;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  [ui-toast="action"] {
+    background-color: transparent !important;
+  }
+
+  /* State */
+  &:popover-open {
+    visibility: visible;
+    opacity: 1;
+    inset-block-end: var(--spacing-12);
+
+    @starting-style {
+      visibility: hidden;
+      opacity: 0;
+      inset-block-end: -5%;
+    }
+  }
+
+  @media (width <= 769px) {
+    width: calc(100vw - var(--spacing-32));
+  }
+}

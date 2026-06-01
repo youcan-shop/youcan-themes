@@ -1,0 +1,31 @@
+/* 
+  Component: Input
+
+  Accepts:
+    - data-size: {String}: lg | md | sm (md)
+
+  Usage:
+    - <input ui-slot="input" data-size="lg" type="text" />
+*/
+
+[ui-slot="input"] {
+  height: 36px;
+  padding-inline: var(--spacing-12);
+  transition: var(--transition-standard-fast-spatial);
+  transition-property: transform, box-shadow;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-button);
+  outline: none;
+  background-color: var(--color-surface-container-low);
+  box-shadow: 3px 3px 0 var(--color-primary);
+  color: var(--color-primary);
+
+  &::placeholder {
+    color: color-mix(in oklab, currentcolor 50%, transparent);
+  }
+
+  &:focus {
+    transform: translate(2px, 2px);
+    box-shadow: 1.5px 1.5px 0 var(--color-primary);
+  }
+}
