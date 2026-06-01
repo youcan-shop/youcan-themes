@@ -28,6 +28,7 @@
         .content {
           display: flex;
           flex: 2;
+          flex-direction: column;
           justify-content: space-between;
 
           .info {
@@ -37,13 +38,25 @@
 
             .bio {
               display: grid;
+              grid-template-columns: repeat(2, auto);
               gap: var(--spacing-8);
 
+              .title,
+              .price {
+                font: var(--font-label-sm);
+              }
+
               .title {
-                font: var(--font-body-lg);
+                flex: 1;
+                justify-content: flex-start;
+              }
+
+              .price {
+                text-align: end;
               }
 
               .variants {
+                grid-column: 1 / 3;
                 color: var(--color-on-surface-variant);
                 font: var(--font-body-sm);
               }
@@ -53,7 +66,8 @@
           .actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
+            gap: var(--spacing-12);
           }
         }
       }
