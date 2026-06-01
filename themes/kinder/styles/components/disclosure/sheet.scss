@@ -9,6 +9,9 @@
   --spring-width-offset: 0px; /* This is so that we don't see a gap when the drawer overshoots on it's enter animation */
   --sheet-width: 460px;
   --sheet-visible-width: calc(var(--sheet-width) + var(--spring-width-offset));
+  --margin: var(--spacing-24);
+  --margin-offset: calc(var(--margin) * 2);
+  --sheet-radius: var(--radius-28);
 
   display: flex;
   position: fixed;
@@ -16,16 +19,16 @@
   flex-direction: column;
   justify-content: space-between;
   width: var(--sheet-visible-width);
-  height: calc(100dvh - calc(var(--spacing-24) * 2));
-  margin: var(--spacing-24);
+  height: calc(100dvh - var(--margin-offset));
+  margin: var(--margin);
   transition: var(--transition-standard-slow-effects);
   border: none;
-  border-radius: var(--radius-28);
+  border-radius: var(--sheet-radius);
   background-color: var(--sheet-background);
   color: inherit;
   inset: unset;
   inset-block-start: var(--spacing-0);
-  inset-inline-end: calc(calc(var(--sheet-visible-width) + calc(var(--spacing-24) * 2)) * -1);
+  inset-inline-end: calc(calc(var(--sheet-visible-width) + var(--margin-offset)) * -1);
 
   /* Header */
   [ui-slot="sheet-header"] {
@@ -95,6 +98,8 @@
   }
 
   @media (width <= 769px) {
-    --sheet-width: 100%;
+    --margin: var(--spacing-16);
+    --sheet-width: calc(100% - var(--margin-offset));
+    --sheet-radius: var(--radius-16);
   }
 }
