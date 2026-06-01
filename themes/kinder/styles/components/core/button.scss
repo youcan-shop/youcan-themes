@@ -23,7 +23,6 @@
   padding: var(--spacing-12) var(--spacing-16);
   padding-inline: var(--button-padding-inline, var(--spacing-16));
   gap: var(--button-gap);
-  border: 1px solid;
   border-radius: var(--radius-8);
   border-color: var(--button-border);
   outline: none;
@@ -183,6 +182,25 @@
     --button-bg: transparent;
     --button-border: transparent;
     --button-fg: var(--on-brand);
+  }
+
+  /* Mode */
+  &[data-mode="stroke"] {
+    --button-bg: transparent;
+    --button-border: currentcolor;
+    --button-fg: var(--brand-color);
+  }
+
+  &[data-mode="lighter"] {
+    --button-bg: color-mix(in srgb, var(--brand-color) 12%, transparent);
+    --button-border: transparent;
+    --button-fg: var(--brand-color);
+  }
+
+  &[data-mode="ghost"] {
+    --button-bg: transparent;
+    --button-border: transparent;
+    --button-fg: var(--brand-color);
   }
 
   /* As Icon */

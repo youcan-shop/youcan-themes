@@ -244,7 +244,7 @@ class CartDrawerItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, price, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
+    const [image, title, price, variant, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
     return { image, title, variant, price, quantity, deleteButton };
   }
 

@@ -401,7 +401,6 @@
     padding-inline:16px;
     padding-inline:var(--button-padding-inline, var(--spacing-16));
     gap:var(--button-gap);
-    border:1px solid;
     border-radius:8px;
     border-radius:var(--radius-8);
     border-color:var(--button-border);
@@ -445,7 +444,6 @@
     padding-inline:16px;
     padding-inline:var(--button-padding-inline, var(--spacing-16));
     gap:var(--button-gap);
-    border:1px solid;
     border-radius:8px;
     border-radius:var(--radius-8);
     border-color:var(--button-border);
@@ -582,6 +580,23 @@
     --button-bg:transparent;
     --button-border:transparent;
     --button-fg:var(--on-brand);
+  }
+  [ui-slot=button]{
+  }
+  [ui-slot=button][data-mode=stroke]{
+    --button-bg:transparent;
+    --button-border:currentcolor;
+    --button-fg:var(--brand-color);
+  }
+  [ui-slot=button][data-mode=lighter]{
+    --button-bg:color-mix(in srgb, var(--brand-color) 12%, transparent);
+    --button-border:transparent;
+    --button-fg:var(--brand-color);
+  }
+  [ui-slot=button][data-mode=ghost]{
+    --button-bg:transparent;
+    --button-border:transparent;
+    --button-fg:var(--brand-color);
   }
   [ui-slot=button]{
   }
