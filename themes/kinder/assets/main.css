@@ -1274,18 +1274,22 @@
     justify-content:space-between;
     width:calc(460px + 0px);
     width:var(--sheet-visible-width);
-    height:100dvh;
+    height:calc(100dvh - 24px * 2);
+    height:calc(100dvh - var(--spacing-24) * 2);
+    margin:24px;
+    margin:var(--spacing-24);
     transition:300ms cubic-bezier(0.34, 0.88, 0.34, 1);
     transition:var(--transition-standard-slow-effects);
     border:none;
+    border-radius:28px;
+    border-radius:var(--radius-28);
     background-color:var(--sheet-background);
     color:inherit;
     inset:unset;
     inset-block-start:0px;
     inset-block-start:var(--spacing-0);
-    inset-inline-end:calc((460px + 0px) * -1);
-    inset-inline-end:calc(calc(460px + 0px) * -1);
-    inset-inline-end:calc(var(--sheet-visible-width) * -1);
+    inset-inline-end:calc((calc(460px + 0px) + 24px * 2) * -1);
+    inset-inline-end:calc((var(--sheet-visible-width) + var(--spacing-24) * 2) * -1);
   }
   [ui-slot=sheet-content] [ui-slot=sheet-header]{
     display:flex;
@@ -1298,6 +1302,7 @@
     gap:12px;
     gap:var(--spacing-12);
     inset-block-start:0;
+    background-color:var(--sheet-background);
   }
   [ui-slot=sheet-content] [ui-slot=sheet-header] [ui-slot=sheet-title]{
     font:var(--font-heading-sm);
@@ -1308,6 +1313,7 @@
     flex:2;
     padding-inline:calc(24px - 4px);
     padding-inline:calc(var(--spacing-24) - var(--spacing-4));
+    overflow:hidden;
   }
   [ui-slot=sheet-content]{
   }

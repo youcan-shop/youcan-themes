@@ -16,14 +16,16 @@
   flex-direction: column;
   justify-content: space-between;
   width: var(--sheet-visible-width);
-  height: 100dvh;
+  height: calc(100dvh - calc(var(--spacing-24) * 2));
+  margin: var(--spacing-24);
   transition: var(--transition-standard-slow-effects);
   border: none;
+  border-radius: var(--radius-28);
   background-color: var(--sheet-background);
   color: inherit;
   inset: unset;
   inset-block-start: var(--spacing-0);
-  inset-inline-end: calc(var(--sheet-visible-width) * -1);
+  inset-inline-end: calc(calc(var(--sheet-visible-width) + calc(var(--spacing-24) * 2)) * -1);
 
   /* Header */
   [ui-slot="sheet-header"] {
@@ -35,6 +37,7 @@
     padding: var(--spacing-24);
     gap: var(--spacing-12);
     inset-block-start: 0;
+    background-color: var(--sheet-background);
 
     /* Title */
     [ui-slot="sheet-title"] {
@@ -46,6 +49,7 @@
   [ui-slot="sheet-body"] {
     flex: 2;
     padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+    overflow: hidden;
   }
 
   /* Body */

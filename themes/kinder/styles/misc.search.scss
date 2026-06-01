@@ -12,7 +12,7 @@
       .terms {
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-8);
+        gap: var(--spacing-12);
 
         .label {
           font: var(--font-label-md);
@@ -28,7 +28,9 @@
       .products {
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-8);
+        padding-block-end: var(--spacing-16);
+        overflow-y: scroll;
+        gap: var(--spacing-12);
 
         .label {
           font: var(--font-label-md);
@@ -36,7 +38,7 @@
 
         .items {
           display: grid;
-          gap: var(--spacing-16);
+          gap: var(--spacing-24);
 
           .item {
             display: flex;
@@ -50,6 +52,11 @@
               overflow: hidden;
               border-radius: var(--radius-12);
 
+              ui-image-fallback {
+                background-color: oklch(from var(--bg-color) calc(l - 0.03) c h);
+                color: oklch(from var(--fg-color) calc(l - 0.4) calc(c + 0.0181) calc(h + 6.6));
+              }
+
               & > img {
                 object-fit: cover;
               }
@@ -57,19 +64,34 @@
 
             .content {
               display: flex;
+              flex: 1;
               flex-direction: column;
               gap: var(--spacing-8);
 
               .title {
                 justify-content: flex-start;
                 overflow: hidden;
-                font: var(--font-body-lg);
+                font: var(--font-label-sm);
                 text-overflow: ellipsis;
                 white-space: nowrap;
               }
 
               .price {
-                font: var(--font-title-md);
+                font: var(--font-label-xs);
+              }
+
+              .categories {
+                display: flex;
+                gap: var(--spacing-8);
+                align-items: center;
+
+                .category {
+                  padding: var(--spacing-4) var(--spacing-8);
+                  border-radius: var(--radius-rounded);
+                  background-color: oklch(from var(--bg-color) calc(l - 0.03) c h);
+                  font: var(--font-label-xs);
+                  text-align: center;
+                }
               }
             }
           }
