@@ -14,23 +14,24 @@
   {% endif %}
 {% endfor %}
 
-<div ui-slot="sheet-content" id="menu" popover>
+<div ui-slot="sheet-content" id="menu" popover data-popover-from="start">
   <div ui-slot="sheet-header">
+    <button
+      ui-slot="button"
+      data-variant="secondary"
+      data-size="lg"
+      aria-label="Close"
+      popovertarget="menu"
+    >
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: 'hgi-arrow-left-03', size: 24 %}
+      </span>
+    </button>
     <div class="logo">
       <a class="name" ui-slot="link-button" href="/">
         {{ store.name }}
       </a>
     </div>
-    <button
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="lighter"
-      data-size="md"
-      aria-label="Close"
-      popovertarget="menu"
-    >
-      {% render 'misc.icon', name: 'hgi-cancel-01' %}
-    </button>
   </div>
   <div ui-slot="sheet-body">
     <ul class="mobile-links">

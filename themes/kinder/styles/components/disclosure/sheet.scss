@@ -12,6 +12,9 @@
   --margin: var(--spacing-24);
   --margin-offset: calc(var(--margin) * 2);
   --sheet-radius: var(--radius-28);
+  --sheet-offset-hidden: calc(calc(var(--sheet-visible-width) + var(--margin-offset)) * -1);
+  --sheet-offset-visible: calc(var(--spacing-0) - var(--spring-width-offset));
+  --sheet-offset-starting: calc(var(--sheet-visible-width) * -1);
 
   display: flex;
   position: fixed;
@@ -28,7 +31,11 @@
   color: inherit;
   inset: unset;
   inset-block-start: var(--spacing-0);
-  inset-inline-end: calc(calc(var(--sheet-visible-width) + var(--margin-offset)) * -1);
+  inset-inline-end: var(--sheet-offset-hidden);
+
+  &[data-popover-from="start"] {
+    inset-inline: var(--sheet-offset-hidden) auto;
+  }
 
   /* Header */
   [ui-slot="sheet-header"] {
@@ -80,7 +87,7 @@
 
   /* State */
   &:popover-open {
-    inset-inline-end: calc(var(--spacing-0) - var(--spring-width-offset));
+    inset-inline-end: var(--sheet-offset-visible);
 
     &::backdrop {
       backdrop-filter: blur(10px);
@@ -88,12 +95,20 @@
     }
 
     @starting-style {
-      inset-inline-end: calc(var(--sheet-visible-width) * -1);
+      inset-inline-end: var(--sheet-offset-starting);
 
       &::backdrop {
         backdrop-filter: blur(0);
         background-color: transparent;
       }
+    }
+  }
+
+  &[data-popover-from="start"]:popover-open {
+    inset-inline: var(--sheet-offset-visible) auto;
+
+    @starting-style {
+      inset-inline: var(--sheet-offset-starting) auto;
     }
   }
 
