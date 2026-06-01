@@ -35,28 +35,32 @@
     <div class="footer">
       <span class="label">{{ 'cart.drawer.total' | t }}</span>
       <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+      <hr ui-slot="divider" data-variant="line">
       <span class="description">{{ 'cart.drawer.note' | t }}</span>
     </div>
     <div class="navigation">
       <a
-        href="/cart"
         ui-slot="button"
         data-variant="primary"
-        data-mode="stroke"
         data-size="lg"
-        popovertarget="cart"
+        {% if section.settings.button_link %}
+          href="{{ section.settings.button_link }}"
+        {% endif %}
       >
-        {{ 'cart.drawer.actions.view_cart' | t }}
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: settings.cart_icon %}
+          {{ 'cart.drawer.actions.checkout' | t }}
+        </span>
       </a>
       <a
-        href="{{ cart.cart_submit_url }}"
         ui-slot="button"
-        data-variant="primary"
-        data-mode="filled"
+        data-variant="secondary"
         data-size="lg"
+        aria-label="Cart"
       >
-        {% render 'misc.icon', name: settings.cart_icon %}
-        {{ 'cart.drawer.actions.checkout' | t }}
+        <span ui-slot="button-front">
+          {{ 'cart.drawer.actions.view_cart' | t }}
+        </span>
       </a>
     </div>
   </div>
