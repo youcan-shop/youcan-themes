@@ -2,19 +2,18 @@
 
 <div
   ui-section="image-with-text"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
   {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
   {% endif %}
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
 >
-  <div class="wrapper-area" data-height="{{ section.settings.image_height }}">
+  <div class="wrapper-area" style="--height: {{ section.settings.image_height }}vh;">
     <div ui-block="media" data-image-placement="{{ section.settings.image_placement }}">
       {% if section.settings.image.src %}
         <img
@@ -29,14 +28,13 @@
       {% endif %}
     </div>
     <div
+      ui-slot="head"
       ui-block="content"
       data-text-alignment="{{ section.settings.text_alignment }}"
       data-vertical-alignment="{{ section.settings.vertical_alignment }}"
     >
       {% for block in section.blocks %}
         {% case block.type %}
-          {% when 'subheading' %}
-            <h4 class="subheading" {{ block.youcan_attributes }}>{{ block.settings.content }}</h4>
           {% when 'heading' %}
             <h1 class="heading" {{ block.youcan_attributes }}>{{ block.settings.content }}</h1>
           {% when 'description' %}
@@ -44,23 +42,18 @@
           {% when 'button' %}
             <a
               class="cta"
-              {% if block.settings.style == 'underline' %}
-                ui-slot="link-button"
-                data-underline="true"
-              {% else %}
-                ui-slot="button"
-                data-variant="primary"
-              {% endif %}
-              {% if block.settings.style == 'primary' %}
-                data-mode="filled"
-              {% elsif block.settings.style == 'secondary' %}
-                data-mode="lighter"
-              {% endif %}
+              ui-slot="button"
+              ui-block="button"
+              data-variant="{{ block.settings.style }}"
               data-size="lg"
-              href="{{ block.settings.link }}"
               {{ block.youcan_attributes }}
+              {% if item.settings.button_link %}
+                href="{{ item.settings.button_link }}"
+              {% endif %}
             >
-              {{ block.settings.label }}
+              <span ui-slot="button-front">
+                {{ block.settings.label }}
+              </span>
             </a>
         {% endcase %}
       {% endfor %}
@@ -145,7 +138,7 @@
         { "label": "t:common.layout.alignment.center", "value": "center" },
         { "label": "t:common.layout.alignment.end", "value": "end" }
       ],
-      "default": "start"
+      "default": "center"
     },
     {
       "type": "header",
@@ -159,7 +152,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 40
     },
     {
       "type": "range",
@@ -169,23 +162,10 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 40
     }
   ],
   "blocks": [
-    {
-      "type": "subheading",
-      "label": "t:common.header.subheading",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "text",
-          "id": "content",
-          "label": "t:common.headers.content",
-          "default": "t:sections.image_with_text.default.subheading"
-        }
-      ]
-    },
     {
       "type": "heading",
       "label": "t:common.header.heading",
@@ -234,8 +214,7 @@
           "id": "style",
           "options": [
             { "label": "t:common.button.style.options.primary", "value": "primary" },
-            { "label": "t:common.button.style.options.secondary", "value": "secondary" },
-            { "label": "t:common.button.style.options.underline", "value": "underline" }
+            { "label": "t:common.button.style.options.secondary", "value": "secondary" }
           ],
           "label": "t:common.button.style.label",
           "default": "primary"
