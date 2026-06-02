@@ -1,0 +1,361 @@
+{{ 'section.header.css' | asset_url | stylesheet_tag }}
+
+{% assign is_sticky = false %}
+
+{% if section.settings.header_sticky_type != 'none' %}
+  {% assign is_sticky = true %}
+{% endif %}
+
+{% if is_sticky %}
+  {{ 'section.header.js' | asset_url | script_tag_deferred }}
+{% endif %}
+
+<div
+  class="header-root"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    --mobile-width: {{ section.settings.logo_mobile_width }}px;
+  "
+>
+  <ui-header
+    ui-layout="header"
+
+    {% if is_sticky %}
+      data-sticky-mode="{{ section.settings.header_sticky_type }}"
+    {% endif %}
+    {% if template.name != 'index' or section.settings.show_social_links %}
+      data-bottom-border="1"
+    {% endif %}
+    data-header-layout="{{ section.settings.header_layout }}"
+    data-mobile-logo-position="{{ section.settings.mobile_logo_position }}"
+    data-top-spacing="{{ section.settings.top_spacing }}"
+    data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+  >
+    <div class="menu">
+      <button
+        ui-slot="button"
+        data-variant="secondary"
+        data-size="lg"
+        aria-label="Menu"
+        popovertarget="menu"
+      >
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: 'hgi-menu-square', size: 24 %}
+        </span>
+      </button>
+    </div>
+
+    <div class="logo">
+      {% if section.settings.logo_desktop.src or section.settings.logo_mobile.src %}
+        <a href="/">
+          <img
+            src="{{ section.settings.logo_desktop.src }}"
+            alt="{{ store.name }}"
+            loading="eager"
+            height="100%"
+            width="{{ section.settings.logo_desktop_width }}px"
+          >
+        </a>
+      {% else %}
+        <a class="name" ui-slot="link-button" href="/">
+          {{ store.name }}
+        </a>
+      {% endif %}
+    </div>
+
+    {% if section.settings.header_layout == 'logo-center-menu-split' %}
+      <div class="left-split">
+        <ul class="links" data-split-menu="first-half">
+          {% assign second_half_first_index = main-link-list.links.size | divided_by: 2 | floor %}
+          {% assign first_half_last_index = second_half_first_index | minus: 1 %}
+
+          {% for index in (0..first_half_last_index) %}
+            {% assign link = main-link-list.links[index] %}
+            <li class="link">
+              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="right-split">
+        <ul class="links" data-split-menu="second-half">
+          {% assign second_half_last_index = main-link-list.links.size | minus: 1 %}
+          {% assign second_half_first_index = main-link-list.links.size | divided_by: 2 | floor %}
+
+          {% for index in (second_half_first_index..second_half_last_index) %}
+            {% assign link = main-link-list.links[index] %}
+            <li class="link">
+              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="actions">
+          <button
+            class="search"
+            ui-slot="button"
+            data-variant="primary"
+            data-mode="ghost"
+            data-size="md"
+            data-as-icon
+            aria-label="Search"
+            popovertarget="search"
+          >
+            {% render 'misc.icon', name: 'hgi-search-01' %}
+          </button>
+          <button
+            class="cart-drawer-trigger"
+            ui-slot="button"
+            data-variant="primary"
+            data-mode="ghost"
+            data-size="md"
+            data-as-icon
+            aria-label="Cart"
+            popovertarget="cart"
+          >
+            {% render 'misc.icon', name: settings.cart_icon %}
+            <div ui-slot="badge" data-variant="light" data-size="md" data-color="primary" data-square="true">
+              <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+            </div>
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <ul class="links">
+        {% for link in main-link-list.links %}
+          <li class="link">
+            <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+              {{ link.title }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="actions">
+        <button
+          class="search"
+          ui-slot="button"
+          data-variant="secondary"
+          data-size="lg"
+          aria-label="Search"
+          popovertarget="search"
+        >
+          <span ui-slot="button-front">
+            {% render 'misc.icon', name: 'hgi-search-02', size: 24 %}
+            <span>{{ 'header.search' | t }}</span>
+          </span>
+        </button>
+        <button
+          class="cart-drawer-trigger"
+          ui-slot="button"
+          data-variant="secondary"
+          data-size="lg"
+          aria-label="Cart"
+          popovertarget="cart"
+        >
+          <span ui-slot="button-front">
+            {% render 'misc.icon', name: settings.cart_icon, size: 24 %}
+            <span>{{ 'header.cart' | t }}</span>
+            <div ui-slot="badge" data-variant="filled" data-size="md" data-color="primary" data-square="true">
+              <ui-cart-bubble>{{ cart.count | default: 0 }}</ui-cart-bubble>
+            </div>
+          </span>
+        </button>
+      </div>
+    {% endif %}
+  </ui-header>
+
+  {% render 'misc.menu-drawer' %}
+  {% render 'misc.cart-drawer' %}
+  {% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.header.label",
+  "tag": "header",
+  "limit": 1,
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#FEFEFE"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#1D1D1D"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_desktop",
+      "label": "t:sections.header.header_layout.logo.label"
+    },
+    {
+      "type": "range",
+      "id": "logo_desktop_width",
+      "label": "t:sections.header.header_layout.logo.desktop_logo_width",
+      "min": 40,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "header_layout",
+      "label": "t:sections.header.header_layout.label",
+      "options": [
+        { "label": "t:sections.header.header_layout.options.logo_first_menu_center", "value": "logo-first-menu-center" },
+        { "label": "t:sections.header.header_layout.options.logo_center_menu_first", "value": "logo-center-menu-first" }
+      ],
+      "default": "logo-center-menu-first"
+    },
+    {
+      "type": "select",
+      "id": "header_sticky_type",
+      "label": "t:sections.header.sticky_mode.label",
+      "options": [
+        { "label": "t:sections.header.sticky_mode.options.none", "value": "none" },
+        { "label": "t:sections.header.sticky_mode.options.always", "value": "always" },
+        { "label": "t:sections.header.sticky_mode.options.on_scroll_up", "value": "on-scroll-up" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.mobile_layout"
+    },
+    {
+      "type": "range",
+      "id": "logo_mobile_width",
+      "label": "t:sections.header.header_layout.logo.mobile_logo_width",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 75
+    },
+    {
+      "type": "checkbox",
+      "id": "menu_show_social_media_links",
+      "label": "t:sections.header.menu.menu_show_social_media_links",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.actions.search_recommendations"
+    },
+    {
+      "type": "textarea",
+      "id": "search_most_searched_keywords",
+      "label": "t:sections.header.actions.search_most_searched_keywords"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.header.actions.keywords_hint"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recommended_collection",
+      "label": "t:sections.header.actions.show_product_recommendations",
+      "default": false
+    },
+    {
+      "type": "category",
+      "id": "search_collection",
+      "label": "t:sections.header.actions.product_recommendations",
+      "visible_if": {
+        "setting_id": "show_recommended_collection",
+        "value": true
+      }
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.actions.cart_recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_recommendations",
+      "label": "t:sections.header.actions.show_cart_recommendations",
+      "default": false
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_1",
+      "label": "t:sections.header.actions.collection_1",
+      "visible_if": {
+        "setting_id": "show_cart_recommendations",
+        "value": true
+      }
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_2",
+      "label": "t:sections.header.actions.collection_2",
+      "visible_if": {
+        "setting_id": "show_cart_recommendations",
+        "value": true
+      }
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_3",
+      "label": "t:sections.header.actions.collection_3",
+      "visible_if": {
+        "setting_id": "show_cart_recommendations",
+        "value": true
+      }
+    },
+    {
+      "type": "category",
+      "id": "cart_collection_4",
+      "label": "t:sections.header.actions.collection_4",
+      "visible_if": {
+        "setting_id": "show_cart_recommendations",
+        "value": true
+      }
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

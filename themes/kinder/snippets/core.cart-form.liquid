@@ -12,7 +12,11 @@
 
   {% unless cart.count > 0 %}
     {% assign empty_title = 'cart.empty.title' | t %}
-    {% assign empty_description = 'cart.empty.description' | t %}
+
+    {% if section.settings.show_cart_recommendations %}
+      {% assign empty_description = 'cart.empty.description' | t %}
+    {% endif %}
+
     {% render 'misc.empty', heading: empty_title, subheading: empty_description %}
   {% else %}
     {% render 'misc.empty', heading: empty_title, subheading: empty_description, hidden: true %}
@@ -24,29 +28,15 @@
         {% assign collection = section.settings[item] %}
 
         {% if collection != blank %}
-          <a class="collection" href="{{ collection.url }}">
-            <div class="image">
-              {% if collection.preview_image %}
-                <img
-                  src="{{ collection.preview_image.original }}"
-                  alt="{{ collection.name }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                >
-              {% else %}
-                {% render 'misc.image-fallback' %}
-              {% endif %}
-            </div>
+          <a class="collection" href="/collections/{{ collection.slug }}">
             <span class="name">{{ collection.name }}</span>
             <div
               ui-slot="button"
-              data-variant="primary"
-              data-mode="lighter"
+              data-mode="ghost"
               data-size="lg"
               data-as-icon
             >
-              {% render 'misc.icon', name: 'hgi-arrow-up-right-01' %}
+              {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
             </div>
           </a>
         {% endif %}
