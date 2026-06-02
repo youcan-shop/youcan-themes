@@ -29,19 +29,6 @@
 
         {% if collection != blank %}
           <a class="collection" href="/collections/{{ collection.slug }}">
-            <div class="image">
-              {% if collection.preview_image %}
-                <img
-                  src="{{ collection.preview_image.original }}"
-                  alt="{{ collection.name }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                >
-              {% else %}
-                {% render 'misc.image-fallback' %}
-              {% endif %}
-            </div>
             <span class="name">{{ collection.name }}</span>
             <div
               ui-slot="button"
