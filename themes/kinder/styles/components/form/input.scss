@@ -23,7 +23,7 @@
   outline-offset: 1px;
   background-color: var(--input-bg);
   box-shadow: 0 1px 2px 0 color-mix(in srgb, currentcolor 3%, transparent);
-  color: var(--color-primary);
+  color: var(--fg-color);
   font: var(--font-body-md);
 
   /* Size */
@@ -114,6 +114,14 @@
       &:last-child {
         padding-inline-end: var(--spacing-0);
       }
+
+      &:hover {
+        background-color: transparent;
+
+        &::placeholder {
+          color: color-mix(in oklab, currentcolor 50%, transparent);
+        }
+      }
     }
 
     [ui-slot*="input-affix"],
@@ -182,6 +190,7 @@
     [ui-slot="input-button"] {
       padding-inline: var(--inline-padding);
       background-color: transparent;
+      color: inherit;
 
       &:first-child {
         border-inline-end: 1px solid var(--color-surface-variant);
@@ -221,7 +230,11 @@
 
   /* Hover */
   &:hover:not(:focus, :disabled, :has([ui-slot="input"]:focus)) {
-    background-color: var(--color-surface-container-high);
+    background-color: var(--color-surface-container-low);
+
+    [ui-slot="input"] {
+      background-color: transparent;
+    }
 
     &:not([aria-invalid="true"], :has([ui-slot*="input-affix"], [ui-slot="input-button"])) {
       border-color: transparent;

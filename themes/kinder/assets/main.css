@@ -1742,7 +1742,7 @@
     outline-offset:1px;
     background-color:var(--input-bg);
     box-shadow:0 1px 2px 0 color-mix(in srgb, currentcolor 3%, transparent);
-    color:var(--color-primary);
+    color:var(--fg-color);
     font:var(--font-body-md);
   }
   [ui-slot=input][data-size=lg],
@@ -1863,6 +1863,17 @@
     padding-inline-end:0px;
     padding-inline-end:var(--spacing-0);
   }
+  [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input]:hover,
+  [ui-slot=input-wrapper][ui-slot=input-wrapper] [ui-slot=input]:hover{
+    background-color:transparent;
+  }
+  [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input]:hover::-moz-placeholder, [ui-slot=input-wrapper][ui-slot=input-wrapper] [ui-slot=input]:hover::-moz-placeholder{
+    color:color-mix(in oklab, currentcolor 50%, transparent);
+  }
+  [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input]:hover::placeholder,
+  [ui-slot=input-wrapper][ui-slot=input-wrapper] [ui-slot=input]:hover::placeholder{
+    color:color-mix(in oklab, currentcolor 50%, transparent);
+  }
   [ui-slot=input][ui-slot=input-wrapper] [ui-slot*=input-affix],
   [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input-inline-affix],
   [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input-icon],
@@ -1943,6 +1954,7 @@
   [ui-slot=input-wrapper][ui-slot=input-wrapper] [ui-slot=input-button]{
     padding-inline:var(--inline-padding);
     background-color:transparent;
+    color:inherit;
   }
   [ui-slot=input][ui-slot=input-wrapper] [ui-slot=input-button]:first-child,
   [ui-slot=input-wrapper][ui-slot=input-wrapper] [ui-slot=input-button]:first-child{
@@ -1988,7 +2000,11 @@
   }
   [ui-slot=input]:hover:not(:focus):not(:disabled):not(:has([ui-slot=input]:focus)),
   [ui-slot=input-wrapper]:hover:not(:focus):not(:disabled):not(:has([ui-slot=input]:focus)){
-    background-color:var(--color-surface-container-high);
+    background-color:var(--color-surface-container-low);
+  }
+  [ui-slot=input]:hover:not(:focus):not(:disabled):not(:has([ui-slot=input]:focus)) [ui-slot=input],
+  [ui-slot=input-wrapper]:hover:not(:focus):not(:disabled):not(:has([ui-slot=input]:focus)) [ui-slot=input]{
+    background-color:transparent;
   }
   [ui-slot=input]:hover:not(:focus):not(:disabled):not(:has([ui-slot=input]:focus)):not([aria-invalid=true]):not(:has([ui-slot*=input-affix], [ui-slot=input-button])),
   [ui-slot=input-wrapper]:hover:not(:focus):not(:disabled):not(:has([ui-slot=input]:focus)):not([aria-invalid=true]):not(:has([ui-slot*=input-affix], [ui-slot=input-button])){
