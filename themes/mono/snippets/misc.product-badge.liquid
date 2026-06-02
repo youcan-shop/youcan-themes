@@ -12,6 +12,8 @@
   {% render 'misc.product-badge', type: 'discount-percentage', style: 'default', position: 'top-left'  %}
 {% endcomment %}
 
+{% assign pd = block.settings.product | default: product %}
+
 <span
   class="product-badge"
   ui-slot="status-badge"
@@ -20,6 +22,7 @@
   data-size="xs"
   data-style="{{ style | default: settings.badge_style }}"
   data-position="{{ position | default: settings.badge_position }}"
+  {{ block.youcan_attributes }}
 >
   {% assign badge_type = type | default: settings.badge_type %}
 
@@ -32,13 +35,16 @@
     {% when 'discount-amount' %}
       {% if compare_at_price %}
         {% assign fixed = compare_at_price | minus: price %}
-        <span>Save {{ fixed | money }}</span>
+        <span>
+          {{- 'product_badge.save' | t }}
+          {{ fixed | money -}}
+        </span>
       {% endif %}
     {% when 'low-stock' %}
       {% assign badge_threshold = threshold | default: settings.badge_threshold %}
 
-      {% if block.settings.product.isTrackingInventory and block.settings.product.inventory < badge_threshold %}
-        <span>Only {{ block.settings.product.inventory }} left!</span>
+      {% if pd.isTrackingInventory and pd.product.inventory < badge_threshold %}
+        <span>{{ 'product_badge.low_stock' | t |  replace: '[count]',  {{ pd.product.inventory }}</span>
       {% endif %}
     {% when 'custom-text' %}
       {% if type %}

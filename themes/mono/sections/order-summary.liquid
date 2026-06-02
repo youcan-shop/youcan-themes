@@ -85,7 +85,7 @@
       </div>
       {% if order.vat != 0 %}
         <div class="field">
-          <span class="label">VAT ({{ order.vat | times: 100 | append: '%' }}):</span>
+          <span class="label">{{ 'order_summary.vat' | t }} ({{ order.vat | times: 100 | append: '%' }}):</span>
           <span class="value">{{ order.total_tax_amount | default: 0 | money }}</span>
         </div>
       {% endif %}
@@ -110,9 +110,9 @@
     </a>
 
     {% capture wa_message %}
-Hey, just ordered from {{ store.name }}
-Looks really good, you should check them out
-{{ store.domain }}/orders/{{ order.id }}
+{{ 'order_summary.whatsApp_message.line_1' | t | replace: '[store]', store.name  }}
+{{ 'order_summary.whatsApp_message.line_2' | t }}
+https://{{ store.domain }}/orders/{{ order.id }}
 {% endcapture %}
 
     <a
@@ -140,20 +140,20 @@ Looks really good, you should check them out
       "id": "icon",
       "label": "t:sections.order_summary.animated_icon",
       "options": [
-        { "label": "Party popper", "value": "party-popper_1f389" },
-        { "label": "Confetti ball", "value": "confetti-ball_1f38a" },
-        { "label": "Gem stone", "value": "gem-stone_1f48e" },
-        { "label": "Balloon", "value": "balloon_1f388" },
-        { "label": "Fire", "value": "fire_1f525" },
-        { "label": "Rose", "value": "rose_1f339" },
-        { "label": "Heart", "value": "red-heart_2764-fe0f" },
-        { "label": "Money", "value": "money-with-wings_1f4b8" },
-        { "label": "Glowing star", "value": "glowing-star_1f31f" },
-        { "label": "Waving hand", "value": "waving-hand_light-skin-tone_1f44b-1f3fb_1f3fb" },
-        { "label": "Raising hands", "value": "raising-hands_light-skin-tone_1f64c-1f3fb_1f3fb" },
-        { "label": "Flexed Biceps", "value": "flexed-biceps_light-skin-tone_1f4aa-1f3fb_1f3fb" },
-        { "label": "Thumbs up", "value": "thumbs-up_light-skin-tone_1f44d-1f3fb_1f3fb" },
-        { "label": "Victory hand", "value": "victory-hand_light-skin-tone_270c-1f3fb_1f3fb" }
+        { "label": "t:sections.order_summary.icons.party_popper", "value": "party-popper_1f389" },
+        { "label": "t:sections.order_summary.icons.confetti_ball", "value": "confetti-ball_1f38a" },
+        { "label": "t:sections.order_summary.icons.gem_stone", "value": "gem-stone_1f48e" },
+        { "label": "t:sections.order_summary.icons.balloon", "value": "balloon_1f388" },
+        { "label": "t:sections.order_summary.icons.fire", "value": "fire_1f525" },
+        { "label": "t:sections.order_summary.icons.rose", "value": "rose_1f339" },
+        { "label": "t:sections.order_summary.icons.red_heart", "value": "red-heart_2764-fe0f" },
+        { "label": "t:sections.order_summary.icons.money_with_wings", "value": "money-with-wings_1f4b8" },
+        { "label": "t:sections.order_summary.icons.glowing_star", "value": "glowing-star_1f31f" },
+        { "label": "t:sections.order_summary.icons.waving_hand", "value": "waving-hand_light-skin-tone_1f44b-1f3fb_1f3fb" },
+        { "label": "t:sections.order_summary.icons.raising_hands", "value": "raising-hands_light-skin-tone_1f64c-1f3fb_1f3fb" },
+        { "label": "t:sections.order_summary.icons.flexed_biceps", "value": "flexed-biceps_light-skin-tone_1f4aa-1f3fb_1f3fb" },
+        { "label": "t:sections.order_summary.icons.thumbs_up", "value": "thumbs-up_light-skin-tone_1f44d-1f3fb_1f3fb" },
+        { "label": "t:sections.order_summary.icons.victory_hand", "value": "victory-hand_light-skin-tone_270c-1f3fb_1f3fb" }
       ],
       "default": "party-popper_1f389"
     },

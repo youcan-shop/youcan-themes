@@ -6,7 +6,6 @@
 {% endcomment %}
 
 {% comment %} Favicon {% endcomment %}
-
 {% assign words = store.name | split: '' %}
 {% assign first = words[0] | upcase | slice: 0 %}
 {% assign second = words[1] | upcase | slice: 0 %}
@@ -205,6 +204,7 @@
 {{ 'misc.carousel.js' | asset_url | script_tag_deferred }}
 {{ 'misc.marque.js' | asset_url | script_tag_deferred }}
 {{ 'core.quantity.css' | asset_url | stylesheet_tag }}
+{{ 'misc.empty.css' | asset_url | stylesheet_tag }}
 
 {% if template.name != 'thankyou' and template.name != 'page' %}
   {{ 'core.shop-button.css' | asset_url | stylesheet_tag }}
@@ -231,18 +231,6 @@
 
   window.successStrings = {
     review_submitted: '{{ 'success_messages.review_submitted' | t }}'
-  }
-
-  window.inventoryStatuses = {
-    in_stock: '{{ 'product.inventory_in_stock' | t }}',
-    in_stock_show_count: '{{ 'product.inventory_in_stock_show_count' | t }}',
-    low_stock: '{{ 'product.inventory_low_stock' | t }}',
-    low_stock_show_count: '{{ 'product.inventory_low_stock_show_count' | t }}',
-    out_of_stock: '{{ 'product.inventory_out_of_stock' | t }}',
-  }
-
-  window.actions = {
-    out_of_stock: '{{ "general.out_of_stock" | t }}'
   }
 
   window.specialOffer = {

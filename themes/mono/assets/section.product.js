@@ -70,31 +70,27 @@ if (!customElements.get("ui-product")) {
     }
 
     updateInventoryStatus(inventory) {
-      const inventoryElement = this.querySelector("[data-product-item='inventory']");
+      const inventoryElements = this.querySelectorAll("[data-product-item='inventory']");
 
-      if (!inventoryElement) return;
+      if (inventoryElements.length < 1) return;
 
-      const statuses = window.inventoryStatuses;
-      const inventoryStatus = this.querySelector("[data-product-item='inventory']");
+      const threshold = Number(inventoryElements[0].getAttribute("data-threshold")) || 0;
 
-      const showCount = inventoryElement.getAttribute("data-show-count");
-      const threshold = Number(inventoryElement.getAttribute("data-threshold")) || 0;
+      let status;
 
-      const statusKey =
-        inventory === 0
-          ? "out_of_stock"
-          : inventory > threshold
-            ? showCount
-              ? "in_stock_show_count"
-              : "in_stock"
-            : showCount
-              ? "low_stock_show_count"
-              : "low_stock";
+      if (inventory == null || inventory === 0) {
+        status = "sold-out";
+      } else if (inventory === 1) {
+        status = "last-item";
+      } else if (inventory <= threshold) {
+        status = "low-stock";
+      } else {
+        status = "high-stock";
+      }
 
-      inventoryStatus.lastElementChild.textContent = statuses[statusKey].replace("%", inventory);
-      inventoryElement.dataset.inventory = statusKey.replace("_show_count", "").replaceAll("_", "-");
-
-      inventoryStatus.dataset.status = inventory === 0 ? "disabled" : inventory > threshold ? "completed" : "pending";
+      inventoryElements.forEach((element) => {
+        element.hidden = element.dataset.status !== status;
+      });
     }
 
     updateMainImage(image_src) {

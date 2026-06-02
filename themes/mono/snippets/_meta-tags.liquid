@@ -18,12 +18,17 @@
     {% case template.name %}
       {% when 'index' %}
         {{ store_title }}
+      {% when 'search' %}
+        {% paginate search.products by 24 cod %}
+          {% capture t %}"{{ terms | escape }}"{% endcapture %}
+          {{ 'metadata.pages.search' | t | replace: '[count]', items.size | replace: '[term]', t }} - {{ store_title }}
+        {% endpaginate %}
       {% when 'list-collections' %}
-        {{ 'metadata.page_titles.collections' | t }} - {{ store_title }}
+        {{ 'metadata.pages.collections' | t }} - {{ store_title }}
       {% when 'cart' %}
-        {{ 'metadata.page_titles.cart' | t }} - {{ store_title }}
+        {{ 'metadata.pages.cart' | t }} - {{ store_title }}
       {% when 'thankyou' %}
-        {{ 'metadata.page_titles.thank-you' | t }} - {{ store_title }}
+        {{ 'metadata.pages.thank-you' | t }} - {{ store_title }}
       {% else %}
         {{ template.name }} - {{ store_title }}
     {% endcase %}
