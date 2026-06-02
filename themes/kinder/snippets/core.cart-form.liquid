@@ -12,7 +12,11 @@
 
   {% unless cart.count > 0 %}
     {% assign empty_title = 'cart.empty.title' | t %}
-    {% assign empty_description = 'cart.empty.description' | t %}
+
+    {% if section.settings.show_cart_recommendations %}
+      {% assign empty_description = 'cart.empty.description' | t %}
+    {% endif %}
+
     {% render 'misc.empty', heading: empty_title, subheading: empty_description %}
   {% else %}
     {% render 'misc.empty', heading: empty_title, subheading: empty_description, hidden: true %}
