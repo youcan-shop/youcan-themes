@@ -154,22 +154,24 @@
     {% endif %}
     {% unless settings.shopping_flow == 'express_checkout' and settings.form_style == 'inline' %}
       <div class="shop-bar">
-        {% render 'core.quantity', variant: '3d', size: 'md' %}
-        {% case settings.shopping_flow %}
-          {% when 'cart' %}
-            {% render 'core.shop-button', product: product, size: 'lg' %}
-          {% when 'express_checkout' %}
-            {% if settings.form_style == 'drawer' %}
-              <button ui-slot="button" data-mode="filled" data-size="lg" type="button" popovertarget="express-checkout-{{ product.id }}">
-                {{ 'general.buy_it_now' | t }}
-              </button>
-            {% endif %}
-          {% when 'both' %}
-            <div class="actions">
-              {% render 'core.shop-button', skip_to_checkout: true, product: product, mode: '3d', size: 'lg' %}
+        <div class="bar-wrapper">
+          {% render 'core.quantity', variant: '3d', size: 'md' %}
+          {% case settings.shopping_flow %}
+            {% when 'cart' %}
               {% render 'core.shop-button', product: product, size: 'lg' %}
-            </div>
-        {% endcase %}
+            {% when 'express_checkout' %}
+              {% if settings.form_style == 'drawer' %}
+                <button ui-slot="button" data-mode="filled" data-size="lg" type="button" popovertarget="express-checkout-{{ product.id }}">
+                  {{ 'general.buy_it_now' | t }}
+                </button>
+              {% endif %}
+            {% when 'both' %}
+              <div class="actions">
+                {% render 'core.shop-button', skip_to_checkout: true, product: product, mode: '3d', size: 'lg' %}
+                {% render 'core.shop-button', product: product, size: 'lg' %}
+              </div>
+          {% endcase %}
+        </div>
       </div>
     {% endunless %}
   </div>
@@ -215,6 +217,22 @@
     }
   ],
   "blocks": [
+    {
+      "type": "inventory-counter",
+      "label": "t:sections.product_information.blocks.inventory_counter.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "inventory_threshold",
+          "label": "t:common.inventory.threshold",
+          "step": 1,
+          "min": 2,
+          "max": 100,
+          "default": 10
+        }
+      ]
+    },
     {
       "type": "add-ons",
       "label": "t:sections.product_information.blocks.add_ons.label",

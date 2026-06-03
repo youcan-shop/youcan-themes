@@ -1,1 +1,1 @@
-# Bella Theme
+# Mono Theme

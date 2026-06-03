@@ -124,15 +124,9 @@
   max-width:100%;
 }
 [ui-section=product-information] > .core .shop-bar{
-  display:grid;
   position:fixed;
   z-index:50;
-  grid-template-columns:auto 60%;
-  align-items:center;
   width:580px;
-  padding:var(--spacing-16);
-  grid-gap:var(--spacing-16);
-  gap:var(--spacing-16);
   transform:translateX(calc(var(--spacing-16) * -1));
   background-color:var(--color-on-primary);
   inset-block-end:var(--spacing-0);
@@ -141,15 +135,24 @@
 [dir="rtl"] [ui-section=product-information] > .core .shop-bar{
   transform:translateX(var(--spacing-16));
 }
-[ui-section=product-information] > .core .shop-bar .quantity{
+[ui-section=product-information] > .core .shop-bar .bar-wrapper{
+  display:grid;
+  grid-template-columns:auto 60%;
+  align-items:center;
+  padding:var(--spacing-16);
+  grid-gap:var(--spacing-16);
+  gap:var(--spacing-16);
+  background-color:var(--color-surface-container);
+}
+[ui-section=product-information] > .core .shop-bar .bar-wrapper .quantity{
   display:flex;
   align-items:center;
 }
-[ui-section=product-information] > .core .shop-bar .quantity .value{
+[ui-section=product-information] > .core .shop-bar .bar-wrapper .quantity .value{
   width:var(--spacing-48);
   text-align:center;
 }
-[ui-section=product-information] > .core .shop-bar .actions{
+[ui-section=product-information] > .core .shop-bar .bar-wrapper .actions{
   display:grid;
   grid-gap:var(--spacing-8);
   gap:var(--spacing-8);
@@ -163,14 +166,16 @@
     width:40px;
   }
   [ui-section=product-information] > .core .shop-bar{
-    grid-template-columns:min-content auto;
     width:100%;
   }
-  [ui-section=product-information] > .core .shop-bar:has(.actions){
+  [ui-section=product-information] > .core .shop-bar .bar-wrapper{
+    grid-template-columns:min-content auto;
+  }
+  [ui-section=product-information] > .core .shop-bar .bar-wrapper:has(.actions){
     gap:var(--spacing-16);
     grid-template-columns:1fr;
   }
-  [ui-section=product-information] > .core .shop-bar:has(.actions) ui-quantity{
+  [ui-section=product-information] > .core .shop-bar .bar-wrapper:has(.actions) ui-quantity{
     justify-content:center;
   }
 }
