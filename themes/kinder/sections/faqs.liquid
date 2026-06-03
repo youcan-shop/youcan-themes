@@ -2,48 +2,25 @@
 
 <div
   ui-section="faqs"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
-  data-orientation="{{ section.settings.orientation }}"
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --inner-bg-color: {{ section.settings.inner_bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
 >
-  <div ui-slot="head" class="content-area">
-    <h4 class="subheading">{{ section.settings.subheading }}</h4>
-    <h1 class="heading">{{ section.settings.heading }}</h1>
-    <p class="description">{{ section.settings.description }}</p>
-    <a
-      class="cta"
-      {% if section.settings.button_style == 'underline' %}
-        ui-slot="link-button"
-        data-underline="true"
-      {% else %}
-        ui-slot="button"
-        data-variant="primary"
-      {% endif %}
-      {% if section.settings.button_style == 'primary' %}
-        data-mode="filled"
-      {% elsif section.settings.button_style == 'secondary' %}
-        data-mode="lighter"
-      {% endif %}
-      data-size="lg"
-      href="{{ section.settings.button_link }}"
-    >
-      {{ section.settings.button_label }}
-    </a>
+  <div class="faqs-card">
+    <div ui-slot="head">
+      <h1 class="heading">{{ section.settings.heading }}</h1>
+      <p class="description">{{ section.settings.description }}</p>
+    </div>
+    <ul class="items-area" ui-slot="accordion">
+      {% for faq in section.blocks %}
+        {% render 'block.faq' %}
+      {% endfor %}
+    </ul>
   </div>
-  <ul class="items-area" ui-slot="accordion">
-    {% for faq in section.blocks %}
-      {% render 'block.faq' %}
-    {% endfor %}
-  </ul>
 </div>
 
 {% schema %}
@@ -58,51 +35,26 @@
       "content": "t:common.headers.colors"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": false
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
     },
     {
       "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
+      "id": "inner_bg_color",
+      "label": "t:sections.faqs.inner_bg_color",
+      "default": "#FEFEFE"
     },
     {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-foreground"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.layout"
-    },
-    {
-      "type": "select",
-      "id": "orientation",
-      "label": "t:common.globals.orientation",
-      "options": [
-        { "label": "t:common.layout.orientation.vertical", "value": "vertical" },
-        { "label": "t:common.layout.orientation.horizontal", "value": "horizontal" }
-      ],
-      "default": "horizontal"
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
     },
     {
       "type": "header",
       "content": "t:common.headers.header"
-    },
-    {
-      "type": "text",
-      "id": "subheading",
-      "label": "t:common.header.subheading",
-      "default": "t:sections.faqs.default.subheading"
     },
     {
       "type": "text",
@@ -118,30 +70,33 @@
     },
     {
       "type": "header",
-      "content": "t:common.headers.button"
+      "content": "t:common.headers.media"
     },
     {
-      "type": "text",
-      "id": "button_label",
-      "label": "t:common.button.label",
-      "default": "t:sections.faqs.default.button"
-    },
-    {
-      "type": "url",
-      "id": "button_link",
-      "label": "t:common.button.link",
-      "default": "#"
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:common.globals.image"
     },
     {
       "type": "select",
-      "id": "button_style",
+      "id": "image_ratio",
+      "label": "t:common.globals.image_ratio",
       "options": [
-        { "label": "t:common.button.style.options.primary", "value": "primary" },
-        { "label": "t:common.button.style.options.secondary", "value": "secondary" },
-        { "label": "t:common.button.style.options.underline", "value": "underline" }
+        { "label": "t:common.layout.ratio.square", "value": "square" },
+        { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
+        { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
       ],
-      "label": "t:common.button.style.label",
-      "default": "primary"
+      "default": "portrait"
+    },
+    {
+      "type": "select",
+      "id": "image_placement",
+      "label": "t:common.globals.image_placement",
+      "options": [
+        { "label": "t:common.layout.image_placement.image_first", "value": "first" },
+        { "label": "t:common.layout.image_placement.image_second", "value": "second" }
+      ],
+      "default": "first"
     },
     {
       "type": "header",
@@ -155,7 +110,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 40
     },
     {
       "type": "range",
@@ -165,7 +120,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 40
     }
   ],
   "blocks": [
