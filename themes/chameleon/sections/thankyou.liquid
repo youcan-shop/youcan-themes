@@ -17,30 +17,32 @@
         </div>
         {% render 'const-payment-status', status: order.paymentStatusSlug %}
       </div>
-      <div class="summary-title">{{ 'order.products' | t }}</div>
-      <div class="order-info">
-        {% for product in order.order_variants %}
-          <div class="product">
-            <div class="image">
-              {% if product.image %}
-                <img
-                  src="{{ product.image }}"
-                  alt="{{ product.name }}"
-                  height="100%"
-                  width="100%"
-                >
-              {% else %}
-                {% render 'ui-icon', name: 'image', filled: true %}
-              {% endif %}
+      {% if order.order_variants.size %}
+        <div class="summary-title">{{ 'order.products' | t }}</div>
+        <div class="order-info">
+          {% for product in order.order_variants %}
+            <div class="product">
+              <div class="image">
+                {% if product.image %}
+                  <img
+                    src="{{ product.image }}"
+                    alt="{{ product.name }}"
+                    height="100%"
+                    width="100%"
+                  >
+                {% else %}
+                  {% render 'ui-icon', name: 'image', filled: true %}
+                {% endif %}
+              </div>
+              <div class="content">
+                <span class="title">{{ product.name }}</span>
+                <span class="count">x{{ product.quantity }}</span>
+              </div>
+              <div class="value">{{ product.price | default: 0 | money }}</div>
             </div>
-            <div class="content">
-              <span class="title">{{ product.name }}</span>
-              <span class="count">x{{ product.quantity }}</span>
-            </div>
-            <div class="value">{{ product.price | default: 0 | money }}</div>
-          </div>
-        {% endfor %}
-      </div>
+          {% endfor %}
+        </div>
+      {% endif %}
       {% if order.bundles %}
         {% assign types = 'single,multi,buyxgety' | split: ',' %}
 
@@ -96,8 +98,8 @@
                       {% else %}
                         {% unless bundle_item.price %}
                           <span class="free">
-                            {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 16 %}
-                            Free
+                            {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 20 %}
+                            {{ 'order.free' | t }}
                           </span>
                         {% else %}
                           <span class="total">{{ bundle_item.price | default: 0 | money }}</span>

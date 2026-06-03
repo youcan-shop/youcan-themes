@@ -235,7 +235,12 @@ class BaseCartItem extends HTMLElement {
   }
 
   updateItemPrice(priceElement, price) {
-    priceElement.textContent = formatCurrency(price);
+    if (price === 0) {
+      priceElement.firstElementChild.removeAttribute("hidden");
+      priceElement.lastElementChild.toggleAttribute("hidden", true);
+    } else {
+      priceElement.textContent = formatCurrency(price);
+    }
   }
 
   updateItemComparePrice(comparePriceElement, comparePrice) {
@@ -435,7 +440,6 @@ class CartRemove extends HTMLElement {
 
     try {
       const cartItemIds = this.cartItemValue.split(",").filter(Boolean);
-      console.log(cartItemIds);
       const productVariantIds = this.productVariantValue.split(",").filter(Boolean);
 
       if (!cartItemIds.length || !productVariantIds.length) return;

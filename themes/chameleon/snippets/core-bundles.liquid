@@ -31,46 +31,42 @@
     </div>
 
     <div class="core">
-      <div class="products">
+      <div class="images">
         {% for item in bundle.bundle_products %}
           {% assign p = item.selected_variant %}
 
-          <div class="product">
-            {% if forloop.first %}
-              <span class="total">x{{ forloop.length }}</span>
+          <div class="media">
+            {% if p.image %}
+              <img
+                src="https://cdn.youcan.shop/{{ p.image }}"
+                alt="{{ item.product.name }}"
+                width="80"
+                height="80"
+                loading="lazy"
+              >
+            {% elsif item.thumbnail %}
+              <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="80" height="80" loading="lazy">
+            {% else %}
+              {% render 'ui-icon', name: 'image', filled: true %}
             {% endif %}
-            <a class="media" href="{{ item.product.url }}">
-              {% if p.image %}
-                <img
-                  src="https://cdn.youcan.shop/{{ p.image }}"
-                  alt="{{ item.product.name }}"
-                  width="180"
-                  height="180"
-                  loading="lazy"
-                >
-              {% elsif item.thumbnail %}
-                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="180" height="180" loading="lazy">
-              {% else %}
-                {% render 'ui-icon', name: 'image', size: 40, filled: true %}
-              {% endif %}
-            </a>
-            <div class="content">
-              <a class="title" href="{{ item.product.url }}">{{ item.product.name }}</a>
-              <div class="price">
-                <span class="original">{{ item.price | money }}</span>
-                {% if item.discount_value %}
-                  <span class="compare-at">{{ item.product.price | money }}</span>
-                {% endif %}
-              </div>
-              {% unless p.variations == null or p.variations.default %}
-                <div class="variants">
-                  {% for variant in p.variations %}
-                    <span class="variant">{{ variant[1] }}</span>
-                  {% endfor %}
-                </div>
-              {% endunless %}
-            </div>
           </div>
+        {% endfor %}
+      </div>
+      <div class="info">
+        <span class="name">{{ product.name }}</span>
+        {% for item in bundle.bundle_products %}
+          {% assign p = item.selected_variant %}
+
+          {% unless p.variations == null or p.variations.default %}
+            <div class="group">
+              <span class="index">#{{ forloop.index }}</span>
+              <div class="variants">
+                {% for variant in p.variations %}
+                  <span class="variant">{{ variant[1] }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          {% endunless %}
         {% endfor %}
       </div>
     </div>
@@ -281,7 +277,7 @@
         {% endfor %}
 
         <div class="free-group">
-          <span class="label">You get</span>
+          <span class="label">{{ 'bundle.you_get' | t }}</span>
           <div class="items">
             {% for item in bundle.bundle_products %}
               {% assign p = item.selected_variant %}
@@ -314,8 +310,8 @@
                     {% endunless %}
                   </div>
                   <span class="free">
-                    {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 16 %}
-                    Free
+                    {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 20 %}
+                    {{ 'order.free' | t }}
                   </span>
                 </div>
               {% endif %}
