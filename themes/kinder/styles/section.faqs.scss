@@ -21,7 +21,7 @@
         .media {
           width: 400px;
           overflow: hidden;
-          border-radius: var(--spacing-16);
+          border-radius: var(--radius-16);
           background-color: oklch(from var(--inner-bg-color) calc(l - 0.0225) c h);
 
           &[data-image-ratio="square"] {
@@ -55,7 +55,7 @@
       }
     }
 
-    @media (width <= 1028px) {
+    @media (width <= 1024px) {
       .faqs-card {
         gap: var(--spacing-24);
 
@@ -70,11 +70,17 @@
       }
     }
 
-    @media (width <= 769px) {
+    @media (width <= 1024px) {
       padding-inline: var(--spacing-16);
 
       .faqs-card {
         padding: var(--spacing-24);
+
+        .content {
+          .media {
+            aspect-ratio: 4 / 3 !important;
+          }
+        }
       }
     }
   }
