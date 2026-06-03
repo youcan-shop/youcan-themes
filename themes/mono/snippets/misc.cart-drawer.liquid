@@ -50,7 +50,7 @@
           {% assign title = 'note_title_' | append: i %}
           {% assign description = 'note_description_' | append: i %}
 
-          {% if section.settings[title] != blank or section.settings[description] != blank %}
+          {% if section.settings[title] or section.settings[description] %}
             {% assign total_notes = total_notes | plus: 1 %}
 
             <li class="note-item" ui-carousel="item" ui-slot="carousel-item">

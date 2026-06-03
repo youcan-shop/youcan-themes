@@ -1,6 +1,22 @@
 {{ 'section.text.css' | asset_url | stylesheet_tag }}
 
-<div ui-section="text">
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="text"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="text"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
   {% if section.settings.heading %}
     <h3 class="heading">{{ section.settings.heading }}</h3>
   {% endif %}
@@ -24,7 +40,26 @@
     { "type": "header", "content": "t:common.headers.link" },
     { "type": "checkbox", "id": "show_link", "label": "t:common.link.show_link", "default": true },
     { "type": "text", "id": "link_label", "label": "t:common.button.label.label", "default": "t:sections.text.default.link" },
-    { "type": "text", "id": "link_url", "label": "t:common.link.url", "default": "#" }
+    { "type": "url", "id": "link_url", "label": "t:common.link.url", "default": "#" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
   ]
 }
 {% endschema %}

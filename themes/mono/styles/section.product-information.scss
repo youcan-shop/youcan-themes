@@ -143,14 +143,9 @@
     }
 
     .shop-bar {
-      display: grid;
       position: fixed;
       z-index: 50;
-      grid-template-columns: auto 60%;
-      align-items: center;
       width: 580px;
-      padding: var(--spacing-16);
-      gap: var(--spacing-16);
       transform: translateX(calc(var(--spacing-16) * -1));
       background-color: var(--color-on-primary);
       inset-block-end: var(--spacing-0);
@@ -160,20 +155,29 @@
         transform: translateX(var(--spacing-16));
       }
 
-      .quantity {
-        display: flex;
-        align-items: center;
-
-        .value {
-          width: var(--spacing-48);
-          text-align: center;
-        }
-      }
-
-      .actions {
+      .bar-wrapper {
         display: grid;
-        gap: var(--spacing-8);
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: auto 60%;
+        align-items: center;
+        padding: var(--spacing-16);
+        gap: var(--spacing-16);
+        background-color: var(--color-surface-container);
+
+        .quantity {
+          display: flex;
+          align-items: center;
+
+          .value {
+            width: var(--spacing-48);
+            text-align: center;
+          }
+        }
+
+        .actions {
+          display: grid;
+          gap: var(--spacing-8);
+          grid-template-columns: repeat(2, 1fr);
+        }
       }
     }
   }
@@ -191,15 +195,18 @@
 
     & > .core {
       .shop-bar {
-        grid-template-columns: min-content auto;
         width: 100%;
 
-        &:has(.actions) {
-          gap: var(--spacing-16);
-          grid-template-columns: 1fr;
+        .bar-wrapper {
+          grid-template-columns: min-content auto;
 
-          ui-quantity {
-            justify-content: center;
+          &:has(.actions) {
+            gap: var(--spacing-16);
+            grid-template-columns: 1fr;
+
+            ui-quantity {
+              justify-content: center;
+            }
           }
         }
       }
