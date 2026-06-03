@@ -20,6 +20,7 @@
   }
   [ui-section=faqs] .faqs-card .content .media{
     width:400px;
+    overflow:hidden;
     border-radius:var(--spacing-16);
     background-color:oklch(from var(--inner-bg-color) calc(l - 0.0225) c h);
   }
@@ -31,6 +32,16 @@
   }
   [ui-section=faqs] .faqs-card .content .media[data-image-ratio=landscape]{
     aspect-ratio:4/3;
+  }
+  [ui-section=faqs] .faqs-card .content .media > img{
+    -o-object-fit:cover;
+       object-fit:cover;
+  }
+  [ui-section=faqs] .faqs-card .content .media[data-image-placement=first]{
+    order:-1;
+  }
+  [ui-section=faqs] .faqs-card .content .media[data-image-placement=second]{
+    order:1;
   }
   [ui-section=faqs] .faqs-card .content .items-area{
     flex:1;
