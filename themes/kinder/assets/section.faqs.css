@@ -1,32 +1,58 @@
 @layer sections{
   [ui-section=faqs]{
+    padding:var(--top-spacing) 10% var(--bottom-spacing);
+    background-color:var(--bg-color);
     gap:var(--spacing-32);
-    padding:var(--top-spacing) 8% var(--bottom-spacing) !important;
   }
-  [ui-section=faqs][data-orientation=vertical]{
+  [ui-section=faqs] .faqs-card{
     display:flex;
     flex-direction:column;
-    align-items:center;
-    justify-content:center;
+    padding:var(--spacing-40);
+    border-radius:var(--radius-28);
+    background-color:var(--inner-bg-color);
+    color:var(--fg-color);
+    gap:var(--spacing-48);
   }
-  [ui-section=faqs][data-orientation=vertical] .items-area{
-    width:50%;
+  [ui-section=faqs] .faqs-card .content{
+    display:flex;
+    gap:var(--spacing-64);
+    flex-wrap:wrap;
   }
-  [ui-section=faqs][data-orientation=horizontal]{
-    display:grid;
-    grid-template-columns:40% auto;
-    align-items:flex-start;
+  [ui-section=faqs] .faqs-card .content .media{
+    width:400px;
+    border-radius:var(--spacing-16);
+    background-color:oklch(from var(--inner-bg-color) calc(l - 0.0225) c h);
+  }
+  [ui-section=faqs] .faqs-card .content .media[data-image-ratio=square]{
+    aspect-ratio:1/1;
+  }
+  [ui-section=faqs] .faqs-card .content .media[data-image-ratio=portrait]{
+    aspect-ratio:3/4;
+  }
+  [ui-section=faqs] .faqs-card .content .media[data-image-ratio=landscape]{
+    aspect-ratio:4/3;
+  }
+  [ui-section=faqs] .faqs-card .content .items-area{
+    flex:1;
   }
   @media (max-width: 1028px){
-    [ui-section=faqs][data-orientation]{
-      gap:var(--spacing-48);
-      display:flex;
-      flex-direction:column-reverse;
-      align-items:center;
-      text-align:center;
+    [ui-section=faqs] .faqs-card{
+      gap:var(--spacing-24);
     }
-    [ui-section=faqs][data-orientation] .items-area{
+    [ui-section=faqs] .faqs-card .content{
+      flex-direction:column;
+      gap:var(--spacing-24);
+    }
+    [ui-section=faqs] .faqs-card .content .media{
       width:100%;
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=faqs]{
+      padding-inline:var(--spacing-16);
+    }
+    [ui-section=faqs] .faqs-card{
+      padding:var(--spacing-24);
     }
   }
 }

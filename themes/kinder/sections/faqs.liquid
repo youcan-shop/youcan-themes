@@ -15,11 +15,26 @@
       <h1 class="heading">{{ section.settings.heading }}</h1>
       <p class="description">{{ section.settings.description }}</p>
     </div>
-    <ul class="items-area" ui-slot="accordion">
-      {% for faq in section.blocks %}
-        {% render 'block.faq' %}
-      {% endfor %}
-    </ul>
+    <div class="content">
+      <div class="media" data-image-placement="{{ section.settings.image_placement }}" data-image-ratio="{{ section.settings.image_ratio }}">
+        {% if section.settings.image.src %}
+          <img
+            src="{{ section.settings.image.src }}"
+            alt="FAQs"
+            height="100%"
+            width="100%"
+            loading="lazy"
+          >
+        {% else %}
+          {% render 'misc.image-fallback', icon_size: 100 %}
+        {% endif %}
+      </div>
+      <ul class="items-area" ui-slot="accordion">
+        {% for faq in section.blocks %}
+          {% render 'block.faq' %}
+        {% endfor %}
+      </ul>
+    </div>
   </div>
 </div>
 

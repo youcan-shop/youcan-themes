@@ -1,36 +1,67 @@
 @layer sections {
   [ui-section="faqs"] {
+    padding: var(--top-spacing) 10% var(--bottom-spacing);
+    background-color: var(--bg-color);
     gap: var(--spacing-32);
-    padding: var(--top-spacing) 8% var(--bottom-spacing) !important;
 
-    &[data-orientation="vertical"] {
+    .faqs-card {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      padding: var(--spacing-40);
+      border-radius: var(--radius-28);
+      background-color: var(--inner-bg-color);
+      color: var(--fg-color);
+      gap: var(--spacing-48);
 
-      .items-area {
-        width: 50%;
+      .content {
+        display: flex;
+        gap: var(--spacing-64);
+        flex-wrap: wrap;
+
+        .media {
+          width: 400px;
+          border-radius: var(--spacing-16);
+          background-color: oklch(from var(--inner-bg-color) calc(l - 0.0225) c h);
+
+          &[data-image-ratio="square"] {
+            aspect-ratio: 1 / 1;
+          }
+
+          &[data-image-ratio="portrait"] {
+            aspect-ratio: 3 / 4;
+          }
+
+          &[data-image-ratio="landscape"] {
+            aspect-ratio: 4 / 3;
+          }
+        }
+
+        .items-area {
+          flex: 1;
+        }
       }
     }
 
-    &[data-orientation="horizontal"] {
-      display: grid;
-      grid-template-columns: 40% auto;
-      align-items: flex-start;
+    @media (width <= 1028px) {
+      .faqs-card {
+        gap: var(--spacing-24);
+
+        .content {
+          flex-direction: column;
+          gap: var(--spacing-24);
+
+          .media {
+            width: 100%;
+          }
+        }
+      }
     }
 
-    @media (width <= 1028px) {
-      &[data-orientation] {
-        gap: var(--spacing-48);
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-        text-align: center;
+    @media (width <= 769px) {
+      padding-inline: var(--spacing-16);
 
-        .items-area {
-          width: 100%;
-        }
+      .faqs-card {
+        padding: var(--spacing-24);
       }
     }
   }
