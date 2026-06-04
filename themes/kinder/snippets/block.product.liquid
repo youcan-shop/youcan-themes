@@ -10,7 +10,9 @@
 
 {% if product.has_only_default_variant %}
   {% assign default_variant = product.variants[0] %}
-{% else %}
+{% endif %}
+
+{% if product.selected_or_first_available_variant %}
   {% assign default_variant = product.selected_or_first_available_variant %}
 {% endif %}
 
@@ -60,17 +62,17 @@
         <span>{{ 'product.save' | t | replace: '%', savings }}</span>
       {% endif %}
       {% if product.isTrackingInventory %}
-        {% assign status_color = 'green' %}
-        {% assign status_text = 'product.inventory_in_stock' | t %}
+        {% assign status_color = 'gray' %}
+        {% assign status_text = 'product.inventory_out_of_stock' | t %}
 
-        {% if default_variant.inventory < 10 %}
+        {% if default_variant.inventory > 1 %}
           {% assign status_color = 'orange' %}
           {% assign status_text = 'product.inventory_low_stock' | t %}
         {% endif %}
 
-        {% if default_variant.inventory < 1 %}
-          {% assign status_color = 'gray' %}
-          {% assign status_text = 'product.inventory_out_of_stock' | t %}
+        {% if default_variant.inventory > 10 %}
+          {% assign status_color = 'green' %}
+          {% assign status_text = 'product.inventory_in_stock' | t %}
         {% endif %}
 
         <span ui-slot="badge" data-variant="ghost" data-size="sm" data-color="{{ status_color }}">{{ status_text }}</span>
@@ -107,17 +109,21 @@
       </div>
     </div>
     <div class="actions">
-      {% render 'core.quantity', size: 'md' %}
-      <button
-        ui-slot="button"
-        data-variant="secondary"
-        data-size="lg"
-      >
-        <span ui-slot="button-front">
-          {% render 'misc.icon', name: 'hgi-shopping-bag-03', size: 24 %}
-          <span>Add to Cart</span>
-        </span>
-      </button>
+      {% if product.variants.size > 1 %}
+        <a
+          ui-slot="button"
+          data-variant="secondary"
+          data-size="lg"
+          href="{{ product.url }}"
+        >
+          <span ui-slot="button-front">
+            {{ 'general.choose_options' | t }}
+          </span>
+        </a>
+      {% else %}
+        {% render 'core.quantity', size: 'md' %}
+        {% render 'core.shop-button' %}
+      {% endif %}
     </div>
   </div>
 </li>
