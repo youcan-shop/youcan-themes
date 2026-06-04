@@ -1,29 +1,25 @@
-@layer sections{
-  #youcan-section--upsell{
-    display:flex;
-    flex:1;
-    flex-direction:column;
-  }
-  #youcan-section--upsell ui-upsell{
-    display:flex;
-    flex:1;
-    flex-direction:column;
-    gap:var(--spacing-24);
-    padding:var(--top-spacing) 8% var(--bottom-spacing) !important;
-  }
-  #youcan-section--upsell ui-upsell .head{
-    display:grid;
-    grid-gap:var(--spacing-12);
-    gap:var(--spacing-12);
-  }
-  #youcan-section--upsell ui-upsell .head .title{
-    font:var(--font-title-lg);
-  }
-  #youcan-section--upsell ui-upsell .head .options{
-    display:flex;
-    gap:var(--spacing-8);
-  }
-  #youcan-section--upsell ui-upsell .head .options [ui-slot=button]{
-    width:150px;
-  }
+.youcan-section:has([ui-section=upsell]){
+  display:flex;
+  flex:1;
+}
+
+[ui-section=upsell]{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:var(--spacing-24);
+}
+[ui-section=upsell] .head{
+  display:flex;
+  flex-direction:column;
+  gap:var(--spacing-12);
+}
+[ui-section=upsell] .head .title{
+  font:var(--font-title-md);
+}
+[ui-section=upsell] .head .options{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  grid-gap:var(--spacing-8);
+  gap:var(--spacing-8);
 }
