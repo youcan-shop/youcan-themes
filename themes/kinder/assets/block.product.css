@@ -8,8 +8,7 @@
     display:flex;
     position:relative;
     flex-direction:column;
-    height:-moz-fit-content;
-    height:fit-content;
+    height:100%;
     overflow:hidden;
     border-radius:var(--radius-16);
     background-color:#fefefe;
@@ -39,23 +38,29 @@
        object-fit:cover;
     transition:var(--transition-expressive-default-spatial);
   }
-  [ui-block=product] .savings-stock{
+  [ui-block=product] .content{
+    display:flex;
+    flex:1;
+    flex-direction:column;
+  }
+  [ui-block=product] .stats{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:var(--spacing-4) var(--spacing-16);
     background-color:var(--bg-shade-color);
   }
-  [ui-block=product] .savings-stock > span{
+  [ui-block=product] .stats > span{
+    padding:var(--spacing-4) var(--spacing-16);
     font:var(--font-label-xs);
   }
-  [ui-block=product] .savings-stock [ui-slot=badge]{
+  [ui-block=product] .stats [ui-slot=badge]{
     margin-inline-start:auto;
   }
   [ui-block=product] .info{
-    display:grid;
+    display:flex;
+    flex:1;
+    flex-direction:column;
     padding:var(--spacing-16);
-    grid-gap:var(--spacing-8);
     gap:var(--spacing-8);
   }
   [ui-block=product] .info .price{
