@@ -126,6 +126,8 @@ class BaseCartItem extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
+    this.updateItemSubPrice(elements.subtotal, item.quantity, item.price);
+    this.updateItemCompareAtPrice(elements.compareAtPrice, item.productVariant.compare_at_price, item.price, item.quantity);
     this.updateItemDeleteButtonAttributes(elements.deleteButton.parentElement, item.id, item.productVariant.id);
 
     this.additionalItemUpdates(elements, item);
@@ -195,6 +197,21 @@ class BaseCartItem extends HTMLElement {
     priceElement.textContent = formatCurrency(price);
   }
 
+  updateItemSubPrice(subPriceElement, quantity, basePrice) {
+    subPriceElement.textContent = formatCurrency(quantity * basePrice);
+  }
+
+  updateItemCompareAtPrice(compareAtPriceElement, compareAtPrice, price, quantity) {
+    if (compareAtPrice) {
+      compareAtPriceElement.textContent = formatCurrency(compareAtPrice * quantity);
+      compareAtPriceElement.removeAttribute("hidden");
+
+      const save = compareAtPriceElement.parentElement.nextElementSibling;
+      save.querySelector("span").textContent = formatCurrency(compareAtPrice * quantity - price * quantity);
+      save.removeAttribute("hidden");
+    }
+  }
+
   updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
     buttonElement.setAttribute("item", cartItemId);
     buttonElement.setAttribute("product-variant", productVariantId);
@@ -223,7 +240,7 @@ class CartDrawerItems extends BaseCartItem {
     super();
 
     this.cart = this.closest("[ui-slot='drawer-content']");
-    this.subTotal = this.cart.querySelector("[ui-cart-item='subtotal']");
+    this.subTotal = this.cart.querySelector("[ui-cart-item='cart-subtotal']");
   }
 
   handleCartUpdate(payload) {
@@ -255,8 +272,8 @@ class CartDrawerItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, price, variant, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
-    return { image, title, price, variant, quantity, deleteButton };
+    const [image, title, price, subtotal, compareAtPrice, variant, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
+    return { image, title, price, subtotal, compareAtPrice, variant, quantity, deleteButton };
   }
 
   setIsEmpty(isEmpty = false) {
@@ -281,18 +298,8 @@ class CartItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, price, subtotal, variant, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
-    return { image, title, price, subtotal, variant, quantity, deleteButton };
-  }
-
-  additionalItemUpdates(elements, item) {
-    if (elements.subtotal) {
-      this.updateItemSubPrice(elements.subtotal, item.quantity, item.price);
-    }
-  }
-
-  updateItemSubPrice(subPriceElement, quantity, basePrice) {
-    subPriceElement.textContent = formatCurrency(quantity * basePrice);
+    const [image, title, price, subtotal, compareAtPrice, variant, quantity, deleteButton] = cartItem.querySelectorAll("[ui-cart-item]");
+    return { image, title, price, subtotal, compareAtPrice, variant, quantity, deleteButton };
   }
 
   setIsEmpty(isEmpty = false) {
