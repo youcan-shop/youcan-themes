@@ -3,13 +3,10 @@
 <ui-carousel
   ui-section="collections"
   style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-    {% if section.settings.override_global_colors %}
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    {% endif %}
   "
   {% if section.settings.override_global_colors %}
     data-scoped-color
@@ -18,44 +15,51 @@
 >
   <div class="content-area">
     <div ui-slot="head">
-      <h4 class="subheading">{{ section.settings.subheading }}</h4>
       <h1 class="heading">{{ section.settings.heading }}</h1>
       <p class="description">{{ section.settings.description }}</p>
     </div>
-    {% if section.blocks.size > 1 %}
-      <div class="actions">
-        <button
-          ui-carousel="arrow-previous"
-          ui-slot="button"
-          data-variant="primary"
-          data-mode="stroke"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Previous"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-        </button>
-        <button
-          ui-carousel="arrow-next"
-          ui-slot="button"
-          data-variant="primary"
-          data-mode="stroke"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Next"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-        </button>
-      </div>
-    {% endif %}
+    <a
+      ui-slot="link-button"
+      data-size="md"
+      data-underline="true"
+      href="/collections"
+    >
+      {{ section.settings.button_label }}
+    </a>
   </div>
   <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
     {% for collection in section.blocks %}
       {% render 'block.collection' %}
     {% endfor %}
   </ul>
+  {% if section.blocks.size > 1 %}
+    <div class="controls">
+      <button
+        ui-carousel="arrow-previous"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="stroke"
+        data-size="lg"
+        data-as-icon
+        data-flip-icon-in-rtl
+        aria-label="Previous"
+      >
+        {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+      </button>
+      <button
+        ui-carousel="arrow-next"
+        ui-slot="button"
+        data-variant="primary"
+        data-mode="stroke"
+        data-size="lg"
+        data-as-icon
+        data-flip-icon-in-rtl
+        aria-label="Next"
+      >
+        {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+      </button>
+    </div>
+  {% endif %}
 </ui-carousel>
 
 {% schema %}
