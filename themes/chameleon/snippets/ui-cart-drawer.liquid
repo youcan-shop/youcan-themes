@@ -32,33 +32,39 @@
         {% endfor %}
 
         {% if cart.bundles %}
-          {% for bundle in cart.bundles.single %}
-            <div class="bundle-group">
-              <div class="head">
-                <span class="title" ui-bundle-title>{{ bundle.title }}</span>
-                <ui-cart-remove
-                  item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
-                  product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
-                >
-                  <button
-                    ui-button
-                    data-variant="secondary"
-                    data-size="xs"
-                    as-icon
-                    class="remove"
-                    aria-label="remove"
-                    ui-cart-item="delete-button"
+          {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+          {% for t in types %}
+            {% assign type = cart.bundles[t] %}
+
+            {% for bundle in type %}
+              <div class="bundle-group">
+                <div class="head">
+                  <span class="title" ui-bundle-title>{{ bundle.title }}</span>
+                  <ui-cart-remove
+                    item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                    product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
                   >
-                    {% render 'ui-icon', name: 'close_small' %}
-                  </button>
-                </ui-cart-remove>
+                    <button
+                      ui-button
+                      data-variant="secondary"
+                      data-size="xs"
+                      as-icon
+                      class="remove"
+                      aria-label="remove"
+                      ui-cart-item="delete-button"
+                    >
+                      {% render 'ui-icon', name: 'close_small' %}
+                    </button>
+                  </ui-cart-remove>
+                </div>
+                <div class="group" ui-bundle-group>
+                  {% for bundle_item in bundle.items %}
+                    {% render 'misc-cart-drawer-bundle-item', bundle_item: bundle_item %}
+                  {% endfor %}
+                </div>
               </div>
-              <div class="group" ui-bundle-group>
-                {% for bundle_item in bundle.items %}
-                  {% render 'misc-cart-drawer-bundle-item', bundle_item: bundle_item %}
-                {% endfor %}
-              </div>
-            </div>
+            {% endfor %}
           {% endfor %}
         {% endif %}
       </ui-cart-drawer-items>

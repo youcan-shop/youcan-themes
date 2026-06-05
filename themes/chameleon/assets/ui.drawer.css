@@ -120,6 +120,8 @@ ui-drawer {
                   overflow: hidden;
                   white-space: nowrap;
                   text-overflow: ellipsis;
+                  color: currentColor;
+                  text-decoration: none;
                 }
 
                 .variants {
@@ -185,6 +187,10 @@ ui-drawer {
             gap: var(--spacing-8);
             justify-content: space-between;
 
+            &:has(.free[hidden]) {
+              order: -1;
+            }
+
             .image {
               width: 50px;
               height: auto;
@@ -220,6 +226,17 @@ ui-drawer {
               .compare-at {
                 opacity: 0.5;
                 text-decoration: line-through;
+              }
+
+              .free {
+                color: var(--color-primary);
+                background-color: var(--color-primary-container);
+                padding: var(--spacing-4) var(--spacing-6);
+                font: var(--font-body-sm);
+                border-radius: var(--radius-xs);
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-4);
               }
             }
           }
