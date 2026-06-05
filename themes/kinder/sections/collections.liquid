@@ -5,6 +5,8 @@
   style="
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
+    --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
+    --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
@@ -27,7 +29,12 @@
       {{ section.settings.button_label }}
     </a>
   </div>
-  <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+  <ul
+    class="items-area"
+    ui-carousel="wrapper"
+    ui-slot="carousel"
+    aria-orientation="vertical"
+  >
     {% for collection in section.blocks %}
       {% render 'block.collection' %}
     {% endfor %}
@@ -118,7 +125,7 @@
       "min": 2,
       "max": 6,
       "step": 1,
-      "default": 4
+      "default": 5
     },
     {
       "type": "select",
