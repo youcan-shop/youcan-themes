@@ -64,11 +64,22 @@
     --badge-size: 16px;
 
     font: var(--font-label-sm);
-    text-transform: uppercase;
     gap: var(--spacing-8);
 
     & > [ui-slot="badge-dot"] {
       margin-inline: calc(var(--spacing-8) * -1);
+    }
+  }
+
+  &[data-size="xs"] {
+    --icon-size: 10px;
+    --badge-size: 14px;
+
+    font: var(--font-label-xs);
+    gap: var(--spacing-4);
+
+    & > [ui-slot="badge-dot"] {
+      margin-inline: calc(var(--spacing-4) * -1);
     }
   }
 
@@ -96,6 +107,14 @@
 
   &[data-variant="stroke"] {
     border-color: currentcolor;
+    color: var(--badge-color);
+  }
+
+  &[data-variant="ghost"] {
+    height: unset;
+    padding: unset;
+    border-color: transparent;
+    background-color: transparent;
     color: var(--badge-color);
   }
 

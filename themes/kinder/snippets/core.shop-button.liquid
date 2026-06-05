@@ -75,18 +75,16 @@
   {% else %}
     <button
       ui-slot="button"
-      data-variant="primary"
-      data-mode="{{ mode | default: 'filled' }}"
+      data-variant="{{  button_variant | default: "primary" }}"
       data-size="{{ size | default: 'lg' }}"
       aria-label="{{ 'general.add_to_cart' | t }}"
-      {% if as_icon %}
-        data-as-icon
-      {% endif %}
     >
-      {% render 'misc.icon', name: 'hgi-add-01' %}
-      {% unless as_icon %}
-        <span class="label">{{ 'general.add_to_cart' | t }}</span>
-      {% endunless %}
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: 'hgi-shopping-bag-03', size: 24 %}
+        {% unless as_icon %}
+          <span class="label">{{ 'general.add_to_cart' | t }}</span>
+        {% endunless %}
+      </span>
     </button>
   {% endif %}
 </ui-shop-button>

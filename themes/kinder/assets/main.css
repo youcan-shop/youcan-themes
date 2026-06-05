@@ -29,8 +29,9 @@
     --radius-soft:var(--radius-8);
     --radius-softer:var(--radius-12);
     --radius-rounded:calc(1px * infinity);
-    --shadow-lg:0 0 transparent, 0 0 transparent, 0 0 transparent, 0 2px 4px 0 color-mix(in srgb, var(--color-on-background) 3.92%, transparent), 0 1px 2px 0 color-mix(in srgb, var(--color-on-background) 5.88%, transparent), 0 0 1px 0 color-mix(in srgb, var(--color-on-background) 5.88%, transparent);
+    --shadow-lg:0 0 transparent, 0 0 transparent, 0 0 transparent, 0 2px 4px 0 color-mix(in srgb, var(--shadow-color) 3.92%, transparent), 0 1px 2px 0 color-mix(in srgb, var(--shadow-color) 5.88%, transparent), 0 0 1px 0 color-mix(in srgb, var(--shadow-color) 5.88%, transparent);
     --shadow-md:0 4px 48px rgba(0, 0, 0, 0.1);
+    --shadow-sm:0 4px 24px rgba(0, 0, 0, 0.05);
     --font-heading-2xl:500 56px/64px var(--font-heading-family);
     --font-heading-xl:500 48px/56px var(--font-heading-family);
     --font-heading-lg:500 40px/48px var(--font-heading-family);
@@ -247,13 +248,23 @@
     --icon-size:12px;
     --badge-size:16px;
     font:var(--font-label-sm);
-    text-transform:uppercase;
     gap:8px;
     gap:var(--spacing-8);
   }
   [ui-slot=badge][data-size=sm] > [ui-slot=badge-dot]{
     margin-inline:calc(8px * -1);
     margin-inline:calc(var(--spacing-8) * -1);
+  }
+  [ui-slot=badge][data-size=xs]{
+    --icon-size:10px;
+    --badge-size:14px;
+    font:var(--font-label-xs);
+    gap:4px;
+    gap:var(--spacing-4);
+  }
+  [ui-slot=badge][data-size=xs] > [ui-slot=badge-dot]{
+    margin-inline:calc(4px * -1);
+    margin-inline:calc(var(--spacing-4) * -1);
   }
   [ui-slot=badge]{
   }
@@ -278,6 +289,15 @@
   }
   [ui-slot=badge][data-variant=stroke]{
     border-color:currentcolor;
+    color:var(--badge-color);
+  }
+  [ui-slot=badge][data-variant=ghost]{
+    height:auto;
+    height:initial;
+    padding:0;
+    padding:initial;
+    border-color:transparent;
+    background-color:transparent;
     color:var(--badge-color);
   }
   [ui-slot=badge]{
@@ -407,7 +427,7 @@
     outline:none;
     background-color:var(--button-bg, var(--brand-color));
     color:var(--button-fg);
-    font:var(--font-label-md);
+    font:var(--font-label-sm);
     -webkit-text-decoration:none;
     text-decoration:none;
     cursor:pointer;
@@ -450,7 +470,7 @@
     outline:none;
     background-color:var(--button-bg, var(--brand-color));
     color:var(--button-fg);
-    font:var(--font-label-md);
+    font:var(--font-label-sm);
     -webkit-text-decoration:none;
     text-decoration:none;
     cursor:pointer;
@@ -624,8 +644,7 @@
   [ui-slot=button]{
   }
   [ui-slot=button][data-loading]{
-    --button-bg:var(--color-surface-container);
-    --button-fg:transparent;
+    --button-fg:transparent !important;
   }
   [ui-slot=button][data-loading]:not(:has([ui-slot=button-front])), [ui-slot=button][data-loading]:has([ui-slot=button-front]) [ui-slot=button-front]{
     position:relative;
@@ -717,7 +736,7 @@
     background-color:color-mix(in srgb, currentcolor 15%, transparent);
   }
   [ui-slot=divider]{
-    --color-divider:oklch(from var(--bg-color) calc(l - 0.03) c h);
+    --color-divider:oklch(from var(--bg-color) calc(l - 0.018) c h);
   }
   hr[ui-slot=divider][data-variant=line]{
     width:100%;

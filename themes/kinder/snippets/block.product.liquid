@@ -8,7 +8,14 @@
   {% render 'block.product', product: {...} %}
 {% endcomment %}
 
-{% assign default_variant = product.selected_or_first_available_variant %}
+{% if product.has_only_default_variant %}
+  {% assign default_variant = product.variants[0] %}
+{% endif %}
+
+{% if product.selected_or_first_available_variant %}
+  {% assign default_variant = product.selected_or_first_available_variant %}
+{% endif %}
+
 {% assign price = default_variant.price | default: product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
 
@@ -46,60 +53,92 @@
         {% render 'misc.image-fallback', icon_size: 40 %}
       {% endif %}
     </a>
-
-    {% if settings.cart_checkout_type == 'express-checkout' %}
-      {% render 'core.express-checkout' %}
-      <button
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="lighter"
-        data-size="lg"
-        type="button"
-        popovertarget="express-checkout-{{ product.id }}"
-        data-as-icon
-      >
-        {% render 'misc.icon', name: settings.cart_icon %}
-      </button>
-    {% else %}
-      {% if product.variants.size > 1 %}
-        {% render 'misc.product-drawer' %}
-      {% else %}
-        {% render 'core.shop-button' %}
-        {% render 'core.shop-button', mode: 'lighter', as_icon: true %}
-      {% endif %}
-    {% endif %}
   </div>
   <div class="content">
-    <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/products/{{ product.slug }}">
-      {% assign placeholder = 'product.title' | t %}
-      {{ product.name | default: placeholder }}
-    </a>
-    <div class="price">
-      <span class="original-price">
-        {{ price | default: 0 | money }}
-      </span>
+    <div class="stats">
       {% if compare_at_price %}
+        {% assign savings = compare_at_price | minus: price | money %}
+
+        <span>{{ 'product.save' | t | replace: '%', savings }}</span>
+      {% endif %}
+      {% if product.isTrackingInventory %}
+        {% assign status_color = 'gray' %}
+        {% assign status_text = 'product.inventory_out_of_stock' | t %}
+
+        {% if default_variant.inventory > 1 %}
+          {% assign status_color = 'orange' %}
+          {% assign status_text = 'product.inventory_low_stock' | t %}
+        {% endif %}
+
+        {% if default_variant.inventory > 10 %}
+          {% assign status_color = 'green' %}
+          {% assign status_text = 'product.inventory_in_stock' | t %}
+        {% endif %}
+
+        <span ui-slot="badge" data-variant="ghost" data-size="sm" data-color="{{ status_color }}">{{ status_text }}</span>
+      {% endif %}
+    </div>
+    <div class="info">
+      <div class="price">
+        <span class="current-price">
+          {{ price | default: 0 | money }}
+        </span>
         <s class="compare-at-price">
           {{ compare_at_price | default: 0 | money }}
         </s>
+      </div>
+      <p class="name">
+        {% assign placeholder = 'product.title' | t %}
+        {{ product.name | default: placeholder }}
+      </p>
+      <div class="collections">
+        {% assign visible_limit = 3 %}
+        {% assign total_categories = product.categories | size %}
+        {% assign remaining = total_categories | minus: visible_limit %}
+        {% for category in product.categories limit: visible_limit %}
+          <span class="category">
+            {{ category.name }}
+          </span>
+          {% unless forloop.last and remaining <= 0 %}
+            <span>, &nbsp;</span>
+          {% endunless %}
+        {% endfor %}
+        {% if remaining > 0 %}
+          <span class="category category--more">+{{ remaining }}</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="actions">
+      {% if product.variants.size > 1 %}
+        {% if product.isTrackingInventory %}
+          {% assign has_available_variant = false %}
+          {% for variant in product.variants %}
+            {% if variant.inventory > 0 %}
+              {% assign has_available_variant = true %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        <a
+          ui-slot="button"
+          data-variant="secondary"
+          data-size="lg"
+          href="{{ product.url }}"
+          {% unless product.isTrackingInventory == false or has_available_variant %}
+            aria-disabled="true"
+          {% endunless %}
+        >
+          <span ui-slot="button-front">
+            {% if product.isTrackingInventory and has_available_variant == false %}
+              {{ 'product.inventory_out_of_stock' | t }}
+            {% else %}
+              {{ 'general.choose_options' | t }}
+            {% endif %}
+          </span>
+        </a>
+      {% else %}
+        {% render 'core.quantity', size: 'sm' %}
+        {% render 'core.shop-button', button_variant: 'secondary' %}
       {% endif %}
     </div>
   </div>
-  {% if compare_at_price and section.settings.show_discount_badge %}
-    <div
-      class="badge"
-      ui-slot="status-badge"
-      data-variant="light"
-      data-status="{{ settings.sale_badge_status }}"
-    >
-      {% if settings.sale_badge_type == 'percentage' %}
-        {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
-        -{{ percentage }}%
-      {% else %}
-        {% assign fixed = compare_at_price | minus: price %}
-        {{ 'general.save' | t }}
-        {{ fixed | money }}
-      {% endif %}
-    </div>
-  {% endif %}
 </li>
