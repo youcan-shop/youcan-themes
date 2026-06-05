@@ -9,43 +9,39 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
-  <div class="banner" data-banner-placement="{{ section.settings.banner_placement }}">
-    <div ui-slot="head">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
+  {% if section.settings.show_banner %}
+    <div class="banner" data-banner-placement="{{ section.settings.banner_placement }}">
+      <div ui-slot="head">
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+        <p class="description">{{ section.settings.description }}</p>
+      </div>
+      {% if section.settings.button_label and section.settings.collection %}
+        <a
+          ui-slot="button"
+          data-variant="primary"
+          data-size="lg"
+          href="/collections/{{ section.settings.collection.slug }}"
+        >
+          <span ui-slot="button-front">
+            {{ section.settings.button_label }}
+          </span>
+        </a>
+      {% endif %}
     </div>
-    {% if section.settings.button_label and section.settings.collection %}
-      <a
-        ui-slot="button"
-        data-variant="primary"
-        data-size="lg"
-        href="/collections/{{ section.settings.collection.slug }}"
-      >
-        <span ui-slot="button-front">
-          {{ section.settings.button_label }}
-        </span>
-      </a>
-    {% endif %}
-  </div>
+  {% endif %}
   <div class="products">
     {% assign max_products = section.settings.max_products_to_show %}
 
     {% if section.settings.collection.id %}
       {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
-        <ul ui-block="products" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop | default: 4 }};">
+        <ul ui-block="products">
           {% for product in items %}
             {% render 'block.product', product: product %}
           {% endfor %}
         </ul>
       {% endpaginate %}
     {% else %}
-      <ul
-        ui-block="products"
-        style="
-          --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
-          --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
-        "
-      >
+      <ul ui-block="products">
         {% for product in (1..max_products) %}
           {% render 'block.product' %}
         {% endfor %}
@@ -93,26 +89,7 @@
       "min": 2,
       "max": 12,
       "step": 1,
-      "default": 8
-    },
-    {
-      "type": "range",
-      "id": "nbr_columns_desktop",
-      "label": "t:common.globals.number_per_column",
-      "min": 2,
-      "max": 6,
-      "step": 1,
-      "default": 3
-    },
-    {
-      "type": "select",
-      "id": "nbr_columns_mobile",
-      "label": "t:common.globals.number_per_column_mobile",
-      "options": [
-        { "label": "t:common.layout.column.one", "value": "1" },
-        { "label": "t:common.layout.column.two", "value": "2" }
-      ],
-      "default": "2"
+      "default": 6
     },
     {
       "type": "header",
