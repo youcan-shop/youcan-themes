@@ -1,5 +1,6 @@
 @layer snippets{
   [ui-block=collection]{
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
     display:flex;
     gap:var(--spacing-16);
     flex-direction:column;
@@ -21,6 +22,9 @@
   [ui-block=collection] .media > img{
     -o-object-fit:cover;
        object-fit:cover;
+  }
+  [ui-block=collection] .media ui-image-fallback{
+    background-color:var(--bg-shade-color);
   }
   [ui-block=collection] .title{
     flex:1;
