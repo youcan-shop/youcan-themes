@@ -110,14 +110,29 @@
     </div>
     <div class="actions">
       {% if product.variants.size > 1 %}
+        {% if product.isTrackingInventory %}
+          {% assign has_available_variant = false %}
+          {% for variant in product.variants %}
+            {% if variant.inventory > 0 %}
+              {% assign has_available_variant = true %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
         <a
           ui-slot="button"
           data-variant="secondary"
           data-size="lg"
           href="{{ product.url }}"
+          {% unless product.isTrackingInventory == false or has_available_variant %}
+            aria-disabled="true"
+          {% endunless %}
         >
           <span ui-slot="button-front">
-            {{ 'general.choose_options' | t }}
+            {% if product.isTrackingInventory and has_available_variant == false %}
+              {{ 'product.inventory_out_of_stock' | t }}
+            {% else %}
+              {{ 'general.choose_options' | t }}
+            {% endif %}
           </span>
         </a>
       {% else %}
