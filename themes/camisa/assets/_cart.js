@@ -580,10 +580,10 @@ class CartSummary extends HTMLElement {
       return;
     }
 
-    // this.discount.textContent = this.getFormattedDiscountValue(
-    //   coupon,
-    //   discountedPrice
-    // );
+    this.discount.textContent = this.getFormattedDiscountValue(
+      coupon,
+      discountedPrice
+    );
     this.couponCode.textContent = coupon.code;
 
     this.setShowCouponInSummary(true);

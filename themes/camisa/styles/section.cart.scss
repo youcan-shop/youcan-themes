@@ -162,8 +162,12 @@
             gap: var(--spacing-16);
 
             .label {
-              text-transform: uppercase;
               opacity: 0.7;
+              text-transform: uppercase;
+
+              &:has(+ .value[hidden]) {
+                display: none;
+              }
             }
 
             .value {
@@ -180,7 +184,7 @@
       }
     }
 
-    @media (max-width: 769px) {
+    @media (width <= 769px) {
       .core-area {
         table {
           thead {

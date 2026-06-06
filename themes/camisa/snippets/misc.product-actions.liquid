@@ -5,9 +5,45 @@
   {% render 'misc.product-actions' %}
 {% endcomment %}
 
-<div ui-box="actions">
+<div ui-box="content">
   {% for block in section.blocks %}
     {% case block.type %}
+      {% when 'block_badge' %}
+        <div
+          class="badge"
+          ui-slot="status-badge"
+          data-variant="stroke"
+          data-status="{{ settings.sale_badge_status }}"
+        >
+          {% if settings.sale_badge_type == 'percentage' %}
+            {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+            -{{ percentage }}%
+          {% else %}
+            {% assign fixed = compare_at_price | minus: price %}
+            {{ 'general.save' | t }}
+            {{ fixed | money }}
+          {% endif %}
+        </div>
+
+      {% when 'block_title' %}
+        <h1 ui-block="title" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
+          {{ product.name }}
+        </h1>
+
+      {% when 'block_inventory_status' %}
+        {% render 'const.inventory-status',
+          count: default_variant.inventory,
+          threshold: block.settings.low_inventory_threshold,
+          show_count: block.settings.show_inventory_count
+        %}
+
+      {% when 'block_description' %}
+        {% if product.description %}
+          <div ui-block="description" {{ block.youcan_attributes }}>
+            <article>{{ product.description }}</article>
+          </div>
+        {% endif %}
+
       {% when 'block_price' %}
         <div ui-block="price" data-size="{{ block.settings.price_size }}" {{ block.youcan_attributes }}>
           <span class="original-price" ui-product-item="price">
