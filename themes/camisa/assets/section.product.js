@@ -10,6 +10,7 @@ if (!customElements.get("ui-product")) {
 
       this.variants = [...this.querySelectorAll("[ui-variant]")];
       this.productForms = this.querySelectorAll("ui-shop-button");
+      this.productMedia = this.querySelector('[ui-product="media"]');
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
     }
 
@@ -93,14 +94,15 @@ if (!customElements.get("ui-product")) {
       inventoryStatus.dataset.status = inventory === 0 ? "disabled" : inventory > threshold ? "completed" : "pending";
     }
 
-    updateMainImage(image_src) {
+    updateMainImage(imageSrc) {
       if (!this.productMedia) return;
 
-      this.productMedia.querySelectorAll("img").forEach((element, i) => {
-        if (element.src === image_src) {
-          // Add your logic
-        }
-      });
+      const images = this.productMedia.querySelectorAll("img");
+      const index = [...images].findIndex((img) => img.src === imageSrc);
+
+      if (index !== -1) {
+        this.productMedia.swipe(index);
+      }
     }
 
     disableUnavailableOptions() {
