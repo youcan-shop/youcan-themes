@@ -1,0 +1,78 @@
+{% comment %}
+  Renders the cart bundle item template (cart page)
+
+  Accepts:
+  - bundle_item: {Object} cart item info
+
+  Usage:
+  {% render 'misc-cart-bundle-item', bundle_item: {...} %}
+{% endcomment %}
+
+<div class="bundle-item">
+  <a class="image" ui-cart-item="image" href="{{ bundle_item.url }}">
+    <img
+      src="{{ bundle_item.image }}"
+      alt="{{ bundle_item.name }}"
+      height="50"
+      width="50"
+      loading="lazy"
+      {% unless bundle_item.image %}
+        hidden
+      {% endunless %}
+    >
+    {% unless bundle_item.image %}
+      {% render 'ui-icon', name: 'image', filled: true %}
+    {% else %}
+      {% render 'ui-icon', name: 'image', filled: true, hidden: true %}
+    {% endunless %}
+  </a>
+  <div class="info">
+    <a class="name" href="{{ bundle_item.url }}" ui-cart-item="title">{{ bundle_item.name }}</a>
+    <div
+      class="variants"
+      ui-cart-item="variant"
+      {% if bundle_item.variations == null or bundle_item.variations.default %}
+        hidden
+      {% endif %}
+    >
+      {% for variant in bundle_item.variations %}
+        <span>{{ variant[1] }}</span>
+        {% unless forloop.index == bundle_item.variations.size - 1 %}
+          <span>/</span>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+  <div class="price">
+    <div class="original" ui-cart-item="price">
+      <span
+        class="free"
+        {% if bundle_item.price %}
+          hidden
+        {% endif %}
+      >
+        {% render 'ui-icon', name: 'featured_seasonal_and_gifts', size: 20 %}
+        {{ 'order.free' | t }}
+      </span>
+      <span
+        {% unless bundle_item.price %}
+          hidden
+        {% endunless %}
+      >
+        {{ bundle_item.price | default: 0 | money }}
+      </span>
+    </div>
+    <span
+      class="compare-at"
+      ui-cart-item="compare-price"
+      {% unless bundle.compare_price %}
+        hidden
+      {% endunless %}
+    >
+      {% if bundle.items.size %}
+        {{ bundle.compare_price | divided_by: bundle.items.size | money }}
+      {% endif %}
+    </span>
+    <span class="subtotal" ui-cart-item="subtotal">-</span>
+  </div>
+</div>
