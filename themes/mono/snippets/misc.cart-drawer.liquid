@@ -82,11 +82,59 @@
     <template ui-cart-drawer="item">
       {% render 'core.cart-drawer-item' %}
     </template>
+
     <ui-cart-drawer-items class="list">
       {% for product in cart.items %}
         {% render 'core.cart-drawer-item', product: product %}
       {% endfor %}
+
+      {% if cart.bundles %}
+        {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+        {% for t in types %}
+          {% assign type = cart.bundles[t] %}
+
+          {% for bundle in type %}
+            <div class="bundle-group">
+              <div class="head">
+                <span class="title" ui-bundle="title">{{ bundle.title }}</span>
+                <ui-cart-remove
+                  item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                  product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                >
+                  <button ui-slot="button" data-mode="lighter" data-size="xs" data-as-icon aria-label="Remove" ui-cart-item="delete-button">
+                    {% render 'misc.icon', name: 'hgi-delete-02' %}
+                  </button>
+                </ui-cart-remove>
+              </div>
+              <div class="list" ui-bundle="group">
+                {% for bundle_item in bundle.items %}
+                  {% render 'core.cart-drawer-bundle-item', product: bundle_item %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
     </ui-cart-drawer-items>
+
+    <template ui-cart-drawer="bundle-group">
+      <div class="bundle-group">
+        <div class="head">
+          <span class="title" ui-bundle="title"></span>
+          <ui-cart-remove>
+            <button ui-slot="button" data-mode="lighter" data-size="xs" data-as-icon aria-label="Remove" ui-cart-item="delete-button">
+              {% render 'misc.icon', name: 'hgi-delete-02' %}
+            </button>
+          </ui-cart-remove>
+        </div>
+        <div class="list" ui-bundle="group"></div>
+      </div>
+    </template>
+
+    <template ui-cart-drawer="bundle-item">
+      {% render 'core.cart-drawer-bundle-item' %}
+    </template>
 
     {% unless cart.count %}
       {% render 'misc.empty', type: 'cart' %}
@@ -187,7 +235,7 @@
       <div class="core">
         <div class="field">
           <span class="label">{{ 'header.cart.summary.subtotal' | t }}</span>
-          <span class="subtotal" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+          <span class="subtotal" ui-cart-item="cart-subtotal">{{ cart.sub_total | default: 0 | money }}</span>
         </div>
         <div class="events">
           <a ui-slot="button" data-mode="ghost" data-size="lg" href="/cart">

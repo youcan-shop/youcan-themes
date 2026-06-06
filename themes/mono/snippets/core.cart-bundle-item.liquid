@@ -1,40 +1,58 @@
 {% comment %}
-  Renders cart item template (cart drawer)
+  Renders cart bundle item template (cart page)
 
   Accepts:
   - product: {Object} cart item info
 
   Usage:
-  {% render 'core.cart-drawer-item', product: {...} %}
+  {% render 'core.cart-item', product: {...} %}
 {% endcomment %}
 
 <div class="product-item">
-  <a class="media" href="{{ product.url}}" ui-cart-item="image">
+  <div class="media" ui-cart-item="image">
     <img
       src="{{ product.image }}"
       alt="{{ product.name }}"
       height="100%"
       width="100%"
       loading="lazy"
-      {% if product.image contains '/store-front/images/product-default' %}
+      {% unless product.image %}
         hidden
-      {% endif %}
+      {% endunless %}
     >
-    {% if product.image contains '/store-front/images/product-default' %}
+    {% unless product.image %}
       {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
     {% else %}
       {% render 'misc.image-fallback', type: 'product', icon_size: 40, hidden: true %}
-    {% endif %}
-  </a>
+    {% endunless %}
+  </div>
   <div class="content">
     <div class="info">
-      <a class="name" href="{{ product.url }}" title="{{ product.name }}" ui-cart-item="title">
-        {{ product.name }}
-      </a>
+      <a class="name" ui-cart-item="title" href="{{ product.url }}">{{ product.name }}</a>
       <div class="price">
         <span class="original" ui-cart-item="price" hidden>{{ product.price | default: 0 | money }}</span>
         {% assign subtotal = product.quantity | times: product.price %}
-        <span class="subtotal" ui-cart-item="subtotal">{{ subtotal | money }}</span>
+        <div class="subtotal" ui-cart-item="subtotal">
+          <span
+            class="free"
+            ui-slot="status-badge"
+            data-variant="stroke"
+            data-status="completed"
+            {% if subtotal %}
+              hidden
+            {% endif %}
+          >
+            {% render 'misc.icon', name: 'hgi-gift' %}
+            {{ 'order_summary.free' | t }}
+          </span>
+          <span
+            {% unless subtotal %}
+              hidden
+            {% endunless %}
+          >
+            {{ subtotal | money }}
+          </span>
+        </div>
         <span
           class="compare-at"
           ui-cart-item="compare-at-price"
@@ -72,24 +90,6 @@
           <span>{{ variant[1] }}</span>
         {% endfor %}
       </div>
-    </div>
-    <div class="actions">
-      {% render 'core.quantity' %}
-      <ui-cart-remove
-        item="{{ product.id }}"
-        product-variant="{{ product.product_variant_id }}"
-      >
-        <button
-          ui-slot="button"
-          data-mode="lighter"
-          data-size="xs"
-          data-as-icon
-          aria-label="Remove"
-          ui-cart-item="delete-button"
-        >
-          {% render 'misc.icon', name: 'hgi-delete-02' %}
-        </button>
-      </ui-cart-remove>
     </div>
   </div>
 </div>
