@@ -596,7 +596,7 @@ class CartSummary extends HTMLElement {
 
   updateSummary(subTotal, total) {
     this.subtotal.textContent = formatCurrency(subTotal);
-    // this.total.textContent = formatCurrency(total);
+    this.total.textContent = formatCurrency(total);
   }
 
   getFormattedDiscountValue(coupon, discountedPrice) {
