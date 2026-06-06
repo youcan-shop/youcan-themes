@@ -13,6 +13,7 @@ if (!customElements.get("ui-product")) {
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
       this.addOns = this.querySelectorAll("[ui-add-on]");
       this.bundles = this.querySelectorAll("[data-bundle] input[type='checkbox']");
+      this.quantityInput = this.querySelector("ui-quantity");
     }
 
     connectedCallback() {
@@ -40,6 +41,10 @@ if (!customElements.get("ui-product")) {
           productForm.removeAttribute("bundle-id");
         }
       });
+
+      if (this.quantityInput) {
+        this.quantityInput.toggleAttribute("data-disabled", isChecked);
+      }
     }
 
     get selectedBundle() {

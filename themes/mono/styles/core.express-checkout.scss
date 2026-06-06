@@ -53,11 +53,21 @@ ui-express-checkout {
 
   .actions {
     display: grid;
-    grid-template-columns: min-content auto;
+    grid-template-columns: max-content auto;
     align-items: center;
     padding: var(--spacing-12);
     background-color: var(--color-surface-container);
     gap: var(--spacing-16);
+
+    &:has(.quantity[data-disabled]) {
+      .quantity {
+        display: none;
+      }
+
+      .bundle-selected {
+        display: flex !important;
+      }
+    }
   }
 }
 

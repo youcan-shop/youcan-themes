@@ -178,6 +178,16 @@
           gap: var(--spacing-8);
           grid-template-columns: repeat(2, 1fr);
         }
+
+        &:has(.quantity[data-disabled]) {
+          .quantity {
+            display: none;
+          }
+
+          .bundle-selected {
+            display: flex !important;
+          }
+        }
       }
     }
   }
@@ -198,7 +208,11 @@
         width: 100%;
 
         .bar-wrapper {
-          grid-template-columns: min-content auto;
+          grid-template-columns: max-content auto;
+
+          .bundle-selected {
+            width: 100%;
+          }
 
           &:has(.actions) {
             gap: var(--spacing-16);

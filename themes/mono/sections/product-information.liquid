@@ -155,6 +155,12 @@
     {% unless settings.shopping_flow == 'express_checkout' and settings.form_style == 'inline' %}
       <div class="shop-bar">
         <div class="bar-wrapper">
+          <div class="bundle-selected" ui-slot="status-badge" data-variant="stroke" data-status="completed" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" height="16" width="16">
+              <path fill-rule="evenodd" d="M1.5 8c0 -3.59 2.91 -6.5 6.5 -6.5s6.5 2.91 6.5 6.5 -2.91 6.5 -6.5 6.5S1.5 11.59 1.5 8Zm8.906666666666666 -1.2093333333333334a0.5 0.5 0 1 0 -0.8133333333333332 -0.5813333333333333l-2.1573333333333333 3.02L6.353333333333333 8.146666666666667a0.5 0.5 0 0 0 -0.7066666666666667 0.7066666666666667l1.5 1.5a0.5 0.5 0 0 0 0.7599999999999999 -0.06266666666666666l2.5 -3.5Z" clip-rule="evenodd" stroke-width="0.6667"></path>
+            </svg>
+            {{ 'general.selected_bundle' | t }}
+          </div>
           {% render 'core.quantity', variant: '3d', size: 'md' %}
           {% case settings.shopping_flow %}
             {% when 'cart' %}

@@ -49,12 +49,18 @@ ui-express-checkout [ui-express-checkout=field]::after{
 }
 .express-checkout-default .actions{
   display:grid;
-  grid-template-columns:min-content auto;
+  grid-template-columns:max-content auto;
   align-items:center;
   padding:var(--spacing-12);
   background-color:var(--color-surface-container);
   grid-gap:var(--spacing-16);
   gap:var(--spacing-16);
+}
+.express-checkout-default .actions:has(.quantity[data-disabled]) .quantity{
+  display:none;
+}
+.express-checkout-default .actions:has(.quantity[data-disabled]) .bundle-selected{
+  display:flex !important;
 }
 
 .express-checkout-drawer [ui-slot=drawer-body]{
