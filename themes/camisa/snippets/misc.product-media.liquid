@@ -6,6 +6,28 @@
 {% endcomment %}
 
 <ui-carousel ui-box="media" data-layout="carousel">
+  {% if product.images.size > 1 %}
+    <div class="markers">
+      {% for marker in product.images %}
+        <button
+          class="marker"
+          ui-carousel="marker"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+          data-image-ratio="{{ settings.product_image_ratio }}"
+        >
+          <img
+            src="{{ marker }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+            loading="eager"
+          >
+        </button>
+      {% endfor %}
+    </div>
+  {% endif %}
   <div
     class="items"
     ui-carousel="wrapper"
@@ -34,26 +56,4 @@
       {% render 'misc.image-fallback', icon_size: 60 %}
     {% endif %}
   </div>
-  {% if product.images.size > 1 %}
-    <div class="markers">
-      {% for marker in product.images %}
-        <button
-          class="marker"
-          ui-carousel="marker"
-          {% if forloop.first %}
-            aria-selected="true"
-          {% endif %}
-          data-image-ratio="{{ settings.product_image_ratio }}"
-        >
-          <img
-            src="{{ marker }}"
-            alt="{{ product.name }}"
-            height="100%"
-            width="100%"
-            loading="eager"
-          >
-        </button>
-      {% endfor %}
-    </div>
-  {% endif %}
 </ui-carousel>

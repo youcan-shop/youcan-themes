@@ -104,6 +104,16 @@
         {% endif %}
         <hr ui-slot="divider" data-variant="line">
         <div class="details">
+          <span class="label">{{ 'order.discount_amount' | t }}</span>
+          <span
+            class="value"
+            ui-summary-box="discount"
+            {% unless cart.coupon != null %}
+              hidden
+            {% endunless %}
+          >
+            {% render 'const.discount-value', coupon: cart.coupon %}
+          </span>
           <span class="label">{{ 'cart.page.summary.subtotal' | t }}</span>
           <span class="value" ui-summary-box="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
           <span class="label">{{ 'cart.page.summary.total' | t }}</span>
