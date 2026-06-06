@@ -54,7 +54,9 @@ class BaseCartItem extends HTMLElement {
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
       const { items } = payload.cartData;
       this.handleCartUpdate(payload);
-      this.updateCartList(items);
+
+      const { regularItems, bundles } = this.partitionCartItems(items);
+      this.updateCartList(regularItems, bundles);
     });
   }
 
@@ -98,22 +100,68 @@ class BaseCartItem extends HTMLElement {
     }
   }
 
-  updateCartList(items) {
+  updateCartList(regularItems, bundles = []) {
     const fragment = new DocumentFragment();
     const template = this.getCartItemTemplate();
 
-    if (items.length) {
-      items.map((item) => {
-        const cartItem = this.createCartItem(template, item);
-        this.appendCartItem(fragment, cartItem);
-      });
-    }
+    const itemTemplate = this.getCartItemTemplate();
+    regularItems.forEach((item) => {
+      fragment.append(this.createCartItem(itemTemplate, item));
+    });
 
-    this.setIsEmpty(!items.length);
+    const bundleGroupTemplate = this.getCartBundleGroupTemplate();
+    const bundleItemTemplate = this.getCartBundleItemTemplate();
+    bundles.forEach((bundle) => {
+      fragment.append(this.createBundleGroup(bundleGroupTemplate, bundleItemTemplate, bundle));
+    });
+
+    this.setIsEmpty(!regularItems.length && !bundles.length);
     this.replaceContent(fragment);
   }
 
+  createBundleGroup(groupTemplate, itemTemplate, bundle) {
+    const element = groupTemplate.content.cloneNode(true);
+
+    element.querySelector('[ui-bundle="title"]').textContent = bundle.title;
+
+    const removeElement = element.querySelector("ui-cart-remove");
+    removeElement.setAttribute("item", bundle.items.map((i) => i.id).join(","));
+    removeElement.setAttribute("product-variant", bundle.items.map((i) => i.productVariant.id).join(","));
+
+    const totalComparePrice = bundle.items[0]?.extra_fields.bundle_compare_price ?? 0;
+    const perItemComparePrice = totalComparePrice / bundle.items.length;
+
+    const group = element.querySelector('[ui-bundle="group"]');
+    bundle.items.forEach((bundleItem) => {
+      const itemEl = itemTemplate.content.cloneNode(true);
+      this.populateBundleItem(itemEl, bundleItem, perItemComparePrice);
+      group.append(itemEl);
+    });
+
+    return element;
+  }
+
+  populateBundleItem(element, item, perItemComparePrice) {
+    const image = element.querySelector("[ui-cart-item='image']");
+    const title = element.querySelector("[ui-cart-item='title']");
+    const variant = element.querySelector("[ui-cart-item='variant']");
+    const price = element.querySelector("[ui-cart-item='price']");
+    const comparePrice = element.querySelector("[ui-cart-item='compare-price']");
+    const subtotal = element.querySelector("[ui-cart-item='subtotal']");
+
+    if (image) this.updateItemImage(image, item.productVariant);
+    if (title) this.updateItemTitle(title, item.productVariant.product);
+    if (variant) this.updateItemVariant(variant, item.productVariant.variations);
+    if (price) this.updateItemPrice(price, item.extra_fields.bundle_product_price);
+    if (comparePrice) this.updateItemCompareAtPrice(comparePrice, perItemComparePrice, item.price, item.quantity);
+    if (subtotal) this.updateItemSubPrice(subtotal, item.quantity, item.extra_fields.bundle_product_price);
+  }
+
   getCartItemTemplate() {}
+
+  getCartBundleGroupTemplate() {}
+
+  getCartBundleItemTemplate() {}
 
   appendCartItem(fragment, cartItem) {}
 
@@ -198,7 +246,12 @@ class BaseCartItem extends HTMLElement {
   }
 
   updateItemSubPrice(subPriceElement, quantity, basePrice) {
-    subPriceElement.textContent = formatCurrency(quantity * basePrice);
+    if (basePrice === 0) {
+      subPriceElement.firstElementChild.removeAttribute("hidden");
+      subPriceElement.lastElementChild.toggleAttribute("hidden", true);
+    } else {
+      subPriceElement.textContent = formatCurrency(quantity * basePrice);
+    }
   }
 
   updateItemCompareAtPrice(compareAtPriceElement, compareAtPrice, price, quantity) {
@@ -232,6 +285,30 @@ class BaseCartItem extends HTMLElement {
 
   setItemIsLoading(element, isLoading) {
     element.toggleAttribute("data-loading", isLoading);
+  }
+
+  partitionCartItems(items) {
+    const regularItems = [];
+    const bundleMap = new Map();
+
+    items.forEach((item) => {
+      const extra = item.extra_fields;
+
+      if (extra?.is_bundle_item) {
+        if (!bundleMap.has(extra.bundle_id)) {
+          bundleMap.set(extra.bundle_id, {
+            id: extra.bundle_id,
+            title: extra.bundle_title,
+            items: [],
+          });
+        }
+        bundleMap.get(extra.bundle_id).items.push(item);
+      } else {
+        regularItems.push(item);
+      }
+    });
+
+    return { regularItems, bundles: [...bundleMap.values()] };
   }
 }
 
@@ -267,6 +344,14 @@ class CartDrawerItems extends BaseCartItem {
     return this.cart.querySelector("template[ui-cart-drawer='item']");
   }
 
+  getCartBundleGroupTemplate() {
+    return this.cart.querySelector("template[ui-cart-drawer='bundle-group']");
+  }
+
+  getCartBundleItemTemplate() {
+    return this.cart.querySelector("template[ui-cart-drawer='bundle-item']");
+  }
+
   appendCartItem(fragment, cartItem) {
     fragment.append(cartItem);
   }
@@ -289,8 +374,34 @@ class CartItems extends BaseCartItem {
     super();
   }
 
+  updateCartList(regularItems, bundles = []) {
+    const fragment = new DocumentFragment();
+
+    const itemTemplate = this.getCartItemTemplate();
+    regularItems.forEach((item) => {
+      fragment.append(this.createCartItem(itemTemplate, item));
+    });
+
+    const bundleGroupTemplate = this.getCartBundleGroupTemplate();
+    const bundleItemTemplate = this.getCartBundleItemTemplate();
+    bundles.forEach((bundle) => {
+      fragment.append(this.createBundleGroup(bundleGroupTemplate, bundleItemTemplate, bundle));
+    });
+
+    this.setIsEmpty(!regularItems.length && !bundles.length);
+    this.replaceContent(fragment);
+  }
+
   getCartItemTemplate() {
     return document.querySelector("template[ui-cart-item]");
+  }
+
+  getCartBundleGroupTemplate() {
+    return document.querySelector("template[ui-cart='bundle-group']");
+  }
+
+  getCartBundleItemTemplate() {
+    return document.querySelector("template[ui-cart='bundle-item']");
   }
 
   appendCartItem(fragment, cartItem) {
@@ -329,24 +440,40 @@ class CartRemove extends HTMLElement {
     this.isLoading = true;
 
     try {
-      const productVariantId = this.productVariantValue;
-      const cartItemId = this.cartItemValue;
+      const cartItemIds = this.cartItemValue.split(",").filter(Boolean);
+      const productVariantIds = this.productVariantValue.split(",").filter(Boolean);
 
-      if (!productVariantId || !cartItemId) return;
+      if (!cartItemIds.length || !productVariantIds.length) return;
 
-      const response = await youcanjs.cart.removeItem({
-        cartItemId,
-        productVariantId,
-      });
+      if (cartItemIds.length === 1) {
+        const response = await youcanjs.cart.removeItem({
+          cartItemId: cartItemIds[0],
+          productVariantId: productVariantIds[0],
+        });
+
+        publish(PUB_SUB_EVENTS.cartUpdate, {
+          source: "delete-button",
+          productVariantId: productVariantIds[0],
+          cartData: response,
+        });
+
+        return;
+      }
+
+      let response;
+      for (let i = 0; i < cartItemIds.length; i++) {
+        response = await youcanjs.cart.removeItem({
+          cartItemId: cartItemIds[i],
+          productVariantId: productVariantIds[i],
+        });
+      }
 
       publish(PUB_SUB_EVENTS.cartUpdate, {
         source: "delete-button",
-        productVariantId,
         cartData: response,
       });
     } catch (error) {
       console.error(error);
-
       toast.show(error.message, "error");
     } finally {
       this.isLoading = false;

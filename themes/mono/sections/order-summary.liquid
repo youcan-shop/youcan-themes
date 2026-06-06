@@ -35,39 +35,126 @@
       <h2 class="heading">{{ 'order_summary.heading' | t }}</h2>
       <p class="description">{{ 'order_summary.description' | t }}</p>
     </div>
-    <ul class="products">
-      {% for product in order.order_variants %}
-        <li class="product">
-          <div class="media">
-            {% if product.image %}
-              <img
-                src="{{ product.image }}"
-                alt="{{ product.name }}"
-                height="60"
-                width="60"
-                loading="eager"
-              >
-            {% else %}
-              {% render 'misc.image-fallback', type: 'product' %}
-            {% endif %}
-            <span class="count">{{ product.quantity }}</span>
-          </div>
-          <div class="info">
-            <a class="title" href="/products/{{ product.slug }}" title="{{ product.name }}">{{ product.name }}</a>
-            <span class="price">{{ product.price | default: 0 | money }}</span>
-          </div>
-          <a
-            ui-slot="button"
-            data-mode="3d"
-            data-size="xs"
-            href="/products/{{ product.slug }}"
-            target="_blank"
-          >
-            {{ 'order_summary.buy_again' | t }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
+    {% if order.order_variants.size %}
+      <ul class="products">
+        {% for product in order.order_variants %}
+          <li class="product">
+            <div class="media">
+              {% if product.image %}
+                <img
+                  src="{{ product.image }}"
+                  alt="{{ product.name }}"
+                  height="60"
+                  width="60"
+                  loading="eager"
+                >
+              {% else %}
+                {% render 'misc.image-fallback', type: 'product' %}
+              {% endif %}
+              <span class="count">{{ product.quantity }}</span>
+            </div>
+            <div class="info">
+              <a class="title" href="/products/{{ product.slug }}" title="{{ product.name }}">{{ product.name }}</a>
+              <div class="price">
+                <span class="original">{{ product.price | default: 0 | money }}</span>
+                {% if product.compare_at_price %}
+                  <span class="compare-at">{{ product.compare_at_price | default: 0 | money }}</span>
+                {% endif %}
+              </div>
+              {% if product.variations.size %}
+                <div class="variants">
+                  {% for variant in product.variations %}
+                    <span class="variant">{{ variant[1] }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+            <a
+              ui-slot="button"
+              data-mode="3d"
+              data-size="xs"
+              href="/products/{{ product.slug }}"
+              target="_blank"
+            >
+              {{ 'order_summary.buy_again' | t }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if order.bundles %}
+      <div class="bundles">
+        {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+        {% for t in types %}
+          {% assign type = order.bundles[t] %}
+
+          {% for bundle in type %}
+            <div class="bundle">
+              <div class="top">
+                <h4 class="title">{{ bundle.title }}</h4>
+                <div class="price">
+                  <span class="original">{{ bundle.total_price | money }}</span>
+                  {% if bundle.compare_price %}
+                    <span class="compare-at">{{ bundle.compare_price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+              <ul class="items">
+                {% for bundle_item in bundle.items %}
+                  <li class="product">
+                    <div class="media">
+                      {% if bundle_item.image %}
+                        <img
+                          src="{{ bundle_item.image }}"
+                          alt="{{ bundle_item.name }}"
+                          height="60"
+                          width="60"
+                          loading="eager"
+                        >
+                      {% else %}
+                        {% render 'misc.image-fallback', type: 'product' %}
+                      {% endif %}
+                    </div>
+                    <div class="info">
+                      <a
+                        class="title"
+                        href="/products/{{ bundle_item.slug }}"
+                        title="{{ bundle_item.name }}"
+                      >
+                        {{ bundle_item.name }}
+                      </a>
+                      {% if bundle_item.price %}
+                        <div class="price">
+                          <span class="original">{{ bundle_item.price | default: 0 | money }}</span>
+                          {% if bundle_item.compare_at_price %}
+                            <span class="compare-at">{{ bundle_item.compare_at_price | default: 0 | money }}</span>
+                          {% endif %}
+                        </div>
+                      {% else %}
+                        <span class="free" ui-slot="status-badge" data-variant="stroke" data-status="completed">
+                          {% render 'misc.icon', name: 'hgi-gift' %}
+                          {{ 'order_summary.free' | t }}
+                        </span>
+                      {% endif %}
+                    </div>
+                    <a
+                      ui-slot="button"
+                      data-mode="3d"
+                      data-size="xs"
+                      href="/products/{{ bundle_item.slug }}"
+                      target="_blank"
+                    >
+                      {{ 'order_summary.buy_again' | t }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
     <div class="core">
       <div class="field">
         <span class="label">{{ 'order_summary.status.label' | t }}:</span>

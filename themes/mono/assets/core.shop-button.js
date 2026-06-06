@@ -2,6 +2,7 @@ if (!customElements.get("ui-shop-button")) {
   class ShopButton extends HTMLElement {
     static observedAttributes = [
       "variant-id",
+      "bundle-id",
       "quantity",
       "checkout-type",
       "attached-image",
@@ -72,6 +73,7 @@ if (!customElements.get("ui-shop-button")) {
       this.setIsBuyButtonLoading(true);
 
       const productVariantId = this.productVariantId;
+      const bundleId = this.bundleId;
       const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
@@ -80,10 +82,10 @@ if (!customElements.get("ui-shop-button")) {
           const [mainId, ...addOnIds] = this.productVariantId.split(",");
           Promise.all([
             this.placeOrder(mainId, attachedImage, quantity, true),
-            ...addOnIds.map((variantId) => this.placeOrder(variantId, attachedImage, 1, true)),
+            ...addOnIds.map((variantId) => this.placeOrder(variantId, bundleId, attachedImage, 1, true)),
           ]);
         } else {
-          this.placeOrder(productVariantId, attachedImage, quantity);
+          this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
         }
 
         return;
@@ -91,21 +93,20 @@ if (!customElements.get("ui-shop-button")) {
 
       if (this.isBulk) {
         const [mainId, ...addOnIds] = this.productVariantId.split(",");
-        this.addToCart(mainId, attachedImage, quantity);
-        addOnIds.forEach((variantId) => this.addToCart(variantId, attachedImage, 1));
+        this.addToCart(mainId, bundleId, attachedImage, quantity);
+        addOnIds.forEach((variantId) => this.addToCart(variantId, bundleId, attachedImage, 1));
 
         return;
       }
 
-      this.addToCart(productVariantId, attachedImage, quantity);
+      this.addToCart(productVariantId, bundleId, attachedImage, quantity);
     }
 
-    async addToCart(productVariantId, attachedImage, quantity) {
+    async addToCart(productVariantId, bundleId, attachedImage, quantity) {
       try {
         const newCart = await youcanjs.cart.addItem({
-          attachedImage,
-          productVariantId,
           quantity,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
@@ -135,16 +136,15 @@ if (!customElements.get("ui-shop-button")) {
       }
     }
 
-    async placeOrder(productVariantId, attachedImage, quantity, deferRedirect = false) {
+    async placeOrder(productVariantId, bundleId, attachedImage, quantity, deferRedirect = false) {
       const formData = new FormData(this.form);
       const fields = Object.fromEntries(formData);
 
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
-          productVariantId,
-          attachedImage,
           quantity,
           fields,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         return new Promise((resolve) => {
@@ -200,6 +200,10 @@ if (!customElements.get("ui-shop-button")) {
 
     get productVariantId() {
       return this.getAttribute("variant-id");
+    }
+
+    get bundleId() {
+      return this.getAttribute("bundle-id");
     }
 
     get quantityValue() {

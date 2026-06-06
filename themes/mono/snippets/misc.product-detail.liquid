@@ -64,12 +64,21 @@
     {% if product.variants.size > 1 %}
       {% render 'core.variants' %}
     {% endif %}
+    {% dump product %}
+    {% if product.is_bundle %}
+      {% render 'core.bundles' %}
+    {% endif %}
     <div class="core">
       <div class="qty">
         <span class="label">{{ 'general.quantity' | t }}</span>
         {% render 'core.quantity' %}
       </div>
-      <span class="price">{{ price | default: 0 | money }}</span>
+      <div class="price">
+        <span class="price" ui-product-item="price">{{ price | money }}</span>
+        {% if compare_at_price %}
+          <span class="compare-at" ui-product-item="compare-at-price">{{ compare_at_price | money }}</span>
+        {% endif %}
+      </div>
     </div>
   </div>
   <div ui-slot="drawer-footer">
