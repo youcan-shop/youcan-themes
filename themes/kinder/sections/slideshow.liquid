@@ -30,7 +30,7 @@
     {% endfor %}
   </ul>
 
-  {% unless should_hide_controls and section.blocks.size > 1 %}
+  {% if should_hide_controls == false and section.blocks.size > 1 %}
     <div
       class="controls"
       {% if section.settings.show_arrows %}
@@ -83,7 +83,7 @@
         </button>
       {% endif %}
     </div>
-  {% endunless %}
+  {% endif %}
 </ui-carousel>
 
 {% schema %}
