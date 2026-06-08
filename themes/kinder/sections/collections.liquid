@@ -1,5 +1,11 @@
 {{ 'section.collections.css' | asset_url | stylesheet_tag }}
 
+{% assign should_hide_controls = false %}
+
+{% if section.settings.show_arrows != true and section.settings.show_dots != true %}
+  {% assign should_hide_controls = true %}
+{% endif %}
+
 <ui-carousel
   ui-section="collections"
   style="
@@ -48,34 +54,61 @@
       {% render 'block.collection' %}
     {% endfor %}
   </ul>
-  {% if section.settings.enable_slideshow and section.blocks.size > 1 %}
-    <div class="controls">
-      <button
-        ui-carousel="arrow-previous"
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
-        data-size="lg"
-        data-as-icon
-        data-flip-icon-in-rtl
-        aria-label="Previous"
-      >
-        {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-      </button>
-      <button
-        ui-carousel="arrow-next"
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
-        data-size="lg"
-        data-as-icon
-        data-flip-icon-in-rtl
-        aria-label="Next"
-      >
-        {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-      </button>
+
+  {% unless section.settings.enable_slideshow and should_hide_controls and section.blocks.size > 1 %}
+    <div
+      class="controls"
+      {% if section.settings.show_arrows %}
+        data-show-arrows
+      {% endif %}
+      {% if section.settings.show_dots %}
+        data-dots
+      {% endif %}
+      {% if section.settings.arrows_position == 'centered' %}
+        data-centered-arrows
+      {% endif %}
+    >
+      {% if section.settings.show_arrows %}
+        <button
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-variant="neutral"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
+        </button>
+      {% endif %}
+      {% if section.settings.show_dots %}
+        <div class="pagination" data-position="{{ section.settings.arrows_position }}">
+          {% for marker in section.blocks %}
+            <button
+              ui-carousel="marker"
+              aria-label="Slide {{ forloop.index }}"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if section.settings.show_arrows %}
+        <button
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-variant="neutral"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+        </button>
+      {% endif %}
     </div>
-  {% endif %}
+  {% endunless %}
 </ui-carousel>
 
 {% schema %}
