@@ -10,9 +10,11 @@
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
-  {% if section.settings.override_global_colors %}
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
+  {% if section.settings.enable_slideshow %}
+    {% if section.settings.auto_play %}
+      autoplay
+      interval="{{ section.settings.change_every | times: 1000 }}"
+    {% endif %}
   {% endif %}
 >
   <div class="content-area">
@@ -31,16 +33,22 @@
   </div>
   <ul
     class="items-area"
-    ui-carousel="wrapper"
-    ui-slot="carousel"
-    aria-orientation="vertical"
+
+    {% unless section.settings.enable_slideshow %}
+      data-show-as-list
+    {% else %}
+      ui-carousel="wrapper"
+      ui-slot="carousel"
+      aria-orientation="vertical"
+    {% endunless %}
+
     style="--items-text-alignment: {{ section.settings.text_alignment }};"
   >
     {% for collection in section.blocks %}
       {% render 'block.collection' %}
     {% endfor %}
   </ul>
-  {% if section.blocks.size > 1 %}
+  {% if section.settings.enable_slideshow and section.blocks.size > 1 %}
     <div class="controls">
       <button
         ui-carousel="arrow-previous"
