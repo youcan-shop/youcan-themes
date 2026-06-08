@@ -30,7 +30,7 @@
     {% endfor %}
   </ul>
 
-  {% unless should_hide_controls and section.blocks.size > 1 %}
+  {% if should_hide_controls == false and section.blocks.size > 1 %}
     <div
       class="controls"
       {% if section.settings.show_arrows %}
@@ -83,12 +83,12 @@
         </button>
       {% endif %}
     </div>
-  {% endunless %}
+  {% endif %}
 </ui-carousel>
 
 {% schema %}
 {
-  "label": "t:sections.slideshow.label",
+  "label": "t:common.slideshow.label",
   "templates": ["index"],
   "limit": 3,
   "max_blocks": 6,
@@ -121,13 +121,13 @@
     {
       "type": "checkbox",
       "id": "auto_play",
-      "label": "t:sections.slideshow.auto_play",
+      "label": "t:common.slideshow.autoplay",
       "default": false
     },
     {
       "type": "range",
       "id": "change_every",
-      "label": "t:sections.slideshow.change_every",
+      "label": "t:common.slideshow.change_every",
       "min": 3,
       "max": 7,
       "step": 1,
@@ -137,22 +137,22 @@
     {
       "type": "checkbox",
       "id": "show_dots",
-      "label": "t:sections.slideshow.show_dots",
+      "label": "t:common.slideshow.show_dots",
       "default": true
     },
     {
       "type": "checkbox",
       "id": "show_arrows",
-      "label": "t:sections.slideshow.show_arrows",
+      "label": "t:common.slideshow.show_arrows",
       "default": true
     },
     {
       "type": "select",
       "id": "arrows_position",
-      "label": "t:sections.slideshow.arrows_position.label",
+      "label": "t:common.slideshow.desktop_arrows_position.label",
       "options": [
-        { "label": "t:sections.slideshow.arrows_position.options.centered", "value": "centered" },
-        { "label": "t:sections.slideshow.arrows_position.options.edges", "value": "edges" }
+        { "label": "t:common.slideshow.desktop_arrows_position.options.centered", "value": "centered" },
+        { "label": "t:common.slideshow.desktop_arrows_position.options.edges", "value": "edges" }
       ],
       "default": "edges"
     },
