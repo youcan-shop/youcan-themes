@@ -22,7 +22,7 @@
       {% render 'core.cart-item', product: product %}
     </template>
     <ui-cart-items
-      {% unless cart.items.size > 0 %}
+      {% unless cart.items.size > 0 or cart.bundles %}
         hidden
       {% endunless %}
     >
@@ -40,7 +40,83 @@
           {% endfor %}
         </tbody>
       </table>
+
+      {% if cart.bundles %}
+        {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+        {% for t in types %}
+          {% assign type = cart.bundles[t] %}
+
+          {% for bundle in type %}
+            <div class="bundle-group">
+              <div class="head">
+                <span class="title" ui-bundle="title">{{ bundle.title }}</span>
+                <ui-cart-remove
+                  item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                  product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                >
+                  <button
+                    ui-slot="link-button"
+                    data-variant="gray"
+                    data-size="sm"
+                    ui-cart-item="delete-button"
+                    data-underline="true"
+                  >
+                    {{ 'general.remove' | t }}
+                  </button>
+                </ui-cart-remove>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>{{ 'cart.page.table.product' | t }}</th>
+                    <th>{{ 'cart.page.table.total' | t }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for bundle_item in bundle.items %}
+                    {% render 'core.cart-bundle-item', product: bundle_item %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
     </ui-cart-items>
+
+    <template ui-cart="bundle-group">
+      <div class="bundle-group">
+        <div class="head">
+          <span class="title" ui-bundle="title"></span>
+          <ui-cart-remove>
+            <button
+              ui-slot="link-button"
+              data-variant="gray"
+              data-size="sm"
+              ui-cart-item="delete-button"
+              data-underline="true"
+            >
+              {{ 'general.remove' | t }}
+            </button>
+          </ui-cart-remove>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>{{ 'cart.page.table.product' | t }}</th>
+              <th>{{ 'cart.page.table.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody ui-bundle="group"></tbody>
+        </table>
+      </div>
+    </template>
+
+    <template ui-cart="bundle-item">
+      {% render 'core.cart-bundle-item' %}
+    </template>
+
     <ui-summary-box
       class="summary"
       {% unless cart.items.size > 0 %}

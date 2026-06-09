@@ -2,6 +2,7 @@ if (!customElements.get("ui-shop-button")) {
   class ShopButton extends HTMLElement {
     static observedAttributes = [
       "variant-id",
+      "bundle-id",
       "quantity",
       "checkout-type",
       "attached-image",
@@ -61,31 +62,31 @@ if (!customElements.get("ui-shop-button")) {
       this.setIsBuyButtonLoading(true);
 
       const productVariantId = this.productVariantId;
+      const bundleId = this.bundleId;
       const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
       if (this.checkoutType === "express") {
-        this.placeOrder(productVariantId, attachedImage, quantity);
+        this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
 
         return;
       }
 
       if (this.isBulk) {
         const variantIds = this.productVariantId.split(",");
-        variantIds.forEach((variantId) => this.addToCart(variantId, attachedImage, quantity));
+        variantIds.forEach((variantId) => this.addToCart(variantId, bundleId, attachedImage, quantity));
 
         return;
       }
 
-      this.addToCart(productVariantId, attachedImage, quantity);
+      this.addToCart(productVariantId, bundleId, attachedImage, quantity);
     }
 
-    async addToCart(productVariantId, attachedImage, quantity) {
+    async addToCart(productVariantId, bundleId, attachedImage, quantity) {
       try {
         const newCart = await youcanjs.cart.addItem({
-          attachedImage,
-          productVariantId,
           quantity,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
@@ -113,16 +114,15 @@ if (!customElements.get("ui-shop-button")) {
       }
     }
 
-    async placeOrder(productVariantId, attachedImage, quantity) {
+    async placeOrder(productVariantId, bundleId, attachedImage, quantity) {
       const formData = new FormData(this.form);
       const fields = Object.fromEntries(formData);
 
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
-          productVariantId,
-          attachedImage,
           quantity,
           fields,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         response
@@ -175,6 +175,10 @@ if (!customElements.get("ui-shop-button")) {
 
     get productVariantId() {
       return this.getAttribute("variant-id");
+    }
+
+    get bundleId() {
+      return this.getAttribute("bundle-id");
     }
 
     get quantityValue() {

@@ -33,41 +33,99 @@
         gap: var(--spacing-24);
         padding: var(--spacing-16);
         border: 1px solid var(--color-surface-variant);
+      }
 
-        .product {
+      .bundles {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-24);
+
+        .bundle {
           display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: var(--spacing-8);
+          flex-direction: column;
+          gap: var(--spacing-24);
+          padding: var(--spacing-16);
+          border: 1px solid var(--color-surface-variant);
 
-          .media {
-            width: 80px;
-            height: 80px;
-            overflow: hidden;
+          .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-12);
 
-            & > img {
-              object-fit: cover;
+            .title {
+              font: var(--font-title-md);
+              text-transform: uppercase;
+            }
+
+            .price {
+              display: flex;
+              font: var(--font-title-md);
+              gap: var(--spacing-4);
+
+              .compare-at {
+                opacity: 0.5;
+                text-decoration: line-through;
+              }
             }
           }
 
-          .content {
-            display: flex;
-            flex: 1;
-            flex-direction: column;
-            justify-content: center;
-            gap: var(--spacing-8);
+          .items {
+            display: grid;
+            gap: var(--spacing-24);
 
-            .title {
-              justify-content: flex-start;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              width: fit-content;
+            .product {
+              &:not(:has(.free)) {
+                order: -1;
+              }
             }
+          }
+        }
+      }
 
-            .count {
-              opacity: 0.8;
-            }
+      .product {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--spacing-8);
+
+        .media {
+          width: 80px;
+          height: 80px;
+          overflow: hidden;
+
+          & > img {
+            object-fit: cover;
+          }
+        }
+
+        .content {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          justify-content: center;
+          gap: var(--spacing-8);
+
+          .title {
+            justify-content: flex-start;
+            width: fit-content;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .count {
+            opacity: 0.8;
+          }
+        }
+
+        .price {
+          display: flex;
+          gap: var(--spacing-4);
+
+          .compare-at {
+            opacity: 0.5;
+            text-decoration: line-through;
           }
         }
       }

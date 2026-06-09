@@ -17,11 +17,21 @@
       align-items: flex-start;
       gap: var(--spacing-32);
 
+      ui-cart-items {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-24);
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
 
         &:has(tbody:empty) {
+          display: none;
+        }
+
+        &:not(:has(tbody tr)) {
           display: none;
         }
 
@@ -59,6 +69,16 @@
 
                 .title {
                   width: fit-content;
+                }
+
+                .price {
+                  display: flex;
+                  gap: var(--spacing-4);
+
+                  .compare-at {
+                    opacity: 0.5;
+                    text-decoration: line-through;
+                  }
                 }
 
                 .image {
@@ -113,6 +133,25 @@
                 gap: var(--spacing-12);
               }
             }
+          }
+        }
+      }
+
+      .bundle-group {
+        display: flex;
+        flex-direction: column;
+
+        .head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: var(--spacing-12);
+          padding-block-end: var(--spacing-24);
+          border-block-end: 1px solid var(--color-surface-variant);
+
+          .title {
+            font: var(--font-title-md);
+            text-transform: uppercase;
           }
         }
       }

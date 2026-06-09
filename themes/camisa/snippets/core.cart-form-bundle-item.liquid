@@ -1,3 +1,13 @@
+{% comment %}
+  Renders cart bundle item template (cart drawer)
+
+  Accepts:
+  - product: {Object} cart item info
+
+  Usage:
+  {% render 'core.cart-form-bundle-item', product: {...} %}
+{% endcomment %}
+
 <div class="item">
   <div class="image" ui-cart-item="image" data-image-ratio="{{ settings.product_image_ratio }}">
     <img
@@ -5,16 +15,16 @@
       alt="{{ product.name }}"
       height="100%"
       width="100%"
-      loading="eager"
-      {% if product.image contains '/store-front/images/product-default' %}
+      loading="lazy"
+      {% unless product.image %}
         hidden
-      {% endif %}
+      {% endunless %}
     >
-    {% if product.image contains '/store-front/images/product-default' %}
+    {% unless product.image %}
       {% render 'misc.image-fallback' %}
     {% else %}
       {% render 'misc.image-fallback', hidden: true %}
-    {% endif %}
+    {% endunless %}
   </div>
   <div class="content">
     <div class="head">
@@ -29,20 +39,22 @@
       >
         {{ product.name }}
       </a>
-      <ui-cart-remove
-        item="{{ product.id }}"
-        product-variant="{{ product.product_variant_id }}"
+      <div
+        class="save"
+        ui-slot="status-badge"
+        data-variant="light"
+        data-status="completed"
+        {% unless product.compare_at_price %}
+          hidden
+        {% endunless %}
       >
-        <button
-          ui-slot="link-button"
-          data-variant="gray"
-          data-size="sm"
-          data-underline="true"
-          ui-cart-item="delete-button"
-        >
-          {{ 'general.remove' | t }}
-        </button>
-      </ui-cart-remove>
+        {{ 'general.you_save' | t }}
+        <span>
+          {% assign price_total = product.price | times: product.quantity %}
+          {% assign compare_at_price_total = product.compare_at_price | default: 0 | times: product.quantity %}
+          {{ compare_at_price_total | minus: price_total | money }}
+        </span>
+      </div>
     </div>
     <div class="core">
       <div
@@ -61,14 +73,30 @@
       </div>
     </div>
     <div class="footer">
-      <div class="qty">
-        <span class="label">{{ 'general.quantity_sm' | t }}</span>
-        {% render 'core.quantity', product: product, size: 'xs' %}
-      </div>
       <div class="price">
         <span class="original" ui-cart-item="price" hidden>{{ product.price | default: 0 | money }}</span>
         {% assign subtotal = product.quantity | times: product.price %}
-        <span class="subtotal" ui-cart-item="subtotal">{{ subtotal | money }}</span>
+        <div class="subtotal" ui-cart-item="subtotal">
+          <span
+            class="free"
+            ui-slot="status-badge"
+            data-variant="light"
+            data-status="completed"
+            {% if subtotal %}
+              hidden
+            {% endif %}
+          >
+            {% render 'misc.icon', name: 'hgi-gift' %}
+            {{ 'order.free' | t }}
+          </span>
+          <span
+            {% unless subtotal %}
+              hidden
+            {% endunless %}
+          >
+            {{ subtotal | money }}
+          </span>
+        </div>
         <span
           class="compare-at"
           ui-cart-item="compare-at-price"
