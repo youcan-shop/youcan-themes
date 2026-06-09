@@ -100,11 +100,11 @@ class Reviews extends HTMLElement {
       renderImages(imageTpl, imageTpl.parentElement, item.images_urls);
 
       const modal = review.querySelector("[popover]");
-      const trigger = review.querySelector("[popovertarget]");
+      const triggers = review.querySelectorAll("[popovertarget]");
 
       const id = `review-${i + 1}`;
       modal.id = id;
-      trigger.setAttribute("popovertarget", id);
+      triggers.forEach((trigger) => trigger.setAttribute("popovertarget", id));
 
       const detailTpl = modal.querySelector('[ui-reviews="item-detail"]');
       const detail = detailTpl.content.cloneNode(true);

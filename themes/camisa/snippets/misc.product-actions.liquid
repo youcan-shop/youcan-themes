@@ -67,6 +67,11 @@
           {% render 'core.variants' %}
         {% endif %}
 
+      {% when 'block_bundles' %}
+        {% if product.bundles %}
+          {% render 'core.bundles' %}
+        {% endif %}
+
       {% when 'block_shop_buttons' %}
         {% if settings.cart_checkout_type == 'express-checkout' and block.settings.buy_button_style == 'default' %}
           <div ui-block="express-checkout" {{ block.youcan_attributes }}>

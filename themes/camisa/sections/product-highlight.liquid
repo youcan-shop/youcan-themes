@@ -79,22 +79,24 @@
       {% for block in section.blocks %}
         {% case block.type %}
           {% when 'block_badge' %}
-            <div
-              class="badge"
-              ui-slot="status-badge"
-              data-variant="stroke"
-              data-status="{{ settings.sale_badge_status }}"
-              {{ block.youcan_attributes }}
-            >
-              {% if settings.sale_badge_type == 'percentage' %}
-                {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
-                -{{ percentage }}%
-              {% else %}
-                {% assign fixed = compare_at_price | minus: price %}
-                {{ 'general.save' | t }}
-                {{ fixed | money }}
-              {% endif %}
-            </div>
+            {% if compare_at_price %}
+              <div
+                class="badge"
+                ui-slot="status-badge"
+                data-variant="stroke"
+                data-status="{{ settings.sale_badge_status }}"
+                {{ block.youcan_attributes }}
+              >
+                {% if settings.sale_badge_type == 'percentage' %}
+                  {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+                  -{{ percentage }}%
+                {% else %}
+                  {% assign fixed = compare_at_price | minus: price %}
+                  {{ 'general.save' | t }}
+                  {{ fixed | money }}
+                {% endif %}
+              </div>
+            {% endif %}
 
           {% when 'block_title' %}
             <h1 ui-block="title" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
@@ -135,6 +137,11 @@
           {% when 'block_variant_picker' %}
             {% if product.options.size > 0 %}
               {% render 'core.variants' %}
+            {% endif %}
+
+          {% when 'block_bundles' %}
+            {% if product.bundles %}
+              {% render 'core.bundles' %}
             {% endif %}
 
           {% when 'block_shop_buttons' %}
@@ -367,6 +374,11 @@
           "default": "open-drawer"
         }
       ]
+    },
+    {
+      "type": "block_bundles",
+      "label": "t:sections.single_product.blocks.bundles.label",
+      "limit": 1
     }
   ]
 }

@@ -1,0 +1,132 @@
+[data-bundle="single"],
+[data-bundle="multi"],
+[data-bundle="buyxgety"] {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-product);
+  cursor: pointer;
+
+  &:has(input:checked) {
+    background-color: var(--color-surface-container);
+  }
+
+  .head {
+    display: flex;
+    padding: var(--spacing-12);
+    gap: var(--spacing-12);
+    border-block-end: 1px solid var(--color-primary);
+
+    .detail {
+      display: grid;
+      flex: 1;
+      gap: var(--spacing-8);
+
+      .box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .title {
+          flex: 1;
+          font: var(--font-title-md);
+          text-transform: uppercase;
+        }
+
+        .price {
+          display: flex;
+          gap: var(--spacing-4);
+          font: var(--font-title-md);
+
+          .compare-at {
+            opacity: 0.5;
+            text-decoration: line-through;
+          }
+        }
+      }
+    }
+  }
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-6) var(--spacing-12);
+    gap: var(--spacing-12);
+
+    &:first-of-type {
+      padding-block-start: var(--spacing-12);
+    }
+
+    &:last-of-type {
+      padding-block-end: var(--spacing-12);
+    }
+
+    &:not(:has(.variants)) {
+      align-items: center;
+    }
+
+    .media {
+      width: 65px;
+      height: auto;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+
+      & > img {
+        object-fit: cover;
+      }
+    }
+
+    .info {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: var(--spacing-8);
+
+      .price {
+        display: flex;
+        gap: var(--spacing-4);
+        align-items: center;
+
+        .compare-at {
+          opacity: 0.5;
+          text-decoration: line-through;
+        }
+      }
+
+      .group {
+        display: flex;
+        gap: var(--spacing-8);
+
+        .index {
+          width: 22px;
+          opacity: 0.8;
+        }
+      }
+
+      .variants {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--spacing-8);
+
+        span {
+          padding: var(--spacing-2) var(--spacing-6);
+          background-color: var(--color-primary-container);
+          font: var(--font-body-sm);
+        }
+      }
+    }
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gift {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-8);
+    padding: var(--spacing-8) var(--spacing-12);
+    border-block: 1px solid var(--color-primary);
+  }
+}

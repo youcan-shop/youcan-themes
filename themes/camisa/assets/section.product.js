@@ -12,13 +12,37 @@ if (!customElements.get("ui-product")) {
       this.productForms = this.querySelectorAll("ui-shop-button");
       this.productMedia = this.querySelector('[ui-product="media"]');
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
+      this.bundles = this.querySelectorAll("[data-bundle] input[type='checkbox']");
     }
 
     connectedCallback() {
+      this.bundles.forEach((bundle) => bundle.addEventListener("change", () => this.onBundleChanged(bundle)));
+
       if (!this.productVariants) return;
 
       this.onVariantChanged();
       this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
+    }
+
+    onBundleChanged(changed) {
+      this.bundles.forEach((bundle) => {
+        if (bundle !== changed) bundle.checked = false;
+      });
+
+      const isChecked = changed.checked;
+      const bundleId = isChecked ? changed.value : null;
+
+      this.productForms.forEach((productForm) => {
+        if (bundleId) {
+          productForm.setAttribute("bundle-id", bundleId);
+        } else {
+          productForm.removeAttribute("bundle-id");
+        }
+      });
+    }
+
+    get selectedBundle() {
+      return [...this.bundles].find((bundle) => bundle.checked) ?? null;
     }
 
     get selectedOptions() {
@@ -59,11 +83,14 @@ if (!customElements.get("ui-product")) {
       const priceElement = this.querySelector("[ui-product-item='price']");
       const compareAtPriceElement = this.querySelector("[ui-product-item='compare-at-price']");
 
-      if (!priceElement) return;
+      if (priceElement) {
+        priceElement.textContent = formatCurrency(price);
+      }
 
-      priceElement.textContent = formatCurrency(price);
-      compareAtPriceElement.textContent = formatCurrency(compare_at_price);
-      compareAtPriceElement.hidden = !compare_at_price;
+      if (compareAtPriceElement) {
+        compareAtPriceElement.textContent = formatCurrency(compare_at_price);
+        compareAtPriceElement.hidden = !compare_at_price;
+      }
     }
 
     updateInventoryStatus(inventory) {
