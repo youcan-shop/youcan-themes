@@ -1,0 +1,172 @@
+{{ 'misc.search-drawer.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a search drawer
+
+  Accepts:
+  - collection_1: {String} Collection 1
+  - collection_2: {String} Collection 2
+  - collection_3: {String} Collection 3
+  - recently_viewed_id: {String} Collection id
+  - show_cart_recommendations: {Boolean} Control visibility
+
+  Usage:
+  {% render 'misc.search' %}
+{% endcomment %}
+
+<div ui-slot="sheet-content" id="search" popover>
+  <div ui-slot="sheet-header">
+    <h3 ui-slot="sheet-title">{{ 'search.title' | t }}</h3>
+    <button
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="ghost"
+      data-size="md"
+      aria-label="Close"
+      popovertarget="search"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <form action="/search">
+    <fieldset role="group">
+      {% render 'misc.icon', name: 'hgi-search-01' %}
+      <input name="q" type="text" placeholder="{{ 'search.placeholder' | t }}">
+    </fieldset>
+  </form>
+  <div ui-slot="sheet-body">
+    {% if show_cart_recommendations %}
+      <div class="core">
+        <div class="category">
+          <div class="head">
+            <h4 class="title">{{ 'search.drawer.collections' | t }}</h4>
+          </div>
+          <ul class="links">
+            {% if section.settings.search_collection_1 or section.settings.search_collection_2 or section.settings.search_collection_3 %}
+              {% for i in (1..3) %}
+                {% assign item = 'search_collection_' | append: i %}
+                {% assign collection = section.settings[item] %}
+
+                {% if collection != blank %}
+                  <li class="link">
+                    <a
+                      ui-slot="button"
+                      data-variant="primary"
+                      data-mode="ghost"
+                      data-size="lg"
+                      data-flip-icon-in-rtl
+                      href="/collections/{{ collection.slug }}"
+                    >
+                      {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                      {{ collection.name }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% for item in (1..3) %}
+                <li class="link">
+                  <a
+                    ui-slot="button"
+                    data-variant="primary"
+                    data-mode="ghost"
+                    data-size="lg"
+                    data-flip-icon-in-rtl
+                    href="/collections/{{ collection.slug }}"
+                  >
+                    {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                    {{ 'collection.title' | t }}
+                    {{ item }}
+                  </a>
+                </li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+        </div>
+        {% if recently_viewed_id %}
+          {% paginate collection.products by 4 id category_id: recently_viewed_id %}
+            <ui-carousel class="category">
+              <div class="head">
+                <h4 class="title">{{ 'search.drawer.recently_viewed' | t }}</h4>
+                {% if items.size > 1 %}
+                  <div class="arrows">
+                    <button
+                      ui-carousel="arrow-previous"
+                      ui-slot="button"
+                      data-variant="primary"
+                      data-mode="stroke"
+                      data-size="xs"
+                      data-as-icon
+                      data-flip-icon-in-rtl
+                      aria-label="Previous"
+                    >
+                      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                    </button>
+                    <button
+                      ui-carousel="arrow-next"
+                      ui-slot="button"
+                      data-variant="primary"
+                      data-mode="stroke"
+                      data-size="xs"
+                      data-as-icon
+                      data-flip-icon-in-rtl
+                      aria-label="Next"
+                    >
+                      {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                    </button>
+                  </div>
+                {% endif %}
+              </div>
+              <div ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" class="products">
+                {% for product in items %}
+                  <ul ui-carousel="item" ui-slot="carousel-item" class="product">
+                    {% render 'block.product', product: product %}
+                  </ul>
+                {% endfor %}
+              </div>
+            </ui-carousel>
+          {% endpaginate %}
+        {% else %}
+          <ui-carousel class="category">
+            <div class="head">
+              <h4 class="title">{{ 'search.drawer.recently_viewed' | t }}</h4>
+              <div class="arrows">
+                <button
+                  ui-carousel="arrow-previous"
+                  ui-slot="button"
+                  data-variant="primary"
+                  data-mode="stroke"
+                  data-size="xs"
+                  data-as-icon
+                  data-flip-icon-in-rtl
+                  aria-label="Previous"
+                >
+                  {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                </button>
+                <button
+                  ui-carousel="arrow-next"
+                  ui-slot="button"
+                  data-variant="primary"
+                  data-mode="stroke"
+                  data-size="xs"
+                  data-as-icon
+                  data-flip-icon-in-rtl
+                  aria-label="Next"
+                >
+                  {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                </button>
+              </div>
+            </div>
+            <div ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" class="products">
+              {% for product in (1..4) %}
+                <ul ui-carousel="item" ui-slot="carousel-item" class="product">
+                  {% render 'block.product' %}
+                </ul>
+              {% endfor %}
+            </div>
+          </ui-carousel>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

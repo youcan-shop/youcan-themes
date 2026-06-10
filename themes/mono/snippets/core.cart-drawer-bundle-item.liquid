@@ -1,0 +1,97 @@
+{% comment %}
+  Renders cart bundle item template (cart drawer)
+
+  Accepts:
+  - product: {Object} cart item info
+
+  Usage:
+  {% render 'core.cart-drawer-bundle-item', product: {...} %}
+{% endcomment %}
+
+<div class="product-item">
+  <a class="media" href="{{ product.url}}" ui-cart-item="image">
+    <img
+      src="{{ product.image }}"
+      alt="{{ product.name }}"
+      height="100%"
+      width="100%"
+      loading="lazy"
+      {% unless product.image %}
+        hidden
+      {% endunless %}
+    >
+    {% unless product.image %}
+      {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
+    {% else %}
+      {% render 'misc.image-fallback', type: 'product', icon_size: 40, hidden: true %}
+    {% endunless %}
+  </a>
+  <div class="content">
+    <div class="info">
+      <a class="name" href="{{ product.url }}" title="{{ product.name }}" ui-cart-item="title">
+        {{ product.name }}
+      </a>
+      <div class="price">
+        <span class="original" ui-cart-item="price" hidden>{{ product.price | default: 0 | money }}</span>
+        {% assign subtotal = product.quantity | times: product.price %}
+        <div class="subtotal" ui-cart-item="subtotal">
+          <span
+            class="free"
+            ui-slot="status-badge"
+            data-variant="stroke"
+            data-status="completed"
+            {% if subtotal %}
+              hidden
+            {% endif %}
+          >
+            {% render 'misc.icon', name: 'hgi-gift' %}
+            {{ 'order_summary.free' | t }}
+          </span>
+          <span
+            {% unless subtotal %}
+              hidden
+            {% endunless %}
+          >
+            {{ subtotal | money }}
+          </span>
+        </div>
+        <span
+          class="compare-at"
+          ui-cart-item="compare-at-price"
+          {% unless product.compare_at_price %}
+            hidden
+          {% endunless %}
+        >
+          {{ product.compare_at_price | default: 0 | times: product.quantity | money }}
+        </span>
+      </div>
+      <div
+        class="save"
+        ui-slot="status-badge"
+        data-variant="stroke"
+        data-status="completed"
+        {% unless product.compare_at_price %}
+          hidden
+        {% endunless %}
+      >
+        {{ 'general.you_save' | t }}
+        <span>
+          {% assign price_total = product.price | times: product.quantity %}
+          {% assign compare_at_price_total = product.compare_at_price | default: 0 | times: product.quantity %}
+          {{ compare_at_price_total | minus: price_total | money }}
+        </span>
+      </div>
+      <div
+        class="variants"
+        ui-cart-item="variant"
+        {% if product.variations == null or product.variations.default %}
+          hidden
+        {% endif %}
+      >
+        {% for variant in product.variations %}
+          <span>{{ variant[1] }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

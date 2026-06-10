@@ -1,0 +1,25 @@
+{% comment %}
+  Renders a video player drawer
+
+  Usage:
+  {% render 'misc.video-player' %}
+{% endcomment %}
+
+<div ui-slot="drawer-content" popover id="video-player">
+  <div ui-slot="drawer-header">
+    <h3 ui-slot="drawer-title">{{ 'video_reviews.title' | t }}</h3>
+    <button
+      ui-slot="button"
+      data-mode="ghost"
+      data-size="md"
+      data-as-icon
+      aria-label="Close"
+      popovertarget="video-player"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <div ui-slot="drawer-body">
+    <video controls muted playsinline data-aspect-ratio="{{ section.settings.aspect_ratio }}"></video>
+  </div>
+</div>

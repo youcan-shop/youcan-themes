@@ -1,0 +1,84 @@
+<div class="item">
+  <div class="image" ui-cart-item="image" data-image-ratio="{{ settings.product_image_ratio }}">
+    <img
+      src="{{ product.image }}"
+      alt="{{ product.name }}"
+      height="100%"
+      width="100%"
+      loading="eager"
+      {% if product.image contains '/store-front/images/product-default' %}
+        hidden
+      {% endif %}
+    >
+    {% if product.image contains '/store-front/images/product-default' %}
+      {% render 'misc.image-fallback' %}
+    {% else %}
+      {% render 'misc.image-fallback', hidden: true %}
+    {% endif %}
+  </div>
+  <div class="content">
+    <div class="head">
+      <a
+        class="title"
+        ui-slot="link-button"
+        data-variant="black"
+        data-size="md"
+        title="{{ product.name }}"
+        ui-cart-item="title"
+        href="{{ product.url }}"
+      >
+        {{ product.name }}
+      </a>
+      <ui-cart-remove
+        item="{{ product.id }}"
+        product-variant="{{ product.product_variant_id }}"
+      >
+        <button
+          ui-slot="link-button"
+          data-variant="gray"
+          data-size="sm"
+          data-underline="true"
+          ui-cart-item="delete-button"
+        >
+          {{ 'general.remove' | t }}
+        </button>
+      </ui-cart-remove>
+    </div>
+    <div class="core">
+      <div
+        class="variants"
+        ui-cart-item="variant"
+        {% if product.variations == null or product.variations.default %}
+          hidden
+        {% endif %}
+      >
+        {% for variant in product.variations %}
+          <div class="variant">
+            <span class="label">{{ variant[0] }}:</span>
+            <p class="value">{{ variant[1] }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="footer">
+      <div class="qty">
+        <span class="label">{{ 'general.quantity_sm' | t }}</span>
+        {% render 'core.quantity', product: product, size: 'xs' %}
+      </div>
+      <div class="price">
+        <span class="original" ui-cart-item="price" hidden>{{ product.price | default: 0 | money }}</span>
+        {% assign subtotal = product.quantity | times: product.price %}
+        <span class="subtotal" ui-cart-item="subtotal">{{ subtotal | money }}</span>
+        <span
+          class="compare-at"
+          ui-cart-item="compare-at-price"
+          {% unless product.compare_at_price %}
+            hidden
+          {% endunless %}
+        >
+          {{ product.compare_at_price | default: 0 | times: product.quantity | money }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

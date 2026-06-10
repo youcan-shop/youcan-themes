@@ -1,0 +1,175 @@
+{{ 'section.special-product.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="special-product"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="special-product"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% if section.settings.heading %}
+    <div class="head">
+      <h3 class="title">{{ section.settings.heading }}</h3>
+    </div>
+  {% endif %}
+  {% if section.settings.product %}
+    {% assign default_variant = section.settings.product.selected_or_first_available_variant %}
+    {% assign price = default_variant.price | default: section.settings.product.price %}
+    {% assign compare_at_price = default_variant.compare_at_price | default: section.settings.product.compare_at_price %}
+
+    <div class="product">
+      <a class="image" href="{{ section.settings.product.url }}" data-aspect-ratio="{{ section.settings.image_aspect_ratio }}">
+        {% if section.settings.product.preview_image %}
+          <img
+            src="{{ section.settings.product.preview_image.original }}"
+            alt="{{ section.settings.product.name }}"
+            height="100%"
+            width="100%"
+            loading="lazy"
+          >
+        {% else %}
+          {% render 'misc.image-fallback', type: 'product' %}
+        {% endif %}
+        {% unless default_variant.available %}
+          <div class="sold-out">
+            <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">
+              {{ 'general.sold_out' | t }}
+            </span>
+          </div>
+        {% endunless %}
+      </a>
+      <div class="info">
+        <a class="name" href="{{ section.settings.product.url }}">
+          {{ section.settings.product.name }}
+        </a>
+        <div class="price">
+          <span class="original">{{ price | money }}</span>
+          {% if compare_at_price %}
+            <span class="compare-at">{{ compare_at_price | money }}</span>
+          {% endif %}
+        </div>
+      </div>
+      {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
+        {% if section.settings.product.variants.size > 1 %}
+          <button
+            ui-slot="button"
+            data-mode="stroke"
+            data-size="sm"
+            popovertarget="product-{{ section.settings.product.id }}"
+          >
+            {{ 'general.quick_look' | t }}
+          </button>
+        {% else %}
+          {% render 'core.shop-button', product: section.settings.product, size: 'sm' %}
+        {% endif %}
+      {% else %}
+        {% if default_variant.available %}
+          {% if section.settings.product.variants.size > 1 %}
+            <a ui-slot="button" data-mode="stroke" data-size="sm" href="{{ section.settings.product.url }}">
+              {{ 'general.view' | t }}
+            </a>
+          {% else %}
+            <button
+              ui-slot="button"
+              data-mode="filled"
+              data-size="sm"
+              type="button"
+              popovertarget="express-checkout-{{ section.settings.product.id }}"
+            >
+              {{ 'general.buy_now' | t }}
+            </button>
+          {% endif %}
+        {% else %}
+          <button ui-slot="button" data-mode="filled" data-size="sm" disabled>
+            {{ 'general.out_of_stock' | t }}
+          </button>
+        {% endif %}
+      {% endif %}
+
+      {% if default_variant.available %}
+        {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
+          {% if section.settings.product.variants.size > 1 %}
+            {% render 'misc.product-detail', product: section.settings.product %}
+          {% endif %}
+        {% else %}
+          {% unless section.settings.product.variants.size > 1 %}
+            {% render 'core.express-checkout', product: section.settings.product, style: 'open-drawer' %}
+          {% endunless %}
+        {% endif %}
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="product">
+      <div class="image" data-aspect-ratio="{{ section.settings.image_aspect_ratio }}">
+        {% render 'misc.image-fallback', type: 'product' %}
+      </div>
+      <div class="info">
+        <span class="name">{{ 'general.product_name' | t }}</span>
+        <div class="price">
+          <span class="original">{{ 0 | money }}</span>
+          <span class="compare-at">{{ 0 | money }}</span>
+        </div>
+      </div>
+      <button ui-slot="button" data-mode="filled" data-size="sm">{{ 'general.add' | t }}</button>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.special_product.label",
+  "limit": 3,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.header" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.special_product.default.heading"
+    },
+    { "type": "header", "content": "t:common.headers.product" },
+    { "type": "product", "id": "product", "label": "t:common.headers.item" },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:common.aspect_ratio.with_image",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" },
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

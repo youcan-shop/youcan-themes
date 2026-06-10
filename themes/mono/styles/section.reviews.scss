@@ -1,0 +1,216 @@
+[ui-section="reviews"] {
+  --per-page: 2;
+  --item-size: 85%;
+  --gap: var(--spacing-12);
+
+  display: grid;
+  gap: var(--spacing-12);
+
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      font: var(--font-title-md);
+
+      span {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--spacing-2);
+
+        svg {
+          position: relative;
+          transform: translateY(-0.5px);
+        }
+      }
+    }
+
+    .arrows {
+      display: flex;
+      gap: var(--spacing-8);
+    }
+  }
+
+  .list {
+    padding-block-end: 3px;
+
+    .review-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: var(--spacing-12);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-section);
+      box-shadow: 3px 3px 0 var(--color-primary);
+      gap: var(--spacing-12);
+
+      .content {
+        display: -webkit-box;
+        overflow: hidden;
+        word-break: break-all;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+      }
+
+      .info {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-8);
+
+        .stars {
+          display: flex;
+          gap: var(--spacing-2);
+          align-items: center;
+        }
+
+        .author {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  ui-empty {
+    padding: var(--spacing-12);
+  }
+
+  @media (width <= 769px) {
+    --per-page: 1;
+  }
+}
+
+#reviews-detail {
+  [ui-slot="drawer-body"] {
+    .list {
+      display: flex;
+      flex-direction: column;
+
+      .review-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-block: var(--spacing-24);
+        gap: var(--spacing-12);
+
+        &:first-child {
+          padding-block-start: var(--spacing-0);
+        }
+
+        &:not(:last-child) {
+          border-block-end: 1px solid var(--color-surface-variant);
+        }
+
+        .images {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--spacing-8);
+
+          &:not(:has(img)) {
+            display: none;
+          }
+
+          img {
+            width: 65px;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border: 1px solid var(--color-surface-variant);
+            border-radius: var(--radius-section);
+          }
+        }
+
+        .content {
+          word-break: break-all;
+        }
+
+        .info {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-8);
+
+          .stars {
+            display: flex;
+            gap: var(--spacing-2);
+            align-items: center;
+          }
+
+          .author {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+}
+
+#add-review {
+  [ui-slot="drawer-body"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-12);
+
+    .product {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-12);
+      padding-block-end: var(--spacing-12);
+      border-block-end: 1px solid var(--color-surface-variant);
+
+      .media {
+        width: 65px;
+        height: auto;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+
+        & > img {
+          object-fit: cover;
+        }
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-8);
+
+      &:has([ui-slot="rating-bar"]) {
+        align-items: center;
+        padding-block: var(--spacing-24);
+      }
+
+      .images {
+        display: flex;
+        gap: var(--spacing-8);
+
+        .image,
+        .upload {
+          width: 65px !important;
+          height: auto;
+          aspect-ratio: 1 / 1;
+          overflow: hidden;
+
+          & > img {
+            object-fit: cover;
+          }
+        }
+      }
+    }
+
+    .fields {
+      display: grid;
+      gap: var(--spacing-12);
+    }
+  }
+
+  [ui-slot="drawer-footer"] {
+    display: grid;
+    gap: var(--spacing-8);
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,95 @@
+[ui-section="special-offer"] {
+  [ui-slot="drawer-body"] {
+    padding-block-end: var(--spacing-0) !important;
+  }
+
+  .offer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-12);
+
+    .head {
+      padding: var(--spacing-12);
+      border-radius: var(--radius-section);
+      background-color: var(--color-primary);
+      color: var(--color-on-primary);
+
+      .title {
+        font: var(--font-title-md);
+        text-align: center;
+      }
+    }
+
+    .list {
+      display: grid;
+      gap: var(--spacing-12);
+
+      .product-item {
+        display: flex;
+        justify-content: space-between;
+        padding: var(--spacing-12);
+        border: 1px solid var(--color-primary);
+        border-radius: var(--radius-section);
+        box-shadow: 3px 3px 0 var(--color-primary);
+        gap: var(--spacing-12);
+
+        .media {
+          position: relative;
+          width: 65px;
+          height: auto;
+          overflow: hidden;
+          aspect-ratio: 1 / 1;
+
+          & > img {
+            object-fit: cover;
+          }
+        }
+
+        .info {
+          display: grid;
+          flex: 1;
+          gap: var(--spacing-8);
+
+          .price {
+            display: flex;
+            gap: var(--spacing-4);
+
+            .compare-at {
+              opacity: 0.5;
+              text-decoration: line-through;
+            }
+          }
+
+          .variants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-4);
+
+            .variant {
+              min-width: 22px;
+              padding: var(--spacing-2) var(--spacing-4);
+              border: 1px solid var(--color-primary);
+              background-color: var(--color-primary-container);
+              font: var(--font-body-sm);
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: var(--spacing-8);
+  }
+
+  @media (width <= 769px) {
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+  }
+}

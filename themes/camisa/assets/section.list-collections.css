@@ -1,0 +1,34 @@
+
+  [ui-section=list-collections]:not(#\#){
+    padding:attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
+  }
+  [ui-section=list-collections]{
+    display:flex;
+    gap:var(--spacing-24);
+    flex-direction:column;
+  }
+  [ui-section=list-collections] .head-area .heading{
+    font:var(--font-title-md);
+    text-transform:uppercase;
+  }
+  [ui-section=list-collections] .core-area .items{
+    display:grid;
+    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+    grid-gap:var(--spacing-12);
+    gap:var(--spacing-12);
+  }
+  @media (max-width: 1280px){
+    [ui-section=list-collections] .core-area .items{
+      grid-template-columns:repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 1024px){
+    [ui-section=list-collections] .core-area .items{
+      grid-template-columns:repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=list-collections] .core-area .items{
+      grid-template-columns:1fr;
+    }
+  }

@@ -1,0 +1,182 @@
+{{ 'section.link.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="link"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<a
+  ui-section="link"
+  href="{{ section.settings.url | default: "#" }}"
+  target="{{ section.settings.url_target }}"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="media">
+    {% case section.settings.icon %}
+      {% when 'youcan' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 32 32" fill="none">
+          <path d="M13.0997 8.86162H8.45828L11.3598 16H15.9988L13.0997 8.86162Z" fill="currentColor"/>
+          <path d="M18.9003 8.8616L15.9989 16.0025L13.0974 23.1383H17.7388L20.6403 16.0025L23.5417 8.8616H18.9003Z" fill="currentColor"/>
+        </svg>
+      {% when 'facebook' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978c.401 0 .955.042 1.468.103a9 9 0 0 1 1.141.195v3.325a9 9 0 0 0-.653-.036a27 27 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.7 1.7 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103l-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647"/>
+        </svg>
+      {% when 'instagram' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M7.03.084c-1.277.06-2.149.264-2.91.563a5.9 5.9 0 0 0-2.124 1.388a5.9 5.9 0 0 0-1.38 2.127C.321 4.926.12 5.8.064 7.076s-.069 1.688-.063 4.947s.021 3.667.083 4.947c.061 1.277.264 2.149.563 2.911c.308.789.72 1.457 1.388 2.123a5.9 5.9 0 0 0 2.129 1.38c.763.295 1.636.496 2.913.552c1.278.056 1.689.069 4.947.063s3.668-.021 4.947-.082c1.28-.06 2.147-.265 2.91-.563a5.9 5.9 0 0 0 2.123-1.388a5.9 5.9 0 0 0 1.38-2.129c.295-.763.496-1.636.551-2.912c.056-1.28.07-1.69.063-4.948c-.006-3.258-.02-3.667-.081-4.947c-.06-1.28-.264-2.148-.564-2.911a5.9 5.9 0 0 0-1.387-2.123a5.9 5.9 0 0 0-2.128-1.38c-.764-.294-1.636-.496-2.914-.55C15.647.009 15.236-.006 11.977 0S8.31.021 7.03.084m.14 21.693c-1.17-.05-1.805-.245-2.228-.408a3.7 3.7 0 0 1-1.382-.895a3.7 3.7 0 0 1-.9-1.378c-.165-.423-.363-1.058-.417-2.228c-.06-1.264-.072-1.644-.08-4.848c-.006-3.204.006-3.583.061-4.848c.05-1.169.246-1.805.408-2.228c.216-.561.477-.96.895-1.382a3.7 3.7 0 0 1 1.379-.9c.423-.165 1.057-.361 2.227-.417c1.265-.06 1.644-.072 4.848-.08c3.203-.006 3.583.006 4.85.062c1.168.05 1.804.244 2.227.408c.56.216.96.475 1.382.895s.681.817.9 1.378c.165.422.362 1.056.417 2.227c.06 1.265.074 1.645.08 4.848c.005 3.203-.006 3.583-.061 4.848c-.051 1.17-.245 1.805-.408 2.23c-.216.56-.477.96-.896 1.38a3.7 3.7 0 0 1-1.378.9c-.422.165-1.058.362-2.226.418c-1.266.06-1.645.072-4.85.079s-3.582-.006-4.848-.06m9.783-16.192a1.44 1.44 0 1 0 1.437-1.442a1.44 1.44 0 0 0-1.437 1.442M5.839 12.012a6.161 6.161 0 1 0 12.323-.024a6.162 6.162 0 0 0-12.323.024M8 12.008A4 4 0 1 1 12.008 16A4 4 0 0 1 8 12.008"/>
+        </svg>
+      {% when 'x_twitter' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M14.234 10.162L22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299l-.929-1.329L3.076 1.56h3.182l5.965 8.532l.929 1.329l7.754 11.09h-3.182z"/>
+        </svg>
+      {% when 'whatsapp' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" fill-rule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11c-1.936 0-3.757-.5-5.338-1.38L1.4 22.6l.98-5.262A10.95 10.95 0 0 1 1 12m6.147-5.353c.654-.655 1.527-.713 1.998-.69c.435.02.776.272.984.564l.952 1.334a1.5 1.5 0 0 1-.16 1.932l-.674.673c.223.544.67 1.42 1.272 2.021s1.477 1.05 2.02 1.273l.675-.674a1.5 1.5 0 0 1 1.931-.16l1.335.951c.291.209.544.55.564.984c.022.471-.036 1.344-.69 1.999c-1.067 1.066-2.741 1.077-4.264.659c-1.55-.426-3.13-1.34-4.197-2.406c-1.065-1.066-1.98-2.646-2.406-4.197c-.418-1.523-.407-3.197.66-4.263" clip-rule="evenodd"/>
+        </svg>
+      {% when 'tiktok' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M16 1h-3.5v15.5c0 1.5-1.5 3-3 3s-3-.5-3-3c0-2 1.899-3.339 3.5-3V10c-6.12 0-7 5-7 6.5S3.977 23 9.5 23c4.522 0 6.5-3.5 6.5-6V8c1.146 1.018 2.922 1.357 5 1.5V6c-3.017 0-5-2.654-5-5"/>
+        </svg>
+      {% when 'snapchat' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M7.926 2.432C9.298 1.266 10.93 1 12 1s2.702.266 4.074 1.432c1.284 1.091 2.269 2.91 2.409 5.836l.296-.118a2.297 2.297 0 0 1 1.953 4.148l-2.032.931c.267.405.698.923 1.243 1.468c.75.75 1.66 1.494 2.522 1.985c.302.173.566.453.674.795a1 1 0 0 1-.328 1.103c-.547.45-1.383.812-2.357.9c-.08.387-.262.699-.546.928c-.366.295-.83.393-1.235.432c-.305.03-.637.03-.93.029h-.269c-.385.005-.633.03-.78.092c-.2.084-.445.236-.761.445l-.19.127c-.26.173-.552.369-.862.554c-.78.465-1.748.913-2.881.913s-2.101-.448-2.881-.913c-.31-.185-.602-.38-.862-.554l-.19-.127c-.316-.21-.56-.36-.76-.445c-.148-.062-.396-.087-.781-.091l-.269-.001c-.293 0-.625 0-.93-.029c-.405-.039-.869-.137-1.235-.432a1.56 1.56 0 0 1-.546-.928c-.974-.088-1.81-.45-2.357-.9a1 1 0 0 1-.328-1.103c.108-.342.372-.622.674-.795c.862-.491 1.772-1.235 2.522-1.985c.545-.545.976-1.063 1.243-1.468l-2.032-.93A2.297 2.297 0 0 1 5.221 8.15l.296.117c.14-2.925 1.125-4.745 2.41-5.836Z"/>
+        </svg>
+      {% when 'youtube' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" fill-rule="evenodd" d="M1.172 7.693A56 56 0 0 0 1 12c0 1.632.08 3.167.182 4.44c.146 1.817 1.531 3.206 3.318 3.33c1.794.125 4.305.23 7.5.23s5.706-.105 7.5-.23c1.787-.124 3.172-1.513 3.318-3.33c.102-1.273.182-2.808.182-4.44c0-1.576-.074-3.06-.172-4.307a3.73 3.73 0 0 0-3.46-3.46C17.59 4.107 15.164 4 12 4s-5.591.107-7.368.233a3.73 3.73 0 0 0-3.46 3.46M15.5 12L10 9v6z" clip-rule="evenodd"/>
+        </svg>
+      {% when 'linkedin' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" fill-rule="evenodd" d="M3.5 6a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5M6 23V8H1v15zM8 8h4.5v1.946C13.216 9.005 14.746 8 17.5 8c4.33 0 5.5 4.32 5.5 7v8h-5v-8c0-1-.5-3-2.5-3c-1.42 0-2.42 1.008-3 1.951V23H8z" clip-rule="evenodd"/>
+        </svg>
+      {% when 'messenger' %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+          <path fill="currentColor" fill-rule="evenodd" d="M1.25 11.267C1.25 5.574 6.086 1 12 1s10.75 4.574 10.75 10.267S17.914 21.535 12 21.535a11.2 11.2 0 0 1-2.91-.381l-2.06 1.548c-.974.732-2.363.036-2.363-1.18v-2.747c-2.099-1.87-3.417-4.54-3.417-7.508m5.5 2.858l2.828-1.414a1 1 0 0 1 .853-.02l3.25 1.445a1 1 0 0 0 1.27-.41l2.626-4.501a.25.25 0 0 0-.328-.35l-2.827 1.414a1 1 0 0 1-.853.02l-3.25-1.445a1 1 0 0 0-1.27.41l-2.626 4.501a.25.25 0 0 0 .328.35Z" clip-rule="evenodd"/>
+        </svg>
+      {% when 'email' %}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M14.92 2.78681C12.967 2.73773 11.033 2.73773 9.07999 2.7868L9.02182 2.78826C7.497 2.82655 6.27002 2.85735 5.2867 3.0286C4.2572 3.20789 3.42048 3.55177 2.71362 4.26132C2.00971 4.9679 1.66764 5.7926 1.49176 6.8054C1.32429 7.76978 1.29878 8.9668 1.26719 10.4496L1.26593 10.5084C1.24469 11.5047 1.24469 12.4953 1.26594 13.4916L1.26719 13.5504C1.29879 15.0332 1.32429 16.2302 1.49176 17.1946C1.66764 18.2074 2.00972 19.0321 2.71362 19.7387C3.42048 20.4482 4.2572 20.7921 5.2867 20.9714C6.27001 21.1426 7.49697 21.1735 9.02177 21.2117L9.07999 21.2132C11.033 21.2623 12.967 21.2623 14.92 21.2132L14.9782 21.2117C16.503 21.1735 17.73 21.1426 18.7133 20.9714C19.7428 20.7921 20.5795 20.4482 21.2864 19.7387C21.9903 19.0321 22.3324 18.2074 22.5082 17.1946C22.6757 16.2302 22.7012 15.0332 22.7328 13.5503L22.7341 13.4916C22.7553 12.4953 22.7553 11.5047 22.7341 10.5084L22.7328 10.4497C22.7012 8.96683 22.6757 7.76979 22.5082 6.80542C22.3324 5.79261 21.9903 4.96792 21.2864 4.26134C20.5795 3.55179 19.7428 3.20791 18.7133 3.02862C17.73 2.85737 16.503 2.82656 14.9782 2.78827L14.92 2.78681ZM7.38182 7.85452C7.02527 7.64371 6.56533 7.76186 6.35452 8.11841C6.14371 8.47497 6.26186 8.93491 6.61841 9.14572L9.56043 10.8851C10.4313 11.4 11.1827 11.7501 12.0001 11.7501C12.8175 11.7501 13.569 11.4 14.4398 10.8851L17.3818 9.14572C17.7384 8.93491 17.8565 8.47497 17.6457 8.11841C17.4349 7.76186 16.975 7.64371 16.6184 7.85452L13.6764 9.59395C12.832 10.0932 12.3831 10.2501 12.0001 10.2501C11.6171 10.2501 11.1682 10.0932 10.3238 9.59395L7.38182 7.85452Z" fill="currentColor"></path>
+        </svg>
+      {% when 'phone' %}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path d="M9.09135 5.05591L8.83809 4.48608C8.49696 3.71854 8.3264 3.33477 8.0457 3.06351C7.86041 2.88445 7.64237 2.74275 7.40349 2.64615C7.0416 2.49982 6.62164 2.49982 5.7817 2.49982C4.53105 2.49982 3.90572 2.49982 3.4185 2.80345C3.11968 2.98967 2.83388 3.30583 2.67866 3.62188C2.42559 4.13717 2.483 4.70489 2.59781 5.84033C3.55055 15.2621 8.73782 20.4494 18.1596 21.4021C19.2951 21.517 19.8628 21.5744 20.3781 21.3213C20.6941 21.1661 21.0103 20.8803 21.1965 20.5815C21.5001 20.0942 21.5001 19.4689 21.5001 18.2183C21.5001 17.3783 21.5001 16.9584 21.3538 16.5965C21.2572 16.3576 21.1155 16.1395 20.9364 15.9543C20.6652 15.6736 20.2814 15.503 19.5139 15.1619L18.944 14.9086C18.2715 14.6097 17.9352 14.4602 17.5979 14.4318C17.2391 14.4016 16.8788 14.4686 16.5547 14.6255C16.2501 14.7731 15.9899 15.0333 15.4694 15.5538C14.9574 16.0658 14.7014 16.3218 14.3681 16.4725C14.0436 16.6192 13.5877 16.6816 13.2358 16.6274C12.8742 16.5717 12.6084 16.4218 12.0768 16.1219C10.1924 15.0591 8.94088 13.8076 7.87801 11.9231C7.57819 11.3916 7.42828 11.1258 7.37258 10.7641C7.31839 10.4123 7.38074 9.95632 7.52744 9.6319C7.6782 9.29851 7.9342 9.04251 8.44619 8.53052C8.96661 8.0101 9.22681 7.7499 9.37441 7.44525C9.5314 7.12119 9.59831 6.76086 9.5681 6.40205C9.53971 6.06473 9.39026 5.72845 9.09135 5.05591Z" fill="currentColor"></path>
+        </svg>
+    {% endcase %}
+  </div>
+  <div class="info">
+    {% if section.settings.title %}
+      <h2 class="heading">{{ section.settings.title }}</h2>
+    {% endif %}
+    {% if section.settings.description %}
+      <p class="description">{{ section.settings.description }}</p>
+    {% endif %}
+  </div>
+  {% if section.settings.show_arrow %}
+    {% render 'misc.icon', name: 'hgi-arrow-right-02', size: 24 %}
+  {% endif %}
+</a>
+
+{% schema %}
+{
+  "label": "t:sections.link.label",
+  "settings": [
+    { "type": "header", "content": "t:common.headers.content" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:common.content.title",
+      "default": "t:sections.link.default.title"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.content.description",
+      "default": "t:sections.link.default.description"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "t:common.link.url",
+      "default": "https://youcan.shop"
+    },
+    {
+      "type": "select",
+      "id": "url_target",
+      "label": "t:common.link.open_link_in.label",
+      "options": [
+        { "label": "t:common.link.open_link_in.options.same_tab", "value": "_self" },
+        { "label": "t:common.link.open_link_in.options.new_tab", "value": "_blank" }
+      ],
+      "default": "_self"
+    },
+    { "type": "header", "content": "t:common.headers.media" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:common.media.icon",
+      "options": [
+        { "label": "t:globals.social_media.youcan", "value": "youcan" },
+        { "label": "t:globals.social_media.instagram", "value": "instagram" },
+        { "label": "t:globals.social_media.facebook", "value": "facebook" },
+        { "label": "t:globals.social_media.x_twitter", "value": "x_twitter" },
+        { "label": "t:globals.social_media.whatsapp", "value": "whatsapp" },
+        { "label": "t:globals.social_media.tiktok", "value": "tiktok" },
+        { "label": "t:globals.social_media.snapchat", "value": "snapchat" },
+        { "label": "t:globals.social_media.youtube", "value": "youtube" },
+        { "label": "t:globals.social_media.linkedin", "value": "linkedin" },
+        { "label": "t:globals.social_media.messenger", "value": "messenger" },
+        { "label": "t:globals.social_media.email", "value": "email" },
+        { "label": "t:globals.social_media.phone", "value": "phone" }
+      ],
+      "default": "youcan"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "t:sections.link.show_arrow",
+      "default": true
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

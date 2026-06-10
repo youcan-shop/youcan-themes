@@ -1,0 +1,763 @@
+class CartBubble extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
+      const { count } = payload.cartData;
+
+      this.updateCount(count);
+    });
+  }
+
+  updateCount(count) {
+    this.textContent = count;
+  }
+}
+
+customElements.define("ui-cart-bubble", CartBubble);
+
+class BaseCartItem extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    const handleQuantityChange = debounce((event) => {
+      const quantityControl = event.target;
+
+      this.handleQuantityChangeForQuantityElement(quantityControl);
+    }, ON_CHANGE_DEBOUNCE_TIMER);
+
+    this.addEventListener("change", handleQuantityChange.bind(this));
+
+    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
+      const { items } = payload.cartData;
+      this.handleCartUpdate(payload);
+
+      const { regularItems, bundles } = this.partitionCartItems(items);
+      this.updateCartList(regularItems, bundles);
+    });
+  }
+
+  handleCartUpdate(payload) {}
+
+  async handleQuantityChangeForQuantityElement(element) {
+    const cartItemId = element.getAttribute("item");
+    const productVariantId = element.getAttribute("product-variant");
+    const quantity = element.getAttribute("quantity");
+
+    if (!(cartItemId && productVariantId && quantity)) {
+      return;
+    }
+
+    this.setItemIsLoading(element, true);
+
+    try {
+      const newCart = await youcanjs.cart.updateItem({
+        cartItemId,
+        productVariantId,
+        quantity,
+      });
+
+      publish(PUB_SUB_EVENTS.cartUpdate, {
+        source: "quantity",
+        productVariantId: this.productVariantValue,
+        cartData: newCart,
+      });
+    } catch (error) {
+      console.error(error);
+
+      publish(PUB_SUB_EVENTS.cartError, {
+        source: "quantity",
+        productVariantId: this.productVariantValue,
+        error: error,
+      });
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setItemIsLoading(element, false);
+    }
+  }
+
+  updateCartList(regularItems, bundles = []) {
+    const fragment = new DocumentFragment();
+    const template = this.getCartItemTemplate();
+
+    const itemTemplate = this.getCartItemTemplate();
+    regularItems.forEach((item) => {
+      fragment.append(this.createCartItem(itemTemplate, item));
+    });
+
+    const bundleGroupTemplate = this.getCartBundleGroupTemplate();
+    const bundleItemTemplate = this.getCartBundleItemTemplate();
+    bundles.forEach((bundle) => {
+      fragment.append(this.createBundleGroup(bundleGroupTemplate, bundleItemTemplate, bundle));
+    });
+
+    this.setIsEmpty(!regularItems.length && !bundles.length);
+    this.replaceContent(fragment);
+  }
+
+  createBundleGroup(groupTemplate, itemTemplate, bundle) {
+    const element = groupTemplate.content.cloneNode(true);
+
+    element.querySelector('[ui-bundle="title"]').textContent = bundle.title;
+
+    const removeElement = element.querySelector("ui-cart-remove");
+    removeElement.setAttribute("item", bundle.items.map((i) => i.id).join(","));
+    removeElement.setAttribute("product-variant", bundle.items.map((i) => i.productVariant.id).join(","));
+
+    const totalComparePrice = bundle.items[0]?.extra_fields.bundle_compare_price ?? 0;
+    const perItemComparePrice = totalComparePrice / bundle.items.length;
+
+    const group = element.querySelector('[ui-bundle="group"]');
+    bundle.items.forEach((bundleItem) => {
+      const itemEl = itemTemplate.content.cloneNode(true);
+      this.populateBundleItem(itemEl, bundleItem, perItemComparePrice);
+      group.append(itemEl);
+    });
+
+    return element;
+  }
+
+  populateBundleItem(element, item, perItemComparePrice) {
+    const image = element.querySelector("[ui-cart-item='image']");
+    const title = element.querySelector("[ui-cart-item='title']");
+    const variant = element.querySelector("[ui-cart-item='variant']");
+    const price = element.querySelector("[ui-cart-item='price']");
+    const comparePrice = element.querySelector("[ui-cart-item='compare-price']");
+    const subtotal = element.querySelector("[ui-cart-item='subtotal']");
+
+    if (image) this.updateItemImage(image, item.productVariant);
+    if (title) this.updateItemTitle(title, item.productVariant.product);
+    if (variant) this.updateItemVariant(variant, item.productVariant.variations);
+    if (price) this.updateItemPrice(price, item.extra_fields.bundle_product_price);
+    if (comparePrice) this.updateItemCompareAtPrice(comparePrice, perItemComparePrice, item.price, item.quantity);
+    if (subtotal) this.updateItemSubPrice(subtotal, item.quantity, item.extra_fields.bundle_product_price);
+  }
+
+  getCartItemTemplate() {}
+
+  getCartBundleGroupTemplate() {}
+
+  getCartBundleItemTemplate() {}
+
+  appendCartItem(fragment, cartItem) {}
+
+  createCartItem(template, item) {
+    const cartItem = template.content.cloneNode(true);
+    const elements = this.getCartItemElements(cartItem);
+
+    this.updateItemImage(elements.image, item.productVariant);
+    this.updateItemTitle(elements.title, item.productVariant.product);
+    this.updateItemVariant(elements.variant, item.productVariant.variations);
+    this.updateItemQuantity(elements.quantity, item.quantity);
+    this.updateItemPrice(elements.price, item.price);
+    this.updateItemSubPrice(elements.subtotal, item.quantity, item.price);
+    this.updateItemCompareAtPrice(elements.compareAtPrice, item.productVariant.compare_at_price, item.price, item.quantity);
+    this.updateItemDeleteButtonAttributes(elements.deleteButton.parentElement, item.id, item.productVariant.id);
+
+    this.additionalItemUpdates(elements, item);
+
+    this.updateItemAttributes(
+      elements.quantity.parentElement,
+      item.id,
+      item.productVariant.id,
+      item.quantity,
+      item.productVariant.product.track_inventory && item.productVariant.inventory,
+    );
+
+    return cartItem;
+  }
+
+  additionalItemUpdates(elements, item) {}
+
+  getCartItemElements(cartItem) {}
+
+  updateItemImage(imageContainer, productVariant) {
+    const img = imageContainer.querySelector("img");
+    const placeholder = imageContainer.querySelector("ui-image-fallback");
+    const shouldShowImage = productVariant.image.url || productVariant.product.images.length > 0;
+
+    if (shouldShowImage) {
+      img.src = productVariant.image.url ?? productVariant.product.thumbnail;
+      img.alt = productVariant.product.name;
+      img.hidden = false;
+      placeholder.hidden = true;
+    } else {
+      img.hidden = true;
+      placeholder.hidden = false;
+    }
+  }
+
+  updateItemTitle(titleElement, product) {
+    titleElement.textContent = product.name;
+  }
+
+  updateItemVariant(variantElement, variations) {
+    const variationKeys = Object.keys(variations);
+    if (variationKeys.length === 1 && variationKeys[0] === "default") return;
+
+    const variantFragment = this.createVariantFragment(variations);
+    variantElement.removeAttribute("hidden");
+    variantElement.replaceChildren(variantFragment);
+  }
+
+  createVariantFragment(variations) {
+    const fragment = new DocumentFragment();
+
+    Object.entries(variations).forEach(([key, value]) => {
+      const v = document.createElement("div");
+      v.innerHTML = `
+        <div class="variant">
+          <span class="label">${key}:</span>
+          <p class="value">${value}</p>
+        </div>`;
+
+      fragment.append(v);
+    });
+
+    return fragment;
+  }
+
+  updateItemQuantity(quantityElement, quantity) {
+    quantityElement.textContent = quantity;
+  }
+
+  updateItemPrice(priceElement, price) {
+    priceElement.textContent = formatCurrency(price);
+  }
+
+  updateItemSubPrice(subPriceElement, quantity, basePrice) {
+    if (basePrice === 0) {
+      subPriceElement.firstElementChild.removeAttribute("hidden");
+      subPriceElement.lastElementChild.toggleAttribute("hidden", true);
+    } else {
+      subPriceElement.textContent = formatCurrency(quantity * basePrice);
+    }
+  }
+
+  updateItemCompareAtPrice(compareAtPriceElement, compareAtPrice, price, quantity) {
+    if (compareAtPrice) {
+      compareAtPriceElement.textContent = formatCurrency(compareAtPrice * quantity);
+      compareAtPriceElement.removeAttribute("hidden");
+
+      const save = compareAtPriceElement?.parentElement?.nextElementSibling;
+      if (save) {
+        save.querySelector("span").textContent = formatCurrency(compareAtPrice * quantity - price * quantity);
+        save.removeAttribute("hidden");
+      }
+    }
+  }
+
+  updateItemDeleteButtonAttributes(buttonElement, cartItemId, productVariantId) {
+    buttonElement.setAttribute("item", cartItemId);
+    buttonElement.setAttribute("product-variant", productVariantId);
+  }
+
+  setIsEmpty(isEmpty = false) {}
+
+  updateItemAttributes(quantityElement, cartItemId, productVariantId, quantity, inventory = null) {
+    quantityElement.setAttribute("item", cartItemId);
+    quantityElement.setAttribute("product-variant", productVariantId);
+    quantityElement.setAttribute("quantity", quantity);
+    if (inventory) quantityElement.setAttribute("inventory", inventory);
+  }
+
+  replaceContent(fragment) {
+    const tbody = this.querySelector("table tbody");
+    tbody ? tbody.replaceChildren(fragment) : this.replaceChildren(fragment);
+  }
+
+  setItemIsLoading(element, isLoading) {
+    element.toggleAttribute("data-loading", isLoading);
+  }
+
+  partitionCartItems(items) {
+    const regularItems = [];
+    const bundleMap = new Map();
+
+    items.forEach((item) => {
+      const extra = item.extra_fields;
+
+      if (extra?.is_bundle_item) {
+        if (!bundleMap.has(extra.bundle_id)) {
+          bundleMap.set(extra.bundle_id, {
+            id: extra.bundle_id,
+            title: extra.bundle_title,
+            items: [],
+          });
+        }
+        bundleMap.get(extra.bundle_id).items.push(item);
+      } else {
+        regularItems.push(item);
+      }
+    });
+
+    return { regularItems, bundles: [...bundleMap.values()] };
+  }
+}
+
+class CartDrawerItems extends BaseCartItem {
+  constructor() {
+    super();
+
+    this.cart = this.closest("[ui-slot='sheet-content']");
+    this.subTotal = this.cart.querySelector("[ui-cart-item='cart-subtotal']");
+  }
+
+  handleCartUpdate(payload) {
+    const { sub_total, one_page_checkout, all_in_one_checkout_url, checkout_info_url } = payload.cartData;
+
+    if (payload.source === "product-form") {
+      if (payload.skipToCheckout) {
+        window.location.href = one_page_checkout ? all_in_one_checkout_url : checkout_info_url;
+
+        return;
+      }
+
+      payload.skipCart ? (window.location.href = "/cart") : this.cart.showPopover();
+    }
+
+    this.updateCartSubTotal(sub_total);
+  }
+
+  updateCartSubTotal(subtotal) {
+    this.subTotal.textContent = formatCurrency(subtotal);
+  }
+
+  getCartItemTemplate() {
+    return this.cart.querySelector("template[ui-cart-drawer='item']");
+  }
+
+  getCartBundleGroupTemplate() {
+    return this.cart.querySelector("template[ui-cart-drawer='bundle-group']");
+  }
+
+  getCartBundleItemTemplate() {
+    return this.cart.querySelector("template[ui-cart-drawer='bundle-item']");
+  }
+
+  appendCartItem(fragment, cartItem) {
+    fragment.append(cartItem);
+  }
+
+  getCartItemElements(cartItem) {
+    const [image, title, deleteButton, variant, quantity, price, subtotal, compareAtPrice] = cartItem.querySelectorAll("[ui-cart-item]");
+    return { image, title, variant, price, subtotal, compareAtPrice, quantity, deleteButton };
+  }
+
+  setIsEmpty(isEmpty = false) {
+    this.cart.querySelector("[ui-cart-drawer='footer']").toggleAttribute("hidden", isEmpty);
+    this.cart.querySelector("ui-empty").toggleAttribute("hidden", !isEmpty);
+  }
+}
+
+customElements.define("ui-cart-drawer-items", CartDrawerItems);
+
+class CartItems extends BaseCartItem {
+  constructor() {
+    super();
+  }
+
+  updateCartList(regularItems, bundles = []) {
+    const fragment = new DocumentFragment();
+
+    const itemTemplate = this.getCartItemTemplate();
+    regularItems.forEach((item) => {
+      fragment.append(this.createCartItem(itemTemplate, item));
+    });
+
+    const bundleGroupTemplate = this.getCartBundleGroupTemplate();
+    const bundleItemTemplate = this.getCartBundleItemTemplate();
+    bundles.forEach((bundle) => {
+      fragment.append(this.createBundleGroup(bundleGroupTemplate, bundleItemTemplate, bundle));
+    });
+
+    this.setIsEmpty(!regularItems.length && !bundles.length);
+    this.replaceContent(fragment);
+  }
+
+  getCartItemTemplate() {
+    return document.querySelector("template[ui-cart-item]");
+  }
+
+  getCartBundleGroupTemplate() {
+    return document.querySelector("template[ui-cart='bundle-group']");
+  }
+
+  getCartBundleItemTemplate() {
+    return document.querySelector("template[ui-cart='bundle-item']");
+  }
+
+  appendCartItem(fragment, cartItem) {
+    fragment.append(cartItem);
+  }
+
+  getCartItemElements(cartItem) {
+    const [image, title, price, compareAtPrice, variant, quantity, deleteButton, subtotal] = cartItem.querySelectorAll("[ui-cart-item]");
+    return { image, title, variant, price, compareAtPrice, quantity, subtotal, deleteButton };
+  }
+
+  additionalItemUpdates(elements, item) {}
+
+  updateItemSubPrice(subPriceElement, quantity, basePrice) {
+    subPriceElement.textContent = formatCurrency(quantity * basePrice);
+  }
+
+  setIsEmpty(isEmpty = false) {
+    this.parentElement.querySelector("ui-empty").toggleAttribute("hidden", !isEmpty);
+    this.parentElement.querySelector("ui-summary-box").toggleAttribute("hidden", isEmpty);
+  }
+}
+
+customElements.define("ui-cart-items", CartItems);
+
+class CartRemove extends HTMLElement {
+  constructor() {
+    super();
+
+    this.button = this.querySelector('[ui-slot="link-button"]');
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    this.button.addEventListener("click", this.onRemoveItem.bind(this));
+  }
+
+  async onRemoveItem() {
+    this.isLoading = true;
+
+    try {
+      const cartItemIds = this.cartItemValue.split(",").filter(Boolean);
+      const productVariantIds = this.productVariantValue.split(",").filter(Boolean);
+
+      if (!cartItemIds.length || !productVariantIds.length) return;
+
+      if (cartItemIds.length === 1) {
+        const response = await youcanjs.cart.removeItem({
+          cartItemId: cartItemIds[0],
+          productVariantId: productVariantIds[0],
+        });
+
+        publish(PUB_SUB_EVENTS.cartUpdate, {
+          source: "delete-button",
+          cartData: response,
+        });
+
+        return;
+      }
+
+      let response;
+      for (let i = 0; i < cartItemIds.length; i++) {
+        response = await youcanjs.cart.removeItem({
+          cartItemId: cartItemIds[i],
+          productVariantId: productVariantIds[i],
+        });
+      }
+
+      publish(PUB_SUB_EVENTS.cartUpdate, {
+        source: "delete-button",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.show(error.message, "error");
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  get cartItemValue() {
+    return this.getAttribute("item");
+  }
+
+  get productVariantValue() {
+    return this.getAttribute("product-variant");
+  }
+
+  get isLoading() {
+    return this.button.getAttribute("data-loading");
+  }
+
+  set isLoading(value) {
+    this.button.textContent = window.actions.loading ?? "Loading...";
+    this.button.toggleAttribute("data-loading", value);
+  }
+}
+
+customElements.define("ui-cart-remove", CartRemove);
+
+class Quantity extends HTMLElement {
+  constructor() {
+    super();
+
+    this.isSyncing = false;
+    this.quantity = this.querySelector("[ui-quantity='value']");
+    this.plusButton = this.querySelector('button[name="plus"]');
+    this.minusButton = this.querySelector('button[name="minus"]');
+    this.changeEvent = new Event("change", { bubbles: true });
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    this.plusButton.addEventListener("click", this.onButtonClick.bind(this));
+    this.minusButton.addEventListener("click", this.onButtonClick.bind(this));
+    this.updateButtonsForQuantity(this.quantityValue);
+  }
+
+  onButtonClick(event) {
+    try {
+      if (isNaN(this.quantityValue)) {
+        this.quantityValue = 1;
+        this.updateMinusButtonState();
+
+        return;
+      }
+
+      const buttonName = event.currentTarget.name;
+      const nextQuantityValue = this.calculateNextQuantity(buttonName);
+
+      if (nextQuantityValue === null) return;
+
+      this.quantityValue = nextQuantityValue;
+
+      this.updateButtonsForQuantity(nextQuantityValue);
+      this.dispatchEvent(this.changeEvent);
+    } catch (error) {
+      console.error(error);
+
+      publish(PUB_SUB_EVENTS.cartError, {
+        source: "quantity",
+        error: error,
+      });
+
+      toast.show(error.message, "error");
+    }
+  }
+
+  updateMinusButtonState(quantity) {
+    this.minusButton.toggleAttribute("disabled", quantity <= 1);
+  }
+
+  updatePlusButtonState(quantity) {
+    this.plusButton.toggleAttribute("disabled", quantity === this.inventoryValue);
+  }
+
+  calculateNextQuantity(buttonName) {
+    if (buttonName === "plus") {
+      if (this.inventoryValue < this.quantityValue) {
+        const message = window.errorStrings.insufficient_inventory;
+        toast.show(message.replace("[inventory]", this.inventoryValue), "error");
+
+        return null;
+      }
+
+      return this.quantityValue + 1;
+    }
+
+    return this.quantityValue - 1;
+  }
+
+  syncQuantity(value) {
+    const itemId = this.getAttribute("item");
+    if (!itemId) return;
+
+    const quantitySiblings = document.querySelectorAll(`ui-quantity[item="${itemId}"]`);
+
+    quantitySiblings.forEach((sibling) => {
+      if (sibling !== this) {
+        sibling.setQuantityFromSync(value);
+      }
+    });
+  }
+
+  setQuantityFromSync(value) {
+    this.isSyncing = true;
+    this.quantityValue = value;
+    this.updateButtonsForQuantity(value);
+    this.dispatchEvent(this.changeEvent);
+    this.isSyncing = false;
+  }
+
+  updateButtonsForQuantity(quantity) {
+    this.updateMinusButtonState(quantity);
+    this.updatePlusButtonState(quantity);
+  }
+
+  get inventoryValue() {
+    return parseInt(this.getAttribute("inventory"), 10);
+  }
+
+  get quantityValue() {
+    return parseInt(this.getAttribute("quantity"), 10);
+  }
+
+  set quantityValue(value) {
+    const parsed = parseInt(value, 10);
+    if (isNaN(parsed)) {
+      throw new Error("Invalid quantity value");
+    }
+
+    this.setAttribute("quantity", value);
+    this.quantity.textContent = String(value);
+
+    if (!this.isSyncing) this.syncQuantity(parsed);
+  }
+}
+
+customElements.define("ui-quantity", Quantity);
+
+class CartSummary extends HTMLElement {
+  static COUPON_TYPES = {
+    FIXED: 0,
+    PERCENTAGE: 1,
+  };
+
+  constructor() {
+    super();
+
+    this.couponForm = this.querySelector('[ui-summary-box="coupon-form"]');
+    this.subtotal = this.querySelector('[ui-summary-box="subtotal"]');
+    this.total = this.querySelector('[ui-summary-box="total"]');
+    this.couponCode = this.querySelector('[ui-summary-box="coupon-code"]');
+    this.discount = this.querySelector('[ui-summary-box="discount"]');
+    this.removeCouponButton = this.querySelector('[ui-summary-box="remove-coupon"]');
+
+    if (this.couponForm) {
+      const [couponInput, couponButton] = this.couponForm.querySelectorAll("[data-coupon]");
+      this.couponInput = couponInput;
+      this.couponButton = couponButton;
+    }
+  }
+
+  connectedCallback() {
+    this._render();
+  }
+
+  _render() {
+    this.couponForm?.addEventListener("submit", this.handleApplyCoupon.bind(this));
+    this.removeCouponButton?.addEventListener("click", this.handleRemoveCoupon.bind(this));
+
+    subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
+      const { sub_total, discountedPrice, coupon, discounted_sub_total } = payload.cartData;
+
+      this.updateCoupon(coupon, discountedPrice);
+      this.updateSummary(sub_total, discounted_sub_total);
+    });
+
+    subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
+      const { sub_total, discountedPrice, coupon, discounted_sub_total } = payload.cartData;
+
+      this.updateCoupon(coupon, discountedPrice);
+      this.updateSummary(sub_total, discounted_sub_total);
+    });
+  }
+
+  async handleRemoveCoupon() {
+    this.setCouponRemoveButtonIsLoading(true);
+
+    try {
+      const response = await youcanjs.checkout.removeCoupons();
+
+      publish(PUB_SUB_EVENTS.couponUpdate, {
+        source: "coupon-form",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setCouponRemoveButtonIsLoading(false);
+    }
+  }
+
+  async handleApplyCoupon(event) {
+    event.preventDefault();
+
+    const couponCode = new FormData(event.target).get("coupon_code");
+
+    if (!couponCode) return;
+
+    this.setCouponFormIsLoading(true);
+
+    try {
+      const response = await youcanjs.checkout.applyCoupon(couponCode);
+
+      publish(PUB_SUB_EVENTS.couponUpdate, {
+        source: "coupon-form",
+        cartData: response,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast.show(error.message, "error");
+    } finally {
+      this.setCouponFormIsLoading(false);
+      this.clearCouponForm();
+    }
+  }
+
+  updateCoupon(coupon, discountedPrice) {
+    if (!coupon) {
+      this.setShowCouponInSummary(false);
+
+      return;
+    }
+
+    this.discount.textContent = this.getFormattedDiscountValue(coupon, discountedPrice);
+    this.couponCode.textContent = coupon.code;
+
+    this.setShowCouponInSummary(true);
+  }
+
+  setShowCouponInSummary(shouldShow) {
+    this.discount?.toggleAttribute("hidden", !shouldShow);
+    this.couponCode.toggleAttribute("hidden", !shouldShow);
+  }
+
+  updateSummary(subTotal, total) {
+    this.subtotal.textContent = formatCurrency(subTotal);
+    this.total.textContent = formatCurrency(total);
+  }
+
+  getFormattedDiscountValue(coupon, discountedPrice) {
+    if (coupon.type == CartSummary.COUPON_TYPES.PERCENTAGE) {
+      return `-${formatCurrency(discountedPrice)} (${coupon.value}%)`;
+    }
+
+    return `-${formatCurrency(coupon.value)}`;
+  }
+
+  clearCouponForm() {
+    this.couponInput.value = "";
+  }
+
+  setCouponRemoveButtonIsLoading(isLoading) {
+    this.removeCouponButton.toggleAttribute("data-loading", isLoading);
+  }
+
+  setCouponFormIsLoading(isLoading) {
+    this.couponButton.toggleAttribute("data-loading", isLoading);
+    this.couponInput.disabled = isLoading;
+  }
+}
+
+customElements.define("ui-summary-box", CartSummary);

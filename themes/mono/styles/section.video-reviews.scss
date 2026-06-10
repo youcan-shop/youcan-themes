@@ -1,0 +1,100 @@
+[ui-section="video-reviews"] {
+  --per-page: 2;
+  --item-size: 85%;
+  --gap: var(--spacing-12);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-12);
+
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      font: var(--font-title-md);
+    }
+
+    .arrows {
+      display: flex;
+      gap: var(--spacing-8);
+    }
+  }
+
+  .list {
+    padding-block-end: 3px;
+    padding-inline-end: 3px;
+
+    .video-item {
+      position: relative;
+      width: 100%;
+      height: auto;
+      overflow: hidden;
+      transition: var(--transition-standard-fast-spatial);
+      transition-property: transform, box-shadow;
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-section);
+      box-shadow: 3px 3px 0 var(--color-primary);
+
+      &[data-aspect-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-aspect-ratio="portrait"] {
+        aspect-ratio: 9 / 16;
+      }
+
+      &[data-aspect-ratio="landscape"] {
+        aspect-ratio: 16 / 9;
+      }
+
+      & > img {
+        object-fit: cover;
+      }
+
+      .play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+
+      &:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 1.5px 1.5px 0 var(--color-primary);
+      }
+    }
+  }
+
+  ui-empty {
+    padding: var(--spacing-12);
+  }
+
+  @media (width <= 769px) {
+    --per-page: 1;
+  }
+}
+
+#video-player {
+  [ui-slot="drawer-body"] {
+    video {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+
+      &[data-aspect-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-aspect-ratio="portrait"] {
+        aspect-ratio: 9 / 16;
+      }
+
+      &[data-aspect-ratio="landscape"] {
+        aspect-ratio: 16 / 9;
+      }
+    }
+  }
+}

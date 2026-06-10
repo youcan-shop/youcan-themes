@@ -1,0 +1,107 @@
+{% comment %}
+  Render a product actions (price, shop button, variants, form..)
+
+  Usage:
+  {% render 'misc.product-actions' %}
+{% endcomment %}
+
+<div ui-box="content">
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'block_badge' %}
+        {% if compare_at_price %}
+          <div
+            class="badge"
+            ui-slot="status-badge"
+            data-variant="stroke"
+            data-status="{{ settings.sale_badge_status }}"
+          >
+            {% if settings.sale_badge_type == 'percentage' %}
+              {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+              -{{ percentage }}%
+            {% else %}
+              {% assign fixed = compare_at_price | minus: price %}
+              {{ 'general.save' | t }}
+              {{ fixed | money }}
+            {% endif %}
+          </div>
+        {% endif %}
+
+      {% when 'block_title' %}
+        <h1 ui-block="title" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
+          {{ product.name }}
+        </h1>
+
+      {% when 'block_inventory_status' %}
+        {% if product.isTrackingInventory %}
+          {% render 'const.inventory-status',
+            count: default_variant.inventory,
+            threshold: block.settings.low_inventory_threshold,
+            show_count: block.settings.show_inventory_count
+          %}
+        {% endif %}
+
+      {% when 'block_description' %}
+        {% if product.description %}
+          <div ui-block="description" {{ block.youcan_attributes }}>
+            <article>{{ product.description }}</article>
+          </div>
+        {% endif %}
+
+      {% when 'block_price' %}
+        <div ui-block="price" data-size="{{ block.settings.price_size }}" {{ block.youcan_attributes }}>
+          <span class="original-price" ui-product-item="price">
+            {{ price | default: 0 | money }}
+          </span>
+          <div
+            class="compare-at-price"
+            ui-product-item="compare-at-price"
+            {% unless compare_at_price %}
+              hidden
+            {% endunless %}
+          >
+            {{ compare_at_price | default: 0 | money }}
+          </div>
+        </div>
+
+      {% when 'block_variant_picker' %}
+        {% if product.options.size > 0 %}
+          {% render 'core.variants' %}
+        {% endif %}
+
+      {% when 'block_bundles' %}
+        {% if product.bundles %}
+          {% render 'core.bundles' %}
+        {% endif %}
+
+      {% when 'block_shop_buttons' %}
+        {% if settings.cart_checkout_type == 'express-checkout' and block.settings.buy_button_style == 'default' %}
+          <div ui-block="express-checkout" {{ block.youcan_attributes }}>
+            {% render 'core.express-checkout', style: 'default' %}
+          </div>
+        {% else %}
+          <div ui-block="controller" {{ block.youcan_attributes }}>
+            <div class="quantity-control">
+              <span class="label">{{ 'general.quantity' | t }}</span>
+              {% render 'core.quantity', size: 'md' %}
+            </div>
+            {% if settings.cart_checkout_type == 'cart' %}
+              {% assign button_mode = 'filled' %}
+
+              {% if block.settings.show_buy_button %}
+                {% assign button_mode = 'stroke' %}
+              {% endif %}
+
+              {% render 'core.shop-button', mode: button_mode %}
+            {% endif %}
+            {% if settings.cart_checkout_type == 'cart' and block.settings.show_buy_button %}
+              {% render 'core.shop-button', skip_to_checkout: true %}
+            {% endif %}
+            {% if settings.cart_checkout_type == 'express-checkout' %}
+              {% render 'core.express-checkout', style: 'open-drawer' %}
+            {% endif %}
+          </div>
+        {% endif %}
+    {% endcase %}
+  {% endfor %}
+</div>

@@ -1,0 +1,211 @@
+{{ 'section.cart.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="cart"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="cart"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="head">
+    <a
+      ui-slot="button"
+      data-mode="3d"
+      data-size="md"
+      data-as-icon
+      data-flip-icon-in-rtl
+      aria-label="Back to home"
+      href="/"
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+    </a>
+    <h2 class="title">{{ 'cart.title' | t }}</h2>
+  </div>
+
+  <template ui-cart-item="item">
+    {% render 'core.cart-item' %}
+  </template>
+  <ui-cart-items class="list">
+    {% for product in cart.items %}
+      {% render 'core.cart-item' %}
+    {% endfor %}
+
+    {% if cart.bundles %}
+      {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+      {% for t in types %}
+        {% assign type = cart.bundles[t] %}
+
+        {% for bundle in type %}
+          <div class="bundle-group">
+            <div class="head">
+              <span class="title" ui-bundle="title">{{ bundle.title }}</span>
+              <ui-cart-remove
+                item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+              >
+                <button ui-slot="button" data-mode="lighter" data-size="xs" data-as-icon aria-label="Remove" ui-cart-item="delete-button">
+                  {% render 'misc.icon', name: 'hgi-delete-02' %}
+                </button>
+              </ui-cart-remove>
+            </div>
+            <div class="list" ui-bundle="group">
+              {% for bundle_item in bundle.items %}
+                {% render 'core.cart-bundle-item', product: bundle_item %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  </ui-cart-items>
+
+  <template ui-cart="bundle-group">
+    <div class="bundle-group">
+      <div class="head">
+        <span class="title" ui-bundle="title"></span>
+        <ui-cart-remove>
+          <button ui-slot="button" data-mode="lighter" data-size="xs" data-as-icon aria-label="Remove" ui-cart-item="delete-button">
+            {% render 'misc.icon', name: 'hgi-delete-02' %}
+          </button>
+        </ui-cart-remove>
+      </div>
+      <div class="list" ui-bundle="group"></div>
+    </div>
+  </template>
+
+  <template ui-cart="bundle-item">
+    {% render 'core.cart-bundle-item' %}
+  </template>
+
+  <ui-summary-box
+    {% unless cart.count %}
+      hidden
+    {% endunless %}
+  >
+    {% if section.settings.show_coupon %}
+      <div class="coupon">
+        <div class="header">
+          <h3 class="title">{{ 'cart.coupon.label' | t }}</h3>
+        </div>
+        <form class="core" ui-summary-box="coupon-form">
+          <fieldset class="field">
+            <input
+              ui-slot="input"
+              type="text"
+              name="coupon_code"
+              placeholder="{{ 'cart.coupon.placeholder' | t }}"
+              data-coupon="coupon-input"
+            >
+            <button ui-slot="button" data-mode="3d" data-size="md" data-coupon="coupon-button">
+              {{ 'cart.coupon.apply' | t }}
+            </button>
+          </fieldset>
+          <div
+            class="applied"
+            ui-summary-box="applied-area"
+            {% unless cart.coupon != null %}
+              hidden
+            {% endunless %}
+          >
+            <div class="icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path d="M16.5528 3.25C17.6837 3.24998 18.5964 3.24997 19.3243 3.33203C20.0784 3.41708 20.7271 3.59862 21.2833 4.02539C21.5429 4.2247 21.7754 4.45713 21.9747 4.7168C22.4014 5.27298 22.583 5.92169 22.668 6.67578C22.7501 7.40366 22.7501 8.31633 22.7501 9.44727V9.5C22.7501 9.91421 22.4143 10.25 22.0001 10.25C21.0336 10.25 20.2501 11.0335 20.2501 12C20.2501 12.9665 21.0336 13.75 22.0001 13.75C22.4143 13.75 22.7501 14.0858 22.7501 14.5V14.5527C22.7501 15.6837 22.7501 16.5963 22.668 17.3242C22.583 18.0783 22.4014 18.727 21.9747 19.2832C21.7754 19.5429 21.5429 19.7753 21.2833 19.9746C20.7271 20.4014 20.0784 20.5829 19.3243 20.668C18.5964 20.75 17.6837 20.75 16.5528 20.75H7.44733C6.31639 20.75 5.40372 20.75 4.67584 20.668C3.92175 20.5829 3.27304 20.4014 2.71686 19.9746C2.45719 19.7753 2.22476 19.5429 2.02545 19.2832C1.59868 18.727 1.41714 18.0783 1.33209 17.3242C1.25004 16.5963 1.25004 15.6837 1.25006 14.5527V14.5C1.25006 14.0858 1.58585 13.75 2.00006 13.75C2.96656 13.75 3.75006 12.9665 3.75006 12C3.75006 11.0335 2.96656 10.25 2.00006 10.25C1.58585 10.25 1.25006 9.91421 1.25006 9.5V9.44727C1.25004 8.31633 1.25003 7.40366 1.33209 6.67578C1.41714 5.92169 1.59868 5.27298 2.02545 4.7168C2.22476 4.45713 2.45719 4.2247 2.71686 4.02539C3.27304 3.59862 3.92175 3.41708 4.67584 3.33203C5.40372 3.24997 6.31639 3.24998 7.44733 3.25H16.5528ZM15.7071 8.29297C15.3166 7.90252 14.6835 7.90247 14.293 8.29297L8.29303 14.293C7.90253 14.6835 7.90258 15.3165 8.29303 15.707C8.68355 16.0976 9.31657 16.0976 9.70709 15.707L15.7071 9.70703C16.0976 9.31651 16.0976 8.68349 15.7071 8.29297ZM15.0001 14C14.4478 14 14.0001 14.4477 14.0001 15C14.0001 15.5523 14.4478 16 15.0001 16C15.5523 16 16.0001 15.5523 16.0001 15C16.0001 14.4477 15.5523 14 15.0001 14ZM9.00006 8C8.44777 8 8.00006 8.44772 8.00006 9C8.00006 9.55228 8.44778 10 9.00006 10C9.55234 10 10.0001 9.55229 10.0001 9C10.0001 8.44772 9.55234 8 9.00006 8Z" fill="currentColor"></path>
+              </svg>
+            </div>
+            <div class="info">
+              <p class="discount" ui-summary-box="discount">
+                {% render 'const.discount-value', coupon: cart.coupon %}
+              </p>
+              <span class="name" ui-summary-box="coupon-code">
+                {{ cart.coupon.code }}
+              </span>
+            </div>
+            <button
+              class="action"
+              ui-slot="button"
+              data-mode="lighter"
+              data-size="xs"
+              data-as-icon
+              aria-label="Remove"
+              ui-summary-box="remove-coupon"
+            >
+              {% render 'misc.icon', name: 'hgi-cancel-01' %}
+            </button>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+    <div class="summary">
+      <div class="header">
+        <h3 class="title">{{ 'cart.summary.label' | t }}</h3>
+      </div>
+      <div class="core">
+        <div class="field">
+          <span class="label">{{ 'cart.summary.subtotal' | t }}</span>
+          <span class="value" ui-summary-box="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+        </div>
+        <div class="field">
+          <span class="label">{{ 'cart.summary.total' | t }}</span>
+          <span class="value" ui-summary-box="total">{{ cart.discounted_sub_total | default: 0 | money }}</span>
+        </div>
+        <a ui-slot="button" data-mode="filled" data-size="lg" href="{{ cart.cart_submit_url }}">
+          {{ 'cart.summary.checkout' | t }}
+        </a>
+      </div>
+    </div>
+  </ui-summary-box>
+
+  {% unless cart.count %}
+    {% render 'misc.empty', type: 'cart' %}
+  {% else %}
+    {% render 'misc.empty', type: 'cart', hidden: true %}
+  {% endunless %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.cart.label",
+  "templates": ["cart"],
+  "limit": 1,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.appearance" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    { "type": "checkbox", "id": "show_coupon", "label": "t:sections.cart.show_coupon_area", "default": true }
+  ]
+}
+{% endschema %}

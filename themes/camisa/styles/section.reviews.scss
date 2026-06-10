@@ -1,0 +1,284 @@
+@layer sections {
+  [ui-section="reviews"] {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-32);
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
+
+    .head-area {
+      .heading {
+        font: var(--font-title-md);
+        text-transform: uppercase;
+      }
+    }
+
+    .overview-area {
+      display: flex;
+      gap: var(--spacing-64);
+
+      .rating {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .avg {
+          display: grid;
+          gap: var(--spacing-8);
+          align-items: center;
+          grid-template-columns: repeat(2, max-content);
+
+          .nbr {
+            font: var(--font-headline-lg);
+          }
+
+          .total {
+            grid-column: 1 / 3;
+          }
+        }
+
+        [ui-slot="link-button"] {
+          width: fit-content;
+        }
+
+        .add-review-modal {
+          @media (width > 769px) {
+            width: 500px !important;
+          }
+
+          [ui-slot="modal-body"] {
+            display: grid;
+            gap: var(--spacing-16);
+
+            .field {
+              display: flex;
+              flex-direction: column;
+              align-items: flex-start;
+              gap: var(--spacing-8);
+
+              [ui-slot="input"],
+              [ui-slot="textarea"] {
+                width: 100%;
+              }
+
+              .rating-bar {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-block: var(--spacing-24) var(--spacing-32);
+              }
+            }
+
+            .fields {
+              display: grid;
+              gap: var(--spacing-16);
+              grid-template-columns: repeat(2, 1fr);
+
+              .field {
+                &:last-child,
+                &:nth-last-child(2),
+                &:nth-last-child(3) {
+                  grid-column: 1 / 3;
+                }
+
+                .images {
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: var(--spacing-8);
+
+                  .upload {
+                    position: relative;
+                    width: 60px;
+                    height: 60px !important;
+
+                    & > input[type="file"] {
+                      position: absolute;
+                      border-radius: var(--radius-sm);
+                      opacity: 0;
+                      scale: 0;
+                      appearance: none;
+                    }
+                  }
+
+                  .image {
+                    position: relative;
+                    height: 60px;
+
+                    & > img {
+                      border-radius: var(--radius-button);
+                      object-fit: cover;
+                    }
+
+                    & > button {
+                      position: absolute;
+                      z-index: 2;
+                      inset-inline-end: calc(var(--spacing-4) * -1);
+                      inset-block-start: calc(var(--spacing-4) * -1);
+                      background-color: color-mix(in srgb, currentcolor 15%, transparent) !important;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .states {
+        width: 300px;
+        display: flex;
+        flex-direction: column-reverse;
+        gap: var(--spacing-8);
+
+        .state {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-8);
+
+          span {
+            width: 10px;
+          }
+
+          progress {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .items-area {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: 100%;
+      align-items: flex-start;
+      gap: var(--spacing-32);
+
+      [ui-block="review"],
+      .skeleton-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-16);
+
+        .head {
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-8);
+
+          .author {
+            color: var(--color-on-surface-variant);
+          }
+        }
+
+        .content {
+          display: grid;
+          gap: var(--spacing-8);
+
+          article {
+            display: -webkit-box;
+            overflow: hidden;
+            word-break: break-all;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 8;
+            line-clamp: 8;
+          }
+
+          [ui-slot="link-button"] {
+            width: fit-content;
+          }
+        }
+
+        .media {
+          .images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-16);
+
+            .image {
+              overflow: hidden;
+              aspect-ratio: 1 / 1;
+              width: var(--spacing-64);
+              height: auto;
+
+              & > img {
+                object-fit: cover;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .actions-area {
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (width <= 1024px) {
+      .items-area {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (width <= 769px) {
+      .overview-area {
+        gap: var(--spacing-32);
+
+        .states {
+          flex: 1;
+        }
+      }
+
+      .items-area {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+
+.review-modal {
+  @media (width > 769px) {
+    width: 50% !important;
+  }
+
+  [ui-slot="modal-body"] {
+    padding-block-end: var(--spacing-24);
+    display: grid;
+    gap: var(--spacing-32);
+    grid-template-columns: repeat(2, 1fr);
+
+    .media {
+      display: grid;
+      gap: var(--spacing-16);
+      grid-template-columns: repeat(5, 1fr);
+
+      &:has(.image:nth-of-type(2)) {
+        .image {
+          &:first-of-type {
+            display: none;
+          }
+
+          &:nth-of-type(2) {
+            grid-column: 1 / 6;
+          }
+        }
+      }
+
+      .image {
+        height: auto;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+
+        &:first-of-type {
+          grid-column: 1 / 6;
+        }
+
+        & > img {
+          object-fit: cover;
+        }
+      }
+    }
+
+    @media (max-width: 769px) {
+      grid-template-columns: 1fr;
+    }
+  }
+}

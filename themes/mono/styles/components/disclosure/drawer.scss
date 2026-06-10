@@ -1,0 +1,84 @@
+/* 
+  Component: Drawer
+
+  Usage:
+    - ...
+*/
+
+[ui-slot="drawer-content"][popover] {
+  --drawer-min-height: 40vh;
+  --drawer-max-height: 80vh;
+
+  display: flex;
+  position: fixed;
+  inset: unset;
+  bottom: var(--spacing-0);
+  left: 50%;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 580px;
+  min-height: var(--drawer-min-height);
+  max-height: var(--drawer-max-height);
+  transform: translate3d(-50%, 100%, 0);
+  transition: var(--transition-expressive-slow-spatial);
+  border: none;
+  background-color: var(--color-on-primary);
+  color: inherit;
+  border-start-start-radius: var(--radius-section);
+  border-start-end-radius: var(--radius-section);
+
+  /* Header */
+  [ui-slot="drawer-header"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-16);
+    gap: var(--spacing-4);
+    background-color: var(--color-surface-container);
+    border-block-end: 1px solid var(--color-primary);
+
+    /* Title */
+    [ui-slot="drawer-title"] {
+      font: var(--font-title-md);
+    }
+  }
+
+  /* Body */
+  [ui-slot="drawer-body"] {
+    flex: 2;
+    padding: var(--spacing-16);
+    background-color: var(--color-surface-container);
+  }
+
+  /* Footer */
+  [ui-slot="drawer-footer"] {
+    padding: var(--spacing-16);
+    background-color: var(--color-surface-container);
+  }
+
+  /* Backdrop */
+  &::backdrop {
+    transition: var(--transition-standard-default-spatial);
+  }
+
+  /* State */
+  &:popover-open {
+    transform: translate3d(-50%, 0%, 0);
+
+    &::backdrop {
+      background-color: color-mix(in srgb, var(--color-on-surface) 30%, transparent);
+    }
+
+    @starting-style {
+      transform: translate3d(-50%, 100%, 0);
+
+      &::backdrop {
+        background-color: transparent;
+      }
+    }
+  }
+
+  @media (width <= 769px) {
+    width: 100%;
+  }
+}

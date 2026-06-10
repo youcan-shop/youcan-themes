@@ -1,0 +1,109 @@
+{% comment %}
+  Renders a product card (Block)
+
+  Accepts:
+  - product: {Object} Item info
+  - youcan_attributes: {String} YouCan attributes
+
+  Usage:
+  {% render 'block.product', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<li
+  ui-block="product"
+  data-alignment="{{ settings.product_alignment }}"
+  {{ youcan_attributes }}
+>
+  <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+    <a href="{{ product.url | default: "#" }}">
+      {% if product.preview_image %}
+        <img
+          srcset="
+            {{ product.preview_image.medium }} 480w,
+            {{ product.preview_image.large }} 800w,
+            {{ product.preview_image.original }} 1200w
+          "
+          sizes="
+            (max-width: 640px) 50vw,
+            (max-width: 768px) 33vw,
+            (max-width: 1024px) 25vw,
+            33vw
+          "
+          src="{{ product.preview_image.original }}"
+          alt="{{ product.name }}"
+          height="100%"
+          width="100%"
+          {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 40 %}
+      {% endif %}
+    </a>
+  </div>
+  <div class="content">
+    <div class="detail">
+      <a class="title" ui-slot="link-button" data-variant="gray" data-size="md" href="{{ product.url | default: "#" }}">
+        {% assign placeholder = 'product.title' | t %}
+        {{ product.name | default: placeholder }}
+      </a>
+      {% if product.options.size > 0 %}
+        {% for variant in product.options %}
+          {% if variant.type == 'color_base_buttons' %}
+            <div class="variants">
+              {% for opt in variant.values %}
+                {% if forloop.index < 4 %}
+                  <span class="option" style="background-color: {{ opt.preview }};"></span>
+                {% endif %}
+              {% endfor %}
+              {% if variant.values.size > 3 %}
+                <span class="rest">+{{ variant.values.size | minus: 3 }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      <div class="price">
+        <span class="original-price">
+          {{ price | default: 0 | money }}
+        </span>
+        {% if compare_at_price %}
+          <s class="compare-at-price">
+            {{ compare_at_price | default: 0 | money }}
+          </s>
+        {% endif %}
+      </div>
+    </div>
+    {% if settings.cart_checkout_type == 'cart' %}
+      {% if product.variants.size > 1 %}
+        {% render 'misc.product-modal' %}
+      {% else %}
+        {% render 'core.shop-button', size: 'sm', mode: 'stroke', as_icon: true %}
+      {% endif %}
+    {% endif %}
+  </div>
+  {% if compare_at_price and section.settings.show_discount_badge %}
+    <div
+      class="badge"
+      ui-slot="status-badge"
+      data-variant="stroke"
+      data-status="{{ settings.sale_badge_status }}"
+    >
+      {% if settings.sale_badge_type == 'percentage' %}
+        {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+        -{{ percentage }}%
+      {% else %}
+        {% assign fixed = compare_at_price | minus: price %}
+        {{ 'general.save' | t }}
+        {{ fixed | money }}
+      {% endif %}
+    </div>
+  {% endif %}
+</li>

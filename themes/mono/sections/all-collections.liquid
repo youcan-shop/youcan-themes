@@ -1,0 +1,110 @@
+{{ 'section.all-collections.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="all-collections"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="all-collections"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="head">
+    <a
+      ui-slot="button"
+      data-mode="3d"
+      data-size="md"
+      data-as-icon
+      data-flip-icon-in-rtl
+      aria-label="Back to home"
+      href="/"
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+    </a>
+    <h2 class="title">{{ 'product_information.navigation.collections' | t }}</h2>
+  </div>
+  {% paginate collections by 24 cod %}
+    {% if items.size > 0 %}
+      <ul class="list">
+        {% for collection in items %}
+          <li class="collection-item">
+            <a
+              class="media"
+              href="/collections/{{ collection.slug }}"
+              data-aspect-ratio="{{ section.settings.image_aspect_ratio }}"
+            >
+              {% if collection.preview_image %}
+                <img
+                  src="{{ collection.preview_image.original }}"
+                  alt="{{ collection.name }}"
+                  height="100%"
+                  width="100%"
+                  {% if template.name == 'list-collections' and forloop.index < 5 %}
+                    loading="eager"
+                  {% else %}
+                    loading="lazy"
+                  {% endif %}
+                >
+              {% else %}
+                {% render 'misc.image-fallback', type: 'collection', icon_size: 40 %}
+              {% endif %}
+            </a>
+            <a class="name" href="#">{{ collection.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      {% render 'misc.pagination' %}
+    {% else %}
+      {% render 'misc.empty', type: 'collections' %}
+    {% endif %}
+  {% endpaginate %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.all_collections.label",
+  "templates": ["list-collections"],
+  "limit": 1,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:common.aspect_ratio.with_image",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

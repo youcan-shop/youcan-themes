@@ -1,0 +1,69 @@
+{{ 'section.footer.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="footer"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="footer"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <span class="copyright">{{ section.settings.copyright | default: 'Powered by YouCan' }}</span>
+  <ul class="links">
+    {% for list in link-lists %}
+      {% if list != main-link-list %}
+        {% for link in list.links %}
+          <li class="link">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </li>
+          <li class="dot">·</li>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.footer.label",
+  "tag": "footer",
+  "settings": [
+    { "type": "header", "content": "t:common.headers.content" },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "t:sections.footer.copyright",
+      "default": "t:sections.footer.default.copyright"
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

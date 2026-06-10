@@ -1,0 +1,143 @@
+{{ 'section.collections.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="collections"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<ui-carousel
+  ui-section="collections"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% if section.settings.heading %}
+    <div class="head">
+      <h2 class="title">{{ section.settings.heading }}</h2>
+      {% if section.blocks.size > 1 and section.settings.arrows %}
+        <div class="arrows">
+          <button
+            ui-carousel="arrow-previous"
+            ui-slot="button"
+            data-mode="stroke"
+            data-size="xs"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Previous"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+          </button>
+          <button
+            ui-carousel="arrow-next"
+            ui-slot="button"
+            data-mode="stroke"
+            data-size="xs"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Next"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% if section.blocks.size %}
+    <ul class="list" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+      {% for block in section.blocks %}
+        {% assign default_title = 'general.collection' | t | append: ' ' | append: forloop.index %}
+        {% assign title = block.settings.collection.name | default: default_title %}
+
+        <li ui-carousel="item" ui-slot="carousel-item" {{ block.youcan_attributes }}>
+          <a
+            class="collection-item"
+            href="/collections/{{ block.settings.collection.slug }}"
+            title="{{ title}}"
+          >
+            <div class="media" data-aspect-ratio="{{ section.settings.image_aspect_ratio }}">
+              {% if block.settings.collection.preview_image %}
+                <img
+                  src="{{ block.settings.collection.preview_image.original }}"
+                  alt="{{ title }}"
+                  height="40"
+                  width="40"
+                  loading="lazy"
+                >
+              {% else %}
+                {% render 'misc.image-fallback', type: 'collection' %}
+              {% endif %}
+            </div>
+            <span class="name">{{ title }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "t:sections.collections.label",
+  "limit": 3,
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.header" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.collections.default.heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "arrows",
+      "label": "t:common.header.show_arrows",
+      "default": true
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "t:common.aspect_ratio.with_image",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" },
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "label": "t:common.headers.collection",
+      "settings": [{ "type": "category", "id": "collection", "label": "t:common.headers.item" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,31 @@
+
+  [ui-section=collections]:not(#\#){
+    padding:attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
+  }
+  [ui-section=collections]{
+    display:grid;
+    grid-gap:var(--spacing-32);
+    gap:var(--spacing-32);
+  }
+  [ui-section=collections] .items-area{
+    display:grid;
+    grid-gap:var(--spacing-12);
+    gap:var(--spacing-12);
+    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+  }
+  @media (max-width: 1028px){
+    [ui-section=collections] .items-area{
+      grid-template-columns:repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 769px){
+    [ui-section=collections] .items-area{
+      grid-template-columns:repeat(attr(data-nbr-columns-mobile number), 1fr);
+    }
+    [ui-section=collections] .content-area{
+      padding-inline-end:var(--spacing-24);
+    }
+    [ui-section=collections] .content-area .actions{
+      justify-content:var(--text-heading-alignment-mobile);
+    }
+  }

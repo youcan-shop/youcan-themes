@@ -1,0 +1,121 @@
+{{ 'section.map.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="amp"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="map"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  <div class="media" data-aspect-ratio="{{ section.settings.aspect_ratio }}">
+    {% if section.settings.embed_url %}
+      {{ section.settings.embed_url }}
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
+  </div>
+  <div class="content">
+    {% if section.settings.title %}
+      <h3 class="title">{{ section.settings.title }}</h3>
+    {% endif %}
+    {% if section.settings.description %}
+      <p class="description">{{ section.settings.description }}</p>
+    {% endif %}
+    {% if section.settings.show_directions %}
+      <a
+        class="action"
+        ui-slot="button"
+        data-mode="3d"
+        data-size="md"
+        href="{{ section.settings.directions_url | default: '#' }}"
+        target="_blank"
+      >
+        {% render 'misc.icon', name: 'hgi-rounded hgi-navigation-03' %}
+        {{ 'map.directions' | t }}
+      </a>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.map.label",
+  "limit": 3,
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "embed_url",
+      "label": "t:sections.map.google_maps_embed_url.label",
+      "placeholder": "https://www.google.com/maps/embed?pb=..."
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.map.google_maps_embed_url.hint"
+    },
+    { "type": "header", "content": "t:common.headers.content" },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:common.content.title",
+      "default": "t:sections.map.default.title"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.content.description",
+      "default": "t:sections.map.default.description"
+    },
+    { "type": "checkbox", "id": "show_directions", "label": "t:sections.map.show_directions", "default": true },
+    { "type": "header", "content": "t:sections.map.directions" },
+    {
+      "type": "text",
+      "id": "directions_url",
+      "label": "Url",
+      "placeholder": "https://maps.app.goo.gl/...",
+      "visible_if": { "setting_id": "show_directions", "value": true }
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "landscape"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,97 @@
+@layer sections {
+  [ui-section="image-with-text"] {
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
+
+    .wrapper-area {
+      display: grid;
+      height: attr(data-height vh);
+      overflow: hidden;
+      gap: var(--spacing-32);
+
+      &:has([data-image-placement="first"]) {
+        grid-template-columns: 70% auto;
+      }
+
+      &:has([data-image-placement="second"]) {
+        grid-template-columns: auto 70%;
+      }
+
+      [ui-block="media"] {
+        height: inherit;
+
+        & > img {
+          object-fit: cover;
+        }
+
+        &[data-image-placement="first"] {
+          order: -1;
+        }
+
+        &[data-image-placement="second"] {
+          order: 1;
+        }
+      }
+
+      [ui-block="content"] {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-32);
+
+        &[data-text-alignment="start"] {
+          align-items: flex-start;
+        }
+
+        &[data-text-alignment="center"] {
+          align-items: center;
+          text-align: center;
+        }
+
+        &[data-text-alignment="end"] {
+          align-items: flex-end;
+          text-align: end;
+        }
+
+        &[data-vertical-alignment="start"] {
+          justify-content: flex-start;
+        }
+
+        &[data-vertical-alignment="center"] {
+          justify-content: center;
+        }
+
+        &[data-vertical-alignment="end"] {
+          justify-content: flex-end;
+        }
+
+        .description {
+          color: var(--color-on-surface-variant);
+          font: var(--font-body-lg);
+          text-wrap: balance;
+        }
+
+        .cta {
+          width: fit-content;
+
+          &[ui-slot="button"] {
+            min-width: 180px;
+          }
+        }
+      }
+    }
+
+    @media (width <= 1028px) {
+      .wrapper-area {
+        grid-template-columns: 1fr !important;
+        height: auto;
+
+        [ui-block="media"] {
+          height: calc(attr(data-height vh, 70vh) / 2);
+        }
+
+        [ui-block="content"] {
+          padding-inline: var(--spacing-24);
+        }
+      }
+    }
+  }
+}

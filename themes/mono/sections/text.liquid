@@ -1,0 +1,65 @@
+{{ 'section.text.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="text"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="text"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% if section.settings.heading %}
+    <h3 class="heading">{{ section.settings.heading }}</h3>
+  {% endif %}
+  {% if section.settings.content %}
+    <article class="description">{{ section.settings.content }}</article>
+  {% endif %}
+  {% if section.settings.show_link and section.settings.link_label %}
+    <a class="action" ui-slot="button" data-mode="filled" data-size="sm" href="{{ section.settings.link_url | default: "#" }}">
+      {{ section.settings.link_label }}
+    </a>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.text.label",
+  "limit": 3,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:common.header.heading", "default": "t:sections.text.default.heading" },
+    { "type": "richtext", "id": "content", "label": "t:common.headers.content", "default": "t:sections.text.default.content" },
+    { "type": "header", "content": "t:common.headers.link" },
+    { "type": "checkbox", "id": "show_link", "label": "t:common.link.show_link", "default": true },
+    { "type": "text", "id": "link_label", "label": "t:common.button.label.label", "default": "t:sections.text.default.link" },
+    { "type": "url", "id": "link_url", "label": "t:common.link.url", "default": "#" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

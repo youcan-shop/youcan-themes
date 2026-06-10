@@ -99,12 +99,19 @@
       }
 
       .summary-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         font: var(--font-body-sm);
         text-transform: uppercase;
         padding: var(--spacing-4) var(--spacing-24);
         color: var(--color-on-surface-variant);
         border-block: 1px dashed var(--color-surface-container-high);
         background-color: var(--color-surface-container-lowest);
+
+        .count {
+          text-transform: lowercase;
+        }
       }
 
       .order-info {
@@ -132,6 +139,10 @@
           display: flex;
           gap: var(--spacing-12);
           justify-content: space-between;
+
+          &:not(:has(.free)) {
+            order: -1;
+          }
 
           .image {
             width: 80px;
@@ -166,6 +177,56 @@
             .count {
               opacity: 0.8;
             }
+
+            .variants {
+              display: flex;
+              flex-wrap: wrap;
+              gap: var(--spacing-8);
+
+              .variant {
+                font: var(--font-body-sm);
+                border-radius: var(--radius-xs);
+                padding: var(--spacing-4) var(--spacing-6);
+                color: var(--color-on-surface-variant);
+                background-color: var(--color-surface-container);
+              }
+            }
+          }
+
+          .price {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-8);
+
+            .compare-at {
+              opacity: 0.5;
+              text-decoration: line-through;
+            }
+
+            .free {
+              color: var(--color-primary);
+              background-color: var(--color-primary-container);
+              padding: var(--spacing-4) var(--spacing-6);
+              font: var(--font-body-sm);
+              border-radius: var(--radius-xs);
+              display: flex;
+              align-items: center;
+              gap: var(--spacing-4);
+            }
+          }
+        }
+
+        .operation {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          order: -1;
+
+          [ui-icon] {
+            border: 1px dashed var(--color-surface-variant);
+            border-radius: var(--radius-rounded);
+            padding: var(--spacing-4);
+            background-color: var(--color-surface-container-lowest);
           }
         }
       }
