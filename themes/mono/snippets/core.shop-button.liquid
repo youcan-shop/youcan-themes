@@ -1,0 +1,67 @@
+{% comment %}
+  Renders a shop button
+
+  Accepts:
+  - product: {Object} Product info
+  - size: {String} (Optional) (lg | md | sm | xs) Button size
+  - mode: {String} (Optional) (filled | stroke | lighter | ghost) Button mode
+  - source: {String} (Optional) Shopping flow (product-form | quick-view)
+  - is_express_checkout: {Boolean} (Optional) Checkout type (express checkout)
+  - skip_to_checkout: {Boolean} (Optional) Skip cart (drawer) -> Go directly to checkout or thankyou page
+
+  Usage:
+  {% render 'core-product-button', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+
+<ui-shop-button
+  quantity="1"
+  variant-id="{{ default_variant.id }}"
+  {% unless default_variant.available %}
+    not-available
+  {% endunless %}
+  {% if product.skip_to_checkout %}
+    skip-cart
+  {% endif %}
+  {% if source %}
+    source="{{ source }}"
+  {% endif %}
+  {% if is_express_checkout %}
+    checkout-type="express"
+  {% endif %}
+  {% if skip_to_checkout %}
+    skip-to-checkout
+  {% endif %}
+>
+  {% if is_express_checkout %}
+    <button
+      ui-slot="button"
+      data-mode="{{ mode | default: 'filled' }}"
+      data-size="{{ size | default: 'sm' }}"
+    >
+      <span>{{ 'general.place_order' | t }}</span>
+    </button>
+  {% elsif product.skip_to_checkout or skip_to_checkout %}
+    <button
+      ui-slot="button"
+      data-mode="{{ mode | default: 'filled' }}"
+      data-size="{{ size | default: 'sm' }}"
+    >
+      <span>{{ 'general.shop_now' | t }}</span>
+    </button>
+  {% else %}
+    <button
+      ui-slot="button"
+      data-mode="{{ mode | default: 'filled' }}"
+      data-size="{{ size | default: 'sm' }}"
+    >
+      {% if template.name == 'product' %}
+        {% render 'misc.icon', name: 'hgi-add-01' %}
+        <span class="label">{{ 'general.add_to_cart' | t }}</span>
+      {% else %}
+        <span class="label">{{ 'general.add' | t }}</span>
+      {% endif %}
+    </button>
+  {% endif %}
+</ui-shop-button>

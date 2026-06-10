@@ -1,0 +1,208 @@
+ui-variants {
+  display: grid;
+  gap: var(--spacing-12);
+
+  [ui-variant] {
+    display: grid;
+    gap: var(--spacing-8);
+
+    .label {
+      font: var(--font-body-md);
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-8);
+
+      .opt {
+        position: relative;
+        font: var(--font-body-md);
+      }
+    }
+
+    &:not([ui-variant="radio_buttons"]) {
+      .options {
+        .opt {
+          & > input[type="radio"] {
+            position: absolute;
+            scale: 0;
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    &[ui-variant="textual_buttons"] {
+      .options {
+        .opt {
+          display: flex;
+          align-items: center;
+          min-width: 36px;
+          height: 36px;
+          padding-inline: var(--spacing-12);
+          transition: var(--transition-standard-default-effects);
+          border: 1px solid var(--color-primary);
+          border-radius: var(--radius-button);
+          box-shadow: 3px 3px 0 var(--color-primary);
+          cursor: pointer;
+
+          &:has(> input[type="radio"]:checked) {
+            border-color: transparent;
+            background-color: var(--color-primary);
+            color: var(--color-on-primary);
+          }
+
+          &:has(> input[type="radio"]:disabled) {
+            opacity: 0.5;
+            background-color: var(--color-surface-container);
+            pointer-events: none;
+          }
+        }
+      }
+    }
+
+    &[ui-variant="color_base_buttons"] {
+      .options {
+        .opt {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          transition: var(--transition-standard-fast-effects);
+          border: 1px solid var(--color-primary);
+          border-radius: var(--radius-button);
+          background-color: var(--color-value);
+          box-shadow: 3px 3px 0 var(--color-primary);
+          cursor: pointer;
+
+          & > i {
+            color: transparent;
+          }
+
+          &:has(> input[type="radio"]:checked) {
+            transform: translate(2px, 2px);
+            box-shadow: 1.5px 1.5px 0 var(--color-primary);
+
+            & > i {
+              color: white;
+            }
+          }
+
+          &:has(> input[type="radio"]:disabled) {
+            background-color: color-mix(in srgb, var(--color-value) 50%, transparent);
+            pointer-events: none;
+
+            &::before {
+              content: "";
+              position: absolute;
+              width: 1px;
+              height: 100%;
+              rotate: 35deg;
+              filter: invert(1);
+              background-color: var(--color-value);
+            }
+          }
+        }
+      }
+    }
+
+    &[ui-variant="image_based_buttons"] {
+      .options {
+        .opt {
+          display: grid;
+          gap: var(--spacing-8);
+
+          .image {
+            display: flex;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            transition: var(--transition-standard-fast-effects);
+            border: 1px solid var(--color-primary);
+            border-radius: var(--radius-button);
+            background-color: transparent;
+            box-shadow: 3px 3px 0 var(--color-primary);
+            cursor: pointer;
+
+            .checked {
+              display: flex;
+              position: absolute;
+              align-items: center;
+              justify-content: center;
+              transition: var(--transition-standard-default-effects);
+              opacity: 0;
+              background-color: rgb(0 0 0 / 30%);
+              color: white;
+              inset: 0;
+              backdrop-filter: blur(2px);
+            }
+
+            & > img {
+              object-fit: cover;
+            }
+          }
+
+          &:has(> input[type="radio"]:checked) {
+            .image {
+              transform: translate(2px, 2px);
+              box-shadow: 1.5px 1.5px 0 var(--color-primary);
+            }
+
+            .checked {
+              opacity: 1;
+            }
+          }
+
+          &:has(> input[type="radio"]:disabled) {
+            pointer-events: none;
+
+            .image {
+              & > img {
+                filter: grayscale(1) blur(1px);
+              }
+
+              &::before {
+                content: "";
+                position: absolute;
+                z-index: 2;
+                width: 1px;
+                height: 140%;
+                background-color: white;
+                rotate: 45deg;
+              }
+            }
+
+            .value {
+              opacity: 0.5;
+            }
+          }
+        }
+      }
+    }
+
+    &[ui-variant="radio_buttons"] {
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+
+        .opt {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          gap: var(--spacing-8);
+
+          &:has(> input[type="radio"]:disabled) {
+            opacity: 0.5;
+            pointer-events: none;
+          }
+        }
+      }
+    }
+  }
+}

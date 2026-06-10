@@ -1,0 +1,90 @@
+{{ 'misc.sort.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a sort drawer (products)
+
+   Accepts:
+  - url: {String} The collection/search URL with sorting params
+
+  Usage:
+  {% render 'misc.sort', url: "{your_store}.youcan.store?sort_field=price&sort_order=asc"  %}
+{% endcomment %}
+
+{% assign sort_field = '' %}
+{% assign sort_order = '' -%}
+{% assign query_params = url | split: '?' | last | split: '&' %}
+
+{% for param in query_params %}
+  {% if param contains 'sort_field=' %}
+    {% assign sort_field = param | split: '=' | last %}
+  {% elsif param contains 'sort_order=' %}
+    {% assign sort_order = param | split: '=' | last %}
+  {% endif %}
+{% endfor %}
+
+{% assign alphabetical_asc = 'search.sort.options.alphabetical_asc' | t %}
+{% assign alphabetical_desc = 'search.sort.options.alphabetical_desc' | t %}
+{% assign oldest = 'search.sort.options.oldest' | t %}
+{% assign newest = 'search.sort.options.newest' | t %}
+{% assign price_low_high = 'search.sort.options.price_low_high' | t %}
+{% assign price_high_low = 'search.sort.options.price_high_low' | t %}
+
+{% capture labels %}
+  {{ alphabetical_asc }}| {{ alphabetical_desc }}| {{ oldest }}| {{ newest }}| {{ price_low_high }}| {{ price_high_low }}
+{% endcapture -%}
+
+{% assign keys = ',name,name,created_at,created_at,price,price' | split: ',' %}
+{% assign values = 'desc,asc' | split: ',' %}
+{% assign options = labels | split: '|' %}
+
+<button
+  ui-slot="button"
+  data-mode="3d"
+  data-size="md"
+  data-as-icon
+  aria-label="Sort"
+  popovertarget="sort"
+>
+  {% render 'misc.icon', name: 'hgi-filter-horizontal' %}
+</button>
+
+<div ui-slot="drawer-content" id="sort" popover>
+  <div ui-slot="drawer-header">
+    <h3 ui-slot="drawer-title">{{ 'search.sort.label' | t }}</h3>
+    <button
+      ui-slot="button"
+      data-mode="ghost"
+      data-size="md"
+      data-as-icon
+      aria-label="Close"
+      popovertarget="sort"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <div ui-slot="drawer-body">
+    <fieldset class="options">
+      {% for opt in options %}
+        {% assign index = forloop.index %}
+        {% assign field = keys[index] %}
+        {% assign order = index | modulo: 2 == 0 %}
+        {% assign href = '?sort_field=' | append: field | append: '&sort_order=' | append: values[order] %}
+        {% unless terms == null or terms == '' %}
+          {% assign href = href | append: '&q=' | append: terms %}
+        {% endunless %}
+
+        <a class="opt" ui-slot="button" data-mode="ghost" data-size="md" href="{{ href }}">
+          {{ opt }}
+          <input
+            ui-slot="radio"
+            type="radio"
+            name="sort"
+            {% if field == sort_field and values[order] == sort_order %}
+              checked
+            {% endif %}
+          >
+        </a>
+      {% endfor %}
+    </fieldset>
+  </div>
+</div>

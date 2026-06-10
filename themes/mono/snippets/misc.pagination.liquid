@@ -1,0 +1,37 @@
+{% comment %}
+  Renders a set of pagination controls
+
+  Usage:
+  {% render 'misc.pagination'  %}
+{% endcomment %}
+
+{% if last > 1 %}
+  <div class="pagination">
+    <a
+      ui-slot="button"
+      data-mode="3d"
+      data-size="md"
+      data-flip-icon-in-rtl
+      href="{{ previous_page }}"
+      {% if current == 1 %}
+        aria-disabled="true"
+      {% endif %}
+    >
+      {% render 'misc.icon', name: ' hgi-arrow-left-01' %}
+      {{ 'general.previous' | t }}
+    </a>
+    <a
+      ui-slot="button"
+      data-mode="3d"
+      data-size="md"
+      data-flip-icon-in-rtl
+      href="{{ next_page }}"
+      {% if current >= last %}
+        aria-disabled="true"
+      {% endif %}
+    >
+      {{ 'general.next' | t }}
+      {% render 'misc.icon', name: ' hgi-arrow-right-01' %}
+    </a>
+  </div>
+{% endif %}

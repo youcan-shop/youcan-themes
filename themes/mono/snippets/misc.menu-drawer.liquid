@@ -1,0 +1,80 @@
+{% comment %}
+  Renders a menu drawer
+
+  Usage:
+  {% render 'misc.menu-drawer' %}
+{% endcomment %}
+
+<button
+  ui-slot="button"
+  data-mode="3d"
+  data-size="md"
+  data-as-icon
+  aria-label="Menu"
+  popovertarget="menu"
+  class="menu-trigger"
+>
+  {% render 'misc.icon', name: 'hgi-menu-09' %}
+</button>
+
+<div ui-slot="drawer-content" id="menu" popover>
+  <div ui-slot="drawer-header">
+    <h3 ui-slot="drawer-title">{{ 'header.navigate.menu.label' | t }}</h3>
+    <button
+      ui-slot="button"
+      data-mode="ghost"
+      data-size="md"
+      data-as-icon
+      aria-label="Close"
+      popovertarget="menu"
+    >
+      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+    </button>
+  </div>
+  <div ui-slot="drawer-body">
+    <div class="group">
+      <div class="head">
+        <h4 class="title">{{ 'header.navigate.search.label' | t }}</h4>
+      </div>
+      <form action="/search">
+        <input
+          ui-slot="input"
+          type="search"
+          name="q"
+          placeholder="{{ 'header.navigate.search.placeholder' | t }}"
+          value="{{ terms | escape }}"
+        >
+        <button
+          ui-slot="button"
+          data-mode="3d"
+          data-size="md"
+          data-as-icon
+          aria-label="Search"
+        >
+          {% render 'misc.icon', name: 'hgi-search-01' %}
+        </button>
+      </form>
+    </div>
+    <div class="group">
+      <div class="head">
+        <h4 class="title">{{ 'header.navigate.menu.label' | t }}</h4>
+      </div>
+      <ul class="links">
+        {% for link in main-link-list.links %}
+          <li class="link">
+            <a
+              ui-slot="button"
+              data-mode="ghost"
+              data-size="md"
+              data-flip-icon-in-rtl
+              href="{{ link.url}}"
+            >
+              {{ link.title }}
+              {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>

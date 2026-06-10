@@ -1,0 +1,185 @@
+{{ 'section.media.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="media"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="media"
+  data-aspect-ratio="{{ section.settings.aspect_ratio }}"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% case section.settings.type %}
+    {% when 'youtube' %}
+      <iframe
+        width="100%"
+        height="100%"
+        src="https://www.youtube.com/embed/{{ section.settings.youtube }}"
+        title="Media"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      >
+      </iframe>
+    {% when 'instagram' %}
+      <blockquote
+        style="height: 100%; width: 100%;"
+        class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/p/{{ section.settings.instagram }}"
+        data-instgrm-version="14"
+      ></blockquote>
+
+      <script async src="//www.instagram.com/embed.js"></script>
+
+    {% when 'facebook' %}
+      <iframe
+        src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fweb.facebook.com%2Fargoodmusic%2Fvideos%{{ section.settings.facebook }}%2F&show_text=false&width=560&t=0"
+        width="100%"
+        height="100%"
+        style="border:none;overflow:hidden"
+        scrolling="no"
+        frameborder="0"
+        allowfullscreen="true"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowFullScreen="true"
+      ></iframe>
+    {% when 'tiktok' %}
+      <blockquote
+        class="tiktok-embed"
+        cite="https://www.tiktok.com/@USERNAME/video/{{ section.settings.tiktok }}"
+        data-video-id="{{ section.settings.tiktok }}"
+        style="height: 100%; width: 100%;"
+      >
+        <section></section>
+      </blockquote>
+
+      <script async src="https://www.tiktok.com/embed.js"></script>
+
+    {% when 'vimeo' %}
+      <iframe
+        src="https://player.vimeo.com/video/{{ section.settings.vimeo }}"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allow="autoplay; fullscreen; picture-in-picture"
+        allowfullscreen
+      >
+      </iframe>
+
+    {% else %}
+      {% if section.settings.image %}
+        <img
+          src="{{ section.settings.image.src }}"
+          alt="{{ section.settings.image.alt | default: "Media" }}"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 40 %}
+      {% endif %}
+  {% endcase %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.media.label",
+  "settings": [
+    {
+      "type": "select",
+      "id": "type",
+      "label": "t:sections.media.type.label",
+      "options": [
+        { "label": "t:sections.media.type.options.image", "value": "image" },
+        { "label": "t:sections.media.type.options.youtube", "value": "youtube" },
+        { "label": "t:sections.media.type.options.instagram", "value": "instagram" },
+        { "label": "t:sections.media.type.options.facebook", "value": "facebook" },
+        { "label": "t:sections.media.type.options.tiktok", "value": "tiktok" },
+        { "label": "t:sections.media.type.options.vimeo", "value": "vimeo" }
+      ],
+      "default": "image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:common.media.image",
+      "visible_if": { "setting_id": "type", "value": "image" }
+    },
+    {
+      "type": "text",
+      "id": "youtube",
+      "label": "t:sections.media.video_id",
+      "placeholder": "dQw4w9WgXcQ",
+      "visible_if": { "setting_id": "type", "value": "youtube" }
+    },
+    {
+      "type": "text",
+      "id": "instagram",
+      "label": "t:sections.media.video_id",
+      "placeholder": "C_3ijPXRJ-w",
+      "visible_if": { "setting_id": "type", "value": "instagram" }
+    },
+    {
+      "type": "text",
+      "id": "facebook",
+      "label": "t:sections.media.video_id",
+      "placeholder": "505766732586160",
+      "visible_if": { "setting_id": "type", "value": "facebook" }
+    },
+    {
+      "type": "text",
+      "id": "tiktok",
+      "label": "t:sections.media.video_id",
+      "placeholder": "7593022588272561430",
+      "visible_if": { "setting_id": "type", "value": "tiktok" }
+    },
+    {
+      "type": "text",
+      "id": "vimeo",
+      "label": "t:sections.media.video_id",
+      "placeholder": "1114114582",
+      "visible_if": { "setting_id": "type", "value": "vimeo" }
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.vertical", "value": "vertical" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "square"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ]
+}
+{% endschema %}

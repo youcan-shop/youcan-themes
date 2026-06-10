@@ -1,0 +1,136 @@
+{{ 'section.blogs.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="blogs"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<div
+  ui-section="blogs"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% if section.settings.heading %}
+    <div class="head">
+      <h2 class="title">{{ section.settings.heading }}</h2>
+    </div>
+  {% endif %}
+  {% if section.blocks.size %}
+    <ul class="list">
+      {% for block in section.blocks %}
+        <li {{ block.youcan_attributes }}>
+          {% assign default_title = 'general.page' | t | append: ' ' | append: forloop.index %}
+          {% assign title = block.settings.page.name | default: default_title %}
+
+          <a
+            class="blog-item"
+            title="{{ title }}"
+            {% if block.settings.page.slug %}
+              href="/pages/{{ block.settings.page.slug }}"
+            {% else %}
+              href="#"
+            {% endif %}
+            target="{{ section.settings.link_target }}"
+          >
+            <div class="media" data-aspect-ratio="{{ section.settings.aspect_ratio }}">
+              {% if block.settings.image %}
+                <img
+                  src="{{ block.settings.image.src }}"
+                  alt="{{ title }}"
+                  height="100%"
+                  width="100%"
+                  loading="lazy"
+                >
+              {% else %}
+                {% render 'misc.image-fallback' %}
+              {% endif %}
+            </div>
+            <div class="info">
+              <span class="title">{{ title }}</span>
+              {% if section.settings.show_link and section.settings.link_label %}
+                <span class="link">{{ section.settings.link_label }}</span>
+              {% endif %}
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {% render 'misc.empty', type: 'block' %}
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.blogs.label",
+  "limit": 3,
+  "max_blocks": 12,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.header" },
+    { "type": "text", "id": "heading", "label": "t:common.header.heading", "default": "t:sections.blogs.default.heading" },
+    { "type": "header", "content": "t:common.headers.media" },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "square"
+    },
+    { "type": "header", "content": "t:common.headers.link" },
+    { "type": "text", "id": "link_label", "label": "Label", "default": "t:sections.blogs.default.link_label" },
+    {
+      "type": "select",
+      "id": "link_target",
+      "label": "t:common.link.open_link_in.label",
+      "options": [
+        { "label": "t:common.link.open_link_in.options.same_tab", "value": "_self" },
+        { "label": "t:common.link.open_link_in.options.new_tab", "value": "_blank" }
+      ],
+      "default": "_self"
+    },
+    { "type": "checkbox", "id": "show_link", "label": "t:common.link.show_link", "default": true },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ],
+  "blocks": [
+    {
+      "type": "page",
+      "label": "t:sections.blogs.blocks.page.label",
+      "settings": [
+        { "type": "page", "id": "page", "label": "t:sections.blogs.blocks.page.label" },
+        { "type": "header", "content": "t:common.headers.media" },
+        { "type": "image_picker", "id": "image", "label": "t:common.media.image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

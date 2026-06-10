@@ -1,0 +1,56 @@
+{% comment %}
+  Renders a product badge (by type)
+
+  Accepts:
+  - type: {String} (Optional)
+  - style: {String} (Optional)
+  - position: {String} (Optional)
+  - custom_text: {String} (Optional)
+  - threshold: {Number} (Optional)
+
+  Usage:
+  {% render 'misc.product-badge', type: 'discount-percentage', style: 'default', position: 'top-left'  %}
+{% endcomment %}
+
+{% assign pd = block.settings.product | default: product %}
+
+<span
+  class="product-badge"
+  ui-slot="status-badge"
+  data-variant="stroke"
+  data-status="disabled"
+  data-size="xs"
+  data-style="{{ style | default: settings.badge_style }}"
+  data-position="{{ position | default: settings.badge_position }}"
+  {{ block.youcan_attributes }}
+>
+  {% assign badge_type = type | default: settings.badge_type %}
+
+  {% case badge_type %}
+    {% when 'discount-percentage' %}
+      {% if compare_at_price %}
+        {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+        <span>-{{ percentage }}%</span>
+      {% endif %}
+    {% when 'discount-amount' %}
+      {% if compare_at_price %}
+        {% assign fixed = compare_at_price | minus: price %}
+        <span>
+          {{- 'product_badge.save' | t }}
+          {{ fixed | money -}}
+        </span>
+      {% endif %}
+    {% when 'low-stock' %}
+      {% assign badge_threshold = threshold | default: settings.badge_threshold %}
+
+      {% if pd.isTrackingInventory and pd.product.inventory < badge_threshold %}
+        <span>{{ 'product_badge.low_stock' | t |  replace: '[count]',  {{ pd.product.inventory }}</span>
+      {% endif %}
+    {% when 'custom-text' %}
+      {% if type %}
+        <span>{{ custom_text }}</span>
+      {% else %}
+        <span>{{ settings.badge_text }}</span>
+      {% endif %}
+  {% endcase %}
+</span>

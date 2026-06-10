@@ -1,0 +1,184 @@
+{{ 'section.slideshow.css' | asset_url | stylesheet_tag }}
+
+{% if section.settings.custom_color %}
+  {% style %}
+    #youcan-section--{{ section.id }}:has([ui-section="slideshow"]) {
+      --brand-lightness: {{ section.settings.color.lightness | divided_by: 100 }};
+      --brand-chroma: {{ section.settings.color.chroma }};
+      --brand-hue: {{ section.settings.color.oklch_hue }};
+    }
+  {% endstyle %}
+{% endif %}
+
+<ui-carousel
+  ui-section="slideshow"
+  {% if section.settings.custom_color %}
+    data-custom-color
+    data-theme="{{ section.settings.theme }}"
+  {% endif %}
+>
+  {% if section.settings.heading %}
+    <div class="head">
+      <h2 class="title">{{ section.settings.heading }}</h2>
+      {% if section.blocks.size > 1 and section.settings.arrows %}
+        <div class="arrows">
+          <button
+            ui-carousel="arrow-previous"
+            ui-slot="button"
+            data-mode="stroke"
+            data-size="xs"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Previous"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+          </button>
+          <button
+            ui-carousel="arrow-next"
+            ui-slot="button"
+            data-mode="stroke"
+            data-size="xs"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Next"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% if section.blocks.size %}
+    <ul class="list" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+      {% for block in section.blocks %}
+        <li
+          class="slide-item"
+          ui-carousel="item"
+          ui-slot="carousel-item"
+          data-aspect-ratio="{{ section.settings.aspect_ratio }}"
+          {{ block.youcan_attributes }}
+        >
+          {% if block.settings.heading %}
+            <h3 class="heading">{{ block.settings.heading }}</h3>
+          {% endif %}
+          {% if block.settings.button_label %}
+            <a class="action" ui-slot="button" data-mode="filled" data-size="sm" href="{{ block.settings.button_url | default: "#" }}">
+              {{ block.settings.button_label }}
+            </a>
+          {% endif %}
+          <div class="media">
+            {% if block.settings.image %}
+              {% assign alt = block.settings.heading | default: 'Slide {{ forloop.index }}' %}
+
+              <img
+                src="{{ block.settings.image.src }}"
+                alt="{{ alt }}"
+                height="100%"
+                width="100%"
+              >
+            {% else %}
+              {% render 'misc.image-fallback', icon_size: 40 %}
+            {% endif %}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  {% if section.blocks.size > 1 and section.settings.pagination %}
+    <div class="markers">
+      {% for marker in section.blocks %}
+        <button
+          ui-carousel="marker"
+          aria-label="Slide {{ forloop.index }}"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "t:sections.slideshow.label",
+  "limit": 3,
+  "max_blocks": 6,
+  "settings": [
+    { "type": "header", "content": "t:common.headers.header" },
+    { "type": "text", "id": "heading", "label": "t:common.header.heading", "default": "t:sections.slideshow.default.heading" },
+    {
+      "type": "checkbox",
+      "id": "arrows",
+      "label": "t:common.header.show_arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "pagination",
+      "label": "t:common.header.show_pagination",
+      "default": true
+    },
+    { "type": "header", "content": "t:common.headers.appearance" },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:common.aspect_ratio.label",
+      "options": [
+        { "label": "t:common.aspect_ratio.options.square", "value": "square" },
+        { "label": "t:common.aspect_ratio.options.portrait", "value": "portrait" },
+        { "label": "t:common.aspect_ratio.options.landscape", "value": "landscape" }
+      ],
+      "default": "landscape"
+    },
+    { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:common.custom_color.color",
+      "default": "#121212",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "t:common.custom_color.theme.label",
+      "options": [
+        { "label": "t:common.custom_color.theme.options.light", "value": "light" },
+        { "label": "t:common.custom_color.theme.options.dark", "value": "dark" }
+      ],
+      "default": "light",
+      "visible_if": { "setting_id": "custom_color", "value": true }
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "label": "t:sections.slideshow.blocks.slide.label",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:common.header.heading",
+          "default": "t:sections.slideshow.blocks.slide.default.heading"
+        },
+        { "type": "header", "content": "t:common.headers.button" },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "t:common.button.label.label",
+          "default": "t:common.button.label.default"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "t:common.button.url",
+          "default": "#"
+        },
+        { "type": "header", "content": "t:common.headers.media" },
+        { "type": "image_picker", "id": "image", "label": "t:common.media.image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

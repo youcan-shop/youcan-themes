@@ -1,0 +1,104 @@
+.youcan-section:has([ui-section=search]){
+  display:flex;
+  flex:1;
+}
+
+[ui-section=search]{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:var(--spacing-24);
+}
+[ui-section=search] .head{
+  display:flex;
+  gap:var(--spacing-12);
+}
+[ui-section=search] .head form{
+  flex:1;
+  border-radius:var(--radius-button);
+  background-color:var(--color-on-primary);
+}
+[ui-section=search] .head form [ui-slot=input]{
+  width:100%;
+}
+[ui-section=search] .results{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+[ui-section=search] .results .title{
+  font:var(--font-title-md);
+}
+[ui-section=search] .results .count{
+  opacity:0.8;
+}
+[ui-section=search] .list{
+  display:grid;
+  grid-gap:var(--spacing-12);
+  gap:var(--spacing-12);
+}
+[ui-section=search] .list .product-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:var(--spacing-12);
+  transition:var(--transition-standard-fast-spatial);
+  transition-property:transform, box-shadow;
+  border:1px solid var(--color-primary);
+  border-radius:var(--radius-section);
+  box-shadow:3px 3px 0 var(--color-primary);
+  gap:var(--spacing-12);
+}
+[ui-section=search] .list .product-item .image{
+  position:relative;
+  width:65px;
+  height:auto;
+  overflow:hidden;
+  border-radius:var(--radius-section);
+}
+[ui-section=search] .list .product-item .image[data-aspect-ratio=square]{
+  aspect-ratio:1/1;
+}
+[ui-section=search] .list .product-item .image[data-aspect-ratio=portrait]{
+  aspect-ratio:3/4;
+}
+[ui-section=search] .list .product-item .image[data-aspect-ratio=landscape]{
+  width:85px;
+  aspect-ratio:16/9;
+}
+[ui-section=search] .list .product-item .image > img{
+  -o-object-fit:cover;
+     object-fit:cover;
+}
+[ui-section=search] .list .product-item .info{
+  display:flex;
+  gap:var(--spacing-8);
+  flex:1;
+  flex-direction:column;
+}
+[ui-section=search] .list .product-item .info .name{
+  overflow:hidden;
+  font:var(--font-title-md);
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+[ui-section=search] .list .product-item .info .price{
+  display:flex;
+  gap:var(--spacing-4);
+}
+[ui-section=search] .list .product-item .info .price .compare-at{
+  opacity:0.5;
+  -webkit-text-decoration:line-through;
+  text-decoration:line-through;
+}
+[ui-section=search] .list .product-item:hover{
+  transform:translate(2px, 2px);
+  box-shadow:1.5px 1.5px 0 var(--color-primary);
+}
+[ui-section=search] .pagination{
+  display:flex;
+  justify-content:space-between;
+}
+[ui-section=search] ui-empty{
+  flex:1;
+}

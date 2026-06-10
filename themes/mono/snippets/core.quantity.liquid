@@ -1,0 +1,53 @@
+{% comment %}
+  Renders a quantity input
+
+  Accepts:
+  - product: {Object} Product information
+  - size: {String} Item size (xs | sm | md | lg)
+  - variant: {String} Item variant (filled | stroke | lighter | 3d | ghost)
+
+  Usage:
+  {% render 'core.quantity' product: {...} %}
+{% endcomment %}
+
+{% assign quantity = 1 %}
+
+{% if product.quantity != null %}
+  {% assign quantity = product.quantity %}
+{% endif %}
+
+<ui-quantity
+  class="quantity"
+  item="{{ product.id }}"
+  product-variant="{{ product.product_variant_id }}"
+  quantity="{{ quantity }}"
+  {% if product.inventory %}
+    inventory="{{ product.inventory }}"
+  {% endif %}
+>
+  <button
+    ui-slot="button"
+    data-mode="{{ variant | default: 'stroke' }}"
+    data-size="{{ size | default: 'xs' }}"
+    data-as-icon
+    aria-label="Decrease"
+    name="minus"
+    type="button"
+  >
+    {% render 'misc.icon', name: 'hgi-minus-sign' %}
+  </button>
+  <span ui-quantity="value" class="value" ui-cart-item="quantity">
+    {{ quantity }}
+  </span>
+  <button
+    ui-slot="button"
+    data-mode="{{ variant | default: 'stroke' }}"
+    data-size="{{ size | default: 'xs' }}"
+    data-as-icon
+    aria-label="Increase"
+    name="plus"
+    type="button"
+  >
+    {% render 'misc.icon', name: 'hgi-plus-sign' %}
+  </button>
+</ui-quantity>
