@@ -1,5 +1,11 @@
 # aura
 
+## 4.4.13
+
+### Patch Changes
+
+- b9e2ca3: Add footer layout object
+
 ## 4.4.12
 
 ### Patch Changes

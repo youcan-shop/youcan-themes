@@ -28,7 +28,7 @@
   <div class="content">
     <div class="info">
       <div class="bio">
-        <span class="title" title="{{ product.name }}" ui-cart-item="title">{{ product.name }}</span>
+        <a href="{{ product.url }}" class="title" title="{{ product.name }}" ui-cart-item="title">{{ product.name }}</a>
         <span
           class="variants"
           ui-cart-item="variant"
@@ -44,7 +44,10 @@
           {% endfor %}
         </span>
       </div>
-      <span class="price" ui-cart-item="price">{{ product.price | default: 0 | money }}</span>
+      <div class="price">
+        <span class="original" ui-cart-item="price">{{ product.price | default: 0 | money }}</span>
+        <span class="compare-at" ui-cart-item="compare-price" hidden></span>
+      </div>
     </div>
     <div class="actions">
       {% render 'core-quantity', product: product %}
