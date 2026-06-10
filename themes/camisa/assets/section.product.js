@@ -39,6 +39,8 @@ if (!customElements.get("ui-product")) {
           productForm.removeAttribute("bundle-id");
         }
       });
+
+      this.disableUnavailableOptions();
     }
 
     get selectedBundle() {
@@ -152,6 +154,15 @@ if (!customElements.get("ui-product")) {
 
         if (isUnavailable) input.checked = false;
       });
+
+      if (this.selectedBundle) {
+        this.productForms.forEach((productForm) => {
+          productForm.removeAttribute("not-available");
+          productForm.querySelector('[ui-slot="button"]').disabled = false;
+        });
+
+        return;
+      }
 
       this.productForms.forEach((productForm) =>
         productForm.toggleAttribute(
