@@ -275,7 +275,8 @@ class BaseCartItem extends HTMLElement {
   }
 
   replaceContent(fragment) {
-    this.tagName === "UI-CART-ITEMS" ? this.querySelector("table tbody").replaceChildren(fragment) : this.replaceChildren(fragment);
+    const tbody = this.querySelector("table tbody");
+    tbody ? tbody.replaceChildren(fragment) : this.replaceChildren(fragment);
   }
 
   setItemIsLoading(element, isLoading) {
