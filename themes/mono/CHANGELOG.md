@@ -1,5 +1,11 @@
 # bella
 
+## 1.0.0
+
+### Major Changes
+
+- 0b2f0d2: Release Mono theme
+
 ## 1.1.0
 
 ### Minor Changes
