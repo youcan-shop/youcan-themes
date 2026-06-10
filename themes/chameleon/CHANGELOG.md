@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.7.0
+
+### Minor Changes
+
+- db74e9e: Chameleon > Add bundles support
+
 ## 4.6.4
 
 ### Patch Changes
