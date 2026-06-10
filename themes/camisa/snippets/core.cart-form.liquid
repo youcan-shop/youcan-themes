@@ -1,0 +1,79 @@
+{{ 'core.cart-form.css' | asset_url | stylesheet_tag }}
+
+<ui-cart-form>
+  <template ui-cart-drawer="item">
+    {% render 'core.cart-form-item', product: product %}
+  </template>
+  <ui-cart-drawer-items>
+    {% for product in cart.items %}
+      {% render 'core.cart-form-item', product: product %}
+    {% endfor %}
+
+    {% if cart.bundles %}
+      {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+      {% for t in types %}
+        {% assign type = cart.bundles[t] %}
+
+        {% for bundle in type %}
+          <div class="bundle-group">
+            <div class="top">
+              <span class="title" ui-bundle="title">{{ bundle.title }}</span>
+              <ui-cart-remove
+                item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+              >
+                <button
+                  ui-slot="link-button"
+                  data-variant="gray"
+                  data-size="sm"
+                  data-underline="true"
+                  ui-cart-item="delete-button"
+                >
+                  {{ 'general.remove' | t }}
+                </button>
+              </ui-cart-remove>
+            </div>
+            <div class="list" ui-bundle="group">
+              {% for bundle_item in bundle.items %}
+                {% render 'core.cart-form-bundle-item', product: bundle_item %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  </ui-cart-drawer-items>
+
+  <template ui-cart-drawer="bundle-group">
+    <div class="bundle-group">
+      <div class="top">
+        <span class="title" ui-bundle="title"></span>
+        <ui-cart-remove>
+          <button
+            ui-slot="link-button"
+            data-variant="gray"
+            data-size="sm"
+            data-underline="true"
+            ui-cart-item="delete-button"
+          >
+            {{ 'general.remove' | t }}
+          </button>
+        </ui-cart-remove>
+      </div>
+      <div class="list" ui-bundle="group"></div>
+    </div>
+  </template>
+
+  <template ui-cart-drawer="bundle-item">
+    {% render 'core.cart-form-bundle-item' %}
+  </template>
+
+  {% unless cart.count > 0 %}
+    {% assign empty_title = 'cart.empty.title' | t | append: ' [0]' %}
+    {% assign empty_description = 'cart.empty.description' | t %}
+    {% render 'misc.empty', heading: empty_title, subheading: empty_description %}
+  {% else %}
+    {% render 'misc.empty', heading: empty_title, subheading: empty_description, hidden: true %}
+  {% endunless %}
+</ui-cart-form>

@@ -1,0 +1,96 @@
+{% comment %}
+  Renders the cart bundle item template (cart page)
+
+  Accepts:
+  - product: {Object} cart item info
+
+  Usage:
+  {% render 'core.cart-bundle-item', product: {...} %}
+{% endcomment %}
+
+<tr>
+  <td>
+    <div class="product">
+      <div class="image" ui-cart-item="image" data-image-ratio="{{ settings.product_image_ratio }}">
+        <img
+          src="{{ product.image }}"
+          alt="{{ product.name }}"
+          height="100%"
+          width="100%"
+          loading="lazy"
+          {% unless product.image %}
+            hidden
+          {% endunless %}
+        >
+        {% unless product.image %}
+          {% render 'misc.image-fallback' %}
+        {% else %}
+          {% render 'misc.image-fallback', hidden: true %}
+        {% endunless %}
+      </div>
+      <div class="info">
+        <a
+          class="title"
+          href="{{ product.url }}"
+          ui-slot="link-button"
+          data-size="md"
+          ui-cart-item="title"
+        >
+          {{ product.name }}
+        </a>
+        <div class="price">
+          <span class="original" ui-cart-item="price">
+            {{ product.price | default: 0 | money }}
+          </span>
+          <span
+            class="compare-at"
+            ui-cart-item="compare-at-price"
+            {% unless product.compare_at_price %}
+              hidden
+            {% endunless %}
+          >
+            {{ product.compare_at_price | default: 0 | times: product.quantity | money }}
+          </span>
+        </div>
+        <span
+          class="variants"
+          ui-cart-item="variant"
+          {% if product.variations == null or product.variations.default %}
+            hidden
+          {% endif %}
+        >
+          {% for variant in product.variations %}
+            <div class="variant">
+              <span class="label">{{ variant[0] }}:</span>
+              <p class="value">{{ variant[1] }}</p>
+            </div>
+          {% endfor %}
+        </span>
+      </div>
+    </div>
+  </td>
+  <td>
+    {% assign subtotal = product.quantity | times: product.price %}
+    <div class="subtotal" ui-cart-item="subtotal">
+      <span
+        class="free"
+        ui-slot="status-badge"
+        data-variant="light"
+        data-status="completed"
+        {% if subtotal %}
+          hidden
+        {% endif %}
+      >
+        {% render 'misc.icon', name: 'hgi-gift' %}
+        {{ 'order.free' | t }}
+      </span>
+      <span
+        {% unless subtotal %}
+          hidden
+        {% endunless %}
+      >
+        {{ subtotal | money }}
+      </span>
+    </div>
+  </td>
+</tr>

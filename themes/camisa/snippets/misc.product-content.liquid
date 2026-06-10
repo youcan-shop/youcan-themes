@@ -1,0 +1,29 @@
+{% comment %}
+  Renders a product content (title, rating, inventory, variants, description, shop buttons, collapsible content, feature list)
+
+  Usage:
+  {% render 'misc.product-content' %}
+{% endcomment %}
+
+<div ui-box="content">
+  {% for c in product.categories %}
+    {% assign collection_name = c.name %}
+    {% assign collection_slug = c.slug %}
+  {% endfor %}
+
+  {% assign translated_collections = 'navigation.collections' | t %}
+  {% capture breadcrumb_items %}
+  {{ 'navigation.home' | t }},/|
+  {{ translated_collections }},/collections
+  {% if collection_name %}
+    |{{ collection_name }},/collections/{{ collection_slug }}
+  {% endif %}
+  {% endcapture %}
+
+  {% for block in section.blocks %}
+    {% case block.type %}
+      {% when 'block_breadcrumb' %}
+        {% render 'misc.breadcrumb', items: breadcrumb_items, last_link_active: true %}
+    {% endcase %}
+  {% endfor %}
+</div>

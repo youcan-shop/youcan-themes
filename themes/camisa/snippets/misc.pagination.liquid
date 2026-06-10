@@ -1,0 +1,100 @@
+{% comment %}
+  Renders a set of pagination controls '<' '1' '2' '..' 'n' '>'
+
+  Accepts:
+  - next_page_url: {String} The next page's URL,
+  - previous_page_url: {String} The previous page's URL,
+  - current: {Number} The index of the currently viewed page (e.g 1, 2, 3),
+  - last: {Number} The index of the last available page (e.g 4, 5, 6),
+  - terms: {String} (optional) Search term(s)
+
+  Usage:
+  {% render 'ui-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+{% endcomment %}
+
+{% assign start = current | minus: 2 %}
+{% assign end = current | plus: 2 %}
+
+{% if base != '' or base != null %}
+  {% assign page_params = base | append: '?' %}
+{% else %}
+  {% assign page_params = '/search?' %}
+{% endif %}
+
+{% if sort_order and sort_field %}
+  {% assign page_params = page_params | append: 'sort_field=' | append: sort_field %}
+  {% assign page_params = page_params | append: '&sort_order=' | append: sort_order | append: '&' %}
+{% endif %}
+
+{% unless terms == null or terms == '' %}
+  {% assign page_params = page_params | append: 'q=' | append: terms | append: '&' %}
+{% endunless %}
+{% assign page_params = page_params | append: 'page%5Bcod%5D=%p' %}
+
+{% if last > 1 %}
+  <div ui-slot="pagination" data-variant="basic">
+    <a
+      ui-slot="pagination-nav"
+      href="{{ previous_page_url }}"
+      aria-label="back"
+      {% if current == 1 %}
+        aria-disabled="true"
+      {% endif %}
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+    </a>
+
+    {% if start < 1 %}
+      {% assign end = end | plus: (1 - start) %}
+      {% assign start = 1 %}
+    {% endif %}
+
+    {% if end > last %}
+      {% assign start = start | minus: (end - last) %}
+      {% assign end = last %}
+    {% endif %}
+
+    {% if start > 1 %}
+      {% assign page_link = page_params | replace: '%p', 1 %}
+
+      <a ui-slot="pagination-item" href="{{ page_link }}">1</a>
+    {% endif %}
+
+    {% for index in (start..end) %}
+      {% assign page_link = page_params | replace: '%p', index %}
+
+      <a
+        ui-slot="pagination-item"
+        href="{{ page_link }}"
+        {% if index == current %}
+          aria-current="true"
+        {% endif %}
+      >
+        {{ index }}
+      </a>
+    {% endfor %}
+
+    {% if end < last %}
+      {% if end < last - 1 %}
+        <span ui-slot="pagination-ellipsis">
+          {% render 'misc.icon', name: 'hgi-more-horizontal' %}
+        </span>
+      {% endif %}
+
+      {% assign page_link = page_params | replace: '%p', last %}
+
+      <a ui-slot="pagination-item" href="{{ page_link }}"> {{ last }} </a>
+    {% endif %}
+
+    <a
+      ui-slot="pagination-nav"
+      href="{{ next_page_url }}"
+      aria-label="next"
+      {% if current >= last %}
+        aria-disabled="true"
+      {% endif %}
+    >
+      {% render 'misc.icon', name: 'hgi-arrow-right-01"' %}
+    </a>
+  </div>
+{% endif %}

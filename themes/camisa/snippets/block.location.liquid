@@ -1,0 +1,45 @@
+{% comment %}
+  Renders a location item (Block)
+
+  Accepts:
+    - location: {Object} Item info
+    - youcan_attributes: {String} YouCan attributes
+
+
+  Usage:
+  {% render 'block.location' %}
+{% endcomment %}
+
+<li
+  ui-carousel="item"
+  ui-block="location"
+  ui-slot="carousel-item"
+  data-alignment="{{ section.settings.alignment }}"
+  {{ youcan_attributes }}
+>
+  <div class="map">
+    {% if location.iframe %}
+      {{ location.iframe }}
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
+  </div>
+  <div class="detail">
+    <h4 class="name">{{ location.title }}</h4>
+    <div class="info">
+      <article class="directions">{{ location.description }}</article>
+      {% if location.show_directions %}
+        <a
+          ui-slot="link-button"
+          data-variant="primary"
+          data-size="md"
+          data-underline="true"
+          target="_blank"
+          href="{{ location.link_directions | default: "https://www.google.com/maps" }}"
+        >
+          Directions
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</li>

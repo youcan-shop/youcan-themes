@@ -1,0 +1,47 @@
+@layer sections {
+  [ui-section="list-collections"] {
+    display: flex;
+    gap: var(--spacing-24);
+    flex-direction: column;
+    padding: attr(data-top-spacing px) var(--spacing-24) attr(data-bottom-spacing px) !important;
+
+    .head-area {
+      .heading {
+        font: var(--font-title-md);
+        text-transform: uppercase;
+      }
+    }
+
+    .core-area {
+      .items {
+        display: grid;
+        grid-template-columns: repeat(attr(data-nbr-columns-desktop number), 1fr);
+        gap: var(--spacing-12);
+      }
+    }
+
+    @media (width <= 1280px) {
+      .core-area {
+        .items {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+    }
+
+    @media (width <= 1024px) {
+      .core-area {
+        .items {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+
+    @media (width <= 769px) {
+      .core-area {
+        .items {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

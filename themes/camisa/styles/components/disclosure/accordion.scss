@@ -1,0 +1,88 @@
+/* 
+  Component: Accordion
+
+  Usage:
+    - <div ui-slot="accordion">
+        <div ui-slot="accordion-item">
+          <label ui-slot="accordion-trigger">
+            Accordion Trigger
+            <input type="checkbox" name="my-accordion" checked />
+          </label>
+          <div ui-slot="accordion-content" role="region">
+            <p>Accordion content </p>
+          </div>
+        </div>
+      </div>
+*/
+
+[ui-slot="accordion"] {
+  display: flex;
+  flex-direction: column;
+
+  /* Item */
+  [ui-slot="accordion-item"] {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background-color var(--transition-standard-default-spatial);
+
+    &:not(:last-child) {
+      border-block-end: 1px solid var(--color-surface-variant);
+    }
+
+    /* Trigger */
+    [ui-slot="accordion-trigger"] {
+      display: flex;
+      position: relative;
+      align-items: center;
+      padding-block: var(--spacing-32);
+      font: var(--font-title-md);
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      gap: var(--spacing-10);
+
+      & > input[type="checkbox"] {
+        overflow: hidden;
+        opacity: 0;
+        scale: 0;
+      }
+
+      & > i {
+        flex-shrink: 0;
+        font-size: 24px;
+        position: absolute;
+        inset-inline: auto 0;
+        transition: transform var(--transition-standard-default-spatial);
+      }
+    }
+
+    /* Content */
+    [ui-slot="accordion-content"] {
+      display: grid;
+      grid-template-rows: 0fr;
+      padding-block-end: var(--spacing-0);
+      transition: all var(--transition-expressive-default-spatial);
+      color: var(--color-on-surface-variant);
+
+      & > * {
+        overflow: hidden;
+      }
+    }
+
+    /* Checked */
+    &:has(input[type="checkbox"]:checked) {
+      [ui-slot="accordion-trigger"] {
+        & > i {
+          transform: rotate(-180deg);
+        }
+      }
+
+      [ui-slot="accordion-content"] {
+        grid-template-rows: 1fr;
+        padding-block-end: var(--spacing-32);
+      }
+    }
+  }
+}

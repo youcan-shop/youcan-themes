@@ -1,0 +1,126 @@
+/* 
+  Component: Modal
+
+  Usage:
+    - <div ui-slot="modal">
+        <button popovertarget="my-modal">  Click to Open </button>
+
+        <div ui-slot="modal-content" id="my-modal" popover> My Modal Content </div>
+      </div>
+    
+*/
+
+/* Content */
+[ui-slot="modal-content"][popover] {
+  display: flex;
+  inset: auto;
+  left: 50%;
+  flex-direction: column;
+  width: 70%;
+  transform: translate(-50%, -45%);
+  transition: var(--transition-expressive-default-spatial);
+  border: none;
+  background-color: var(--modal-background);
+  color: inherit;
+  inset-block-start: 50%;
+
+  /* Header */
+  [ui-slot="modal-header"] {
+    display: flex;
+    position: sticky;
+    z-index: 99;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-24);
+    background-color: var(--modal-background);
+    gap: var(--spacing-12);
+    inset-block-start: var(--spacing-0);
+
+    /* Title */
+    [ui-slot="modal-title"] {
+      font: var(--font-label-lg);
+      text-transform: uppercase;
+    }
+  }
+
+  /* Body */
+  [ui-slot="modal-body"] {
+    padding-inline: var(--spacing-24);
+  }
+
+  /* Body */
+  [ui-slot="modal-footer"] {
+    display: grid;
+    gap: var(--spacing-12);
+    grid-template-columns: repeat(2, 1fr);
+    padding: var(--spacing-24);
+  }
+
+  /* Backdrop */
+  &::backdrop {
+    transition: var(--transition-standard-default-spatial);
+  }
+
+  /* State */
+  &:popover-open {
+    &::backdrop {
+      background-color: color-mix(in srgb, black 30%, transparent);
+    }
+
+    @starting-style {
+      &::backdrop {
+        background-color: transparent;
+      }
+    }
+  }
+
+  @media (width >= 1024px) {
+    visibility: hidden;
+    filter: blur(2px);
+    opacity: 0;
+
+    &:popover-open {
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      filter: blur(0);
+
+      @starting-style {
+        visibility: hidden;
+        transform: translate(-50%, -45%);
+        opacity: 0;
+        filter: blur(2px);
+      }
+    }
+  }
+
+  @media (width <= 1024px) {
+    left: var(--spacing-0);
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    transform: translate3d(0, 100%, 0);
+    inset-block: auto var(--spacing-0);
+
+    &:popover-open {
+      transform: translate3d(0, 0%, 0);
+
+      @starting-style {
+        transform: translate3d(0, 100%, 0);
+      }
+    }
+  }
+}
+
+[data-intensity="as-solid-bg"],
+[data-intensity="as-foreground"] {
+  [ui-slot="modal-content"] {
+    --modal-background: var(--color-on-primary);
+  }
+}
+
+[data-intensity="as-light-bg"] {
+  [ui-slot="modal-content"] {
+    --modal-background: var(--color-primary-container);
+  }
+}

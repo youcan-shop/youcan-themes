@@ -1,0 +1,86 @@
+@layer reset, base, components, utilities, sections, snippets, overrides;
+
+@layer snippets {
+  [ui-block="product"] {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: var(--spacing-16);
+
+    .media {
+      position: relative;
+      height: auto;
+      overflow: hidden;
+      transition: var(--transition-expressive-default-spatial);
+      border-radius: var(--radius-product);
+      text-decoration: none;
+
+      &[data-image-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-image-ratio="portrait"] {
+        aspect-ratio: 3 / 4;
+      }
+
+      &[data-image-ratio="landscape"] {
+        aspect-ratio: 4 / 3;
+      }
+
+      & > a img {
+        object-fit: cover;
+        transition: var(--transition-expressive-default-spatial);
+      }
+    }
+
+    .content {
+      display: flex;
+      gap: var(--spacing-8);
+      align-items: flex-start;
+      justify-content: space-between;
+      text-align: var(--alignment-product);
+
+      .detail {
+        display: grid;
+        gap: var(--spacing-8);
+
+        .title {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .variants {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-6);
+
+          .option {
+            height: var(--spacing-6);
+            width: var(--spacing-24);
+          }
+
+          .rest {
+            font: var(--font-body-sm);
+          }
+        }
+
+        .price {
+          font: var(--font-title-sm);
+
+          .compare-at-price {
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+
+    & > .badge {
+      position: absolute;
+      inset-inline-end: 0;
+      inset-block-start: 0;
+      margin: var(--spacing-12);
+    }
+  }
+}

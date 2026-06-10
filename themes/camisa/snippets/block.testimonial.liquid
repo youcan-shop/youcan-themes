@@ -1,0 +1,45 @@
+{% comment %}
+  Renders a testimonial item (Block)
+
+  Accepts:
+    - testimonial: {Object} Item info
+
+  Usage:
+  {% render 'block.testimonial' %}
+{% endcomment %}
+
+<li ui-block="testimonial" ui-carousel="item" ui-slot="carousel-item" {{ testimonial.youcan_attributes }}>
+  <article class="review">
+    <p>{{ testimonial.settings.testimonial_content }}</p>
+  </article>
+  <div class="product">
+    <a class="image" href="/products/{{ testimonial.settings.testimonial_product.slug }}">
+      {% if testimonial.settings.testimonial_product.preview_image %}
+        <img
+          src="{{ testimonial.settings.testimonial_product.preview_image.small }}"
+          alt="{{ testimonial.settings.testimonial_product.name }}"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      {% else %}
+        {% render 'misc.image-fallback', icon_size: 20 %}
+      {% endif %}
+    </a>
+    <div class="info">
+      <a
+        class="title"
+        ui-slot="link-button"
+        data-variant="black"
+        data-size="md"
+        href="/products/{{ testimonial.settings.testimonial_product.slug }}"
+      >
+        {% assign placeholder = 'product.title' | t %}
+        {{ testimonial.settings.testimonial_product.name | default: placeholder }}
+      </a>
+      {% assign default_variant = testimonial.settings.testimonial_product.selected_or_first_available_variant %}
+      {% assign price = default_variant.price | default: testimonial.settings.testimonial_product.price %}
+      <span class="price">{{ price | default: 0 | money }}</span>
+    </div>
+  </div>
+</li>

@@ -1,0 +1,59 @@
+{% comment %}
+  Render a product media (images)
+
+  Usage:
+  {% render 'misc.product-media' %}
+{% endcomment %}
+
+<ui-carousel ui-product="media" ui-box="media" data-layout="carousel">
+  {% if product.images.size > 1 %}
+    <div class="markers">
+      {% for marker in product.images %}
+        <button
+          class="marker"
+          ui-carousel="marker"
+          {% if forloop.first %}
+            aria-selected="true"
+          {% endif %}
+          data-image-ratio="{{ settings.product_image_ratio }}"
+        >
+          <img
+            src="{{ marker }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+            loading="eager"
+          >
+        </button>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div
+    class="items"
+    ui-carousel="wrapper"
+    ui-slot="carousel"
+    aria-orientation="horizontal"
+    data-align="center"
+    data-image-ratio="{{ settings.product_image_ratio }}"
+  >
+    {% if product.images.size %}
+      {% for image in product.images %}
+        <div class="item" ui-carousel="item" ui-slot="carousel-item">
+          <img
+            src="{{ image }}"
+            alt="{{ product.name }}"
+            height="100%"
+            width="100%"
+            {% if forloop.index0 %}
+              loading="eager"
+            {% else %}
+              loading="lazy"
+            {% endif %}
+          >
+        </div>
+      {% endfor %}
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 60 %}
+    {% endif %}
+  </div>
+</ui-carousel>
