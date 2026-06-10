@@ -37,19 +37,19 @@
     <div class="products">
       {% for product in order.order_variants %}
         <div class="product">
-          <a class="media" href="{{ product.url }}">
+          <div class="media">
             {% if product.image %}
               <img
                 src="{{ product.image }}"
                 alt="{{ product.name }}"
-                height="60"
-                width="60"
+                height="100%"
+                width="100%"
                 loading="eager"
               >
             {% else %}
               {% render 'misc.image-fallback' %}
             {% endif %}
-          </a>
+          </div>
           <div class="content">
             <a
               ui-slot="link-button"
