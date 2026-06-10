@@ -1,5 +1,17 @@
 # bella
 
+## 1.1.2
+
+### Patch Changes
+
+- f8f1c44: Arabic translation improvements
+
+## 1.1.1
+
+### Patch Changes
+
+- b9e2ca3: Add footer layout object
+
 ## 1.1.0
 
 ### Minor Changes
