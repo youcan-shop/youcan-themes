@@ -1290,17 +1290,17 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=modal-content][popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=modal-header]{
     display:flex;
+    position:sticky;
+    z-index:99;
     align-items:center;
     justify-content:space-between;
     padding:24px;
     padding:var(--spacing-24);
+    background-color:var(--modal-background);
     gap:12px;
     gap:var(--spacing-12);
-    position:sticky;
-    background-color:var(--modal-background);
     inset-block-start:0px;
     inset-block-start:var(--spacing-0);
-    z-index:99;
   }
 [ui-slot=modal-content][popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) [ui-slot=modal-header] [ui-slot=modal-title]{
     font:var(--font-label-lg);
@@ -1363,15 +1363,14 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 @media (max-width: 1024px){
     [ui-slot=modal-content][popover]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
+      left:0px;
+      left:var(--spacing-0);
       width:100%;
       max-height:80vh;
       overflow:auto;
-      inset-block-start:auto;
       transform:translate3d(0, 100%, 0);
-      inset-block-end:0px;
-      inset-block-end:var(--spacing-0);
-      left:0px;
-      left:var(--spacing-0);
+      inset-block:auto 0px;
+      inset-block:auto var(--spacing-0);
     }
     [ui-slot=modal-content][popover]:popover-open:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
       transform:translate3d(0, 0%, 0);
@@ -1890,8 +1889,7 @@ button[ui-slot=link-button]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#
   }
 [ui-slot=label]:has(+ input:required, > input:required, + textarea:required, + select:required, + [ui-phone-validator=input-wrapper]):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#)::after{
     content:"*";
-    margin-left:1px;
-    margin-right:1px;
+    margin-inline:1px;
     color:var(--color-error);
   }
 [ui-slot=label]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
@@ -2712,8 +2710,8 @@ body[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):no
     gap:var(--spacing-8);
   }
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .heading{
-    text-transform:uppercase;
     font:400 calc(22px * var(--font-heading-scale))/calc(28px * var(--font-heading-scale)) var(--font-heading-family);
+    text-transform:uppercase;
   }
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .description{
     max-width:800px;
@@ -2722,9 +2720,9 @@ body[data-intensity=as-light-bg]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):no
     text-wrap:balance;
   }
 [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#) .link{
-    text-transform:uppercase;
     margin-block-start:8px;
     margin-block-start:var(--spacing-8);
+    text-transform:uppercase;
   }
 @media (max-width: 769px){
     [ui-slot=head]:not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#):not(#\#){
