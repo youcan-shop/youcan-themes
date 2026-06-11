@@ -9,51 +9,44 @@
 {% endcomment %}
 
 <li ui-block="testimonial" ui-carousel="item" ui-slot="carousel-item" {{ testimonial.youcan_attributes }}>
-  <div class="media">
-    {% if testimonial.settings.testimonial_image.src %}
-      <img
-        src="{{ testimonial.settings.testimonial_image.src }}"
-        alt="{{ testimonial.settings.testimonial_product.name | default :testimonial.settings.testimonial_author }}"
-        height="100%"
-        width="100%"
-        loading="lazy"
-      >
-    {% else %}
-      {% render 'misc.image-fallback', icon_size: 40 %}
-    {% endif %}
-  </div>
   <div class="content">
+    <div class="rating">
+      {% comment %} Quote Icon {% endcomment %}
+      <svg class="quote" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24.0697 15C25.2677 15 26.2666 14.9999 27.0597 15.1065C27.8967 15.2191 28.6525 15.4667 29.2597 16.074C29.867 16.6812 30.1146 17.4369 30.2271 18.274C30.3338 19.0671 30.3337 20.066 30.3337 21.264V21.4027C30.3337 22.6007 30.3338 23.5996 30.2271 24.3927C30.1146 25.2297 29.867 25.9855 29.2597 26.5927C28.6525 27.2 27.8967 27.4476 27.0597 27.5601C26.2666 27.6668 25.2677 27.6667 24.0697 27.6667H23.931C22.733 27.6667 21.7341 27.6668 20.941 27.5601C20.1039 27.4476 19.3482 27.2 18.741 26.5927C18.1337 25.9855 17.8861 25.2297 17.7735 24.3927C17.6669 23.5996 17.667 22.6007 17.667 21.4027V21.264C17.667 20.066 17.6669 19.0671 17.7735 18.274C17.8861 17.4369 18.1337 16.6812 18.741 16.074C19.3482 15.4667 20.1039 15.2191 20.941 15.1065C21.7341 14.9999 22.733 15 23.931 15H24.0697Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M28.2733 5.27C28.4923 5.97303 28.1001 6.72056 27.397 6.93965C23.2535 8.23095 20.3337 11.9001 20.3337 16.1502V21.6666C20.3337 22.403 19.7367 23 19.0003 23C18.2639 23 17.667 22.403 17.667 21.6666V16.1502C17.667 10.6218 21.4558 5.99803 26.6037 4.39375C27.3066 4.17465 28.0542 4.56697 28.2733 5.27Z" fill="currentColor"/>
+        <path d="M8.0697 15C9.26766 15 10.2666 14.9999 11.0596 15.1065C11.8967 15.2191 12.6524 15.4667 13.2597 16.074C13.867 16.6812 14.1146 17.4369 14.2271 18.274C14.3338 19.0671 14.3337 20.066 14.3337 21.264V21.4027C14.3337 22.6007 14.3338 23.5996 14.2271 24.3927C14.1146 25.2297 13.867 25.9855 13.2597 26.5927C12.6524 27.2 11.8967 27.4476 11.0596 27.5601C10.2666 27.6668 9.26766 27.6667 8.0697 27.6667H7.93101C6.73305 27.6667 5.73406 27.6668 4.94102 27.5601C4.10397 27.4476 3.34823 27.2 2.74094 26.5927C2.13365 25.9855 1.88609 25.2297 1.77354 24.3927C1.66693 23.5996 1.66695 22.6007 1.66699 21.4027V21.264C1.66695 20.066 1.66693 19.0671 1.77354 18.274C1.88609 17.4369 2.13365 16.6812 2.74094 16.074C3.34823 15.4667 4.10397 15.2191 4.94102 15.1065C5.73406 14.9999 6.73301 15 7.93095 15H8.0697Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2733 5.27C12.4924 5.97303 12.1001 6.72056 11.397 6.93965C7.25347 8.23095 4.33366 11.9001 4.33366 16.1502V21.6666C4.33366 22.403 3.7367 23 3.00033 23C2.26395 23 1.66699 22.403 1.66699 21.6666V16.1502C1.66699 10.6218 5.45574 5.99803 10.6036 4.39375C11.3067 4.17465 12.0542 4.56697 12.2733 5.27Z" fill="currentColor"/>
+      </svg>
+      <div class="stars">
+        {% assign rating = testimonial.settings.testimonial_rating %}
+        {% for star in (1..5) %}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="24"
+            height="24"
+            color="currentColor"
+            {% if rating >= star %}
+              fill="currentColor"
+            {% else %}
+              fill="transparent"
+            {% endif %}
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M13.7276 3.44418L15.4874 6.99288C15.7274 7.48687 16.3673 7.9607 16.9073 8.05143L20.0969 8.58575C22.1367 8.92853 22.6167 10.4206 21.1468 11.8925L18.6671 14.3927C18.2471 14.8161 18.0172 15.6327 18.1471 16.2175L18.8571 19.3125C19.417 21.7623 18.1271 22.71 15.9774 21.4296L12.9877 19.6452C12.4478 19.3226 11.5579 19.3226 11.0079 19.6452L8.01827 21.4296C5.8785 22.71 4.57865 21.7522 5.13859 19.3125L5.84851 16.2175C5.97849 15.6327 5.74852 14.8161 5.32856 14.3927L2.84884 11.8925C1.389 10.4206 1.85895 8.92853 3.89872 8.58575L7.08837 8.05143C7.61831 7.9607 8.25824 7.48687 8.49821 6.99288L10.258 3.44418C11.2179 1.51861 12.7777 1.51861 13.7276 3.44418Z"></path>
+          </svg>
+        {% endfor %}
+      </div>
+    </div>
     <div class="info">
-      <h5 class="author">{{ testimonial.settings.testimonial_author }}</h5>
-      <article class="review">
+      <article class="description">
         <p>{{ testimonial.settings.testimonial_content }}</p>
       </article>
     </div>
-    <hr ui-slot="divider" data-variant="line">
-    <div class="product">
-      <a class="image" href="/products/{{ testimonial.settings.testimonial_product.slug }}">
-        {% if testimonial.settings.testimonial_product.preview_image %}
-          <img
-            src="{{ testimonial.settings.testimonial_product.preview_image.small }}"
-            alt="{{ testimonial.settings.testimonial_product.name }}"
-            height="100%"
-            width="100%"
-            loading="lazy"
-          >
-        {% else %}
-          {% render 'misc.image-fallback', icon_size: 20 %}
-        {% endif %}
-      </a>
-      <a
-        class="title"
-        ui-slot="link-button"
-        data-variant="black"
-        data-size="md"
-        href="/products/{{ testimonial.settings.testimonial_product.slug }}"
-      >
-        {% assign placeholder = 'product.title' | t %}
-        {{ testimonial.settings.testimonial_product.name | default: placeholder }}
-      </a>
-    </div>
+    <p class="author">– &nbsp; {{ testimonial.settings.testimonial_author }}</p>
   </div>
 </li>
