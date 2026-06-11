@@ -24,14 +24,17 @@
       [ui-block="testimonial"] {
         --testimonial-bg-color: #fff !important;
 
-        display: grid;
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
         border-radius: var(--radius-testimonial);
         background-color: var(--testimonial-bg-color);
         color: oklch(from var(--bg-color) clamp(0, calc((0.5 - l) * 9999), 1) 0 none);
 
         .content {
-          display: grid;
+          display: flex;
+          flex: 1;
+          flex-direction: column;
           gap: var(--spacing-16);
           padding: var(--spacing-40);
 
@@ -54,14 +57,10 @@
             }
           }
 
-          .info {
-            display: grid;
-            gap: var(--spacing-16);
-
-            .description {
-              color: var(--color-on-surface-variant);
-              text-wrap: balance;
-            }
+          .description {
+            flex: 1;
+            color: var(--color-on-surface-variant);
+            text-wrap: balance;
           }
 
           .author {
