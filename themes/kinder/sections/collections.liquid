@@ -53,7 +53,8 @@
     {% endfor %}
   </ul>
 
-  {% if section.settings.enable_slideshow and should_hide_controls == false and section.blocks.size > 1 %}
+  {% assign min_items = section.settings.nbr_columns_desktop %}
+  {% if section.settings.enable_slideshow and should_hide_controls == false and section.blocks.size > min_items %}
     <div
       class="controls"
       {% if section.settings.show_arrows %}

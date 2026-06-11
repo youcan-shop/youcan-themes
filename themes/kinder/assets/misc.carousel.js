@@ -29,7 +29,10 @@ if (!customElements.get("ui-carousel")) {
       if (this.arrows.previous && this.arrows.next) {
         this.setArrowsState();
 
-        this.arrows.previous.addEventListener("click", () => this.swipe(Math.max(0, this.index - this.perPage)));
+        this.arrows.previous.addEventListener("click", () => {
+          const prevPage = Math.floor((this.index - 1) / this.perPage);
+          this.swipe(Math.max(0, prevPage * this.perPage));
+        });
         this.arrows.next.addEventListener("click", () => this.swipe(Math.min(this.TOTAL - this.perPage, this.index + this.perPage)));
       }
 
@@ -107,8 +110,10 @@ if (!customElements.get("ui-carousel")) {
         marker.setAttribute("aria-hidden", i >= totalPages);
       });
 
+      const lastPageStart = this.TOTAL - this.perPage;
       this.slides.forEach((slide, i) => {
-        slide.toggleAttribute("data-snap", i % this.perPage === 0);
+        const isRegularPageStart = i % this.perPage === 0 && i < lastPageStart;
+        slide.toggleAttribute("data-snap", isRegularPageStart || i === lastPageStart);
       });
 
       this.setIndex(this.index);
