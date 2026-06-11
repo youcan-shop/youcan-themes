@@ -3,14 +3,11 @@
 <ui-carousel
   ui-section="testimonials"
   style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
     --per-page: {{ section.settings.nbr_columns_desktop }};
-    {% if section.settings.override_global_colors %}
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    {% endif %}
   "
   {% if section.settings.override_global_colors %}
     data-scoped-color
@@ -19,44 +16,70 @@
 >
   <div ui-slot="head">
     <div class="content">
-      <h4 class="subheading">{{ section.settings.subheading }}</h4>
       <h1 class="heading">{{ section.settings.heading }}</h1>
+      <p class="description">{{ section.settings.description }}</p>
     </div>
-    {% assign min_items = section.settings.nbr_columns_desktop | plus: 0 %}
-    {% if section.blocks.size > min_items %}
-      <div class="actions">
-        <button
-          ui-carousel="arrow-previous"
-          ui-slot="button"
-          data-variant="primary"
-          data-mode="stroke"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Previous"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-        </button>
-        <button
-          ui-carousel="arrow-next"
-          ui-slot="button"
-          data-variant="primary"
-          data-mode="stroke"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Next"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-        </button>
-      </div>
-    {% endif %}
   </div>
   <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
     {% for testimonial in section.blocks %}
       {% render 'block.testimonial' %}
     {% endfor %}
   </ul>
+  {% assign min_items = section.settings.nbr_columns_desktop %}
+  {% if section.blocks.size > min_items %}
+    <div
+      class="controls"
+      {% if section.settings.show_arrows %}
+        data-show-arrows
+      {% endif %}
+      {% if section.settings.show_dots %}
+        data-dots
+      {% endif %}
+      {% if section.settings.arrows_position == 'centered' %}
+        data-centered-arrows
+      {% endif %}
+    >
+      {% if section.settings.show_arrows %}
+        <button
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-variant="neutral"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
+        </button>
+      {% endif %}
+      {% if section.settings.show_dots %}
+        <div class="pagination" data-position="{{ section.settings.arrows_position }}">
+          {% for marker in section.blocks %}
+            <button
+              ui-carousel="marker"
+              aria-label="Slide {{ forloop.index }}"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if section.settings.show_arrows %}
+        <button
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-variant="neutral"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+        </button>
+      {% endif %}
+    </div>
+  {% endif %}
 </ui-carousel>
 
 {% schema %}
@@ -110,6 +133,28 @@
       "max": 4,
       "step": 1,
       "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "t:common.slideshow.show_dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:common.slideshow.show_arrows",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrows_position",
+      "label": "t:common.slideshow.desktop_arrows_position.label",
+      "options": [
+        { "label": "t:common.slideshow.desktop_arrows_position.options.centered", "value": "centered" },
+        { "label": "t:common.slideshow.desktop_arrows_position.options.edges", "value": "edges" }
+      ],
+      "default": "edges"
     },
     {
       "type": "header",
