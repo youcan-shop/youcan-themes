@@ -1,6 +1,7 @@
 {{ 'section.products.css' | asset_url | stylesheet_tag }}
 
 {% assign should_hide_controls = false %}
+{% assign per_page = 4 %}
 
 {% if section.settings.show_arrows != true and section.settings.show_dots != true %}
   {% assign should_hide_controls = true %}
@@ -9,9 +10,9 @@
 <ui-carousel
   ui-section="products"
   style="
+    --per-page: {{ per_page }};
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
-    --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
@@ -137,19 +138,6 @@
       "id": "description",
       "label": "t:common.header.description",
       "default": "t:sections.products.default.description"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.layout"
-    },
-    {
-      "type": "range",
-      "id": "nbr_columns_desktop",
-      "label": "t:common.globals.number_per_column",
-      "min": 2,
-      "max": 4,
-      "step": 1,
-      "default": 4
     },
     {
       "type": "header",

@@ -1,7 +1,6 @@
 @layer sections{
   [ui-section=products]{
-    --per-page:var(--nbr-columns-desktop);
-    --gap:var(--spacing-32);
+    --gap:var(--spacing-24);
     --item-size:100%;
     display:flex;
     flex-direction:column;
@@ -30,8 +29,9 @@
     grid-gap:var(--gap);
     gap:var(--gap);
   }
-  [ui-section=products] .items-area [ui-block=collection] .title{
-    justify-content:var(--items-text-alignment) !important;
+  [ui-section=products] .items-area [ui-slot=carousel-item]{
+    height:auto !important;
+    height:initial !important;
   }
   [ui-section=products] .controls{
     display:flex;
@@ -45,6 +45,9 @@
   }
   [ui-section=products] .controls:not([data-show-arrows]), [ui-section=products] .controls[data-centered-arrows]{
     justify-content:center;
+  }
+  [ui-section=products] .controls:has([ui-carousel=arrow-previous][disabled]):has([ui-carousel=arrow-next][disabled]){
+    display:none;
   }
   [ui-section=products] .controls .pagination{
     display:flex;
@@ -88,9 +91,14 @@
     width:inherit;
     background-color:currentcolor;
   }
+  @media (max-width: 1400px){
+    [ui-section=products]{
+      --per-page:3 !important;
+    }
+  }
   @media (max-width: 1024px){
     [ui-section=products]{
-      --per-page:2;
+      --per-page:2 !important;
       display:flex;
       flex-direction:column;
       padding-inline:var(--spacing-16);
