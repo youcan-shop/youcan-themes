@@ -45,8 +45,8 @@ if (!customElements.get("ui-special-offer")) {
 
       label.textContent =
         this.triggerShopButton.getAttribute("checkout-type") === "express" || this.triggerShopButton.hasAttribute("skip-to-checkout")
-          ? window.specialOffer.add_items_to_cart
-          : window.specialOffer.add_to_order;
+          ? window.specialOffer.add_to_order
+          : window.specialOffer.add_items_to_cart;
     }
 
     onSubmit() {

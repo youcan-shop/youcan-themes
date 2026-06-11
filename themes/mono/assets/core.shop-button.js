@@ -81,8 +81,8 @@ if (!customElements.get("ui-shop-button")) {
         if (this.isBulk) {
           const [mainId, ...addOnIds] = this.productVariantId.split(",");
           Promise.all([
-            this.placeOrder(mainId, attachedImage, quantity, true),
-            ...addOnIds.map((variantId) => this.placeOrder(variantId, bundleId, attachedImage, 1, true)),
+            this.placeOrder(mainId, bundleId, attachedImage, quantity, true),
+            ...addOnIds.map((variantId, index) => this.placeOrder(variantId, bundleId, attachedImage, 1, addOnIds.length - 1 != index)),
           ]);
         } else {
           this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
