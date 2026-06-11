@@ -18,112 +18,115 @@
   {% endstyle %}
 {% endif %}
 
-<ui-special-offer
-  ui-section="special-offer"
-  ui-slot="drawer-content"
-  id="offer"
-  popover="manual"
-  {% if section.settings.custom_color %}
-    data-custom-color
-    data-theme="{{ section.settings.theme }}"
-  {% endif %}
->
-  <div ui-slot="drawer-header">
-    <h3 ui-slot="drawer-title">{{ section.settings.heading }}</h3>
-    <button
-      type="button"
-      ui-slot="button"
-      data-mode="ghost"
-      data-size="md"
-      data-as-icon
-      aria-label="Close"
-      ui-special-offer="skip"
-    >
-      {% render 'misc.icon', name: 'hgi-cancel-01' %}
-    </button>
-  </div>
-  <div ui-slot="drawer-body">
-    <div class="offer">
-      {% if section.settings.note %}
-        <div class="head">
-          <span class="heading">{{ section.settings.note }}</span>
-        </div>
-      {% endif %}
-      {% if product.related_products.size %}
-        <ul class="list">
-          {% for p in product.related_products %}
-            {% assign default_variant = p.selected_or_first_available_variant %}
-            {% assign price = default_variant.price | default: p.price %}
-            {% assign compare_at_price = default_variant.compare_at_price | default: p.compare_at_price %}
-
-            <li class="product-item">
-              {% assign default_title = 'general.product' | t | append: ' ' | append: forloop.index %}
-              {% assign title = p.name | default: default_title %}
-
-              <a class="media" href="{{ p.url }}" title="{{ title }}">
-                {% if p.preview_image %}
-                  <img
-                    src="{{ p.preview_image.original }}"
-                    alt="{{ title }}"
-                    height="65"
-                    width="65"
-                    loading="lazy"
-                  >
-                {% else %}
-                  {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
-                {% endif %}
-                {% unless default_variant.available %}
-                  <div class="sold-out">
-                    <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
-                  </div>
-                {% endunless %}
-              </a>
-              <div class="info">
-                <a class="name" href="{{ p.url }}" title="{{ title }}">{{ title }}</a>
-                <div class="price">
-                  <span class="original">{{ price | default: 0 | money }}</span>
-                  {% if compare_at_price %}
-                    <span class="compare-at">{{ compare_at_price | default: 0 | money }}</span>
-                  {% endif %}
-                </div>
-                {% unless default_variant.variations == null or default_variant.variations.default %}
-                  <div class="variants">
-                    {% for variant in default_variant.variations %}
-                      <span class="variant">{{ variant[1] }}</span>
-                    {% endfor %}
-                  </div>
-                {% endunless %}
-              </div>
-              <input
-                ui-slot="checkbox"
-                type="checkbox"
-                value="{{ default_variant.id }}"
-                {% unless default_variant.available %}
-                  disabled
-                {% endunless %}
-                ui-special-offer="item"
-              >
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+{% if section.settings.enabled %}
+  <ui-special-offer
+    ui-section="special-offer"
+    ui-slot="drawer-content"
+    id="offer"
+    popover="manual"
+    {% if section.settings.custom_color %}
+      data-custom-color
+      data-theme="{{ section.settings.theme }}"
+    {% endif %}
+  >
+    <div ui-slot="drawer-header">
+      <h3 ui-slot="drawer-title">{{ section.settings.heading }}</h3>
+      <button
+        type="button"
+        ui-slot="button"
+        data-mode="ghost"
+        data-size="md"
+        data-as-icon
+        aria-label="Close"
+        ui-special-offer="skip"
+      >
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </button>
     </div>
-  </div>
-  <div class="actions" ui-slot="drawer-footer">
-    <button ui-slot="button" data-mode="filled" data-size="lg" ui-special-offer="submit" disabled>
-      <span>-</span>
-    </button>
-    <button ui-slot="button" data-mode="ghost" data-size="lg" ui-special-offer="skip">
-      {{ 'special_offer.skip_this_offer' | t }}
-    </button>
-  </div>
-</ui-special-offer>
+    <div ui-slot="drawer-body">
+      <div class="offer">
+        {% if section.settings.note %}
+          <div class="head">
+            <span class="heading">{{ section.settings.note }}</span>
+          </div>
+        {% endif %}
+        {% if product.related_products.size %}
+          <ul class="list">
+            {% for p in product.related_products %}
+              {% assign default_variant = p.selected_or_first_available_variant %}
+              {% assign price = default_variant.price | default: p.price %}
+              {% assign compare_at_price = default_variant.compare_at_price | default: p.compare_at_price %}
+
+              <li class="product-item">
+                {% assign default_title = 'general.product' | t | append: ' ' | append: forloop.index %}
+                {% assign title = p.name | default: default_title %}
+
+                <a class="media" href="{{ p.url }}" title="{{ title }}">
+                  {% if p.preview_image %}
+                    <img
+                      src="{{ p.preview_image.original }}"
+                      alt="{{ title }}"
+                      height="65"
+                      width="65"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
+                  {% endif %}
+                  {% unless default_variant.available %}
+                    <div class="sold-out">
+                      <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
+                    </div>
+                  {% endunless %}
+                </a>
+                <div class="info">
+                  <a class="name" href="{{ p.url }}" title="{{ title }}">{{ title }}</a>
+                  <div class="price">
+                    <span class="original">{{ price | default: 0 | money }}</span>
+                    {% if compare_at_price %}
+                      <span class="compare-at">{{ compare_at_price | default: 0 | money }}</span>
+                    {% endif %}
+                  </div>
+                  {% unless default_variant.variations == null or default_variant.variations.default %}
+                    <div class="variants">
+                      {% for variant in default_variant.variations %}
+                        <span class="variant">{{ variant[1] }}</span>
+                      {% endfor %}
+                    </div>
+                  {% endunless %}
+                </div>
+                <input
+                  ui-slot="checkbox"
+                  type="checkbox"
+                  value="{{ default_variant.id }}"
+                  {% unless default_variant.available %}
+                    disabled
+                  {% endunless %}
+                  ui-special-offer="item"
+                >
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+    <div class="actions" ui-slot="drawer-footer">
+      <button ui-slot="button" data-mode="filled" data-size="lg" ui-special-offer="submit" disabled>
+        <span>-</span>
+      </button>
+      <button ui-slot="button" data-mode="ghost" data-size="lg" ui-special-offer="skip">
+        {{ 'special_offer.skip_this_offer' | t }}
+      </button>
+    </div>
+  </ui-special-offer>
+{% endif %}
 
 {% schema %}
 {
   "label": "t:sections.special_offer.label",
   "settings": [
     { "type": "paragraph", "content": "t:sections.special_offer.hint" },
+    { "type": "checkbox", "id": "enabled", "label": "t:sections.special_offer.enabled", "default": false },
     { "type": "header", "content": "t:common.headers.content" },
     {
       "type": "text",
