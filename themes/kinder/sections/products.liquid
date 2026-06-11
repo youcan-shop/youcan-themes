@@ -1,4 +1,4 @@
-{{ 'section.collections.css' | asset_url | stylesheet_tag }}
+{{ 'section.products.css' | asset_url | stylesheet_tag }}
 
 {% assign should_hide_controls = false %}
 
@@ -7,7 +7,7 @@
 {% endif %}
 
 <ui-carousel
-  ui-section="collections"
+  ui-section="products"
   style="
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
@@ -46,7 +46,6 @@
       ui-slot="carousel"
       aria-orientation="vertical"
     {% endunless %}
-    style="--items-text-alignment: {{ section.settings.text_alignment }};"
   >
     {% for collection in section.blocks %}
       {% render 'block.collection' %}
@@ -111,7 +110,7 @@
 
 {% schema %}
 {
-  "label": "t:sections.collections.label",
+  "label": "t:sections.products.label",
   "templates": ["index"],
   "limit": 3,
   "max_blocks": 10,
@@ -149,12 +148,6 @@
       "default": ""
     },
     {
-      "type": "text",
-      "id": "button_label",
-      "label": "t:common.button.label",
-      "default": "t:sections.collections.default.button_label"
-    },
-    {
       "type": "header",
       "content": "t:common.headers.layout"
     },
@@ -176,21 +169,6 @@
         { "label": "t:common.layout.column.two", "value": "2" }
       ],
       "default": "2"
-    },
-    {
-      "type": "header",
-      "content": "t:theme.collection_cards.label"
-    },
-    {
-      "type": "select",
-      "id": "text_alignment",
-      "label": "t:common.globals.text_alignment",
-      "options": [
-        { "label": "t:common.layout.alignment.start", "value": "flex-start" },
-        { "label": "t:common.layout.alignment.center", "value": "center" },
-        { "label": "t:common.layout.alignment.end", "value": "flex-end" }
-      ],
-      "default": "center"
     },
     {
       "type": "header",
@@ -287,13 +265,13 @@
   ],
   "blocks": [
     {
-      "type": "collection_item",
-      "label": "t:common.globals.collection",
+      "type": "product_item",
+      "label": "t:common.globals.product",
       "settings": [
         {
-          "type": "category",
-          "id": "collection",
-          "label": "t:common.globals.collection"
+          "type": "product",
+          "id": "product",
+          "label": "t:common.globals.product"
         }
       ]
     }
