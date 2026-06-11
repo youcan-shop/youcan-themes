@@ -1,18 +1,18 @@
-{{ 'section.collections.css' | asset_url | stylesheet_tag }}
+{{ 'section.products.css' | asset_url | stylesheet_tag }}
 
 {% assign should_hide_controls = false %}
+{% assign per_page = 4 %}
 
 {% if section.settings.show_arrows != true and section.settings.show_dots != true %}
   {% assign should_hide_controls = true %}
 {% endif %}
 
 <ui-carousel
-  ui-section="collections"
+  ui-section="products"
   style="
+    --per-page: {{ per_page }};
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
-    --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
-    --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
@@ -28,14 +28,6 @@
       <h1 class="heading">{{ section.settings.heading }}</h1>
       <p class="description">{{ section.settings.description }}</p>
     </div>
-    <a
-      ui-slot="link-button"
-      data-size="md"
-      data-underline="true"
-      href="/collections"
-    >
-      {{ section.settings.button_label }}
-    </a>
   </div>
   <ul
     class="items-area"
@@ -46,10 +38,9 @@
       ui-slot="carousel"
       aria-orientation="vertical"
     {% endunless %}
-    style="--items-text-alignment: {{ section.settings.text_alignment }};"
   >
-    {% for collection in section.blocks %}
-      {% render 'block.collection' %}
+    {% for block in section.blocks %}
+      {% render 'block.product', product: block.settings.product %}
     {% endfor %}
   </ul>
 
@@ -111,7 +102,7 @@
 
 {% schema %}
 {
-  "label": "t:sections.collections.label",
+  "label": "t:sections.products.label",
   "templates": ["index"],
   "limit": 3,
   "max_blocks": 10,
@@ -140,57 +131,13 @@
       "type": "text",
       "id": "heading",
       "label": "t:common.header.heading",
-      "default": "t:sections.collections.default.heading"
+      "default": "t:sections.products.default.heading"
     },
     {
       "type": "textarea",
       "id": "description",
       "label": "t:common.header.description",
-      "default": ""
-    },
-    {
-      "type": "text",
-      "id": "button_label",
-      "label": "t:common.button.label",
-      "default": "t:sections.collections.default.button_label"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.layout"
-    },
-    {
-      "type": "range",
-      "id": "nbr_columns_desktop",
-      "label": "t:common.globals.number_per_column",
-      "min": 2,
-      "max": 6,
-      "step": 1,
-      "default": 5
-    },
-    {
-      "type": "select",
-      "id": "nbr_columns_mobile",
-      "label": "t:common.globals.number_per_column_mobile",
-      "options": [
-        { "label": "t:common.layout.column.one", "value": "1" },
-        { "label": "t:common.layout.column.two", "value": "2" }
-      ],
-      "default": "2"
-    },
-    {
-      "type": "header",
-      "content": "t:theme.collection_cards.label"
-    },
-    {
-      "type": "select",
-      "id": "text_alignment",
-      "label": "t:common.globals.text_alignment",
-      "options": [
-        { "label": "t:common.layout.alignment.start", "value": "flex-start" },
-        { "label": "t:common.layout.alignment.center", "value": "center" },
-        { "label": "t:common.layout.alignment.end", "value": "flex-end" }
-      ],
-      "default": "center"
+      "default": "t:sections.products.default.description"
     },
     {
       "type": "header",
@@ -287,13 +234,13 @@
   ],
   "blocks": [
     {
-      "type": "collection_item",
-      "label": "t:common.globals.collection",
+      "type": "product_item",
+      "label": "t:common.globals.product",
       "settings": [
         {
-          "type": "category",
-          "id": "collection",
-          "label": "t:common.globals.collection"
+          "type": "product",
+          "id": "product",
+          "label": "t:common.globals.product"
         }
       ]
     }
