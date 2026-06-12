@@ -36,7 +36,7 @@ if (!customElements.get("ui-shop-button")) {
         ? this.form.addEventListener("submit", this.onBuyClicked.bind(this))
         : this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
 
-      this.previousElementSibling?.addEventListener("change", this.handleQuantityChange.bind(this));
+      this.closest("ui-product")?.addEventListener("change", this.handleQuantityChange.bind(this));
     }
 
     handleQuantityChange(event) {
@@ -81,9 +81,11 @@ if (!customElements.get("ui-shop-button")) {
         if (this.isBulk) {
           const [mainId, ...addOnIds] = this.productVariantId.split(",");
           Promise.all([
-            this.placeOrder(mainId, attachedImage, quantity, true),
-            ...addOnIds.map((variantId) => this.placeOrder(variantId, bundleId, attachedImage, 1, true)),
-          ]);
+            this.placeOrder(mainId, bundleId, attachedImage, quantity, true),
+            ...addOnIds.map((variantId) => this.placeOrder(variantId, null, attachedImage, 1, true)),
+          ])
+            .then((redirectFns) => redirectFns.find(Boolean)?.())
+            .finally(() => this.setIsBuyButtonLoading(false));
         } else {
           this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
         }

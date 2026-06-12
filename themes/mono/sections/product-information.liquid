@@ -144,7 +144,7 @@
     {% endif %}
     {% if section.blocks.size %}
       {% for block in section.blocks %}
-        {% if block.type == 'add-ons' %}
+        {% if block.type == 'add-ons' and settings.shopping_flow != 'express_checkout' %}
           {% render 'misc.add-ons' %}
         {% endif %}
       {% endfor %}
@@ -248,6 +248,7 @@
       "limit": 1,
       "settings": [
         { "type": "paragraph", "content": "t:sections.product_information.blocks.add_ons.hint" },
+        { "type": "paragraph", "content": "t:sections.product_information.blocks.add_ons.warning" },
         { "type": "header", "content": "t:common.headers.header" },
         {
           "type": "text",
