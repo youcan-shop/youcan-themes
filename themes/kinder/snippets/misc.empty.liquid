@@ -1,0 +1,31 @@
+{{ 'misc.empty.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders an empty message state
+
+  Accepts:
+  - heading: {String} Heading text
+  - subheading: {String} (optional) Subheading text
+  - action_label: {String} (optional) Button label
+  - action_url: {String} (optional) Button url
+  - hidden: {Boolean} (optional) Hide element
+
+  Usage:
+  {% render 'misc-empty' %}
+{% endcomment %}
+
+<ui-empty
+  {% if hidden %}
+    hidden
+  {% endif %}
+>
+  <span class="heading">{{ heading }}</span>
+  {% if subheading %}
+    <p class="subheading">{{ subheading }}</p>
+  {% endif %}
+  {% if action_label %}
+    <a href="{{ action_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg">
+      {{ action_label }}
+    </a>
+  {% endif %}
+</ui-empty>

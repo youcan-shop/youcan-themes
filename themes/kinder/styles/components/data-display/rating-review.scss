@@ -1,0 +1,49 @@
+/* 
+  Component: Rating Review
+
+  Accepts:
+    - data-variant: {String} star | heart
+
+  Usage:
+    - <div ui-slot="rating-review" data-variant="star">
+        <i class="hgi hgi-stroke hgi-star"></i>
+        <i class="hgi hgi-stroke hgi-star"></i>
+        <i class="hgi hgi-stroke hgi-star"></i>
+        <i class="hgi hgi-stroke hgi-star"></i>
+        <i class="hgi hgi-stroke hgi-star"></i>
+      </div>
+*/
+
+[ui-slot="rating-review"] {
+  --color-star: #f6b51e;
+  --color-heart: #fb3748;
+
+  display: flex;
+  gap: var(--spacing-2);
+  color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+
+  /* Icon */
+  & > i {
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+
+  & > svg {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Variant */
+  &[data-variant="star"] {
+    & > svg {
+      color: var(--color-star);
+    }
+  }
+
+  &[data-variant="heart"] {
+    & > svg {
+      color: var(--color-heart);
+    }
+  }
+}

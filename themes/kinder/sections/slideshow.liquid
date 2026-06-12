@@ -1,0 +1,328 @@
+{{ 'section.slideshow.css' | asset_url | stylesheet_tag }}
+
+{% assign should_hide_controls = false %}
+
+{% if section.settings.show_arrows != true and section.settings.show_dots != true %}
+  {% assign should_hide_controls = true %}
+{% endif %}
+
+<ui-carousel
+  ui-section="slideshow"
+  {% if section.settings.auto_play %}
+    autoplay
+    interval="{{ section.settings.change_every | times: 1000 }}"
+  {% endif %}
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --height: {{ section.settings.height }}vh;
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
+>
+  <ul
+    ui-carousel="wrapper"
+    ui-slot="carousel"
+    aria-orientation="vertical"
+    data-align="center"
+  >
+    {% for slide in section.blocks %}
+      {% render 'block.slide' %}
+    {% endfor %}
+  </ul>
+
+  {% if should_hide_controls == false and section.blocks.size > 1 %}
+    <div
+      class="controls"
+      {% if section.settings.show_arrows %}
+        data-show-arrows
+      {% endif %}
+      {% if section.settings.show_dots %}
+        data-dots
+      {% endif %}
+      {% if section.settings.arrows_position == 'centered' %}
+        data-centered-arrows
+      {% endif %}
+    >
+      {% if section.settings.show_arrows %}
+        <button
+          ui-carousel="arrow-previous"
+          ui-slot="button"
+          data-variant="neutral"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Previous"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
+        </button>
+      {% endif %}
+      {% if section.settings.show_dots %}
+        <div class="pagination" data-position="{{ section.settings.arrows_position }}">
+          {% for marker in section.blocks %}
+            <button
+              ui-carousel="marker"
+              aria-label="Slide {{ forloop.index }}"
+              {% if forloop.first %}
+                aria-selected="true"
+              {% endif %}
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if section.settings.show_arrows %}
+        <button
+          ui-carousel="arrow-next"
+          ui-slot="button"
+          data-variant="neutral"
+          data-size="lg"
+          data-as-icon
+          data-flip-icon-in-rtl
+          aria-label="Next"
+        >
+          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+        </button>
+      {% endif %}
+    </div>
+  {% endif %}
+</ui-carousel>
+
+{% schema %}
+{
+  "label": "t:common.slideshow.label",
+  "templates": ["index"],
+  "limit": 3,
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.general"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:common.globals.height",
+      "options": [
+        { "label": "t:common.layout.size.small", "value": "40" },
+        { "label": "t:common.layout.size.medium", "value": "64" },
+        { "label": "t:common.layout.size.large", "value": "80" }
+      ],
+      "default": "64"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play",
+      "label": "t:common.slideshow.autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "change_every",
+      "label": "t:common.slideshow.change_every",
+      "min": 3,
+      "max": 7,
+      "step": 1,
+      "unit": "s",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "t:common.slideshow.show_dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:common.slideshow.show_arrows",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrows_position",
+      "label": "t:common.slideshow.desktop_arrows_position.label",
+      "options": [
+        { "label": "t:common.slideshow.desktop_arrows_position.options.centered", "value": "centered" },
+        { "label": "t:common.slideshow.desktop_arrows_position.options.edges", "value": "edges" }
+      ],
+      "default": "edges"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide_item",
+      "label": "t:sections.slideshow.blocks.slide.label",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.slideshow.images.label"
+        },
+        {
+          "type": "image_picker",
+          "id": "first_image",
+          "label": "t:sections.slideshow.images.first_image"
+        },
+        {
+          "type": "image_picker",
+          "id": "second_image",
+          "label": "t:sections.slideshow.images.second_image"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_content_image",
+          "label": "t:sections.slideshow.images.desktop_content_image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_content_image",
+          "label": "t:sections.slideshow.images.mobile_content_image"
+        },
+        {
+          "type": "range",
+          "id": "content_image_opacity",
+          "label": "t:sections.slideshow.images.content_image_opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 10
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.layout"
+        },
+        {
+          "type": "select",
+          "id": "content_order",
+          "label": "t:sections.slideshow.images.content_order.label",
+          "options": [
+            { "label": "t:sections.slideshow.images.content_order.first", "value": "-1" },
+            { "label": "t:sections.slideshow.images.content_order.middle", "value": "0" },
+            { "label": "t:sections.slideshow.images.content_order.last", "value": "1" }
+          ],
+          "default": "0"
+        },
+        {
+          "type": "select",
+          "id": "content_alignment",
+          "label": "t:sections.slideshow.content_alignment",
+          "options": [
+            { "label": "t:common.layout.alignment.start", "value": "start" },
+            { "label": "t:common.layout.alignment.center", "value": "center" },
+            { "label": "t:common.layout.alignment.end", "value": "end" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "vertical_alignment",
+          "label": "t:common.globals.vertical_alignment",
+          "options": [
+            { "label": "t:common.layout.vertical_alignment.top", "value": "start" },
+            { "label": "t:common.layout.vertical_alignment.middle", "value": "center" },
+            { "label": "t:common.layout.vertical_alignment.bottom", "value": "end" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.colors"
+        },
+        {
+          "type": "color",
+          "id": "slide_bg_color",
+          "label": "t:common.colors.bg_color",
+          "default": "#49AB6A"
+        },
+        {
+          "type": "color",
+          "id": "slide_fg_color",
+          "label": "t:common.colors.fg_color",
+          "default": "#FEFEFE"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.content"
+        },
+        {
+          "type": "text",
+          "id": "slide_heading",
+          "label": "t:common.header.heading",
+          "default": "t:sections.slideshow.blocks.slide.default.heading"
+        },
+        {
+          "type": "textarea",
+          "id": "slide_description",
+          "label": "t:common.header.description",
+          "default": "t:sections.slideshow.blocks.slide.default.description"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.slideshow.images.first_button"
+        },
+        {
+          "type": "text",
+          "id": "first_button_label",
+          "label": "t:common.button.label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "first_button_link",
+          "label": "t:common.button.link",
+          "default": ""
+        },
+        {
+          "type": "header",
+          "content": "t:sections.slideshow.images.second_button"
+        },
+        {
+          "type": "text",
+          "id": "second_button_label",
+          "label": "t:common.button.label",
+          "default": "Learn more"
+        },
+        {
+          "type": "url",
+          "id": "second_button_link",
+          "label": "t:common.button.link",
+          "default": ""
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

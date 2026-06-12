@@ -1,0 +1,49 @@
+@layer reset, base, components, utilities, sections, snippets, overrides;
+
+@layer snippets {
+  #cart[popover] {
+    [ui-slot="sheet-body"] {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    [ui-slot="sheet-footer"] {
+      display: flex;
+      gap: var(--spacing-16);
+      flex-direction: column;
+
+      .footer {
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        gap: var(--spacing-16);
+
+        .label,
+        .value {
+          font: var(--font-label-md);
+        }
+
+        .value {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        [ui-slot="divider"] {
+          grid-column: 1 / 3;
+        }
+
+        .description {
+          grid-column: 1 / 3;
+          opacity: 0.75;
+          font: var(--font-label-sm);
+        }
+      }
+
+      .navigation {
+        display: grid;
+        gap: var(--spacing-16);
+        grid-template-columns: 1fr auto;
+      }
+    }
+  }
+}

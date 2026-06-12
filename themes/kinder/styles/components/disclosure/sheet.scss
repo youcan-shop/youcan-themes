@@ -1,0 +1,119 @@
+/* 
+  Component: Sheet
+
+  Usage:
+    - ...
+*/
+
+[ui-slot="sheet-content"] {
+  --spring-width-offset: 0px; /* This is so that we don't see a gap when the drawer overshoots on it's enter animation */
+  --sheet-width: 460px;
+  --sheet-visible-width: calc(var(--sheet-width) + var(--spring-width-offset));
+  --margin: var(--spacing-24);
+  --margin-offset: calc(var(--margin) * 2);
+  --sheet-radius: var(--radius-28);
+  --sheet-offset-hidden: calc(calc(var(--sheet-visible-width) + var(--margin-offset)) * -1);
+  --sheet-offset-visible: calc(var(--spacing-0) - var(--spring-width-offset));
+  --sheet-offset-starting: calc(var(--sheet-visible-width) * -1);
+
+  display: flex;
+  position: fixed;
+  z-index: 50;
+  flex-direction: column;
+  justify-content: space-between;
+  width: var(--sheet-visible-width);
+  height: calc(100dvh - var(--margin-offset));
+  margin: var(--margin);
+  transition: var(--transition-standard-slow-effects);
+  border: none;
+  border-radius: var(--sheet-radius);
+  background-color: var(--sheet-background);
+  color: inherit;
+  inset: unset;
+  inset-block-start: var(--spacing-0);
+  inset-inline-end: var(--sheet-offset-hidden);
+
+  &[data-popover-from="start"] {
+    inset-inline: var(--sheet-offset-hidden) auto;
+  }
+
+  /* Header */
+  [ui-slot="sheet-header"] {
+    display: flex;
+    position: sticky;
+    z-index: 2;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-24);
+    gap: var(--spacing-12);
+    inset-block-start: 0;
+    background-color: var(--sheet-background);
+
+    /* Title */
+    [ui-slot="sheet-title"] {
+      font: var(--font-heading-sm);
+    }
+  }
+
+  /* Body */
+  [ui-slot="sheet-body"] {
+    flex: 2;
+    padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+  }
+
+  /* Body */
+  [ui-slot="sheet-footer"] {
+    display: grid;
+    position: sticky;
+    grid-template-columns: repeat(2, 1fr);
+    padding: calc(var(--spacing-24) - var(--spacing-4));
+    gap: var(--spacing-12);
+    inset-block-end: 0;
+    background-image: linear-gradient(
+      to top,
+      var(--sheet-background),
+      var(--sheet-background),
+      var(--sheet-background),
+      var(--sheet-background),
+      transparent
+    );
+  }
+
+  /* Backdrop */
+  &::backdrop {
+    transition: var(--transition-standard-default-spatial);
+  }
+
+  /* State */
+  &:popover-open {
+    inset-inline-end: var(--sheet-offset-visible);
+
+    &::backdrop {
+      backdrop-filter: blur(10px);
+      background-color: color-mix(in srgb, currentcolor 15%, transparent);
+    }
+
+    @starting-style {
+      inset-inline-end: var(--sheet-offset-starting);
+
+      &::backdrop {
+        backdrop-filter: blur(0);
+        background-color: transparent;
+      }
+    }
+  }
+
+  &[data-popover-from="start"]:popover-open {
+    inset-inline: var(--sheet-offset-visible) auto;
+
+    @starting-style {
+      inset-inline: var(--sheet-offset-starting) auto;
+    }
+  }
+
+  @media (width <= 769px) {
+    --margin: var(--spacing-16);
+    --sheet-width: calc(100% - var(--margin-offset));
+    --sheet-radius: var(--radius-16);
+  }
+}

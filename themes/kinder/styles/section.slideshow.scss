@@ -1,0 +1,255 @@
+@layer sections {
+  [ui-section="slideshow"] {
+    --per-page: 1;
+    --item-size: 100%;
+
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--top-spacing) var(--bottom-spacing);
+    padding-inline: 0;
+    gap: var(--spacing-16);
+    background-color: var(--bg-color);
+
+    [ui-slot="carousel"] {
+      [ui-slot="carousel-item"] {
+        position: relative;
+        height: max(var(--height), 240px);
+        background-color: transparent !important;
+
+        .slide-wrapper {
+          display: flex;
+          height: 100%;
+          padding-inline: 10%;
+          gap: var(--spacing-8);
+
+          .first-img,
+          .second-img {
+            flex: 1;
+            overflow: hidden;
+            border-radius: var(--radius-28);
+
+            @media (width <= 769px) {
+              display: none;
+            }
+          }
+
+          .main-content {
+            position: relative;
+            flex: 2;
+            order: var(--content-order);
+            padding: var(--spacing-32);
+            overflow: hidden;
+            border-radius: var(--radius-28);
+            background-color: var(--slide-bg);
+            color: var(--slide-fg);
+
+            .media {
+              position: absolute;
+              inset: 0;
+              z-index: 1;
+
+              img {
+                opacity: var(--content-image-opacity);
+              }
+            }
+
+            .content {
+              display: flex;
+              position: relative;
+              z-index: 2;
+              flex-direction: column;
+              height: 100%;
+              gap: var(--spacing-32);
+
+              [ui-slot="head"],
+              .actions {
+                width: 100%;
+              }
+
+              [ui-slot="head"] {
+                .heading {
+                  display: -webkit-box;
+                  overflow: hidden;
+                  -webkit-box-orient: vertical;
+                  -webkit-line-clamp: 2;
+                }
+
+                .description {
+                  display: -webkit-box;
+                  overflow: hidden;
+                  -webkit-box-orient: vertical;
+                  -webkit-line-clamp: 4;
+                }
+              }
+
+              .actions {
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-16);
+
+                [ui-slot="button"] {
+                  &[data-variant="primary"] {
+                    --button-bg: var(--fg-color);
+                    --button-fg: var(--bg-color);
+                  }
+
+                  &[data-variant="neutral"] {
+                    --button-fg: var(--fg-color);
+
+                    i {
+                      transition: transform var(--transition-bouncy-default-effects);
+                    }
+
+                    &:dir(rtl) {
+                      i {
+                        rotate: -180deg;
+                      }
+                    }
+
+                    &:hover {
+                      i {
+                        transform: translateX(var(--spacing-4));
+                      }
+                    }
+                  }
+                }
+              }
+
+              &[data-y-alignment="start"] {
+                justify-content: flex-start;
+              }
+
+              &[data-y-alignment="center"] {
+                justify-content: center;
+              }
+
+              &[data-y-alignment="end"] {
+                justify-content: flex-end;
+              }
+
+              &[data-x-alignment="start"] {
+                align-items: flex-start;
+
+                [ui-slot="head"] {
+                  align-items: flex-start;
+
+                  & > * {
+                    text-align: start;
+                  }
+                }
+
+                .actions {
+                  justify-content: flex-start;
+                }
+              }
+
+              &[data-x-alignment="center"] {
+                align-items: center;
+
+                [ui-slot="head"] {
+                  align-items: center;
+
+                  & > * {
+                    text-align: center;
+                  }
+                }
+
+                .actions {
+                  justify-content: center;
+                }
+              }
+
+              &[data-x-alignment="end"] {
+                align-items: flex-end;
+
+                [ui-slot="head"] {
+                  align-items: flex-end;
+
+                  & > * {
+                    text-align: end;
+                  }
+                }
+
+                .actions {
+                  justify-content: flex-end;
+                }
+              }
+            }
+          }
+
+          @media (width <= 1024px) {
+            padding-inline: var(--spacing-16);
+          }
+        }
+      }
+    }
+
+    .controls {
+      --controls-fg-color: oklch(from var(--bg-color) clamp(0, (0.6 - l) * 99999, 1) 0 0deg);
+
+      display: flex;
+      justify-content: space-between;
+      height: 48px;
+      padding-inline: 10%;
+      gap: var(--spacing-24);
+
+      &:not([data-show-arrows]),
+      &[data-centered-arrows] {
+        justify-content: center;
+      }
+
+      [ui-slot="button"][data-variant="neutral"] {
+        --button-fg: var(--controls-fg-color);
+      }
+
+      @media (width <= 1024px) {
+        padding-inline: var(--spacing-16);
+      }
+
+      .pagination {
+        display: flex;
+        gap: var(--spacing-8);
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+
+        &:dir(rtl) {
+          right: 50%;
+          left: auto;
+          transform: translateX(50%);
+        }
+
+        [ui-carousel="marker"] {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          transition: var(--transition-standard-default-spatial);
+          border: none;
+          background-color: transparent;
+          color: var(--controls-fg-color);
+          cursor: pointer;
+
+          &::before {
+            content: "";
+            display: flex;
+            width: 20px;
+            height: 4px;
+            transition: var(--transition-standard-default-spatial);
+            border-radius: var(--radius-rounded);
+            background-color: color-mix(in srgb, currentcolor 38%, transparent);
+          }
+
+          &[aria-selected="true"] {
+            &::before {
+              width: inherit;
+              background-color: currentcolor;
+            }
+          }
+        }
+      }
+    }
+  }
+}

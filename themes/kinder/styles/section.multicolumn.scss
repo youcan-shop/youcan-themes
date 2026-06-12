@@ -1,0 +1,116 @@
+@layer sections {
+  [ui-section="multicolumn"] {
+    --item-size: 100%;
+
+    display: flex;
+    flex-direction: column;
+    padding: var(--top-spacing) 10% var(--bottom-spacing);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    gap: var(--spacing-32);
+
+    .items-area {
+      display: grid;
+      grid-template-columns: repeat(var(--columns-desktop), minmax(0, 1fr));
+      align-items: flex-start;
+      width: 100%;
+      gap: var(--spacing-32);
+      padding-block: var(--spacing-40);
+      border-block: 1px solid transparent;
+
+      @media (width < 768px) {
+        --columns-desktop: 2;
+      }
+
+      @media (width < 640px) {
+        --columns-desktop: 1;
+      }
+
+      [ui-block="column"] {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: var(--spacing-24);
+
+        .content {
+          display: grid;
+          gap: var(--spacing-24);
+
+          .heading {
+            font: var(--column-title);
+            text-decoration: underline;
+          }
+
+          .description {
+            font: var(--font-body-md);
+          }
+        }
+
+        .media {
+          width: var(--image-width);
+          aspect-ratio: var(--image-ratio);
+          overflow: hidden;
+          border-radius: var(--radius-column);
+
+          & > img {
+            object-fit: cover;
+          }
+        }
+
+        &[data-alignment="center"] {
+          align-items: center;
+
+          .content {
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    &[data-has-borders] {
+      .items-area {
+        border-color: color-mix(in srgb, var(--fg-color) 8%, transparent);
+      }
+    }
+
+    &[data-image-width="third"] {
+      --image-width: 30%;
+    }
+
+    &[data-image-width="half"] {
+      --image-width: 50%;
+    }
+
+    &[data-image-width="full"] {
+      --image-width: 100%;
+    }
+
+    &[data-image-ratio="square"] {
+      --image-ratio: 1 / 1;
+    }
+
+    &[data-image-ratio="portrait"] {
+      --image-ratio: 3 / 4;
+    }
+
+    &[data-image-ratio="landscape"] {
+      --image-ratio: 4 / 3;
+    }
+
+    &[data-column-title-size="lg"] {
+      --column-title: var(--font-label-lg);
+    }
+
+    &[data-column-title-size="md"] {
+      --column-title: var(--font-label-md);
+    }
+
+    &[data-column-title-size="sm"] {
+      --column-title: var(--font-label-sm);
+    }
+
+    @media (width <= 1024px) {
+      padding-inline: var(--spacing-24);
+    }
+  }
+}

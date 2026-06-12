@@ -1,0 +1,80 @@
+/* 
+  Component: File Upload
+
+  Usage:
+    - <label ui-slot="file-upload">
+        <input type="file" name="my-file-upload" />
+        <div ui-slot="file-upload-icon">
+          <i class="hgi hgi-stroke hgi-cloud-upload"></i>
+        </div>
+        <div ui-slot="file-upload-content">
+          <h4 ui-slot="file-upload-label">Label</h4>
+          <p ui-slot="file-upload-description">Description</p>
+        </div>
+        <div ui-slot="file-upload-button">Browse File</div>
+      </label>
+*/
+
+[ui-slot="file-upload"] {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-32);
+  transition: all var(--transition-standard-default-spatial);
+  border: 1px dashed
+    color-mix(in srgb, var(--color-on-surface-variant) 38%, transparent);
+  border-radius: var(--radius-12);
+  background-color: var(--color-background);
+  cursor: pointer;
+  gap: calc(var(--spacing-24) - var(--spacing-4));
+
+  input[type="file"] {
+    position: absolute;
+    scale: 0;
+    opacity: 0;
+  }
+
+  /* Icon */
+  [ui-slot="file-upload-icon"] {
+    height: 20px;
+
+    & > i {
+      flex-shrink: 0;
+      color: var(--color-on-surface-variant);
+      font-size: 20px;
+    }
+  }
+
+  /* Content */
+  [ui-slot="file-upload-content"] {
+    display: grid;
+    gap: var(--spacing-6);
+    text-align: center;
+
+    [ui-slot="file-upload-label"] {
+      font: var(--font-body-md);
+    }
+
+    [ui-slot="file-upload-description"] {
+      color: var(--color-on-surface-variant);
+      font: var(--font-body-sm);
+    }
+  }
+
+  /* Button */
+  [ui-slot="file-upload-button"] {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding-inline: var(--spacing-10);
+    border: 1px solid var(--color-surface-variant);
+    border-radius: var(--radius-8);
+    background-color: var(--color-background);
+    color: var(--color-on-surface-variant);
+  }
+
+  &:hover {
+    background-color: var(--color-surface-container-high);
+  }
+}

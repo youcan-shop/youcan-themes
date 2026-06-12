@@ -1,0 +1,41 @@
+/* 
+  Component: Skeleton
+
+  Accepts:
+    - data-radius: {String} (Optional) rounded | circled
+
+  Usage:
+    - <div ui-slot="skeleton" aria-label="loading..." style="height: 16px; width: 300px;"></div>
+    - <div ui-slot="skeleton" data-radius="circled" aria-label="loading..." style="height: 40px; width: 40px;"></div>
+*/
+
+[ui-slot="skeleton"] {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-12);
+  background-color: var(--color-surface-container);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    animation: pulse 1s infinite;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-background),
+      transparent
+    );
+  }
+
+  &[data-radius="circled"] {
+    border-radius: var(--radius-rounded);
+  }
+}
+
+@keyframes pulse {
+  100% {
+    transform: translateX(100%);
+  }
+}
