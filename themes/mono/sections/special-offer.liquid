@@ -18,7 +18,7 @@
   {% endstyle %}
 {% endif %}
 
-{% if section.settings.enabled %}
+{% if section.settings.enabled and settings.shopping_flow != 'express_checkout' %}
   <ui-special-offer
     ui-section="special-offer"
     ui-slot="drawer-content"
@@ -126,6 +126,7 @@
   "label": "t:sections.special_offer.label",
   "settings": [
     { "type": "paragraph", "content": "t:sections.special_offer.hint" },
+    { "type": "paragraph", "content": "t:sections.special_offer.warning" },
     { "type": "checkbox", "id": "enabled", "label": "t:sections.special_offer.enabled", "default": false },
     { "type": "header", "content": "t:common.headers.content" },
     {
