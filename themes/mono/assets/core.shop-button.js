@@ -36,7 +36,7 @@ if (!customElements.get("ui-shop-button")) {
         ? this.form.addEventListener("submit", this.onBuyClicked.bind(this))
         : this.buyButton.addEventListener("click", this.onBuyClicked.bind(this));
 
-      this.previousElementSibling?.addEventListener("change", this.handleQuantityChange.bind(this));
+      this.closest("ui-product")?.addEventListener("change", this.handleQuantityChange.bind(this));
     }
 
     handleQuantityChange(event) {
