@@ -82,8 +82,10 @@ if (!customElements.get("ui-shop-button")) {
           const [mainId, ...addOnIds] = this.productVariantId.split(",");
           Promise.all([
             this.placeOrder(mainId, bundleId, attachedImage, quantity, true),
-            ...addOnIds.map((variantId, index) => this.placeOrder(variantId, bundleId, attachedImage, 1, addOnIds.length - 1 != index)),
-          ]);
+            ...addOnIds.map((variantId) => this.placeOrder(variantId, null, attachedImage, 1, true)),
+          ])
+            .then((redirectFns) => redirectFns.find(Boolean)?.())
+            .finally(() => this.setIsBuyButtonLoading(false));
         } else {
           this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
         }
