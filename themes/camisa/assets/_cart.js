@@ -117,32 +117,29 @@ class BaseCartItem extends HTMLElement {
     removeElement.setAttribute("item", bundle.items.map((i) => i.id).join(","));
     removeElement.setAttribute("product-variant", bundle.items.map((i) => i.productVariant.id).join(","));
 
-    const totalComparePrice = bundle.items[0]?.extra_fields.bundle_compare_price ?? 0;
-    const perItemComparePrice = totalComparePrice / bundle.items.length;
-
     const group = element.querySelector('[ui-bundle="group"]');
     bundle.items.forEach((bundleItem) => {
       const itemEl = itemTemplate.content.cloneNode(true);
-      this.populateBundleItem(itemEl, bundleItem, perItemComparePrice);
+      this.populateBundleItem(itemEl, bundleItem);
       group.append(itemEl);
     });
 
     return element;
   }
 
-  populateBundleItem(element, item, perItemComparePrice) {
+  populateBundleItem(element, item) {
     const image = element.querySelector("[ui-cart-item='image']");
     const title = element.querySelector("[ui-cart-item='title']");
     const variant = element.querySelector("[ui-cart-item='variant']");
     const price = element.querySelector("[ui-cart-item='price']");
-    const comparePrice = element.querySelector("[ui-cart-item='compare-price']");
+    const comparePrice = element.querySelector("[ui-cart-item='compare-at-price']");
     const subtotal = element.querySelector("[ui-cart-item='subtotal']");
 
     if (image) this.updateItemImage(image, item.productVariant);
     if (title) this.updateItemTitle(title, item.productVariant.product);
     if (variant) this.updateItemVariant(variant, item.productVariant.variations);
     if (price) this.updateItemPrice(price, item.extra_fields.bundle_product_price);
-    if (comparePrice) this.updateItemCompareAtPrice(comparePrice, perItemComparePrice, item.price, item.quantity);
+    if (comparePrice) this.updateItemCompareAtPrice(comparePrice, item.productVariant.compare_at_price, item.price, item.quantity);
     if (subtotal) this.updateItemSubPrice(subtotal, item.quantity, item.extra_fields.bundle_product_price);
   }
 
@@ -252,7 +249,7 @@ class BaseCartItem extends HTMLElement {
       compareAtPriceElement.textContent = formatCurrency(compareAtPrice * quantity);
       compareAtPriceElement.removeAttribute("hidden");
 
-      const save = compareAtPriceElement?.parentElement?.nextElementSibling;
+      const save = compareAtPriceElement.closest(".content")?.querySelector(".save");
       if (save) {
         save.querySelector("span").textContent = formatCurrency(compareAtPrice * quantity - price * quantity);
         save.removeAttribute("hidden");
@@ -276,7 +273,21 @@ class BaseCartItem extends HTMLElement {
 
   replaceContent(fragment) {
     const tbody = this.querySelector("table tbody");
-    tbody ? tbody.replaceChildren(fragment) : this.replaceChildren(fragment);
+
+    if (!tbody) {
+      this.replaceChildren(fragment);
+      return;
+    }
+
+    const rows = [...fragment.children].filter((el) => el.tagName === "TR");
+    const bundleGroups = [...fragment.children].filter((el) => el.tagName !== "TR");
+
+    const rowsFragment = new DocumentFragment();
+    rows.forEach((row) => rowsFragment.append(row));
+    tbody.replaceChildren(rowsFragment);
+
+    this.querySelectorAll(".bundle-group").forEach((el) => el.remove());
+    bundleGroups.forEach((group) => this.append(group));
   }
 
   setItemIsLoading(element, isLoading) {
@@ -410,10 +421,6 @@ class CartItems extends BaseCartItem {
   }
 
   additionalItemUpdates(elements, item) {}
-
-  updateItemSubPrice(subPriceElement, quantity, basePrice) {
-    subPriceElement.textContent = formatCurrency(quantity * basePrice);
-  }
 
   setIsEmpty(isEmpty = false) {
     this.parentElement.querySelector("ui-empty").toggleAttribute("hidden", !isEmpty);
