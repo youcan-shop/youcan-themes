@@ -1,38 +1,87 @@
 @layer sections {
   [ui-section="collection-tabs"] {
     display: flex;
-    gap: var(--spacing-64);
-    padding: var(--top-spacing) 10% var(--bottom-spacing) !important;
+    flex-direction: column;
+    padding: var(--top-spacing) 10% var(--bottom-spacing);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    gap: var(--spacing-48);
 
-    [ui-slot="head"] {
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-16);
+      width: 100%;
+
+      [ui-slot="head"] {
+        align-items: flex-start;
+        text-align: center;
+      }
+    }
+
+    .content {
+      display: flex;
+      gap: var(--spacing-48);
+    }
+
+    .sidebar {
+      display: flex;
+      position: sticky;
+      flex-direction: column;
+      flex-shrink: 0;
+      width: 432px;
+      height: fit-content;
+      padding: var(--spacing-24);
+      border-radius: var(--radius-28);
+      background-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+      inset-block-start: var(--spacing-16);
+      gap: var(--spacing-40);
+
+      .media {
+        height: auto;
+        overflow: hidden;
+        border-radius: var(--radius-collection);
+
+        &[data-image-ratio="square"] {
+          aspect-ratio: 1 / 1;
+        }
+
+        &[data-image-ratio="portrait"] {
+          aspect-ratio: 3 / 4;
+        }
+
+        &[data-image-ratio="landscape"] {
+          aspect-ratio: 4 / 3;
+        }
+
+        & > img {
+          object-fit: cover;
+        }
+
+        ui-image-fallback {
+          background-color: var(--bg-shade-color);
+        }
+      }
+
       .tab-list {
         display: flex;
         position: relative;
-        flex-wrap: wrap;
+        flex-flow: column wrap;
         justify-content: var(--text-heading-alignment-desktop);
         column-gap: var(--spacing-24);
 
-        &::before {
-          content: "";
-          position: absolute;
-          bottom: anchor(bottom);
-          left: anchor(left);
-          width: anchor-size(width);
-          height: 1.5px;
-          transition: var(--transition-expressive-default-spatial);
-          border-radius: var(--radius-rounded);
-          background-color: currentcolor;
-          position-anchor: --selected;
-        }
-
         .tab-trigger {
-          height: calc(var(--spacing-32) + var(--spacing-8));
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 56px;
           transition: var(--transition-standard-default-spatial);
           border: none;
           opacity: 0.7;
           background-color: transparent;
           color: inherit;
-          font: var(--font-title-md);
+          font: var(--font-label-md);
           cursor: pointer;
 
           &:hover {
@@ -41,7 +90,11 @@
 
           &[aria-selected="true"] {
             opacity: 1;
-            anchor-name: --selected;
+            color: var(--brand-color);
+          }
+
+          :dir(rtl) i {
+            rotate: 180deg;
           }
         }
       }
@@ -58,7 +111,9 @@
       }
     }
 
-    @media (width <= 1028px) {
+    @media (width <= 1024px) {
+      padding-inline: var(--spacing-16);
+
       .products-area {
         .items {
           gap: var(--spacing-12);
@@ -70,15 +125,13 @@
     @media (width <= 769px) {
       gap: var(--spacing-48);
 
-      [ui-slot="head"] {
-        .tab-list {
-          justify-content: var(--text-heading-alignment-mobile);
-        }
+      .tab-list {
+        justify-content: var(--text-heading-alignment-mobile);
+      }
 
-        .products-area {
-          .items {
-            grid-template-columns: repeat(var(--nbr-columns-mobile), 1fr);
-          }
+      .products-area {
+        .items {
+          grid-template-columns: repeat(var(--nbr-columns-mobile), 1fr);
         }
       }
     }
