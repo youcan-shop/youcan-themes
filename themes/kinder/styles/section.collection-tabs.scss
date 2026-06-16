@@ -100,7 +100,7 @@
         .tab-content {
           display: flex;
           flex-direction: column;
-          gap: var(--spacing-16);
+          gap: var(--spacing-24);
 
           .tab-head {
             display: flex;
@@ -122,6 +122,7 @@
           display: grid;
           grid-template-columns: repeat(var(--nbr-columns-desktop), 1fr);
           gap: var(--spacing-24);
+          align-content: flex-start;
         }
       }
     }
@@ -159,6 +160,43 @@
             grid-template-columns: repeat(var(--nbr-columns-mobile), 1fr);
           }
         }
+      }
+    }
+  }
+}
+
+@layer snippets {
+  [ui-block="product-tab"] {
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+
+    display: flex;
+    gap: var(--spacing-16);
+    flex-direction: column;
+    height: fit-content;
+
+    .media {
+      height: auto;
+      overflow: hidden;
+      border-radius: var(--radius-collection);
+
+      &[data-image-ratio="square"] {
+        aspect-ratio: 1 / 1;
+      }
+
+      &[data-image-ratio="portrait"] {
+        aspect-ratio: 3 / 4;
+      }
+
+      &[data-image-ratio="landscape"] {
+        aspect-ratio: 4 / 3;
+      }
+
+      & > img {
+        object-fit: cover;
+      }
+
+      ui-image-fallback {
+        background-color: var(--bg-shade-color);
       }
     }
   }
