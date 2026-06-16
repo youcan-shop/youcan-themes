@@ -9,7 +9,11 @@ if (!customElements.get("ui-carousel")) {
       this.interval = null;
       this.ignoreScroll = false;
 
+      // Sections reuse <ui-carousel> as a plain grid when the slideshow is off;
+      // in that mode there's no wrapper and no carousel behavior to wire up.
       this.wrapper = this.querySelector('[ui-carousel="wrapper"]');
+      if (!this.wrapper) return;
+
       this.slides = this.wrapper.querySelectorAll(':scope > [ui-carousel="item"]');
       this.arrows = {
         previous: this.querySelector('[ui-carousel="arrow-previous"]'),
@@ -22,6 +26,8 @@ if (!customElements.get("ui-carousel")) {
     }
 
     connectedCallback() {
+      if (!this.wrapper) return;
+
       this._render();
     }
 

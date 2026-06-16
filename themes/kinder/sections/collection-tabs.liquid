@@ -68,14 +68,16 @@
             >
               <div class="tab-head">
                 <h2 class="collection-name">{{ collection_block.settings.collection.name }}</h2>
-                <a
-                  ui-slot="link-button"
-                  data-size="md"
-                  data-underline="true"
-                  href="/collections/{{ collection_block.settings.collection.slug }}"
-                >
-                  {{ 'collection-tabs.view_all' | t }}
-                </a>
+                {% if section.settings.show_view_all_button %}
+                  <a
+                    ui-slot="link-button"
+                    data-size="md"
+                    data-underline="true"
+                    href="/collections/{{ collection_block.settings.collection.slug }}"
+                  >
+                    {{ 'collection-tabs.view_all' | t }}
+                  </a>
+                {% endif %}
               </div>
               {% if items.size == 0 %}
                 <div class="empty-message">
