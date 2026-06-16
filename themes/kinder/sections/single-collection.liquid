@@ -2,17 +2,12 @@
 
 <div
   ui-section="single-collection"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
 >
   {% capture breadcrumb_items %}
   {{ 'navigation.home' | t }},/|
@@ -52,7 +47,6 @@
         {% endfor %}
       </ul>
     {% endif %}
-    <hr ui-slot="divider" data-variant="line">
     <div class="core-area">
       {% if items.size > 0 %}
         <div class="controller">
@@ -65,7 +59,7 @@
             {% render 'misc.sort', url: previous_page %}
           </div>
         </div>
-        <ul class="items" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
+        <ul class="items" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
           {% for product in items %}
             {% render 'block.product', product: product %}
           {% endfor %}
@@ -92,27 +86,16 @@
       "content": "t:common.headers.colors"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": false
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
     },
     {
       "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
-    },
-    {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-foreground"
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
     },
     {
       "type": "header",
@@ -123,15 +106,9 @@
       "id": "nbr_columns_desktop",
       "label": "t:common.globals.number_per_column",
       "min": 2,
-      "max": 6,
+      "max": 4,
       "step": 1,
       "default": 4
-    },
-    {
-      "type": "checkbox",
-      "id": "show_discount_badge",
-      "label": "t:sections.collection.show_discount_badge",
-      "default": true
     },
     {
       "type": "header",
@@ -145,7 +122,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 24
     },
     {
       "type": "range",
@@ -155,7 +132,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 24
     }
   ]
 }
