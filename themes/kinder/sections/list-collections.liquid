@@ -2,17 +2,12 @@
 
 <div
   ui-section="list-collections"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
 >
   {% capture breadcrumb_items %}
   {{ 'navigation.home' | t }},/|
@@ -26,7 +21,7 @@
   <div class="core-area">
     {% paginate collections by 24 cod %}
       {% if items.size > 0 %}
-        <ul class="items" data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}">
+        <ul class="items" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
           {% for collection in items %}
             {% render 'block.collection', collection: collection %}
           {% endfor %}
@@ -39,6 +34,7 @@
     {% endpaginate %}
   </div>
 </div>
+
 {% schema %}
 {
   "label": "t:sections.list_collections.label",
@@ -86,7 +82,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 24
     },
     {
       "type": "range",
@@ -96,7 +92,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 64
+      "default": 24
     }
   ]
 }
