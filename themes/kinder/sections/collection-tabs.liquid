@@ -9,19 +9,9 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
-  <div class="section-head">
-    <div ui-slot="head">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
-    <a
-      ui-slot="link-button"
-      data-size="md"
-      data-underline="true"
-      href="/collections"
-    >
-      {{ 'collection-tabs.view_all' | t }}
-    </a>
+  <div ui-slot="head">
+    <h1 class="heading">{{ section.settings.heading }}</h1>
+    <p class="description">{{ section.settings.description }}</p>
   </div>
   <div class="content">
     <aside class="sidebar">
@@ -66,8 +56,8 @@
         {% assign max_products = section.settings.max_products_to_show %}
         {% if collection_block.settings.collection.id %}
           {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
-            <ul
-              class="items"
+            <div
+              class="tab-content"
               ui-carousel="item"
               ui-slot="carousel-item"
               role="tabpanel"
@@ -76,10 +66,30 @@
                 --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
               "
             >
-              {% for product in items %}
-                {% render 'block.product' %}
-              {% endfor %}
-            </ul>
+              <div class="tab-head">
+                <h2 class="collection-name">{{ collection_block.settings.collection.name }}</h2>
+                <a
+                  ui-slot="link-button"
+                  data-size="md"
+                  data-underline="true"
+                  href="/collections/{{ collection_block.settings.collection.slug }}"
+                >
+                  {{ 'collection-tabs.view_all' | t }}
+                </a>
+              </div>
+              {% if items.size == 0 %}
+                <div class="empty-message">
+                  <p>
+                    {{ 'single-collection.empty.title' | t }}
+                  </p>
+                </div>
+              {% endif %}
+              <ul class="items">
+                {% for product in items %}
+                  {% render 'block.product-tab', product: product %}
+                {% endfor %}
+              </ul>
+            </div>
           {% endpaginate %}
         {% else %}
           <ul
@@ -93,7 +103,7 @@
             "
           >
             {% for product in (1..max_products) %}
-              {% render 'block.product' %}
+              {% render 'block.product-tab', product: product %}
             {% endfor %}
           </ul>
         {% endif %}
@@ -158,14 +168,14 @@
       "min": 2,
       "max": 12,
       "step": 1,
-      "default": 8
+      "default": 9
     },
     {
       "type": "range",
       "id": "nbr_columns_desktop",
       "label": "t:common.globals.number_per_column",
       "min": 2,
-      "max": 5,
+      "max": 4,
       "step": 1,
       "default": 3
     },

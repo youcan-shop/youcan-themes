@@ -7,131 +7,152 @@
     color: var(--fg-color);
     gap: var(--spacing-48);
 
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-16);
-      width: 100%;
-
-      [ui-slot="head"] {
-        align-items: flex-start;
-        text-align: center;
-      }
+    [ui-slot="head"] {
+      align-items: flex-start;
+      text-align: center;
     }
 
     .content {
       display: flex;
       gap: var(--spacing-48);
-    }
 
-    .sidebar {
-      display: flex;
-      position: sticky;
-      flex-direction: column;
-      flex-shrink: 0;
-      width: 432px;
-      height: fit-content;
-      padding: var(--spacing-24);
-      border-radius: var(--radius-28);
-      background-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
-      inset-block-start: var(--spacing-16);
-      gap: var(--spacing-40);
-
-      .media {
-        height: auto;
-        overflow: hidden;
-        border-radius: var(--radius-collection);
-
-        &[data-image-ratio="square"] {
-          aspect-ratio: 1 / 1;
-        }
-
-        &[data-image-ratio="portrait"] {
-          aspect-ratio: 3 / 4;
-        }
-
-        &[data-image-ratio="landscape"] {
-          aspect-ratio: 4 / 3;
-        }
-
-        & > img {
-          object-fit: cover;
-        }
-
-        ui-image-fallback {
-          background-color: var(--bg-shade-color);
-        }
-      }
-
-      .tab-list {
+      .sidebar {
         display: flex;
-        position: relative;
-        flex-flow: column wrap;
-        justify-content: var(--text-heading-alignment-desktop);
-        column-gap: var(--spacing-24);
+        position: sticky;
+        flex-direction: column;
+        flex-shrink: 0;
+        width: 432px;
+        height: fit-content;
+        padding: var(--spacing-24);
+        border-radius: var(--radius-28);
+        background-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+        inset-block-start: var(--spacing-16);
+        gap: var(--spacing-40);
 
-        .tab-trigger {
+        .media {
+          height: auto;
+          overflow: hidden;
+          border-radius: var(--radius-collection);
+
+          &[data-image-ratio="square"] {
+            aspect-ratio: 1 / 1;
+          }
+
+          &[data-image-ratio="portrait"] {
+            aspect-ratio: 3 / 4;
+          }
+
+          &[data-image-ratio="landscape"] {
+            aspect-ratio: 4 / 3;
+          }
+
+          & > img {
+            object-fit: cover;
+          }
+
+          ui-image-fallback {
+            background-color: var(--bg-shade-color);
+          }
+        }
+
+        .tab-list {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          height: 56px;
-          transition: var(--transition-standard-default-spatial);
-          border: none;
-          opacity: 0.7;
-          background-color: transparent;
-          color: inherit;
-          font: var(--font-label-md);
-          cursor: pointer;
+          position: relative;
+          flex-flow: column wrap;
+          justify-content: var(--text-heading-alignment-desktop);
+          column-gap: var(--spacing-24);
 
-          &:hover {
-            opacity: 1;
-          }
+          .tab-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            transition: var(--transition-standard-default-spatial);
+            border: none;
+            opacity: 0.7;
+            background-color: transparent;
+            color: inherit;
+            font: var(--font-label-md);
+            cursor: pointer;
 
-          &[aria-selected="true"] {
-            opacity: 1;
-            color: var(--brand-color);
-          }
+            &:hover {
+              opacity: 1;
+            }
 
-          :dir(rtl) i {
-            rotate: 180deg;
+            &[aria-selected="true"] {
+              opacity: 1;
+              color: var(--brand-color);
+            }
+
+            :dir(rtl) i {
+              rotate: 180deg;
+            }
           }
         }
       }
-    }
 
-    .products-area {
-      --per-page: 1;
-      --gap: var(--spacing-24);
+      .products-area {
+        --per-page: 1;
+        --gap: var(--spacing-24);
 
-      .items {
-        display: grid;
-        gap: var(--spacing-24);
-        grid-template-columns: repeat(var(--nbr-columns-desktop), 1fr);
+        flex: 1;
+
+        .tab-content {
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-16);
+
+          .tab-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-16);
+          }
+
+          .empty-message {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.4;
+          }
+        }
+
+        .items {
+          display: grid;
+          grid-template-columns: repeat(var(--nbr-columns-desktop), 1fr);
+          gap: var(--spacing-24);
+        }
       }
     }
 
     @media (width <= 1024px) {
       padding-inline: var(--spacing-16);
+    }
 
-      .products-area {
-        .items {
-          gap: var(--spacing-12);
-          grid-template-columns: repeat(2, 1fr);
+    @media (width <= 1400px) {
+      .content {
+        .products-area {
+          .items {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          }
         }
       }
     }
 
     @media (width <= 769px) {
-      gap: var(--spacing-48);
+      .content {
+        flex-direction: column;
 
-      .tab-list {
-        justify-content: var(--text-heading-alignment-mobile);
-      }
+        .sidebar {
+          position: relative;
+          width: 100%;
+        }
 
-      .products-area {
-        .items {
-          grid-template-columns: repeat(var(--nbr-columns-mobile), 1fr);
+        .products-area {
+          .items {
+            grid-template-columns: repeat(var(--nbr-columns-mobile), 1fr);
+          }
         }
       }
     }
