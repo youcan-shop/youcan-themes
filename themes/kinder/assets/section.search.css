@@ -5,17 +5,23 @@
     flex-direction:column;
   }
   #youcan-section--search [ui-section=search]{
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
     display:flex;
     flex:1;
     flex-direction:column;
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding:var(--top-spacing) 10% var(--bottom-spacing);
     gap:var(--spacing-32);
+    background-color:var(--bg-color);
+    color:var(--fg-color);
   }
   #youcan-section--search [ui-section=search] [ui-slot=head]{
     align-items:center;
   }
   #youcan-section--search [ui-section=search] [ui-slot=head] .search{
-    width:500px;
+    width:min(688px, 100%);
+  }
+  #youcan-section--search [ui-section=search] [ui-slot=head] .search [ui-slot=input-wrapper]{
+    background-color:var(--bg-shade-color);
   }
   #youcan-section--search [ui-section=search] .controller{
     display:flex;
@@ -23,24 +29,38 @@
     justify-content:space-between;
   }
   #youcan-section--search [ui-section=search] .controller .result{
-    color:var(--color-on-surface-variant);
-    font:var(--font-body-lg);
+    color:var(--fg-color);
+    font:var(--font-body-sm);
   }
   #youcan-section--search [ui-section=search] .controller .sort{
     display:flex;
     align-items:center;
     gap:var(--spacing-12);
+    font:var(--font-label-md);
   }
   #youcan-section--search [ui-section=search] .list{
     display:grid;
-    grid-template-columns:repeat(attr(data-nbr-columns-desktop number), 1fr);
+    grid-template-columns:repeat(var(--nbr-columns-desktop), 1fr);
     width:100%;
     grid-gap:var(--spacing-24);
     gap:var(--spacing-24);
   }
-  @media (max-width: 1024px){
+  #youcan-section--search [ui-section=search] [ui-slot=sheet-content]{
+    --sheet-background:var(--bg-color);
+    color:var(--fg-color);
+  }
+  #youcan-section--search [ui-section=search] [ui-slot=sheet-content] [ui-slot=sheet-header] [ui-slot=button]{
+    --button-bg:var(--bg-shade-color);
+    --button-fg:var(--fg-color);
+  }
+  @media (max-width: 1280px){
     #youcan-section--search [ui-section=search] .list{
       grid-template-columns:repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 1024px){
+    #youcan-section--search [ui-section=search]{
+      padding-inline:var(--spacing-16);
     }
   }
   @media (max-width: 769px){
@@ -51,7 +71,7 @@
       width:100%;
     }
     #youcan-section--search [ui-section=search] .list{
-      grid-template-columns:repeat(2, 1fr);
+      grid-template-columns:1fr;
     }
   }
 }
