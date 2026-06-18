@@ -10,6 +10,24 @@
   "
 >
   {% paginate search.products by 24 cod %}
+    {% if items.size > 1 %}
+      {% assign result = 'search.result.many' | t %}
+    {% else %}
+      {% assign result = 'search.result.one' | t %}
+    {% endif %}
+    {% assign found_for = 'search.found_for' | t %}
+    {% assign result = result | append: ' ' | append: found_for %}
+    {% assign message = total | append: ' ' | append: result | append: ' "' | append: terms | append: '"' %}
+    {% assign search = 'search.title' | t %}
+    {% assign message = search | append: ': ' | append: message %}
+
+    {% capture breadcrumb_items %}
+    {{ 'navigation.home' | t }},/|
+    {{ message }}
+    {% endcapture %}
+
+    {% render 'misc.breadcrumb', items: breadcrumb_items %}
+
     <div ui-slot="head">
       <h1 class="heading">{{ 'search.title' | t }}</h1>
       <form action="/search" class="search">
