@@ -1,9 +1,13 @@
 @layer sections {
   [ui-section="thankyou"] {
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr minmax(0, 460px);
     gap: var(--spacing-64);
-    padding: attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+    padding: var(--top-spacing) 10% var(--bottom-spacing);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
 
     .content-area {
       display: flex;
@@ -11,13 +15,17 @@
       flex-direction: column;
 
       .heading {
-        font: var(--font-display-md);
+        font: var(--font-heading-xl);
       }
 
       .description {
-        color: var(--color-on-surface-variant);
-        font: var(--font-body-lg);
+        font: var(--font-body-md);
         text-wrap: balance;
+      }
+
+      [ui-slot="button"] {
+        max-width: 240px;
+        margin-block-start: var(--spacing-24);
       }
     }
 
@@ -31,7 +39,7 @@
         gap: var(--spacing-32);
         padding: var(--spacing-32);
         border-radius: var(--radius-20);
-        background-color: var(--color-surface-container-low);
+        background-color: var(--bg-shade-color);
 
         .item {
           display: flex;
@@ -50,7 +58,7 @@
         padding: var(--spacing-32);
         border-radius: var(--radius-20);
         gap: var(--spacing-32);
-        background-color: var(--color-surface-container-low);
+        background-color: var(--bg-shade-color);
 
         .product {
           display: flex;
@@ -77,6 +85,7 @@
 
             .title {
               justify-content: flex-start;
+              width: fit-content;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;
@@ -98,7 +107,7 @@
         gap: var(--spacing-16);
         padding: var(--spacing-32);
         border-radius: var(--radius-20);
-        background-color: var(--color-surface-container-low);
+        background-color: var(--bg-shade-color);
 
         .item {
           display: flex;
@@ -123,6 +132,7 @@
     @media (width <= 1024px) {
       display: flex;
       flex-direction: column;
+      padding-inline: var(--spacing-16);
     }
 
     @media (width <= 769px) {

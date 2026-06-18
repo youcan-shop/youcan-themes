@@ -2,21 +2,27 @@
 
 <div
   ui-section="thankyou"
-  {% if section.settings.override_global_colors %}
-    style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
-      --brand-chroma: {{ section.settings.main_color.chroma }};
-      --brand-hue: {{ section.settings.main_color.oklch_hue }};
-    "
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
-  data-top-spacing="{{ section.settings.top_spacing }}"
-  data-bottom-spacing="{{ section.settings.bottom_spacing }}"
+  style="
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  "
 >
   <div class="content-area">
     <h1 class="heading">{{ 'order.title' | t }}</h1>
     <p class="description">{{ 'order.description' | t }}</p>
+    <a
+      ui-slot="button"
+      data-variant="primary"
+      data-mode="filled"
+      data-size="lg"
+      href="{{ routes.root_url |  default: "/" }}"
+    >
+      <span ui-slot="button-front">
+        {{ 'order.action' | t }}
+      </span>
+    </a>
   </div>
   <div class="order-summary-area">
     <div class="statuses">
@@ -105,15 +111,6 @@
         <span class="value">{{ order.total | default: 0 | money }}</span>
       </div>
     </div>
-    <a
-      ui-slot="button"
-      data-variant="primary"
-      data-mode="filled"
-      data-size="lg"
-      href="{{ routes.root_url |  default: "/" }}"
-    >
-      {{ 'order.action' | t }}
-    </a>
   </div>
 </div>
 
@@ -128,27 +125,16 @@
       "content": "t:common.headers.colors"
     },
     {
-      "type": "checkbox",
-      "id": "override_global_colors",
-      "label": "t:common.colors.override_global_colors",
-      "default": false
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
     },
     {
       "type": "color",
-      "id": "main_color",
-      "label": "t:common.colors.main_color",
-      "default": "#121212"
-    },
-    {
-      "type": "select",
-      "id": "color_intensity",
-      "label": "t:common.colors.color_intensity",
-      "options": [
-        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-      ],
-      "default": "as-foreground"
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
     },
     {
       "type": "header",
