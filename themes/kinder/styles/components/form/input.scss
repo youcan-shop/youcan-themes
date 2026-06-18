@@ -12,7 +12,7 @@
 [ui-slot="input-wrapper"] {
   --icon-size: 24px;
   --inline-padding: var(--spacing-10);
-  --input-bg: var(--color-surface-container-low);
+  --input-bg: var(--bg-shade-color);
 
   height: 36px;
   padding-inline: var(--inline-padding);
@@ -55,7 +55,6 @@
   &:disabled,
   &:has([ui-slot="input"]:disabled) {
     border-color: transparent;
-    background-color: var(--color-surface-container-low);
     box-shadow: none;
 
     &[ui-slot="input"],
@@ -142,10 +141,6 @@
       &:disabled {
         pointer-events: none;
       }
-
-      &:hover:not(:disabled) {
-        color: var(--color-on-surface-variant);
-      }
     }
 
     /* Affix */
@@ -163,7 +158,6 @@
 
       &:first-child {
         margin-inline-start: calc(var(--inline-padding) * -1);
-        border-inline-end: 1px solid var(--color-surface-variant);
 
         &:not([ui-slot*="select"]) {
           margin-inline-start: var(--spacing-0);
@@ -192,16 +186,8 @@
       background-color: transparent;
       color: inherit;
 
-      &:first-child {
-        border-inline-end: 1px solid var(--color-surface-variant);
-      }
-
       & > i {
         font-size: var(--icon-size);
-      }
-
-      &:hover:not(:disabled) {
-        background-color: var(--color-surface-container-high);
       }
     }
 
@@ -221,27 +207,19 @@
     [ui-slot="input-kbd"] {
       height: 20px;
       padding-inline: var(--spacing-6);
-      border: 1px solid var(--color-surface-variant);
       border-radius: calc(var(--radius-input) * 0.5);
-      background-color: var(--color-surface-container-low);
       font: var(--font-label-sm);
     }
   }
 
   /* Hover */
   &:hover:not(:focus, :disabled, :has([ui-slot="input"]:focus)) {
-    background-color: var(--color-surface-container-high);
-
     [ui-slot="input"] {
       background-color: transparent;
     }
 
     &:not([aria-invalid="true"], :has([ui-slot*="input-affix"], [ui-slot="input-button"])) {
       border-color: transparent;
-    }
-
-    &::placeholder {
-      color: var(--color-on-surface-variant);
     }
   }
 }
