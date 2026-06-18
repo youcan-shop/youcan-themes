@@ -1,11 +1,12 @@
 async function addToCart(snippetId) {
   const parentSection = document.querySelector(`#s-${snippetId}`);
+  const bundleId = parentSection.querySelector(`#bundleId`)?.value || undefined;
   const variantId = parentSection.querySelector(`#variantId`)?.value || undefined;
   const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
   const inventory = parseInt(parentSection.querySelector(`#_inventory`)?.value) || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
 
-  if (!variantId) {
+  if (!(variantId || bundleId)) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
   }
 
@@ -22,11 +23,11 @@ async function addToCart(snippetId) {
       load('#loading__cart');
     });
 
-    const response = await youcanjs.cart.addItem({
-      productVariantId: variantId,
-      attachedImage: uploadedImageLink,
-      quantity,
-    });
+    const cartPayload = bundleId
+      ? { bundleId, isBundle: true }
+      : { productVariantId: variantId, attachedImage: uploadedImageLink, quantity };
+
+    const response = await youcanjs.cart.addItem(cartPayload);
 
     if (response.error) throw new Error(response.error);
 
@@ -35,17 +36,19 @@ async function addToCart(snippetId) {
 
     stopLoad('#loading__cart');
 
-    const selectedVariant = response.items.find((variant) => variant.productVariant.id === variantId);
+    if (!bundleId) {
+      const selectedVariant = response.items.find((variant) => variant.productVariant.id === variantId);
 
-    window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
+      window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
 
-    const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
+      const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
 
-    if (IS_CART_SKIPED) {
-      window.location.href = checkoutPageUrl;
-      window.Dotshop.pixels.publish('initiate-checkout', selectedVariant);
+      if (IS_CART_SKIPED) {
+        window.location.href = checkoutPageUrl;
+        window.Dotshop.pixels.publish('initiate-checkout', selectedVariant);
 
-      return;
+        return;
+      }
     }
 
     notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
@@ -69,6 +72,27 @@ async function attachRemoveItemListeners() {
       }
     }),
   );
+}
+
+function attachBundleRemoveListeners() {
+  document.querySelectorAll('.remove-bundle-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const itemIds = btn.getAttribute('data-bundle-item-ids').split(',').map((s) => s.trim()).filter(Boolean);
+      const variantIds = btn.getAttribute('data-bundle-variant-ids').split(',').map((s) => s.trim()).filter(Boolean);
+
+      try {
+        for (let i = 0; i < itemIds.length; i++) {
+          await youcanjs.cart.removeItem({ cartItemId: itemIds[i], productVariantId: variantIds[i] });
+        }
+
+        const updatedCart = await youcanjs.cart.fetch();
+        updateCartCount(updatedCart.count);
+        await updateCartDrawer();
+      } catch (error) {
+        notify(error.message, 'error');
+      }
+    });
+  });
 }
 
 async function removeCartItem(cartItemId, productVariantId) {
@@ -133,6 +157,51 @@ function updateCartQuantity(cartItemId, productVariantId, delta) {
       updateCartItem(cartItemId, productVariantId, newQuantity);
     }
   }
+}
+
+function bundleItemTemplate(item) {
+  const variationsArray = [];
+  for (const key in item.variations) {
+    if (item.variations.hasOwnProperty(key) && key !== 'default') {
+      variationsArray.push(`${key}: ${item.variations[key]}`);
+    }
+  }
+  const variationsString = variationsArray.join(', ');
+
+  const subtotal = item.price * item.quantity;
+  const priceHtml = subtotal === 0
+    ? `<span class="free-badge">${CART_DRAWER_TRANSLATION.free}</span>`
+    : `<span>${formatCurrency(subtotal, CURRENCY_CODE, CUSTOMER_LOCALE)}</span>`;
+
+  return `
+    <div class="bundle-item">
+      <img src="${item.image || defaultImage}" alt="${item.name}">
+      <div class="bundle-item-info">
+        <span class="name">${item.name}</span>
+        ${variationsString ? `<div class="variants">${variationsString}</div>` : ''}
+        <div class="price">${priceHtml}</div>
+      </div>
+    </div>
+  `;
+}
+
+function bundleGroupTemplate(bundle) {
+  const itemIds = bundle.items.map((i) => i.id).join(',');
+  const variantIds = bundle.items.map((i) => i.product_variant_id).join(',');
+
+  return `
+    <div class="bundle-group">
+      <div class="bundle-group-top">
+        <span class="bundle-title">${bundle.title}</span>
+        <button class="remove-bundle-btn" data-bundle-item-ids="${itemIds}" data-bundle-variant-ids="${variantIds}">
+          ${CART_DRAWER_TRANSLATION.remove}
+        </button>
+      </div>
+      <div class="bundle-items-list">
+        ${bundle.items.map(bundleItemTemplate).join('')}
+      </div>
+    </div>
+  `;
 }
 
 function cartTemplate(item) {
@@ -211,7 +280,22 @@ async function updateCartDrawer() {
     if (cartData.count > 0) {
       const products = document.createElement('ul');
 
+      // Collect bundle item IDs to exclude from regular items list
+      const bundleItemIds = new Set();
+      const bundleTypes = ['single', 'multi', 'buyxgety'];
+      if (cartData.bundles) {
+        for (const type of bundleTypes) {
+          for (const bundle of cartData.bundles[type] || []) {
+            for (const bi of bundle.items) {
+              bundleItemIds.add(bi.id);
+            }
+          }
+        }
+      }
+
       for (const item of cartData.items) {
+        if (bundleItemIds.has(item.id)) continue;
+
         item.price = formatCurrency(item.price, CURRENCY_CODE, CUSTOMER_LOCALE);
         item.productVariant.price = formatCurrency(item.productVariant.price, CURRENCY_CODE, CUSTOMER_LOCALE);
 
@@ -224,8 +308,18 @@ async function updateCartDrawer() {
 
       cartDrawerContent.appendChild(products);
 
+      // Render bundle groups
+      if (cartData.bundles) {
+        for (const type of bundleTypes) {
+          for (const bundle of cartData.bundles[type] || []) {
+            cartDrawerContent.innerHTML += bundleGroupTemplate(bundle);
+          }
+        }
+      }
+
       // Attach event listeners to the newly added remove buttons
       await attachRemoveItemListeners();
+      attachBundleRemoveListeners();
     } else {
       const p = document.createElement('p');
       p.classList.add('empty-cart');

@@ -1,100 +1,113 @@
 const TYPES = ['country', 'region', 'city'];
-
-let fields = {};
-let regionCode = null;
-let countryCode = null;
 const locale = document.documentElement.lang || 'en';
 
-for (const type of TYPES) {
-  fields[type] = document.querySelector(`[data-linked-field='${type}']`);
-  fields[type]?.addEventListener('change', () => onChange(type));
-}
+function initLinkedFields(container) {
+  if (container._linkedFieldsInit) return;
+  container._linkedFieldsInit = true;
 
-fetchOptions();
+  let fields = {};
+  let regionCode = null;
+  let countryCode = null;
 
-async function fetchOptions() {
   for (const type of TYPES) {
-    fields[type] && (await fetchLocationByType(type));
+    fields[type] = container.querySelector(`[data-linked-field='${type}']`);
+    fields[type]?.addEventListener('change', () => onChange(type));
   }
-}
 
-function setUpOptions(type, options) {
-  fields[type].innerHTML = '';
+  fetchOptions();
 
-  options.forEach((opt, index) => {
-    const label = typeof opt === 'string' ? opt : opt.name;
-    const value = typeof opt === 'string' ? opt : opt.code;
-    const isDefault = (type === 'country' && value === countryCode) || index === 0;
-
-    const option = new Option(label, label);
-    option.dataset.value = value;
-    option.defaultSelected = isDefault;
-
-    fields[type].add(option);
-  });
-}
-
-async function onChange(type) {
-  const value = fields[type].selectedOptions[0]?.dataset.value;
-
-  if (type === 'country') countryCode = value;
-  if (type === 'region') regionCode = value;
-
-  const dependentFields = getDependentFields(type);
-  for (const next of dependentFields) {
-    fields[next] && (await fetchLocationByType(next));
+  async function fetchOptions() {
+    for (const type of TYPES) {
+      fields[type] && (await fetchLocationByType(type));
+    }
   }
-}
 
-async function fetchLocationByType(type) {
-  const fetchMap = {
-    country: () => window.storeMarketCountries,
-    region: () => {
-      const key = `${countryCode}_${locale}`;
+  function setUpOptions(type, options) {
+    fields[type].innerHTML = '';
 
-      if (!window.storeRegions[key]) {
-        window.storeRegions[key] = youcanjs.misc.getCountryRegions(countryCode, locale);
-      }
+    options.forEach((opt, index) => {
+      const label = typeof opt === 'string' ? opt : opt.name;
+      const value = typeof opt === 'string' ? opt : opt.code;
+      const isDefault = (type === 'country' && value === countryCode) || index === 0;
 
-      return window.storeRegions[key];
-    },
-    city: () => {
-      const key = `${countryCode}_${regionCode}_${locale}`;
+      const option = new Option(label, label);
+      option.dataset.value = value;
+      option.defaultSelected = isDefault;
 
-      if (!window.storeCities[key]) {
-        window.storeCities[key] = youcanjs.misc.getCountryCities(countryCode, regionCode, locale);
-      }
+      fields[type].add(option);
+    });
+  }
 
-      return window.storeCities[key];
-    },
-  };
+  async function onChange(type) {
+    const value = fields[type].selectedOptions[0]?.dataset.value;
 
-  try {
-    const response = await fetchMap[type]?.call();
-    if (!response) throw new Error(`Unknown fetch type: ${type}`);
+    if (type === 'country') countryCode = value;
+    if (type === 'region') regionCode = value;
 
-    const map = {
-      country: () => {
-        const customerCountryExists = response.countries.some(country => country.code === CUSTOMER_COUNTRY_CODE);
-        countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
+    const dependentFields = getDependentFields(type);
+    for (const next of dependentFields) {
+      fields[next] && (await fetchLocationByType(next));
+    }
+  }
 
-        this.setUpOptions(type, response.countries);
-      },
+  async function fetchLocationByType(type) {
+    const fetchMap = {
+      country: () => window.storeMarketCountries,
       region: () => {
-        regionCode = response.states[0].code;
-        setUpOptions(type, response.states);
+        const key = `${countryCode}_${locale}`;
+
+        if (!window.storeRegions[key]) {
+          window.storeRegions[key] = youcanjs.misc.getCountryRegions(countryCode, locale);
+        }
+
+        return window.storeRegions[key];
       },
-      city: () => setUpOptions(type, response.cities),
+      city: () => {
+        const key = `${countryCode}_${regionCode}_${locale}`;
+
+        if (!window.storeCities[key]) {
+          window.storeCities[key] = youcanjs.misc.getCountryCities(countryCode, regionCode, locale);
+        }
+
+        return window.storeCities[key];
+      },
     };
 
-    map[type]?.call();
-  } catch (error) {
-    console.error(error);
+    try {
+      const response = await fetchMap[type]?.call();
+      if (!response) throw new Error(`Unknown fetch type: ${type}`);
+
+      const map = {
+        country: () => {
+          const customerCountryExists = response.countries.some(country => country.code === CUSTOMER_COUNTRY_CODE);
+          countryCode = customerCountryExists ? CUSTOMER_COUNTRY_CODE : response.countries[0].code;
+
+          setUpOptions(type, response.countries);
+        },
+        region: () => {
+          regionCode = response.states[0].code;
+          setUpOptions(type, response.states);
+        },
+        city: () => setUpOptions(type, response.cities),
+      };
+
+      map[type]?.call();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function getDependentFields(type) {
+    if (type === 'country') return TYPES.slice(1);
+    if (type === 'region') return TYPES.slice(2);
+    return [];
   }
 }
 
-function getDependentFields(type) {
-  if (type === 'country') return TYPES.slice(1);
-  if (type === 'region') return TYPES.slice(2);
-  return [];
-}
+const linkedFieldEls = document.querySelectorAll('[data-linked-field]');
+const linkedForms = new Set();
+linkedFieldEls.forEach(el => {
+  const form = el.closest('form');
+  if (form) linkedForms.add(form);
+});
+linkedForms.forEach(form => initLinkedFields(form));

@@ -150,6 +150,17 @@ const CartUI = {
 };
 
 // Events
+async function removeBundleItems(itemIds, variantIds) {
+  try {
+    for (let i = 0; i < itemIds.length; i++) {
+      await CartService.removeItem(itemIds[i], variantIds[i]);
+    }
+    window.location.reload();
+  } catch (e) {
+    notify(e.message, 'error');
+  }
+}
+
 async function updateQuantity(cartItemId, productVariantId, quantity) {
   let parsedQuantity = Number(quantity);
 

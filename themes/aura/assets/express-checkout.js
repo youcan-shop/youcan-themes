@@ -1,5 +1,5 @@
-async function placeOrder() {
-  const expressCheckoutForm = document.querySelector('#express-checkout-form');
+async function placeOrder(button) {
+  const expressCheckoutForm = button ? button.closest('form') : document.querySelector('#express-checkout-form');
   let fields = Object.fromEntries(new FormData(expressCheckoutForm));
 
   load('#loading__checkout');
@@ -19,7 +19,7 @@ async function placeOrder() {
         redirectToThankyouPage();
       })
       .onValidationErr((err) => {
-        const form = document.querySelector('#express-checkout-form');
+        const form = expressCheckoutForm;
         const formFields = Object.keys(err.meta.fields);
 
         if (!form || !formFields) return;
