@@ -28,21 +28,23 @@
     opacity:0;
   }
   ui-variants [ui-variant][ui-variant=textual_buttons] .options{
+    position:relative;
     width:-moz-fit-content;
     width:fit-content;
     border:1px solid var(--color-surface-variant);
-    position:relative;
+    border-radius:var(--radius-button);
   }
   ui-variants [ui-variant][ui-variant=textual_buttons] .options::before{
     content:"";
     inset:0;
     position:absolute;
-    box-shadow:0 0 0 1px currentColor;
-    height:anchor-size(height);
-    width:anchor-size(width);
+    z-index:2;
     bottom:anchor(bottom);
     left:anchor(left);
-    z-index:2;
+    width:anchor-size(width);
+    height:anchor-size(height);
+    border-radius:var(--radius-button);
+    box-shadow:0 0 0 1px currentcolor;
     position-anchor:--selected;
   }
   [dir="rtl"] ui-variants [ui-variant][ui-variant=textual_buttons] .options::before{
@@ -55,7 +57,6 @@
     height:36px;
     padding-inline:var(--spacing-12);
     transition:var(--transition-standard-default-effects);
-    border-radius:var(--radius-button);
     cursor:pointer;
   }
   ui-variants [ui-variant][ui-variant=textual_buttons] .options .opt:not(:first-child){
@@ -70,21 +71,23 @@
     pointer-events:none;
   }
   ui-variants [ui-variant][ui-variant=color_base_buttons] .options{
+    position:relative;
     width:-moz-fit-content;
     width:fit-content;
     border:1px solid var(--color-surface-variant);
-    position:relative;
+    border-radius:var(--radius-button);
   }
   ui-variants [ui-variant][ui-variant=color_base_buttons] .options::before{
     content:"";
     inset:0;
     position:absolute;
-    box-shadow:0 0 0 1px currentColor;
-    height:anchor-size(height);
-    width:anchor-size(width);
+    z-index:2;
     bottom:anchor(bottom);
     left:anchor(left);
-    z-index:2;
+    width:anchor-size(width);
+    height:anchor-size(height);
+    border-radius:var(--radius-button);
+    box-shadow:0 0 0 1px currentcolor;
     position-anchor:--selected;
   }
   [dir="rtl"] ui-variants [ui-variant][ui-variant=color_base_buttons] .options::before{
@@ -97,7 +100,6 @@
     width:26px;
     height:26px;
     transition:var(--transition-standard-default-effects);
-    border-radius:var(--radius-button);
     cursor:pointer;
   }
   ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:not(:first-child){
@@ -108,6 +110,7 @@
     display:flex;
     width:18px;
     height:18px;
+    border-radius:var(--radius-button);
     background-color:var(--color-value);
   }
   ui-variants [ui-variant][ui-variant=color_base_buttons] .options .opt:has(> input[type=radio]:checked){
@@ -129,21 +132,23 @@
     background-color:color-mix(in srgb, var(--color-value) 50%, transparent);
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options{
+    position:relative;
     width:-moz-fit-content;
     width:fit-content;
     border:1px solid var(--color-surface-variant);
-    position:relative;
+    border-radius:var(--radius-product);
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options::before{
     content:"";
     inset:0;
     position:absolute;
-    box-shadow:0 0 0 1px currentColor;
-    height:anchor-size(height);
-    width:anchor-size(width);
+    z-index:2;
     bottom:anchor(bottom);
     left:anchor(left);
-    z-index:2;
+    width:anchor-size(width);
+    height:anchor-size(height);
+    border-radius:var(--radius-product);
+    box-shadow:0 0 0 1px currentcolor;
     position-anchor:--selected;
   }
   [dir="rtl"] ui-variants [ui-variant][ui-variant=image_based_buttons] .options::before{
@@ -151,12 +156,11 @@
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt{
     display:grid;
+    padding:var(--spacing-6);
+    font:var(--font-body-sm);
+    cursor:pointer;
     grid-gap:var(--spacing-8);
     gap:var(--spacing-8);
-    border-radius:var(--radius-button);
-    padding:var(--spacing-6);
-    cursor:pointer;
-    font:var(--font-body-sm);
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:not(:first-child){
     border-inline-start:1px solid var(--color-surface-variant);
@@ -169,11 +173,11 @@
     width:60px;
     height:60px;
     overflow:hidden;
+    border-radius:var(--radius-button);
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt .image > img{
     width:100%;
     height:100%;
-    border-radius:var(--radius-button);
     -o-object-fit:cover;
        object-fit:cover;
   }
@@ -181,8 +185,8 @@
     anchor-name:--selected;
   }
   ui-variants [ui-variant][ui-variant=image_based_buttons] .options .opt:has(> input[type=radio]:disabled){
-    pointer-events:none;
     opacity:0.5;
+    pointer-events:none;
   }
   ui-variants [ui-variant][ui-variant=radio_buttons] .options{
     display:flex;
@@ -192,15 +196,16 @@
   ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt{
     display:flex;
     align-items:center;
-    cursor:pointer;
-    gap:var(--spacing-8);
     padding:var(--spacing-8);
     border:1px solid var(--color-surface-variant);
+    border-radius:var(--radius-button);
     color:var(--color-on-surface-variant);
+    cursor:pointer;
+    gap:var(--spacing-8);
   }
   ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt:has(> input[type=radio]:checked){
+    border-color:currentcolor;
     color:var(--color-primary);
-    border-color:currentColor;
   }
   ui-variants [ui-variant][ui-variant=radio_buttons] .options .opt:has(> input[type=radio]:disabled){
     opacity:0.5;
