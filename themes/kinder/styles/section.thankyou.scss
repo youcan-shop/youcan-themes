@@ -32,22 +32,25 @@
     .order-summary-area {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-16);
+      gap: var(--spacing-24);
 
       .statuses {
         display: grid;
-        gap: var(--spacing-32);
+        gap: var(--spacing-16);
         padding: var(--spacing-32);
         border-radius: var(--radius-20);
         background-color: var(--bg-shade-color);
 
         .item {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
 
           [ui-slot="label"] {
-            color: var(--color-on-surface-variant);
+            font: var(--font-label-sm);
+          }
+
+          .value {
+            font: var(--font-body-sm);
           }
         }
       }
@@ -55,14 +58,11 @@
       .products {
         display: flex;
         flex-direction: column;
-        padding: var(--spacing-32);
         border-radius: var(--radius-20);
         gap: var(--spacing-32);
-        background-color: var(--bg-shade-color);
 
         .product {
           display: flex;
-          align-items: center;
           justify-content: space-between;
           gap: var(--spacing-12);
 
@@ -75,29 +75,34 @@
             & > img {
               object-fit: cover;
             }
+
+            ui-image-fallback {
+              background-color: var(--bg-shade-color);
+            }
           }
 
           .content {
             display: flex;
             flex: 1;
             flex-direction: column;
-            justify-content: center;
+            gap: var(--spacing-8);
 
             .title {
               justify-content: flex-start;
               width: fit-content;
               overflow: hidden;
+              font: var(--font-label-sm);
               text-overflow: ellipsis;
               white-space: nowrap;
             }
 
             .count {
-              color: var(--color-on-surface-variant);
+              font: var(--font-body-xs);
             }
           }
 
           .price {
-            font: var(--font-title-md);
+            font: var(--font-label-sm);
           }
         }
       }
@@ -114,15 +119,15 @@
           align-items: flex-start;
           justify-content: space-between;
 
-          [ui-slot="label"] {
-            color: var(--color-on-surface-variant);
+          [ui-slot="label"],
+          .value {
+            font: var(--font-body-sm);
           }
 
           &:last-child {
             [ui-slot="label"],
             .value {
-              color: var(--color-on-background);
-              font: var(--font-title-lg);
+              font: var(--font-label-sm);
             }
           }
         }
@@ -140,7 +145,11 @@
         text-align: center;
 
         .heading {
-          font: var(--font-headline-lg);
+          font: var(--font-heading-lg);
+        }
+
+        [ui-slot="button"] {
+          margin-inline: auto;
         }
       }
     }
