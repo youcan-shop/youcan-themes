@@ -5,14 +5,23 @@
     flex-direction:column;
   }
   #youcan-section--upsell ui-upsell{
-    display:flex;
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+    display:grid;
+    grid-template-columns:1fr 2fr;
     flex:1;
-    flex-direction:column;
+    padding:var(--top-spacing) 10% var(--bottom-spacing);
+    background-color:var(--bg-color);
+    color:var(--fg-color);
+    grid-gap:var(--spacing-24);
     gap:var(--spacing-24);
-    padding:attr(data-top-spacing px) 8% attr(data-bottom-spacing px) !important;
+  }
+  #youcan-section--upsell ui-upsell img{
+    border-radius:var(--radius-20);
   }
   #youcan-section--upsell ui-upsell .head{
     display:grid;
+    height:-moz-fit-content;
+    height:fit-content;
     grid-gap:var(--spacing-12);
     gap:var(--spacing-12);
   }
@@ -24,6 +33,28 @@
     gap:var(--spacing-8);
   }
   #youcan-section--upsell ui-upsell .head .options [ui-slot=button]{
-    width:150px;
+    max-width:300px;
+  }
+  #youcan-section--upsell ui-upsell .head .options [data-variant=secondary]{
+    --button-fg:var(--fg-color);
+    --button-bg:var(--bg-shade-color);
+  }
+  #youcan-section--upsell ui-upsell .description{
+    padding:var(--spacing-24);
+    border-radius:var(--radius-20);
+    background-color:var(--bg-shade-color);
+  }
+  #youcan-section--upsell ui-upsell .footer{
+    display:flex;
+    grid-column:1/-1;
+    align-items:center;
+    justify-content:center;
+  }
+  @media (max-width: 1024px){
+    #youcan-section--upsell ui-upsell{
+      display:flex;
+      flex-direction:column;
+      padding-inline:var(--spacing-16);
+    }
   }
 }
