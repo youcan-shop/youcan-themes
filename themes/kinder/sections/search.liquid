@@ -15,15 +15,17 @@
     {% else %}
       {% assign result = 'search.result.one' | t %}
     {% endif %}
+
     {% assign found_for = 'search.found_for' | t %}
     {% assign result = result | append: ' ' | append: found_for %}
     {% assign message = total | append: ' ' | append: result | append: ' "' | append: terms | append: '"' %}
+
     {% assign search = 'search.title' | t %}
-    {% assign message = search | append: ': ' | append: message %}
+    {% assign breadcrumb = search | append: ': ' | append: message %}
 
     {% capture breadcrumb_items %}
     {{ 'navigation.home' | t }},/|
-    {{ message }}
+    {{ breadcrumb }}
     {% endcapture %}
 
     {% render 'misc.breadcrumb', items: breadcrumb_items %}
@@ -61,8 +63,7 @@
     </div>
     <div class="controller">
       <h4 class="result">
-        {{ items.size }}
-        {{ 'general.products' | t }}
+        {{ message }}
       </h4>
       <div class="sort">
         <label for="sort">{{ 'general.sort.label' | t }}</label>
