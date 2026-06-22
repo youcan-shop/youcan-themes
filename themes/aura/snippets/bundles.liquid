@@ -226,4 +226,21 @@
   </label>
 {% endfor %}
 
-{% render 'express-checkout', checkout: checkout, is_sticky: false, settings: section.settings, form_id: 'bundle-express-checkout-form' %}
+{% assign has_express_checkout = false %}
+{% for block in section.blocks %}
+  {% if block.type == 'express_checkout' %}
+    {% assign has_express_checkout = true %}
+    {% assign express_settings = block.settings %}
+  {% endif %}
+{% endfor %}
+
+{% if has_express_checkout %}
+  {% render 'express-checkout', checkout: checkout, is_sticky: false, settings: express_settings, form_id: 'bundle-express-checkout-form' %}
+{% else %}
+  <div class="bundle-add-to-cart">
+    <button class="yc-btn add-to-cart-button w-full" onclick="addBundleToCart('{{ snippetId }}')">
+      <span class="spinner hidden" id="loading__bundle-cart"></span>
+      <span>{{ 'general.add_bundle_to_cart' | t }}</span>
+    </button>
+  </div>
+{% endif %}

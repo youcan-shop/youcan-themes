@@ -1,12 +1,11 @@
 async function addToCart(snippetId) {
   const parentSection = document.querySelector(`#s-${snippetId}`);
-  const bundleId = parentSection.querySelector(`#bundleId`)?.value || undefined;
   const variantId = parentSection.querySelector(`#variantId`)?.value || undefined;
   const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
   const inventory = parseInt(parentSection.querySelector(`#_inventory`)?.value) || null;
   const uploadedImageLink = parentSection.querySelector(`#yc-upload-link`)?.value || undefined;
 
-  if (!(variantId || bundleId)) {
+  if (!variantId) {
     return notify(ADD_TO_CART_EXPECTED_ERRORS.select_variant, 'error');
   }
 
@@ -23,11 +22,11 @@ async function addToCart(snippetId) {
       load('#loading__cart');
     });
 
-    const cartPayload = bundleId
-      ? { bundleId, isBundle: true, quantity }
-      : { productVariantId: variantId, attachedImage: uploadedImageLink, quantity };
-
-    const response = await youcanjs.cart.addItem(cartPayload);
+    const response = await youcanjs.cart.addItem({
+      productVariantId: variantId,
+      attachedImage: uploadedImageLink,
+      quantity,
+    });
 
     if (response.error) throw new Error(response.error);
 
@@ -36,25 +35,58 @@ async function addToCart(snippetId) {
 
     stopLoad('#loading__cart');
 
-    if (!bundleId) {
-      const selectedVariant = response.items.find((variant) => variant.productVariant.id === variantId);
+    const selectedVariant = response.items.find((variant) => variant.productVariant.id === variantId);
 
-      window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
+    window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
 
-      const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
+    const checkoutPageUrl = response.one_page_checkout === true ? response.all_in_one_checkout_url : response.checkout_info_url;
 
-      if (IS_CART_SKIPED) {
-        window.location.href = checkoutPageUrl;
-        window.Dotshop.pixels.publish('initiate-checkout', selectedVariant);
+    if (IS_CART_SKIPED) {
+      window.location.href = checkoutPageUrl;
+      window.Dotshop.pixels.publish('initiate-checkout', selectedVariant);
 
-        return;
-      }
+      return;
     }
 
     notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     stopLoad('#loading__cart');
+    notify(err.message, 'error');
+  }
+}
+
+async function addBundleToCart(snippetId) {
+  const parentSection = document.querySelector(`#s-${snippetId}`);
+  const bundleId = parentSection.querySelector('[data-bundle] input[type="checkbox"]:checked')?.value;
+  const quantity = parseInt(parentSection.querySelector(`#quantity`)?.value) || 1;
+
+  if (!bundleId) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.select_bundle, 'error');
+  }
+
+  if (quantity < 1) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.quantity_smaller_than_zero, 'error');
+  }
+
+  try {
+    requestAnimationFrame(() => {
+      load('#loading__bundle-cart');
+    });
+
+    const response = await youcanjs.cart.addItem({ bundleId, isBundle: true, quantity });
+
+    if (response.error) throw new Error(response.error);
+
+    updateCartCount(response.count);
+    await updateCartDrawer();
+
+    stopLoad('#loading__bundle-cart');
+
+    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    toggleCartDrawer();
+  } catch (err) {
+    stopLoad('#loading__bundle-cart');
     notify(err.message, 'error');
   }
 }
