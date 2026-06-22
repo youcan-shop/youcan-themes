@@ -1,31 +1,25 @@
 {{ 'bundles.css' | asset_url | stylesheet_tag }}
 
 {% for bundle in product.bundles.single %}
-  <label data-bundle="single">
-    <div class="head">
+  {% assign sv = null %}
+  {% for bp in bundle.bundle_products %}
+    {% if forloop.first %}
+      {% assign sv = bp.selected_variant %}
+    {% endif %}
+  {% endfor %}
+  <label data-bundle="single" class="bundle-card">
+    <div class="bundle-card-head">
       <input class="bundle-checkbox" type="checkbox" value="{{ bundle.id }}">
-      <div class="detail">
-        <div class="box">
-          <h3 class="title">{{ bundle.title }}</h3>
-          <div class="price">
-            <span class="original">{{ bundle.total_price | money }}</span>
-            {% if bundle.compare_price %}
-              <span class="compare-at">{{ bundle.compare_price | money }}</span>
-            {% endif %}
-          </div>
-        </div>
-        <div class="box">
-          <span class="bundle-save-badge bundle-save-badge--stroke">x{{ bundle.bundle_products.size }}</span>
-          {% if bundle.saving_percentage %}
-            <span class="bundle-save-badge bundle-save-badge--success">
-              {{ 'general.you_save' | t }}
-              {{ bundle.saving_percentage }}%
-            </span>
-          {% endif %}
-        </div>
-      </div>
+      <h3 class="bundle-card-title">{{ bundle.title }}</h3>
+      {% if bundle.saving_percentage %}
+        <span class="bundle-discount-tag">
+          {{ 'general.you_save' | t }}
+          {{ bundle.saving_percentage }}%
+        </span>
+      {% endif %}
     </div>
-    <div class="item">
+
+    <div class="bundle-card-product">
       <div class="media">
         {% if product.preview_image %}
           <img
@@ -39,19 +33,48 @@
       </div>
       <div class="info">
         <span class="name">{{ product.name }}</span>
-        {% for item in bundle.bundle_products %}
-          {% assign p = item.selected_variant %}
-          {% unless p.variations == null or p.variations.default %}
-            <div class="group">
-              <span class="index">#{{ forloop.index }}</span>
-              <div class="variants">
-                {% for variant in p.variations %}
-                  <span class="variant">{{ variant[1] }}</span>
-                {% endfor %}
-              </div>
-            </div>
-          {% endunless %}
+        <div class="price">
+          <span class="original">{{ bundle.total_price | money }}</span>
+          {% if bundle.compare_price %}
+            <span class="compare-at">{{ bundle.compare_price | money }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="bundle-card-variants">
+      {% unless sv.variations == null or sv.variations.default %}
+        {% for variation in sv.variations %}
+          <div class="bundle-variant-group">
+            <span class="bundle-variant-label">{{ variation[0] }} :</span>
+            {% for option in product.options %}
+              {% if option.name == variation[0] %}
+                {% case option.type %}
+                  {% when 'color_base_buttons' %}
+                    <ul class="yc-colors-select">
+                      {% for item in option.values %}
+                        {% if item.value == variation[1] %}
+                          <li class="color-item">
+                            <span class="preview" style="background-color: {{ item.preview }}"></span>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  {% when 'textual_buttons' %}
+                    <ul class="yc-options-list">
+                      <li class="yc-options-item">{{ variation[1] }}</li>
+                    </ul>
+                  {% else %}
+                    <span class="bundle-variant-value">{{ variation[1] }}</span>
+                {% endcase %}
+              {% endif %}
+            {% endfor %}
+          </div>
         {% endfor %}
+      {% endunless %}
+      <div class="bundle-variant-group">
+        <span class="bundle-variant-label">{{ 'general.quantity' | t }} :</span>
+        <span class="bundle-variant-qty">x{{ bundle.bundle_products.size }}</span>
       </div>
     </div>
   </label>

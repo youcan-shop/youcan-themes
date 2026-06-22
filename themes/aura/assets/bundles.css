@@ -190,11 +190,154 @@
 }
 
 .bundle-checkbox{
-  width:18px;
-  height:18px;
+  -moz-appearance:none;
+  appearance:none;
+  -webkit-appearance:none;
+  box-sizing:border-box;
+  width:20px;
+  height:20px;
+  min-width:20px;
+  padding:0;
+  margin:0;
+  border:1px solid #B7B7B7;
+  border-radius:50%;
   cursor:pointer;
   flex-shrink:0;
-  accent-color:var(--yc-primary-color);
+  position:relative;
+}
+.bundle-checkbox:checked{
+  border-color:var(--yc-primary-color);
+}
+.bundle-checkbox:checked::after{
+  content:"";
+  position:absolute;
+  inset:1.3px;
+  border-radius:50%;
+  background-color:var(--yc-primary-color);
+}
+
+.bundle-card{
+  box-shadow:1px 2px 18px -2px #F2F1F1;
+}
+.bundle-card .bundle-card-head{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:16px;
+}
+.bundle-card .bundle-card-head .bundle-card-title{
+  margin:0;
+  font-weight:700;
+  font-size:18px;
+  line-height:normal;
+}
+.bundle-card .bundle-discount-tag{
+  display:inline-flex;
+  align-items:center;
+  padding:4px 16px;
+  border-radius:4px;
+  font-size:13px;
+  font-weight:700;
+  white-space:nowrap;
+  background-color:var(--yc-primary-color);
+  color:#fff;
+}
+.bundle-card .bundle-card-product{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:0 16px 16px;
+}
+.bundle-card .bundle-card-product .info{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  gap:6px;
+}
+.bundle-card .bundle-card-product .info .name{
+  font-size:15px;
+  font-style:normal;
+  font-weight:700;
+  line-height:120%;
+}
+.bundle-card .bundle-card-product .info .price{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.bundle-card .bundle-card-product .info .price .original{
+  font-size:16px;
+  font-style:normal;
+  font-weight:700;
+  line-height:120%;
+}
+.bundle-card .bundle-card-product .info .price .compare-at{
+  color:#8D8D8D;
+  font-size:13px;
+  font-style:normal;
+  font-weight:400;
+  line-height:120%;
+  text-decoration-line:line-through;
+}
+.bundle-card .bundle-card-product .media{
+  width:65px;
+  height:65px;
+  flex-shrink:0;
+  overflow:hidden;
+  border-radius:4px;
+  aspect-ratio:1/1;
+}
+.bundle-card .bundle-card-product .media > img{
+  -o-object-fit:cover;
+     object-fit:cover;
+  width:100%;
+  height:100%;
+}
+.bundle-card .bundle-card-variants{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:12px 20px;
+  margin:0 16px;
+  padding:12px 0;
+  border-top:1px solid #e5e7eb;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group .bundle-variant-label{
+  font-size:12px;
+  font-style:normal;
+  font-weight:400;
+  line-height:120%;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group .bundle-variant-qty{
+  font-size:15px;
+  font-style:normal;
+  font-weight:700;
+  line-height:120%;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group .bundle-variant-value{
+  padding:2px 6px;
+  background-color:#f3f4f6;
+  font-size:0.875rem;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group .yc-options-list,
+.bundle-card .bundle-card-variants .bundle-variant-group .yc-colors-select{
+  gap:8px;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group .yc-options-item{
+  padding:6px 12px;
+  cursor:default;
+}
+.bundle-card .bundle-card-variants .bundle-variant-group .color-item{
+  width:28px;
+  height:28px;
+  cursor:default;
 }
 
 .bundle-add-to-cart{
