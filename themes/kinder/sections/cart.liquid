@@ -9,6 +9,13 @@
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
   "
 >
+  {% capture breadcrumb_items %}
+    {{ 'navigation.home' | t }},/|
+    {{ 'cart.title' | t }}
+  {% endcapture %}
+
+  {% render 'misc.breadcrumb', items: breadcrumb_items %}
+
   <div ui-slot="head" data-align="start">
     <h1 class="heading">{{ 'cart.title' | t }}</h1>
   </div>
@@ -26,7 +33,6 @@
           <tr>
             <th></th>
             <th>{{ 'cart.page.table.product' | t }}</th>
-            <th>{{ 'cart.page.table.price' | t }}</th>
             <th>{{ 'cart.page.table.quantity' | t }}</th>
             <th>{{ 'cart.page.table.total' | t }}</th>
           </tr>
@@ -48,7 +54,7 @@
         <div ui-slot="accordion">
           <form ui-slot="accordion-item" ui-summary-box="coupon-form">
             <label ui-slot="accordion-trigger">
-              <i class="hgi hgi-stroke hgi-coupon-percent"></i>
+              {% render 'misc.icon', name: 'hgi-coupon-01', size: 24 %}
               {{ 'cart.page.summary.coupon' | t }}
               <input type="checkbox" name="my-accordion" checked>
             </label>
@@ -66,9 +72,8 @@
                   <button
                     type="submit"
                     ui-slot="button"
-                    data-variant="primary"
-                    data-mode="filled"
-                    data-size="md"
+                    data-variant="ghost"
+                    data-size="lg"
                     data-coupon="coupon-button"
                   >
                     {{ 'cart.page.coupon.apply' | t }}
@@ -107,10 +112,13 @@
       <div class="details">
         <span class="label">{{ 'cart.drawer.total' | t }}</span>
         <span class="value" ui-summary-box="subtotal">{{ cart.discounted_sub_total | default: 0 | money }}</span>
+        <hr ui-slot="divider" data-variant="line">
         <span class="description">{{ 'cart.drawer.note' | t }}</span>
         <a href="{{ cart.cart_submit_url }}" ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg" id="checkout-button">
-          {% render 'misc.icon', name: settings.cart_icon %}
-          {{ 'cart.drawer.actions.checkout' | t }}
+          <span ui-slot="button-front">
+            {% render 'misc.icon', name: settings.cart_icon %}
+            {{ 'cart.drawer.actions.checkout' | t }}
+          </span>
         </a>
       </div>
     </ui-summary-box>
@@ -191,7 +199,7 @@
       "max": 64,
       "step": 4,
       "unit": "px",
-      "default": 40
+      "default": 24
     },
     {
       "type": "range",
