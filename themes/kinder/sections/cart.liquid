@@ -60,7 +60,10 @@
             </label>
             <div ui-slot="accordion-content" role="region">
               <div class="coupon">
-                <div class="input">
+                <div
+                  ui-slot="input-wrapper"
+                  class="input"
+                >
                   <input
                     ui-slot="input"
                     data-size="md"
@@ -81,7 +84,6 @@
                 </div>
                 <div class="output">
                   <div class="info">
-                    <span ui-slot="label">{{ 'cart.page.coupon.applied' | t }}</span>
                     <div
                       ui-slot="status-badge"
                       ui-summary-box="coupon-code"
@@ -89,19 +91,17 @@
                         hidden
                       {% endunless %}
                     >
-                      <i class="hgi hgi-stroke hgi-coupon-percent"></i>
                       {{ cart.coupon.code }}
                     </div>
                   </div>
                   <button
                     type="button"
                     ui-slot="button"
-                    data-variant="error"
-                    data-mode="lighter"
+                    data-variant="neutral"
                     data-size="sm"
                     ui-summary-box="remove-coupon"
                   >
-                    {{ 'cart.page.coupon.remove' | t }}
+                    {% render 'misc.icon', name: 'hgi-delete-02' %}
                   </button>
                 </div>
               </div>

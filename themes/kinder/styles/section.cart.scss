@@ -68,10 +68,6 @@
                 .info {
                   display: grid;
                   gap: var(--spacing-4);
-
-                  .variants {
-                    color: var(--color-on-surface-variant);
-                  }
                 }
               }
             }
@@ -105,18 +101,24 @@
           display: grid;
           gap: var(--spacing-16);
 
-          .input {
+          [ui-slot="input-wrapper"] {
             display: flex;
             height: 48px;
+            padding-inline-end: var(--spacing-0);
             transition: all var(--transition-standard-default-spatial);
             border: 1px solid color-mix(in srgb, var(--bg-shade-color), black 4%);
             border-radius: var(--radius-8);
             background-color: var(--bg-color);
             gap: var(--spacing-8);
 
+            &:focus {
+              border-color: transparent;
+              outline-color: transparent;
+            }
+
             &:has([ui-slot="input"]:focus) {
               border-color: currentcolor;
-              outline-color: color-mix(in oklab, currentcolor 10%, transparent);
+              outline-color: transparent;
             }
 
             [ui-slot="input"] {
@@ -141,7 +143,9 @@
           .output {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
+            height: 48px;
+            gap: var(--spacing-4);
 
             .info {
               display: flex;
@@ -149,18 +153,25 @@
               gap: var(--spacing-8);
 
               [ui-slot="status-badge"] {
-                background-color: var(--color-primary-container);
-                color: var(--color-primary);
+                background-color: oklch(from var(--bg-shade-color) calc(l - 0.0444) calc(c + 0.0456) calc(h - 1));
+                color: var(--fg-color);
+                font: var(--font-label-sm);
               }
             }
 
             [ui-slot="button"] {
-              width: 75px;
+              color: inherit;
             }
           }
 
           &:has([ui-summary-box="coupon-code"][hidden]) {
             .output {
+              display: none;
+            }
+          }
+
+          &:has([ui-summary-box="coupon-code"]:not([hidden])) {
+            [ui-slot="input-wrapper"] {
               display: none;
             }
           }

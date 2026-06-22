@@ -62,9 +62,6 @@
     grid-gap:var(--spacing-4);
     gap:var(--spacing-4);
   }
-  [ui-section=cart] .core-area table tbody tr td .product .info .variants{
-    color:var(--color-on-surface-variant);
-  }
   [ui-section=cart] .core-area .summary{
     display:grid;
     grid-gap:var(--spacing-24);
@@ -88,30 +85,35 @@
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
   }
-  [ui-section=cart] .core-area .summary .coupon .input{
+  [ui-section=cart] .core-area .summary .coupon [ui-slot=input-wrapper]{
     display:flex;
     height:48px;
+    padding-inline-end:var(--spacing-0);
     transition:all var(--transition-standard-default-spatial);
     border:1px solid color-mix(in srgb, var(--bg-shade-color), black 4%);
     border-radius:var(--radius-8);
     background-color:var(--bg-color);
     gap:var(--spacing-8);
   }
-  [ui-section=cart] .core-area .summary .coupon .input:has([ui-slot=input]:focus){
-    border-color:currentcolor;
-    outline-color:color-mix(in oklab, currentcolor 10%, transparent);
+  [ui-section=cart] .core-area .summary .coupon [ui-slot=input-wrapper]:focus{
+    border-color:transparent;
+    outline-color:transparent;
   }
-  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=input]{
+  [ui-section=cart] .core-area .summary .coupon [ui-slot=input-wrapper]:has([ui-slot=input]:focus){
+    border-color:currentcolor;
+    outline-color:transparent;
+  }
+  [ui-section=cart] .core-area .summary .coupon [ui-slot=input-wrapper] [ui-slot=input]{
     flex:2;
     height:100%;
     background-color:transparent;
     box-shadow:none;
   }
-  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=input]:focus{
+  [ui-section=cart] .core-area .summary .coupon [ui-slot=input-wrapper] [ui-slot=input]:focus{
     border-color:transparent;
     outline-color:transparent;
   }
-  [ui-section=cart] .core-area .summary .coupon .input [ui-slot=button]{
+  [ui-section=cart] .core-area .summary .coupon [ui-slot=input-wrapper] [ui-slot=button]{
     width:75px;
     background-color:transparent;
     color:var(--fg-color);
@@ -119,7 +121,9 @@
   [ui-section=cart] .core-area .summary .coupon .output{
     display:flex;
     align-items:center;
-    justify-content:space-between;
+    justify-content:flex-start;
+    height:48px;
+    gap:var(--spacing-4);
   }
   [ui-section=cart] .core-area .summary .coupon .output .info{
     display:flex;
@@ -127,13 +131,17 @@
     gap:var(--spacing-8);
   }
   [ui-section=cart] .core-area .summary .coupon .output .info [ui-slot=status-badge]{
-    background-color:var(--color-primary-container);
-    color:var(--color-primary);
+    background-color:oklch(from var(--bg-shade-color) calc(l - 0.0444) calc(c + 0.0456) calc(h - 1));
+    color:var(--fg-color);
+    font:var(--font-label-sm);
   }
   [ui-section=cart] .core-area .summary .coupon .output [ui-slot=button]{
-    width:75px;
+    color:inherit;
   }
   [ui-section=cart] .core-area .summary .coupon:has([ui-summary-box=coupon-code][hidden]) .output{
+    display:none;
+  }
+  [ui-section=cart] .core-area .summary .coupon:has([ui-summary-box=coupon-code]:not([hidden])) [ui-slot=input-wrapper]{
     display:none;
   }
   [ui-section=cart] .core-area .summary .details{
