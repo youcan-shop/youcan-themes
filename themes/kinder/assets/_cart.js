@@ -152,6 +152,7 @@ class BaseCartItem extends HTMLElement {
 
   updateItemTitle(titleElement, product) {
     titleElement.textContent = product.name;
+    titleElement.href = product.url ?? `/products/${product.slug}`;
   }
 
   updateItemVariant(variantElement, variations) {
@@ -270,11 +271,9 @@ class CartItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [image, title, variant, quantity, deleteButton, subtotal] = cartItem.querySelectorAll("[ui-cart-item]");
-    return { image, title, variant, quantity, deleteButton, subtotal };
+    const [image, title, price, variant, quantity, deleteButton, subtotal] = cartItem.querySelectorAll("[ui-cart-item]");
+    return { image, title, price, variant, quantity, deleteButton, subtotal };
   }
-
-  updateItemPrice() {}
 
   additionalItemUpdates(elements, item) {
     if (elements.subtotal) {
