@@ -28,7 +28,7 @@
     border-block-end:1px solid var(--color-surface-variant);
   }
   [ui-section=cart] .core-area table thead th{
-    padding-inline:var(--spacing-12);
+    padding-block:var(--spacing-8);
     text-align:start;
     white-space:nowrap;
   }
@@ -39,7 +39,7 @@
     border-block-end:1px solid var(--color-surface-variant);
   }
   [ui-section=cart] .core-area table tbody tr td{
-    padding:var(--spacing-12);
+    padding-block:var(--spacing-32);
     white-space:nowrap;
   }
   [ui-section=cart] .core-area table tbody tr td .product{
@@ -49,7 +49,9 @@
   }
   [ui-section=cart] .core-area table tbody tr td .product .image{
     width:120px;
+    min-width:100px;
     height:120px;
+    min-height:100px;
     overflow:hidden;
     border-radius:var(--radius-12);
   }
@@ -57,9 +59,22 @@
     -o-object-fit:cover;
        object-fit:cover;
   }
+  [ui-section=cart] .core-area table tbody tr td .product .image ui-image-fallback{
+    background-color:var(--bg-shade-color);
+  }
   [ui-section=cart] .core-area table tbody tr td .product .info{
     display:grid;
     grid-gap:var(--spacing-4);
+    gap:var(--spacing-4);
+  }
+  [ui-section=cart] .core-area table tbody tr td .product .info .title{
+    word-wrap:break-word;
+    white-space:normal;
+  }
+  [ui-section=cart] .core-area table tbody tr td .controls{
+    --quantity-bg:var(--fg-color);
+    display:flex;
+    align-items:center;
     gap:var(--spacing-4);
   }
   [ui-section=cart] .core-area .summary{
@@ -190,16 +205,18 @@
     }
     [ui-section=cart] .core-area table tbody tr{
       display:grid;
-      grid-template-columns:repeat(2, auto);
+      grid-template-columns:1fr auto;
       align-items:center;
-      grid-gap:var(--spacing-12);
-      gap:var(--spacing-12);
+      grid-gap:var(--spacing-24);
+      gap:var(--spacing-24);
     }
     [ui-section=cart] .core-area table tbody tr:has(:last-child){
       margin-block-end:var(--spacing-16);
       padding-block-end:var(--spacing-16);
     }
     [ui-section=cart] .core-area table tbody tr td{
+      order:-1;
+      width:100%;
       padding:var(--spacing-0);
     }
     [ui-section=cart] .core-area table tbody tr td:first-child, [ui-section=cart] .core-area table tbody tr td:nth-child(4){

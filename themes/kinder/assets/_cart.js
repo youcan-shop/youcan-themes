@@ -270,9 +270,11 @@ class CartItems extends BaseCartItem {
   }
 
   getCartItemElements(cartItem) {
-    const [deleteButton, image, title, variant, price, quantity, subtotal] = cartItem.querySelectorAll("[ui-cart-item]");
-    return { image, title, variant, price, quantity, subtotal, deleteButton };
+    const [image, title, variant, quantity, deleteButton, subtotal] = cartItem.querySelectorAll("[ui-cart-item]");
+    return { image, title, variant, quantity, deleteButton, subtotal };
   }
+
+  updateItemPrice() {}
 
   additionalItemUpdates(elements, item) {
     if (elements.subtotal) {

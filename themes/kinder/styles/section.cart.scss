@@ -29,7 +29,7 @@
           border-block-end: 1px solid var(--color-surface-variant);
 
           th {
-            padding-inline: var(--spacing-12);
+            padding-block: var(--spacing-8);
             text-align: start;
             white-space: nowrap;
 
@@ -46,7 +46,7 @@
             }
 
             td {
-              padding: var(--spacing-12);
+              padding-block: var(--spacing-32);
               white-space: nowrap;
 
               .product {
@@ -56,19 +56,38 @@
 
                 .image {
                   width: 120px;
+                  min-width: 100px;
                   height: 120px;
+                  min-height: 100px;
                   overflow: hidden;
                   border-radius: var(--radius-12);
 
                   & > img {
                     object-fit: cover;
                   }
+
+                  ui-image-fallback {
+                    background-color: var(--bg-shade-color);
+                  }
                 }
 
                 .info {
                   display: grid;
                   gap: var(--spacing-4);
+
+                  .title {
+                    overflow-wrap: break-word;
+                    white-space: normal;
+                  }
                 }
+              }
+
+              .controls {
+                --quantity-bg: var(--fg-color);
+
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-4);
               }
             }
           }
@@ -232,9 +251,9 @@
           tbody {
             tr {
               display: grid;
-              grid-template-columns: repeat(2, auto);
+              grid-template-columns: 1fr auto;
               align-items: center;
-              gap: var(--spacing-12);
+              gap: var(--spacing-24);
 
               &:has(:last-child) {
                 margin-block-end: var(--spacing-16);
@@ -242,6 +261,8 @@
               }
 
               td {
+                order: -1;
+                width: 100%;
                 padding: var(--spacing-0);
 
                 &:first-child,
