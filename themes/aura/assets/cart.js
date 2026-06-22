@@ -236,8 +236,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const cart = await CartService.fetchCart();
 
-    if (cart.items.length > 0) {
-      CartUI.updateTotalPrice(cart.discounted_sub_total, cart.items);
+    const items = Array.isArray(cart.items) ? cart.items : [];
+
+    if (items.length > 0) {
+      CartUI.updateTotalPrice(cart.discounted_sub_total, items);
     }
 
     if (cart.coupon && cart.discountedPrice) {

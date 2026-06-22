@@ -24,7 +24,7 @@ async function addToCart(snippetId) {
     });
 
     const cartPayload = bundleId
-      ? { bundleId, isBundle: true }
+      ? { bundleId, isBundle: true, quantity }
       : { productVariantId: variantId, attachedImage: uploadedImageLink, quantity };
 
     const response = await youcanjs.cart.addItem(cartPayload);
@@ -77,8 +77,10 @@ async function attachRemoveItemListeners() {
 function attachBundleRemoveListeners() {
   document.querySelectorAll('.remove-bundle-btn').forEach((btn) => {
     btn.addEventListener('click', async () => {
-      const itemIds = btn.getAttribute('data-bundle-item-ids').split(',').map((s) => s.trim()).filter(Boolean);
-      const variantIds = btn.getAttribute('data-bundle-variant-ids').split(',').map((s) => s.trim()).filter(Boolean);
+      const itemIds = (btn.getAttribute('data-bundle-item-ids') || '').split(',').map((s) => s.trim()).filter(Boolean);
+      const variantIds = (btn.getAttribute('data-bundle-variant-ids') || '').split(',').map((s) => s.trim()).filter(Boolean);
+
+      if (!itemIds.length) return;
 
       try {
         for (let i = 0; i < itemIds.length; i++) {
@@ -160,10 +162,11 @@ function updateCartQuantity(cartItemId, productVariantId, delta) {
 }
 
 function bundleItemTemplate(item) {
+  const variations = item.productVariant?.variations || {};
   const variationsArray = [];
-  for (const key in item.variations) {
-    if (item.variations.hasOwnProperty(key) && key !== 'default') {
-      variationsArray.push(`${key}: ${item.variations[key]}`);
+  for (const key in variations) {
+    if (variations.hasOwnProperty(key) && key !== 'default') {
+      variationsArray.push(`${key}: ${variations[key]}`);
     }
   }
   const variationsString = variationsArray.join(', ');
@@ -173,11 +176,14 @@ function bundleItemTemplate(item) {
     ? `<span class="free-badge">${CART_DRAWER_TRANSLATION.free}</span>`
     : `<span>${formatCurrency(subtotal, CURRENCY_CODE, CUSTOMER_LOCALE)}</span>`;
 
+  const imageUrl = item.productVariant?.image?.url ?? item.productVariant?.product?.thumbnail ?? defaultImage;
+  const name = item.productVariant?.product?.name ?? '';
+
   return `
     <div class="bundle-item">
-      <img src="${item.image || defaultImage}" alt="${item.name}">
+      <img src="${imageUrl}" alt="${name}">
       <div class="bundle-item-info">
-        <span class="name">${item.name}</span>
+        <span class="name">${name}</span>
         ${variationsString ? `<div class="variants">${variationsString}</div>` : ''}
         <div class="price">${priceHtml}</div>
       </div>
@@ -187,7 +193,7 @@ function bundleItemTemplate(item) {
 
 function bundleGroupTemplate(bundle) {
   const itemIds = bundle.items.map((i) => i.id).join(',');
-  const variantIds = bundle.items.map((i) => i.product_variant_id).join(',');
+  const variantIds = bundle.items.map((i) => i.productVariant?.id ?? '').join(',');
 
   return `
     <div class="bundle-group">
@@ -276,26 +282,30 @@ async function updateCartDrawer() {
 
     cartDrawerContent.innerHTML += headerContainer;
 
-    // Check if the cart has items
-    if (cartData.count > 0) {
+    // Partition items into regular and bundle groups via extra_fields
+    const bundleMap = new Map();
+    const regularItems = [];
+    const items = Array.isArray(cartData.items) ? cartData.items : [];
+
+    items.forEach(item => {
+      const extra = item.extra_fields;
+      if (extra?.is_bundle_item) {
+        if (!bundleMap.has(extra.bundle_id)) {
+          bundleMap.set(extra.bundle_id, { id: extra.bundle_id, title: extra.bundle_title, items: [] });
+        }
+        bundleMap.get(extra.bundle_id).items.push(item);
+      } else {
+        regularItems.push(item);
+      }
+    });
+
+    const cartBundles = [...bundleMap.values()];
+    const hasContent = regularItems.length > 0 || cartBundles.length > 0;
+
+    if (hasContent) {
       const products = document.createElement('ul');
 
-      // Collect bundle item IDs to exclude from regular items list
-      const bundleItemIds = new Set();
-      const bundleTypes = ['single', 'multi', 'buyxgety'];
-      if (cartData.bundles) {
-        for (const type of bundleTypes) {
-          for (const bundle of cartData.bundles[type] || []) {
-            for (const bi of bundle.items) {
-              bundleItemIds.add(bi.id);
-            }
-          }
-        }
-      }
-
-      for (const item of cartData.items) {
-        if (bundleItemIds.has(item.id)) continue;
-
+      for (const item of regularItems) {
         item.price = formatCurrency(item.price, CURRENCY_CODE, CUSTOMER_LOCALE);
         item.productVariant.price = formatCurrency(item.productVariant.price, CURRENCY_CODE, CUSTOMER_LOCALE);
 
@@ -308,14 +318,9 @@ async function updateCartDrawer() {
 
       cartDrawerContent.appendChild(products);
 
-      // Render bundle groups
-      if (cartData.bundles) {
-        for (const type of bundleTypes) {
-          for (const bundle of cartData.bundles[type] || []) {
-            cartDrawerContent.innerHTML += bundleGroupTemplate(bundle);
-          }
-        }
-      }
+      cartBundles.forEach(bundle => {
+        cartDrawerContent.innerHTML += bundleGroupTemplate(bundle);
+      });
 
       // Attach event listeners to the newly added remove buttons
       await attachRemoveItemListeners();
