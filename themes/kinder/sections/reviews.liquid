@@ -13,9 +13,10 @@
   "
 >
   <div class="reviews">
-    Reviews
-
-    {% render 'misc.add-review' %}
+    <div ui-slot="head" data-align="start">
+      <h2 class="heading">{{ 'reviews.title' | t }}</h2>
+      {% render 'misc.add-review' %}
+    </div>
 
     <ul class="items">
       {% render 'block.review' %}
@@ -57,7 +58,7 @@
   </div>
   <div class="ratings">
     <div ui-slot="head" data-align="start">
-      <h2 class="heading">{{ section.settings.heading }}</h2>
+      <h2 class="heading">{{ 'reviews.product_rating' | t }}</h2>
     </div>
     <div class="avg-rating">
       <div class="rating">
@@ -110,16 +111,6 @@
       "id": "fg_color",
       "label": "t:common.colors.fg_color",
       "default": "#0E0E0E"
-    },
-    {
-      "type": "header",
-      "content": "t:common.headers.header"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "t:common.header.heading",
-      "default": "t:sections.reviews.default.heading"
     },
     {
       "type": "header",

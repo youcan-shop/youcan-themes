@@ -1,6 +1,7 @@
 @layer sections{
   [ui-section=reviews]{
     --star-color:#f7ca4d;
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
     display:grid;
     grid-template-columns:55% auto;
     padding:var(--top-spacing) 10% var(--bottom-spacing);
@@ -92,6 +93,19 @@
   }
   [ui-section=reviews] [ui-slot=head] .heading{
     font:var(--font-heading-md);
+  }
+  [ui-section=reviews] .reviews{
+    display:flex;
+    flex-direction:column;
+    gap:var(--spacing-24);
+  }
+  [ui-section=reviews] .reviews [ui-slot=head]{
+    flex-direction:row;
+    justify-content:space-between;
+  }
+  [ui-section=reviews] .reviews [ui-slot=button]{
+    --button-bg:var(--bg-shade-color) !important;
+    --button-fg:var(--fg-color) !important;
   }
   [ui-section=reviews] .ratings{
     display:flex;
