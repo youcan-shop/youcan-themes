@@ -30,14 +30,16 @@
     <h3 ui-slot="modal-title">{{ 'reviews.add_review.title' | t }}</h3>
     <button
       ui-slot="button"
-      data-variant="primary"
-      data-mode="lighter"
-      data-size="md"
+      data-variant="secondary"
+      data-size="lg"
       aria-label="Close"
+      data-as-icon
       popovertarget="add-review"
       type="button"
     >
-      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </span>
     </button>
   </div>
   <form>
@@ -138,8 +140,7 @@
           <div class="images">
             <label
               ui-slot="button"
-              data-variant="primary"
-              data-mode="lighter"
+              data-variant="neutral"
               data-size="md"
               class="upload"
             >
@@ -179,23 +180,25 @@
     <div ui-slot="modal-footer">
       <button
         ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
+        data-variant="secondary"
         data-size="lg"
         popovertarget="add-review"
         type="button"
       >
-        {{ 'general.cancel' | t }}
+        <span ui-slot="button-front">
+          {{ 'general.cancel' | t }}
+        </span>
       </button>
       <button
         ui-slot="button"
         data-variant="primary"
-        data-mode="filled"
         data-size="lg"
         type="submit"
         ui-add-review="submit"
       >
-        {{ 'general.submit' | t }}
+        <span ui-slot="button-front">
+          {{ 'general.submit' | t }}
+        </span>
       </button>
     </div>
   </form>
