@@ -10,10 +10,26 @@ class Reviews extends HTMLElement {
     this.item = this.querySelector('[ui-reviews="item"]');
     this.skeleton = this.querySelector('[ui-reviews="skeleton"]');
     this.showMore = this.querySelector('[ui-reviews="show-more"]');
+    this.dialog = this.querySelector('[ui-reviews="image-dialog"]');
   }
 
   connectedCallback() {
     this._render();
+    this._bindImageDialog();
+  }
+
+  _bindImageDialog() {
+    this.addEventListener("click", (e) => {
+      const image = e.target.closest(".images .image");
+      if (!image) return;
+
+      this.dialog.querySelector("img").src = image.querySelector("img").src;
+      this.dialog.showModal();
+    });
+
+    this.dialog.addEventListener("click", (e) => {
+      if (e.target === this.dialog) this.dialog.close();
+    });
   }
 
   _render() {
@@ -26,6 +42,8 @@ class Reviews extends HTMLElement {
 
       const res = response || youcanjs.product.fetchReviews(this.productId, { limit: 8 });
       const items = await res.data();
+
+      console.log(items);
 
       if (!items.length) return;
 
@@ -88,7 +106,7 @@ class Reviews extends HTMLElement {
       const rating = review.querySelector('[ui-reviews="item-rating"]');
       const content = review.querySelector('[ui-reviews="item-content"]');
       const author = review.querySelector('[ui-reviews="item-author"]');
-      const media = review.querySelector('[ui-reviews="item-media"]');
+      const reviewDate = review.querySelector('[ui-reviews="review-date"]');
       const image = review.querySelector('[ui-reviews="item-image"]');
 
       content.innerHTML = item.content;
@@ -97,29 +115,19 @@ class Reviews extends HTMLElement {
         author.textContent = `${item.first_name || ""} ${item.last_name || ""}`.trim();
       }
 
+      if (item.created_at) {
+        reviewDate.textContent = new Date(item.created_at).toLocaleDateString();
+      }
+
       for (let index = 0; index < 5; index++) {
         rating.appendChild(item.ratings > index ? filledStar.content.cloneNode(true) : strokeStar.content.cloneNode(true));
       }
 
-      item.images_urls?.forEach((src, i) => {
-        if (i === 0) {
-          const img = media.content.cloneNode(true);
-          img.querySelector("img").src = src;
-          img.querySelector("img")?.removeAttribute("hidden");
-          media.parentElement.appendChild(img);
-        }
-
+      item.images_urls?.forEach((src) => {
         const img = image.content.cloneNode(true);
         img.querySelector("img").src = src;
-
         image.parentElement.appendChild(img);
       });
-
-      if (!item.images_urls.length) {
-        const img = media.content.cloneNode(true);
-        img.querySelector("ui-image-fallback")?.removeAttribute("hidden");
-        media.parentElement.appendChild(img);
-      }
 
       this.item.parentElement.appendChild(review);
     });

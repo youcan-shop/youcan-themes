@@ -9,6 +9,29 @@
     background-color: var(--bg-color);
     gap: var(--spacing-64);
 
+    dialog[ui-reviews="image-dialog"] {
+      max-width: min(90vw, 800px);
+      max-height: 90vh;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-16);
+      background: transparent;
+
+      &::backdrop {
+        background: rgb(0 0 0 / 80%);
+        backdrop-filter: blur(6px);
+      }
+
+      & > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: var(--radius-16);
+      }
+    }
+
     .items {
       display: flex;
       flex-direction: column;
@@ -19,72 +42,52 @@
       .skeleton-item {
         --bg-color: #fefefe;
 
-        display: grid;
-        position: sticky;
-        grid-template-columns: repeat(2, 1fr);
+        display: flex;
+        flex-direction: column;
+        padding: var(--spacing-24);
+        gap: var(--spacing-24);
         overflow: hidden;
         border-radius: var(--radius-review);
-        inset-block-start: var(--spacing-16);
         background-color: var(--bg-color);
 
-        .media {
-          height: 100%;
-          aspect-ratio: 1 / 1;
+        .images {
+          display: flex;
+          flex-wrap: wrap;
+          gap: var(--spacing-8);
 
-          & > img {
-            object-fit: cover;
+          .image {
+            width: 64px;
+            height: 64px;
+            overflow: hidden;
+            border-radius: var(--radius-16);
+            cursor: pointer;
+
+            & > img {
+              object-fit: cover;
+            }
           }
         }
 
-        .content {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: var(--spacing-24);
-          gap: var(--spacing-16);
+        [ui-reviews="item-content"] {
+          display: -webkit-box;
+          overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 7;
 
-          .core {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-16);
-
-            article {
-              display: -webkit-box;
-              overflow: hidden;
-              color: var(--color-on-surface-variant);
-              word-break: break-all;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 8;
-              line-clamp: 8;
-            }
-
-            .images {
-              display: flex;
-              flex-wrap: wrap;
-              gap: var(--spacing-8);
-
-              .image {
-                width: var(--spacing-48);
-                height: var(--spacing-48);
-                overflow: hidden;
-                border-radius: calc(var(--radius-testimonial) * 0.6);
-
-                & > img {
-                  object-fit: cover;
-                }
-              }
-            }
+          p {
+            overflow-wrap: break-word;
           }
+        }
+
+        .author-wrapper {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-4);
+          opacity: 0.6;
+          font: var(--font-body-sm);
 
           .author {
-            padding-block-start: var(--spacing-16);
-            border-block-start: 1px solid var(--color-surface-variant);
-          }
-        }
-
-        &[ui-block="review"] {
-          .content {
-            background-color: var(--color-surface-container-low);
+            text-transform: capitalize;
           }
         }
       }
@@ -116,10 +119,7 @@
 
     .ratings {
       display: flex;
-      position: sticky;
-      inset-block-start: var(--spacing-16);
       flex-direction: column;
-      align-self: flex-start;
       gap: var(--spacing-32);
 
       .avg-rating {
