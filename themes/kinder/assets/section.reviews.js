@@ -123,11 +123,15 @@ class Reviews extends HTMLElement {
         rating.appendChild(item.ratings > index ? filledStar.content.cloneNode(true) : strokeStar.content.cloneNode(true));
       }
 
-      item.images_urls?.forEach((src) => {
-        const img = image.content.cloneNode(true);
-        img.querySelector("img").src = src;
-        image.parentElement.appendChild(img);
-      });
+      if (item.images_urls?.length) {
+        item.images_urls.forEach((src) => {
+          const img = image.content.cloneNode(true);
+          img.querySelector("img").src = src;
+          image.parentElement.appendChild(img);
+        });
+      } else {
+        image.parentElement.setAttribute("hidden", true);
+      }
 
       this.item.parentElement.appendChild(review);
     });
