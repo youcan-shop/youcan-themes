@@ -110,6 +110,13 @@
     --button-bg:var(--bg-shade-color) !important;
     --button-fg:var(--fg-color) !important;
   }
+  [ui-section=reviews] .reviews [ui-reviews=show-more]{
+    width:-moz-fit-content;
+    width:fit-content;
+    min-width:200px;
+    margin:0 auto;
+    background-color:transparent;
+  }
   [ui-section=reviews] .ratings{
     display:flex;
     flex-direction:column;
@@ -246,16 +253,19 @@
       grid-template-columns:1fr;
     }
   }
+  @media (max-width: 1024px){
+    [ui-section=reviews]{
+      padding-inline:var(--spacing-16);
+      gap:var(--spacing-32);
+    }
+  }
   @media (max-width: 769px){
-    [ui-section=reviews] [ui-slot=head] .overview{
-      width:100%;
+    [ui-section=reviews]{
+      grid-template-columns:1fr;
     }
-    [ui-section=reviews] [ui-slot=head] .overview .star-distro{
-      width:100%;
-    }
-    [ui-section=reviews] [ui-slot=head] .overview .add-review-modal [ui-slot=modal-body] .fields{
-      display:flex;
-      flex-direction:column;
+    [ui-section=reviews] .ratings{
+      order:-1;
+      gap:var(--spacing-24);
     }
     [ui-section=reviews] .items .skeleton-item,
     [ui-section=reviews] .items [ui-block=review]{
