@@ -6,6 +6,7 @@
     grid-template-columns:55% auto;
     padding:var(--top-spacing) 10% var(--bottom-spacing);
     background-color:var(--bg-color);
+    color:var(--fg-color);
     grid-gap:var(--spacing-64);
     gap:var(--spacing-64);
   }
@@ -59,7 +60,15 @@
     border-radius:var(--radius-review);
     background-color:#fefefe;
     background-color:var(--bg-color);
+    color:oklch(from #fefefe clamp(0, (0.5 - l) * 9999, 1) 0 none);
   }
+
+@supports (color: lab(from red l 1 1% / calc(alpha + 0.1))){
+[ui-section=reviews] .items [ui-block=review],
+  [ui-section=reviews] .items .skeleton-item{
+    color:oklch(from var(--bg-color) clamp(0, (0.5 - l) * 9999, 1) 0 none);
+  }
+}
   [ui-section=reviews] .items [ui-block=review] .images,
   [ui-section=reviews] .items .skeleton-item .images{
     display:flex;
