@@ -1,12 +1,6 @@
 {{ 'bundles.css' | asset_url | stylesheet_tag }}
 
 {% for bundle in product.bundles.single %}
-  {% assign sv = null %}
-  {% for bp in bundle.bundle_products %}
-    {% if forloop.first %}
-      {% assign sv = bp.selected_variant %}
-    {% endif %}
-  {% endfor %}
   <label data-bundle="single" class="bundle-card">
     <div class="bundle-card-head">
       <input class="bundle-checkbox" type="checkbox" value="{{ bundle.id }}">
@@ -43,39 +37,39 @@
     </div>
 
     <div class="bundle-card-variants">
-      {% unless sv.variations == null or sv.variations.default %}
-        {% for variation in sv.variations %}
-          <div class="bundle-variant-group">
-            <span class="bundle-variant-label">{{ variation[0] }} :</span>
-            {% for option in product.options %}
-              {% if option.name == variation[0] %}
-                {% case option.type %}
-                  {% when 'color_base_buttons' %}
-                    <ul class="yc-colors-select">
-                      {% for item in option.values %}
-                        {% if item.value == variation[1] %}
-                          <li class="color-item">
-                            <span class="preview" style="background-color: {{ item.preview }}"></span>
-                          </li>
-                        {% endif %}
-                      {% endfor %}
-                    </ul>
-                  {% when 'textual_buttons' %}
-                    <ul class="yc-options-list">
-                      <li class="yc-options-item">{{ variation[1] }}</li>
-                    </ul>
-                  {% else %}
+      {% assign seen_ids = '' %}
+      {% assign row_index = 0 %}
+      {% for bp in bundle.bundle_products %}
+        {% unless seen_ids contains bp.product_variant_id %}
+          {% assign seen_ids = seen_ids | append: bp.product_variant_id | append: ',' %}
+          {% assign row_index = row_index | plus: 1 %}
+
+          {% assign total_qty = 0 %}
+          {% for dup in bundle.bundle_products %}
+            {% if dup.product_variant_id == bp.product_variant_id %}
+              {% assign total_qty = total_qty | plus: dup.quantity %}
+            {% endif %}
+          {% endfor %}
+
+          <div class="bundle-variant-row">
+            <span class="bundle-variant-index">#{{ row_index }}</span>
+            <div class="bundle-variant-info">
+              {% unless bp.selected_variant.variations == null or bp.selected_variant.variations.default %}
+                {% for variation in bp.selected_variant.variations %}
+                  <div class="bundle-variant-group">
+                    <span class="bundle-variant-label">{{ variation[0] }} :</span>
                     <span class="bundle-variant-value">{{ variation[1] }}</span>
-                {% endcase %}
-              {% endif %}
-            {% endfor %}
+                  </div>
+                {% endfor %}
+              {% endunless %}
+              <div class="bundle-variant-group">
+                <span class="bundle-variant-label">{{ 'general.quantity' | t }} :</span>
+                <span class="bundle-variant-qty">x{{ total_qty }}</span>
+              </div>
+            </div>
           </div>
-        {% endfor %}
-      {% endunless %}
-      <div class="bundle-variant-group">
-        <span class="bundle-variant-label">{{ 'general.quantity' | t }} :</span>
-        <span class="bundle-variant-qty">x{{ bundle.bundle_products.size }}</span>
-      </div>
+        {% endunless %}
+      {% endfor %}
     </div>
   </label>
 {% endfor %}
