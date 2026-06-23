@@ -23,12 +23,6 @@
   [ui-section=related-products] .items-area{
     width:100%;
   }
-  [ui-section=related-products] .items-area[data-show-as-list]{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(288px, 1fr));
-    grid-gap:var(--gap);
-    gap:var(--gap);
-  }
   [ui-section=related-products] .items-area [ui-slot=carousel-item]{
     height:auto !important;
     height:initial !important;
@@ -102,10 +96,12 @@
       display:flex;
       flex-direction:column;
       padding-inline:var(--spacing-16);
-      gap:var(--spacing-48);
     }
   }
   @media (max-width: 769px){
+    [ui-section=related-products]{
+      --per-page:1 !important;
+    }
     [ui-section=related-products] .content-area .actions{
       justify-content:var(--text-heading-alignment-mobile);
     }

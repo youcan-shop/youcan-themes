@@ -26,12 +26,6 @@
     .items-area {
       width: 100%;
 
-      &[data-show-as-list] {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
-        gap: var(--gap);
-      }
-
       [ui-slot="carousel-item"] {
         height: unset !important;
       }
@@ -117,10 +111,11 @@
       display: flex;
       flex-direction: column;
       padding-inline: var(--spacing-16);
-      gap: var(--spacing-48);
     }
 
     @media (width <= 769px) {
+      --per-page: 1 !important;
+
       .content-area {
         .actions {
           justify-content: var(--text-heading-alignment-mobile);
