@@ -6,7 +6,7 @@ class Reviews extends HTMLElement {
     this.productId = this.getAttribute("product-id");
 
     this.totals = document.querySelectorAll('[ui-reviews="total"]');
-    this.states = this.querySelector('[ui-reviews="states"]');
+    this.starDistro = this.querySelector('[ui-reviews="star-distro"]');
     this.item = this.querySelector('[ui-reviews="item"]');
     this.skeleton = this.querySelector('[ui-reviews="skeleton"]');
     this.showMore = this.querySelector('[ui-reviews="show-more"]');
@@ -29,16 +29,30 @@ class Reviews extends HTMLElement {
 
       if (!items.length) return;
 
-      this.setTotal(res.meta.pagination.total);
-      this.setStates(items);
+      const { total } = res.meta.pagination;
+      this.setTotal(total);
       this.setItems(items);
       this.updatePagination(res);
+
+      if (!response) {
+        this.fetchStarDistro(total);
+      }
     } catch (error) {
       console.error(error);
 
       toast.show(error.message, "error");
     } finally {
       this.skeleton.setAttribute("hidden", true);
+    }
+  }
+
+  async fetchStarDistro(total) {
+    try {
+      const res = youcanjs.product.fetchReviews(this.productId, { limit: total });
+      const items = await res.data();
+      this.setStarDistro(items);
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -51,11 +65,17 @@ class Reviews extends HTMLElement {
     this.totals?.forEach((t) => (t.textContent = total));
   }
 
-  setStates(reviews) {
-    this.states?.querySelectorAll("progress").forEach((item, i) => {
-      const percentage = reviews.filter((r) => r.ratings === i + 1).length / reviews.length;
+  setStarDistro(reviews) {
+    this.starDistro?.querySelectorAll("progress").forEach((item, i) => {
+      const count = reviews.filter((r) => r.ratings === i + 1).length;
+      const percentage = count / reviews.length;
 
       item.value = percentage * 100;
+
+      const starRatingSpan = item.nextElementSibling;
+      if (starRatingSpan?.getAttribute("ui-slot") === "star-rating") {
+        starRatingSpan.textContent = count;
+      }
     });
   }
 
