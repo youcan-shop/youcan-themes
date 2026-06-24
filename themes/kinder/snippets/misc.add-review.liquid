@@ -9,12 +9,14 @@
 
 <button
   ui-slot="button"
-  data-variant="primary"
-  data-mode="lighter"
+  data-variant="secondary"
   data-size="lg"
   popovertarget="add-review"
 >
-  {{ 'reviews.add_review.action' | t }}
+  <span ui-slot="button-front">
+    {% render 'misc.icon', name: 'hgi-add-01' %}
+    {{ 'reviews.add_review.action' | t }}
+  </span>
 </button>
 
 <ui-add-review
@@ -28,14 +30,16 @@
     <h3 ui-slot="modal-title">{{ 'reviews.add_review.title' | t }}</h3>
     <button
       ui-slot="button"
-      data-variant="primary"
-      data-mode="lighter"
-      data-size="md"
+      data-variant="secondary"
+      data-size="lg"
       aria-label="Close"
+      data-as-icon
       popovertarget="add-review"
       type="button"
     >
-      {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+      </span>
     </button>
   </div>
   <form>
@@ -79,7 +83,7 @@
           </label>
           <input
             ui-slot="input"
-            data-size="md"
+            data-size="lg"
             required
             type="text"
             id="first-name"
@@ -93,7 +97,7 @@
           </label>
           <input
             ui-slot="input"
-            data-size="md"
+            data-size="lg"
             required
             type="text"
             id="last-name"
@@ -107,7 +111,7 @@
           </label>
           <input
             ui-slot="input"
-            data-size="md"
+            data-size="lg"
             required
             type="email"
             id="email"
@@ -136,9 +140,8 @@
           <div class="images">
             <label
               ui-slot="button"
-              data-variant="primary"
-              data-mode="lighter"
-              data-size="md"
+              data-variant="neutral"
+              data-size="lg"
               class="upload"
             >
               {% render 'misc.icon', name: 'hgi-add-01' %}
@@ -161,7 +164,7 @@
                 >
                 <button
                   ui-slot="compact-button"
-                  data-size="md"
+                  data-size="lg"
                   aria-label="Remove"
                   type="button"
                   ui-add-review="remove-image"
@@ -177,23 +180,25 @@
     <div ui-slot="modal-footer">
       <button
         ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
+        data-variant="secondary"
         data-size="lg"
         popovertarget="add-review"
         type="button"
       >
-        {{ 'general.cancel' | t }}
+        <span ui-slot="button-front">
+          {{ 'general.cancel' | t }}
+        </span>
       </button>
       <button
         ui-slot="button"
         data-variant="primary"
-        data-mode="filled"
         data-size="lg"
         type="submit"
         ui-add-review="submit"
       >
-        {{ 'general.submit' | t }}
+        <span ui-slot="button-front">
+          {{ 'general.submit' | t }}
+        </span>
       </button>
     </div>
   </form>

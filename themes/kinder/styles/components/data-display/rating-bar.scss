@@ -19,10 +19,9 @@
 */
 
 [ui-slot="rating-bar"] {
-  --color-active-star: #f6b51e;
+  --color-active-star: #f7ca4d;
   --color-active-heart: #fb3748;
-  --color-active: var(--color-on-surface);
-  --color-inactive: var(--color-surface-container-highest);
+  --color-inactive: color-mix(in srgb, var(--color-active-star) 20%, transparent);
 
   display: flex;
   width: fit-content;
@@ -36,8 +35,8 @@
 
     [ui-slot="rating-item"] {
       padding-inline: var(--spacing-16);
-      border: 1px solid var(--color-surface-variant);
-      border-radius: calc(var(--radius-12) - var(--spacing-2));
+      border: 1px solid color-mix(in srgb, var(--bg-shade-color) 88%, black);
+      border-radius: var(--radius-12);
 
       &:not(:has(> svg)) {
         width: var(--item-size);
@@ -49,13 +48,13 @@
     --icon-size: 20px;
     --item-size: 36px;
 
-    border: 1px solid var(--color-surface-variant);
+    border: 1px solid red;
 
     [ui-slot="rating-item"] {
       padding-inline: calc(var(--spacing-24) - var(--spacing-4));
 
       &:not(:last-child) {
-        border-inline-end: 1px solid var(--color-surface-variant);
+        border-inline-end: 1px solid red;
       }
     }
   }
@@ -81,7 +80,7 @@
     cursor: pointer;
 
     &:not(:has(> svg)) {
-      --color-inactive: var(--color-on-surface-variant);
+      --color-inactive: red;
     }
 
     & > input[type="radio"] {
@@ -102,7 +101,7 @@
       color: var(--color-active);
 
       &:not(:has(> svg)) {
-        background-color: var(--color-surface-container-high);
+        background-color: red;
       }
 
       & ~ [ui-slot="rating-item"] {
@@ -113,7 +112,7 @@
     /* Hover */
     &:hover {
       border-color: transparent;
-      background-color: var(--color-surface-container-low);
+      background-color: var(--bg-shade-color);
     }
   }
 
@@ -128,7 +127,6 @@
       --icon-size: 24px;
       --item-size: 48px;
 
-      justify-content: space-between;
       width: 100%;
     }
   }
