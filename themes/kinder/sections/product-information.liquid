@@ -1,11 +1,11 @@
-{{ 'section.single-product.css' | asset_url | stylesheet_tag }}
+{{ 'section.product-information.css' | asset_url | stylesheet_tag }}
 
 {% assign default_variant = product.selected_or_first_available_variant %}
 {% assign price = default_variant.price | default: product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
 
 <ui-product
-  ui-section="single-product"
+  ui-section="product-information"
   product-id="{{ product.id }}"
   {% if section.settings.override_global_colors %}
     style="
