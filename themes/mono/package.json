@@ -13,11 +13,12 @@
     "url": "https://github.com/youcan-shop/theme-starter-kit"
   },
   "scripts": {
+    "clean:temp": "rm -rf ./.temp && mkdir -p ./.temp",
     "sass": "sass ./styles:./.temp --no-source-map --watch",
     "postcss": "postcss ./.temp/*.css --dir ./assets --no-map",
     "watch:postcss": "onchange './.temp/*.css' -- pnpm run postcss",
     "yc": "youcan theme:dev -p",
-    "dev": "npm-run-all --parallel sass watch:postcss yc",
+    "dev": "npm-run-all clean:temp --parallel sass watch:postcss yc",
     "zip": "node ./tooling/zip.js",
     "release": "bumpp --execute 'pnpm run zip'"
   },
