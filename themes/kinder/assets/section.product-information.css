@@ -1,15 +1,18 @@
 @layer sections{
   [ui-section=product-information]{
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
     display:flex;
     gap:var(--spacing-24);
     flex-direction:column;
-    padding:var(--top-spacing) 8% var(--bottom-spacing) !important;
+    padding:var(--top-spacing) 10% var(--bottom-spacing);
+    background-color:var(--bg-color);
+    color:var(--fg-color);
   }
   [ui-section=product-information] .core{
     display:grid;
     grid-template-columns:50% auto;
-    grid-gap:var(--spacing-24);
-    gap:var(--spacing-24);
+    grid-gap:var(--spacing-64);
+    gap:var(--spacing-64);
     overflow:hidden;
   }
   [ui-section=product-information] .core .media[data-layout=carousel]{
@@ -91,19 +94,19 @@
     gap:var(--spacing-16);
   }
   [ui-section=product-information] .core .content [ui-block=title][data-size=xl]{
-    font:var(--font-display-md);
+    font:var(--font-heading-xl);
   }
   [ui-section=product-information] .core .content [ui-block=title][data-size=lg]{
-    font:var(--font-headline-lg);
+    font:var(--font-heading-lg);
   }
   [ui-section=product-information] .core .content [ui-block=title][data-size=md]{
-    font:var(--font-title-lg);
+    font:var(--font-heading-md);
   }
   [ui-section=product-information] .core .content [ui-block=title][data-size=sm]{
-    font:var(--font-title-md);
+    font:var(--font-heading-sm);
   }
   [ui-section=product-information] .core .content [ui-block=title][data-size=xs]{
-    font:var(--font-title-sm);
+    font:var(--font-heading-xs);
   }
   [ui-section=product-information] .core .content [ui-block=rating]{
     display:flex;
@@ -184,6 +187,11 @@
   }
   [ui-section=product-information][data-media-width-desktop=lg] .core{
     grid-template-columns:auto 40%;
+  }
+  @media (max-width: 1024px){
+    [ui-section=product-information]{
+      padding-inline:var(--spacing-16);
+    }
   }
   @media (min-width: 769.02px){
     [ui-section=product-information]:has(.media[data-layout=grid]) [data-layout=carousel]{
