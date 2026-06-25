@@ -4,6 +4,7 @@
   "version": "4.4.13",
   "type": "module",
   "scripts": {
+    "clean:temp": "rm -rf ./.temp && mkdir -p ./.temp",
     "sass": "sass ./styles:./.temp --no-source-map --watch",
     "postcss": "postcss ./.temp/*.css --dir ./assets",
     "watch:postcss": "onchange './.temp/*.css' -- pnpm run postcss",
@@ -12,7 +13,7 @@
     "wind": "npx tailwindcss build -i ./styles/_utils.css -o ./styles/utils.scss",
     "clean": "cleancss -o ./styles/utils.scss ./styles/utils.scss",
     "yc": "youcan theme:dev -p",
-    "dev": "npm-run-all --parallel sass watch:postcss yc",
+    "dev": "npm-run-all clean:temp --parallel sass watch:postcss yc",
     "utilise": "clear && pnpm wind && node eyeliner && pnpm clean && pnpm dev"
   },
   "devDependencies": {

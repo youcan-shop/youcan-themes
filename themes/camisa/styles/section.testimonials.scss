@@ -26,12 +26,14 @@
 
     .core-area {
       display: grid;
-      gap: var(--spacing-24);
-      height: 30vh;
       grid-template-columns: 30% auto;
+      height: 30vh;
+      gap: var(--spacing-24);
 
       [ui-block="media"] {
         height: inherit;
+        overflow: hidden;
+        border-radius: var(--radius-testimonial);
 
         & > img {
           object-fit: cover;
@@ -43,11 +45,11 @@
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          overflow: hidden;
           height: 100%;
-          border-radius: var(--radius-testimonial);
           padding: var(--spacing-32) var(--spacing-24);
+          overflow: hidden;
           border: 1px solid var(--color-surface-variant);
+          border-radius: var(--radius-testimonial);
 
           .review {
             opacity: 0.8;
@@ -62,6 +64,7 @@
               width: 60px;
               height: 60px;
               overflow: hidden;
+              border-radius: calc(var(--radius-testimonial) * 0.8);
 
               & > img {
                 object-fit: cover;
@@ -99,8 +102,8 @@
 
     @media (width <= 769px) {
       .core-area {
-        height: auto;
         grid-template-columns: 1fr;
+        height: auto;
 
         [ui-block="media"] {
           height: 100%;

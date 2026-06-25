@@ -80,21 +80,23 @@
       {% endif %}
     </ui-carousel>
     <div ui-box="content">
-      <div
-        class="badge"
-        ui-slot="status-badge"
-        data-variant="stroke"
-        data-status="{{ settings.sale_badge_status }}"
-      >
-        {% if settings.sale_badge_type == 'percentage' %}
-          {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
-          -{{ percentage }}%
-        {% else %}
-          {% assign fixed = compare_at_price | minus: price %}
-          {{ 'general.save' | t }}
-          {{ fixed | money }}
-        {% endif %}
-      </div>
+      {% if compare_at_price %}
+        <div
+          class="badge"
+          ui-slot="status-badge"
+          data-variant="stroke"
+          data-status="{{ settings.sale_badge_status }}"
+        >
+          {% if settings.sale_badge_type == 'percentage' %}
+            {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+            -{{ percentage }}%
+          {% else %}
+            {% assign fixed = compare_at_price | minus: price %}
+            {{ 'general.save' | t }}
+            {{ fixed | money }}
+          {% endif %}
+        </div>
+      {% endif %}
       <a ui-block="title" ui-slot="link-button" href="/products/{{ product.slug }}">{{ product.name }}</a>
       <div ui-block="price">
         <span class="original-price" ui-product-item="price">
@@ -110,7 +112,9 @@
           {{ compare_at_price | default: 0 | money }}
         </div>
       </div>
-      {% render 'const.inventory-status', count: default_variant.inventory %}
+      {% if product.isTrackingInventory %}
+        {% render 'const.inventory-status', count: default_variant.inventory %}
+      {% endif %}
       {% if product.options.size > 0 %}
         {% render 'core.variants' %}
       {% endif %}
