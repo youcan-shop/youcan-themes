@@ -69,9 +69,10 @@
     {% render 'core.cart-form-bundle-item' %}
   </template>
 
-  {% unless cart.count > 0 %}
-    {% assign empty_title = 'cart.empty.title' | t | append: ' [0]' %}
-    {% assign empty_description = 'cart.empty.description' | t %}
+  {% assign empty_title = 'cart.empty.title' | t | append: ' [0]' %}
+  {% assign empty_description = 'cart.empty.description' | t %}
+
+  {% unless cart.count %}
     {% render 'misc.empty', heading: empty_title, subheading: empty_description %}
   {% else %}
     {% render 'misc.empty', heading: empty_title, subheading: empty_description, hidden: true %}

@@ -22,10 +22,10 @@
   }
   [ui-section=reviews] .overview-area .rating .avg{
     display:grid;
+    grid-template-columns:repeat(2, max-content);
+    align-items:center;
     grid-gap:var(--spacing-8);
     gap:var(--spacing-8);
-    align-items:center;
-    grid-template-columns:repeat(2, max-content);
   }
   [ui-section=reviews] .overview-area .rating .avg .nbr{
     font:var(--font-headline-lg);
@@ -36,6 +36,9 @@
   [ui-section=reviews] .overview-area .rating [ui-slot=link-button]{
     width:-moz-fit-content;
     width:fit-content;
+  }
+  [ui-section=reviews] .overview-area .rating .add-review-modal{
+    border-radius:var(--radius-product);
   }
   @media (min-width: 769.02px){
     [ui-section=reviews]:not(#\#) .overview-area .rating .add-review-modal{
@@ -58,9 +61,9 @@
     width:100%;
   }
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .field .rating-bar{
-    width:100%;
     display:flex;
     justify-content:center;
+    width:100%;
     margin-block:var(--spacing-24) var(--spacing-32);
   }
   [ui-section=reviews] .overview-area .rating .add-review-modal [ui-slot=modal-body] .fields{
@@ -112,9 +115,9 @@
     inset-block-start:calc(var(--spacing-4) * -1);
   }
   [ui-section=reviews] .overview-area .states{
-    width:300px;
     display:flex;
     flex-direction:column-reverse;
+    width:300px;
     gap:var(--spacing-8);
   }
   [ui-section=reviews] .overview-area .states .state{
@@ -131,8 +134,8 @@
   [ui-section=reviews] .items-area{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
-    width:100%;
     align-items:flex-start;
+    width:100%;
     grid-gap:var(--spacing-32);
     gap:var(--spacing-32);
   }
@@ -180,10 +183,10 @@
   }
   [ui-section=reviews] .items-area [ui-block=review] .media .images .image,
   [ui-section=reviews] .items-area .skeleton-item .media .images .image{
-    overflow:hidden;
-    aspect-ratio:1/1;
     width:var(--spacing-64);
     height:auto;
+    overflow:hidden;
+    aspect-ratio:1/1;
   }
   [ui-section=reviews] .items-area [ui-block=review] .media .images .image > img,
   [ui-section=reviews] .items-area .skeleton-item .media .images .image > img{
@@ -210,17 +213,20 @@
       grid-template-columns:1fr;
     }
   }
+.review-modal:not(#\#){
+  border-radius:var(--radius-product);
+}
 @media (min-width: 769.02px){
   .review-modal{
     width:50% !important;
   }
 }
 .review-modal:not(#\#) [ui-slot=modal-body]{
-  padding-block-end:var(--spacing-24);
   display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  padding-block-end:var(--spacing-24);
   grid-gap:var(--spacing-32);
   gap:var(--spacing-32);
-  grid-template-columns:repeat(2, 1fr);
 }
 .review-modal:not(#\#) [ui-slot=modal-body] .media{
   display:grid;
@@ -238,6 +244,7 @@
   height:auto;
   aspect-ratio:1/1;
   overflow:hidden;
+  border-radius:var(--radius-product);
 }
 .review-modal:not(#\#) [ui-slot=modal-body] .media .image:first-of-type{
   grid-column:1/6;
