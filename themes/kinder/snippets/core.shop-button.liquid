@@ -47,7 +47,7 @@
     {% else %}
       <button
         ui-slot="button"
-        data-variant="primary"
+        data-variant="{{ mode | default: 'primary' }}"
         data-size="{{ size | default: 'lg' }}"
         {% if as_icon %}
           data-as-icon
@@ -63,7 +63,7 @@
   {% elsif product.skip_to_checkout %}
     <button
       ui-slot="button"
-      data-variant="primary"
+      data-variant="{{ mode | default: 'primary' }}"
       data-size="{{ size | default: 'lg' }}"
       {% if as_icon %}
         data-as-icon
