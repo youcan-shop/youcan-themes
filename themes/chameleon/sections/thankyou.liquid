@@ -168,10 +168,12 @@
           <span class="label">{{ 'order.total' | t }}</span>
           <span class="value">{{ order.total | default: 0 | money }}</span>
         </div>
-        <a href="{{ routes.root_url |  default: "/" }}" ui-button data-variant="primary" data-size="md">
-          {{ 'order.action' | t }}
-          {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
-        </a>
+        {% if section.settings.show_continue_shopping %}
+          <a href="{{ routes.root_url |  default: "/" }}" ui-button data-variant="primary" data-size="md">
+            {{ 'order.action' | t }}
+            {% render 'ui-icon', name: 'arrow_right_alt', flip_in_rtl: true %}
+          </a>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -181,6 +183,14 @@
 {
   "label": "t:sections.thank_you.label",
   "templates": ["thankyou"],
-  "limit": 1
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_continue_shopping",
+      "label": "t:sections.thank_you.show_button",
+      "default": true
+    }
+  ]
 }
 {% endschema %}
