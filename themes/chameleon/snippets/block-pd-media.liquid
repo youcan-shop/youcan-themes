@@ -14,31 +14,12 @@
   <div class="images" ui-media-images>
     {% if product.images.size %}
       {% for image in product.images %}
-        {% if image contains 'youtube.com/vi' %}
-          {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
-
-          {% if youtube_video_id %}
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/{{ youtube_video_id }}"
-              title="{{ product.name }}"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            >
-            </iframe>
-          {% else %}
-            {% render 'ui-icon', name: 'image', size: 60, filled: true %}
-          {% endif %}
-        {% else %}
-          <img
-            src="{{ image }}"
-            alt="{{ product.name }}"
-            height="100%"
-            width="100%"
-          >
-        {% endif %}
+        <img
+          src="{{ image }}"
+          alt="{{ product.name }}"
+          height="100%"
+          width="100%"
+        >
       {% endfor %}
     {% else %}
       {% render 'ui-icon', name: 'image', size: 60, filled: true %}
