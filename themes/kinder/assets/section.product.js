@@ -11,6 +11,7 @@ if (!customElements.get("ui-product")) {
       this.variants = [...this.querySelectorAll("[ui-variant]")];
       this.productForms = this.querySelectorAll("ui-shop-button");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
+      this.currentPrice = 0;
     }
 
     connectedCallback() {
@@ -18,6 +19,9 @@ if (!customElements.get("ui-product")) {
 
       this.onVariantChanged();
       this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
+      this.addEventListener("change", (e) => {
+        if (e.target.tagName === "UI-QUANTITY") this.updateSubtotal();
+      });
     }
 
     get selectedOptions() {
@@ -50,8 +54,24 @@ if (!customElements.get("ui-product")) {
       attachedImage && this.productForms.forEach((productForm) => productForm.setAttribute("attached-image", attachedImage));
       image && this.updateMainImage(image);
 
+      this.currentPrice = price;
       this.updateProduct(price, compare_at_price);
       this.updateInventoryStatus(inventory);
+      this.updateSubtotal();
+    }
+
+    updateSubtotal() {
+      const subtotalEl = this.querySelector("[ui-block='subtotal']");
+      if (!subtotalEl) return;
+
+      if (!this.currentPrice) {
+        this.currentPrice = parseFloat(subtotalEl.dataset.price) || 0;
+      }
+
+      const qtyEl = this.querySelector("ui-quantity");
+      const qty = qtyEl ? qtyEl.quantityValue : 1;
+
+      subtotalEl.textContent = formatCurrency(this.currentPrice * qty);
     }
 
     updateProduct(price, compare_at_price) {

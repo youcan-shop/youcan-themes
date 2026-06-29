@@ -84,16 +84,24 @@
       {% when 'block_shop_buttons' %}
         {% if block.settings.buy_button_style == 'open-drawer' %}
           <div ui-block="controller" {{ block.youcan_attributes }}>
-            {% render 'core.quantity', size: 'md' %}
-            {% if block.settings.shop_buttons_layout == 'add-to-cart'
-              or block.settings.shop_buttons_layout == 'both'
-              and settings.cart_checkout_type == 'cart'
-            %}
-              {% render 'core.shop-button', mode: 'lighter' %}
-            {% endif %}
-            {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
-              {% render 'core.express-checkout', style: 'open-drawer' %}
-            {% endif %}
+            <div class="quantity-wrapper">
+              {% render 'core.quantity', size: 'md' %}
+              <div class="subtotal">
+                <span class="label">Subtotal</span>
+                <span ui-block="subtotal" data-price="{{ price | default: 0 }}">{{ price | default: 0 | money }}</span>
+              </div>
+            </div>
+            <div class="shop-buttons">
+              {% if block.settings.shop_buttons_layout == 'add-to-cart'
+                or block.settings.shop_buttons_layout == 'both'
+                and settings.cart_checkout_type == 'cart'
+              %}
+                {% render 'core.shop-button', mode: 'secondary' %}
+              {% endif %}
+              {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
+                {% render 'core.express-checkout', style: 'open-drawer' %}
+              {% endif %}
+            </div>
           </div>
         {% else %}
           <div ui-block="express-checkout" {{ block.youcan_attributes }}>

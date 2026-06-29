@@ -36,8 +36,7 @@
       <a
         href="{{ product.url }}"
         ui-slot="button"
-        data-variant="primary"
-        data-mode="{{ mode | default: 'filled' }}"
+        data-variant="{{ mode | default: 'primary' }}"
         data-size="{{ size | default: 'lg' }}"
         data-as-icon
       >
@@ -47,7 +46,6 @@
       <button
         ui-slot="button"
         data-variant="primary"
-        data-mode="{{ mode | default: 'filled' }}"
         data-size="{{ size | default: 'lg' }}"
         {% if as_icon %}
           data-as-icon
@@ -61,7 +59,6 @@
     <button
       ui-slot="button"
       data-variant="primary"
-      data-mode="{{ mode | default: 'filled' }}"
       data-size="{{ size | default: 'lg' }}"
       {% if as_icon %}
         data-as-icon
@@ -75,7 +72,7 @@
   {% else %}
     <button
       ui-slot="button"
-      data-variant="{{  button_variant | default: "primary" }}"
+      data-variant="{{  mode | default: "primary" }}"
       data-size="{{ size | default: 'lg' }}"
       aria-label="{{ 'general.add_to_cart' | t }}"
     >
