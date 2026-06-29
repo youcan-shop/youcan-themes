@@ -29,16 +29,31 @@ class Reviews extends HTMLElement {
 
       if (!items.length) return;
 
-      this.setTotal(res.meta.pagination.total);
-      this.setStates(items);
+      const { total } = res.meta.pagination;
+      this.setTotal(total);
       this.setItems(items);
       this.updatePagination(res);
+
+      if (!response) {
+        this.fetchStarDistro(total);
+      }
     } catch (error) {
       console.error(error);
 
       toast.show(error.message, "error");
     } finally {
       this.skeleton.setAttribute("hidden", true);
+    }
+  }
+
+  async fetchStarDistro(total) {
+    try {
+      const res = youcanjs.product.fetchReviews(this.productId, { limit: total });
+      const items = await res.data();
+
+      this.setStates(items);
+    } catch (error) {
+      console.error(error);
     }
   }
 
