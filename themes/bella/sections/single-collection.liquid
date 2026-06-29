@@ -76,8 +76,9 @@
         {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
 
       {% else %}
-        {% assign empty_content = 'Sorry, there are no products in this collection.' %}
-        {% render 'misc.empty', heading: empty_content, action_label: 'Explore Other Collections', action_url: '/collections' %}
+        {% assign empty_content = 'single-collection.empty.title' | t %}
+        {% assign empty_action = 'single-collection.empty.action' | t %}
+        {% render 'misc.empty', heading: empty_content, action_label: empty_action, action_url: '/collections' %}
       {% endif %}
     </div>
   {% endpaginate %}
