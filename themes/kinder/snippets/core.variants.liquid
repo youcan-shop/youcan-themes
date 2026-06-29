@@ -125,6 +125,26 @@
           </div>
           <div ui-slot="file-upload-button">{{ 'product.upload_image.trigger' | t }}</div>
         </label>
+        <div ui-slot="file-upload-preview" hidden>
+          <div ui-slot="file-upload-preview-thumb">
+            <img height="100" width="100%" src="" alt="">
+          </div>
+          <div ui-slot="file-upload-preview-info">
+            <span ui-slot="file-upload-preview-name"></span>
+            <span ui-slot="file-upload-preview-size"></span>
+          </div>
+          <button
+            ui-slot="button"
+            data-variant="neutral"
+            data-size="lg"
+            data-as-icon
+            aria-label="remove"
+            ui-slot="file-upload-preview-remove"
+            data-as-icon
+          >
+            {% render 'misc.icon', name: 'hgi-delete-02' %}
+          </button>
+        </div>
       {% endif %}
     </div>
   {% endfor %}

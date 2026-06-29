@@ -183,6 +183,11 @@ if (!customElements.get("ui-product")) {
 
               output.querySelector("img").src = base64;
               output.querySelector("img").alt = file.name;
+              output.querySelector('[ui-slot="file-upload-preview-name"]').textContent = file.name;
+              output.querySelector('[ui-slot="file-upload-preview-size"]').textContent =
+                fileSizeInMB >= 1
+                  ? `${fileSizeInMB.toFixed(1)}mb`
+                  : `${Math.round(fileSizeInKB)}kb`;
 
               output.querySelector("button").addEventListener("click", () => {
                 this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));
