@@ -43,8 +43,6 @@ class Reviews extends HTMLElement {
       const res = response || youcanjs.product.fetchReviews(this.productId, { limit: 8 });
       const items = await res.data();
 
-      console.log(items);
-
       if (!items.length) return;
 
       const { total } = res.meta.pagination;
