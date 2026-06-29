@@ -133,19 +133,22 @@
       {% when 'block_feature_list' %}
         <ul ui-block="feature-list" {{ block.youcan_attributes }}>
           {% for i in (1..5) %}
-            {% assign icon = 'feature_icon_' | append: i %}
-            {% assign heading = 'feature_heading_' | append: i %}
-            {% assign description = 'feature_description_' | append: i %}
+            {% assign icon_key = 'feature_icon_' | append: i %}
+            {% assign heading_key = 'feature_heading_' | append: i %}
+            {% assign description_key = 'feature_description_' | append: i %}
 
-            {% if block.settings[heading] != blank %}
+            {% assign heading = block.settings[heading_key] %}
+            {% assign description = block.settings[description_key] %}
+
+            {% if heading != blank %}
               <li class="feature-item">
                 <div class="icon">
-                  {% render 'misc.icon', name: block.settings[icon], size: 20 %}
+                  {% render 'misc.icon', name: block.settings[icon_key], size: 24 %}
                 </div>
                 <div class="feature-text">
-                  <span class="label">{{ block.settings[heading] }}</span>
-                  {% if block.settings[description] != blank %}
-                    <span class="description">{{ block.settings[description] }}</span>
+                  <span class="label">{{ heading }}</span>
+                  {% if description %}
+                    <span class="description">{{ description }}</span>
                   {% endif %}
                 </div>
               </li>
