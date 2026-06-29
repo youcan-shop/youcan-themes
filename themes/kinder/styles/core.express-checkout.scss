@@ -46,6 +46,10 @@
   }
 
   .express-checkout-drawer {
+    &[ui-slot="sheet-content"] {
+      --sheet-background: var(--bg-color);
+    }
+
     [ui-slot="sheet-body"] {
       display: flex;
       flex-direction: column;
@@ -56,6 +60,8 @@
         gap: var(--spacing-8);
 
         .order {
+          --quantity-bg: var(--fg-color);
+
           display: flex;
           gap: var(--spacing-16);
 
@@ -67,6 +73,10 @@
 
             & > img {
               object-fit: cover;
+            }
+
+            ui-image-fallback {
+              background-color: var(--bg-shade-color);
             }
           }
 
@@ -81,8 +91,11 @@
               gap: var(--spacing-4);
 
               .price {
-                color: var(--color-primary);
-                font: var(--font-body-lg);
+                font: var(--font-body-md);
+              }
+
+              .title {
+                font: var(--font-label-md);
               }
             }
           }

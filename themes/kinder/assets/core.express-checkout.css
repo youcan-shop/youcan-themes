@@ -39,6 +39,9 @@
   .express-checkout-default .actions:has(> ui-shop-button:nth-of-type(2)) > ui-shop-button:last-of-type{
     grid-column:1/3;
   }
+  .express-checkout-drawer[ui-slot=sheet-content]{
+    --sheet-background:var(--bg-color);
+  }
   .express-checkout-drawer [ui-slot=sheet-body]{
     display:flex;
     flex-direction:column;
@@ -50,6 +53,7 @@
     gap:var(--spacing-8);
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order{
+    --quantity-bg:var(--fg-color);
     display:flex;
     gap:var(--spacing-16);
   }
@@ -63,6 +67,9 @@
     -o-object-fit:cover;
        object-fit:cover;
   }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .image ui-image-fallback{
+    background-color:var(--bg-shade-color);
+  }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail{
     display:flex;
     flex-direction:column;
@@ -75,8 +82,10 @@
     gap:var(--spacing-4);
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .info .price{
-    color:var(--color-primary);
-    font:var(--font-body-lg);
+    font:var(--font-body-md);
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .info .title{
+    font:var(--font-label-md);
   }
   .express-checkout-drawer [ui-slot=sheet-footer] ui-quantity{
     display:none;
