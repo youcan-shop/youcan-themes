@@ -109,10 +109,19 @@ if (!customElements.get("ui-product")) {
               ? "low_stock_show_count"
               : "low_stock";
 
-      inventoryStatus.lastElementChild.textContent = statuses[statusKey].replace("%", inventory);
+      inventoryStatus.querySelector(".value").textContent = statuses[statusKey].replace("%", inventory);
       inventoryElement.dataset.inventory = statusKey.replace("_show_count", "").replaceAll("_", "-");
 
-      inventoryStatus.dataset.status = inventory === 0 ? "disabled" : inventory > threshold ? "completed" : "pending";
+      inventoryStatus.dataset.status = inventory === 0 ? "soldout" : inventory > threshold ? "instock" : "lowstock";
+
+      const progressBar = inventoryStatus.querySelector("[ui-slot='progress-bar']");
+      if (progressBar) {
+        let progressValue = 0;
+        if (inventory > 0 && threshold > 0) {
+          progressValue = inventory >= threshold ? 100 : Math.round((inventory / threshold) * 100);
+        }
+        progressBar.value = progressValue;
+      }
     }
 
     updateMainImage(image_src) {
@@ -185,9 +194,7 @@ if (!customElements.get("ui-product")) {
               output.querySelector("img").alt = file.name;
               output.querySelector('[ui-slot="file-upload-preview-name"]').textContent = file.name;
               output.querySelector('[ui-slot="file-upload-preview-size"]').textContent =
-                fileSizeInMB >= 1
-                  ? `${fileSizeInMB.toFixed(1)}mb`
-                  : `${Math.round(fileSizeInKB)}kb`;
+                fileSizeInMB >= 1 ? `${fileSizeInMB.toFixed(1)}mb` : `${Math.round(fileSizeInKB)}kb`;
 
               output.querySelector("button").addEventListener("click", () => {
                 this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));

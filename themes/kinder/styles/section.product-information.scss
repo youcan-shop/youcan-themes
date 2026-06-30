@@ -329,4 +329,52 @@
       }
     }
   }
+
+  [ui-slot="inventory-status"] {
+    --in-stock-color: #49ab6a;
+    --low-stock-color: #fb9700;
+    --sold-out-color: #b6b6b6;
+    --indicator-color: var(--sold-out-color);
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-16);
+
+    &[data-status="instock"] {
+      --indicator-color: var(--in-stock-color);
+    }
+
+    &[data-status="lowstock"] {
+      --indicator-color: var(--low-stock-color);
+    }
+
+    &[data-status="soldout"] {
+      --indicator-color: var(--sold-out-color);
+    }
+
+    [ui-slot="progress-bar"] {
+      width: 100px;
+      height: 6px;
+      overflow: hidden;
+      border: none;
+      border-radius: var(--radius-rounded);
+      appearance: none;
+      background-color: color-mix(in srgb, var(--indicator-color) 20%, transparent);
+
+      &::-webkit-progress-bar {
+        border-radius: var(--radius-rounded);
+        background-color: color-mix(in srgb, var(--indicator-color) 20%, transparent);
+      }
+
+      &::-webkit-progress-value {
+        border-radius: var(--radius-rounded);
+        background-color: var(--indicator-color);
+      }
+
+      &::-moz-progress-bar {
+        border-radius: var(--radius-rounded);
+        background-color: var(--indicator-color);
+      }
+    }
+  }
 }

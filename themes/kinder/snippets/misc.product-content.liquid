@@ -63,11 +63,14 @@
         </div>
 
       {% when 'block_inventory_status' %}
-        {% render 'const.inventory-status',
-          count: default_variant.inventory,
-          threshold: block.settings.low_inventory_threshold,
-          show_count: block.settings.show_inventory_count
-        %}
+        {% if product.isTrackingInventory %}
+          {% if product.has_only_default_variant %}
+            {% assign inventory_variant = product.variants[0] %}
+          {% else %}
+            {% assign inventory_variant = product.selected_or_first_available_variant %}
+          {% endif %}
+          {% render 'const.inventory-status', count: inventory_variant.inventory, threshold: block.settings.low_inventory_threshold, show_count: true, style: 'inline' %}
+        {% endif %}
 
       {% when 'block_variant_picker' %}
         {% if product.options.size > 0 %}

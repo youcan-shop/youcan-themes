@@ -262,4 +262,45 @@
       font:var(--font-title-md);
     }
   }
+  [ui-slot=inventory-status]{
+    --in-stock-color:#49ab6a;
+    --low-stock-color:#fb9700;
+    --sold-out-color:#b6b6b6;
+    --indicator-color:var(--sold-out-color);
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-16);
+  }
+  [ui-slot=inventory-status][data-status=instock]{
+    --indicator-color:var(--in-stock-color);
+  }
+  [ui-slot=inventory-status][data-status=lowstock]{
+    --indicator-color:var(--low-stock-color);
+  }
+  [ui-slot=inventory-status][data-status=soldout]{
+    --indicator-color:var(--sold-out-color);
+  }
+  [ui-slot=inventory-status] [ui-slot=progress-bar]{
+    width:100px;
+    height:6px;
+    overflow:hidden;
+    border:none;
+    border-radius:var(--radius-rounded);
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+    background-color:color-mix(in srgb, var(--indicator-color) 20%, transparent);
+  }
+  [ui-slot=inventory-status] [ui-slot=progress-bar]::-webkit-progress-bar{
+    border-radius:var(--radius-rounded);
+    background-color:color-mix(in srgb, var(--indicator-color) 20%, transparent);
+  }
+  [ui-slot=inventory-status] [ui-slot=progress-bar]::-webkit-progress-value{
+    border-radius:var(--radius-rounded);
+    background-color:var(--indicator-color);
+  }
+  [ui-slot=inventory-status] [ui-slot=progress-bar]::-moz-progress-bar{
+    border-radius:var(--radius-rounded);
+    background-color:var(--indicator-color);
+  }
 }
