@@ -18,9 +18,9 @@
 <ui-shop-button
   quantity="1"
   variant-id="{{ default_variant.id }}"
-  {% if product.trackingInventory and default_variant.available == false %}
+  {% unless default_variant.available %}
     not-available
-  {% endif %}
+  {% endunless %}
   {% if product.skip_to_checkout %}
     skip-cart
   {% endif %}

@@ -63,18 +63,13 @@
         </div>
 
       {% when 'block_inventory_status' %}
-        {% if product.trackingInventory %}
+        {% if product.isTrackingInventory %}
           {% if product.has_only_default_variant %}
             {% assign inventory_variant = product.variants[0] %}
           {% else %}
             {% assign inventory_variant = product.selected_or_first_available_variant %}
           {% endif %}
-          {% render 'const.inventory-status',
-            count: inventory_variant.inventory,
-            threshold: block.settings.low_inventory_threshold,
-            show_count: true,
-            style: 'inline'
-          %}
+          {% render 'const.inventory-status', count: inventory_variant.inventory, threshold: block.settings.low_inventory_threshold, show_count: true, style: 'inline' %}
         {% endif %}
 
       {% when 'block_variant_picker' %}
@@ -126,6 +121,35 @@
             {% render 'core.express-checkout', style: 'default' %}
           </div>
         {% endif %}
+
+      {% when 'block_collapsible_content' %}
+        <ul ui-block="collapsible-content" ui-slot="accordion" {{ block.youcan_attributes }}>
+          {% for i in (1..10) %}
+            {% assign trigger = 'collapsible_trigger_' | append: i %}
+            {% assign content = 'collapsible_content_' | append: i %}
+            {% assign open_by_default = 'collapsible_open_by_default_' | append: i %}
+
+            {% if block.settings[trigger] != blank %}
+              <li ui-slot="accordion-item">
+                <label ui-slot="accordion-trigger">
+                  {{ block.settings[trigger] }}
+
+                  <input
+                    type="checkbox"
+                    name="faq"
+                    {% if block.settings[open_by_default] %}
+                      checked
+                    {% endif %}
+                  >
+                </label>
+
+                <div ui-slot="accordion-content" role="region">
+                  <article>{{ block.settings[content] }}</article>
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
 
       {% when 'block_feature_list' %}
         <ul ui-block="feature-list" {{ block.youcan_attributes }}>
