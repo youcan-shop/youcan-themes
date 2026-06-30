@@ -156,6 +156,27 @@
           {% endfor %}
         </ul>
 
+      {% when 'block_statistics' %}
+        <div ui-block="statistics" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
+          <div class="stat">
+            <span class="value">{{ product.averageRating | default: '0.0' }}</span>
+            <span class="label">{{ 'reviews.product_rating' | t }}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="stat">
+            <span class="value" ui-reviews="total">-</span>
+            <span class="label">{{ 'reviews.title' | t }}</span>
+          </div>
+          {% if compare_at_price and compare_at_price > price %}
+            {% assign discount_percent = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price %}
+            <div class="divider"></div>
+            <div class="stat">
+              <span class="value">{{ discount_percent }}%</span>
+              <span class="label">{{ 'product.save' | t: percent: '' }}</span>
+            </div>
+          {% endif %}
+        </div>
+
       {% when 'block_feature_list' %}
         <ul ui-block="feature-list" {{ block.youcan_attributes }}>
           {% for i in (1..5) %}
