@@ -43,12 +43,21 @@ if (!customElements.get("ui-product")) {
       if (matchedVariant) await this.updateVariant(matchedVariant);
 
       this.disableUnavailableOptions();
+
+      if (!matchedVariant) {
+        this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = true));
+        this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => (trigger.disabled = true));
+      }
     }
 
     async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
       this.productForms.forEach((productForm) => {
         productForm.setAttribute("variant-id", id);
         productForm.toggleAttribute("not-available", !available);
+      });
+
+      this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => {
+        trigger.disabled = !available;
       });
 
       const attachedImage = await this.getAttachedImage();
@@ -163,8 +172,15 @@ if (!customElements.get("ui-product")) {
       );
 
       const hasCheckedInput = [...inputs].some((input) => input.checked || input.value);
+      const allUnavailable = [...inputs].every((input) => input.disabled);
 
       this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = !hasCheckedInput));
+
+      if (allUnavailable) {
+        this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => {
+          trigger.disabled = true;
+        });
+      }
     }
 
     async getAttachedImage() {

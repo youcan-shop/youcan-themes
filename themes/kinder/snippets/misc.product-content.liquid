@@ -69,7 +69,12 @@
           {% else %}
             {% assign inventory_variant = product.selected_or_first_available_variant %}
           {% endif %}
-          {% render 'const.inventory-status', count: inventory_variant.inventory, threshold: block.settings.low_inventory_threshold, show_count: true, style: 'inline' %}
+          {% render 'const.inventory-status',
+            count: inventory_variant.inventory,
+            threshold: block.settings.low_inventory_threshold,
+            show_count: true,
+            style: 'inline'
+          %}
         {% endif %}
 
       {% when 'block_variant_picker' %}

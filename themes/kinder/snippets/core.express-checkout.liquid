@@ -16,12 +16,17 @@
 {% assign has_phone_validation = checkout.phone_validation %}
 
 {% if style == 'open-drawer' %}
+  {% assign trigger_variant = product.selected_or_first_available_variant %}
   <button
     ui-slot="button"
     data-variant="primary"
     data-size="lg"
     type="button"
     popovertarget="express-checkout-{{ product.id }}"
+    data-express-checkout-trigger
+    {% if product.trackingInventory and trigger_variant.available == false %}
+      disabled
+    {% endif %}
   >
     <span ui-slot="button-front">
       {{ 'general.buy_now' | t }}
