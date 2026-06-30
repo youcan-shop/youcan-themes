@@ -10,6 +10,7 @@ if (!customElements.get("ui-product")) {
 
       this.variants = [...this.querySelectorAll("[ui-variant]")];
       this.productForms = this.querySelectorAll("ui-shop-button");
+      this.buyNowTriggers = [...this.querySelectorAll("[data-buy-now-trigger]")];
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
       this.currentPrice = 0;
     }
@@ -42,13 +43,21 @@ if (!customElements.get("ui-product")) {
 
       if (matchedVariant) await this.updateVariant(matchedVariant);
 
-      this.disableUnavailableOptions();
+      this.disableUnavailableOptions(matchedVariant);
     }
 
     async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
       this.productForms.forEach((productForm) => {
         productForm.setAttribute("variant-id", id);
-        productForm.toggleAttribute("not-available", !available);
+        productForm.toggleAttribute("not-available", this.hasAttribute("data-tracking-inventory") && !available);
+      });
+
+      this.querySelectorAll("ui-quantity").forEach((el) => {
+        if (this.hasAttribute("data-tracking-inventory") && inventory != null) {
+          el.setAttribute("inventory", inventory);
+        } else {
+          el.removeAttribute("inventory");
+        }
       });
 
       const attachedImage = await this.getAttachedImage();
@@ -134,37 +143,48 @@ if (!customElements.get("ui-product")) {
       });
     }
 
-    disableUnavailableOptions() {
-      const lastVariant = this.variants.filter((variant) => variant.getAttribute("ui-variant") !== "upload_image_zone").at(-1);
+    disableUnavailableOptions(matchedVariant = null) {
+      const variantGroups = this.variants.filter((v) => v.getAttribute("ui-variant") !== "upload_image_zone");
 
-      if (!lastVariant) return;
+      if (!variantGroups.length) return;
 
-      const inputs = lastVariant.querySelectorAll("input, select");
+      const lastGroup = variantGroups.at(-1);
+      const lastGroupInputs = lastGroup.querySelectorAll("input, select");
+      const isTrackingInventory = this.hasAttribute("data-tracking-inventory");
 
-      inputs.forEach((input) => {
-        const compareOptions = {
-          ...this.selectedOptions,
-          [this.getBaseName(input.name)]: input.value,
-        };
-        const isUnavailable = this.productVariants.some(
-          (variant) => JSON.stringify(variant.variations) === JSON.stringify(compareOptions) && !variant.available,
+      if (isTrackingInventory) {
+        lastGroupInputs.forEach((input) => {
+          const compareOptions = {
+            ...this.selectedOptions,
+            [this.getBaseName(input.name)]: input.value,
+          };
+          const isUnavailable = this.productVariants.some(
+            (variant) => JSON.stringify(variant.variations) === JSON.stringify(compareOptions) && !variant.available,
+          );
+
+          input.disabled = isUnavailable;
+
+          if (isUnavailable) input.checked = false;
+        });
+
+        this.productForms.forEach((productForm) =>
+          productForm.toggleAttribute(
+            "not-available",
+            [...lastGroupInputs].every((input) => input.disabled),
+          ),
         );
+      }
 
-        input.disabled = isUnavailable;
-
-        if (isUnavailable) input.checked = false;
+      const allGroupsSelected = variantGroups.every((group) => {
+        const groupInputs = group.querySelectorAll("input, select");
+        return [...groupInputs].some((input) => (input.type === "radio" || input.type === "checkbox" ? input.checked : Boolean(input.value)));
       });
 
-      this.productForms.forEach((productForm) =>
-        productForm.toggleAttribute(
-          "not-available",
-          [...inputs].every((input) => input.disabled),
-        ),
-      );
+      const soldOut = isTrackingInventory && matchedVariant && !matchedVariant.available;
+      const buttonsDisabled = !allGroupsSelected || soldOut;
 
-      const hasCheckedInput = [...inputs].some((input) => input.checked || input.value);
-
-      this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = !hasCheckedInput));
+      this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = buttonsDisabled));
+      this.buyNowTriggers.forEach((btn) => (btn.disabled = buttonsDisabled));
     }
 
     async getAttachedImage() {
