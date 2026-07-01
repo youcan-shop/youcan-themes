@@ -157,22 +157,54 @@
         </ul>
 
       {% when 'block_statistics' %}
-        <div ui-block="statistics" data-size="{{ block.settings.title_size }}" {{ block.youcan_attributes }}>
-          <div class="stat">
-            <span class="value">{{ product.averageRating | default: '0.0' }}</span>
-            <span class="label">{{ 'reviews.product_rating' | t }}</span>
-          </div>
-          <div class="divider"></div>
-          <div class="stat">
-            <span class="value" ui-reviews="total">-</span>
-            <span class="label">{{ 'reviews.title' | t }}</span>
-          </div>
-          {% if compare_at_price and compare_at_price > price %}
-            {% assign discount_percent = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price %}
-            <div class="divider"></div>
-            <div class="stat">
-              <span class="value">{{ discount_percent }}%</span>
-              <span class="label">{{ 'product.save' | t: percent: '' }}</span>
+        <div ui-block="statistics" {{ block.youcan_attributes }}>
+          {% if block.settings.show_discount %}
+            {% assign has_saving = false %}
+            {% if compare_at_price and compare_at_price > price %}
+              {% assign has_saving = true %}
+              {% assign discount_amount = compare_at_price | minus: price %}
+            {% endif %}
+            <div
+              ui-slot="status-badge"
+              class="saving"
+              ui-statistic="saving-badge"
+              {% unless has_saving %}
+                hidden
+              {% endunless %}
+            >
+              <span>{{ 'product.save' | t }}</span>
+              <span ui-statistic="saving">{{ discount_amount | default: 0 | money }}</span>
+            </div>
+          {% endif %}
+
+          {% if block.settings.show_inventory and product.isTrackingInventory %}
+            {% if product.has_only_default_variant %}
+              {% assign inventory_variant = product.variants[0] %}
+            {% else %}
+              {% assign inventory_variant = product.selected_or_first_available_variant %}
+            {% endif %}
+            {% assign inventory_count = inventory_variant.inventory %}
+            {% assign inventory_threshold = block.settings.low_inventory_threshold | default: 10 %}
+
+            {% if inventory_count == 0 or inventory_count == null %}
+              {% assign stock_status = 'soldout' %}
+              {% assign stock_text = 'product.inventory_out_of_stock' | t %}
+            {% elsif inventory_count > inventory_threshold %}
+              {% assign stock_status = 'instock' %}
+              {% assign stock_text = 'product.inventory_in_stock' | t %}
+            {% else %}
+              {% assign stock_status = 'lowstock' %}
+              {% assign stock_text = 'product.inventory_low_stock' | t %}
+            {% endif %}
+
+            <div
+              ui-slot="status-badge"
+              ui-statistic="inventory"
+              data-status="{{ stock_status }}"
+              data-threshold="{{ inventory_threshold }}"
+            >
+              <div ui-slot="badge-dot"></div>
+              <span class="value">{{ stock_text }}</span>
             </div>
           {% endif %}
         </div>

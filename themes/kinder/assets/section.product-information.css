@@ -186,20 +186,33 @@
     align-items:center;
     gap:var(--spacing-16);
   }
-  [ui-section=product-information] .core .content [ui-block=statistics][data-size=xl] .value{
-    font:var(--font-heading-xl);
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-slot=status-badge]{
+    padding-inline:var(--spacing-8);
+    background-color:var(--bg-shade-color);
   }
-  [ui-section=product-information] .core .content [ui-block=statistics][data-size=lg] .value{
-    font:var(--font-heading-lg);
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-slot=status-badge].saving{
+    gap:var(--spacing-4);
   }
-  [ui-section=product-information] .core .content [ui-block=statistics][data-size=md] .value{
-    font:var(--font-heading-md);
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-slot=status-badge][hidden]{
+    display:none;
   }
-  [ui-section=product-information] .core .content [ui-block=statistics][data-size=sm] .value{
-    font:var(--font-heading-sm);
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-statistic=inventory]{
+    --in-stock-color:#49ab6a;
+    --low-stock-color:#fb9700;
+    --sold-out-color:#b6b6b6;
+    --indicator-color:var(--sold-out-color);
   }
-  [ui-section=product-information] .core .content [ui-block=statistics][data-size=xs] .value{
-    font:var(--font-heading-xs);
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-statistic=inventory][data-status=instock]{
+    --indicator-color:var(--in-stock-color);
+  }
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-statistic=inventory][data-status=lowstock]{
+    --indicator-color:var(--low-stock-color);
+  }
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-statistic=inventory][data-status=soldout]{
+    --indicator-color:var(--sold-out-color);
+  }
+  [ui-section=product-information] .core .content [ui-block=statistics] [ui-statistic=inventory] [ui-slot=badge-dot]::before{
+    background-color:var(--indicator-color);
   }
   [ui-section=product-information] .core .content [ui-block=statistics] .stat{
     display:flex;
@@ -208,14 +221,14 @@
     gap:var(--spacing-4);
   }
   [ui-section=product-information] .core .content [ui-block=statistics] .stat .label{
-    font:var(--font-body-xs);
     opacity:0.6;
+    font:var(--font-body-xs);
   }
   [ui-section=product-information] .core .content [ui-block=statistics] .divider{
     width:1px;
     height:32px;
-    background-color:currentColor;
     opacity:0.15;
+    background-color:currentcolor;
   }
   [ui-section=product-information] .core .content [ui-block=feature-list]{
     display:flex;

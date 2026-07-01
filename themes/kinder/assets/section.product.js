@@ -68,7 +68,33 @@ if (!customElements.get("ui-product")) {
       this.currentPrice = price;
       this.updateProduct(price, compare_at_price);
       this.updateInventoryStatus(inventory);
+      this.updateStatistics(price, compare_at_price, inventory);
       this.updateSubtotal();
+    }
+
+    updateStatistics(price, compare_at_price, inventory) {
+      const savingBadge = this.querySelector("[ui-statistic='saving-badge']");
+      if (savingBadge) {
+        const hasSaving = compare_at_price && compare_at_price > price;
+        savingBadge.hidden = !hasSaving;
+
+        if (hasSaving) {
+          const savingValue = savingBadge.querySelector("[ui-statistic='saving']");
+          if (savingValue) savingValue.textContent = formatCurrency(compare_at_price - price);
+        }
+      }
+
+      const inventoryBadge = this.querySelector("[ui-statistic='inventory']");
+      if (inventoryBadge) {
+        const threshold = Number(inventoryBadge.getAttribute("data-threshold")) || 0;
+        const status = inventory === 0 ? "soldout" : inventory > threshold ? "instock" : "lowstock";
+        const statusKey = inventory === 0 ? "out_of_stock" : inventory > threshold ? "in_stock" : "low_stock";
+
+        inventoryBadge.dataset.status = status;
+
+        const valueEl = inventoryBadge.querySelector(".value");
+        if (valueEl) valueEl.textContent = window.inventoryStatuses[statusKey];
+      }
     }
 
     updateSubtotal() {
