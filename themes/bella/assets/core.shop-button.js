@@ -2,6 +2,7 @@ if (!customElements.get("ui-shop-button")) {
   class ShopButton extends HTMLElement {
     static observedAttributes = [
       "variant-id",
+      "bundle-id",
       "quantity",
       "checkout-type",
       "attached-image",
@@ -61,32 +62,31 @@ if (!customElements.get("ui-shop-button")) {
       this.setIsBuyButtonLoading(true);
 
       const productVariantId = this.productVariantId;
+      const bundleId = this.bundleId;
       const attachedImage = this.attachedImage || null;
       const quantity = this.quantityValue || 1;
 
       if (this.checkoutType === "express") {
-        this.placeOrder(productVariantId, attachedImage, quantity);
+        this.placeOrder(productVariantId, bundleId, attachedImage, quantity);
 
         return;
       }
 
       if (this.isBulk) {
         const variantIds = this.productVariantId.split(",");
-        variantIds.forEach((variantId) => this.addToCart(variantId, attachedImage, quantity));
+        variantIds.forEach((variantId) => this.addToCart(variantId, bundleId, attachedImage, quantity));
 
         return;
       }
 
-      this.addToCart(productVariantId, attachedImage, quantity);
+      this.addToCart(productVariantId, bundleId, attachedImage, quantity);
     }
 
-    async addToCart(productVariantId, attachedImage, quantity) {
+    async addToCart(productVariantId, bundleId, attachedImage, quantity) {
       try {
-        const newCart = await youcanjs.cart.addItem({
-          attachedImage,
-          productVariantId,
-          quantity,
-        });
+        const newCart = await youcanjs.cart.addItem(
+          bundleId ? { bundleId, isBundle: true, quantity: 1 } : { quantity, productVariantId, attachedImage },
+        );
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
           source: this.getAttribute("source") ?? "product-form",
@@ -98,7 +98,7 @@ if (!customElements.get("ui-shop-button")) {
 
         const selectedVariant = newCart.items.find((variant) => variant.productVariant.id === productVariantId);
 
-        window.Dotshop.pixels.publish('add-to-cart', selectedVariant);
+        window.Dotshop.pixels.publish("add-to-cart", selectedVariant);
       } catch (error) {
         console.error(error);
 
