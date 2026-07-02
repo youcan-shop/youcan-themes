@@ -26,15 +26,13 @@
     }
   }
   .express-checkout-default{
+    --input-bg:var(--bg-on-shade-color);
     display:flex;
     flex-direction:column;
     padding:var(--spacing-24);
     border-radius:var(--radius-16);
     background-color:var(--bg-shade-color);
     gap:var(--spacing-24);
-  }
-  .express-checkout-default [ui-slot=input]{
-    --input-bg:var(--bg-on-shade-color);
   }
   .express-checkout-default .actions .quantity{
     background-color:var(--bg-on-shade-color);
@@ -47,6 +45,9 @@
   }
   .express-checkout-default .actions:has(> ui-shop-button:nth-of-type(2)) > ui-shop-button:last-of-type{
     grid-column:1/3;
+  }
+  .express-checkout-drawer{
+    --input-bg:var(--bg-shade-color);
   }
   .express-checkout-drawer[ui-slot=sheet-content]{
     --sheet-background:var(--bg-color);
@@ -108,7 +109,7 @@
     border-radius:var(--radius-input);
     outline:2px solid transparent;
     outline-offset:1px;
-    background-color:var(--bg-on-shade-color);
+    background-color:var(--input-bg);
   }
   ui-phone-validation [ui-phone-validator=input-wrapper]:has([ui-phone-validator=number]:focus){
     outline-color:color-mix(in oklab, currentcolor 10%, transparent);
