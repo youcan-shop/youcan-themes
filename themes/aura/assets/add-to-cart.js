@@ -198,71 +198,6 @@ function updateCartQuantity(cartItemId, productVariantId, delta) {
   }
 }
 
-function bundleItemTemplate(item) {
-  const variations = item.productVariant?.variations || {};
-  const variationsArray = [];
-  for (const key in variations) {
-    if (variations.hasOwnProperty(key) && key !== 'default') {
-      variationsArray.push(`${key}: ${variations[key]}`);
-    }
-  }
-  const variationsString = variationsArray.join(', ');
-
-  const subtotal = item.price * item.quantity;
-  const isFree = subtotal === 0;
-  const priceHtml = isFree
-    ? `
-        <div class="gift">
-          ${GIFT_ICON}
-          <span class="free">${CART_DRAWER_TRANSLATION.free}</span>
-        </div>
-        <span class="compare-at">${formatCurrency(item.productVariant.price, CURRENCY_CODE, CUSTOMER_LOCALE)}</span>
-      `
-    : `
-        <span class="original">${formatCurrency(subtotal, CURRENCY_CODE, CUSTOMER_LOCALE)}</span>
-        ${item.productVariant?.compare_at_price ? `<span class="compare-at">${formatCurrency(item.productVariant.compare_at_price * item.quantity, CURRENCY_CODE, CUSTOMER_LOCALE)}</span>` : ''}
-      `;
-
-  const imageUrl = item.productVariant?.image?.url ?? item.productVariant?.product?.thumbnail ?? defaultImage;
-  const name = item.productVariant?.product?.name ?? '';
-
-  return `
-    <div class="bundle-item">
-      <img src="${imageUrl}" alt="${name}">
-      <div class="bundle-item-info">
-        <span class="name">${name}</span>
-        ${variationsString ? `<div class="variants">${variationsString}</div>` : ''}
-        <div class="price${isFree ? ' free-gift' : ''}">${priceHtml}</div>
-      </div>
-    </div>
-  `;
-}
-
-function bundleGroupTemplate(bundle) {
-  const itemIds = bundle.items.map((i) => i.id).join(',');
-  const variantIds = bundle.items.map((i) => i.productVariant?.id ?? '').join(',');
-  const total = bundle.items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-  const totalFormatted = formatCurrency(total, CURRENCY_CODE, CUSTOMER_LOCALE);
-
-  return `
-    <div class="bundle-group">
-      <div class="bundle-group-top">
-        <div class="bundle-heading">
-          <span class="bundle-title">${bundle.title}</span>
-          <span class="bundle-total">${totalFormatted}</span>
-        </div>
-        <button class="remove-bundle-btn" data-type="" data-bundle-item-ids="${itemIds}" data-bundle-variant-ids="${variantIds}">
-          <span class="spinner hidden"></span>
-          <span class="remove-text">${CART_DRAWER_TRANSLATION.remove}</span>
-        </button>
-      </div>
-      <div class="bundle-items-list">
-        ${bundle.items.map(bundleItemTemplate).join('')}
-      </div>
-    </div>
-  `;
-}
-
 function cartTemplate(item) {
   // Loop through variations
   const variationsArray = [];
@@ -336,11 +271,11 @@ async function updateCartDrawer() {
     cartDrawerContent.innerHTML += headerContainer;
 
     // Partition items into regular and bundle groups via extra_fields
+    const items = Array.isArray(cartData.items) ? cartData.items : [];
     const bundleMap = new Map();
     const regularItems = [];
-    const items = Array.isArray(cartData.items) ? cartData.items : [];
 
-    items.forEach(item => {
+    items.forEach((item) => {
       const extra = item.extra_fields;
       if (extra?.is_bundle_item) {
         if (!bundleMap.has(extra.bundle_id)) {
@@ -353,9 +288,8 @@ async function updateCartDrawer() {
     });
 
     const cartBundles = [...bundleMap.values()];
-    const hasContent = regularItems.length > 0 || cartBundles.length > 0;
 
-    if (hasContent) {
+    if (regularItems.length > 0 || cartBundles.length > 0) {
       const products = document.createElement('ul');
 
       for (const item of regularItems) {
@@ -371,8 +305,8 @@ async function updateCartDrawer() {
 
       cartDrawerContent.appendChild(products);
 
-      cartBundles.forEach(bundle => {
-        cartDrawerContent.innerHTML += bundleGroupTemplate(bundle);
+      cartBundles.forEach((bundle) => {
+        cartDrawerContent.appendChild(createBundleGroup(bundle));
       });
 
       // Attach event listeners to the newly added remove buttons
@@ -410,6 +344,64 @@ async function updateCartDrawer() {
   } catch (error) {
     notify(error.message, 'error');
   }
+}
+
+function createBundleGroup(bundle) {
+  const groupTemplate = document.getElementById('cart-drawer-bundle-group');
+  const itemTemplate = document.getElementById('cart-drawer-bundle-item');
+  const group = groupTemplate.content.cloneNode(true);
+
+  group.querySelector('[ui-slot="title"]').textContent = bundle.title;
+
+  const total = bundle.items.reduce((sum, i) => sum + ((i.extra_fields?.bundle_product_price ?? i.price) * i.quantity), 0);
+  group.querySelector('[ui-slot="total"]').textContent = formatCurrency(total, CURRENCY_CODE, CUSTOMER_LOCALE);
+
+  const removeBtn = group.querySelector('[ui-slot="remove"]');
+  removeBtn.setAttribute('data-bundle-item-ids', bundle.items.map((i) => i.id).join(','));
+  removeBtn.setAttribute('data-bundle-variant-ids', bundle.items.map((i) => i.productVariant?.id ?? '').join(','));
+
+  const list = group.querySelector('[ui-slot="items"]');
+  bundle.items.forEach((item) => list.appendChild(createBundleItem(itemTemplate, item)));
+
+  return group;
+}
+
+function createBundleItem(itemTemplate, item) {
+  const el = itemTemplate.content.cloneNode(true);
+
+  const image = el.querySelector('[ui-slot="image"]');
+  image.src = item.productVariant?.image?.url ?? item.productVariant?.product?.thumbnail ?? defaultImage;
+  image.alt = item.productVariant?.product?.name ?? '';
+
+  const name = el.querySelector('[ui-slot="name"]');
+  name.textContent = item.productVariant?.product?.name ?? '';
+  if (item.productVariant?.product?.url) name.href = item.productVariant.product.url;
+
+  const variantsEl = el.querySelector('[ui-slot="variants"]');
+  const variations = item.productVariant?.variations || {};
+  const entries = Object.entries(variations).filter(([key]) => key !== 'default');
+  if (entries.length) {
+    variantsEl.innerHTML = entries.map(([key, value]) => `<span>${key}: ${value}</span>`).join('');
+    variantsEl.removeAttribute('hidden');
+  } else {
+    variantsEl.setAttribute('hidden', '');
+  }
+
+  const unitPrice = item.extra_fields?.bundle_product_price ?? item.price;
+  const subtotal = unitPrice * item.quantity;
+  const freeEl = el.querySelector('[ui-slot="free"]');
+  const priceEl = el.querySelector('[ui-slot="price"]');
+
+  if (subtotal === 0) {
+    freeEl.removeAttribute('hidden');
+    priceEl.setAttribute('hidden', '');
+  } else {
+    priceEl.textContent = formatCurrency(subtotal, CURRENCY_CODE, CUSTOMER_LOCALE);
+    priceEl.removeAttribute('hidden');
+    freeEl.setAttribute('hidden', '');
+  }
+
+  return el;
 }
 
 function updateCartCount(delta, relative = false) {

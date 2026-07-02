@@ -72,28 +72,7 @@
           </div>
         {% endfor %}
 
-        {% if cart.bundles %}
-          {% assign bundle_types = 'single,multi,buyxgety' | split: ',' %}
-          {% for t in bundle_types %}
-            {% assign bundle_type = cart.bundles[t] %}
-            {% for bundle in bundle_type %}
-              <div class="cart-bundle-group">
-                <div class="bundle-group-head">
-                  <span class="bundle-title">{{ bundle.title }}</span>
-                  <button
-                    class="remove-bundle-btn"
-                    onclick="removeBundleItems([{% for bi in bundle.items %}'{{ bi.id }}'{% unless forloop.last %},{% endunless %}{% endfor %}],[{% for bi in bundle.items %}'{{ bi.product_variant_id }}'{% unless forloop.last %},{% endunless %}{% endfor %}])"
-                  >
-                    {{ 'cart.items.remove_cta' | t }}
-                  </button>
-                </div>
-                {% for bundle_item in bundle.items %}
-                  {% render 'cart-bundle-item', product: bundle_item %}
-                {% endfor %}
-              </div>
-            {% endfor %}
-          {% endfor %}
-        {% endif %}
+        {% render 'cart-bundles', context: 'page' %}
       </div>
       <div class="summary-box h-fit">
         <div id="summary">
