@@ -3,6 +3,8 @@
 
   Accepts:
   - product: {Object} Product info
+  - bundle_id: {String} (Optional) Bundle item id
+  - saving_percentage: {Number} (Optional) Saving percentage (bundle offer)
   - size: {String} (Optional) (lg | md | sm | xs) Button size
   - mode: {String} (Optional) (filled | stroke | lighter | ghost) Button mode
   - as_icon: {Boolean} (Optional) Button style
@@ -33,6 +35,9 @@
   {% endif %}
   {% if skip_to_checkout %}
     skip-to-checkout
+  {% endif %}
+  {% if bundle_id %}
+    bundle-id="{{ bundle_id }}"
   {% endif %}
 >
   {% if is_express_checkout %}
@@ -89,7 +94,17 @@
     >
       {% render 'misc.icon', name: 'hgi-add-01' %}
       {% unless as_icon %}
-        <span class="label">{{ 'general.add_to_cart' | t }}</span>
+        {% if bundle_id %}
+          <span class="label">
+            {{ 'general.add_bundle' | t }}
+            {% if saving_percentage %}
+              ({{ 'bundles.save' | t }}
+              {{ saving_percentage }}%)
+            {% endif %}
+          </span>
+        {% else %}
+          <span class="label">{{ 'general.add_to_cart' | t }} </span>
+        {% endif %}
       {% endunless %}
     </button>
   {% endif %}
