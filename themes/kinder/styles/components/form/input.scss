@@ -42,11 +42,24 @@
 
   /* Native select */
   &:is(select) {
-    appearance: none;
     padding-inline-end: calc(var(--inline-padding) + 20px);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='currentColor' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     background-position: calc(100% - var(--inline-padding)) center;
+    appearance: none;
+
+    &[data-size="lg"] {
+      --inline-padding: var(--spacing-12);
+
+      height: 60px;
+      border-radius: calc(var(--radius-input) * 1.5);
+    }
+
+    &[data-size="sm"] {
+      --inline-padding: var(--spacing-8);
+
+      height: 32px;
+    }
 
     &:dir(rtl) {
       background-position: var(--inline-padding) center;

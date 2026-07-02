@@ -95,6 +95,7 @@
                     ></textarea>
                   {% when 'select' %}
                     <select
+                      data-size="lg"
                       ui-slot="input"
                       name="{{ field_name }}"
                       {% if field.required %}
@@ -144,6 +145,14 @@
               <p class="price">{{ price | default: 0 | money }}</p>
             </div>
             {% render 'core.quantity', product: product %}
+            {% if block.settings.show_subtotal %}
+              <div class="subtotal">
+                <span class="label">{{ 'product.subtotal' | t }}</span>
+                <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
+                  {{ price | default: 0 | money }}
+                </span>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -204,6 +213,7 @@
                   ></textarea>
                 {% when 'select' %}
                   <select
+                    data-size="lg"
                     ui-slot="input"
                     name="{{ field_name }}"
                     {% if field.required %}
@@ -235,6 +245,12 @@
     <div class="actions">
       {% render 'core.quantity', size: 'md' %}
       {% render 'core.shop-button', is_express_checkout: true %}
+    </div>
+    <div class="subtotal">
+      <span class="label">{{ 'product.subtotal' | t }}</span>
+      <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
+        {{ price | default: 0 | money }}
+      </span>
     </div>
   </form>
 {% endif %}

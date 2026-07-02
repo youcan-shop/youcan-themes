@@ -15,7 +15,7 @@ if (!customElements.get("ui-product")) {
     }
 
     connectedCallback() {
-      if (this.querySelector("[ui-block='subtotal']")) {
+      if (this.querySelectorAll("[ui-block='subtotal']").length) {
         this.addEventListener("change", (e) => {
           if (e.target.tagName === "UI-QUANTITY") this.updateSubtotal();
         });
@@ -100,17 +100,19 @@ if (!customElements.get("ui-product")) {
     }
 
     updateSubtotal() {
-      const subtotalEl = this.querySelector("[ui-block='subtotal']");
-      if (!subtotalEl) return;
+      const subtotalEls = this.querySelectorAll("[ui-block='subtotal']");
+      if (!subtotalEls.length) return;
 
       if (!this.currentPrice) {
-        this.currentPrice = parseFloat(subtotalEl.dataset.price) || 0;
+        this.currentPrice = parseFloat(subtotalEls[0].dataset.price) || 0;
       }
 
       const qtyEl = this.querySelector("ui-quantity");
       const qty = qtyEl ? qtyEl.quantityValue : 1;
 
-      subtotalEl.textContent = formatCurrency(this.currentPrice * qty);
+      subtotalEls.forEach((subtotalEl) => {
+        subtotalEl.textContent = formatCurrency(this.currentPrice * qty);
+      });
     }
 
     updateProduct(price, compare_at_price) {

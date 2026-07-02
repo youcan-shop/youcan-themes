@@ -27,6 +27,15 @@
   }
   .express-checkout-default{
     --input-bg:var(--bg-on-shade-color);
+  }
+  .express-checkout-default [ui-slot=input],
+  .express-checkout-default [ui-slot=textarea]{
+    --input-bg:var(--bg-on-shade-color);
+  }
+  .express-checkout-default [ui-express-checkout=field]:has([ui-slot=textarea]){
+    grid-column:1/-1;
+  }
+  .express-checkout-default{
     display:flex;
     flex-direction:column;
     padding:var(--spacing-24);
@@ -45,6 +54,17 @@
   }
   .express-checkout-default .actions:has(> ui-shop-button:nth-of-type(2)) > ui-shop-button:last-of-type{
     grid-column:1/3;
+  }
+  .express-checkout-default .subtotal{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-4);
+  }
+  .express-checkout-default .subtotal .label{
+    font:var(--font-label-xs);
+  }
+  .express-checkout-default .subtotal [ui-block=subtotal]{
+    font:var(--font-body-xs);
   }
   .express-checkout-drawer{
     --input-bg:var(--bg-shade-color);
@@ -85,6 +105,7 @@
     flex-direction:column;
     justify-content:space-between;
     padding-block:var(--spacing-4);
+    gap:var(--spacing-8);
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .info{
     display:grid;
@@ -96,6 +117,17 @@
   }
   .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .info .title{
     font:var(--font-label-md);
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .subtotal{
+    display:flex;
+    align-items:center;
+    gap:var(--spacing-4);
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .subtotal .label{
+    font:var(--font-label-xs);
+  }
+  .express-checkout-drawer [ui-slot=sheet-body] .order-box .order .detail .subtotal [ui-block=subtotal]{
+    font:var(--font-body-xs);
   }
   .express-checkout-drawer [ui-slot=sheet-footer] ui-quantity{
     display:none;
