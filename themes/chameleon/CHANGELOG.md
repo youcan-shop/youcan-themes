@@ -1,5 +1,12 @@
 # chameleon
 
+## 4.7.1
+
+### Patch Changes
+
+- 4946124: chameleon > product > add YouTube videos support
+- 9c04147: chameleon > thankyou > Add toggle to show/hide "Continue shopping" button
+
 ## 4.7.0
 
 ### Minor Changes
