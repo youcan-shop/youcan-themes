@@ -18,7 +18,13 @@
       {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
     </button>
   {% endif %}
-  <div class="main-media" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+  <div
+    class="main-media"
+    ui-carousel="wrapper"
+    ui-slot="carousel"
+    aria-orientation="vertical"
+    data-align="center"
+  >
     {% if product.images.size %}
       {% for image in product.images %}
         <div ui-carousel="item" ui-slot="carousel-item">
@@ -72,8 +78,14 @@
     </div>
   {% endif %}
 </ui-carousel>
-{% if section.settings.media_desktop_layout == 'grid' %}
-  <div class="media" data-layout="grid">
+{% if section.settings.gallery_layout != 'slider_with_thumbnails' %}
+  {% assign grid_style = 'full_width_thumbnail' %}
+
+  {% if section.settings.gallery_layout == 'full_width_two_thumbnails' %}
+    {% assign grid_style = 'full_width_two_thumbnails' %}
+  {% endif %}
+
+  <div class="media" data-layout="grid" data-grid-style="{{ grid_style }}">
     {% if product.images.size %}
       {% for image in product.images %}
         <div class="image">
