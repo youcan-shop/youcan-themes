@@ -35,8 +35,7 @@
     grid-template-columns: 1fr 4fr 1fr;
     align-items: center;
     min-height: 64px;
-    padding-block: var(--top-spacing) var(--bottom-spacing);
-    padding-inline: 10%;
+    padding: var(--top-spacing) 10% var(--bottom-spacing);
     transform: translateY(0%);
     transition:
       box-shadow var(--transition-standard-fast-spatial),
@@ -137,6 +136,10 @@
       }
     }
 
+    @media (width <= 1024px) {
+      padding-inline: var(--spacing-16);
+    }
+
     @media (width > 769px) {
       .menu {
         display: none;
@@ -147,7 +150,6 @@
       display: grid;
       grid-template-areas: "menu logo actions" !important;
       grid-template-columns: auto auto 1fr !important;
-      padding-inline: var(--spacing-16);
 
       .links {
         display: none;

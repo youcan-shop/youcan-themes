@@ -29,8 +29,7 @@
     grid-template-columns:1fr 4fr 1fr;
     align-items:center;
     min-height:64px;
-    padding-block:var(--top-spacing) var(--bottom-spacing);
-    padding-inline:10%;
+    padding:var(--top-spacing) 10% var(--bottom-spacing);
     transform:translateY(0%);
     transition:box-shadow var(--transition-standard-fast-spatial), transform var(--transition-standard-slow-spatial);
     background-color:var(--bg-color);
@@ -107,6 +106,11 @@
   [ui-layout=header][data-header-layout=logo-first-menu-center] .links{
     justify-content:center;
   }
+  @media (max-width: 1024px){
+    [ui-layout=header]{
+      padding-inline:var(--spacing-16);
+    }
+  }
   @media (min-width: 769.02px){
     [ui-layout=header] .menu{
       display:none;
@@ -117,7 +121,6 @@
       display:grid;
       grid-template-areas:"menu logo actions" !important;
       grid-template-columns:auto auto 1fr !important;
-      padding-inline:var(--spacing-16);
     }
     [ui-layout=header] .links{
       display:none;
