@@ -53,7 +53,7 @@
               --per-page: 1;
 
               height: 100%;
-              aspect-ratio: 1 / 1;
+              aspect-ratio: var(--media-ratio);
               overflow-y: hidden;
               border-radius: var(--radius-16);
             }
@@ -93,7 +93,7 @@
           .image {
             height: 100%;
             overflow: hidden;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: var(--media-ratio);
             border-radius: var(--radius-16);
 
             & > img {
@@ -354,8 +354,28 @@
       grid-template-columns: auto 40%;
     }
 
+    &[data-image-ratio="adapt"] {
+      --media-ratio: auto;
+    }
+
+    &[data-image-ratio="square"] {
+      --media-ratio: 1 / 1;
+    }
+
+    &[data-image-ratio="portrait"] {
+      --media-ratio: 3 / 4;
+    }
+
+    &[data-image-ratio="landscape"] {
+      --media-ratio: 4 / 3;
+    }
+
     @media (width <= 1024px) {
       padding-inline: var(--spacing-16);
+
+      .core {
+        gap: var(--spacing-32);
+      }
     }
 
     @media (width > 769px) {
