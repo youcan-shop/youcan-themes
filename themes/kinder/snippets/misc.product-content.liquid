@@ -34,15 +34,15 @@
               {% endif %}
             {% endfor %}
           </div>
-          <span class="total">({{ product.averageRating }})</span>
+          <span class="total">{{ product.averageRating }}</span>
           <a
             ui-slot="link-button"
-            data-variant="gray"
+            data-variant="neutral"
             data-size="sm"
             data-underline="true"
             href="#reviews"
           >
-            <span ui-reviews="total">-</span> {{ 'reviews.title' | t }}
+            <span ui-reviews="total">-</span>{{ 'reviews.title' | t }}
           </a>
         </div>
 
@@ -63,11 +63,19 @@
         </div>
 
       {% when 'block_inventory_status' %}
-        {% render 'const.inventory-status',
-          count: default_variant.inventory,
-          threshold: block.settings.low_inventory_threshold,
-          show_count: block.settings.show_inventory_count
-        %}
+        {% if product.isTrackingInventory %}
+          {% if product.has_only_default_variant %}
+            {% assign inventory_variant = product.variants[0] %}
+          {% else %}
+            {% assign inventory_variant = product.selected_or_first_available_variant %}
+          {% endif %}
+          {% render 'const.inventory-status',
+            count: inventory_variant.inventory,
+            threshold: block.settings.low_inventory_threshold,
+            show_count: true,
+            style: 'inline'
+          %}
+        {% endif %}
 
       {% when 'block_variant_picker' %}
         {% if product.options.size > 0 %}
@@ -84,16 +92,34 @@
       {% when 'block_shop_buttons' %}
         {% if block.settings.buy_button_style == 'open-drawer' %}
           <div ui-block="controller" {{ block.youcan_attributes }}>
-            {% render 'core.quantity', size: 'md' %}
-            {% if block.settings.shop_buttons_layout == 'add-to-cart'
-              or block.settings.shop_buttons_layout == 'both'
-              and settings.cart_checkout_type == 'cart'
-            %}
-              {% render 'core.shop-button', mode: 'lighter' %}
-            {% endif %}
-            {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
-              {% render 'core.express-checkout', style: 'open-drawer' %}
-            {% endif %}
+            <div class="quantity-wrapper">
+              {% render 'core.quantity', size: 'lg' %}
+              {% if block.settings.show_subtotal %}
+                <div class="subtotal">
+                  <span class="label">{{ 'product.subtotal' | t }}</span>
+                  <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
+                    {{ price | default: 0 | money }}
+                  </span>
+                </div>
+              {% endif %}
+            </div>
+            <div class="shop-buttons">
+              {% if settings.cart_checkout_type == 'cart' %}
+                {% assign button_mode = 'primary' %}
+
+                {% if block.settings.show_buy_button %}
+                  {% assign button_mode = 'secondary' %}
+                {% endif %}
+
+                {% render 'core.shop-button', mode: button_mode %}
+              {% endif %}
+              {% if settings.cart_checkout_type == 'cart' and block.settings.show_buy_button %}
+                {% render 'core.express-checkout', style: 'open-drawer' %}
+              {% endif %}
+              {% if settings.cart_checkout_type == 'express-checkout' %}
+                {% render 'core.express-checkout', style: 'open-drawer' %}
+              {% endif %}
+            </div>
           </div>
         {% else %}
           <div ui-block="express-checkout" {{ block.youcan_attributes }}>
@@ -130,18 +156,80 @@
           {% endfor %}
         </ul>
 
+      {% when 'block_statistics' %}
+        <div ui-block="statistics" {{ block.youcan_attributes }}>
+          {% if block.settings.show_discount %}
+            {% assign has_saving = false %}
+            {% if compare_at_price and compare_at_price > price %}
+              {% assign has_saving = true %}
+              {% assign discount_amount = compare_at_price | minus: price %}
+            {% endif %}
+            <div
+              ui-slot="status-badge"
+              class="saving"
+              ui-statistic="saving-badge"
+              {% unless has_saving %}
+                hidden
+              {% endunless %}
+            >
+              <span>{{ 'product.save' | t }}</span>
+              <span ui-statistic="saving">{{ discount_amount | default: 0 | money }}</span>
+            </div>
+          {% endif %}
+
+          {% if block.settings.show_inventory and product.isTrackingInventory %}
+            {% if product.has_only_default_variant %}
+              {% assign inventory_variant = product.variants[0] %}
+            {% else %}
+              {% assign inventory_variant = product.selected_or_first_available_variant %}
+            {% endif %}
+            {% assign inventory_count = inventory_variant.inventory %}
+            {% assign inventory_threshold = block.settings.low_inventory_threshold | default: 10 %}
+
+            {% if inventory_count == 0 or inventory_count == null %}
+              {% assign stock_status = 'soldout' %}
+              {% assign stock_text = 'product.inventory_out_of_stock' | t %}
+            {% elsif inventory_count > inventory_threshold %}
+              {% assign stock_status = 'instock' %}
+              {% assign stock_text = 'product.inventory_in_stock' | t %}
+            {% else %}
+              {% assign stock_status = 'lowstock' %}
+              {% assign stock_text = 'product.inventory_low_stock' | t %}
+            {% endif %}
+
+            <div
+              ui-slot="status-badge"
+              ui-statistic="inventory"
+              data-status="{{ stock_status }}"
+              data-threshold="{{ inventory_threshold }}"
+            >
+              <div ui-slot="badge-dot"></div>
+              <span class="value">{{ stock_text }}</span>
+            </div>
+          {% endif %}
+        </div>
+
       {% when 'block_feature_list' %}
         <ul ui-block="feature-list" {{ block.youcan_attributes }}>
           {% for i in (1..5) %}
-            {% assign icon = 'feature_icon_' | append: i %}
-            {% assign content = 'feature_content_' | append: i %}
+            {% assign icon_key = 'feature_icon_' | append: i %}
+            {% assign heading_key = 'feature_heading_' | append: i %}
+            {% assign description_key = 'feature_description_' | append: i %}
 
-            {% if block.settings[content] != blank %}
+            {% assign heading = block.settings[heading_key] %}
+            {% assign description = block.settings[description_key] %}
+
+            {% if heading != blank %}
               <li class="feature-item">
                 <div class="icon">
-                  {% render 'misc.icon', name: block.settings[icon], size: 20 %}
+                  {% render 'misc.icon', name: block.settings[icon_key], size: 24 %}
                 </div>
-                <span class="label">{{ block.settings[content] }}</span>
+                <div class="feature-text">
+                  <span class="label">{{ heading }}</span>
+                  {% if description %}
+                    <span class="description">{{ description }}</span>
+                  {% endif %}
+                </div>
               </li>
             {% endif %}
           {% endfor %}

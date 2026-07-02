@@ -11,9 +11,17 @@ if (!customElements.get("ui-product")) {
       this.variants = [...this.querySelectorAll("[ui-variant]")];
       this.productForms = this.querySelectorAll("ui-shop-button");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
+      this.currentPrice = 0;
     }
 
     connectedCallback() {
+      if (this.querySelectorAll("[ui-block='subtotal']").length) {
+        this.addEventListener("change", (e) => {
+          if (e.target.tagName === "UI-QUANTITY") this.updateSubtotal();
+        });
+        this.updateSubtotal();
+      }
+
       if (!this.productVariants) return;
 
       this.onVariantChanged();
@@ -37,6 +45,11 @@ if (!customElements.get("ui-product")) {
       if (matchedVariant) await this.updateVariant(matchedVariant);
 
       this.disableUnavailableOptions();
+
+      if (!matchedVariant) {
+        this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = true));
+        this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => (trigger.disabled = true));
+      }
     }
 
     async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
@@ -45,13 +58,61 @@ if (!customElements.get("ui-product")) {
         productForm.toggleAttribute("not-available", !available);
       });
 
+      this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => {
+        trigger.disabled = !available;
+      });
+
       const attachedImage = await this.getAttachedImage();
 
       attachedImage && this.productForms.forEach((productForm) => productForm.setAttribute("attached-image", attachedImage));
       image && this.updateMainImage(image);
 
+      this.currentPrice = price;
       this.updateProduct(price, compare_at_price);
       this.updateInventoryStatus(inventory);
+      this.updateStatistics(price, compare_at_price, inventory);
+      this.updateSubtotal();
+    }
+
+    updateStatistics(price, compare_at_price, inventory) {
+      const savingBadge = this.querySelector("[ui-statistic='saving-badge']");
+      if (savingBadge) {
+        const hasSaving = compare_at_price && compare_at_price > price;
+        savingBadge.hidden = !hasSaving;
+
+        if (hasSaving) {
+          const savingValue = savingBadge.querySelector("[ui-statistic='saving']");
+          if (savingValue) savingValue.textContent = formatCurrency(compare_at_price - price);
+        }
+      }
+
+      const inventoryBadge = this.querySelector("[ui-statistic='inventory']");
+      if (inventoryBadge) {
+        const threshold = Number(inventoryBadge.getAttribute("data-threshold")) || 0;
+        const status = inventory === 0 ? "soldout" : inventory > threshold ? "instock" : "lowstock";
+        const statusKey = inventory === 0 ? "out_of_stock" : inventory > threshold ? "in_stock" : "low_stock";
+
+        inventoryBadge.dataset.status = status;
+
+        const valueEl = inventoryBadge.querySelector(".value");
+        if (valueEl) valueEl.textContent = window.inventoryStatuses[statusKey];
+      }
+    }
+
+    updateSubtotal() {
+      const subtotalEls = this.querySelectorAll("[ui-block='subtotal']");
+      if (!subtotalEls.length) return;
+
+      if (!this.currentPrice) {
+        this.currentPrice = parseFloat(subtotalEls[0].dataset.price) || 0;
+      }
+
+      const qtyEl = this.querySelector("ui-quantity");
+      const qty = qtyEl ? qtyEl.quantityValue : 1;
+
+      subtotalEls.forEach((subtotalEl) => {
+        subtotalEl.textContent = formatCurrency(this.currentPrice * qty);
+      });
     }
 
     updateProduct(price, compare_at_price) {
@@ -87,10 +148,19 @@ if (!customElements.get("ui-product")) {
               ? "low_stock_show_count"
               : "low_stock";
 
-      inventoryStatus.lastElementChild.textContent = statuses[statusKey].replace("%", inventory);
+      inventoryStatus.querySelector(".value").textContent = statuses[statusKey].replace("%", inventory);
       inventoryElement.dataset.inventory = statusKey.replace("_show_count", "").replaceAll("_", "-");
 
-      inventoryStatus.dataset.status = inventory === 0 ? "disabled" : inventory > threshold ? "completed" : "pending";
+      inventoryStatus.dataset.status = inventory === 0 ? "soldout" : inventory > threshold ? "instock" : "lowstock";
+
+      const progressBar = inventoryStatus.querySelector("[ui-slot='progress-bar']");
+      if (progressBar) {
+        let progressValue = 0;
+        if (inventory > 0 && threshold > 0) {
+          progressValue = inventory >= threshold ? 100 : Math.round((inventory / threshold) * 100);
+        }
+        progressBar.value = progressValue;
+      }
     }
 
     updateMainImage(image_src) {
@@ -132,8 +202,15 @@ if (!customElements.get("ui-product")) {
       );
 
       const hasCheckedInput = [...inputs].some((input) => input.checked || input.value);
+      const allUnavailable = [...inputs].every((input) => input.disabled);
 
       this.productForms.forEach((productForm) => (productForm.querySelector('[ui-slot="button"]').disabled = !hasCheckedInput));
+
+      if (allUnavailable) {
+        this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => {
+          trigger.disabled = true;
+        });
+      }
     }
 
     async getAttachedImage() {
@@ -161,6 +238,9 @@ if (!customElements.get("ui-product")) {
 
               output.querySelector("img").src = base64;
               output.querySelector("img").alt = file.name;
+              output.querySelector('[ui-slot="file-upload-preview-name"]').textContent = file.name;
+              output.querySelector('[ui-slot="file-upload-preview-size"]').textContent =
+                fileSizeInMB >= 1 ? `${fileSizeInMB.toFixed(1)}mb` : `${Math.round(fileSizeInKB)}kb`;
 
               output.querySelector("button").addEventListener("click", () => {
                 this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));

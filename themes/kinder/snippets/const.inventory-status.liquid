@@ -11,23 +11,25 @@
 {% endcomment %}
 
 <div
-  ui-slot="status-badge"
-  data-variant="light"
+  ui-slot="inventory-status"
   {% if count == 0 or count == null %}
-    data-status="disabled"
+    data-status="soldout"
   {% elsif count > threshold %}
-    data-status="completed"
+    data-status="instock"
   {% else %}
-    data-status="pending"
+    data-status="lowstock"
   {% endif %}
   data-product-item="inventory"
   data-threshold="{{ threshold | default: 10 }}"
+  data-style="{{ style | default: 'inline' }}"
   data-show-count="{{ show_count }}"
   {{ block.youcan_attributes }}
 >
-  <span ui-slot="badge-dot"></span>
+  {% unless style == 'inline' %}
+    <span ui-slot="badge-dot"></span>
+  {% endunless %}
   <span class="value">
-    {% if count == 0 %}
+    {% if count == 0 or count == null %}
       {{ 'product.inventory_out_of_stock' | t }}
     {% elsif count > threshold %}
       {% if show_count %}
@@ -43,4 +45,12 @@
       {% endif %}
     {% endif %}
   </span>
+  {% if count == 0 or count == null or threshold == 0 or threshold == blank %}
+    {% assign progress_value = 0 %}
+  {% elsif count > threshold %}
+    {% assign progress_value = 100 %}
+  {% else %}
+    {% assign progress_value = count | times: 100 | divided_by: threshold %}
+  {% endif %}
+  <progress ui-slot="progress-bar" value="{{ progress_value }}" max="100"></progress>
 </div>

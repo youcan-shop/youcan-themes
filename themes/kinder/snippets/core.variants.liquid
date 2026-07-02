@@ -58,7 +58,6 @@
         <div class="options">
           {% for opt in variant.values %}
             <label class="opt" style="--color-value: {{ opt.preview }}">
-              {% render 'misc.icon', name: 'hgi-tick-02', size: 20 %}
               <input
                 type="radio"
                 name="{{ unique_name }}"
@@ -71,7 +70,7 @@
           {% endfor %}
         </div>
       {% elsif variant.type == 'dropdown' %}
-        <select ui-slot="input" data-size="md" name="{{ unique_name }}">
+        <select ui-slot="input" data-size="lg" name="{{ unique_name }}">
           {% for opt in variant.values %}
             <option
               value="{{ opt }}"
@@ -107,9 +106,6 @@
                 {% else %}
                   {% render 'misc.image-fallback' %}
                 {% endif %}
-                <div class="checked">
-                  {% render 'misc.icon', name: 'hgi-tick-02', size: 24 %}
-                </div>
               </div>
 
               <span class="value">{{ opt.value }}</span>
@@ -129,6 +125,26 @@
           </div>
           <div ui-slot="file-upload-button">{{ 'product.upload_image.trigger' | t }}</div>
         </label>
+        <div ui-slot="file-upload-preview" hidden>
+          <div ui-slot="file-upload-preview-thumb">
+            <img height="100" width="100%" src="" alt="">
+          </div>
+          <div ui-slot="file-upload-preview-info">
+            <span ui-slot="file-upload-preview-name"></span>
+            <span ui-slot="file-upload-preview-size"></span>
+          </div>
+          <button
+            ui-slot="button"
+            data-variant="neutral"
+            data-size="lg"
+            data-as-icon
+            aria-label="remove"
+            ui-slot="file-upload-preview-remove"
+            data-as-icon
+          >
+            {% render 'misc.icon', name: 'hgi-delete-02' %}
+          </button>
+        </div>
       {% endif %}
     </div>
   {% endfor %}

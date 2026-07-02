@@ -13,17 +13,24 @@
 
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
+{% assign has_phone_validation = checkout.phone_validation %}
 
 {% if style == 'open-drawer' %}
+  {% assign trigger_variant = product.selected_or_first_available_variant %}
   <button
     ui-slot="button"
     data-variant="primary"
-    data-mode="filled"
     data-size="lg"
     type="button"
     popovertarget="express-checkout-{{ product.id }}"
+    data-express-checkout-trigger
+    {% if product.trackingInventory and trigger_variant.available == false %}
+      disabled
+    {% endif %}
   >
-    {{ 'general.buy_now' | t }}
+    <span ui-slot="button-front">
+      {{ 'general.buy_now' | t }}
+    </span>
   </button>
 
   <form
@@ -38,13 +45,15 @@
       <button
         type="button"
         ui-slot="button"
-        data-variant="primary"
-        data-mode="lighter"
-        data-size="md"
+        data-variant="secondary"
+        data-size="lg"
         aria-label="Close"
         popovertarget="express-checkout-{{ product.id }}"
+        data-as-icon
       >
-        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: 'hgi-cancel-01' %}
+        </span>
       </button>
     </div>
     <div ui-slot="sheet-body">
@@ -57,51 +66,56 @@
           {% endif %}
 
           {% unless has_linked_fields and linked_fields contains field.name %}
-            <label ui-express-checkout="field">
-              <span ui-slot="label">{{ field.display_name }}</span>
-              {% case field.type %}
-                {% when 'text', 'number', 'hidden' %}
-                  <input
-                    ui-slot="input"
-                    data-size="lg"
-                    type="{{ field.type }}"
-                    name="{{ field_name }}"
-                    value="{{ field.default_value }}"
-                    placeholder="{{ field.placeholder }}"
-                    {% if field.required %}
-                      required
-                    {% endif %}
-                  >
-                {% when 'textarea' %}
-                  <textarea
-                    ui-slot="textarea"
-                    name="{{ field_name }}"
-                    placeholder="{{ field.placeholder }}"
-                    {% if field.required %}
-                      required
-                    {% endif %}
-                  ></textarea>
-                {% when 'select' %}
-                  <select
-                    ui-slot="input"
-                    name="{{ field_name }}"
-                    {% if field.required %}
-                      required
-                    {% endif %}
-                  >
-                    {% for opt in field.options %}
-                      <option
-                        value="{{ opt }}"
-                        {% if option == field.default_value %}
-                          selected
-                        {% endif %}
-                      >
-                        {{ opt }}
-                      </option>
-                    {% endfor %}
-                  </select>
-              {% endcase %}
-            </label>
+            {% if field.name == 'phone' and has_phone_validation %}
+              {% render 'core.phone-validation', field: field %}
+            {% else %}
+              <label ui-express-checkout="field">
+                <span ui-slot="label">{{ field.display_name }}</span>
+                {% case field.type %}
+                  {% when 'text', 'number', 'hidden' %}
+                    <input
+                      ui-slot="input"
+                      data-size="lg"
+                      type="{{ field.type }}"
+                      name="{{ field_name }}"
+                      value="{{ field.default_value }}"
+                      placeholder="{{ field.placeholder }}"
+                      {% if field.required %}
+                        required
+                      {% endif %}
+                    >
+                  {% when 'textarea' %}
+                    <textarea
+                      ui-slot="textarea"
+                      name="{{ field_name }}"
+                      placeholder="{{ field.placeholder }}"
+                      {% if field.required %}
+                        required
+                      {% endif %}
+                    ></textarea>
+                  {% when 'select' %}
+                    <select
+                      data-size="lg"
+                      ui-slot="input"
+                      name="{{ field_name }}"
+                      {% if field.required %}
+                        required
+                      {% endif %}
+                    >
+                      {% for opt in field.options %}
+                        <option
+                          value="{{ opt }}"
+                          {% if option == field.default_value %}
+                            selected
+                          {% endif %}
+                        >
+                          {{ opt }}
+                        </option>
+                      {% endfor %}
+                    </select>
+                {% endcase %}
+              </label>
+            {% endif %}
           {% endunless %}
         {% endfor %}
 
@@ -131,6 +145,14 @@
               <p class="price">{{ price | default: 0 | money }}</p>
             </div>
             {% render 'core.quantity', product: product %}
+            {% if block.settings.show_subtotal %}
+              <div class="subtotal">
+                <span class="label">{{ 'product.subtotal' | t }}</span>
+                <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
+                  {{ price | default: 0 | money }}
+                </span>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -139,12 +161,13 @@
       <button
         type="button"
         ui-slot="button"
-        data-variant="primary"
-        data-mode="lighter"
+        data-variant="secondary"
         data-size="lg"
         popovertarget="express-checkout-{{ product.id }}"
       >
-        {{ 'general.cancel' | t }}
+        <span ui-slot="button-front">
+          {{ 'general.cancel' | t }}
+        </span>
       </button>
       {% render 'core.quantity', product: product %}
       {% render 'core.shop-button', is_express_checkout: true %}
@@ -161,51 +184,56 @@
         {% endif %}
 
         {% unless has_linked_fields and linked_fields contains field.name %}
-          <label ui-express-checkout="field">
-            <span ui-slot="label">{{ field.display_name }}</span>
-            {% case field.type %}
-              {% when 'text', 'number', 'hidden' %}
-                <input
-                  ui-slot="input"
-                  data-size="lg"
-                  type="{{ field.type }}"
-                  name="{{ field_name }}"
-                  value="{{ field.default_value }}"
-                  placeholder="{{ field.placeholder }}"
-                  {% if field.required %}
-                    required
-                  {% endif %}
-                >
-              {% when 'textarea' %}
-                <textarea
-                  ui-slot="textarea"
-                  name="{{ field_name }}"
-                  placeholder="{{ field.placeholder }}"
-                  {% if field.required %}
-                    required
-                  {% endif %}
-                ></textarea>
-              {% when 'select' %}
-                <select
-                  ui-slot="input"
-                  name="{{ field_name }}"
-                  {% if field.required %}
-                    required
-                  {% endif %}
-                >
-                  {% for opt in field.options %}
-                    <option
-                      value="{{ opt }}"
-                      {% if option == field.default_value %}
-                        selected
-                      {% endif %}
-                    >
-                      {{ opt }}
-                    </option>
-                  {% endfor %}
-                </select>
-            {% endcase %}
-          </label>
+          {% if field.name == 'phone' and has_phone_validation %}
+            {% render 'core.phone-validation', field: field %}
+          {% else %}
+            <label ui-express-checkout="field">
+              <span ui-slot="label">{{ field.display_name }}</span>
+              {% case field.type %}
+                {% when 'text', 'number', 'hidden' %}
+                  <input
+                    ui-slot="input"
+                    data-size="lg"
+                    type="{{ field.type }}"
+                    name="{{ field_name }}"
+                    value="{{ field.default_value }}"
+                    placeholder="{{ field.placeholder }}"
+                    {% if field.required %}
+                      required
+                    {% endif %}
+                  >
+                {% when 'textarea' %}
+                  <textarea
+                    ui-slot="textarea"
+                    name="{{ field_name }}"
+                    placeholder="{{ field.placeholder }}"
+                    {% if field.required %}
+                      required
+                    {% endif %}
+                  ></textarea>
+                {% when 'select' %}
+                  <select
+                    data-size="lg"
+                    ui-slot="input"
+                    name="{{ field_name }}"
+                    {% if field.required %}
+                      required
+                    {% endif %}
+                  >
+                    {% for opt in field.options %}
+                      <option
+                        value="{{ opt }}"
+                        {% if option == field.default_value %}
+                          selected
+                        {% endif %}
+                      >
+                        {{ opt }}
+                      </option>
+                    {% endfor %}
+                  </select>
+              {% endcase %}
+            </label>
+          {% endif %}
         {% endunless %}
       {% endfor %}
 
@@ -216,17 +244,28 @@
 
     <div class="actions">
       {% render 'core.quantity', size: 'md' %}
-
-      {% if block.settings.shop_buttons_layout == 'buy-now' or block.settings.shop_buttons_layout == 'both' %}
-        {% render 'core.shop-button', is_express_checkout: true %}
-      {% endif %}
-
-      {% if block.settings.shop_buttons_layout == 'add-to-cart'
-        or block.settings.shop_buttons_layout == 'both'
-        and settings.cart_checkout_type == 'cart'
-      %}
-        {% render 'core.shop-button', mode: 'lighter' %}
-      {% endif %}
+      {% render 'core.shop-button', is_express_checkout: true %}
+    </div>
+    <div class="subtotal">
+      <span class="label">{{ 'product.subtotal' | t }}</span>
+      <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
+        {{ price | default: 0 | money }}
+      </span>
     </div>
   </form>
+{% endif %}
+
+{% if has_linked_fields or has_phone_validation %}
+  {% javascript %}
+    if (!window.storeMarketCountries) {
+      window.storeMarketCountries = new Promise((resolve) => {
+        document.addEventListener('DOMContentLoaded', async () => {
+          const data = await youcanjs.misc.getStoreMarketCountries();
+          resolve(data);
+        });
+      });
+      window.storeRegions = {};
+      window.storeCities = {};
+    }
+  {% endjavascript %}
 {% endif %}

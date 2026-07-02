@@ -136,6 +136,12 @@
     &:active [ui-slot="button-front"] {
       transform: translateY(-2px);
     }
+
+    &:disabled,
+    &[data-loading],
+    &[aria-disabled="true"] {
+      --button-elevation: 0px;
+    }
   }
 
   &[data-variant="secondary"] {
@@ -217,9 +223,6 @@
   &:disabled,
   &[data-loading],
   &[aria-disabled="true"] {
-    --button-border: transparent;
-    --button-bg: transparent;
-
     opacity: 0.5;
     pointer-events: none;
   }
