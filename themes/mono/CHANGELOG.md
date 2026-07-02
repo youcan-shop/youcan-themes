@@ -1,5 +1,11 @@
 # bella
 
+## 1.0.1
+
+### Patch Changes
+
+- cfe84d4: Mono > fix bundles quantity issue
+
 ## 1.0.0
 
 ### Major Changes
