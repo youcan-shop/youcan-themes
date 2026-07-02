@@ -10,8 +10,10 @@
   </div>
 </div>
 
+{% capture gift_icon %}{% render 'gift-icon' %}{% endcapture %}
 {% javascript %}
   const defaultImage = '{{ "default_product.jpeg" | asset_url }}';
+  const GIFT_ICON = `{{ gift_icon }}`;
 
   const ADD_TO_CART_EXPECTED_ERRORS = {
     select_variant: "{{ 'errors.select_variant' | t }}",
