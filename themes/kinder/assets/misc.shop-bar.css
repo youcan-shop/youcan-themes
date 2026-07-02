@@ -1,22 +1,24 @@
 @layer snippets{
   ui-shop-bar{
+    --safe-area:var(--spacing-16);
     display:flex;
     position:fixed;
     z-index:50;
     align-items:center;
     justify-content:space-between;
-    width:100%;
-    padding:var(--spacing-8) 8%;
-    transform:translateY(100%);
+    width:60%;
+    padding:var(--spacing-8) var(--spacing-16);
+    transform:translate(-50%, 100%);
     transition:var(--transition-expressive-default-spatial);
+    border-radius:var(--radius-20);
     background-color:var(--color-on-primary);
     box-shadow:var(--shadow-md);
     color:var(--color-primary);
-    inset-inline-start:0;
-    inset-block-end:0;
+    inset-block-end:var(--safe-area);
+    inset-inline-start:50%;
   }
   ui-shop-bar[data-visible=true]{
-    transform:translateY(0%);
+    transform:translate(-50%, 0%);
   }
   ui-shop-bar .product{
     display:flex;
