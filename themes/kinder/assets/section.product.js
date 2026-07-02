@@ -15,15 +15,17 @@ if (!customElements.get("ui-product")) {
     }
 
     connectedCallback() {
-      if (!this.productVariants) return;
-
-      this.onVariantChanged();
-      this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
       if (this.querySelector("[ui-block='subtotal']")) {
         this.addEventListener("change", (e) => {
           if (e.target.tagName === "UI-QUANTITY") this.updateSubtotal();
         });
+        this.updateSubtotal();
       }
+
+      if (!this.productVariants) return;
+
+      this.onVariantChanged();
+      this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
     }
 
     get selectedOptions() {
