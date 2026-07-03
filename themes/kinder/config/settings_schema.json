@@ -377,27 +377,6 @@
       {
         "type": "paragraph",
         "content": "t:common.colors.brand_color_hint"
-      },
-      {
-        "type": "color",
-        "id": "main_color",
-        "label": "t:common.colors.main_color",
-        "default": "#121212"
-      },
-      {
-        "type": "select",
-        "id": "color_intensity",
-        "label": "t:common.colors.color_intensity",
-        "options": [
-          { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
-          { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
-          { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
-        ],
-        "default": "as-foreground"
-      },
-      {
-        "type": "paragraph",
-        "content": "t:common.colors.hint"
       }
     ]
   },
@@ -405,13 +384,23 @@
     "label": "t:theme.layout.label",
     "settings": [
       {
+        "type": "range",
+        "id": "page_width",
+        "label": "t:common.globals.page_width",
+        "min": 1200,
+        "max": 1600,
+        "step": 10,
+        "unit": "px",
+        "default": 1400
+      },
+      {
         "type": "header",
         "content": "t:common.globals.navigation"
       },
       {
         "type": "checkbox",
-        "id": "show_breadcrumbs",
-        "label": "t:common.layout.show_breadcrumbs",
+        "id": "enable_breadcrumbs",
+        "label": "t:common.layout.enable_breadcrumbs",
         "default": true
       },
       {
@@ -550,61 +539,20 @@
       },
       {
         "type": "select",
-        "id": "corner_radius_multicolumns",
-        "label": "t:theme.layout.multicolumns",
-        "options": [
-          { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "20px" },
-          { "label": "t:common.layout.corner.rounded", "value": "calc(1px * infinity)" }
-        ],
-        "default": "20px"
-      },
-      {
-        "type": "select",
         "id": "corner_radius_image_with_text",
-        "label": "t:theme.layout.image_with_text",
+        "label": "t:common.globals.image_banners",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
           { "label": "t:common.layout.corner.soft", "value": "12px" },
           { "label": "t:common.layout.corner.softer", "value": "20px" }
         ],
         "default": "20px"
-      },
-      {
-        "type": "select",
-        "id": "corner_radius_feature_list",
-        "label": "t:theme.layout.feature_list",
-        "options": [
-          { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "8px" },
-          { "label": "t:common.layout.corner.softer", "value": "12px" },
-          { "label": "t:common.layout.corner.rounded", "value": "calc(1px * infinity)" }
-        ],
-        "default": "calc(1px * infinity)"
       }
     ]
   },
   {
     "label": "t:theme.product_cards.label",
     "settings": [
-      {
-        "type": "select",
-        "id": "product_image_ratio",
-        "label": "t:common.globals.image_ratio",
-        "options": [
-          { "label": "t:common.layout.ratio.square", "value": "square" },
-          { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
-          { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
-        ],
-        "default": "square"
-      },
-      {
-        "type": "checkbox",
-        "id": "center_text",
-        "label": "t:theme.product_cards.center_text",
-        "default": false
-      },
       {
         "type": "checkbox",
         "id": "show_discount",
@@ -622,6 +570,22 @@
         "id": "show_quantity_controls",
         "label": "t:theme.product_cards.show_quantity_controls",
         "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_quick_add",
+        "label": "t:theme.product_cards.enable_quick_add",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "quick_add_icon",
+        "label": "t:theme.product_cards.quick_add_icon",
+        "options": [
+          { "label": "t:theme.cart.icon.options.bag", "value": "hgi-shopping-basket-02" },
+          { "label": "t:theme.cart.icon.options.cart", "value": "hgi-shopping-cart-02" }
+        ],
+        "default": "hgi-shopping-basket-02"
       }
     ]
   },
