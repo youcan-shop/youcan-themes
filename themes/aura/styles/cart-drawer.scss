@@ -286,7 +286,6 @@
 }
 
 .cart-bundle-group {
-  margin-top: 16px;
   border: 1px solid #ededed;
   border-radius: 4px;
   overflow: hidden;
@@ -298,6 +297,10 @@
     border-top: 1px solid #ededed;
     border-radius: 0px;
 
+    @include max-screen('md') {
+      margin: 20px 10px;
+    }
+
     .bundle-group-head {
       border-radius: 4px 4px 0px 0px;
     }
@@ -305,6 +308,10 @@
     .bundle-items-list :last-child {
       border-radius: 0px 0px 4px 4px;
     }
+  }
+
+  &[ui-context='cart'] {
+    margin-bottom: 25px;
   }
 
   .bundle-group-head {
@@ -320,6 +327,11 @@
       display: flex;
       align-items: center;
       gap: 8px;
+
+      @include max-screen('md') {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     .bundle-title {
@@ -340,23 +352,13 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: #9b9b9b;
-      font-size: 0.875rem;
-      text-decoration: underline;
+      color: #4b5565;
+      font-size: 23px;
       padding: 0;
-
-      &:hover {
-        color: #4b5565;
-      }
 
       &:disabled {
         cursor: not-allowed;
         opacity: 0.6;
-      }
-
-      .spinner {
-        width: 14px;
-        height: 14px;
       }
     }
   }
@@ -383,8 +385,8 @@
 
     .bundle-item-info {
       .bundle-item-name {
-        font-weight: 500;
-        font-size: 16px;
+        font-weight: 600;
+        font-size: 14px;
         display: block;
         margin-bottom: 4px;
         color: inherit;
@@ -392,7 +394,12 @@
       }
 
       .bundle-item-variants {
-        font-size: 12px;
+        font-size: 13px;
+        font-weight: 400;
+
+        span:not(:last-child)::after {
+          content: ', ';
+        }
       }
     }
 

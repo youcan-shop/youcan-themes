@@ -256,7 +256,6 @@
 }
 
 .cart-bundle-group{
-  margin-top:16px;
   border:1px solid #ededed;
   border-radius:4px;
   overflow:hidden;
@@ -268,11 +267,19 @@
   border-top:1px solid #ededed;
   border-radius:0px;
 }
+@media (max-width: 768px){
+  .cart-bundle-group[ui-context=drawer]{
+    margin:20px 10px;
+  }
+}
 .cart-bundle-group[ui-context=drawer] .bundle-group-head{
   border-radius:4px 4px 0px 0px;
 }
 .cart-bundle-group[ui-context=drawer] .bundle-items-list :last-child{
   border-radius:0px 0px 4px 4px;
+}
+.cart-bundle-group[ui-context=cart]{
+  margin-bottom:25px;
 }
 .cart-bundle-group .bundle-group-head{
   display:flex;
@@ -287,6 +294,12 @@
   display:flex;
   align-items:center;
   gap:8px;
+}
+@media (max-width: 768px){
+  .cart-bundle-group .bundle-group-head .bundle-heading{
+    flex-direction:column;
+    align-items:flex-start;
+  }
 }
 .cart-bundle-group .bundle-group-head .bundle-title{
   font-weight:700;
@@ -304,22 +317,13 @@
   background:none;
   border:none;
   cursor:pointer;
-  color:#9b9b9b;
-  font-size:0.875rem;
-  -webkit-text-decoration:underline;
-  text-decoration:underline;
-  padding:0;
-}
-.cart-bundle-group .bundle-group-head .remove-bundle-btn:hover{
   color:#4b5565;
+  font-size:23px;
+  padding:0;
 }
 .cart-bundle-group .bundle-group-head .remove-bundle-btn:disabled{
   cursor:not-allowed;
   opacity:0.6;
-}
-.cart-bundle-group .bundle-group-head .remove-bundle-btn .spinner{
-  width:14px;
-  height:14px;
 }
 .cart-bundle-group .bundle-item-row{
   display:grid;
@@ -342,8 +346,8 @@
   border-radius:4px;
 }
 .cart-bundle-group .bundle-item-row .bundle-item-info .bundle-item-name{
-  font-weight:500;
-  font-size:16px;
+  font-weight:600;
+  font-size:14px;
   display:block;
   margin-bottom:4px;
   color:inherit;
@@ -351,7 +355,11 @@
   text-decoration:none;
 }
 .cart-bundle-group .bundle-item-row .bundle-item-info .bundle-item-variants{
-  font-size:12px;
+  font-size:13px;
+  font-weight:400;
+}
+.cart-bundle-group .bundle-item-row .bundle-item-info .bundle-item-variants span:not(:last-child)::after{
+  content:", ";
 }
 .cart-bundle-group .bundle-item-row .bundle-item-price .price{
   font-weight:700;
