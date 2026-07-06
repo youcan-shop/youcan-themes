@@ -301,19 +301,21 @@
 }
 
 .cart-bundle-group {
-  border: 1px solid #ededed;
   border-radius: 4px;
   overflow: hidden;
 
   &[ui-context='drawer'] {
-    margin: 20px;
-    padding-top: 20px;
-    border: none;
-    border-top: 1px solid #ededed;
+    margin: 0 20px 20px;
+    padding-bottom: 20px;
     border-radius: 0px;
 
+    &:has(~ .cart-bundle-group) {
+      border-bottom: 1px solid #ededed;
+    }
+
     @include max-screen('md') {
-      margin: 20px 10px;
+      margin: 0 16px;
+      padding: 16px 0;
     }
 
     .bundle-group-head {
@@ -326,6 +328,7 @@
   }
 
   &[ui-context='cart'] {
+    border: 1px solid #ededed;
     margin-bottom: 25px;
   }
 
@@ -419,10 +422,26 @@
     }
 
     .bundle-item-price {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+
       .price {
         font-weight: 700;
         font-size: 15px;
         color: var(--yc-primary-color);
+      }
+
+      .compare-at {
+        font-weight: 400;
+        font-size: 13px;
+        text-decoration-line: line-through;
+        color: #8d8d8d;
+
+        &[hidden] {
+          display: none;
+        }
       }
 
       .gift {

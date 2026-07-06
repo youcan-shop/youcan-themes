@@ -382,6 +382,16 @@ function createBundleItem(itemTemplate, item) {
     freeEl.setAttribute('hidden', '');
   }
 
+  const compareEl = el.querySelector('[ui-slot="compare"]');
+  const compareAtPrice = item.productVariant?.compare_at_price;
+
+  if (compareAtPrice) {
+    compareEl.textContent = formatCurrency(compareAtPrice * item.quantity, CURRENCY_CODE, CUSTOMER_LOCALE);
+    compareEl.removeAttribute('hidden');
+  } else {
+    compareEl.setAttribute('hidden', '');
+  }
+
   return el;
 }
 

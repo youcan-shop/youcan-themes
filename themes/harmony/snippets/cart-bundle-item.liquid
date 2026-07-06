@@ -42,5 +42,14 @@
     >
       {{- subtotal | money -}}
     </span>
+    <span
+      class="compare-at"
+      ui-slot="compare"
+      {% unless product.compare_at_price %}
+        hidden
+      {% endunless %}
+    >
+      {{- product.compare_at_price | default: 0 | times: product.quantity | money -}}
+    </span>
   </div>
 </div>
