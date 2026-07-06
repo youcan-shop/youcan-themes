@@ -190,13 +190,37 @@
 
         .image,
         .upload {
+          position: relative;
           width: 65px !important;
-          height: auto;
+          height: 100%;
           aspect-ratio: 1 / 1;
-          overflow: hidden;
 
           & > img {
             object-fit: cover;
+          }
+        }
+
+        .upload {
+          overflow: hidden;
+
+          input[type="file"] {
+            position: absolute;
+            transform: scale(0);
+          }
+        }
+
+        .image {
+          button {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: var(--color-on-primary);
+            inset-inline-end: -5px;
+            inset-block-start: -5px;
+
+            & > i {
+              font-size: 14px;
+            }
           }
         }
       }

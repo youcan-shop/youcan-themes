@@ -162,15 +162,33 @@
 }
 #add-review [ui-slot=drawer-body] .field .images .image,
 #add-review [ui-slot=drawer-body] .field .images .upload{
+  position:relative;
   width:65px !important;
-  height:auto;
+  height:100%;
   aspect-ratio:1/1;
-  overflow:hidden;
 }
 #add-review [ui-slot=drawer-body] .field .images .image > img,
 #add-review [ui-slot=drawer-body] .field .images .upload > img{
   -o-object-fit:cover;
      object-fit:cover;
+}
+#add-review [ui-slot=drawer-body] .field .images .upload{
+  overflow:hidden;
+}
+#add-review [ui-slot=drawer-body] .field .images .upload input[type=file]{
+  position:absolute;
+  transform:scale(0);
+}
+#add-review [ui-slot=drawer-body] .field .images .image button{
+  position:absolute;
+  width:20px;
+  height:20px;
+  background-color:var(--color-on-primary);
+  inset-inline-end:-5px;
+  inset-block-start:-5px;
+}
+#add-review [ui-slot=drawer-body] .field .images .image button > i{
+  font-size:14px;
 }
 #add-review [ui-slot=drawer-body] .fields{
   display:grid;
