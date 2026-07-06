@@ -47,15 +47,7 @@
 
     /* Base */
     --font-family: '{{ settings.font_family | replace: '+', ' ' }}';
-
-    {% case settings.base_size %}
-      {% when 'small' %}
-        --font-base-size: var(--font-body-sm);
-      {% when 'medium' %}
-        --font-base-size: var(--font-body-md);
-      {% else %}
-        --font-base-size: var(--font-body-lg);
-    {% endcase %}
+    --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
 
     /* Heading */
     --font-heading-scale: calc({{ settings.font_scale_headings }} / 100);
