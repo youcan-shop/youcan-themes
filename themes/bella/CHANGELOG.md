@@ -1,5 +1,13 @@
 # bella
 
+## 1.1.3
+
+### Patch Changes
+
+- 83cd63b: fix > theme variant images + rtl issues
+- 984cd20: bella > single collection > empty > add translation
+- c5d3c62: bella > fix product rating calculation
+
 ## 1.1.2
 
 ### Patch Changes
