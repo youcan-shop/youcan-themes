@@ -1,29 +1,30 @@
 {{ 'thankyou.css' | asset_url | stylesheet_tag }}
 
 {% style %}
-.content-wrapper .title {
-  color: {{ section.settings.title_color.hex }};
-}
+  .content-wrapper .title {
+    color: {{ section.settings.title_color.hex }};
+  }
 
-.content-wrapper .subtitle {
-  color: {{ section.settings.subtitle_color.hex }};
-}
+  .content-wrapper .subtitle {
+    color: {{ section.settings.subtitle_color.hex }};
+  }
 {% endstyle %}
 
 <article class="thankyou-page-container">
-  <div class='thankyou-wrapper'>
-    <div class='content-wrapper'>
+  <div class="thankyou-wrapper">
+    <div class="content-wrapper">
       {%- if section.settings.upload_thankyou_img.src -%}
-        <img loading='lazy' class='image' src="{{ section.settings.upload_thankyou_img.src }}" alt='Upload thank you image'>
+        <img loading="lazy" class="image" src="{{ section.settings.upload_thankyou_img.src }}" alt="Upload thank you image">
       {% else %}
         <ion-icon name="checkmark-circle-outline" class="icon"></ion-icon>
       {%- endif -%}
       <div class="heading">
-        <div class='title'>{{ section.settings.title | default: 'thankyou.default_title' | t }}
-        <div class='subtitle'>{{ section.settings.subtitle | default: 'thankyou.default_subtitle' | t }}</div>
+        <div class="title">
+          {{ section.settings.title | default: 'thankyou.default_title' | t }}
+          <div class="subtitle">{{ section.settings.subtitle | default: 'thankyou.default_subtitle' | t }}</div>
+        </div>
       </div>
-      </div>
-      <div class='description'>
+      <div class="description">
         {{ section.settings.description | default: 'thankyou.default_description' | t }}
       </div>
     </div>
@@ -35,11 +36,15 @@
       <ul class="product-list">
         {% for item in order.order_variants %}
           <li class="product-item">
-            <img class="product-image" src="{{- item.image -}}" alt="{{- item.name -}}" />
+            <img class="product-image" src="{{- item.image -}}" alt="{{- item.name -}}">
             <div class="product-details">
               <a class="product-name" href="/products/{{- item.slug -}}" target="_blank">{{- item.name -}}</a>
               <ul class="product-variations">
-                <li>{{- 'thankyou.details.quantity' | t -}}: &nbsp; {{- item.quantity -}}</li>
+                <li>
+                  {{- 'thankyou.details.quantity' | t -}}
+                  : &nbsp;
+                  {{- item.quantity -}}
+                </li>
                 {% for variation in item.variations %}
                   <li>
                     {% if variation[0] != 'default' or variation[1] != 'default' %}
@@ -48,12 +53,47 @@
                   </li>
                 {% endfor %}
               </ul>
-              <span class="product-price">{{- item.price * item.quantity | money -}}</span>
+              <span class="product-price">{{- item.price | money -}}</span>
             </div>
           </li>
         {% endfor %}
       </ul>
     </div>
+
+    {% if order.bundles %}
+      <div class="cart-bundles">
+        {% assign bundle_types = 'single,multi,buyxgety' | split: ',' %}
+        {% for t in bundle_types %}
+          {% assign bundle_type = order.bundles[t] %}
+          {% for bundle in bundle_type %}
+            <div class="bundle-group">
+              <div class="bundle-top">
+                <span class="bundle-title">{{ bundle.title }}</span>
+                <div class="bundle-total">
+                  <span>{{ bundle.total_price | money }}</span>
+                </div>
+              </div>
+              <div class="bundle-items">
+                {% for bundle_item in bundle.items %}
+                  <div class="bundle-product">
+                    <div class="bundle-product-info">
+                      <a href="/products/{{ bundle_item.slug }}">{{ bundle_item.name }}</a>
+                      <div class="bundle-product-price">
+                        {% if bundle_item.price %}
+                          <span>{{ bundle_item.price | money }}</span>
+                        {% else %}
+                          <span class="free-badge">{{ 'general.free' | t }}</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
 
     <div class="order-details">
       <ul class="data-listing">
@@ -68,7 +108,11 @@
               {%- if order.coupon.is_percentage -%}
                 <div class="coupon-data">
                   <span class="coupon-discount">{{- order.coupon.deducted_amount | money -}}</span>
-                  <span>({{- order.coupon.value -}}%)</span>
+                  <span
+                    >(
+                    {{- order.coupon.value -}}
+                    %)</span
+                  >
                 </div>
               {%- else -%}
                 <span class="coupon-discount">{{- order.coupon.value | money -}}</span>
@@ -89,7 +133,11 @@
             <span>{{- 'thankyou.details.vat' | t -}}</span>
             <div>
               <span>{{- order.total_tax_amount | money -}}</span>
-              <span>({{- store.vat -}}%)</span>
+              <span
+                >(
+                {{- store.vat -}}
+                %)</span
+              >
             </div>
           </li>
         {%- endif -%}
@@ -102,7 +150,7 @@
   </section>
 
   <div class="home-page">
-    <a href='/' class='yc-btn'>
+    <a href="/" class="yc-btn">
       <ion-icon name="home-outline"></ion-icon>
       {{ 'thankyou.return_cta' | t }}
     </a>

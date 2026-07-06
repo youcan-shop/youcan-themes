@@ -1,6 +1,7 @@
 {{ 'express-checkout.css' | asset_url | stylesheet_tag }}
 
 {% assign checkout_id = 100 | rand: 2000 %}
+{% assign ec_form_id = form_id | default: 'express-checkout-form' %}
 {% assign linked_fields = 'country,region,city' %}
 {% assign has_linked_fields = checkout.linked_fields %}
 {% assign has_phone_validation = checkout.phone_validation %}
@@ -11,20 +12,28 @@
       padding-bottom: 80px;
     }
 
-    #express-checkout-form {
+    #{{ ec_form_id }} {
       display: none;
     }
   {% endif %}
 
-  .custom-checkout-{{ checkout_id }},
-  .sticky-form-wrapper {
+  .custom-checkout-{{ checkout_id }} {
     border: 1px solid {{ settings.form_border_colour.hex }};
   }
 
-  .custom-checkout-{{ checkout_id }} .express-checkout-fields,
-  .sticky-form-wrapper .form-wrapper {
+  .custom-checkout-{{ checkout_id }} .express-checkout-fields {
     grid-gap: {{ settings.inputs_gap }}px;
   }
+
+  {% if is_sticky %}
+    .sticky-form-wrapper {
+      border: 1px solid {{ settings.form_border_colour.hex }};
+    }
+
+    .sticky-form-wrapper .form-wrapper {
+      grid-gap: {{ settings.inputs_gap }}px;
+    }
+  {% endif %}
 
   .custom-checkout-{{ checkout_id }} input {
     padding: {{ settings.input_padding }}px;
@@ -97,7 +106,7 @@
 {% endstyle %}
 
 <form
-  id="express-checkout-form"
+  id="{{ ec_form_id }}"
   class="custom-checkout-{{ checkout_id }} {% if is_placeholder %}express-checkout-placeholder{% endif %}"
   onsubmit="return false;"
 >

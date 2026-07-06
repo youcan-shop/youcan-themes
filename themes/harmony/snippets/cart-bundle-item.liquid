@@ -1,0 +1,46 @@
+{% assign subtotal = product.quantity | times: product.price %}
+
+<div class="bundle-item-row">
+  <img
+    class="bundle-item-image"
+    ui-slot="image"
+    src="{{ product.image }}"
+    alt="{{ product.name }}"
+    loading="lazy"
+  >
+  <div class="bundle-item-info">
+    <a class="bundle-item-name" ui-slot="name" href="{{ product.url }}">{{ product.name }}</a>
+    <div
+      class="bundle-item-variants"
+      ui-slot="variants"
+      {% if product.variations == null or product.variations.default %}
+        hidden
+      {% endif %}
+    >
+      {% for variant in product.variations %}
+        <span>{{ variant[0] }}: {{ variant[1] }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="bundle-item-price">
+    <div
+      class="gift"
+      ui-slot="free"
+      {% if subtotal != 0 %}
+        hidden
+      {% endif %}
+    >
+      {% render 'gift-icon' %}
+      <span class="free">{{ 'general.free' | t }}</span>
+    </div>
+    <span
+      class="price"
+      ui-slot="price"
+      {% if subtotal == 0 %}
+        hidden
+      {% endif %}
+    >
+      {{- subtotal | money -}}
+    </span>
+  </div>
+</div>

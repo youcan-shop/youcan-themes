@@ -150,6 +150,35 @@ const CartUI = {
 };
 
 // Events
+async function removeBundleItems(button, itemIds, variantIds) {
+  const spinner = button?.querySelector('.spinner');
+  const removeText = button?.querySelector('.remove-text');
+
+  if (button) button.disabled = true;
+  spinner?.classList.remove('hidden');
+  removeText?.classList.add('hidden');
+
+  try {
+    let updatedCart;
+    for (let i = 0; i < itemIds.length; i++) {
+      updatedCart = await CartService.removeItem(itemIds[i], variantIds[i]);
+    }
+
+    button?.closest('.cart-bundle-group')?.remove();
+    CartUI.updateCartBadge(updatedCart.count);
+    CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
+
+    if (updatedCart.count === 0) {
+      CartUI.handleEmptyCart();
+    }
+  } catch (e) {
+    if (button) button.disabled = false;
+    spinner?.classList.add('hidden');
+    removeText?.classList.remove('hidden');
+    notify(e.message, 'error');
+  }
+}
+
 async function updateQuantity(cartItemId, productVariantId, quantity) {
   let parsedQuantity = Number(quantity);
 
@@ -180,7 +209,7 @@ async function removeItem(cartItemId, productVariantId) {
     CartUI.updateCartBadge(updatedCart.count);
     CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
 
-    if (updatedCart.items.length === 0) {
+    if (updatedCart.count === 0) {
       CartUI.handleEmptyCart();
     }
   } catch (e) {
@@ -225,8 +254,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const cart = await CartService.fetchCart();
 
-    if (cart.items.length > 0) {
-      CartUI.updateTotalPrice(cart.discounted_sub_total, cart.items);
+    const items = Array.isArray(cart.items) ? cart.items : [];
+
+    if (items.length > 0) {
+      CartUI.updateTotalPrice(cart.discounted_sub_total, items);
     }
 
     if (cart.coupon && cart.discountedPrice) {
