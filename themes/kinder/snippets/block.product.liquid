@@ -58,12 +58,16 @@
   </div>
   <div class="content">
     <div class="stats">
-      {% if compare_at_price %}
+      {% if settings.show_discount and compare_at_price %}
         {% assign savings = compare_at_price | minus: price | money %}
 
-        <span>{{ 'product.save' | t }} {{ savings }}</span>
+        <span>
+          {{- 'product.save' | t }}
+          {{ savings -}}
+        </span>
       {% endif %}
-      {% if product.isTrackingInventory %}
+
+      {% if settings.show_inventory and product.isTrackingInventory %}
         {% assign status_color = 'gray' %}
         {% assign status_text = 'product.inventory_out_of_stock' | t %}
 
@@ -110,37 +114,43 @@
         {% endif %}
       </div>
     </div>
-    <div class="actions">
-      {% if product.variants.size > 1 %}
-        {% if product.isTrackingInventory %}
-          {% assign has_available_variant = false %}
-          {% for variant in product.variants %}
-            {% if variant.inventory > 0 %}
-              {% assign has_available_variant = true %}
-            {% endif %}
-          {% endfor %}
+    {% if settings.enable_quick_add or settings.show_quantity_controls %}
+      <div class="actions">
+        {% if product.variants.size > 1 %}
+          {% if product.isTrackingInventory %}
+            {% assign has_available_variant = false %}
+            {% for variant in product.variants %}
+              {% if variant.inventory > 0 %}
+                {% assign has_available_variant = true %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          <a
+            ui-slot="button"
+            data-variant="secondary"
+            data-size="lg"
+            href="{{ product.url }}"
+            {% unless product.isTrackingInventory == false or has_available_variant %}
+              aria-disabled="true"
+            {% endunless %}
+          >
+            <span ui-slot="button-front">
+              {% if product.isTrackingInventory and has_available_variant == false %}
+                {{ 'product.inventory_out_of_stock' | t }}
+              {% else %}
+                {{ 'general.choose_options' | t }}
+              {% endif %}
+            </span>
+          </a>
+        {% else %}
+          {% if settings.show_quantity_controls %}
+            {% render 'core.quantity', size: 'sm' %}
+          {% endif %}
+          {% if settings.enable_quick_add %}
+            {% render 'core.shop-button', mode: 'secondary', icon: settings.quick_add_icon %}
+          {% endif %}
         {% endif %}
-        <a
-          ui-slot="button"
-          data-variant="secondary"
-          data-size="lg"
-          href="{{ product.url }}"
-          {% unless product.isTrackingInventory == false or has_available_variant %}
-            aria-disabled="true"
-          {% endunless %}
-        >
-          <span ui-slot="button-front">
-            {% if product.isTrackingInventory and has_available_variant == false %}
-              {{ 'product.inventory_out_of_stock' | t }}
-            {% else %}
-              {{ 'general.choose_options' | t }}
-            {% endif %}
-          </span>
-        </a>
-      {% else %}
-        {% render 'core.quantity', size: 'sm' %}
-        {% render 'core.shop-button', mode: 'secondary' %}
-      {% endif %}
-    </div>
+      </div>
+    {% endif %}
   </div>
 </li>
