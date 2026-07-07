@@ -8,90 +8,93 @@
     {% assign should_hide_controls = true %}
   {% endif %}
 
-  <ui-carousel
-    ui-section="related-products"
-    style="
+  <style>
+    #youcan-section--related-products {
       --per-page: {{ per_page }};
       --bg-color: {{ section.settings.bg_color.hex }};
       --fg-color: {{ section.settings.fg_color.hex }};
       --top-spacing: {{ section.settings.top_spacing }}px;
       --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-    "
-  >
-    <div
-      ui-slot="head"
-      data-align="{{ section.settings.heading_alignment_desktop }}"
-      data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
-    >
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
-    <ul
-      class="items-area"
-      ui-carousel="wrapper"
-      ui-slot="carousel"
-      aria-orientation="vertical"
-    >
-      {% for product in product.related_products %}
-        {% render 'block.product', product: product %}
-      {% endfor %}
-    </ul>
+    }
+  </style>
 
-    {% if should_hide_controls == false and product.related_products > 1 %}
+  <div ui-slot="container">
+    <ui-carousel ui-section="related-products">
       <div
-        class="controls"
-        {% if section.settings.show_arrows %}
-          data-show-arrows
-        {% endif %}
-        {% if section.settings.show_dots %}
-          data-dots
-        {% endif %}
-        {% if section.settings.arrows_position == 'centered' %}
-          data-centered-arrows
-        {% endif %}
+        ui-slot="head"
+        data-align="{{ section.settings.heading_alignment_desktop }}"
+        data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
       >
-        {% if section.settings.show_arrows %}
-          <button
-            ui-carousel="arrow-previous"
-            ui-slot="button"
-            data-variant="neutral"
-            data-size="lg"
-            data-as-icon
-            data-flip-icon-in-rtl
-            aria-label="Previous"
-          >
-            {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
-          </button>
-        {% endif %}
-        {% if section.settings.show_dots %}
-          <div class="pagination" data-position="{{ section.settings.arrows_position }}">
-            {% for marker in product.related_products %}
-              <button
-                ui-carousel="marker"
-                aria-label="Slide {{ forloop.index }}"
-                {% if forloop.first %}
-                  aria-selected="true"
-                {% endif %}
-              ></button>
-            {% endfor %}
-          </div>
-        {% endif %}
-        {% if section.settings.show_arrows %}
-          <button
-            ui-carousel="arrow-next"
-            ui-slot="button"
-            data-variant="neutral"
-            data-size="lg"
-            data-as-icon
-            data-flip-icon-in-rtl
-            aria-label="Next"
-          >
-            {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-          </button>
-        {% endif %}
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+        <p class="description">{{ section.settings.description }}</p>
       </div>
-    {% endif %}
-  </ui-carousel>
+      <ul
+        class="items-area"
+        ui-carousel="wrapper"
+        ui-slot="carousel"
+        aria-orientation="vertical"
+      >
+        {% for product in product.related_products %}
+          {% render 'block.product', product: product %}
+        {% endfor %}
+      </ul>
+
+      {% if should_hide_controls == false and product.related_products > 1 %}
+        <div
+          class="controls"
+          {% if section.settings.show_arrows %}
+            data-show-arrows
+          {% endif %}
+          {% if section.settings.show_dots %}
+            data-dots
+          {% endif %}
+          {% if section.settings.arrows_position == 'centered' %}
+            data-centered-arrows
+          {% endif %}
+        >
+          {% if section.settings.show_arrows %}
+            <button
+              ui-carousel="arrow-previous"
+              ui-slot="button"
+              data-variant="neutral"
+              data-size="lg"
+              data-as-icon
+              data-flip-icon-in-rtl
+              aria-label="Previous"
+            >
+              {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
+            </button>
+          {% endif %}
+          {% if section.settings.show_dots %}
+            <div class="pagination" data-position="{{ section.settings.arrows_position }}">
+              {% for marker in product.related_products %}
+                <button
+                  ui-carousel="marker"
+                  aria-label="Slide {{ forloop.index }}"
+                  {% if forloop.first %}
+                    aria-selected="true"
+                  {% endif %}
+                ></button>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% if section.settings.show_arrows %}
+            <button
+              ui-carousel="arrow-next"
+              ui-slot="button"
+              data-variant="neutral"
+              data-size="lg"
+              data-as-icon
+              data-flip-icon-in-rtl
+              aria-label="Next"
+            >
+              {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+            </button>
+          {% endif %}
+        </div>
+      {% endif %}
+    </ui-carousel>
+  </div>
 {% endif %}
 
 {% schema %}
