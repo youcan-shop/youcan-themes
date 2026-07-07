@@ -1,3 +1,5 @@
+let LATEST_CART = null;
+
 async function addToCart(snippetId) {
   const parentSection = document.querySelector(`#s-${snippetId}`);
   const variantId = parentSection.querySelector(`#variantId`)?.value || undefined;
@@ -30,7 +32,6 @@ async function addToCart(snippetId) {
 
     if (response.error) throw new Error(response.error);
 
-    updateCartCount(response.count);
     await updateCartDrawer();
 
     stopLoad('#loading__cart');
@@ -48,7 +49,7 @@ async function addToCart(snippetId) {
       return;
     }
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     stopLoad('#loading__cart');
@@ -62,7 +63,16 @@ async function addBundleToCart(snippetId) {
   const quantity = 1;
 
   if (!bundleId) {
-    return notify(ADD_TO_CART_EXPECTED_ERRORS.select_bundle, 'error');
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.select_bundle, 'warning');
+  }
+
+  const cartItems = Array.isArray(LATEST_CART?.items) ? LATEST_CART.items : [];
+  const isBundleAlreadyInCart = cartItems.some(
+    (item) => item.extra_fields?.is_bundle_item && item.extra_fields?.bundle_id === bundleId,
+  );
+
+  if (isBundleAlreadyInCart) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.bundle_already_added, 'warning');
   }
 
   try {
@@ -74,12 +84,11 @@ async function addBundleToCart(snippetId) {
 
     if (response.error) throw new Error(response.error);
 
-    updateCartCount(response.count);
     await updateCartDrawer();
 
     stopLoad('#loading__bundle-cart');
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.bundle_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     stopLoad('#loading__bundle-cart');
@@ -95,8 +104,6 @@ async function attachRemoveItemListeners() {
 
       if (cartItemId && productVariantId) {
         await removeCartItem(cartItemId, productVariantId);
-        await updateCartDrawer();
-        updateCartCount(-1, true);
       }
     }),
   );
@@ -121,8 +128,6 @@ function attachBundleRemoveListeners() {
           await youcanjs.cart.removeItem({ cartItemId: itemIds[i], productVariantId: variantIds[i] });
         }
 
-        const updatedCart = await youcanjs.cart.fetch();
-        updateCartCount(updatedCart.count);
         await updateCartDrawer();
       } catch (error) {
         btn.disabled = false;
@@ -251,6 +256,8 @@ async function updateCartDrawer() {
 
   try {
     const cartData = await youcanjs.cart.fetch();
+    LATEST_CART = cartData;
+    updateCartCount(cartData.count);
 
     document.querySelector('.cart-drawer__close').addEventListener('click', toggleCartDrawer);
 
@@ -492,10 +499,9 @@ async function directAddToCart(productId) {
 
     if (response.error) throw new Error(response.error);
 
-    updateCartCount(response.count);
     await updateCartDrawer();
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     notify(err.message, 'error');

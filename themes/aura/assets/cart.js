@@ -192,6 +192,7 @@ async function updateQuantity(cartItemId, productVariantId, quantity) {
 
       CartUI.updateCartItem(cartItemId, productVariantId, parsedQuantity, itemSubtotal);
       CartUI.updateTotalPrice(updatedCart.discounted_sub_total, updatedCart.items);
+      CartUI.updateCartBadge(updatedCart.count);
     }
   } catch (e) {
     notify(e.message, 'error');
