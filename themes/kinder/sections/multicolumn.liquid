@@ -1,38 +1,43 @@
 {{ 'section.multicolumn.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="multicolumn"
-  {% if section.settings.borders_enabled %}
-    data-has-borders
-  {% endif %}
-  data-image-width="{{ section.settings.image_width }}"
-  data-image-ratio="{{ section.settings.image_ratio }}"
-  data-column-title-size="{{ section.settings.title_size }}"
-  style="
+<style>
+  #youcan-section--multicolumn {
     --columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  {% unless section.settings.heading == '' and section.settings.description == '' %}
-    <div ui-slot="head">
-      {% if section.settings.heading %}
-        <h1 class="heading">{{ section.settings.heading }}</h1>
-      {% endif %}
-      {% if section.settings.description %}
-        <p class="description">{{ section.settings.description }}</p>
-      {% endif %}
-    </div>
-  {% endunless %}
-  <ul
-    class="items-area"
+  }
+</style>
+
+<div ui-slot="container">
+  <div
+    ui-section="multicolumn"
+    {% if section.settings.borders_enabled %}
+      data-has-borders
+    {% endif %}
+    data-image-width="{{ section.settings.image_width }}"
+    data-image-ratio="{{ section.settings.image_ratio }}"
+    data-column-title-size="{{ section.settings.title_size }}"
   >
-    {% for column in section.blocks %}
-      {% render 'block.column', column: column %}
-    {% endfor %}
-  </ul>
+    {% unless section.settings.heading == '' and section.settings.description == '' %}
+      <div ui-slot="head">
+        {% if section.settings.heading %}
+          <h1 class="heading">{{ section.settings.heading }}</h1>
+        {% endif %}
+        {% if section.settings.description %}
+          <p class="description">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
+    {% endunless %}
+    <ul
+      class="items-area"
+    >
+      {% for column in section.blocks %}
+        {% render 'block.column', column: column %}
+      {% endfor %}
+    </ul>
+  </div>
 </div>
 
 {% schema %}
