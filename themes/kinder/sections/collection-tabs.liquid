@@ -1,67 +1,109 @@
 {{ 'section.collection-tabs.css' | asset_url | stylesheet_tag }}
 
-<ui-carousel
-  ui-section="collection-tabs"
-  style="
+<style>
+  #youcan-section--collection-tabs {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  <div
-    ui-slot="head"
-    data-align="{{ section.settings.heading_alignment_desktop }}"
-    data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
-  >
-    <h1 class="heading">{{ section.settings.heading }}</h1>
-    <p class="description">{{ section.settings.description }}</p>
-  </div>
-  <div class="content">
-    <aside class="sidebar">
-      <div class="media" data-image-ratio="{{ section.settings.image_ratio }}">
-        {% if section.settings.image.src %}
-          <img
-            src="{{ section.settings.image.src }}"
-            alt="FAQs"
-            height="100%"
-            width="100%"
-            loading="lazy"
-          >
-        {% else %}
-          {% render 'misc.image-fallback', icon_size: 100 %}
-        {% endif %}
-      </div>
-      {% if section.blocks.size > 1 %}
-        <div class="tab-list" role="tablist">
-          {% for collection_block in section.blocks %}
-            <button
-              class="tab-trigger"
-              ui-carousel="marker"
-              {% if forloop.first %}
-                aria-selected="true"
-              {% endif %}
-              {{ collection_block.youcan_attributes }}
-            >
-              <span>
-                {% assign translated_trigger = 'collection-tabs.tab-trigger' | t %}
-                {% assign fallback = translated_trigger | append: ' ' | append: forloop.index %}
-                {{ collection_block.settings.tab_name | default: collection_block.settings.collection.name | default: fallback }}
-              </span>
+  }
+</style>
 
-              {% render 'misc.icon', name: 'hgi-arrow-right-02', size: 24 %}
-            </button>
-          {% endfor %}
+<div ui-slot="container">
+  <ui-carousel
+    ui-section="collection-tabs"
+  >
+    <div
+      ui-slot="head"
+      data-align="{{ section.settings.heading_alignment_desktop }}"
+      data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
+    >
+      <h1 class="heading">{{ section.settings.heading }}</h1>
+      <p class="description">{{ section.settings.description }}</p>
+    </div>
+    <div class="content">
+      <aside class="sidebar">
+        <div class="media" data-image-ratio="{{ section.settings.image_ratio }}">
+          {% if section.settings.image.src %}
+            <img
+              src="{{ section.settings.image.src }}"
+              alt="FAQs"
+              height="100%"
+              width="100%"
+              loading="lazy"
+            >
+          {% else %}
+            {% render 'misc.image-fallback', icon_size: 100 %}
+          {% endif %}
         </div>
-      {% endif %}
-    </aside>
-    <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
-      {% for collection_block in section.blocks %}
-        {% assign max_products = section.settings.max_products_to_show %}
-        {% if collection_block.settings.collection.id %}
-          {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
-            <div
-              class="tab-content"
+        {% if section.blocks.size > 1 %}
+          <div class="tab-list" role="tablist">
+            {% for collection_block in section.blocks %}
+              <button
+                class="tab-trigger"
+                ui-carousel="marker"
+                {% if forloop.first %}
+                  aria-selected="true"
+                {% endif %}
+                {{ collection_block.youcan_attributes }}
+              >
+                <span>
+                  {% assign translated_trigger = 'collection-tabs.tab-trigger' | t %}
+                  {% assign fallback = translated_trigger | append: ' ' | append: forloop.index %}
+                  {{ collection_block.settings.tab_name | default: collection_block.settings.collection.name | default: fallback }}
+                </span>
+
+                {% render 'misc.icon', name: 'hgi-arrow-right-02', size: 24 %}
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </aside>
+      <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+        {% for collection_block in section.blocks %}
+          {% assign max_products = section.settings.max_products_to_show %}
+          {% if collection_block.settings.collection.id %}
+            {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
+              <div
+                class="tab-content"
+                ui-carousel="item"
+                ui-slot="carousel-item"
+                role="tabpanel"
+                style="
+                  --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
+                  --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
+                "
+              >
+                <div class="tab-head">
+                  <h2 class="collection-name">{{ collection_block.settings.collection.name }}</h2>
+                  {% if section.settings.show_view_all_button %}
+                    <a
+                      ui-slot="link-button"
+                      data-size="md"
+                      data-underline="true"
+                      href="/collections/{{ collection_block.settings.collection.slug }}"
+                    >
+                      {{ 'collection-tabs.view_all' | t }}
+                    </a>
+                  {% endif %}
+                </div>
+                {% if items.size == 0 %}
+                  <div class="empty-message">
+                    <p>
+                      {{ 'single-collection.empty.title' | t }}
+                    </p>
+                  </div>
+                {% endif %}
+                <ul class="items">
+                  {% for product in items %}
+                    {% render 'block.product-tab', product: product %}
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endpaginate %}
+          {% else %}
+            <ul
+              class="items"
               ui-carousel="item"
               ui-slot="carousel-item"
               role="tabpanel"
@@ -70,53 +112,16 @@
                 --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
               "
             >
-              <div class="tab-head">
-                <h2 class="collection-name">{{ collection_block.settings.collection.name }}</h2>
-                {% if section.settings.show_view_all_button %}
-                  <a
-                    ui-slot="link-button"
-                    data-size="md"
-                    data-underline="true"
-                    href="/collections/{{ collection_block.settings.collection.slug }}"
-                  >
-                    {{ 'collection-tabs.view_all' | t }}
-                  </a>
-                {% endif %}
-              </div>
-              {% if items.size == 0 %}
-                <div class="empty-message">
-                  <p>
-                    {{ 'single-collection.empty.title' | t }}
-                  </p>
-                </div>
-              {% endif %}
-              <ul class="items">
-                {% for product in items %}
-                  {% render 'block.product-tab', product: product %}
-                {% endfor %}
-              </ul>
-            </div>
-          {% endpaginate %}
-        {% else %}
-          <ul
-            class="items"
-            ui-carousel="item"
-            ui-slot="carousel-item"
-            role="tabpanel"
-            style="
-              --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
-              --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
-            "
-          >
-            {% for product in (1..max_products) %}
-              {% render 'block.product-tab', product: product %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endfor %}
+              {% for product in (1..max_products) %}
+                {% render 'block.product-tab', product: product %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
-  </div>
-</ui-carousel>
+  </ui-carousel>
+</div>
 
 {% schema %}
 {
