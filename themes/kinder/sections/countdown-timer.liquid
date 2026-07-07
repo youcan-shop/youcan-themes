@@ -1,57 +1,62 @@
 {{ 'section.countdown-timer.css' | asset_url | stylesheet_tag }}
 {{ 'section.countdown-timer.js' | asset_url | script_tag_deferred }}
 
-<div
-  ui-section="countdown-timer"
-  role="banner"
-  style="
+<style>
+  #youcan-section--countdown-timer {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --timer-bg: {{ section.settings.timer_bg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  <div class="timer-container">
-    <h1 class="title">{{ section.settings.heading }}</h1>
-    <ui-countdown
-      class="timer"
-      end-datetime="{{ section.settings.end_datetime }}"
-      {% if section.settings.hide_counter_after_end %}
-        hide-after-end
-      {% endif %}
-    >
-      <div class="segments" ui-countdown="segments" role="timer" aria-live="polite" aria-atomic="true">
-        <div class="segment">
-          <span ui-countdown="days">--</span>
-          <span class="label">{{ 'countdown-timer.days' | t }}</span>
-        </div>
-        <span class="divider">:</span>
-        <div class="segment">
-          <span ui-countdown="hours">--</span>
-          <span class="label">{{ 'countdown-timer.hours' | t }}</span>
-        </div>
-        <span class="divider">:</span>
-        <div class="segment">
-          <span ui-countdown="minutes">--</span>
-          <span class="label">{{ 'countdown-timer.minutes' | t }}</span>
-        </div>
-      </div>
-      <p hidden ui-countdown="message">{{ section.settings.message_after_end }}</p>
-    </ui-countdown>
-    <div class="action">
-      <a
-        ui-slot="button"
-        data-variant="primary"
-        data-size="lg"
-        {% if section.settings.button_link %}
-          href="{{ section.settings.button_link }}"
+  }
+</style>
+
+<div ui-slot="container">
+  <div
+    ui-section="countdown-timer"
+    role="banner"
+  >
+    <div class="timer-container">
+      <h1 class="title">{{ section.settings.heading }}</h1>
+      <ui-countdown
+        class="timer"
+        end-datetime="{{ section.settings.end_datetime }}"
+        {% if section.settings.hide_counter_after_end %}
+          hide-after-end
         {% endif %}
       >
-        <span ui-slot="button-front">
-          {{ section.settings.button_label }}
-        </span>
-      </a>
+        <div class="segments" ui-countdown="segments" role="timer" aria-live="polite" aria-atomic="true">
+          <div class="segment">
+            <span ui-countdown="days">--</span>
+            <span class="label">{{ 'countdown-timer.days' | t }}</span>
+          </div>
+          <span class="divider">:</span>
+          <div class="segment">
+            <span ui-countdown="hours">--</span>
+            <span class="label">{{ 'countdown-timer.hours' | t }}</span>
+          </div>
+          <span class="divider">:</span>
+          <div class="segment">
+            <span ui-countdown="minutes">--</span>
+            <span class="label">{{ 'countdown-timer.minutes' | t }}</span>
+          </div>
+        </div>
+        <p hidden ui-countdown="message">{{ section.settings.message_after_end }}</p>
+      </ui-countdown>
+      <div class="action">
+        <a
+          ui-slot="button"
+          data-variant="primary"
+          data-size="lg"
+          {% if section.settings.button_link %}
+            href="{{ section.settings.button_link }}"
+          {% endif %}
+        >
+          <span ui-slot="button-front">
+            {{ section.settings.button_label }}
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </div>
