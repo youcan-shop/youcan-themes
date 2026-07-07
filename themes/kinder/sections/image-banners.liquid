@@ -1,51 +1,56 @@
 {{ 'section.image-banners.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="image-banners"
-  role="banner"
-  {% if section.settings.fullscreen %}
-    data-fullscreen
-  {% endif %}
-  style="
+<style>
+  #youcan-section--image-banners {
     --bg-color: {{ section.settings.bg_color.hex }};
     --desktop-height: {{ section.settings.desktop_height }}px;
     --mobile-height: {{ section.settings.mobile_height }}px;
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  <ul class="banners">
-    {% for item in section.blocks %}
-      <li class="image-item" {{ item.youcan_attributes }}>
-        <div ui-block="image">
-          {% if item.settings.image %}
-            <img
-              src="{{ item.settings.image.src }}"
-              alt="image-{{ forloop.index }}"
-              height="100%"
-              width="100%"
-              loading="lazy"
-            >
-          {% else %}
-            {% render 'misc.image-fallback', icon_size: 80 %}
-          {% endif %}
-        </div>
-        <a
-          ui-slot="button"
-          ui-block="button"
-          data-variant="primary"
-          data-size="lg"
-          {% if item.settings.button_link %}
-            href="{{ item.settings.button_link }}"
-          {% endif %}
-        >
-          <span ui-slot="button-front">
-            {{ item.settings.button_label }}
-          </span>
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
+  }
+</style>
+
+<div ui-slot="container">
+  <div
+    ui-section="image-banners"
+    role="banner"
+    {% if section.settings.fullscreen %}
+      data-fullscreen
+    {% endif %}
+  >
+    <ul class="banners">
+      {% for item in section.blocks %}
+        <li class="image-item" {{ item.youcan_attributes }}>
+          <div ui-block="image">
+            {% if item.settings.image %}
+              <img
+                src="{{ item.settings.image.src }}"
+                alt="image-{{ forloop.index }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback', icon_size: 80 %}
+            {% endif %}
+          </div>
+          <a
+            ui-slot="button"
+            ui-block="button"
+            data-variant="primary"
+            data-size="lg"
+            {% if item.settings.button_link %}
+              href="{{ item.settings.button_link }}"
+            {% endif %}
+          >
+            <span ui-slot="button-front">
+              {{ item.settings.button_label }}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 </div>
 
 {% schema %}
