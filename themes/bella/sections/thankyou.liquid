@@ -38,7 +38,7 @@
       {% for product in order.order_variants %}
         <div class="product">
           <div class="media">
-            {% if product.image %}
+            {% unless product.image == null or product.image contains '/store-front/images/product-default' %}
               <img
                 src="{{ product.image }}"
                 alt="{{ product.name }}"
@@ -48,7 +48,7 @@
               >
             {% else %}
               {% render 'misc.image-fallback' %}
-            {% endif %}
+            {% endunless %}
           </div>
           <div class="content">
             <a
@@ -56,7 +56,7 @@
               data-variant="black"
               data-size="md"
               class="title"
-              href="{{ product.url }}"
+              href="/products/{{ product.slug }}"
             >
               {{ product.name }}
             </a>
@@ -68,6 +68,72 @@
           <hr ui-slot="divider" data-variant="line">
         {% endunless %}
       {% endfor %}
+
+      {% if order.bundles %}
+        {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+        {% for t in types %}
+          {% assign type = order.bundles[t] %}
+
+          {% for bundle in type %}
+            <div class="bundle">
+              <div class="top">
+                <h4 class="title">{{ bundle.title }}</h4>
+                <div class="price">
+                  <span class="original">{{ bundle.total_price | money }}</span>
+                  {% if bundle.compare_price %}
+                    <span class="compare-at">{{ bundle.compare_price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+              <ul class="items">
+                {% for bundle_item in bundle.items %}
+                  <li class="product">
+                    <div class="media">
+                      {% unless bundle_item.image == null or bundle_item.image contains '/store-front/images/product-default' %}
+                        <img
+                          src="{{ bundle_item.image }}"
+                          alt="{{ bundle_item.name }}"
+                          height="100%"
+                          width="100%"
+                          loading="eager"
+                        >
+                      {% else %}
+                        {% render 'misc.image-fallback' %}
+                      {% endunless %}
+                    </div>
+                    <div class="content">
+                      <a
+                        ui-slot="link-button"
+                        data-variant="black"
+                        data-size="md"
+                        class="title"
+                        href="/products/{{ bundle_item.slug }}"
+                        title="{{ bundle_item.name }}"
+                      >
+                        {{ bundle_item.name }}
+                      </a>
+                      {% if bundle_item.price %}
+                        <div class="price">
+                          <span class="original">{{ bundle_item.price | default: 0 | money }}</span>
+                          {% if bundle_item.compare_at_price %}
+                            <span class="compare-at">{{ bundle_item.compare_at_price | default: 0 | money }}</span>
+                          {% endif %}
+                        </div>
+                      {% else %}
+                        <div class="free">
+                          {% render 'misc.icon', name: 'hgi-gift' %}
+                          {{ 'bundles.free_gift' | t }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
     </div>
     <div class="summary">
       <div class="item">

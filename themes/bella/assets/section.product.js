@@ -12,13 +12,34 @@ if (!customElements.get("ui-product")) {
       this.productMedia = this.querySelector('[ui-product="media"]');
       this.productForms = this.querySelectorAll("ui-shop-button");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
+      this.bundles = this.querySelectorAll("input[name='single-bundle']");
     }
 
     connectedCallback() {
+      this.bundles.forEach((bundle) => bundle.addEventListener("change", () => this.onBundleChanged(bundle)));
+
       if (!this.productVariants) return;
 
       this.onVariantChanged();
       this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
+    }
+
+    onBundleChanged(changed) {
+      this.bundles.forEach((bundle) => {
+        if (bundle !== changed) bundle.checked = false;
+      });
+
+      const isChecked = changed.checked;
+      const bundleId = isChecked ? changed.value : null;
+      const shopButton = [...this.bundles].at(-1).closest("div").querySelector("ui-shop-button");
+
+      if (shopButton) {
+        bundleId ? shopButton.setAttribute("bundle-id", bundleId) : shopButton.removeAttribute("bundle-id");
+      }
+    }
+
+    get selectedBundle() {
+      return [...this.bundles].find((bundle) => bundle.checked) ?? null;
     }
 
     get selectedOptions() {

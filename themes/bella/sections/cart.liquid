@@ -1,5 +1,11 @@
 {{ 'section.cart.css' | asset_url | stylesheet_tag }}
 
+{% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+{% for t in types %}
+  {% if cart.bundles[t] %} {% assign has_bundles = true %} {% endif %}
+{% endfor %}
+
 <div
   ui-section="cart"
   style="
@@ -24,7 +30,7 @@
       {% render 'core.cart-item', product: product %}
     </template>
     <ui-cart-items
-      {% unless cart.items.size > 0 %}
+      {% unless cart.items.size > 0 or has_bundles %}
         hidden
       {% endunless %}
     >
@@ -42,12 +48,110 @@
           {% for product in cart.items %}
             {% render 'core.cart-item', product: product %}
           {% endfor %}
+
+          {% if cart.bundles %}
+            {% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+            {% for t in types %}
+              {% assign type = cart.bundles[t] %}
+
+              {% for bundle in type %}
+                <tr class="bundle-group">
+                  <td>
+                    <ui-cart-remove
+                      item="{% for bundle_item in bundle.items %} {{ bundle_item.id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                      product-variant="{% for bundle_item in bundle.items %} {{ bundle_item.product_variant_id }} {% unless forloop.index == bundle.items.size %} , {% endunless %} {% endfor %}"
+                    >
+                      <button
+                        ui-slot="button"
+                        data-variant="primary"
+                        data-mode="stroke"
+                        data-size="sm"
+                        data-as-icon
+                        aria-label="delete"
+                        ui-cart-item="delete-button"
+                      >
+                        {% render 'misc.icon', name: 'hgi-cancel-01' %}
+                      </button>
+                    </ui-cart-remove>
+                  </td>
+                  <td>
+                    <span class="title" ui-bundle="title">{{ bundle.title }}</span>
+                  </td>
+                  <td>
+                    <div class="price">
+                      <span class="original" ui-bundle="price">{{ bundle.total_price | money }}</span>
+                      <span
+                        class="compare-at"
+                        ui-bundle="compare-price"
+                        {% unless bundle.compare_price %}
+                          hidden
+                        {% endunless %}
+                      >
+                        {{ bundle.compare_price | default: 0 | money }}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="quantity" ui-bundle="quantity">{{ bundle.items.size }}</span>
+                  </td>
+                  <td>
+                    <span class="subtotal" ui-bundle="subtotal">{{ bundle.total_price | money }}</span>
+                  </td>
+                </tr>
+                {% for bundle_item in bundle.items %}
+                  {% render 'core.cart-bundle-item', product: bundle_item %}
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          {% endif %}
         </tbody>
       </table>
     </ui-cart-items>
+
+    <template ui-cart="bundle-group">
+      <tr class="bundle-group">
+        <td>
+          <ui-cart-remove>
+            <button
+              ui-slot="button"
+              data-variant="primary"
+              data-mode="stroke"
+              data-size="sm"
+              data-as-icon
+              aria-label="delete"
+              ui-cart-item="delete-button"
+            >
+              {% render 'misc.icon', name: 'hgi-cancel-01' %}
+            </button>
+          </ui-cart-remove>
+        </td>
+        <td>
+          <span class="title" ui-bundle="title"></span>
+        </td>
+        <td>
+          <div class="price">
+            <span class="original" ui-bundle="price"></span>
+            <span class="compare-at" ui-bundle="compare-price"></span>
+          </div>
+        </td>
+        <td>
+          <span class="quantity" ui-bundle="quantity"></span>
+        </td>
+        <td>
+          <span class="subtotal" ui-bundle="subtotal"></span>
+        </td>
+      </tr>
+      <tr ui-bundle="group"></tr>
+    </template>
+
+    <template ui-cart="bundle-item">
+      {% render 'core.cart-bundle-item' %}
+    </template>
+
     <ui-summary-box
       class="summary"
-      {% unless cart.items.size > 0 %}
+      {% unless cart.items.size > 0 or has_bundles %}
         hidden
       {% endunless %}
     >
@@ -124,7 +228,7 @@
 
     {% assign empty_content = 'cart.empty.title' | t %}
     {% assign continue_shopping = 'order.action' | t %}
-    {% if cart.items.size > 0 %}
+    {% if cart.items.size > 0 or has_bundles %}
       {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/', hidden: true %}
     {% else %}
       {% render 'misc.empty', heading: empty_content, action_label: continue_shopping, action_url: '/' %}

@@ -37,8 +37,28 @@
 
         tbody {
           tr {
-            &:not(:last-child) {
+            &:not(:last-child, .bundle-group, .bundle-item) {
               border-block-end: 1px solid var(--color-surface-variant);
+            }
+
+            &.bundle-group {
+              font: var(--font-title-md);
+
+              &:not(:first-of-type) {
+                border-block-start: 1px solid var(--color-surface-variant);
+              }
+
+              td {
+                .price {
+                  display: flex;
+                  gap: var(--spacing-4);
+
+                  .compare-at {
+                    opacity: 0.5;
+                    text-decoration: line-through;
+                  }
+                }
+              }
             }
 
             td {
@@ -51,6 +71,7 @@
                 gap: var(--spacing-12);
 
                 .image {
+                  flex-shrink: 0;
                   width: 120px;
                   height: 120px;
                   overflow: hidden;
@@ -64,6 +85,10 @@
                 .info {
                   display: grid;
                   gap: var(--spacing-4);
+
+                  .title {
+                    white-space: normal;
+                  }
 
                   .variants {
                     color: var(--color-on-surface-variant);

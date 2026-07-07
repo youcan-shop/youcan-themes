@@ -114,16 +114,15 @@ if (!customElements.get("ui-shop-button")) {
       }
     }
 
-    async placeOrder(productVariantId, attachedImage, quantity) {
+    async placeOrder(productVariantId, bundleId, attachedImage, quantity) {
       const formData = new FormData(this.form);
       const fields = Object.fromEntries(formData);
 
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
-          productVariantId,
-          attachedImage,
           quantity,
           fields,
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
         });
 
         response
@@ -176,6 +175,10 @@ if (!customElements.get("ui-shop-button")) {
 
     get productVariantId() {
       return this.getAttribute("variant-id");
+    }
+
+    get bundleId() {
+      return this.getAttribute("bundle-id");
     }
 
     get quantityValue() {

@@ -19,7 +19,15 @@
         <div class="option">
       {% endif %}
       {% if forloop.length > 1 %}
-        <input ui-slot="radio" type="radio" name="single-bundle" value="{{ bundle.id }}">
+        <input
+          ui-slot="radio"
+          type="radio"
+          name="single-bundle"
+          value="{{ bundle.id }}"
+          {% if forloop.first %}
+            checked
+          {% endif %}
+        >
       {% endif %}
       <div class="quantity">
         <span>x{{ bundle.bundle_products.size }}</span>
@@ -60,9 +68,24 @@
             <span class="original">{{ bundle.total_price | money }}</span>
           </div>
         </div>
+        {% if settings.cart_checkout_type == 'express-checkout' %}
+          {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+        {% else %}
+          {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+        {% endif %}
       {% endif %}
     {% endfor %}
-    {% render 'core.shop-button' %}
+    {% if product.bundles.single.size > 1 %}
+      {% for bundle in product.bundles.single %}
+        {% if forloop.first %}
+          {% if settings.cart_checkout_type == 'express-checkout' %}
+            {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id %}
+          {% else %}
+            {% render 'core.shop-button', bundle_id: bundle.id %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
   </div>
 {% endif %}
 
@@ -131,7 +154,11 @@
         <span class="original">{{ bundle.total_price | money }}</span>
       </div>
     </div>
-    {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% if settings.cart_checkout_type == 'express-checkout' %}
+      {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% else %}
+      {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% endif %}
   </div>
 {% endfor %}
 
@@ -256,6 +283,10 @@
         <span class="original">{{ bundle.total_price | money }}</span>
       </div>
     </div>
-    {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% if settings.cart_checkout_type == 'express-checkout' %}
+      {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% else %}
+      {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% endif %}
   </div>
 {% endfor %}
