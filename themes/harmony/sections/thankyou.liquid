@@ -70,25 +70,35 @@
               <div class="bundle-top">
                 <span class="bundle-title">{{ bundle.title }}</span>
                 <div class="bundle-total">
-                  <span>{{ bundle.total_price | money }}</span>
+                  {{ bundle.total_price | money }}
                 </div>
               </div>
-              <div class="bundle-items">
+              <ul class="bundle-items product-list">
                 {% for bundle_item in bundle.items %}
-                  <div class="bundle-product">
-                    <div class="bundle-product-info">
-                      <a href="/products/{{ bundle_item.slug }}">{{ bundle_item.name }}</a>
-                      <div class="bundle-product-price">
+                  <li class="product-item">
+                    <img class="product-image" src="{{- bundle_item.image -}}" alt="{{- bundle_item.name -}}">
+                    <div class="product-details">
+                      <a class="product-name" href="/products/{{- bundle_item.slug -}}" target="_blank">{{- bundle_item.name -}}</a>
+                      {% unless bundle_item.variations == null or bundle_item.variations.default %}
+                        <ul class="product-variations">
+                          {% for variation in bundle_item.variations %}
+                            <li>
+                              <span>{{ variation[0] }}: {{ variation[1] }}</span>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% endunless %}
+                      <span class="product-price">
                         {% if bundle_item.price %}
-                          <span>{{ bundle_item.price | money }}</span>
+                          {{- bundle_item.price | money -}}
                         {% else %}
                           <span class="free-badge">{{ 'general.free' | t }}</span>
                         {% endif %}
-                      </div>
+                      </span>
                     </div>
-                  </div>
+                  </li>
                 {% endfor %}
-              </div>
+              </ul>
             </div>
           {% endfor %}
         {% endfor %}
