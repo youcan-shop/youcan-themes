@@ -106,10 +106,9 @@ if (!customElements.get("ui-shop-button")) {
 
     async addToCart(productVariantId, bundleId, attachedImage, quantity) {
       try {
-        const newCart = await youcanjs.cart.addItem({
-          quantity,
-          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
-        });
+        const newCart = await youcanjs.cart.addItem(
+          bundleId ? { bundleId, isBundle: true, quantity: 1 } : { quantity, productVariantId, attachedImage },
+        );
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
           source: this.getAttribute("source") ?? "product-form",
