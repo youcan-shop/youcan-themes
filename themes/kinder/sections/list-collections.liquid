@@ -1,37 +1,40 @@
 {{ 'section.list-collections.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="list-collections"
-  style="
+<style>
+  #youcan-section--list-collections {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  {% capture breadcrumb_items %}
-  {{ 'navigation.home' | t }},/|
-  {{ 'navigation.collections' | t }},/collections
-  {% endcapture %}
+  }
+</style>
 
-  {% render 'misc.breadcrumb', items: breadcrumb_items %}
-  <div ui-slot="head">
-    <h1 class="heading">{{ 'navigation.collections' | t }}</h1>
-  </div>
-  <div class="core-area">
-    {% paginate collections by 24 cod %}
-      {% if items.size > 0 %}
-        <ul class="items" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
-          {% for collection in items %}
-            {% render 'block.collection', collection: collection %}
-          {% endfor %}
-        </ul>
-        {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
-      {% else %}
-        {% assign empty_content = 'single-collection.empty.title' | t %}
-        {% render 'misc.empty', heading: empty_content %}
-      {% endif %}
-    {% endpaginate %}
+<div ui-slot="container">
+  <div ui-section="list-collections">
+    {% capture breadcrumb_items %}
+    {{ 'navigation.home' | t }},/|
+    {{ 'navigation.collections' | t }},/collections
+    {% endcapture %}
+
+    {% render 'misc.breadcrumb', items: breadcrumb_items %}
+    <div ui-slot="head">
+      <h1 class="heading">{{ 'navigation.collections' | t }}</h1>
+    </div>
+    <div class="core-area">
+      {% paginate collections by 24 cod %}
+        {% if items.size > 0 %}
+          <ul class="items" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
+            {% for collection in items %}
+              {% render 'block.collection', collection: collection %}
+            {% endfor %}
+          </ul>
+          {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+        {% else %}
+          {% assign empty_content = 'single-collection.empty.title' | t %}
+          {% render 'misc.empty', heading: empty_content %}
+        {% endif %}
+      {% endpaginate %}
+    </div>
   </div>
 </div>
 
