@@ -1,13 +1,16 @@
 @layer sections {
+  #youcan-section--single-collection {
+    padding-inline: var(--spacing-16);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+  }
+
   [ui-section="single-collection"] {
     --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
 
     display: flex;
     gap: var(--spacing-48);
     flex-direction: column;
-    padding: var(--top-spacing) 10% var(--bottom-spacing);
-    background-color: var(--bg-color);
-    color: var(--fg-color);
 
     [ui-slot="head"] {
       align-items: flex-start;
@@ -101,8 +104,6 @@
     }
 
     @media (width <= 1024px) {
-      padding-inline: var(--spacing-16);
-
       .sub-collections-area {
         --per-page: 3;
         --item-size: 80%;
@@ -118,9 +119,7 @@
     @media (width <= 769px) {
       .sub-collections-area {
         position: relative;
-        width: calc(100% + var(--spacing-48));
-        padding-inline: var(--spacing-24);
-        inset-inline-start: calc(var(--spacing-24) * -1);
+        width: 100%;
 
         .sub-collection > a {
           flex-direction: column;
@@ -140,7 +139,9 @@
           }
 
           .title {
-            font: var(--font-body-lg);
+            width: 100%;
+            font: var(--font-label-sm);
+            text-align: center;
           }
 
           &:hover .media {
@@ -152,37 +153,6 @@
       .core-area {
         .items {
           grid-template-columns: 1fr;
-        }
-      }
-    }
-  }
-
-  [data-intensity="as-foreground"],
-  [data-intensity="as-light-bg"] {
-    [ui-section="single-collection"] {
-      .sub-collections-area {
-        .sub-collection > a {
-          .title {
-            @media (width > 769px) {
-              color: var(--color-on-primary);
-            }
-
-            @media (width <= 769px) {
-              color: var(--color-primary);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  [data-intensity="as-solid-bg"] {
-    [ui-section="single-collection"] {
-      .sub-collections-area {
-        .sub-collection > a {
-          .title {
-            color: var(--color-primary);
-          }
         }
       }
     }

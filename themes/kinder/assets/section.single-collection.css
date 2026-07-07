@@ -1,12 +1,14 @@
 @layer sections{
+  #youcan-section--single-collection{
+    padding-inline:var(--spacing-16);
+    background-color:var(--bg-color);
+    color:var(--fg-color);
+  }
   [ui-section=single-collection]{
     --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
     display:flex;
     gap:var(--spacing-48);
     flex-direction:column;
-    padding:var(--top-spacing) 10% var(--bottom-spacing);
-    background-color:var(--bg-color);
-    color:var(--fg-color);
   }
   [ui-section=single-collection] [ui-slot=head]{
     align-items:flex-start;
@@ -82,9 +84,6 @@
     }
   }
   @media (max-width: 1024px){
-    [ui-section=single-collection]{
-      padding-inline:var(--spacing-16);
-    }
     [ui-section=single-collection] .sub-collections-area{
       --per-page:3;
       --item-size:80%;
@@ -97,9 +96,7 @@
   @media (max-width: 769px){
     [ui-section=single-collection] .sub-collections-area{
       position:relative;
-      width:calc(100% + var(--spacing-48));
-      padding-inline:var(--spacing-24);
-      inset-inline-start:calc(var(--spacing-24) * -1);
+      width:100%;
     }
     [ui-section=single-collection] .sub-collections-area .sub-collection > a{
       flex-direction:column;
@@ -118,7 +115,9 @@
       border-radius:var(--radius-20);
     }
     [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
-      font:var(--font-body-lg);
+      width:100%;
+      font:var(--font-label-sm);
+      text-align:center;
     }
     [ui-section=single-collection] .sub-collections-area .sub-collection > a:hover .media{
       scale:1;
@@ -126,20 +125,5 @@
     [ui-section=single-collection] .core-area .items{
       grid-template-columns:1fr;
     }
-  }
-  @media (min-width: 769.02px){
-    [data-intensity=as-foreground] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title,
-    [data-intensity=as-light-bg] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
-      color:var(--color-on-primary);
-    }
-  }
-  @media (max-width: 769px){
-    [data-intensity=as-foreground] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title,
-    [data-intensity=as-light-bg] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
-      color:var(--color-primary);
-    }
-  }
-  [data-intensity=as-solid-bg] [ui-section=single-collection] .sub-collections-area .sub-collection > a .title{
-    color:var(--color-primary);
   }
 }
