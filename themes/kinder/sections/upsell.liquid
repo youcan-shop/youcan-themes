@@ -10,41 +10,46 @@
 }
 {% endcapture %}
 
-<ui-upsell
-  id="{{ upsell.id }}"
-  order-id="{{ order.id }}"
-  product-offers="{{ product_offers | strip_newlines | strip | escape }}"
-  style="
+<style>
+  #youcan-section--upsell {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  <div class="head">
-    <h3 class="title">{{ 'upsell.offer_title' | t }}</h3>
-    <div class="options">
-      <button ui-slot="button" data-variant="secondary" data-size="lg" name="no">
-        <span ui-slot="button-front">
-          {{ upsell.actions.btn_no.title }}
-        </span>
-      </button>
-      <button ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg" name="yes">
-        <span ui-slot="button-front">
-          {{ upsell.actions.btn_yes.title }}
-        </span>
-      </button>
+  }
+</style>
+
+<div ui-slot="container">
+  <ui-upsell
+    id="{{ upsell.id }}"
+    order-id="{{ order.id }}"
+    product-offers="{{ product_offers | strip_newlines | strip | escape }}"
+  >
+    <div class="head">
+      <h3 class="title">{{ 'upsell.offer_title' | t }}</h3>
+      <div class="options">
+        <button ui-slot="button" data-variant="secondary" data-size="lg" name="no">
+          <span ui-slot="button-front">
+            {{ upsell.actions.btn_no.title }}
+          </span>
+        </button>
+        <button ui-slot="button" data-variant="primary" data-mode="filled" data-size="lg" name="yes">
+          <span ui-slot="button-front">
+            {{ upsell.actions.btn_yes.title }}
+          </span>
+        </button>
+      </div>
     </div>
-  </div>
-  {% if upsell.description %}
-    <div class="description">
-      {{ upsell.description }}
-    </div>
-  {% endif %}
-  {% if upsell.footer %}
-    <div class="footer">{{ upsell.footer }}</div>
-  {% endif %}
-</ui-upsell>
+    {% if upsell.description %}
+      <div class="description">
+        {{ upsell.description }}
+      </div>
+    {% endif %}
+    {% if upsell.footer %}
+      <div class="footer">{{ upsell.footer }}</div>
+    {% endif %}
+  </ui-upsell>
+</div>
 
 {% schema %}
 {
