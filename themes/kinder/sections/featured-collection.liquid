@@ -1,69 +1,72 @@
 {{ 'section.featured-collection.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="featured-collection"
-  style="
+<style>
+  #youcan-section--featured-collection {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --banner-image-opacity: {{ section.settings.banner_image_opacity | divided_by: 100 }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  {% if section.settings.show_banner %}
-    <div class="banner" data-banner-placement="{{ section.settings.banner_placement }}">
-      <div class="content">
-        <div ui-slot="head">
-          <h1 class="heading">{{ section.settings.heading }}</h1>
-          <p class="description">{{ section.settings.description }}</p>
+  }
+</style>
+
+<div ui-slot="container">
+  <div ui-section="featured-collection">
+    {% if section.settings.show_banner %}
+      <div class="banner" data-banner-placement="{{ section.settings.banner_placement }}">
+        <div class="content">
+          <div ui-slot="head">
+            <h1 class="heading">{{ section.settings.heading }}</h1>
+            <p class="description">{{ section.settings.description }}</p>
+          </div>
+          {% if section.settings.button_label and section.settings.collection %}
+            <a
+              ui-slot="button"
+              data-variant="{{ section.settings.button_style }}"
+              data-size="lg"
+              href="/collections/{{ section.settings.collection.slug }}"
+            >
+              <span ui-slot="button-front">
+                {{ section.settings.button_label }}
+              </span>
+            </a>
+          {% endif %}
         </div>
-        {% if section.settings.button_label and section.settings.collection %}
-          <a
-            ui-slot="button"
-            data-variant="{{ section.settings.button_style }}"
-            data-size="lg"
-            href="/collections/{{ section.settings.collection.slug }}"
-          >
-            <span ui-slot="button-front">
-              {{ section.settings.button_label }}
-            </span>
-          </a>
+        {% if section.settings.banner_image %}
+          <div class="media">
+            <picture>
+              <img
+                src="{{ section.settings.banner_image.src }}"
+                alt="content-image"
+                loading="lazy"
+                width="100%"
+                height="100%"
+                loading="lazy"
+              >
+            </picture>
+          </div>
         {% endif %}
       </div>
-      {% if section.settings.banner_image %}
-        <div class="media">
-          <picture>
-            <img
-              src="{{ section.settings.banner_image.src }}"
-              alt="content-image"
-              loading="lazy"
-              width="100%"
-              height="100%"
-              loading="lazy"
-            >
-          </picture>
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
-  <div class="products">
-    {% assign max_products = section.settings.max_products_to_show %}
+    {% endif %}
+    <div class="products">
+      {% assign max_products = section.settings.max_products_to_show %}
 
-    {% if section.settings.collection.id %}
-      {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
+      {% if section.settings.collection.id %}
+        {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
+          <ul ui-block="products">
+            {% for product in items %}
+              {% render 'block.product', product: product %}
+            {% endfor %}
+          </ul>
+        {% endpaginate %}
+      {% else %}
         <ul ui-block="products">
-          {% for product in items %}
-            {% render 'block.product', product: product %}
+          {% for product in (1..max_products) %}
+            {% render 'block.product' %}
           {% endfor %}
         </ul>
-      {% endpaginate %}
-    {% else %}
-      <ul ui-block="products">
-        {% for product in (1..max_products) %}
-          {% render 'block.product' %}
-        {% endfor %}
-      </ul>
-    {% endif %}
+      {% endif %}
+    </div>
   </div>
 </div>
 
