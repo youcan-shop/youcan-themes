@@ -10,11 +10,13 @@
     --per-page: {{ section.settings.nbr_columns_desktop }};
   "
 >
-  <div ui-slot="head">
-    <div class="content">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
+  <div
+    ui-slot="head"
+    data-align="{{ section.settings.heading_alignment_desktop }}"
+    data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
+  >
+    <h1 class="heading">{{ section.settings.heading }}</h1>
+    <p class="description">{{ section.settings.description }}</p>
   </div>
   <ul class="items-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
     {% for testimonial in section.blocks %}
@@ -116,6 +118,29 @@
       "id": "description",
       "label": "t:common.header.description",
       "default": "t:sections.testimonials.default.description"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_desktop",
+      "label": "t:common.globals.text_alignment",
+      "options": [
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_mobile",
+      "label": "t:common.globals.text_alignment_mobile",
+      "options": [
+        { "label": "t:common.layout.alignment.inherit", "value": "inherit" },
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "inherit"
     },
     {
       "type": "header",
