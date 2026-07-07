@@ -49,7 +49,7 @@ async function addToCart(snippetId) {
       return;
     }
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     stopLoad('#loading__cart');
@@ -88,7 +88,7 @@ async function addBundleToCart(snippetId) {
 
     stopLoad('#loading__bundle-cart');
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.bundle_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.bundle_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     stopLoad('#loading__bundle-cart');
@@ -517,7 +517,7 @@ async function directAddToCart(event, productId) {
 
     await updateCartDrawer();
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     notify(err.message, 'error');
