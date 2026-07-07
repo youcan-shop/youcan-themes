@@ -10,16 +10,16 @@
   {{ 'section.header.js' | asset_url | script_tag_deferred }}
 {% endif %}
 
-<div
-  class="header-root"
-  style="
-    --bg-color: {{ section.settings.bg_color.hex }};
-    --fg-color: {{ section.settings.fg_color.hex }};
-    --top-spacing: {{ section.settings.top_spacing }}px;
-    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-    --mobile-width: {{ section.settings.logo_mobile_width }}px;
-  "
->
+<style>
+  #youcan-section--header {
+  --bg-color: {{ section.settings.bg_color.hex }};
+  --fg-color: {{ section.settings.fg_color.hex }};
+  --top-spacing: {{ section.settings.top_spacing }}px;
+  --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+  --mobile-width: {{ section.settings.logo_mobile_width }}px;}
+</style>
+
+<div ui-slot="container">
   <ui-header
     ui-layout="header"
 
@@ -169,11 +169,11 @@
       </div>
     {% endif %}
   </ui-header>
-
-  {% render 'misc.menu-drawer' %}
-  {% render 'misc.cart-drawer' %}
-  {% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
 </div>
+
+{% render 'misc.menu-drawer' %}
+{% render 'misc.cart-drawer' %}
+{% render 'misc.search-drawer', keywords: section.settings.search_most_searched_keywords, collection_id: section.settings.search_collection.id %}
 
 {% schema %}
 {

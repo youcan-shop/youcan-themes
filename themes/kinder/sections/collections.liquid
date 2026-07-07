@@ -6,109 +6,119 @@
   {% assign should_hide_controls = true %}
 {% endif %}
 
-<ui-carousel
-  ui-section="collections"
-  style="
+<style>
+  #youcan-section--collections {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
-  {% if section.settings.enable_slideshow %}
-    {% if section.settings.auto_play %}
-      autoplay
-      interval="{{ section.settings.change_every | times: 1000 }}"
-    {% endif %}
-  {% endif %}
->
-  <div class="content-area">
-    <div ui-slot="head">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
-    <a
-      ui-slot="link-button"
-      data-size="md"
-      data-underline="true"
-      href="/collections"
-    >
-      {{ section.settings.button_label }}
-    </a>
-  </div>
-  <ul
-    class="items-area"
-    {% unless section.settings.enable_slideshow %}
-      data-show-as-list
-    {% else %}
-      ui-carousel="wrapper"
-      ui-slot="carousel"
-      aria-orientation="vertical"
-    {% endunless %}
-    style="--items-text-alignment: {{ section.settings.text_alignment }};"
-  >
-    {% for collection in section.blocks %}
-      {% render 'block.collection' %}
-    {% endfor %}
-  </ul>
+  }
+</style>
 
-  {% assign min_items = section.settings.nbr_columns_desktop %}
-  {% if section.settings.enable_slideshow and should_hide_controls == false and section.blocks.size > min_items %}
+<div ui-slot="container">
+  <ui-carousel
+    ui-section="collections"
+    {% if section.settings.enable_slideshow %}
+      {% if section.settings.auto_play %}
+        autoplay
+        interval="{{ section.settings.change_every | times: 1000 }}"
+      {% endif %}
+    {% endif %}
+  >
     <div
-      class="controls"
-      {% if section.settings.show_arrows %}
-        data-show-arrows
-      {% endif %}
-      {% if section.settings.show_dots %}
-        data-dots
-      {% endif %}
-      {% if section.settings.arrows_position == 'centered' %}
-        data-centered-arrows
-      {% endif %}
+      class="content-area"
+      data-align="{{ section.settings.heading_alignment_desktop }}"
+      data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
     >
-      {% if section.settings.show_arrows %}
-        <button
-          ui-carousel="arrow-previous"
-          ui-slot="button"
-          data-variant="neutral"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Previous"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
-        </button>
-      {% endif %}
-      {% if section.settings.show_dots %}
-        <div class="pagination" data-position="{{ section.settings.arrows_position }}">
-          {% for marker in section.blocks %}
-            <button
-              ui-carousel="marker"
-              aria-label="Slide {{ forloop.index }}"
-              {% if forloop.first %}
-                aria-selected="true"
-              {% endif %}
-            ></button>
-          {% endfor %}
-        </div>
-      {% endif %}
-      {% if section.settings.show_arrows %}
-        <button
-          ui-carousel="arrow-next"
-          ui-slot="button"
-          data-variant="neutral"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Next"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-        </button>
-      {% endif %}
+      <div ui-slot="head">
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+        {% if section.settings.description %}
+          <p class="description">{{ section.settings.description }}</p>
+        {% endif %}
+      </div>
+      <a
+        ui-slot="link-button"
+        data-size="md"
+        data-underline="true"
+        href="/collections"
+      >
+        {{ section.settings.button_label }}
+      </a>
     </div>
-  {% endif %}
-</ui-carousel>
+    <ul
+      class="items-area"
+      {% unless section.settings.enable_slideshow %}
+        data-show-as-list
+      {% else %}
+        ui-carousel="wrapper"
+        ui-slot="carousel"
+        aria-orientation="vertical"
+      {% endunless %}
+    >
+      {% for collection in section.blocks %}
+        {% render 'block.collection' %}
+      {% endfor %}
+    </ul>
+
+    {% assign min_items = section.settings.nbr_columns_desktop %}
+    {% if section.settings.enable_slideshow and should_hide_controls == false and section.blocks.size > min_items %}
+      <div
+        class="controls"
+        {% if section.settings.show_arrows %}
+          data-show-arrows
+        {% endif %}
+        {% if section.settings.show_dots %}
+          data-dots
+        {% endif %}
+        {% if section.settings.arrows_position == 'centered' %}
+          data-centered-arrows
+        {% endif %}
+      >
+        {% if section.settings.show_arrows %}
+          <button
+            ui-carousel="arrow-previous"
+            ui-slot="button"
+            data-variant="neutral"
+            data-size="lg"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Previous"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
+          </button>
+        {% endif %}
+        {% if section.settings.show_dots %}
+          <div class="pagination" data-position="{{ section.settings.arrows_position }}">
+            {% for marker in section.blocks %}
+              <button
+                ui-carousel="marker"
+                aria-label="Slide {{ forloop.index }}"
+                {% if forloop.first %}
+                  aria-selected="true"
+                {% endif %}
+              ></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if section.settings.show_arrows %}
+          <button
+            ui-carousel="arrow-next"
+            ui-slot="button"
+            data-variant="neutral"
+            data-size="lg"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Next"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+  </ui-carousel>
+</div>
 
 {% schema %}
 {
@@ -156,6 +166,29 @@
       "default": "t:sections.collections.default.button_label"
     },
     {
+      "type": "select",
+      "id": "heading_alignment_desktop",
+      "label": "t:common.globals.text_alignment",
+      "options": [
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_mobile",
+      "label": "t:common.globals.text_alignment_mobile",
+      "options": [
+        { "label": "t:common.layout.alignment.inherit", "value": "inherit" },
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "inherit"
+    },
+    {
       "type": "header",
       "content": "t:common.headers.layout"
     },
@@ -177,21 +210,6 @@
         { "label": "t:common.layout.column.two", "value": "2" }
       ],
       "default": "2"
-    },
-    {
-      "type": "header",
-      "content": "t:theme.collection_cards.label"
-    },
-    {
-      "type": "select",
-      "id": "text_alignment",
-      "label": "t:common.globals.text_alignment",
-      "options": [
-        { "label": "t:common.layout.alignment.start", "value": "flex-start" },
-        { "label": "t:common.layout.alignment.center", "value": "center" },
-        { "label": "t:common.layout.alignment.end", "value": "flex-end" }
-      ],
-      "default": "center"
     },
     {
       "type": "header",

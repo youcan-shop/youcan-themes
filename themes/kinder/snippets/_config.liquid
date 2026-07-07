@@ -39,31 +39,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
   rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family={{ settings.font_family }}:wght@300;400;500;600;700&family={{ settings.font_family_headings }}:wght@300;400;500;600;700&family={{ settings.font_family_buttons }}:wght@400;500;600;700&display=swap"
+  href="https://fonts.googleapis.com/css2?family={{ settings.font_family }}:wght@300;400;500;600;700&family={{ settings.font_family_headings }}:wght@300;400;500;600;700&display=swap"
 >
 
 <style>
   :root {
 
+    --page-width: {{ settings.page_width }}px;
+
     /* Base */
     --font-family: '{{ settings.font_family | replace: '+', ' ' }}';
-
-    {% case settings.base_size %}
-      {% when 'small' %}
-        --font-base-size: var(--font-body-sm);
-      {% when 'medium' %}
-        --font-base-size: var(--font-body-md);
-      {% else %}
-        --font-base-size: var(--font-body-lg);
-    {% endcase %}
+    --font-body-scale: {{ settings.body_scale | divided_by: 100.0 }};
 
     /* Heading */
     --font-heading-scale: calc({{ settings.font_scale_headings }} / 100);
     --font-heading-family: {{ settings.font_family_headings | replace: '+', ' ' }};
-
-    /* Button */
-    --font-button-family: {{ settings.font_family_buttons | replace: '+', ' ' }};
-    --font-button-weight: {{ settings.font_weight_buttons }};
 
     /* Colors */
     --brand-lightness: {{ settings.main_color.lightness | divided_by: 100 }};
@@ -83,6 +73,7 @@
     --alignment-product: {{ settings.product_alignment  }};
 
     /* Corner */
+    --radius-card: {{ settings.corner_cards }};
     --radius-button: {{ settings.corner_radius_button }};
     --radius-input: {{ settings.corner_radius_input }};
     --radius-product: {{ settings.corner_radius_product }};
@@ -92,9 +83,10 @@
     --radius-slide: {{ settings.corner_radius_slide }};
     --radius-testimonial: {{ settings.corner_radius_testimonials }};
     --radius-review: {{ settings.corner_radius_reviews}};
-    --radius-column: {{ settings.corner_radius_multicolumns }};
     --radius-media: {{ settings.corner_radius_image_with_text }};
-    --radius-feature-item: {{ settings.corner_radius_feature_list }};
+
+    /* Alignment */
+    --collection-alignment: {{ settings.collection_alignment }};
   }
 </style>
 

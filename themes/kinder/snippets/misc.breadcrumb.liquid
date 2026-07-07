@@ -10,7 +10,7 @@
 
 {% assign items_list = items | split: '|' %}
 
-{% unless template.name == 'index' %}
+{% if settings.enable_breadcrumbs %}
   <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb">
     <ol ui-slot="breadcrumb-group">
       {% for item in items_list %}
@@ -52,4 +52,4 @@
       {% endfor %}
     </ol>
   </nav>
-{% endunless %}
+{% endif %}

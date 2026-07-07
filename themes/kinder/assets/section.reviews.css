@@ -1,12 +1,14 @@
 @layer sections{
+  #youcan-section--reviews{
+    padding-inline:var(--spacing-16);
+    background-color:var(--bg-color);
+    color:var(--fg-color);
+  }
   [ui-section=reviews]{
     --star-color:#f7ca4d;
     --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
     display:grid;
     grid-template-columns:55% auto;
-    padding:var(--top-spacing) 10% var(--bottom-spacing);
-    background-color:var(--bg-color);
-    color:var(--fg-color);
     grid-gap:var(--spacing-64);
     gap:var(--spacing-64);
   }
@@ -106,7 +108,7 @@
     width:64px;
     height:64px;
     overflow:hidden;
-    border-radius:var(--radius-16);
+    border-radius:calc(var(--radius-review) * 0.66);
     cursor:pointer;
   }
   [ui-section=reviews] .reviews .items [ui-block=review] .images .image > img,
@@ -277,7 +279,6 @@
   }
   @media (max-width: 1024px){
     [ui-section=reviews]{
-      padding-inline:var(--spacing-16);
       gap:var(--spacing-32);
     }
   }

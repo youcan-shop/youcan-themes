@@ -7,98 +7,108 @@
   {% assign should_hide_controls = true %}
 {% endif %}
 
-<ui-carousel
-  ui-section="products"
-  style="
+<style>
+  #youcan-section--products {
     --per-page: {{ per_page }};
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
-  {% if section.settings.enable_slideshow %}
-    {% if section.settings.auto_play %}
-      autoplay
-      interval="{{ section.settings.change_every | times: 1000 }}"
-    {% endif %}
-  {% endif %}
->
-  <div class="content-area">
-    <div ui-slot="head">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
-  </div>
-  <ul
-    class="items-area"
-    {% unless section.settings.enable_slideshow %}
-      data-show-as-list
-    {% else %}
-      ui-carousel="wrapper"
-      ui-slot="carousel"
-      aria-orientation="vertical"
-    {% endunless %}
-  >
-    {% for block in section.blocks %}
-      {% render 'block.product', product: block.settings.product %}
-    {% endfor %}
-  </ul>
+  }
+</style>
 
-  {% if section.settings.enable_slideshow and should_hide_controls == false and section.blocks.size > 1 %}
+<div ui-slot="container">
+  <ui-carousel
+    ui-section="products"
+
+    {% if section.settings.enable_slideshow %}
+      {% if section.settings.auto_play %}
+        autoplay
+        interval="{{ section.settings.change_every | times: 1000 }}"
+      {% endif %}
+    {% endif %}
+  >
     <div
-      class="controls"
-      {% if section.settings.show_arrows %}
-        data-show-arrows
-      {% endif %}
-      {% if section.settings.show_dots %}
-        data-dots
-      {% endif %}
-      {% if section.settings.arrows_position == 'centered' %}
-        data-centered-arrows
-      {% endif %}
+      class="content-area"
+      data-align="{{ section.settings.heading_alignment_desktop }}"
+      data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
     >
-      {% if section.settings.show_arrows %}
-        <button
-          ui-carousel="arrow-previous"
-          ui-slot="button"
-          data-variant="neutral"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Previous"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
-        </button>
-      {% endif %}
-      {% if section.settings.show_dots %}
-        <div class="pagination" data-position="{{ section.settings.arrows_position }}">
-          {% for marker in section.blocks %}
-            <button
-              ui-carousel="marker"
-              aria-label="Slide {{ forloop.index }}"
-              {% if forloop.first %}
-                aria-selected="true"
-              {% endif %}
-            ></button>
-          {% endfor %}
-        </div>
-      {% endif %}
-      {% if section.settings.show_arrows %}
-        <button
-          ui-carousel="arrow-next"
-          ui-slot="button"
-          data-variant="neutral"
-          data-size="lg"
-          data-as-icon
-          data-flip-icon-in-rtl
-          aria-label="Next"
-        >
-          {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
-        </button>
-      {% endif %}
+      <div ui-slot="head">
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+        <p class="description">{{ section.settings.description }}</p>
+      </div>
     </div>
-  {% endif %}
-</ui-carousel>
+    <ul
+      class="items-area"
+      {% unless section.settings.enable_slideshow %}
+        data-show-as-list
+      {% else %}
+        ui-carousel="wrapper"
+        ui-slot="carousel"
+        aria-orientation="vertical"
+      {% endunless %}
+    >
+      {% for block in section.blocks %}
+        {% render 'block.product', product: block.settings.product %}
+      {% endfor %}
+    </ul>
+
+    {% if section.settings.enable_slideshow and should_hide_controls == false and section.blocks.size > 1 %}
+      <div
+        class="controls"
+        {% if section.settings.show_arrows %}
+          data-show-arrows
+        {% endif %}
+        {% if section.settings.show_dots %}
+          data-dots
+        {% endif %}
+        {% if section.settings.arrows_position == 'centered' %}
+          data-centered-arrows
+        {% endif %}
+      >
+        {% if section.settings.show_arrows %}
+          <button
+            ui-carousel="arrow-previous"
+            ui-slot="button"
+            data-variant="neutral"
+            data-size="lg"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Previous"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-left-02' %}
+          </button>
+        {% endif %}
+        {% if section.settings.show_dots %}
+          <div class="pagination" data-position="{{ section.settings.arrows_position }}">
+            {% for marker in section.blocks %}
+              <button
+                ui-carousel="marker"
+                aria-label="Slide {{ forloop.index }}"
+                {% if forloop.first %}
+                  aria-selected="true"
+                {% endif %}
+              ></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if section.settings.show_arrows %}
+          <button
+            ui-carousel="arrow-next"
+            ui-slot="button"
+            data-variant="neutral"
+            data-size="lg"
+            data-as-icon
+            data-flip-icon-in-rtl
+            aria-label="Next"
+          >
+            {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+  </ui-carousel>
+</div>
 
 {% schema %}
 {
@@ -138,6 +148,29 @@
       "id": "description",
       "label": "t:common.header.description",
       "default": "t:sections.products.default.description"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_desktop",
+      "label": "t:common.globals.text_alignment",
+      "options": [
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_mobile",
+      "label": "t:common.globals.text_alignment_mobile",
+      "options": [
+        { "label": "t:common.layout.alignment.inherit", "value": "inherit" },
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "inherit"
     },
     {
       "type": "header",

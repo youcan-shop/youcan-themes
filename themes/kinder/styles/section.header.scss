@@ -1,21 +1,14 @@
 @layer sections {
   #youcan-section--header {
-    .header-root {
-      --spring-width-offset: 0px;
-      --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
-      --sheet-background: var(--bg-color);
-      --color-surface: var(--bg-color);
-      --color-on-surface: var(--fg-color);
-      --color-surface-container-lowest: oklch(from var(--bg-color) 100% c h / 30%);
-      --color-surface-container-low: oklch(from var(--bg-color) 96% c h / 30%);
-      --color-surface-container: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
-      --color-surface-container-high: oklch(from var(--bg-color) 92% c h / 30%);
-      --color-surface-container-highest: oklch(from var(--bg-color) 90% c h / 30%);
+    --spring-width-offset: 0px;
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
+    --sheet-background: var(--bg-color);
 
-      [ui-slot="button"]:not([data-variant="primary"]) {
-        --button-bg: var(--bg-shade-color) !important;
-        --button-fg: var(--fg-color) !important;
-      }
+    padding-inline: var(--spacing-16);
+
+    [ui-slot="button"]:not([data-variant="primary"]) {
+      --button-bg: var(--bg-shade-color) !important;
+      --button-fg: var(--fg-color) !important;
     }
 
     [ui-slot="sheet-content"] {
@@ -35,7 +28,6 @@
     grid-template-columns: 1fr 4fr 1fr;
     align-items: center;
     min-height: 64px;
-    padding: var(--top-spacing) 10% var(--bottom-spacing);
     transform: translateY(0%);
     transition:
       box-shadow var(--transition-standard-fast-spatial),
@@ -53,6 +45,10 @@
       .cart-drawer-trigger {
         [ui-slot="button-front"] {
           padding-inline-end: var(--spacing-12);
+        }
+
+        [ui-slot="badge"] {
+          border-radius: var(--radius-rounded);
         }
       }
     }
@@ -134,10 +130,6 @@
       .links {
         justify-content: center;
       }
-    }
-
-    @media (width <= 1024px) {
-      padding-inline: var(--spacing-16);
     }
 
     @media (width > 769px) {

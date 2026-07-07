@@ -1,62 +1,67 @@
 {{ 'section.image-with-text.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="image-with-text"
-  style="
+<style>
+  #youcan-section--image-with-text {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
-  {% if section.settings.override_global_colors %}
-    data-scoped-color
-    data-intensity="{{ section.settings.color_intensity }}"
-  {% endif %}
->
-  <div class="wrapper-area" style="--height: {{ section.settings.image_height }}vh;">
-    <div ui-block="media" data-image-placement="{{ section.settings.image_placement }}">
-      {% if section.settings.image.src %}
-        <img
-          src="{{ section.settings.image.src }}"
-          alt="Image with Text"
-          height="100%"
-          width="100%"
-          loading="lazy"
-        >
-      {% else %}
-        {% render 'misc.image-fallback', icon_size: 100 %}
-      {% endif %}
-    </div>
-    <div
-      ui-slot="head"
-      ui-block="content"
-      data-text-alignment="{{ section.settings.text_alignment }}"
-      data-vertical-alignment="{{ section.settings.vertical_alignment }}"
-    >
-      {% for block in section.blocks %}
-        {% case block.type %}
-          {% when 'heading' %}
-            <h1 class="heading" {{ block.youcan_attributes }}>{{ block.settings.content }}</h1>
-          {% when 'description' %}
-            <p class="description" {{ block.youcan_attributes }}>{{ block.settings.content }}</p>
-          {% when 'button' %}
-            <a
-              class="cta"
-              ui-slot="button"
-              ui-block="button"
-              data-variant="{{ block.settings.style }}"
-              data-size="lg"
-              {{ block.youcan_attributes }}
-              {% if block.settings.link %}
-                href="{{ block.settings.link }}"
-              {% endif %}
-            >
-              <span ui-slot="button-front">
-                {{ block.settings.label }}
-              </span>
-            </a>
-        {% endcase %}
-      {% endfor %}
+  }
+</style>
+
+<div ui-slot="container">
+  <div
+    ui-section="image-with-text"
+    {% if section.settings.override_global_colors %}
+      data-scoped-color
+      data-intensity="{{ section.settings.color_intensity }}"
+    {% endif %}
+  >
+    <div class="wrapper-area" style="--height: {{ section.settings.image_height }}vh;">
+      <div ui-block="media" data-image-placement="{{ section.settings.image_placement }}">
+        {% if section.settings.image.src %}
+          <img
+            src="{{ section.settings.image.src }}"
+            alt="Image with Text"
+            height="100%"
+            width="100%"
+            loading="lazy"
+          >
+        {% else %}
+          {% render 'misc.image-fallback', icon_size: 100 %}
+        {% endif %}
+      </div>
+      <div
+        ui-slot="head"
+        ui-block="content"
+        data-text-alignment="{{ section.settings.text_alignment }}"
+        data-vertical-alignment="{{ section.settings.vertical_alignment }}"
+      >
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'heading' %}
+              <h1 class="heading" {{ block.youcan_attributes }}>{{ block.settings.content }}</h1>
+            {% when 'description' %}
+              <p class="description" {{ block.youcan_attributes }}>{{ block.settings.content }}</p>
+            {% when 'button' %}
+              <a
+                class="cta"
+                ui-slot="button"
+                ui-block="button"
+                data-variant="{{ block.settings.style }}"
+                data-size="lg"
+                {{ block.youcan_attributes }}
+                {% if block.settings.link %}
+                  href="{{ block.settings.link }}"
+                {% endif %}
+              >
+                <span ui-slot="button-front">
+                  {{ block.settings.label }}
+                </span>
+              </a>
+          {% endcase %}
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>

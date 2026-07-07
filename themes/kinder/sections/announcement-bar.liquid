@@ -2,40 +2,42 @@
   {% if section.blocks.size > 0 %}
     {{ 'section.announcement-bar.css' | asset_url | stylesheet_tag }}
 
-    <div
-      ui-section="announcement-bar"
-      role="banner"
-    >
-      <ui-marquee
-        {% if section.settings.pause_on_hover %}
-          data-pause-on-hover
-        {% endif %}
-        speed="{{ section.settings.speed }}"
+    <div ui-slot="container">
+      <div
+        ui-section="announcement-bar"
+        role="banner"
       >
-        <div ui-marquee="track">
-          <ul ui-marquee="cloud">
-            {% for item in section.blocks %}
-              <li ui-marquee="item" {{ item.youcan_attributes }}>
-                <span>{{ item.settings.heading }}:</span>
-                {% if item.settings.link %}
-                  <a
-                    ui-slot="link-button"
-                    data-size="md"
-                    data-underline="true"
-                    href="{{ item.settings.link }}"
-                  >
-                    {{ item.settings.text }}
-                  </a>
-                {% else %}
-                  <span>
-                    {{ item.settings.text }}
-                  </span>
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </ui-marquee>
+        <ui-marquee
+          {% if section.settings.pause_on_hover %}
+            data-pause-on-hover
+          {% endif %}
+          speed="{{ section.settings.speed }}"
+        >
+          <div ui-marquee="track">
+            <ul ui-marquee="cloud">
+              {% for item in section.blocks %}
+                <li ui-marquee="item" {{ item.youcan_attributes }}>
+                  <span>{{ item.settings.heading }}:</span>
+                  {% if item.settings.link %}
+                    <a
+                      ui-slot="link-button"
+                      data-size="md"
+                      data-underline="true"
+                      href="{{ item.settings.link }}"
+                    >
+                      {{ item.settings.text }}
+                    </a>
+                  {% else %}
+                    <span>
+                      {{ item.settings.text }}
+                    </span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </ui-marquee>
+      </div>
     </div>
   {% endif %}
 {% endunless %}

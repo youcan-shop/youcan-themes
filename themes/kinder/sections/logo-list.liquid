@@ -1,75 +1,82 @@
 {{ 'section.logo-list.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="logo-list"
-  role="banner"
-  {% unless section.settings.scrolling %}
-    data-list
-  {% endunless %}
-  {% if section.settings.grayscale %}
-    data-grayscale
-  {% endif %}
-  {% if section.settings.fullscreen %}
-    data-fullscreen
-  {% endif %}
-  style="
+<style>
+  #youcan-section--logo-list {
     --bg-color: {{ section.settings.bg_color.hex }};
     --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
+  }
+</style>
+
+<div
+  ui-slot="container"
+  {% if section.settings.fullscreen %}
+    data-fullscreen
+  {% endif %}
 >
-  <div class="logos-container">
-    {% if section.settings.scrolling %}
-      <ui-marquee
-        {% if section.settings.pause_on_hover %}
-          data-pause-on-hover
-        {% endif %}
-        speed="{{ section.settings.speed }}"
-      >
-        <div ui-marquee="track">
-          <ul ui-marquee="cloud">
-            {% for item in section.blocks %}
-              <li ui-marquee="item" {{ item.youcan_attributes }}>
-                <div ui-block="logo">
-                  {% if item.settings.logo %}
-                    <img
-                      src="{{ item.settings.logo.src }}"
-                      alt="logo-{{ forloop.index }}"
-                      height="100%"
-                      width="100%"
-                      loading="lazy"
-                    >
-                  {% else %}
-                    {% render 'misc.image-fallback', icon_size: 142 %}
-                  {% endif %}
-                </div>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </ui-marquee>
-    {% else %}
-      <ul class="logo-list">
-        {% for item in section.blocks %}
-          <li class="logo-item" {{ item.youcan_attributes }}>
-            <div ui-block="logo">
-              {% if item.settings.logo %}
-                <img
-                  src="{{ item.settings.logo.src }}"
-                  alt="logo-{{ forloop.index }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                >
-              {% else %}
-                {% render 'misc.image-fallback', icon_size: 142 %}
-              {% endif %}
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+  <div
+    ui-section="logo-list"
+    role="banner"
+    {% unless section.settings.scrolling %}
+      data-list
+    {% endunless %}
+    {% if section.settings.grayscale %}
+      data-grayscale
     {% endif %}
+  >
+    <div class="logos-container">
+      {% if section.settings.scrolling %}
+        <ui-marquee
+          {% if section.settings.pause_on_hover %}
+            data-pause-on-hover
+          {% endif %}
+          speed="{{ section.settings.speed }}"
+        >
+          <div ui-marquee="track">
+            <ul ui-marquee="cloud">
+              {% for item in section.blocks %}
+                <li ui-marquee="item" {{ item.youcan_attributes }}>
+                  <div ui-block="logo">
+                    {% if item.settings.logo %}
+                      <img
+                        src="{{ item.settings.logo.src }}"
+                        alt="logo-{{ forloop.index }}"
+                        height="100%"
+                        width="100%"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      {% render 'misc.image-fallback', icon_size: 142 %}
+                    {% endif %}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </ui-marquee>
+      {% else %}
+        <ul class="logo-list">
+          {% for item in section.blocks %}
+            <li class="logo-item" {{ item.youcan_attributes }}>
+              <div ui-block="logo">
+                {% if item.settings.logo %}
+                  <img
+                    src="{{ item.settings.logo.src }}"
+                    alt="logo-{{ forloop.index }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
+                  >
+                {% else %}
+                  {% render 'misc.image-fallback', icon_size: 142 %}
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
   </div>
 </div>
 

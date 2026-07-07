@@ -128,15 +128,14 @@
         "default": "DM+Sans"
       },
       {
-        "type": "select",
-        "id": "base_size",
-        "label": "t:theme.typography.base_size",
-        "options": [
-          { "label": "t:common.layout.size.small", "value": "small" },
-          { "label": "t:common.layout.size.medium", "value": "medium" },
-          { "label": "t:common.layout.size.large", "value": "large" }
-        ],
-        "default": "medium"
+        "type": "range",
+        "id": "body_scale",
+        "min": 100,
+        "max": 130,
+        "step": 5,
+        "unit": "%",
+        "label": "t:theme.typography.font_size_scale",
+        "default": 100
       },
       {
         "type": "header",
@@ -247,121 +246,6 @@
         "step": 5,
         "unit": "%",
         "default": 100
-      },
-      {
-        "type": "header",
-        "content": "t:common.headers.button"
-      },
-      {
-        "type": "select",
-        "id": "font_family_buttons",
-        "label": "t:theme.typography.font_family",
-        "options": [
-          {
-            "value": "Fredoka",
-            "label": "Fredoka"
-          },
-          {
-            "value": "DM+Sans",
-            "label": "DM Sans"
-          },
-          {
-            "value": "Roboto",
-            "label": "Roboto"
-          },
-          {
-            "value": "Open+Sans",
-            "label": "Open Sans"
-          },
-          {
-            "value": "Lato",
-            "label": "Lato"
-          },
-          {
-            "value": "Noto+Sans",
-            "label": "Noto Sans"
-          },
-          {
-            "value": "Noto+Serif",
-            "label": "Noto Serif"
-          },
-          {
-            "value": "Montserrat",
-            "label": "Montserrat"
-          },
-          {
-            "value": "Oswald",
-            "label": "Oswald"
-          },
-          {
-            "value": "Poppins",
-            "label": "Poppins"
-          },
-          {
-            "value": "Raleway",
-            "label": "Raleway"
-          },
-          {
-            "value": "Inter",
-            "label": "Inter"
-          },
-          {
-            "value": "PT+Sans",
-            "label": "PT Sans"
-          },
-          {
-            "value": "PT+Serif",
-            "label": "PT Serif"
-          },
-          {
-            "value": "Lora",
-            "label": "Lora"
-          },
-          {
-            "value": "Rubik",
-            "label": "Rubik"
-          },
-          {
-            "value": "Cairo",
-            "label": "Cairo"
-          },
-          {
-            "value": "Tajawal",
-            "label": "Tajawal"
-          },
-          {
-            "value": "Almarai",
-            "label": "Almarai"
-          },
-          {
-            "value": "Noto+Kufi+Arabic",
-            "label": "Noto Kufi"
-          },
-          {
-            "value": "Changa",
-            "label": "Changa"
-          },
-          {
-            "value": "Beiruti",
-            "label": "Beiruti"
-          }
-        ],
-        "default": "Fredoka"
-      },
-      {
-        "type": "select",
-        "id": "font_weight_buttons",
-        "label": "t:theme.typography.font_weight",
-        "options": [
-          { "label": "t:common.layout.weight.light", "value": "300" },
-          { "label": "t:common.layout.weight.regular", "value": "400" },
-          { "label": "t:common.layout.weight.medium", "value": "500" },
-          { "label": "t:common.layout.weight.semibold", "value": "600" },
-          { "label": "t:common.layout.weight.bold", "value": "700" },
-          { "label": "t:common.layout.weight.extrabold", "value": "800" },
-          { "label": "t:common.layout.weight.black", "value": "900" }
-        ],
-        "default": "400"
       }
     ]
   },
@@ -436,13 +320,24 @@
       },
       {
         "type": "select",
+        "id": "corner_cards",
+        "label": "t:theme.layout.cards",
+        "options": [
+          { "label": "t:common.layout.corner.flat", "value": "0px" },
+          { "label": "t:common.layout.corner.rounded", "value": "16px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "28px" }
+        ],
+        "default": "28px"
+      },
+      {
+        "type": "select",
         "id": "corner_radius_button",
         "label": "t:theme.layout.buttons",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "6px" },
-          { "label": "t:common.layout.corner.softer", "value": "8px" },
-          { "label": "t:common.layout.corner.rounded", "value": "calc(1px * infinity)" }
+          { "label": "t:common.layout.corner.rounded", "value": "6px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "8px" },
+          { "label": "t:common.layout.corner.full", "value": "calc(1px * infinity)" }
         ],
         "default": "8px"
       },
@@ -452,9 +347,9 @@
         "label": "t:theme.layout.inputs",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "6px" },
-          { "label": "t:common.layout.corner.softer", "value": "8px" },
-          { "label": "t:common.layout.corner.rounded", "value": "calc(1px * infinity)" }
+          { "label": "t:common.layout.corner.rounded", "value": "6px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "8px" },
+          { "label": "t:common.layout.corner.full", "value": "calc(1px * infinity)" }
         ],
         "default": "8px"
       },
@@ -464,10 +359,10 @@
         "label": "t:theme.product_cards.label",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "20px" }
+          { "label": "t:common.layout.corner.rounded", "value": "12px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "16px" }
         ],
-        "default": "20px"
+        "default": "16px"
       },
       {
         "type": "select",
@@ -475,10 +370,10 @@
         "label": "t:theme.collection_cards.label",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "20px" }
+          { "label": "t:common.layout.corner.rounded", "value": "16px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "28px" }
         ],
-        "default": "20px"
+        "default": "28px"
       },
       {
         "type": "select",
@@ -486,11 +381,11 @@
         "label": "t:theme.layout.badges",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "4px" },
-          { "label": "t:common.layout.corner.softer", "value": "6px" },
-          { "label": "t:common.layout.corner.rounded", "value": "calc(1px * infinity)" }
+          { "label": "t:common.layout.corner.rounded", "value": "4px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "6px" },
+          { "label": "t:common.layout.corner.full", "value": "calc(1px * infinity)" }
         ],
-        "default": "calc(1px * infinity)"
+        "default": "4px"
       },
       {
         "type": "select",
@@ -498,11 +393,11 @@
         "label": "t:theme.layout.toasts",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "4px" },
-          { "label": "t:common.layout.corner.softer", "value": "6px" },
-          { "label": "t:common.layout.corner.rounded", "value": "calc(1px * infinity)" }
+          { "label": "t:common.layout.corner.rounded", "value": "4px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "6px" },
+          { "label": "t:common.layout.corner.full", "value": "calc(1px * infinity)" }
         ],
-        "default": "calc(1px * infinity)"
+        "default": "6px"
       },
       {
         "type": "select",
@@ -510,10 +405,10 @@
         "label": "t:theme.layout.slides",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "20px" }
+          { "label": "t:common.layout.corner.rounded", "value": "12px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "28px" }
         ],
-        "default": "20px"
+        "default": "28px"
       },
       {
         "type": "select",
@@ -521,10 +416,10 @@
         "label": "t:theme.layout.reviews",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "20px" }
+          { "label": "t:common.layout.corner.rounded", "value": "12px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "28px" }
         ],
-        "default": "20px"
+        "default": "28px"
       },
       {
         "type": "select",
@@ -532,8 +427,8 @@
         "label": "t:theme.layout.testimonials",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "28px" }
+          { "label": "t:common.layout.corner.rounded", "value": "12px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "28px" }
         ],
         "default": "28px"
       },
@@ -543,10 +438,10 @@
         "label": "t:common.globals.image_banners",
         "options": [
           { "label": "t:common.layout.corner.flat", "value": "0px" },
-          { "label": "t:common.layout.corner.soft", "value": "12px" },
-          { "label": "t:common.layout.corner.softer", "value": "20px" }
+          { "label": "t:common.layout.corner.rounded", "value": "12px" },
+          { "label": "t:common.layout.corner.extra_rounded", "value": "28px" }
         ],
-        "default": "20px"
+        "default": "28px"
       }
     ]
   },
@@ -593,10 +488,10 @@
         "id": "quick_add_icon",
         "label": "t:theme.product_cards.quick_add_icon",
         "options": [
-          { "label": "t:theme.cart.icon.options.bag", "value": "hgi-shopping-basket-02" },
+          { "label": "t:theme.cart.icon.options.bag", "value": "hgi-shopping-bag-03" },
           { "label": "t:theme.cart.icon.options.cart", "value": "hgi-shopping-cart-02" }
         ],
-        "default": "hgi-shopping-basket-02"
+        "default": "hgi-shopping-bag-03"
       }
     ]
   },
@@ -619,11 +514,11 @@
         "id": "collection_alignment",
         "label": "t:common.globals.content_alignment",
         "options": [
-          { "label": "t:common.layout.alignment.start", "value": "start" },
+          { "label": "t:common.layout.alignment.start", "value": "flex-start" },
           { "label": "t:common.layout.alignment.center", "value": "center" },
-          { "label": "t:common.layout.alignment.end", "value": "end" }
+          { "label": "t:common.layout.alignment.end", "value": "flex-end" }
         ],
-        "default": "start"
+        "default": "center"
       }
     ]
   },

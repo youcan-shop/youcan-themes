@@ -1,39 +1,46 @@
 {{ 'section.faqs.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="faqs"
-  style="
+<style>
+  #youcan-section--faqs {
     --bg-color: {{ section.settings.bg_color.hex }};
     --inner-bg-color: {{ section.settings.inner_bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  <div class="faqs-card">
-    <div ui-slot="head">
-      <h1 class="heading">{{ section.settings.heading }}</h1>
-      <p class="description">{{ section.settings.description }}</p>
-    </div>
-    <div class="content">
-      <div class="media" data-image-placement="{{ section.settings.image_placement }}" data-image-ratio="{{ section.settings.image_ratio }}">
-        {% if section.settings.image.src %}
-          <img
-            src="{{ section.settings.image.src }}"
-            alt="FAQs"
-            height="100%"
-            width="100%"
-            loading="lazy"
-          >
-        {% else %}
-          {% render 'misc.image-fallback', icon_size: 100 %}
-        {% endif %}
+  }
+</style>
+
+<div ui-slot="container">
+  <div ui-section="faqs">
+    <div class="faqs-card">
+      <div
+        ui-slot="head"
+        data-align="{{ section.settings.heading_alignment_desktop }}"
+        data-align-mobile="{{ section.settings.heading_alignment_mobile }}"
+      >
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+        <p class="description">{{ section.settings.description }}</p>
       </div>
-      <ul class="items-area" ui-slot="accordion">
-        {% for faq in section.blocks %}
-          {% render 'block.faq' %}
-        {% endfor %}
-      </ul>
+      <div class="content">
+        <div class="media" data-image-placement="{{ section.settings.image_placement }}" data-image-ratio="{{ section.settings.image_ratio }}">
+          {% if section.settings.image.src %}
+            <img
+              src="{{ section.settings.image.src }}"
+              alt="FAQs"
+              height="100%"
+              width="100%"
+              loading="lazy"
+            >
+          {% else %}
+            {% render 'misc.image-fallback', icon_size: 100 %}
+          {% endif %}
+        </div>
+        <ul class="items-area" ui-slot="accordion">
+          {% for faq in section.blocks %}
+            {% render 'block.faq' %}
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -82,6 +89,29 @@
       "id": "description",
       "label": "t:common.header.description",
       "default": "t:sections.faqs.default.description"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_desktop",
+      "label": "t:common.globals.text_alignment",
+      "options": [
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment_mobile",
+      "label": "t:common.globals.text_alignment_mobile",
+      "options": [
+        { "label": "t:common.layout.alignment.inherit", "value": "inherit" },
+        { "label": "t:common.layout.alignment.start", "value": "start" },
+        { "label": "t:common.layout.alignment.center", "value": "center" },
+        { "label": "t:common.layout.alignment.end", "value": "end" }
+      ],
+      "default": "inherit"
     },
     {
       "type": "header",

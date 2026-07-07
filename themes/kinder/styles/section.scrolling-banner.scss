@@ -1,10 +1,17 @@
 @layer sections {
-  [ui-section="scrolling-banner"] {
-    padding-block: var(--top-spacing) var(--bottom-spacing);
-    padding-inline: 10%;
+  #youcan-section--scrolling-banner {
+    padding-inline: var(--spacing-16);
     background-color: var(--bg-color);
     color: var(--fg-color);
+  }
 
+  [ui-slot="container"] {
+    &[data-fullscreen] {
+      max-width: 100%;
+    }
+  }
+
+  [ui-section="scrolling-banner"] {
     [ui-marquee="item"] {
       padding-inline: var(--spacing-0);
 
@@ -66,14 +73,6 @@
           width: 102px;
         }
       }
-    }
-
-    &[data-fullscreen] {
-      padding-inline: var(--spacing-0);
-    }
-
-    @media (width <= 1024px) {
-      padding-inline: var(--spacing-16);
     }
   }
 }
