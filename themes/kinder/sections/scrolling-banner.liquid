@@ -1,49 +1,56 @@
 {{ 'section.scrolling-banner.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="scrolling-banner"
-  role="banner"
-  {% if section.settings.fullscreen %}
-    data-fullscreen
-  {% endif %}
-  style="
+<style>
+  #youcan-section--scrolling-banner {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
+  }
+</style>
+
+<div
+  ui-slot="container"
+  {% if section.settings.fullscreen %}
+    data-fullscreen
+  {% endif %}
 >
-  <ui-marquee
-    {% if section.settings.pause_on_hover %}
-      data-pause-on-hover
-    {% endif %}
-    speed="{{ section.settings.speed }}"
+  <div
+    ui-section="scrolling-banner"
+    role="banner"
   >
-    <div ui-marquee="track">
-      <ul ui-marquee="cloud">
-        {% for item in section.blocks %}
-          <li ui-marquee="item" {{ item.youcan_attributes }}>
-            <div ui-block="text">
-              {% if item.settings.image %}
-                <img
-                  src="{{ item.settings.image.src }}"
-                  alt="image-{{ forloop.index }}"
-                  height="100%"
-                  width="100%"
-                  loading="lazy"
-                  data-shape="{{ item.settings.image_shape }}"
-                >
-              {% endif %}
-              <span>
-                {{ item.settings.text }}
-              </span>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </ui-marquee>
+    <ui-marquee
+      {% if section.settings.pause_on_hover %}
+        data-pause-on-hover
+      {% endif %}
+      speed="{{ section.settings.speed }}"
+    >
+      <div ui-marquee="track">
+        <ul ui-marquee="cloud">
+          {% for item in section.blocks %}
+            <li ui-marquee="item" {{ item.youcan_attributes }}>
+              <div ui-block="text">
+                {% if item.settings.image %}
+                  <img
+                    src="{{ item.settings.image.src }}"
+                    alt="image-{{ forloop.index }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
+                    data-shape="{{ item.settings.image_shape }}"
+                  >
+                {% endif %}
+                <span>
+                  {{ item.settings.text }}
+                </span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </ui-marquee>
+  </div>
 </div>
 
 {% schema %}

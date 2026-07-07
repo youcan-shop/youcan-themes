@@ -9,7 +9,12 @@
   }
 </style>
 
-<div ui-slot="container">
+<div
+  ui-slot="container"
+  {% if section.settings.fullscreen %}
+    data-fullscreen
+  {% endif %}
+>
   <div
     ui-section="logo-list"
     role="banner"
@@ -18,9 +23,6 @@
     {% endunless %}
     {% if section.settings.grayscale %}
       data-grayscale
-    {% endif %}
-    {% if section.settings.fullscreen %}
-      data-fullscreen
     {% endif %}
   >
     <div class="logos-container">
