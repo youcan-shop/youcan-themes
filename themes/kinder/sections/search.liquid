@@ -1,89 +1,92 @@
 {{ 'section.search.css' | asset_url | stylesheet_tag }}
 
-<div
-  ui-section="search"
-  style="
+<style>
+  #youcan-section--search {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  "
->
-  {% paginate search.products by 24 cod %}
-    {% if items.size > 1 %}
-      {% assign result = 'search.result.many' | t %}
-    {% else %}
-      {% assign result = 'search.result.one' | t %}
-    {% endif %}
+  }
+</style>
 
-    {% assign found_for = 'search.found_for' | t %}
-    {% assign result = result | append: ' ' | append: found_for %}
-    {% assign message = total | append: ' ' | append: result | append: ' "' | append: terms | append: '"' %}
+<div ui-slot="container">
+  <div ui-section="search">
+    {% paginate search.products by 24 cod %}
+      {% if items.size > 1 %}
+        {% assign result = 'search.result.many' | t %}
+      {% else %}
+        {% assign result = 'search.result.one' | t %}
+      {% endif %}
 
-    {% assign search = 'search.title' | t %}
-    {% assign breadcrumb = search | append: ': ' | append: message %}
+      {% assign found_for = 'search.found_for' | t %}
+      {% assign result = result | append: ' ' | append: found_for %}
+      {% assign message = total | append: ' ' | append: result | append: ' "' | append: terms | append: '"' %}
 
-    {% capture breadcrumb_items %}
-    {{ 'navigation.home' | t }},/|
-    {{ breadcrumb }}
-    {% endcapture %}
+      {% assign search = 'search.title' | t %}
+      {% assign breadcrumb = search | append: ': ' | append: message %}
 
-    {% render 'misc.breadcrumb', items: breadcrumb_items %}
+      {% capture breadcrumb_items %}
+      {{ 'navigation.home' | t }},/|
+      {{ breadcrumb }}
+      {% endcapture %}
 
-    <div ui-slot="head">
-      <h1 class="heading">{{ 'search.title' | t }}</h1>
-      <form action="/search" class="search">
-        <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
-          <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
-          <input
-            ui-search="input"
-            ui-slot="input"
-            name="q"
-            type="text"
-            value="{{ terms | escape }}"
-            placeholder="{{ 'search.placeholder' | t }}"
-          >
-          <button
-            ui-slot="input-inline-button"
-            type="button"
-            aria-label="Clear"
-            onclick="
-              const input = document.querySelector('[ui-search=\'input\']');
+      {% render 'misc.breadcrumb', items: breadcrumb_items %}
 
-              if (!input) return;
+      <div ui-slot="head">
+        <h1 class="heading">{{ 'search.title' | t }}</h1>
+        <form action="/search" class="search">
+          <fieldset ui-slot="input-wrapper" data-size="lg" role="group">
+            <i ui-slot="input-icon" class="hgi hgi-stroke hgi-search-01"></i>
+            <input
+              ui-search="input"
+              ui-slot="input"
+              name="q"
+              type="text"
+              value="{{ terms | escape }}"
+              placeholder="{{ 'search.placeholder' | t }}"
+            >
+            <button
+              ui-slot="input-inline-button"
+              type="button"
+              aria-label="Clear"
+              onclick="
+                const input = document.querySelector('[ui-search=\'input\']');
 
-              input.value = '';
-              input.focus();
-            "
-          >
-            {% render 'misc.icon', name: 'hgi-cancel-01' %}
-          </button>
-        </fieldset>
-      </form>
-    </div>
-    <div class="controller">
-      <h4 class="result">
-        {{ message }}
-      </h4>
-      <div class="sort">
-        <label for="sort">{{ 'general.sort.label' | t }}</label>
-        {% render 'misc.sort', url: previous_page %}
+                if (!input) return;
+
+                input.value = '';
+                input.focus();
+              "
+            >
+              {% render 'misc.icon', name: 'hgi-cancel-01' %}
+            </button>
+          </fieldset>
+        </form>
       </div>
-    </div>
-    {% if items.size > 0 %}
-      <ul class="list" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
-        {% for product in items %}
-          {% render 'block.product', product: product %}
-        {% endfor %}
-      </ul>
+      <div class="controller">
+        <h4 class="result">
+          {{ message }}
+        </h4>
+        <div class="sort">
+          <label for="sort">{{ 'general.sort.label' | t }}</label>
+          {% render 'misc.sort', url: previous_page %}
+        </div>
+      </div>
+      {% if items.size > 0 %}
+        <ul class="list" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
+          {% for product in items %}
+            {% render 'block.product', product: product %}
+          {% endfor %}
+        </ul>
 
-      {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+        {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
 
-    {% else %}
-      {% assign empty_content = 'search.empty.title' | t %}
-      {% render 'misc.empty', heading: empty_content %}
-    {% endif %}
-  {% endpaginate %}
+      {% else %}
+        {% assign empty_content = 'search.empty.title' | t %}
+        {% render 'misc.empty', heading: empty_content %}
+      {% endif %}
+    {% endpaginate %}
+  </div>
 </div>
 
 {% schema %}
