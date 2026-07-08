@@ -74,9 +74,9 @@ if (!customElements.get("ui-shop-button")) {
     async addToCart(productVariantId, attachedImage, quantity) {
       try {
         const newCart = await youcanjs.cart.addItem({
-          attachedImage,
           productVariantId,
           quantity,
+          fields: { attachedImage },
         });
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
@@ -104,10 +104,11 @@ if (!customElements.get("ui-shop-button")) {
       const formData = new FormData(this.form);
       const fields = Object.fromEntries(formData);
 
+      if (attachedImage) fields.attachedImage = attachedImage;
+
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
           productVariantId,
-          attachedImage,
           quantity,
           fields,
         });
@@ -127,6 +128,8 @@ if (!customElements.get("ui-shop-button")) {
                 ?.parentElement?.setAttribute("error-message", message);
             }
 
+            this.setIsBuyButtonLoading(false);
+
             return;
           })
           .onSkipShippingStep((_, redirectToShippingPage) => {
@@ -139,7 +142,6 @@ if (!customElements.get("ui-shop-button")) {
         console.error(error);
 
         toast.show(error.message, "error");
-      } finally {
         this.setIsBuyButtonLoading(false);
       }
     }

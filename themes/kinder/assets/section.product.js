@@ -34,14 +34,69 @@ if (!customElements.get("ui-product")) {
       this.querySelectorAll("[ui-variant='upload_image_zone'] input[type='file']").forEach((fileInput) => {
         const preview = fileInput.parentElement.nextElementSibling;
 
-        fileInput.addEventListener("change", () => this.renderFilePreview(fileInput));
+        fileInput.addEventListener("change", () => this.onImageUpload(fileInput));
 
         preview?.querySelector("button")?.addEventListener("click", () => {
-          this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));
+          delete fileInput.dataset.attachedImage;
+          this.setAttachedImage(null);
           preview.setAttribute("hidden", "");
           fileInput.value = "";
         });
       });
+    }
+
+    async onImageUpload(fileInput) {
+      delete fileInput.dataset.attachedImage;
+
+      if (!fileInput.files.length) {
+        this.renderFilePreview(fileInput);
+        this.setAttachedImage(null);
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileSizeInMB = file.size / Product.BYTES_IN_KB / Product.KB_IN_MB;
+
+      if (fileSizeInMB > Product.MAXIMUM_FILE_SIZE) {
+        toast?.show(window.errorStrings?.large_file ?? `Max file size is ${Product.MAXIMUM_FILE_SIZE}mb`, "error");
+        fileInput.value = "";
+        this.renderFilePreview(fileInput);
+        this.setAttachedImage(null);
+        return;
+      }
+
+      this.renderFilePreview(fileInput);
+
+      // The cart expects a hosted image link (from youcanjs.product.upload), not a base64 blob.
+      // Block checkout while the upload is in-flight so the item can't be added without the image.
+      this.setUploadingState(true);
+
+      try {
+        const { link } = await youcanjs.product.upload(file);
+
+        fileInput.dataset.attachedImage = link;
+        this.setAttachedImage(link);
+      } catch (error) {
+        console.error(error);
+        toast?.show(error.message, "error");
+        this.setAttachedImage(null);
+      } finally {
+        this.setUploadingState(false);
+      }
+    }
+
+    setUploadingState(isUploading) {
+      this.productForms.forEach((productForm) => {
+        const button = productForm.querySelector('[ui-slot="button"]');
+        if (button) button.disabled = isUploading;
+      });
+      this.querySelectorAll("[data-express-checkout-trigger]").forEach((trigger) => (trigger.disabled = isUploading));
+    }
+
+    setAttachedImage(attachedImage) {
+      this.productForms.forEach((productForm) =>
+        attachedImage ? productForm.setAttribute("attached-image", attachedImage) : productForm.removeAttribute("attached-image"),
+      );
     }
 
     renderFilePreview(fileInput) {
@@ -103,9 +158,9 @@ if (!customElements.get("ui-product")) {
         trigger.disabled = !available;
       });
 
-      const attachedImage = await this.getAttachedImage();
-
-      attachedImage && this.productForms.forEach((productForm) => productForm.setAttribute("attached-image", attachedImage));
+      // Re-apply the already-uploaded image (if any); never clear it here, the upload may still be in-flight.
+      const attachedImage = this.getAttachedImage();
+      if (attachedImage) this.setAttachedImage(attachedImage);
       image && this.updateMainImage(image);
 
       this.currentPrice = price;
@@ -254,24 +309,13 @@ if (!customElements.get("ui-product")) {
       }
     }
 
-    async getAttachedImage() {
+    getAttachedImage() {
       const fileInput = this.variants
         .flatMap((variant) => [...variant.querySelectorAll("input[type='file']")].filter((input) => input.files.length > 0))
         .pop();
 
-      if (!fileInput) return null;
-
-      const file = fileInput.files[0];
-      const fileSizeInKB = file.size / Product.BYTES_IN_KB;
-      const fileSizeInMB = fileSizeInKB / Product.KB_IN_MB;
-
-      if (fileSizeInMB > Product.MAXIMUM_FILE_SIZE) return null;
-
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-      });
+      // Link produced by youcanjs.product.upload when the file was selected (see onImageUpload).
+      return fileInput?.dataset.attachedImage || null;
     }
 
     getBaseName(name) {
