@@ -22,10 +22,51 @@ if (!customElements.get("ui-product")) {
         this.updateSubtotal();
       }
 
+      this.setupImageUploads();
+
       if (!this.productVariants) return;
 
       this.onVariantChanged();
       this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
+    }
+
+    setupImageUploads() {
+      this.querySelectorAll("[ui-variant='upload_image_zone'] input[type='file']").forEach((fileInput) => {
+        const preview = fileInput.parentElement.nextElementSibling;
+
+        fileInput.addEventListener("change", () => this.renderFilePreview(fileInput));
+
+        preview?.querySelector("button")?.addEventListener("click", () => {
+          this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));
+          preview.setAttribute("hidden", "");
+          fileInput.value = "";
+        });
+      });
+    }
+
+    renderFilePreview(fileInput) {
+      const preview = fileInput.parentElement.nextElementSibling;
+      if (!preview) return;
+
+      if (!fileInput.files.length) {
+        preview.setAttribute("hidden", "");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileSizeInKB = file.size / Product.BYTES_IN_KB;
+      const fileSizeInMB = fileSizeInKB / Product.KB_IN_MB;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        preview.removeAttribute("hidden");
+        preview.querySelector("img").src = reader.result;
+        preview.querySelector("img").alt = file.name;
+        preview.querySelector('[ui-slot="file-upload-preview-name"]').textContent = file.name;
+        preview.querySelector('[ui-slot="file-upload-preview-size"]').textContent =
+          fileSizeInMB >= 1 ? `${fileSizeInMB.toFixed(1)}mb` : `${Math.round(fileSizeInKB)}kb`;
+      };
+      reader.readAsDataURL(file);
     }
 
     get selectedOptions() {
@@ -226,32 +267,11 @@ if (!customElements.get("ui-product")) {
 
       if (fileSizeInMB > Product.MAXIMUM_FILE_SIZE) return null;
 
-      return fileInput
-        ? new Promise((resolve) => {
-            const reader = new FileReader();
-
-            reader.onload = () => {
-              const base64 = reader.result;
-
-              const output = fileInput.parentElement.nextElementSibling;
-              output.removeAttribute("hidden");
-
-              output.querySelector("img").src = base64;
-              output.querySelector("img").alt = file.name;
-              output.querySelector('[ui-slot="file-upload-preview-name"]').textContent = file.name;
-              output.querySelector('[ui-slot="file-upload-preview-size"]').textContent =
-                fileSizeInMB >= 1 ? `${fileSizeInMB.toFixed(1)}mb` : `${Math.round(fileSizeInKB)}kb`;
-
-              output.querySelector("button").addEventListener("click", () => {
-                this.productForms.forEach((productForm) => productForm.removeAttribute("attached-image"));
-                output.setAttribute("hidden", "");
-                fileInput.value = "";
-              });
-            };
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(fileInput.files[0]);
-          })
-        : null;
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
     }
 
     getBaseName(name) {
