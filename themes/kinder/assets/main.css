@@ -72,45 +72,19 @@
     --transition-bouncy-slow-effects:450ms cubic-bezier(0.35, 1.65, 0.45, 1);
   }
   :root{
-    --primary-h:var(--brand-hue);
-    --neutral-h:var(--brand-hue);
-    --neutral-c:0;
-    --primary-c:clamp(0, var(--brand-chroma), 0.32);
-    --primary-ch:var(--primary-c) var(--primary-h);
-    --neutral-ch:var(--neutral-c) var(--neutral-h);
-    --_l-max:clamp(0.25, calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55);
-    --_c:var(--primary-c);
-    --primary-l-max:var(--_l-max);
-    --_cs:0.55;
     --error:rgb(197, 2, 32);
     --success:rgb(0, 133, 60);
     --info:rgb(32, 103, 218);
     --warning:rgb(212, 94, 0);
-    --color-primary:oklch(var(--primary-l-max) var(--primary-ch));
+    --_cs:0.55;
     --color-error:oklch(from var(--error) 93% calc(c * var(--_cs)) h);
     --color-success:oklch(from var(--success) 93% calc(c * var(--_cs)) h);
     --color-info:oklch(from var(--info) 93% calc(c * var(--_cs)) h);
     --color-warning:oklch(from var(--warning) 93% calc(c * var(--_cs)) h);
-    --_on:rgb(255, 255, 255);
-    --color-on-primary:var(--_on);
     --color-on-error:var(--error);
     --color-on-success:var(--success);
     --color-on-info:var(--info);
     --color-on-warning:var(--warning);
-    --color-primary-container:oklch(93% calc(var(--primary-c) * var(--_cs)) var(--primary-h));
-    --_ocl:0.18;
-    --color-on-primary-container:oklch(var(--_ocl) var(--primary-ch));
-    --color-background:oklch(98% var(--primary-ch));
-    --color-on-background:oklch(10% var(--primary-ch));
-    --color-surface:var(--color-background);
-    --color-on-surface:var(--color-on-background);
-    --color-surface-container-lowest:oklch(100% var(--primary-ch) / 30%);
-    --color-surface-container-low:oklch(96% var(--primary-ch) / 30%);
-    --color-surface-container:oklch(94% var(--primary-ch) / 30%);
-    --color-surface-container-high:oklch(92% var(--primary-ch) / 30%);
-    --color-surface-container-highest:oklch(90% var(--primary-ch) / 30%);
-    --color-surface-variant:oklch(90% var(--neutral-c) var(--primary-h));
-    --color-on-surface-variant:oklch(30% var(--neutral-c) var(--primary-h));
   }
 
 @supports (color: color(display-p3 0 0 0%)){
@@ -126,41 +100,6 @@
   }
 }
 }
-  :root [data-intensity=as-solid-bg]{
-    --primary-c:clamp(0.01, calc(var(--brand-chroma) * 0.95), 0.36);
-    --_l-min:calc(1 - var(--brand-lightness) + var(--_c) * 0.4);
-    --_c:var(--primary-c);
-    --primary-l-min:var(--_l-min);
-    --_l-clamp:0.88, 0.95;
-    --color-primary:oklch(clamp(var(--primary-l-min), var(--_l-clamp)) var(--primary-ch));
-    --_on-l:clamp(0, var(--brand-lightness), 0.22);
-    --color-on-primary:oklch(var(--_on-l) var(--primary-ch));
-    --color-primary-container:oklch(32% calc(var(--primary-c) * var(--_cs)) var(--primary-h));
-    --_ocl:0.92;
-    --color-background:oklch(6% var(--primary-ch));
-    --color-on-background:oklch(90% var(--primary-ch));
-    --color-surface:var(--color-background);
-    --color-on-surface:var(--color-on-background);
-    --color-surface-container-lowest:oklch(4% var(--primary-ch) / 30%);
-    --color-surface-container-low:oklch(10% var(--primary-ch) / 30%);
-    --color-surface-container:oklch(12% var(--primary-ch) / 30%);
-    --color-surface-container-high:oklch(17% var(--primary-ch) / 30%);
-    --color-surface-container-highest:oklch(22% var(--primary-ch) / 30%);
-    --color-surface-variant:oklch(80% var(--primary-c) var(--primary-h) / 30%);
-    --color-on-surface-variant:oklch(80% var(--primary-ch));
-  }
-  :root{
-  }
-  :root [data-intensity=as-light-bg]{
-    --scc:clamp(0, 0.15, var(--primary-c));
-    --color-surface-container-lowest:oklch(98% var(--scc) var(--primary-h));
-    --color-surface-container-low:oklch(98% var(--scc) var(--primary-h));
-    --color-surface-container:oklch(90% var(--scc) var(--primary-h));
-    --color-surface-container-high:oklch(86% var(--scc) var(--primary-h));
-    --color-surface-container-highest:oklch(82% var(--scc) var(--primary-h));
-    --color-surface-variant:oklch(30% var(--primary-c) var(--primary-h) / 30%);
-    --color-on-surface-variant:oklch(26% var(--primary-ch));
-  }
 }
 @layer components{
   [ui-slot=badge]{
