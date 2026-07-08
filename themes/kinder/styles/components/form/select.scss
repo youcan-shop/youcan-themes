@@ -45,9 +45,7 @@
     height: inherit;
     transition: var(--transition-standard-default-spatial);
     outline: none;
-    background-color: var(--color-surface-container-low);
     box-shadow: 0 0 0 3px transparent;
-    color: var(--color-on-surface-variant);
     font: var(--font-body-md);
     cursor: pointer;
 
@@ -57,8 +55,6 @@
       width: 6px;
       height: 6px;
       transform: translate(-1.5px, -1.5px) rotate(45deg);
-      border-inline-end: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
-      border-block-end: 1.2px solid color-mix(in srgb, var(--color-on-surface) 38%, transparent);
       transition: var(--transition-standard-default-spatial);
     }
 
@@ -70,26 +66,17 @@
     &:focus-within {
       border-color: currentcolor;
       box-shadow: 0 0 0 3px color-mix(in oklab, currentcolor 8%, transparent);
-      color: var(--color-on-surface);
     }
 
     /* Disabled */
     &:disabled {
       border-color: transparent;
-      background-color: var(--color-surface-container);
-      color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
       pointer-events: none;
     }
 
     /* Hover */
     &:hover:not(:disabled, :focus-within) {
       border-color: transparent;
-      background-color: var(--color-surface-container-high);
-      color: var(--color-on-surface);
-
-      &::after {
-        border-color: var(--color-on-surface);
-      }
     }
   }
 
@@ -110,10 +97,7 @@
     max-height: 196px;
     padding: var(--spacing-8);
     transition: var(--transition-expressive-fast-spatial);
-    border: 1px solid var(--color-surface-variant);
     border-radius: clamp(0px, calc(var(--radius-input) * 2), var(--radius-16));
-    background-color: var(--color-background);
-    box-shadow: 0 16px 32px -12px color-mix(in srgb, var(--color-on-background) 8%, transparent);
 
     /* Option */
     [ui-slot="select-option"] {
@@ -132,7 +116,6 @@
         padding-inline-end: var(--spacing-32);
         overflow: hidden;
         transition: var(--transition-standard-default-spatial);
-        color: var(--color-on-background);
         text-overflow: ellipsis;
         white-space: nowrap;
         cursor: pointer;
@@ -159,26 +142,16 @@
             height: 10px;
             inset-inline-end: var(--spacing-8);
             transform: translate(-1.5px, -1.5px) rotate(45deg);
-            border-right: 1.2px solid var(--color-on-surface-variant);
-            border-bottom: 1.2px solid var(--color-on-surface-variant);
           }
 
           &:dir(rtl)::after {
             transform: translate(4px, -1.5px) rotate(45deg);
           }
         }
-
-        &:hover {
-          background-color: var(--color-surface-container);
-        }
       }
 
       &:disabled {
         pointer-events: none;
-
-        & > label {
-          color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
-        }
       }
     }
 
