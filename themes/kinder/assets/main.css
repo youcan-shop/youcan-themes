@@ -71,60 +71,35 @@
     --transition-bouncy-default-effects:300ms cubic-bezier(0.4, 1.55, 0.5, 1);
     --transition-bouncy-slow-effects:450ms cubic-bezier(0.35, 1.65, 0.45, 1);
   }
-  :root,
-  [data-scoped-color]{
+  :root{
     --primary-h:var(--brand-hue);
     --neutral-h:var(--brand-hue);
-    --error-h:25;
-    --success-h:150;
-    --info-h:260;
-    --warning-h:48;
     --neutral-c:0;
     --primary-c:clamp(0, var(--brand-chroma), 0.32);
-    --success-c:0.19;
-    --error-c:0.21;
-    --info-c:0.19;
-    --warning-c:0.19;
     --primary-ch:var(--primary-c) var(--primary-h);
     --neutral-ch:var(--neutral-c) var(--neutral-h);
-    --error-ch:var(--error-c) var(--error-h);
-    --success-ch:var(--success-c) var(--success-h);
-    --info-ch:var(--info-c) var(--info-h);
-    --warning-ch:var(--warning-c) var(--warning-h);
     --_l-max:clamp(0.25, calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55);
     --_c:var(--primary-c);
     --primary-l-max:var(--_l-max);
-    --_c:var(--error-c);
-    --error-l-max:var(--_l-max);
-    --_c:var(--success-c);
-    --success-l-max:var(--_l-max);
-    --_c:var(--info-c);
-    --info-l-max:var(--_l-max);
-    --_c:var(--warning-c);
-    --warning-l-max:var(--_l-max);
+    --_cs:0.55;
+    --error:rgb(197, 2, 32);
+    --success:rgb(0, 133, 60);
+    --info:rgb(32, 103, 218);
+    --warning:rgb(212, 94, 0);
     --color-primary:oklch(var(--primary-l-max) var(--primary-ch));
-    --color-error:oklch(var(--error-l-max) var(--error-ch));
-    --color-success:oklch(var(--success-l-max) var(--success-ch));
-    --color-info:oklch(var(--info-l-max) var(--info-ch));
-    --color-warning:oklch(var(--warning-l-max) var(--warning-ch));
+    --color-error:oklch(from var(--error) 93% calc(c * var(--_cs)) h);
+    --color-success:oklch(from var(--success) 93% calc(c * var(--_cs)) h);
+    --color-info:oklch(from var(--info) 93% calc(c * var(--_cs)) h);
+    --color-warning:oklch(from var(--warning) 93% calc(c * var(--_cs)) h);
     --_on:rgb(255, 255, 255);
     --color-on-primary:var(--_on);
-    --color-on-error:var(--_on);
-    --color-on-success:var(--_on);
-    --color-on-info:var(--_on);
-    --color-on-warning:var(--_on);
-    --_cs:0.55;
+    --color-on-error:var(--error);
+    --color-on-success:var(--success);
+    --color-on-info:var(--info);
+    --color-on-warning:var(--warning);
     --color-primary-container:oklch(93% calc(var(--primary-c) * var(--_cs)) var(--primary-h));
-    --color-error-container:oklch(93% calc(var(--error-c) * var(--_cs)) var(--error-h));
-    --color-success-container:oklch(93% calc(var(--success-c) * var(--_cs)) var(--success-h));
-    --color-info-container:oklch(93% calc(var(--info-c) * var(--_cs)) var(--info-h));
-    --color-warning-container:oklch(93% calc(var(--warning-c) * var(--_cs)) var(--warning-h));
     --_ocl:0.18;
     --color-on-primary-container:oklch(var(--_ocl) var(--primary-ch));
-    --color-on-error-container:oklch(var(--_ocl) var(--error-ch));
-    --color-on-success-container:oklch(var(--_ocl) var(--success-ch));
-    --color-on-info-container:oklch(var(--_ocl) var(--info-ch));
-    --color-on-warning-container:oklch(var(--_ocl) var(--warning-ch));
     --color-background:oklch(98% var(--primary-ch));
     --color-on-background:oklch(10% var(--primary-ch));
     --color-surface:var(--color-background);
@@ -137,37 +112,30 @@
     --color-surface-variant:oklch(90% var(--neutral-c) var(--primary-h));
     --color-on-surface-variant:oklch(30% var(--neutral-c) var(--primary-h));
   }
-  :root [data-intensity=as-solid-bg],
-  [data-scoped-color] [data-intensity=as-solid-bg]{
+
+@supports (color: color(display-p3 0 0 0%)){
+:root{
+    --success:rgb(0, 133, 60);
+    --warning:rgb(212, 94, 0);
+  }
+
+@media (color-gamut: p3){
+:root{
+    --success:color(display-p3 0.11347 0.53297 0.20728);
+    --warning:color(display-p3 0.80079 0.37248 0.01887);
+  }
+}
+}
+  :root [data-intensity=as-solid-bg]{
     --primary-c:clamp(0.01, calc(var(--brand-chroma) * 0.95), 0.36);
     --_l-min:calc(1 - var(--brand-lightness) + var(--_c) * 0.4);
     --_c:var(--primary-c);
     --primary-l-min:var(--_l-min);
-    --_c:var(--error-c);
-    --error-l-min:var(--_l-min);
-    --_c:var(--success-c);
-    --success-l-min:var(--_l-min);
-    --_c:var(--info-c);
-    --info-l-min:var(--_l-min);
-    --_c:var(--warning-c);
-    --warning-l-min:var(--_l-min);
     --_l-clamp:0.88, 0.95;
     --color-primary:oklch(clamp(var(--primary-l-min), var(--_l-clamp)) var(--primary-ch));
-    --color-error:oklch(clamp(var(--error-l-min), var(--_l-clamp)) var(--error-ch));
-    --color-success:oklch(clamp(var(--success-l-min), var(--_l-clamp)) var(--success-ch));
-    --color-info:oklch(clamp(var(--info-l-min), var(--_l-clamp)) var(--info-ch));
-    --color-warning:oklch(clamp(var(--warning-l-min), var(--_l-clamp)) var(--warning-ch));
     --_on-l:clamp(0, var(--brand-lightness), 0.22);
     --color-on-primary:oklch(var(--_on-l) var(--primary-ch));
-    --color-on-error:oklch(var(--_on-l) var(--error-ch));
-    --color-on-success:oklch(var(--_on-l) var(--success-ch));
-    --color-on-info:oklch(var(--_on-l) var(--info-ch));
-    --color-on-warning:oklch(var(--_on-l) var(--warning-ch));
     --color-primary-container:oklch(32% calc(var(--primary-c) * var(--_cs)) var(--primary-h));
-    --color-error-container:oklch(32% calc(var(--error-c) * var(--_cs)) var(--error-h));
-    --color-success-container:oklch(32% calc(var(--success-c) * var(--_cs)) var(--success-h));
-    --color-info-container:oklch(32% calc(var(--info-c) * var(--_cs)) var(--info-h));
-    --color-warning-container:oklch(32% calc(var(--warning-c) * var(--_cs)) var(--warning-h));
     --_ocl:0.92;
     --color-background:oklch(6% var(--primary-ch));
     --color-on-background:oklch(90% var(--primary-ch));
@@ -181,11 +149,9 @@
     --color-surface-variant:oklch(80% var(--primary-c) var(--primary-h) / 30%);
     --color-on-surface-variant:oklch(80% var(--primary-ch));
   }
-  :root,
-  [data-scoped-color]{
+  :root{
   }
-  :root [data-intensity=as-light-bg],
-  [data-scoped-color] [data-intensity=as-light-bg]{
+  :root [data-intensity=as-light-bg]{
     --scc:clamp(0, 0.15, var(--primary-c));
     --color-surface-container-lowest:oklch(98% var(--scc) var(--primary-h));
     --color-surface-container-low:oklch(98% var(--scc) var(--primary-h));
@@ -1368,6 +1334,8 @@
   [ui-slot=hint]{
   }
   [ui-slot=hint][aria-invalid=true]{
+    color:rgb(255, 223, 220);
+    color:color(display-p3 1 0.87169 0.85372);
     color:var(--color-error);
   }
   [ui-slot=hint]{
@@ -1454,6 +1422,8 @@
   }
   [ui-slot=input][aria-invalid=true],
   [ui-slot=input-wrapper][aria-invalid=true]{
+    border-color:rgb(255, 223, 220);
+    border-color:color(display-p3 1 0.87169 0.85372);
     border-color:var(--color-error);
   }
   [ui-slot=input],
@@ -1492,9 +1462,27 @@
   [ui-slot=input]:focus[aria-invalid=true], [ui-slot=input]:has([ui-slot=input]:focus)[aria-invalid=true],
   [ui-slot=input-wrapper]:focus[aria-invalid=true],
   [ui-slot=input-wrapper]:has([ui-slot=input]:focus)[aria-invalid=true]{
+    border-color:rgb(255, 223, 220);
+    border-color:color(display-p3 1 0.87169 0.85372);
     border-color:var(--color-error);
+    outline-color:rgba(255, 223, 220, 0.15);
+  }
+
+@media (color-gamut: p3){
+[ui-slot=input]:focus[aria-invalid=true], [ui-slot=input]:has([ui-slot=input]:focus)[aria-invalid=true],
+  [ui-slot=input-wrapper]:focus[aria-invalid=true],
+  [ui-slot=input-wrapper]:has([ui-slot=input]:focus)[aria-invalid=true]{
+    outline-color:color(display-p3 1 0.87169 0.85372 / 0.15);
+  }
+}
+
+@supports (color: color-mix(in lch, red, blue)){
+[ui-slot=input]:focus[aria-invalid=true], [ui-slot=input]:has([ui-slot=input]:focus)[aria-invalid=true],
+  [ui-slot=input-wrapper]:focus[aria-invalid=true],
+  [ui-slot=input-wrapper]:has([ui-slot=input]:focus)[aria-invalid=true]{
     outline-color:color-mix(in oklab, var(--color-error) 15%, transparent);
   }
+}
   [ui-slot=input],
   [ui-slot=input-wrapper]{
   }
@@ -1943,6 +1931,8 @@
   [ui-slot=textarea]{
   }
   [ui-slot=textarea][aria-invalid=true]{
+    border-color:rgb(255, 223, 220);
+    border-color:color(display-p3 1 0.87169 0.85372);
     border-color:var(--color-error);
   }
   [ui-slot=textarea]{
@@ -1965,9 +1955,23 @@
     outline-color:color-mix(in oklab, currentcolor 10%, transparent);
   }
   [ui-slot=textarea]:focus[aria-invalid=true]{
+    border-color:rgb(255, 223, 220);
+    border-color:color(display-p3 1 0.87169 0.85372);
     border-color:var(--color-error);
+    outline-color:rgba(255, 223, 220, 0.15);
+  }
+
+@media (color-gamut: p3){
+[ui-slot=textarea]:focus[aria-invalid=true]{
+    outline-color:color(display-p3 1 0.87169 0.85372 / 0.15);
+  }
+}
+
+@supports (color: color-mix(in lch, red, blue)){
+[ui-slot=textarea]:focus[aria-invalid=true]{
     outline-color:color-mix(in oklab, var(--color-error) 15%, transparent);
   }
+}
   [ui-slot=textarea]{
   }
   [ui-slot=textarea]:hover:not(:focus):not(:disabled):not([aria-invalid=true]){

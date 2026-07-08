@@ -1,68 +1,49 @@
-:root,
-[data-scoped-color] {
+:root {
   /* Hue */
   --primary-h: var(--brand-hue);
   --neutral-h: var(--brand-hue);
-  --error-h: 25;
-  --success-h: 150;
-  --info-h: 260;
-  --warning-h: 48;
 
   /* Chroma */
   --neutral-c: 0;
   --primary-c: clamp(0, var(--brand-chroma), 0.32);
-  --success-c: 0.19;
-  --error-c: 0.21;
-  --info-c: 0.19;
-  --warning-c: 0.19;
 
   /* Chroma + Hue */
   --primary-ch: var(--primary-c) var(--primary-h);
   --neutral-ch: var(--neutral-c) var(--neutral-h);
-  --error-ch: var(--error-c) var(--error-h);
-  --success-ch: var(--success-c) var(--success-h);
-  --info-ch: var(--info-c) var(--info-h);
-  --warning-ch: var(--warning-c) var(--warning-h);
 
   /* Lightness */
   --_l-max: clamp(0.25, calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55);
   --_c: var(--primary-c);
   --primary-l-max: var(--_l-max);
-  --_c: var(--error-c);
-  --error-l-max: var(--_l-max);
-  --_c: var(--success-c);
-  --success-l-max: var(--_l-max);
-  --_c: var(--info-c);
-  --info-l-max: var(--_l-max);
-  --_c: var(--warning-c);
-  --warning-l-max: var(--_l-max);
+  --_cs: 0.55; /* light-tint chroma scale */
 
-  /* Roles */
+  /* Utility base colors — each a single static seed, brand-independent.
+     Everything below is derived from these with `oklch(from …)`, the same
+     way --bg-color drives --bg-shade-color / --fg-color. */
+  --error: oklch(52% 0.21 25deg);
+  --success: oklch(54% 0.19 150deg);
+  --info: oklch(54% 0.19 260deg);
+  --warning: oklch(62% 0.19 48deg);
+
+  /* Roles — utilities get exactly two variants:
+       --color-*     a light background tint (derived from the seed)
+       --color-on-*  the seed itself: a darker, legible foreground for that tint */
   --color-primary: oklch(var(--primary-l-max) var(--primary-ch));
-  --color-error: oklch(var(--error-l-max) var(--error-ch));
-  --color-success: oklch(var(--success-l-max) var(--success-ch));
-  --color-info: oklch(var(--info-l-max) var(--info-ch));
-  --color-warning: oklch(var(--warning-l-max) var(--warning-ch));
-  --_on: oklch(100% 0 0deg); /* on-(role) */
+  --color-error: oklch(from var(--error) 93% calc(c * var(--_cs)) h);
+  --color-success: oklch(from var(--success) 93% calc(c * var(--_cs)) h);
+  --color-info: oklch(from var(--info) 93% calc(c * var(--_cs)) h);
+  --color-warning: oklch(from var(--warning) 93% calc(c * var(--_cs)) h);
+  --_on: oklch(100% 0 0deg);
   --color-on-primary: var(--_on);
-  --color-on-error: var(--_on);
-  --color-on-success: var(--_on);
-  --color-on-info: var(--_on);
-  --color-on-warning: var(--_on);
+  --color-on-error: var(--error);
+  --color-on-success: var(--success);
+  --color-on-info: var(--info);
+  --color-on-warning: var(--warning);
 
-  /* Containers */
-  --_cs: 0.55; /* chroma scale */
+  /* Primary container (brand-only — utilities use the two roles above) */
   --color-primary-container: oklch(93% calc(var(--primary-c) * var(--_cs)) var(--primary-h));
-  --color-error-container: oklch(93% calc(var(--error-c) * var(--_cs)) var(--error-h));
-  --color-success-container: oklch(93% calc(var(--success-c) * var(--_cs)) var(--success-h));
-  --color-info-container: oklch(93% calc(var(--info-c) * var(--_cs)) var(--info-h));
-  --color-warning-container: oklch(93% calc(var(--warning-c) * var(--_cs)) var(--warning-h));
   --_ocl: 0.18; /* on-container lightness */
   --color-on-primary-container: oklch(var(--_ocl) var(--primary-ch));
-  --color-on-error-container: oklch(var(--_ocl) var(--error-ch));
-  --color-on-success-container: oklch(var(--_ocl) var(--success-ch));
-  --color-on-info-container: oklch(var(--_ocl) var(--info-ch));
-  --color-on-warning-container: oklch(var(--_ocl) var(--warning-ch));
 
   /* Background */
   --color-background: oklch(98% var(--primary-ch));
@@ -90,35 +71,15 @@
     --_l-min: calc(1 - var(--brand-lightness) + var(--_c) * 0.4);
     --_c: var(--primary-c);
     --primary-l-min: var(--_l-min);
-    --_c: var(--error-c);
-    --error-l-min: var(--_l-min);
-    --_c: var(--success-c);
-    --success-l-min: var(--_l-min);
-    --_c: var(--info-c);
-    --info-l-min: var(--_l-min);
-    --_c: var(--warning-c);
-    --warning-l-min: var(--_l-min);
 
-    /* Roles */
+    /* Roles (primary only — utility colors are theme-independent) */
     --_l-clamp: 0.88, 0.95; /* clamp bounds */
     --color-primary: oklch(clamp(var(--primary-l-min), var(--_l-clamp)) var(--primary-ch));
-    --color-error: oklch(clamp(var(--error-l-min), var(--_l-clamp)) var(--error-ch));
-    --color-success: oklch(clamp(var(--success-l-min), var(--_l-clamp)) var(--success-ch));
-    --color-info: oklch(clamp(var(--info-l-min), var(--_l-clamp)) var(--info-ch));
-    --color-warning: oklch(clamp(var(--warning-l-min), var(--_l-clamp)) var(--warning-ch));
     --_on-l: clamp(0, var(--brand-lightness), 0.22); /* on lightness */
     --color-on-primary: oklch(var(--_on-l) var(--primary-ch));
-    --color-on-error: oklch(var(--_on-l) var(--error-ch));
-    --color-on-success: oklch(var(--_on-l) var(--success-ch));
-    --color-on-info: oklch(var(--_on-l) var(--info-ch));
-    --color-on-warning: oklch(var(--_on-l) var(--warning-ch));
 
-    /* Containers */
+    /* Primary container */
     --color-primary-container: oklch(32% calc(var(--primary-c) * var(--_cs)) var(--primary-h));
-    --color-error-container: oklch(32% calc(var(--error-c) * var(--_cs)) var(--error-h));
-    --color-success-container: oklch(32% calc(var(--success-c) * var(--_cs)) var(--success-h));
-    --color-info-container: oklch(32% calc(var(--info-c) * var(--_cs)) var(--info-h));
-    --color-warning-container: oklch(32% calc(var(--warning-c) * var(--_cs)) var(--warning-h));
     --_ocl: 0.92; /* on-container lightness */
 
     /* Background */
