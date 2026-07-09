@@ -9,6 +9,7 @@ if (!customElements.get("ui-product")) {
       super();
 
       this.variants = [...this.querySelectorAll("[ui-variant]")];
+      this.productMedia = this.querySelector('[ui-product="media"]');
       this.productForms = this.querySelectorAll("ui-shop-button");
       this.productVariants = window.productsVariants[this.getAttribute("product-id")];
       this.currentPrice = 0;
@@ -262,11 +263,12 @@ if (!customElements.get("ui-product")) {
     updateMainImage(image_src) {
       if (!this.productMedia) return;
 
-      this.productMedia.querySelectorAll("img").forEach((element, i) => {
-        if (element.src === image_src) {
-          // Add your logic
-        }
-      });
+      const images = this.productMedia.querySelectorAll("img");
+      const index = [...images].findIndex((img) => img.src === image_src);
+
+      if (index !== -1) {
+        this.productMedia.swipe(index);
+      }
     }
 
     disableUnavailableOptions() {
