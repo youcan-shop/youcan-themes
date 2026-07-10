@@ -147,7 +147,15 @@
             {% render 'core.quantity', size: 'sm' %}
           {% endif %}
           {% if settings.enable_quick_add %}
-            {% render 'core.shop-button', mode: 'secondary', icon: settings.quick_add_icon %}
+            {% if product.id %}
+              {% render 'core.shop-button', mode: 'secondary', icon: settings.quick_add_icon %}
+            {% else %}
+              <button ui-slot="button" data-variant="secondary" data-size="lg" aria-disabled="true" disabled>
+                <span ui-slot="button-front">
+                  {{ 'product.inventory_out_of_stock' | t }}
+                </span>
+              </button>
+            {% endif %}
           {% endif %}
         {% endif %}
       </div>

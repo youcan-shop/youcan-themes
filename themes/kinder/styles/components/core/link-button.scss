@@ -20,7 +20,7 @@
   transition: var(--transition-standard-default-spatial);
   transition-property: color, background-size;
   background: linear-gradient(to right, currentcolor, currentcolor) 0 1px / 0 1px no-repeat;
-  color: var(--color-link-button);
+  color: var(--fg-color);
   gap: var(--spacing-4);
   background-position-x: right;
   background-position-y: bottom;
@@ -62,16 +62,8 @@
   }
 
   /* Variant */
-  &[data-variant="gray"] {
-    --color-link-button: var(--color-on-surface-variant);
-  }
-
-  &[data-variant="black"] {
-    --color-link-button: var(--color-on-surface);
-  }
-
   &[data-variant="primary"] {
-    --color-link-button: var(--color-primary);
+    --color-link-button: var(--brand-color);
   }
 
   &[data-variant="error"] {
@@ -81,29 +73,8 @@
   /* Disabled */
   &:disabled,
   &[aria-disabled="true"] {
-    color: color-mix(in srgb, var(--color-on-surface) 38%, transparent);
+    color: color-mix(in srgb, var(--fg-color) 24%, transparent);
     cursor: auto;
     pointer-events: none;
   }
-
-  /* Hover */
-
-  /*
-  &::after {
-    content: "";
-    position: absolute;
-    transition: clip-path 0.3s ease;
-    border-bottom: 1px dashed currentcolor;
-    inset: auto 0 0;
-    clip-path: inset(0 100% 0 0);
-  }
-  
-  &:dir(rtl)::after {
-    clip-path: inset(0 0 0 100%);
-  }
-  
-  &:hover:not(:disabled, [aria-disabled="true"])::after {
-    clip-path: inset(0 0 0 0);
-  }
-  */
 }

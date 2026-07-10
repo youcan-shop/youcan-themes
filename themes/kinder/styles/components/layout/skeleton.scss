@@ -10,10 +10,13 @@
 */
 
 [ui-slot="skeleton"] {
+  --lines-color: color-mix(in srgb, var(--fg-color) 10%, transparent);
+  --shimmer-color: color-mix(in srgb, var(--fg-color) 8%, transparent);
+
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-12);
-  background-color: var(--color-surface-container);
+  background-color: var(--lines-color);
 
   &::before {
     content: "";
@@ -21,12 +24,7 @@
     inset: 0;
     transform: translateX(-100%);
     animation: pulse 1s infinite;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--color-background),
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, var(--shimmer-color), transparent);
   }
 
   &[data-radius="circled"] {
