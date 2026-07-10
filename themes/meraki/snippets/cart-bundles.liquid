@@ -1,0 +1,46 @@
+{% if context == 'drawer' %}
+  <template id="cart-drawer-bundle-group">
+    <div class="cart-bundle-group" ui-context="drawer">
+      <div class="bundle-group-head">
+        <div class="bundle-heading">
+          <span class="bundle-title" ui-slot="title"></span>
+          <span class="bundle-total" ui-slot="total"></span>
+        </div>
+        <button class="remove-bundle-btn" data-type="" ui-slot="remove">
+          <span class="spinner hidden"></span>
+          <span class="remove-icon"><ion-icon name="trash-outline"></ion-icon></span>
+        </button>
+      </div>
+      <div class="bundle-items-list" ui-slot="items"></div>
+    </div>
+  </template>
+
+  <template id="cart-drawer-bundle-item">
+    {% render 'cart-bundle-item' %}
+  </template>
+{% else %}
+  {% if cart.bundles %}
+    {% assign bundle_types = 'single,multi,buyxgety' | split: ',' %}
+    {% for t in bundle_types %}
+      {% assign bundle_type = cart.bundles[t] %}
+      {% for bundle in bundle_type %}
+        <div class="cart-bundle-group" ui-context="cart">
+          <div class="bundle-group-head">
+            <span class="bundle-title">{{ bundle.title }}</span>
+            <button
+              class="remove-bundle-btn"
+              data-type=""
+              onclick="removeBundleItems(this, [{% for bi in bundle.items %}'{{ bi.id }}'{% unless forloop.last %},{% endunless %}{% endfor %}], [{% for bi in bundle.items %}'{{ bi.product_variant_id }}'{% unless forloop.last %},{% endunless %}{% endfor %}])"
+            >
+              <span class="spinner hidden"></span>
+              <span class="remove-icon"><ion-icon name="trash-outline"></ion-icon></span>
+            </button>
+          </div>
+          {% for bundle_item in bundle.items %}
+            {% render 'cart-bundle-item', product: bundle_item %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% endfor %}
+  {% endif %}
+{% endif %}
