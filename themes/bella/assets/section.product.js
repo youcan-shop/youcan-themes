@@ -149,7 +149,12 @@ if (!customElements.get("ui-product")) {
       const fileSizeInKB = file.size / Product.BYTES_IN_KB;
       const fileSizeInMB = fileSizeInKB / Product.KB_IN_MB;
 
-      if (fileSizeInMB > Product.MAXIMUM_FILE_SIZE) return null;
+      if (fileSizeInMB > Product.MAXIMUM_FILE_SIZE) {
+        const message = window.errorStrings.large_file;
+        toast.show(message.replace("[file]", `"${file.name}"`), "error");
+
+        return;
+      }
 
       return fileInput
         ? new Promise((resolve) => {
