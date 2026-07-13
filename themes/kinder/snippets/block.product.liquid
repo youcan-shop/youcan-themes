@@ -89,9 +89,11 @@
         <span class="current-price">
           {{ price | default: 0 | money }}
         </span>
-        <s class="compare-at-price">
-          {{ compare_at_price | default: 0 | money }}
-        </s>
+        {% if compare_at_price %}
+          <s class="compare-at-price">
+            {{ compare_at_price | default: 0 | money }}
+          </s>
+        {% endif %}
       </div>
       <p class="name">
         {% assign placeholder = 'product.title' | t %}
