@@ -121,8 +121,8 @@ if (!customElements.get("ui-shop-button")) {
       try {
         const response = await youcanjs.checkout.placeExpressCheckoutOrder({
           quantity,
-          fields,
-          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId, attachedImage }),
+          fields: { ...fields, ...(attachedImage && { attachedImage }) },
+          ...(bundleId ? { bundleId, isBundle: true } : { productVariantId }),
         });
 
         response

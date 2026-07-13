@@ -1844,7 +1844,8 @@ button[ui-slot=link-button]{
   transition:all 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
   transition:all var(--transition-standard-default-spatial);
   border:1px dashed var(--color-primary);
-  border-radius:var(--radius-input);
+  border-radius:max(0px, min(var(--radius-button), 16px));
+  border-radius:max(0px, min(var(--radius-button), var(--radius-16)));
   background-color:transparent;
   cursor:pointer;
   gap:calc(24px - 4px);
@@ -1900,15 +1901,9 @@ button[ui-slot=link-button]{
   height:32px;
   padding-inline:10px;
   padding-inline:var(--spacing-10);
-  border:1px solid var(--color-surface-variant);
-  border-radius:8px;
-  border-radius:var(--radius-8);
-  background-color:var(--color-background);
+  border:1px solid currentcolor;
+  border-radius:var(--radius-button);
   color:var(--color-on-surface-variant);
-}
-
-[ui-slot=file-upload]:hover{
-  background-color:var(--color-surface-container-high);
 }
 [ui-slot=hint]{
   display:flex;
@@ -2201,8 +2196,8 @@ button[ui-slot=link-button]{
   transition:350ms cubic-bezier(0.42, 1.67, 0.21, 0.9);
   transition:var(--transition-expressive-fast-spatial);
   border:1px solid var(--color-surface-variant);
-  border-radius:clamp(0px, var(--radius-input) * 2, 16px);
-  border-radius:clamp(0px, var(--radius-input) * 2, var(--radius-16));
+  border-radius:clamp(0px, var(--radius-button) * 2, 16px);
+  border-radius:clamp(0px, var(--radius-button) * 2, var(--radius-16));
   background-color:var(--color-background);
   box-shadow:0 16px 32px -12px color-mix(in srgb, var(--color-on-background) 8%, transparent);
 }
@@ -2211,7 +2206,7 @@ button[ui-slot=link-button]{
   width:100%;
   overflow:hidden;
   border:none;
-  border-radius:var(--radius-input);
+  border-radius:var(--radius-button);
   background-color:transparent;
 }
 
@@ -2309,7 +2304,7 @@ button[ui-slot=link-button]{
   gap:var(--spacing-8);
   padding-inline:12px;
   padding-inline:var(--spacing-12);
-  border-radius:calc(var(--radius-input) * 1.2);
+  border-radius:calc(var(--radius-button) * 1.2);
 }
 
 [ui-slot*=select][data-size=md] [ui-slot=select-trigger]{
@@ -2318,7 +2313,7 @@ button[ui-slot=link-button]{
   gap:var(--spacing-8);
   padding-inline:10px;
   padding-inline:var(--spacing-10);
-  border-radius:var(--radius-input);
+  border-radius:var(--radius-button);
 }
 
 [ui-slot*=select][data-size=sm] [ui-slot=select-trigger]{
@@ -2327,7 +2322,7 @@ button[ui-slot=link-button]{
   gap:var(--spacing-6);
   padding-inline:8px;
   padding-inline:var(--spacing-8);
-  border-radius:var(--radius-input);
+  border-radius:var(--radius-button);
 }
 
 [ui-slot*=select]{
