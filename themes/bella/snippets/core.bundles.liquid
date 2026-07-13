@@ -181,12 +181,20 @@
             {% endunless %}
           {% endunless %}
         {% endfor %}
+
+        {% for item in bundle.bundle_products %}
+          {% if item.discount_value %} {% assign is_free = is_free | plus: 1 %} {% endif %}
+        {% endfor %}
+
         {% for item in bundle.bundle_products %}
           {% if item.discount_value %}
+            {% if is_free == 1 %}
+              <span class="plus">+</span>
+            {% endif %}
             <div class="image free">
               {% render 'misc.icon', name: 'hgi-gift' %}
             </div>
-            {% unless forloop.last %}
+            {% unless forloop.last or is_free == 1 %}
               <span class="plus">+</span>
             {% endunless %}
           {% endif %}
