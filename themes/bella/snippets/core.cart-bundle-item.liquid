@@ -1,32 +1,15 @@
 {% comment %}
-  Renders the cart item template (cart page)
+  Renders cart bundle item template (cart page)
 
   Accepts:
   - product: {Object} cart item info
 
   Usage:
-  {% render 'misc-cart-item', product: {...} %}
+  {% render 'core.cart-item', product: {...} %}
 {% endcomment %}
 
-<tr>
-  <td>
-    <ui-cart-remove
-      item="{{ product.id }}"
-      product-variant="{{ product.product_variant_id }}"
-    >
-      <button
-        ui-slot="button"
-        data-variant="primary"
-        data-mode="stroke"
-        data-size="sm"
-        data-as-icon
-        aria-label="delete"
-        ui-cart-item="delete-button"
-      >
-        {% render 'misc.icon', name: 'hgi-cancel-01' %}
-      </button>
-    </ui-cart-remove>
-  </td>
+<tr class="bundle-item">
+  <td></td>
   <td>
     <div class="product">
       <div class="image" ui-cart-item="image">
@@ -74,13 +57,31 @@
     </div>
   </td>
   <td>
-    <span class="price" ui-cart-item="price">{{ product.price | default: 0 | money }}</span>
+    <span
+      class="price"
+      ui-cart-item="price"
+      {% unless product.price %}
+        data-free
+      {% endunless %}
+    >
+      {% if product.price %}
+        {{ product.price | default: 0 | money }}
+      {% else %}
+        {{ 'bundles.free' | t }}
+      {% endif %}
+    </span>
   </td>
   <td>
-    {% render 'core.quantity' %}
+    <span class="quantity" ui-cart-item="quantity">{{ product.quantity }}</span>
   </td>
   <td>
     {% assign subtotal = product.quantity | times: product.price %}
-    <span class="subtotal" ui-cart-item="subtotal">{{ subtotal | money }}</span>
+    <span class="subtotal" ui-cart-item="subtotal">
+      {% if subtotal %}
+        {{ subtotal | money }}
+      {% else %}
+        {{ 'bundles.free' | t }}
+      {% endif %}
+    </span>
   </td>
 </tr>

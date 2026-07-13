@@ -92,6 +92,66 @@
             font: var(--font-title-md);
           }
         }
+
+        .bundle {
+          display: flex;
+          flex-direction: column;
+          gap: var(--spacing-24);
+
+          .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-12);
+
+            .title {
+              font: var(--font-title-md);
+            }
+
+            .price {
+              display: flex;
+              gap: var(--spacing-4);
+
+              .compare-at {
+                opacity: 0.5;
+                text-decoration: line-through;
+              }
+            }
+          }
+
+          .items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-24);
+
+            .product {
+              &:not(:has(.free)) {
+                order: -1;
+              }
+
+              .content {
+                gap: var(--spacing-4);
+
+                .price {
+                  display: flex;
+                  gap: var(--spacing-4);
+                  font: var(--font-body-md);
+
+                  .compare-at {
+                    opacity: 0.5;
+                    text-decoration: line-through;
+                  }
+                }
+
+                .free {
+                  display: flex;
+                  align-items: center;
+                  gap: var(--spacing-4);
+                }
+              }
+            }
+          }
+        }
       }
 
       .summary {

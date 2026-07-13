@@ -5,7 +5,9 @@
 
   Accepts:
   - fields: {Array} Checkout fields
-  - style: {String} Checkout style (default | open-drawer)
+  - style: {String} (Optional) Checkout style (default | open-drawer)
+  - bundle_id: {String} (Optional) Bundle item id
+  - saving_percentage: {Number} (Optional) Saving percentage (bundle offer)
 
   Usage:
   {% render 'core.express-checkout', fields: [...] %}
@@ -224,8 +226,10 @@
     </ui-express-checkout>
 
     <div class="actions">
-      {% render 'core.quantity', size: 'md' %}
-      {% render 'core.shop-button', is_express_checkout: true %}
+      {% unless bundle_id %}
+        {% render 'core.quantity', size: 'md' %}
+      {% endunless %}
+      {% render 'core.shop-button', is_express_checkout: true, bundle_id: bundle_id, saving_percentage: saving_percentage %}
     </div>
   </form>
 {% endif %}

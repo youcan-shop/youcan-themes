@@ -32,8 +32,23 @@
   [dir="rtl"] [ui-section=cart] .core-area table thead th{
     text-align:end;
   }
-  [ui-section=cart] .core-area table tbody tr:not(:last-child){
+  [ui-section=cart] .core-area table tbody tr:not(:last-child):not(.bundle-group):not(.bundle-item){
     border-block-end:1px solid var(--color-surface-variant);
+  }
+  [ui-section=cart] .core-area table tbody tr.bundle-group{
+    font:var(--font-title-md);
+  }
+  [ui-section=cart] .core-area table tbody tr.bundle-group:not(:first-of-type){
+    border-block-start:1px solid var(--color-surface-variant);
+  }
+  [ui-section=cart] .core-area table tbody tr.bundle-group td .price{
+    display:flex;
+    gap:var(--spacing-4);
+  }
+  [ui-section=cart] .core-area table tbody tr.bundle-group td .price .compare-at{
+    opacity:0.5;
+    -webkit-text-decoration:line-through;
+    text-decoration:line-through;
   }
   [ui-section=cart] .core-area table tbody tr td{
     padding:var(--spacing-12);
@@ -45,6 +60,7 @@
     gap:var(--spacing-12);
   }
   [ui-section=cart] .core-area table tbody tr td .product .image{
+    flex-shrink:0;
     width:120px;
     height:120px;
     overflow:hidden;
@@ -58,6 +74,9 @@
     display:grid;
     grid-gap:var(--spacing-4);
     gap:var(--spacing-4);
+  }
+  [ui-section=cart] .core-area table tbody tr td .product .info .title{
+    white-space:normal;
   }
   [ui-section=cart] .core-area table tbody tr td .product .info .variants{
     color:var(--color-on-surface-variant);

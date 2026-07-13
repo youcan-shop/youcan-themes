@@ -1,0 +1,300 @@
+{{ 'core.bundles.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a bundle(s) component
+
+  Accepts:
+  - bundles: {Array} Bundles list
+
+  Usage:
+  {% render 'core-bundles', bundles: [] %}
+{% endcomment %}
+
+{% if product.bundles.single.size %}
+  <div data-bundle="single" {{ block.youcan_attributes }}>
+    {% for bundle in product.bundles.single %}
+      {% if forloop.length > 1 %}
+        <label class="option">
+      {% else %}
+        <div class="option">
+      {% endif %}
+      {% if forloop.length > 1 %}
+        <input
+          ui-slot="radio"
+          type="radio"
+          name="single-bundle"
+          value="{{ bundle.id }}"
+          {% if forloop.first %}
+            checked
+          {% endif %}
+        >
+      {% endif %}
+      <div class="quantity">
+        <span>x{{ bundle.bundle_products.size }}</span>
+      </div>
+      <div class="info">
+        <h3 class="title">{{ bundle.title }}</h3>
+        {% for item in bundle.bundle_products %}
+          {% assign p = item.selected_variant %}
+
+          {% unless p.variations == null or p.variations.default %}
+            <div class="variants">
+              {% for variant in p.variations %}
+                {{ variant[1] }}
+                {% unless forloop.last %},{% endunless %}
+              {% endfor %}
+            </div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+      <div class="price">
+        {% if bundle.compare_price %}
+          <span class="compare-at">{{ bundle.compare_price | money }}</span>
+        {% endif %}
+        <span class="original">{{ bundle.total_price | money }}</span>
+      </div>
+      {% if forloop.length > 1 %}
+        </label>
+      {% else %}
+        </div>
+      {% endif %}
+      {% if forloop.length == 1 %}
+        <div class="total">
+          <span class="label">{{ 'bundles.total' | t }}</span>
+          <div class="value">
+            {% if bundle.compare_price %}
+              <span class="compare-at">{{ bundle.compare_price | money }}</span>
+            {% endif %}
+            <span class="original">{{ bundle.total_price | money }}</span>
+          </div>
+        </div>
+        {% if settings.cart_checkout_type == 'express-checkout' %}
+          {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+        {% else %}
+          {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if product.bundles.single.size > 1 %}
+      {% for bundle in product.bundles.single %}
+        {% if forloop.first %}
+          {% if settings.cart_checkout_type == 'express-checkout' %}
+            {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id %}
+          {% else %}
+            {% render 'core.shop-button', bundle_id: bundle.id %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endif %}
+
+{% for bundle in product.bundles.multi %}
+  <div data-bundle="multiple" {{ block.youcan_attributes }}>
+    <div class="head">
+      <h3 class="title">{{ bundle.title }}</h3>
+      <div class="images">
+        {% for item in bundle.bundle_products %}
+          <div class="image">
+            {% if item.thumbnail %}
+              <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" height="100%" width="100%" loading="lazy">
+            {% else %}
+              {% render 'misc.image-fallback' %}
+            {% endif %}
+          </div>
+          {% unless forloop.last %}
+            <span class="plus">+</span>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+    <hr ui-slot="divider" data-variant="line">
+    <ul class="items">
+      {% for item in bundle.bundle_products %}
+        {% assign p = item.selected_variant %}
+
+        <li class="option">
+          <div class="image">
+            {% unless item.thumbnail == null or item.thumbnail contains '/store-front/images/product-default' %}
+              <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" height="100%" width="100%" loading="lazy">
+            {% else %}
+              {% render 'misc.image-fallback' %}
+            {% endunless %}
+          </div>
+          <div class="info">
+            <h3 class="title">{{ item.product.name }}</h3>
+            {% for item in bundle.bundle_products %}
+              {% assign p = item.selected_variant %}
+
+              {% unless p.variations == null or p.variations.default %}
+                <div class="variants">
+                  {% for variant in p.variations %}
+                    {{ variant[1] }}
+                    {% unless forloop.last %},{% endunless %}
+                  {% endfor %}
+                </div>
+              {% endunless %}
+            {% endfor %}
+          </div>
+          <div class="price">
+            {% if item.discount_value %}
+              <span class="compare-at">{{ p.price | money }}</span>
+            {% endif %}
+            <span class="original">{{ item.price | money }}</span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="total">
+      <span class="label">{{ 'bundles.total' | t }}</span>
+      <div class="value">
+        {% if bundle.compare_price %}
+          <span class="compare-at">{{ bundle.compare_price | money }}</span>
+        {% endif %}
+        <span class="original">{{ bundle.total_price | money }}</span>
+      </div>
+    </div>
+    {% if settings.cart_checkout_type == 'express-checkout' %}
+      {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% else %}
+      {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% endif %}
+  </div>
+{% endfor %}
+
+{% for bundle in product.bundles.buyxgety %}
+  <div data-bundle="buyxgety" {{ block.youcan_attributes }}>
+    <div class="head">
+      <h3 class="title">{{ bundle.title }}</h3>
+      <div class="images">
+        {% for item in bundle.bundle_products %}
+          {% unless item.discount_value %}
+            <div class="image">
+              {% unless item.thumbnail == null or item.thumbnail contains '/store-front/images/product-default' %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" height="100%" width="100%" loading="lazy">
+              {% else %}
+                {% render 'misc.image-fallback' %}
+              {% endunless %}
+            </div>
+            {% unless forloop.last %}
+              <span class="plus">+</span>
+            {% endunless %}
+          {% endunless %}
+        {% endfor %}
+
+        {% for item in bundle.bundle_products %}
+          {% if item.discount_value %} {% assign is_free = is_free | plus: 1 %} {% endif %}
+        {% endfor %}
+
+        {% for item in bundle.bundle_products %}
+          {% if item.discount_value %}
+            {% if is_free == 1 %}
+              <span class="plus">+</span>
+            {% endif %}
+            <div class="image free">
+              {% render 'misc.icon', name: 'hgi-gift' %}
+            </div>
+            {% unless forloop.last or is_free == 1 %}
+              <span class="plus">+</span>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <hr ui-slot="divider" data-variant="line">
+    <ul class="items">
+      {% for item in bundle.bundle_products %}
+        {% assign p = item.selected_variant %}
+
+        {% unless item.discount_value %}
+          <li class="option">
+            <div class="image">
+              {% unless item.thumbnail == null or item.thumbnail contains '/store-front/images/product-default' %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" height="100%" width="100%" loading="lazy">
+              {% else %}
+                {% render 'misc.image-fallback' %}
+              {% endunless %}
+            </div>
+            <div class="info">
+              <h3 class="title">{{ item.product.name }}</h3>
+              {% for item in bundle.bundle_products %}
+                {% assign p = item.selected_variant %}
+
+                {% unless p.variations == null or p.variations.default %}
+                  <div class="variants">
+                    {% for variant in p.variations %}
+                      {{ variant[1] }}
+                      {% unless forloop.last %},{% endunless %}
+                    {% endfor %}
+                  </div>
+                {% endunless %}
+              {% endfor %}
+            </div>
+            <div class="price">
+              {% if item.discount_value %}
+                <span class="compare-at">{{ p.price | money }}</span>
+              {% endif %}
+              <span class="original">{{ item.price | money }}</span>
+            </div>
+          </li>
+        {% endunless %}
+      {% endfor %}
+    </ul>
+    <div class="free-heading">
+      {% render 'misc.icon', name: 'hgi-gift' %}
+      <span>{{ 'bundles.free_gift' | t }}</span>
+    </div>
+    <ul class="items">
+      {% for item in bundle.bundle_products %}
+        {% assign p = item.selected_variant %}
+
+        {% if item.discount_value %}
+          <li class="option">
+            <div class="image">
+              {% unless item.thumbnail == null or item.thumbnail contains '/store-front/images/product-default' %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" height="100%" width="100%" loading="lazy">
+              {% else %}
+                {% render 'misc.image-fallback' %}
+              {% endunless %}
+            </div>
+            <div class="info">
+              <h3 class="title">{{ item.product.name }}</h3>
+              {% for item in bundle.bundle_products %}
+                {% assign p = item.selected_variant %}
+
+                {% unless p.variations == null or p.variations.default %}
+                  <div class="variants">
+                    {% for variant in p.variations %}
+                      {{ variant[1] }}
+                      {% unless forloop.last %},{% endunless %}
+                    {% endfor %}
+                  </div>
+                {% endunless %}
+              {% endfor %}
+            </div>
+            <div class="price">
+              {% if item.discount_value %}
+                <span class="compare-at">{{ p.price | money }}</span>
+              {% endif %}
+              <span class="original" style="text-transform: uppercase;">{{ 'bundles.free' | t }}</span>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div class="total">
+      <span class="label">{{ 'bundles.total' | t }}</span>
+      <div class="value">
+        {% if bundle.compare_price %}
+          <span class="compare-at">{{ bundle.compare_price | money }}</span>
+        {% endif %}
+        <span class="original">{{ bundle.total_price | money }}</span>
+      </div>
+    </div>
+    {% if settings.cart_checkout_type == 'express-checkout' %}
+      {% render 'core.express-checkout', style: 'default', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% else %}
+      {% render 'core.shop-button', bundle_id: bundle.id, saving_percentage: bundle.saving_percentage %}
+    {% endif %}
+  </div>
+{% endfor %}
