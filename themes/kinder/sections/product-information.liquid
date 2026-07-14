@@ -5,11 +5,15 @@
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
 
 <style>
-  #youcan-section--product-information {
+  #youcan-section--{{ section.id }} {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+
+    padding-inline: var(--spacing-16);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
   }
 </style>
 

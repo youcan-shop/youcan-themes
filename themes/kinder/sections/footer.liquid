@@ -10,13 +10,16 @@
 {% endfor %}
 
 <style>
-  #youcan-section--footer {
+  #youcan-section--{{ section.id }} {
     --brand-color: {{ settings.brand_color.hex }};
     --brand-lightness: {{ settings.brand_color.lightness | divided_by: 100.0 }};
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+
+    padding-inline: var(--spacing-16);
+    background-color: var(--bg-color);
   }
 </style>
 

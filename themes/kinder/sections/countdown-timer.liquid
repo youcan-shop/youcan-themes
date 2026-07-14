@@ -2,12 +2,16 @@
 {{ 'section.countdown-timer.js' | asset_url | script_tag_deferred }}
 
 <style>
-  #youcan-section--countdown-timer {
+  #youcan-section--{{ section.id }} {
     --bg-color: {{ section.settings.bg_color.hex }};
     --fg-color: {{ section.settings.fg_color.hex }};
     --timer-bg: {{ section.settings.timer_bg_color.hex }};
     --top-spacing: {{ section.settings.top_spacing }}px;
     --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+
+    padding-inline: var(--spacing-16);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
   }
 </style>
 

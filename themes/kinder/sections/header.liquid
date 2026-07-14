@@ -11,12 +11,41 @@
 {% endif %}
 
 <style>
-  #youcan-section--header {
-  --bg-color: {{ section.settings.bg_color.hex }};
-  --fg-color: {{ section.settings.fg_color.hex }};
-  --top-spacing: {{ section.settings.top_spacing }}px;
-  --bottom-spacing: {{ section.settings.bottom_spacing }}px;
-  --mobile-width: {{ section.settings.logo_mobile_width }}px;}
+    #youcan-section--{{ section.id }} {
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    --mobile-width: {{ section.settings.logo_mobile_width }}px;
+
+    --spring-width-offset: 0px;
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
+    --sheet-background: var(--bg-color);
+
+    padding-inline: var(--spacing-16);
+    transition: transform var(--transition-standard-slow-spatial);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+
+    &:has([ui-layout="header"][aria-hidden="true"]) {
+      transform: translateY(-150%);
+    }
+
+    [ui-slot="button"]:not([data-variant="primary"]) {
+      --button-bg: var(--bg-shade-color) !important;
+      --button-fg: var(--fg-color) !important;
+    }
+
+    [ui-slot="sheet-content"] {
+      color: var(--fg-color);
+    }
+
+    &:has([data-sticky-mode]:not([data-sticky-mode="none"])) {
+      position: sticky;
+      z-index: 50;
+      inset-block-start: var(--spacing-0);
+    }
+  }
 </style>
 
 <div ui-slot="container">
