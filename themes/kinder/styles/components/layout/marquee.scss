@@ -46,9 +46,13 @@ ui-marquee {
     }
   }
 
+  &:dir(rtl) {
+    --marquee-direction: -1;
+  }
+
   @keyframes marquee {
     to {
-      transform: translateX(-50%);
+      transform: translateX(calc(-50% * var(--marquee-direction, 1)));
     }
   }
 }

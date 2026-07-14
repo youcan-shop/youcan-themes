@@ -2042,9 +2042,13 @@
   ui-marquee[data-pause-on-hover]:hover [ui-marquee=track]{
     animation-play-state:paused;
   }
+  [dir="rtl"] ui-marquee{
+    --marquee-direction:-1;
+  }
   @keyframes marquee{
     to{
-      transform:translateX(-50%);
+      transform:translateX(calc(-50% * 1));
+      transform:translateX(calc(-50% * var(--marquee-direction, 1)));
     }
   }
   [ui-slot=skeleton]{
