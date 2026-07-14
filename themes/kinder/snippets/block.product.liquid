@@ -95,18 +95,18 @@
           </s>
         {% endif %}
       </div>
-      <p class="name">
+      <a href="{{ product.url }}" class="name">
         {% assign placeholder = 'product.title' | t %}
         {{ product.name | default: placeholder }}
-      </p>
+      </a>
       <div class="collections">
         {% assign visible_limit = 3 %}
         {% assign total_categories = product.categories | size %}
         {% assign remaining = total_categories | minus: visible_limit %}
         {% for category in product.categories limit: visible_limit %}
-          <span class="category">
+          <a href="/collections/{{ category.slug }}" class="category">
             {{ category.name }}
-          </span>
+          </a>
           {% unless forloop.last and remaining <= 0 %}
             <span>, &nbsp;</span>
           {% endunless %}
