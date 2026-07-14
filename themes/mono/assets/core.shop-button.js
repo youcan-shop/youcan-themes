@@ -106,6 +106,12 @@ if (!customElements.get("ui-shop-button")) {
 
     async addToCart(productVariantId, bundleId, attachedImage, quantity) {
       try {
+        if (bundleId && (await this.bundleExists(bundleId))) {
+          toast.show(window.errorStrings.bundle_exists, "warning");
+
+          return;
+        }
+
         const newCart = await youcanjs.cart.addItem(
           bundleId ? { bundleId, isBundle: true, quantity: 1 } : { quantity, productVariantId, attachedImage },
         );
@@ -227,6 +233,12 @@ if (!customElements.get("ui-shop-button")) {
           addOn.checked = false;
           addOn.dispatchEvent(new Event("change", { bubbles: true }));
         });
+    }
+
+    async bundleExists(bundleId) {
+      const cart = await youcanjs.cart.fetch();
+
+      return cart.items.some((item) => item.extra_fields?.bundle_id === bundleId);
     }
   }
 
