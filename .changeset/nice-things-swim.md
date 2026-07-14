@@ -1,5 +1,0 @@
----
-"kinder": major
----
-
-Release kinder

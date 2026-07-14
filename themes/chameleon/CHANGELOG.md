@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.7.2
+
+### Patch Changes
+
+- 0320aad: Fix attached image issue (express checkout)
+
 ## 4.7.1
 
 ### Patch Changes

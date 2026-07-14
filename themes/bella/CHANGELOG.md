@@ -1,5 +1,16 @@
 # bella
 
+## 1.2.0
+
+### Minor Changes
+
+- 2148b15: Bella > Add bundles support
+
+### Patch Changes
+
+- 0320aad: Fix attached image issue (express checkout)
+- 0320aad: Fix variant image upload
+
 ## 1.1.3
 
 ### Patch Changes
