@@ -4,8 +4,12 @@
     --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.018) c h);
     --sheet-background:var(--bg-color);
     padding-inline:var(--spacing-16);
+    transition:transform var(--transition-standard-slow-spatial);
     background-color:var(--bg-color);
     color:var(--fg-color);
+  }
+  #youcan-section--header:has([ui-layout=header][aria-hidden=true]){
+    transform:translateY(-150%);
   }
   #youcan-section--header [ui-slot=button]:not([data-variant=primary]){
     --button-bg:var(--bg-shade-color) !important;
@@ -45,9 +49,6 @@
   [ui-layout=header][data-shadow=true]{
     border-block-end:none;
     box-shadow:var(--shadow-md);
-  }
-  [ui-layout=header][aria-hidden=true]{
-    transform:translateY(-150%);
   }
   [ui-layout=header][data-header-layout=logo-center-menu-first]{
     grid-template-areas:"menu logo actions";

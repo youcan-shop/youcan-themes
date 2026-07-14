@@ -5,8 +5,13 @@
     --sheet-background: var(--bg-color);
 
     padding-inline: var(--spacing-16);
+    transition: transform var(--transition-standard-slow-spatial);
     background-color: var(--bg-color);
     color: var(--fg-color);
+
+    &:has([ui-layout="header"][aria-hidden="true"]) {
+      transform: translateY(-150%);
+    }
 
     [ui-slot="button"]:not([data-variant="primary"]) {
       --button-bg: var(--bg-shade-color) !important;
@@ -56,10 +61,6 @@
     &[data-shadow="true"] {
       border-block-end: none;
       box-shadow: var(--shadow-md);
-    }
-
-    &[aria-hidden="true"] {
-      transform: translateY(-150%);
     }
 
     &[data-header-layout="logo-center-menu-first"] {
