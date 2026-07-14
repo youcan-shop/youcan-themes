@@ -25,7 +25,7 @@
       {% if section.settings.logo %}
         <img
           src="{{ section.settings.logo.src }}"
-          alt="{{ section.settings.heading | default: store.name }}"
+          alt="{{ section.settings.logo_alt | default: section.settings.heading | default: store.name }}"
           height="80"
           width="80"
           loading="eager"
@@ -171,6 +171,12 @@
       "type": "image_picker",
       "id": "logo",
       "label": "t:common.header.logo"
+    },
+    {
+      "type": "textarea",
+      "id": "logo_alt",
+      "label": "t:common.media.alt.label",
+      "placeholder": "t:common.media.alt.placeholder"
     },
     { "type": "header", "content": "t:common.headers.appearance" },
     { "type": "checkbox", "id": "custom_color", "label": "t:common.custom_color.label", "default": false },

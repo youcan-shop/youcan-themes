@@ -71,7 +71,7 @@
               {% if block.settings.thumbnail %}
                 <img
                   src="{{ block.settings.thumbnail.src }}"
-                  alt="Video {{ forloop.index }}"
+                  alt="{{ block.settings.thumbnail_alt | default: 'Video {{ forloop.index }}' }}"
                   height="100%"
                   width="100%"
                   loading="lazy"
@@ -157,7 +157,13 @@
           "type": "paragraph",
           "content": "t:sections.video_reviews.blocks.video.hint"
         },
-        { "type": "image_picker", "id": "thumbnail", "label": "t:sections.video_reviews.blocks.video.thumbnail_image" }
+        { "type": "image_picker", "id": "thumbnail", "label": "t:sections.video_reviews.blocks.video.thumbnail_image" },
+        {
+          "type": "textarea",
+          "id": "thumbnail_alt",
+          "label": "t:common.media.alt.label",
+          "placeholder": "t:common.media.alt.placeholder"
+        }
       ]
     }
   ]

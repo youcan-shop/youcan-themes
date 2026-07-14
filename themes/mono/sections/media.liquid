@@ -79,7 +79,7 @@
       {% if section.settings.image %}
         <img
           src="{{ section.settings.image.src }}"
-          alt="{{ section.settings.image.alt | default: "Media" }}"
+          alt="{{ section.settings.image_alt | default: section.settings.image.alt | default: "Media" }}"
           height="100%"
           width="100%"
           loading="lazy"
@@ -112,6 +112,13 @@
       "type": "image_picker",
       "id": "image",
       "label": "t:common.media.image",
+      "visible_if": { "setting_id": "type", "value": "image" }
+    },
+    {
+      "type": "textarea",
+      "id": "image_alt",
+      "label": "t:common.media.alt.label",
+      "placeholder": "t:common.media.alt.placeholder",
       "visible_if": { "setting_id": "type", "value": "image" }
     },
     {
