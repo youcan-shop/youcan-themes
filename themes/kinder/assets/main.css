@@ -399,30 +399,60 @@
     opacity:0.5;
     pointer-events:none;
   }
-  [ui-slot=button]{
-  }
   [ui-slot=button]:not(:has([ui-slot=button-front])):active{
     scale:0.98;
+  }
+  [ui-slot=button]:not(:has([ui-slot=button-front])) > *, [ui-slot=button]:has([ui-slot=button-front]) [ui-slot=button-front] > *{
+    transition:opacity 200ms cubic-bezier(0.34, 0.8, 0.34, 1), transform 350ms cubic-bezier(0.27, 1.06, 0.18, 1);
+    transition:opacity var(--transition-standard-default-effects), transform var(--transition-standard-fast-spatial);
   }
   [ui-slot=button]{
   }
   [ui-slot=button][data-loading]:not(:has([ui-slot=button-front])), [ui-slot=button][data-loading]:has([ui-slot=button-front]) [ui-slot=button-front]{
     position:relative;
+    transition:color 200ms cubic-bezier(0.34, 0.8, 0.34, 1);
+    transition:color var(--transition-standard-default-effects);
+    color:transparent;
+  }
+  [ui-slot=button][data-loading]:not(:has([ui-slot=button-front])) > *, [ui-slot=button][data-loading]:has([ui-slot=button-front]) [ui-slot=button-front] > *{
+    transform:translateY(40%);
+    opacity:0;
   }
   [ui-slot=button][data-loading]:not(:has([ui-slot=button-front]))::before, [ui-slot=button][data-loading]:has([ui-slot=button-front]) [ui-slot=button-front]::before{
     content:"";
     position:absolute;
     width:16px;
     height:16px;
-    animation:spin 1s linear infinite;
+    margin-block-start:-8px;
+    margin-inline-start:-8px;
+    animation:spin 1s linear infinite, button-spinner-in 350ms cubic-bezier(0.27, 1.06, 0.18, 1);
+    animation:spin 1s linear infinite, button-spinner-in var(--transition-standard-fast-spatial);
     border:1.5px solid color-mix(in srgb, currentcolor 38%, transparent);
     border-radius:calc(1px * infinity);
     border-radius:var(--radius-rounded);
+    inset-block-start:50%;
+    inset-inline-start:50%;
     border-inline-end-color:transparent;
   }
+
+@supports (color: color-mix(in lch, red, blue)){
+[ui-slot=button][data-loading]:not(:has([ui-slot=button-front]))::before, [ui-slot=button][data-loading]:has([ui-slot=button-front]) [ui-slot=button-front]::before{
+    border:1.5px solid color-mix(in srgb, var(--button-fg, currentcolor) 38%, transparent);
+  }
+}
   @keyframes spin{
     to{
       rotate:360deg;
+    }
+  }
+  @keyframes button-spinner-in{
+    from{
+      transform:translateY(-60%);
+      opacity:0;
+    }
+    to{
+      transform:translateY(0);
+      opacity:1;
     }
   }
   @layer overrides{
