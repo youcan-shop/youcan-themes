@@ -18,14 +18,10 @@
 */
 
 [ui-slot="breadcrumb"] {
-  --separator-arrow-rotate: -45deg;
-  --separator-splash-rotate: 15deg;
-  --separator-arrow-translate: 0;
+  --separator-arrow-rotate: 0;
 
   &:dir(rtl) {
-    --separator-arrow-rotate: 135deg;
-    --separator-splash-rotate: -15deg;
-    --separator-arrow-translate: -4px;
+    --separator-arrow-rotate: 180deg;
   }
 
   /* Group */
@@ -45,6 +41,10 @@
         margin-inline-end: var(--spacing-16);
       }
 
+      i {
+        transform: rotate(var(--separator-arrow-rotate));
+      }
+
       /* Link */
       & > a {
         font: var(--font-label-sm);
@@ -52,6 +52,10 @@
         /* Current */
         &[aria-current="page"] {
           pointer-events: none;
+        }
+
+        i {
+          transform: none;
         }
       }
     }
