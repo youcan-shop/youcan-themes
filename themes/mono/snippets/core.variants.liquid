@@ -121,14 +121,27 @@
           <input type="file" name="{{ unique_name }}" accept="image/png, image/gif, image/jpg, image/jpeg, image/webp">
 
           <div ui-slot="file-upload-icon">
-            <i class="hgi hgi-stroke hgi-cloud-upload"></i>
+            <i class="hgi hgi-stroke hgi-upload-05"></i>
           </div>
           <div ui-slot="file-upload-content">
-            <h4 ui-slot="file-upload-label">{{ 'product.upload_image.label' | t }}</h4>
-            <p ui-slot="file-upload-description">{{ 'product.upload_image.accept' | t }}</p>
+            <h4 ui-slot="file-upload-label">{{ 'product_information.upload_image.label' | t }}</h4>
+            <p ui-slot="file-upload-description">{{ 'product_information.upload_image.accept' | t }}</p>
           </div>
-          <div ui-slot="file-upload-button">{{ 'product.upload_image.trigger' | t }}</div>
+          <div ui-slot="file-upload-button">{{ 'product_information.upload_image.trigger' | t }}</div>
         </label>
+        <div class="upload-output" hidden>
+          <img src="" alt="" width="65" height="65">
+          <button
+            type="button"
+            ui-slot="button"
+            data-mode="3d"
+            data-size="xs"
+            data-as-icon
+            aria-label="Remove"
+          >
+            {% render 'misc.icon', name: 'hgi-delete-02' %}
+          </button>
+        </div>
       {% endif %}
     </div>
   {% endfor %}

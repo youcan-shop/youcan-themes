@@ -1532,9 +1532,9 @@
     transition:all 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
     transition:all var(--transition-standard-default-spatial);
     border:1px dashed color-mix(in srgb, var(--color-on-surface-variant) 38%, transparent);
-    border-radius:12px;
-    border-radius:var(--radius-12);
-    background-color:var(--color-background);
+    border-radius:max(0px, min(var(--radius-input), 16px));
+    border-radius:max(0px, min(var(--radius-input), var(--radius-16)));
+    background-color:var(--color-surface-container-low);
     cursor:pointer;
     gap:calc(24px - 4px);
     gap:calc(var(--spacing-24) - var(--spacing-4));
@@ -1580,9 +1580,8 @@
     padding-inline:10px;
     padding-inline:var(--spacing-10);
     border:1px solid var(--color-surface-variant);
-    border-radius:8px;
-    border-radius:var(--radius-8);
-    background-color:var(--color-background);
+    border-radius:var(--radius-input);
+    background-color:var(--color-surface-container);
     color:var(--color-on-surface-variant);
   }
   [ui-slot=file-upload]:hover{
@@ -1913,11 +1912,10 @@
     padding:2px;
     padding:var(--spacing-2);
     transition:all 0.1s ease-out;
-    border:2px solid var(--color-surface-container-high);
+    border:2px solid var(--color-surface-variant);
     border-radius:calc(1px * infinity);
     border-radius:var(--radius-rounded);
-    background-color:rgb(255, 255, 255);
-    background-color:var(--color-on-primary);
+    background-color:transparent;
     cursor:pointer;
     -webkit-appearance:none;
        -moz-appearance:none;
@@ -1945,11 +1943,6 @@
   }
   [ui-slot=radio]:disabled:not(:checked){
     background-color:var(--color-surface-variant);
-  }
-  [ui-slot=radio]{
-  }
-  [ui-slot=radio]:hover:not(:disabled):not(:checked){
-    border-color:var(--color-surface-container-highest);
   }
   [ui-slot*=select]{
     width:100%;
@@ -2225,8 +2218,8 @@
     transition:all 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
     transition:all var(--transition-standard-default-spatial);
     border:1px solid transparent;
-    border-radius:8px;
-    border-radius:var(--radius-8);
+    border-radius:max(0px, min(var(--radius-input), 16px));
+    border-radius:max(0px, min(var(--radius-input), var(--radius-16)));
     outline:2px solid transparent;
     outline-offset:1px;
     background-color:var(--color-surface-container-low);
