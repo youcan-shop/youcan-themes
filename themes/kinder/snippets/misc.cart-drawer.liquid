@@ -1,0 +1,68 @@
+{{ 'misc.cart-drawer.css' | asset_url | stylesheet_tag }}
+
+{% comment %}
+  Renders a cart drawer
+
+  Usage:
+  {% render 'misc.cart-drawer' %}
+{% endcomment %}
+
+<div ui-slot="sheet-content" id="cart" popover>
+  <div ui-slot="sheet-header">
+    <h2 ui-slot="sheet-title">{{ 'cart.title' | t }}</h2>
+    <button
+      ui-slot="button"
+      data-variant="secondary"
+      data-size="lg"
+      aria-label="Close"
+      popovertarget="cart"
+      data-as-icon
+      data-flip-icon-in-rtl
+    >
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: 'hgi-arrow-right-03', size: 24 %}
+      </span>
+    </button>
+  </div>
+  <div ui-slot="sheet-body">
+    {% render 'core.cart-form' %}
+  </div>
+  <div
+    ui-slot="sheet-footer"
+    {% unless cart.count > 0 %}
+      hidden
+    {% endunless %}
+    ui-cart-drawer="footer"
+  >
+    <div class="footer">
+      <span class="label">{{ 'cart.drawer.total' | t }}</span>
+      <span class="value" ui-cart-item="subtotal">{{ cart.sub_total | default: 0 | money }}</span>
+      <hr ui-slot="divider" data-variant="line">
+      <span class="description">{{ 'cart.drawer.note' | t }}</span>
+    </div>
+    <div class="navigation">
+      <a
+        ui-slot="button"
+        data-variant="primary"
+        data-size="lg"
+        href="{{ cart.cart_submit_url }}"
+      >
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: settings.cart_icon %}
+          {{ 'cart.drawer.actions.checkout' | t }}
+        </span>
+      </a>
+      <a
+        ui-slot="button"
+        data-variant="secondary"
+        data-size="lg"
+        aria-label="Cart"
+        href="/cart"
+      >
+        <span ui-slot="button-front">
+          {{ 'cart.drawer.actions.view_cart' | t }}
+        </span>
+      </a>
+    </div>
+  </div>
+</div>

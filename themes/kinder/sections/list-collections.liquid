@@ -1,0 +1,106 @@
+{{ 'section.list-collections.css' | asset_url | stylesheet_tag }}
+
+<style>
+  #youcan-section--{{ section.id }} {
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+
+    padding-inline: var(--spacing-16);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+  }
+</style>
+
+<div ui-slot="container">
+  <div ui-section="list-collections">
+    {% capture breadcrumb_items %}
+    {{ 'navigation.home' | t }},/|
+    {{ 'navigation.collections' | t }},/collections
+    {% endcapture %}
+
+    {% render 'misc.breadcrumb', items: breadcrumb_items %}
+    <div ui-slot="head">
+      <h1 class="heading">{{ 'navigation.collections' | t }}</h1>
+    </div>
+    <div class="core-area">
+      {% paginate collections by 24 cod %}
+        {% if items.size > 0 %}
+          <ul class="items" style="--nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};">
+            {% for collection in items %}
+              {% render 'block.collection', collection: collection %}
+            {% endfor %}
+          </ul>
+          {% render 'misc.pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+        {% else %}
+          {% assign empty_content = 'single-collection.empty.title' | t %}
+          {% render 'misc.empty', heading: empty_content %}
+        {% endif %}
+      {% endpaginate %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.list_collections.label",
+  "templates": ["list-collections"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "range",
+      "id": "nbr_columns_desktop",
+      "label": "t:common.globals.number_per_column",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

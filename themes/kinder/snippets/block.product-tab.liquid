@@ -1,0 +1,35 @@
+{% comment %}
+  Renders a collection item (Block)
+
+  Accepts:
+  - product: {Object} Item info
+
+  Usage:
+  {% render 'block.product-tab', product: {...} %}
+{% endcomment %}
+
+<li ui-carousel="item" ui-block="product-tab" ui-slot="carousel-item" {{ product.youcan_attributes }}>
+  <a href="/products/{{ product.slug }}" class="media" data-image-ratio="square">
+    {% if product.preview_image %}
+      <img
+        srcset="
+          {{ product.preview_image.medium }} 480w,
+          {{ product.preview_image.large }} 800w,
+          {{ product.preview_image.original }} 1200w
+        "
+        sizes="
+          (max-width: 640px) 50vw,
+          (max-width: 768px) 33vw,
+          (max-width: 1024px) 25vw,
+          33vw
+        "
+        src="{{ product.preview_image.original }}"
+        alt="{{ product.name }}"
+        height="100%"
+        width="100%"
+      >
+    {% else %}
+      {% render 'misc.image-fallback', icon_size: 40 %}
+    {% endif %}
+  </a>
+</li>

@@ -1,0 +1,585 @@
+{{ 'section.product-information.css' | asset_url | stylesheet_tag }}
+
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<style>
+  #youcan-section--{{ section.id }} {
+    --bg-color: {{ section.settings.bg_color.hex }};
+    --fg-color: {{ section.settings.fg_color.hex }};
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+
+    padding-inline: var(--spacing-16);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+  }
+</style>
+
+<div ui-slot="container">
+  <ui-product
+    ui-section="product-information"
+    product-id="{{ product.id }}"
+    data-media-width-desktop="{{ section.settings.media_size }}"
+    data-image-ratio="{{ section.settings.image_ratio }}"
+  >
+    {% for c in product.categories %}
+      {% assign collection_name = c.name %}
+      {% assign collection_slug = c.slug %}
+    {% endfor %}
+
+    {% assign translated_collections = 'navigation.collections' | t %}
+    {% capture breadcrumb_items %}
+    {{ 'navigation.home' | t }},/|
+    {{ collection_name | default: translated_collections }},/collections/{{ collection_slug }}|
+    {{ product.name }},/products/{{ product.slug }}
+    {% endcapture %}
+
+    {% render 'misc.breadcrumb', items: breadcrumb_items %}
+    <div class="core" ui-motion="custom">
+      {% render 'misc.product-media' %}
+      {% render 'misc.product-content' %}
+    </div>
+    {% render 'misc.shop-bar' %}
+  </ui-product>
+</div>
+
+{% if product and product.options.size %}
+  {% javascript %}
+    if (!window.productsVariants["{{ product.id }}"]) {
+      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+    }
+  {% endjavascript %}
+{% endif %}
+
+{% if product %}
+  {% javascript %}
+    const globalProduct = JSON.parse({{ product | json }});
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.Dotshop.pixels.publish('view-content', globalProduct);
+    });
+  {% endjavascript %}
+{% endif %}
+
+{% schema %}
+{
+  "label": "t:sections.product_info.label",
+  "templates": ["product"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "t:common.colors.bg_color",
+      "default": "#fef7ee"
+    },
+    {
+      "type": "color",
+      "id": "fg_color",
+      "label": "t:common.colors.fg_color",
+      "default": "#0E0E0E"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.media"
+    },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "t:sections.product_info.label",
+      "options": [
+        { "label": "t:sections.product_info.gallery_layout.options.full_width_thumbnail", "value": "full_width_thumbnail" },
+        { "label": "t:sections.product_info.gallery_layout.options.full_width_two_thumbnails", "value": "full_width_two_thumbnails" },
+        { "label": "t:sections.product_info.gallery_layout.options.slider_with_thumbnails", "value": "slider_with_thumbnails" }
+      ],
+      "default": "slider_with_thumbnails"
+    },
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "t:sections.product_info.media_size.label",
+      "options": [
+        { "label": "t:sections.product_info.media_size.options.small", "value": "sm" },
+        { "label": "t:sections.product_info.media_size.options.medium", "value": "md" },
+        { "label": "t:sections.product_info.media_size.options.large", "value": "lg" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:common.globals.image_ratio",
+      "options": [
+        { "label": "t:common.layout.ratio.adapt_to_image", "value": "adapt" },
+        { "label": "t:common.layout.ratio.square", "value": "square" },
+        { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
+        { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block_title",
+      "label": "t:sections.product_info.blocks.title.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "title_size",
+          "label": "t:common.globals.size",
+          "options": [
+            { "label": "t:common.layout.size.x_small", "value": "xs" },
+            { "label": "t:common.layout.size.small", "value": "sm" },
+            { "label": "t:common.layout.size.medium", "value": "md" },
+            { "label": "t:common.layout.size.large", "value": "lg" },
+            { "label": "t:common.layout.size.x_large", "value": "xl" }
+          ],
+          "default": "sm"
+        }
+      ]
+    },
+    {
+      "type": "block_statistics",
+      "label": "t:sections.product_info.blocks.statistics_bar.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_inventory",
+          "label": "t:sections.product_info.blocks.statistics_bar.show_inventory",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_discount",
+          "label": "t:sections.product_info.blocks.statistics_bar.show_discount",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "low_inventory_threshold",
+          "label": "t:sections.product_info.blocks.inventory_status.low_inventory_threshold",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        }
+      ]
+    },
+    {
+      "type": "block_rating",
+      "label": "t:sections.product_info.blocks.rating.label",
+      "limit": 1
+    },
+    {
+      "type": "block_price",
+      "label": "t:sections.product_info.blocks.price.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "price_size",
+          "label": "t:common.globals.size",
+          "options": [
+            { "label": "t:common.layout.size.x_small", "value": "xs" },
+            { "label": "t:common.layout.size.small", "value": "sm" },
+            { "label": "t:common.layout.size.medium", "value": "md" },
+            { "label": "t:common.layout.size.large", "value": "lg" },
+            { "label": "t:common.layout.size.x_large", "value": "xl" }
+          ],
+          "default": "lg"
+        }
+      ]
+    },
+    {
+      "type": "block_inventory_status",
+      "label": "t:sections.product_info.blocks.inventory_status.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "low_inventory_threshold",
+          "label": "t:sections.product_info.blocks.inventory_status.low_inventory_threshold",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "checkbox",
+          "id": "show_inventory_count",
+          "label": "t:sections.product_info.blocks.inventory_status.show_inventory_count",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "block_variant_picker",
+      "label": "t:sections.product_info.blocks.variant_picker.label",
+      "limit": 1
+    },
+    {
+      "type": "block_description",
+      "label": "t:sections.product_info.blocks.description.label",
+      "limit": 1
+    },
+    {
+      "type": "block_shop_buttons",
+      "label": "t:sections.product_info.blocks.shop_buttons.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_buy_button",
+          "label": "t:sections.product_info.blocks.shop_buttons.buy_button.show",
+          "default": true
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.product_info.blocks.shop_buttons.buy_button.paragraph"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_subtotal",
+          "label": "t:sections.product_info.blocks.shop_buttons.show_subtotal",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "t:sections.product_info.blocks.shop_buttons.buy_button.label"
+        },
+        {
+          "type": "select",
+          "id": "buy_button_style",
+          "label": "t:common.headers.style",
+          "options": [
+            { "label": "t:sections.product_info.blocks.shop_buttons.buy_button.options.default", "value": "default" },
+            { "label": "t:sections.product_info.blocks.shop_buttons.buy_button.options.open_drawer", "value": "open-drawer" }
+          ],
+          "default": "open-drawer"
+        }
+      ]
+    },
+    {
+      "type": "block_feature_list",
+      "label": "t:sections.product_info.blocks.feature_list.label",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.product_info.blocks.item_1"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_1",
+          "label": "t:sections.product_info.blocks.feature_list.icon",
+          "options": [
+            { "label": "t:common.icons.truck", "value": "hgi-shipping-truck-02" },
+            { "label": "t:common.icons.check_mark", "value": "hgi-tick-02" },
+            { "label": "t:common.icons.alarm", "value": "hgi-alarm-clock" },
+            { "label": "t:common.icons.user", "value": "hgi-user" },
+            { "label": "t:common.icons.dollar", "value": "hgi-dollar-circle" },
+            { "label": "t:common.icons.wallet", "value": " hgi-wallet-01" },
+            { "label": "t:common.icons.setting", "value": "hgi-settings-03" },
+            { "label": "t:common.icons.zap", "value": "hgi-zap" },
+            { "label": "t:common.icons.shield_energy", "value": "hgi-shield-energy" },
+            { "label": "t:common.icons.percentage", "value": "hgi-percent" },
+            { "label": "t:common.icons.gift", "value": "hgi-gift" },
+            { "label": "t:common.icons.battery", "value": "hgi-battery-charging-01" },
+            { "label": "t:common.icons.bell", "value": "hgi-notification-01" },
+            { "label": "t:common.icons.open_book", "value": "hgi-book-open-01" },
+            { "label": "t:common.icons.droplet", "value": "hgi-droplet" },
+            { "label": "t:common.icons.eye", "value": "hgi-view" },
+            { "label": "t:common.icons.glasses", "value": "hgi-glasses" },
+            { "label": "t:common.icons.ruler", "value": "hgi-ruler" },
+            { "label": "t:common.icons.handbag", "value": "hgi-hand-bag-02" },
+            { "label": "t:common.icons.headset", "value": "hgi-headset" },
+            { "label": "t:common.icons.shirt", "value": "hgi-shirt-01" },
+            { "label": "t:common.icons.sparkles", "value": "hgi-sparkles" },
+            { "label": "t:common.icons.smiley_face", "value": "hgi-smile" },
+            { "label": "t:common.icons.smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "t:common.icons.x", "value": "hgi-cancel-01" },
+            { "label": "t:common.icons.shopping_bag", "value": "hgi-shopping-bag-02" },
+            { "label": "t:common.icons.arrow_up_right", "value": "hgi-arrow-up-right-03" },
+            { "label": "t:common.icons.arrow_left", "value": "hgi-arrow-left-01" },
+            { "label": "t:common.icons.arrow_right", "value": "hgi-arrow-right-01" },
+            { "label": "t:common.icons.arrow_up", "value": "hgi-arrow-up-01" },
+            { "label": "t:common.icons.arrow_down", "value": "hgi-arrow-down-01" },
+            { "label": "t:common.icons.filter", "value": "hgi-filter-vertical" },
+            { "label": "t:common.icons.search", "value": "hgi-search-01" },
+            { "label": "t:common.icons.tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-shipping-truck-02"
+        },
+        {
+          "type": "text",
+          "id": "feature_heading_1",
+          "label": "t:sections.product_info.blocks.feature_list.heading",
+          "default": "t:sections.product_info.blocks.feature_list.default"
+        },
+        {
+          "type": "text",
+          "id": "feature_description_1",
+          "label": "t:sections.product_info.blocks.feature_list.description"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.product_info.blocks.item_2"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_2",
+          "label": "t:sections.product_info.blocks.feature_list.icon",
+          "options": [
+            { "label": "t:common.icons.truck", "value": "hgi-shipping-truck-02" },
+            { "label": "t:common.icons.check_mark", "value": "hgi-tick-02" },
+            { "label": "t:common.icons.alarm", "value": "hgi-alarm-clock" },
+            { "label": "t:common.icons.user", "value": "hgi-user" },
+            { "label": "t:common.icons.dollar", "value": "hgi-dollar-circle" },
+            { "label": "t:common.icons.wallet", "value": " hgi-wallet-01" },
+            { "label": "t:common.icons.setting", "value": "hgi-settings-03" },
+            { "label": "t:common.icons.zap", "value": "hgi-zap" },
+            { "label": "t:common.icons.shield_energy", "value": "hgi-shield-energy" },
+            { "label": "t:common.icons.percentage", "value": "hgi-percent" },
+            { "label": "t:common.icons.gift", "value": "hgi-gift" },
+            { "label": "t:common.icons.battery", "value": "hgi-battery-charging-01" },
+            { "label": "t:common.icons.bell", "value": "hgi-notification-01" },
+            { "label": "t:common.icons.open_book", "value": "hgi-book-open-01" },
+            { "label": "t:common.icons.droplet", "value": "hgi-droplet" },
+            { "label": "t:common.icons.eye", "value": "hgi-view" },
+            { "label": "t:common.icons.glasses", "value": "hgi-glasses" },
+            { "label": "t:common.icons.ruler", "value": "hgi-ruler" },
+            { "label": "t:common.icons.handbag", "value": "hgi-hand-bag-02" },
+            { "label": "t:common.icons.headset", "value": "hgi-headset" },
+            { "label": "t:common.icons.shirt", "value": "hgi-shirt-01" },
+            { "label": "t:common.icons.sparkles", "value": "hgi-sparkles" },
+            { "label": "t:common.icons.smiley_face", "value": "hgi-smile" },
+            { "label": "t:common.icons.smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "t:common.icons.x", "value": "hgi-cancel-01" },
+            { "label": "t:common.icons.shopping_bag", "value": "hgi-shopping-bag-02" },
+            { "label": "t:common.icons.arrow_up_right", "value": "hgi-arrow-up-right-03" },
+            { "label": "t:common.icons.arrow_left", "value": "hgi-arrow-left-01" },
+            { "label": "t:common.icons.arrow_right", "value": "hgi-arrow-right-01" },
+            { "label": "t:common.icons.arrow_up", "value": "hgi-arrow-up-01" },
+            { "label": "t:common.icons.arrow_down", "value": "hgi-arrow-down-01" },
+            { "label": "t:common.icons.filter", "value": "hgi-filter-vertical" },
+            { "label": "t:common.icons.search", "value": "hgi-search-01" },
+            { "label": "t:common.icons.tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-droplet"
+        },
+        {
+          "type": "text",
+          "id": "feature_heading_2",
+          "label": "t:sections.product_info.blocks.feature_list.heading",
+          "default": "t:sections.product_info.blocks.feature_list.default"
+        },
+        {
+          "type": "text",
+          "id": "feature_description_2",
+          "label": "t:sections.product_info.blocks.feature_list.description"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.product_info.blocks.item_3"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_3",
+          "label": "t:sections.product_info.blocks.feature_list.icon",
+          "options": [
+            { "label": "t:common.icons.truck", "value": "hgi-shipping-truck-02" },
+            { "label": "t:common.icons.check_mark", "value": "hgi-tick-02" },
+            { "label": "t:common.icons.alarm", "value": "hgi-alarm-clock" },
+            { "label": "t:common.icons.user", "value": "hgi-user" },
+            { "label": "t:common.icons.dollar", "value": "hgi-dollar-circle" },
+            { "label": "t:common.icons.wallet", "value": " hgi-wallet-01" },
+            { "label": "t:common.icons.setting", "value": "hgi-settings-03" },
+            { "label": "t:common.icons.zap", "value": "hgi-zap" },
+            { "label": "t:common.icons.shield_energy", "value": "hgi-shield-energy" },
+            { "label": "t:common.icons.percentage", "value": "hgi-percent" },
+            { "label": "t:common.icons.gift", "value": "hgi-gift" },
+            { "label": "t:common.icons.battery", "value": "hgi-battery-charging-01" },
+            { "label": "t:common.icons.bell", "value": "hgi-notification-01" },
+            { "label": "t:common.icons.open_book", "value": "hgi-book-open-01" },
+            { "label": "t:common.icons.droplet", "value": "hgi-droplet" },
+            { "label": "t:common.icons.eye", "value": "hgi-view" },
+            { "label": "t:common.icons.glasses", "value": "hgi-glasses" },
+            { "label": "t:common.icons.ruler", "value": "hgi-ruler" },
+            { "label": "t:common.icons.handbag", "value": "hgi-hand-bag-02" },
+            { "label": "t:common.icons.headset", "value": "hgi-headset" },
+            { "label": "t:common.icons.shirt", "value": "hgi-shirt-01" },
+            { "label": "t:common.icons.sparkles", "value": "hgi-sparkles" },
+            { "label": "t:common.icons.smiley_face", "value": "hgi-smile" },
+            { "label": "t:common.icons.smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "t:common.icons.x", "value": "hgi-cancel-01" },
+            { "label": "t:common.icons.shopping_bag", "value": "hgi-shopping-bag-02" },
+            { "label": "t:common.icons.arrow_up_right", "value": "hgi-arrow-up-right-03" },
+            { "label": "t:common.icons.arrow_left", "value": "hgi-arrow-left-01" },
+            { "label": "t:common.icons.arrow_right", "value": "hgi-arrow-right-01" },
+            { "label": "t:common.icons.arrow_up", "value": "hgi-arrow-up-01" },
+            { "label": "t:common.icons.arrow_down", "value": "hgi-arrow-down-01" },
+            { "label": "t:common.icons.filter", "value": "hgi-filter-vertical" },
+            { "label": "t:common.icons.search", "value": "hgi-search-01" },
+            { "label": "t:common.icons.tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-glasses"
+        },
+        {
+          "type": "text",
+          "id": "feature_heading_3",
+          "label": "t:sections.product_info.blocks.feature_list.heading"
+        },
+        {
+          "type": "text",
+          "id": "feature_description_3",
+          "label": "t:sections.product_info.blocks.feature_list.description"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.product_info.blocks.item_4"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_4",
+          "label": "t:sections.product_info.blocks.feature_list.icon",
+          "options": [
+            { "label": "t:common.icons.truck", "value": "hgi-shipping-truck-02" },
+            { "label": "t:common.icons.check_mark", "value": "hgi-tick-02" },
+            { "label": "t:common.icons.alarm", "value": "hgi-alarm-clock" },
+            { "label": "t:common.icons.user", "value": "hgi-user" },
+            { "label": "t:common.icons.dollar", "value": "hgi-dollar-circle" },
+            { "label": "t:common.icons.wallet", "value": " hgi-wallet-01" },
+            { "label": "t:common.icons.setting", "value": "hgi-settings-03" },
+            { "label": "t:common.icons.zap", "value": "hgi-zap" },
+            { "label": "t:common.icons.shield_energy", "value": "hgi-shield-energy" },
+            { "label": "t:common.icons.percentage", "value": "hgi-percent" },
+            { "label": "t:common.icons.gift", "value": "hgi-gift" },
+            { "label": "t:common.icons.battery", "value": "hgi-battery-charging-01" },
+            { "label": "t:common.icons.bell", "value": "hgi-notification-01" },
+            { "label": "t:common.icons.open_book", "value": "hgi-book-open-01" },
+            { "label": "t:common.icons.droplet", "value": "hgi-droplet" },
+            { "label": "t:common.icons.eye", "value": "hgi-view" },
+            { "label": "t:common.icons.glasses", "value": "hgi-glasses" },
+            { "label": "t:common.icons.ruler", "value": "hgi-ruler" },
+            { "label": "t:common.icons.handbag", "value": "hgi-hand-bag-02" },
+            { "label": "t:common.icons.headset", "value": "hgi-headset" },
+            { "label": "t:common.icons.shirt", "value": "hgi-shirt-01" },
+            { "label": "t:common.icons.sparkles", "value": "hgi-sparkles" },
+            { "label": "t:common.icons.smiley_face", "value": "hgi-smile" },
+            { "label": "t:common.icons.smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "t:common.icons.x", "value": "hgi-cancel-01" },
+            { "label": "t:common.icons.shopping_bag", "value": "hgi-shopping-bag-02" },
+            { "label": "t:common.icons.arrow_up_right", "value": "hgi-arrow-up-right-03" },
+            { "label": "t:common.icons.arrow_left", "value": "hgi-arrow-left-01" },
+            { "label": "t:common.icons.arrow_right", "value": "hgi-arrow-right-01" },
+            { "label": "t:common.icons.arrow_up", "value": "hgi-arrow-up-01" },
+            { "label": "t:common.icons.arrow_down", "value": "hgi-arrow-down-01" },
+            { "label": "t:common.icons.filter", "value": "hgi-filter-vertical" },
+            { "label": "t:common.icons.search", "value": "hgi-search-01" },
+            { "label": "t:common.icons.tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-settings-03"
+        },
+        {
+          "type": "text",
+          "id": "feature_heading_4",
+          "label": "t:sections.product_info.blocks.feature_list.heading"
+        },
+        {
+          "type": "text",
+          "id": "feature_description_4",
+          "label": "t:sections.product_info.blocks.feature_list.description"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.product_info.blocks.item_5"
+        },
+        {
+          "type": "select",
+          "id": "feature_icon_5",
+          "label": "t:sections.product_info.blocks.feature_list.icon",
+          "options": [
+            { "label": "t:common.icons.truck", "value": "hgi-shipping-truck-02" },
+            { "label": "t:common.icons.check_mark", "value": "hgi-tick-02" },
+            { "label": "t:common.icons.alarm", "value": "hgi-alarm-clock" },
+            { "label": "t:common.icons.user", "value": "hgi-user" },
+            { "label": "t:common.icons.dollar", "value": "hgi-dollar-circle" },
+            { "label": "t:common.icons.wallet", "value": " hgi-wallet-01" },
+            { "label": "t:common.icons.setting", "value": "hgi-settings-03" },
+            { "label": "t:common.icons.zap", "value": "hgi-zap" },
+            { "label": "t:common.icons.shield_energy", "value": "hgi-shield-energy" },
+            { "label": "t:common.icons.percentage", "value": "hgi-percent" },
+            { "label": "t:common.icons.gift", "value": "hgi-gift" },
+            { "label": "t:common.icons.battery", "value": "hgi-battery-charging-01" },
+            { "label": "t:common.icons.bell", "value": "hgi-notification-01" },
+            { "label": "t:common.icons.open_book", "value": "hgi-book-open-01" },
+            { "label": "t:common.icons.droplet", "value": "hgi-droplet" },
+            { "label": "t:common.icons.eye", "value": "hgi-view" },
+            { "label": "t:common.icons.glasses", "value": "hgi-glasses" },
+            { "label": "t:common.icons.ruler", "value": "hgi-ruler" },
+            { "label": "t:common.icons.handbag", "value": "hgi-hand-bag-02" },
+            { "label": "t:common.icons.headset", "value": "hgi-headset" },
+            { "label": "t:common.icons.shirt", "value": "hgi-shirt-01" },
+            { "label": "t:common.icons.sparkles", "value": "hgi-sparkles" },
+            { "label": "t:common.icons.smiley_face", "value": "hgi-smile" },
+            { "label": "t:common.icons.smartphone", "value": "hgi-smart-phone-02" },
+            { "label": "t:common.icons.x", "value": "hgi-cancel-01" },
+            { "label": "t:common.icons.shopping_bag", "value": "hgi-shopping-bag-02" },
+            { "label": "t:common.icons.arrow_up_right", "value": "hgi-arrow-up-right-03" },
+            { "label": "t:common.icons.arrow_left", "value": "hgi-arrow-left-01" },
+            { "label": "t:common.icons.arrow_right", "value": "hgi-arrow-right-01" },
+            { "label": "t:common.icons.arrow_up", "value": "hgi-arrow-up-01" },
+            { "label": "t:common.icons.arrow_down", "value": "hgi-arrow-down-01" },
+            { "label": "t:common.icons.filter", "value": "hgi-filter-vertical" },
+            { "label": "t:common.icons.search", "value": "hgi-search-01" },
+            { "label": "t:common.icons.tag", "value": "hgi-tag-02" }
+          ],
+          "default": "hgi-tag-02"
+        },
+        {
+          "type": "text",
+          "id": "feature_heading_5",
+          "label": "t:sections.product_info.blocks.feature_list.heading"
+        },
+        {
+          "type": "text",
+          "id": "feature_description_5",
+          "label": "t:sections.product_info.blocks.feature_list.description"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

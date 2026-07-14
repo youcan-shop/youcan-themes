@@ -1,0 +1,56 @@
+@layer sections {
+  ui-upsell {
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    flex: 1;
+    gap: var(--spacing-24);
+
+    img {
+      border-radius: var(--radius-20);
+    }
+
+    .head {
+      display: grid;
+      height: fit-content;
+      gap: var(--spacing-12);
+
+      .title {
+        font: var(--font-title-lg);
+      }
+
+      .options {
+        display: flex;
+        gap: var(--spacing-8);
+
+        [ui-slot="button"] {
+          max-width: 300px;
+        }
+
+        [data-variant="secondary"] {
+          --button-fg: var(--fg-color);
+          --button-bg: var(--bg-shade-color);
+        }
+      }
+    }
+
+    .description {
+      padding: var(--spacing-24);
+      border-radius: var(--radius-20);
+      background-color: var(--bg-shade-color);
+    }
+
+    .footer {
+      display: flex;
+      grid-column: 1 / -1;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (width <= 1024px) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{% comment %}
+  Renders a shop button
+
+  Accepts:
+  - product: {Object} Product info
+  - size: {String} (Optional) (lg | md | sm | xs) Button size
+  - mode: {String} (Optional) (primary | secondary) Button mode
+  - as_icon: {Boolean} (Optional) Button style
+  - source: {String} (Optional) Shopping flow (product-form | quick-view)
+  - is_express_checkout: {Boolean} (Optional) Checkout type (express checkout)
+
+  Usage:
+  {% render 'core-product-button', product: {...} %}
+{% endcomment %}
+
+{% assign default_variant = product.selected_or_first_available_variant | default: product.variants[0] %}
+
+<ui-shop-button
+  quantity="1"
+  variant-id="{{ default_variant.id }}"
+  {% if product.isTrackingInventory and default_variant.available == false %}
+    not-available
+  {% endif %}
+  {% if product.skip_to_checkout %}
+    skip-cart
+  {% endif %}
+  {% if source %}
+    source="{{ source }}"
+  {% endif %}
+  {% if is_express_checkout %}
+    checkout-type="express"
+  {% endif %}
+>
+  {% if is_express_checkout %}
+    {% if as_icon %}
+      <a
+        href="{{ product.url }}"
+        ui-slot="button"
+        data-variant="{{ mode | default: 'primary' }}"
+        data-size="{{ size | default: 'lg' }}"
+        data-as-icon
+      >
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: settings.cart_icon %}
+        </span>
+      </a>
+    {% else %}
+      <button
+        ui-slot="button"
+        data-variant="{{ mode | default: 'primary' }}"
+        data-size="{{ size | default: 'lg' }}"
+        {% if as_icon %}
+          data-as-icon
+        {% endif %}
+      >
+        <span ui-slot="button-front">
+          {% render 'misc.icon', name: settings.cart_icon %}
+          <span>{{ 'general.place_order' | t }}</span>
+        </span>
+      </button>
+    {% endif %}
+
+  {% elsif product.skip_to_checkout %}
+    <button
+      ui-slot="button"
+      data-variant="{{ mode | default: 'primary' }}"
+      data-size="{{ size | default: 'lg' }}"
+      {% if as_icon %}
+        data-as-icon
+      {% endif %}
+    >
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: settings.cart_icon %}
+        {% unless as_icon %}
+          <span>{{ 'general.shop_now' | t }}</span>
+        {% endunless %}
+      </span>
+    </button>
+  {% else %}
+    <button
+      ui-slot="button"
+      data-variant="{{  mode | default: "primary" }}"
+      data-size="{{ size | default: 'lg' }}"
+      aria-label="{{ 'general.add_to_cart' | t }}"
+    >
+      <span ui-slot="button-front">
+        {% render 'misc.icon', name: icon | default: 'hgi-shopping-bag-03', size: 24 %}
+        {% unless as_icon %}
+          <span class="label">{{ 'general.add_to_cart' | t }}</span>
+        {% endunless %}
+      </span>
+    </button>
+  {% endif %}
+</ui-shop-button>

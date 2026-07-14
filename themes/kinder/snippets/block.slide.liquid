@@ -1,0 +1,121 @@
+{% comment %}
+  Renders a slide item (Block)
+
+  Accepts:
+    - slide: {Object} Item info
+
+  Usage:
+  {% render 'block.slide' %}
+{% endcomment %}
+
+{% assign overlay_opacity = slide.settings.overlay_opacity | divided_by: 100 %}
+
+<li
+  ui-carousel="item"
+  ui-block="slide"
+  ui-slot="carousel-item"
+  {{ slide.youcan_attributes }}
+  data-alignment="{{ section.settings.mobile_content_alignment }}"
+  style="
+    --slide-bg: {{ slide.settings.slide_bg_color.hex }};
+    --slide-fg: {{ slide.settings.slide_fg_color.hex }};
+  "
+>
+  <div class="slide-wrapper">
+    {% if slide.settings.first_image %}
+      <div class="first-img">
+        <img
+          src="{{ slide.settings.first_image.src }}"
+          alt="first-img"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+    <div
+      class="main-content"
+      style="
+        --fg-color: {{ slide.settings.slide_fg_color.hex }};
+        --bg-color: {{ slide.settings.slide_bg_color.hex }};
+        --content-order: {{ slide.settings.content_order }};
+        --content-image-opacity: {{ slide.settings.content_image_opacity | divided_by: 100 }};
+      "
+    >
+      <div
+        class="content"
+        data-y-alignment="{{ slide.settings.vertical_alignment }}"
+        data-x-alignment="{{ slide.settings.content_alignment }}"
+      >
+        <div ui-slot="head">
+          {% if slide.settings.slide_heading %}
+            <h1 class="heading">{{ slide.settings.slide_heading }}</h1>
+          {% endif %}
+          {% if slide.settings.slide_description %}
+            <p class="description">{{ slide.settings.slide_description }}</p>
+          {% endif %}
+        </div>
+        <div class="actions">
+          {% if slide.settings.first_button_label %}
+            <a
+              ui-slot="button"
+              data-variant="primary"
+              data-size="lg"
+              {% if slide.settings.first_button_link %}
+                href="{{ slide.settings.first_button_link }}"
+              {% endif %}
+            >
+              <span ui-slot="button-front">
+                {{ slide.settings.first_button_label }}
+              </span>
+            </a>
+          {% endif %}
+          {% if slide.settings.second_button_label %}
+            <a
+              ui-slot="button"
+              data-variant="neutral"
+              data-size="lg"
+              {% if slide.settings.second_button_link %}
+                href="{{ slide.settings.second_button_link }}"
+              {% endif %}
+            >
+              {{ slide.settings.second_button_label }}
+              <i class="hgi hgi-stroke hgi-rounded hgi-arrow-right-02"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      {% if slide.settings.desktop_content_image.src or slide.settings.mobile_content_image.src %}
+        <div class="media">
+          <picture>
+            {% if slide.settings.mobile_content_image.src %}
+              <source srcset="{{ slide.settings.mobile_content_image.src }}" media="(max-width: 768px)">
+            {% endif %}
+            {% if slide.settings.desktop_content_image.src %}
+              <source srcset="{{ slide.settings.desktop_content_image.src }}" media="(min-width: 769px)">
+            {% endif %}
+            <img
+              src="{{ slide.settings.desktop_content_image.src | default: slide.settings.mobile_content_image.src }}"
+              alt="content-image"
+              loading="lazy"
+              width="100%"
+              height="100%"
+              loading="lazy"
+            >
+          </picture>
+        </div>
+      {% endif %}
+    </div>
+    {% if slide.settings.second_image %}
+      <div class="first-img">
+        <img
+          src="{{ slide.settings.second_image.src }}"
+          alt="first-img"
+          height="100%"
+          width="100%"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+  </div>
+</li>

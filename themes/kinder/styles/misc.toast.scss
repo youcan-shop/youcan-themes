@@ -1,0 +1,120 @@
+@layer snippets {
+  ui-toast {
+    --bg-color: #fefefe;
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
+    --fg-color: oklch(from var(--bg-color) clamp(0, calc((0.5 - l) * 9999), 1) 0 none);
+
+    inset: auto;
+    display: flex;
+    visibility: hidden;
+    position: fixed;
+    z-index: 50;
+    left: 50%;
+    align-items: center;
+    min-width: 300px;
+    max-width: calc(100vw - var(--spacing-48));
+    padding: var(--spacing-8) var(--spacing-16);
+    padding-inline-start: var(--spacing-12);
+    transform: translateX(-50%);
+    transition: var(--transition-expressive-default-spatial);
+    border: none;
+    border-radius: var(--radius-toast);
+    opacity: 0;
+    background-color: var(--bg-color);
+    box-shadow: var(--shadow-lg);
+    color: var(--fg-color);
+    gap: var(--spacing-16);
+    inset-block-end: -5%;
+
+    &[data-type="success"] {
+      --color-toast: var(--color-success);
+      --color-on-toast: var(--color-on-success);
+
+      [ui-toast="icon"] .hgi-smile {
+        display: block;
+      }
+    }
+
+    &[data-type="error"] {
+      --color-toast: var(--color-error);
+      --color-on-toast: var(--color-on-error);
+
+      [ui-toast="icon"] .hgi-confused {
+        display: block;
+      }
+    }
+
+    &[data-type="info"] {
+      --color-toast: var(--color-info);
+      --color-on-toast: var(--color-on-info);
+
+      [ui-toast="icon"] .hgi-winking {
+        display: block;
+      }
+    }
+
+    &[data-type="warning"] {
+      --color-toast: var(--color-warning);
+      --color-on-toast: var(--color-on-warning);
+
+      [ui-toast="icon"] .hgi-displeased {
+        display: block;
+      }
+    }
+
+    & > hr {
+      width: 1px;
+      height: 16px;
+      border: none;
+      opacity: 0.3;
+      background-color: currentcolor;
+    }
+
+    [ui-toast="icon"] {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      margin-inline: calc(var(--spacing-4) * -1);
+      border-radius: var(--radius-toast);
+      background-color: var(--color-toast);
+      color: var(--color-on-toast);
+      font-size: 18px;
+
+      /* Face is chosen by state — hide all, reveal the matching one below */
+      .hgi {
+        display: none;
+      }
+    }
+
+    [ui-toast="message"] {
+      flex: 2;
+      width: max-content;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    [ui-toast="action"] {
+      border-radius: var(--radius-toast) !important;
+    }
+
+    /* State */
+    &:popover-open {
+      visibility: visible;
+      opacity: 1;
+      inset-block-end: var(--spacing-16);
+      box-shadow: 4px 4px 20px -1px rgb(0 0 0 / 35%);
+
+      @starting-style {
+        visibility: hidden;
+        opacity: 0;
+        inset-block-end: -5%;
+      }
+    }
+
+    @media (width <= 769px) {
+      width: calc(100vw - var(--spacing-48));
+    }
+  }
+}

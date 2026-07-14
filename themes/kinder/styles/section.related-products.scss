@@ -1,0 +1,97 @@
+@layer sections {
+  [ui-section="related-products"] {
+    --gap: var(--spacing-24);
+    --item-size: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-32);
+
+    .items-area {
+      width: 100%;
+
+      [ui-slot="carousel-item"] {
+        height: unset !important;
+      }
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      height: 48px;
+      margin-block-start: var(--spacing-8);
+      gap: var(--spacing-24);
+
+      [ui-slot="button"] {
+        color: var(--fg-color);
+      }
+
+      &:not([data-show-arrows]),
+      &[data-centered-arrows] {
+        justify-content: center;
+      }
+
+      &:has([ui-carousel="arrow-previous"][disabled]):has([ui-carousel="arrow-next"][disabled]) {
+        display: none;
+      }
+
+      .pagination {
+        display: flex;
+        gap: var(--spacing-8);
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+
+        [ui-carousel="marker"] {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          transition: var(--transition-standard-default-spatial);
+          border: none;
+          background-color: transparent;
+          color: var(--controls-fg-color);
+          cursor: pointer;
+
+          &::before {
+            content: "";
+            display: flex;
+            width: 20px;
+            height: 4px;
+            transition: var(--transition-standard-default-spatial);
+            border-radius: var(--radius-rounded);
+            background-color: color-mix(in srgb, currentcolor 38%, transparent);
+          }
+
+          &[aria-hidden="true"] {
+            display: none;
+          }
+
+          &[aria-selected="true"] {
+            &::before {
+              width: inherit;
+              background-color: currentcolor;
+            }
+          }
+        }
+      }
+    }
+
+    @media (width <= 1400px) {
+      --per-page: 3 !important;
+    }
+
+    @media (width <= 1024px) {
+      --per-page: 2 !important;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (width <= 769px) {
+      --per-page: 1 !important;
+    }
+  }
+}

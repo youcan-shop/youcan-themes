@@ -1,0 +1,59 @@
+/* 
+  Component: Radio
+
+  Usage:
+    - <input ui-slot="radio" name="my-radio" type="radio" />
+*/
+
+[ui-slot="radio"] {
+  --radio-size: 24px;
+
+  position: relative;
+  width: var(--radio-size);
+  height: var(--radio-size);
+  padding: var(--spacing-2);
+  transition: all 0.1s ease-out;
+  border: 2px solid oklch(from var(--bg-color) clamp(0, calc((0.5 - l) * 9999), 1) 0 none);
+  border-radius: var(--radius-rounded);
+  background-color: transparent;
+  cursor: pointer;
+  appearance: none;
+
+  /* Dead Area */
+  &::after {
+    content: "";
+    position: absolute;
+    width: calc(var(--radio-size) + 4px);
+    height: calc(var(--radio-size) + 4px);
+    inset-inline-start: -4px;
+    inset-block-start: -4px;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: calc(var(--radio-size) - 12px);
+    height: calc(var(--radio-size) - 12px);
+    margin: auto;
+    transform: scale(0);
+    transform-origin: 50% 50%;
+    transition: transform var(--transition-bouncy-fast-effects);
+    border-radius: 50%;
+    box-shadow: inset 1em 1em oklch(from var(--bg-color) clamp(0, (0.5 - l) * 9999, 1) 0 none);
+  }
+
+  /* Checked */
+  &:checked {
+    border-width: 2px;
+
+    &::before {
+      transform: scale(1);
+    }
+  }
+
+  /* Disabled */
+  &:disabled {
+    pointer-events: none;
+  }
+}

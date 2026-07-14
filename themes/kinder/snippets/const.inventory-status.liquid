@@ -1,0 +1,56 @@
+{% comment %}
+  Renders an inventory status
+
+  Accepts:
+  - count: {Number} Inventory number
+  - threshold: {Number} Inventory threshold
+  - show_count: {Boolean} Toggle inventory count visibility
+
+  Usage:
+  {% render 'const.inventory-status', count: 10, threshold: 24 %}
+{% endcomment %}
+
+<div
+  ui-slot="inventory-status"
+  {% if count == 0 or count == null %}
+    data-status="soldout"
+  {% elsif count > threshold %}
+    data-status="instock"
+  {% else %}
+    data-status="lowstock"
+  {% endif %}
+  data-product-item="inventory"
+  data-threshold="{{ threshold | default: 10 }}"
+  data-style="{{ style | default: 'inline' }}"
+  data-show-count="{{ show_count }}"
+  {{ block.youcan_attributes }}
+>
+  {% unless style == 'inline' %}
+    <span ui-slot="badge-dot"></span>
+  {% endunless %}
+  <span class="value">
+    {% if count == 0 or count == null %}
+      {{ 'product.inventory_out_of_stock' | t }}
+    {% elsif count > threshold %}
+      {% if show_count %}
+        {{ 'product.inventory_in_stock_show_count' | t | replace: '%', count }}
+      {% else %}
+        {{ 'product.inventory_in_stock' | t }}
+      {% endif %}
+    {% else %}
+      {% if show_count %}
+        {{ 'product.inventory_low_stock_show_count' | t | replace: '%', count }}
+      {% else %}
+        {{ 'product.inventory_low_stock' | t }}
+      {% endif %}
+    {% endif %}
+  </span>
+  {% if count == 0 or count == null or threshold == 0 or threshold == blank %}
+    {% assign progress_value = 0 %}
+  {% elsif count > threshold %}
+    {% assign progress_value = 100 %}
+  {% else %}
+    {% assign progress_value = count | times: 100 | divided_by: threshold %}
+  {% endif %}
+  <progress ui-slot="progress-bar" value="{{ progress_value }}" max="100"></progress>
+</div>

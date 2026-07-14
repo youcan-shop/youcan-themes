@@ -1,0 +1,55 @@
+{% comment %}
+  Renders a breadcrumb component
+
+  Accepts:
+  - items: {String} Breadcrumb items
+
+  Usage:
+  {% render 'misc.breadcrumb'%}
+{% endcomment %}
+
+{% assign items_list = items | split: '|' %}
+
+{% if settings.enable_breadcrumbs %}
+  <nav ui-slot="breadcrumb" data-separator="arrow" aria-label="Breadcrumb">
+    <ol ui-slot="breadcrumb-group">
+      {% for item in items_list %}
+        {% assign data = item | split: ',' %}
+        {% if forloop.first %}
+          <li ui-slot="breadcrumb-item">
+            <a
+              ui-slot="link-button"
+              data-size="md"
+              data-as-icon
+              data-flip-icon-in-rtl
+              href="/"
+              {% if forloop.last %}
+                aria-current="page"
+              {% endif %}
+            >
+              {% render 'misc.icon', name: 'hgi-arrow-left-02', size: 20 %}
+            </a>
+          </li>
+        {% endif %}
+
+        <li ui-slot="breadcrumb-item">
+          <a
+            ui-slot="link-button"
+            data-size="md"
+            href="{{ data[1] }}"
+            {% if forloop.last %}
+              aria-current="page"
+            {% endif %}
+          >
+            {{ data[0] }}
+          </a>
+        </li>
+        {% unless forloop.last %}
+          <li ui-slot="breadcrumb-item">
+            {% render 'misc.icon', name: 'hgi-arrow-right-01', size: 20 %}
+          </li>
+        {% endunless %}
+      {% endfor %}
+    </ol>
+  </nav>
+{% endif %}
