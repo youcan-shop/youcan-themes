@@ -63,6 +63,16 @@
               aspect-ratio: var(--media-ratio);
               overflow-y: hidden;
               border-radius: var(--radius-16);
+
+              &:has(ui-image-fallback) {
+                ui-image-fallback {
+                  background-color: var(--bg-shade-color);
+
+                  /* Follow the chosen media ratio, except for "adapt" (auto)
+                     which would collapse an image-less fallback */
+                  aspect-ratio: var(--fallback-ratio, var(--media-ratio));
+                }
+              }
             }
 
             &.markers {
@@ -367,6 +377,7 @@
 
     &[data-image-ratio="adapt"] {
       --media-ratio: auto;
+      --fallback-ratio: 1 / 1;
     }
 
     &[data-image-ratio="square"] {

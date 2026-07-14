@@ -57,6 +57,10 @@
     overflow-y:hidden;
     border-radius:var(--radius-16);
   }
+  [ui-section=product-information] .core .media[data-layout=carousel] [ui-slot=carousel].main-media:has(ui-image-fallback) ui-image-fallback{
+    background-color:var(--bg-shade-color);
+    aspect-ratio:var(--fallback-ratio, var(--media-ratio));
+  }
   [ui-section=product-information] .core .media[data-layout=carousel] [ui-slot=carousel].markers{
     --per-page:4;
     --item-size:85%;
@@ -298,6 +302,7 @@
   }
   [ui-section=product-information][data-image-ratio=adapt]{
     --media-ratio:auto;
+    --fallback-ratio:1 / 1;
   }
   [ui-section=product-information][data-image-ratio=square]{
     --media-ratio:1 / 1;
