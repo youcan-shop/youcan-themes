@@ -103,10 +103,32 @@ if (!customElements.get("ui-carousel")) {
       }
 
       this.markers?.forEach((marker, i) => {
-        marker.setAttribute("aria-selected", currentPage === i);
+        const selected = currentPage === i;
+        marker.setAttribute("aria-selected", selected);
+        if (selected) this.scrollMarkerIntoView(marker);
       });
 
       if (this.arrows.previous && this.arrows.next) this.setArrowsState();
+    }
+
+    // When the markers strip overflows, keep the selected marker visible without scrolling the page.
+    scrollMarkerIntoView(marker) {
+      const container = marker.parentElement;
+      if (!container || container.scrollWidth <= container.clientWidth) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const markerRect = marker.getBoundingClientRect();
+      if (markerRect.left >= containerRect.left && markerRect.right <= containerRect.right) return;
+
+      const delta = markerRect.left + markerRect.width / 2 - (containerRect.left + containerRect.width / 2);
+
+      container.style.scrollSnapType = "none";
+      container.scrollBy({ left: delta, behavior: "smooth" });
+
+      const restoreSnap = () => (container.style.scrollSnapType = "");
+      container.addEventListener("scrollend", restoreSnap, { once: true });
+      clearTimeout(this._snapRestoreTimer);
+      this._snapRestoreTimer = setTimeout(restoreSnap, 600);
     }
 
     updateMarkers() {
