@@ -1,0 +1,51 @@
+@layer sections{
+  ui-upsell{
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+    display:grid;
+    grid-template-columns:1fr 2fr;
+    flex:1;
+    grid-gap:var(--spacing-24);
+    gap:var(--spacing-24);
+  }
+  ui-upsell img{
+    border-radius:var(--radius-20);
+  }
+  ui-upsell .head{
+    display:grid;
+    height:-moz-fit-content;
+    height:fit-content;
+    grid-gap:var(--spacing-12);
+    gap:var(--spacing-12);
+  }
+  ui-upsell .head .title{
+    font:var(--font-title-lg);
+  }
+  ui-upsell .head .options{
+    display:flex;
+    gap:var(--spacing-8);
+  }
+  ui-upsell .head .options [ui-slot=button]{
+    max-width:300px;
+  }
+  ui-upsell .head .options [data-variant=secondary]{
+    --button-fg:var(--fg-color);
+    --button-bg:var(--bg-shade-color);
+  }
+  ui-upsell .description{
+    padding:var(--spacing-24);
+    border-radius:var(--radius-20);
+    background-color:var(--bg-shade-color);
+  }
+  ui-upsell .footer{
+    display:flex;
+    grid-column:1/-1;
+    align-items:center;
+    justify-content:center;
+  }
+  @media (max-width: 1024px){
+    ui-upsell{
+      display:flex;
+      flex-direction:column;
+    }
+  }
+}

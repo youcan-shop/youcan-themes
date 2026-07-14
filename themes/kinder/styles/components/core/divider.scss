@@ -1,0 +1,24 @@
+/* 
+  Component: Divider
+
+  Accepts:
+    - data-variant: {String}: line | line-text | solid-text | content
+
+  Usage:
+    - <hr ui-slot="divider" data-variant="line" />
+    - <div ui-slot="divider" role="separator" data-variant="line-text">OR</div>
+*/
+
+[ui-slot="divider"] {
+  --color-divider: oklch(from var(--bg-color) calc(l - 0.05) c h);
+
+  /* Variant */
+  &[data-variant="line"] {
+    &:is(hr) {
+      width: 100%;
+      height: 1px;
+      border: none;
+      background-color: var(--color-divider);
+    }
+  }
+}

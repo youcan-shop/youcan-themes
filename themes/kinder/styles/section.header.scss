@@ -1,0 +1,214 @@
+@layer sections {
+  [ui-layout="header"] {
+    display: grid;
+    grid-template-areas: "logo menu actions";
+    grid-template-columns: 1fr 4fr 1fr;
+    align-items: center;
+    min-height: 64px;
+    transform: translateY(0%);
+    transition:
+      box-shadow var(--transition-standard-fast-spatial),
+      transform var(--transition-standard-slow-spatial);
+    gap: var(--spacing-16);
+
+    .actions {
+      display: flex;
+      grid-area: actions;
+      flex-shrink: 0;
+      gap: var(--spacing-8);
+
+      .cart-drawer-trigger {
+        [ui-slot="button-front"] {
+          padding-inline-end: var(--spacing-12);
+        }
+
+        [ui-slot="badge"] {
+          border-radius: var(--radius-rounded);
+        }
+      }
+    }
+
+    &[data-shadow="true"] {
+      border-block-end: none;
+      box-shadow: var(--shadow-md);
+    }
+
+    &[data-header-layout="logo-center-menu-first"] {
+      grid-template-areas: "menu logo actions";
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    .logo {
+      grid-area: logo;
+
+      .name {
+        color: var(--brand-color);
+        font: var(--font-heading-sm);
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      a:has(img) {
+        display: flex;
+
+        img {
+          object-fit: contain;
+        }
+      }
+    }
+
+    .links {
+      display: flex;
+      grid-area: menu;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--spacing-32);
+
+      .link {
+        [ui-slot="link-button"] {
+          font: var(--font-label-sm);
+        }
+      }
+    }
+
+    & > .logo,
+    & > .links,
+    & > .actions {
+      display: flex;
+
+      &:nth-of-type(2) {
+        justify-content: center;
+      }
+
+      &:last-child {
+        justify-content: flex-end;
+      }
+    }
+
+    .menu {
+      display: flex;
+      grid-area: menu;
+    }
+
+    &[data-header-layout="logo-first-menu-center"] {
+      grid-template-areas: "logo menu actions";
+      grid-template-columns: auto 4fr auto;
+
+      .links {
+        justify-content: center;
+      }
+    }
+
+    @media (width > 769px) {
+      .menu {
+        display: none;
+      }
+    }
+
+    @media (width <= 769px) {
+      display: grid;
+      grid-template-areas: "menu logo actions" !important;
+      grid-template-columns: auto auto 1fr !important;
+
+      .links {
+        display: none;
+      }
+
+      .logo {
+        display: flex;
+
+        .name {
+          display: inline-block;
+          max-width: 10ch;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        img {
+          width: var(--mobile-width);
+        }
+      }
+
+      .menu {
+        [ui-slot="button"] {
+          aspect-ratio: 1 /1;
+        }
+      }
+
+      .actions {
+        justify-content: flex-end;
+
+        [ui-slot="button"] {
+          aspect-ratio: 1 /1;
+
+          [ui-slot="button-front"] {
+            span {
+              display: none;
+            }
+          }
+        }
+
+        [ui-slot="badge"] {
+          position: absolute;
+          inset-block-start: -10%;
+          inset-inline-end: -10%;
+        }
+      }
+    }
+  }
+
+  #menu {
+    [ui-slot="sheet-header"] {
+      .logo {
+        .name {
+          color: var(--brand-color);
+          font: var(--font-heading-sm);
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    [ui-slot="sheet-body"] {
+      .mobile-links {
+        display: flex;
+        flex-direction: column;
+        padding-block: var(--spacing-16);
+        gap: var(--spacing-14);
+
+        .link {
+          [ui-slot="link-button"] {
+            justify-content: space-between !important;
+            width: 100% !important;
+            height: 40px;
+            font: var(--font-label-md);
+          }
+        }
+      }
+    }
+
+    [ui-slot="sheet-footer"] {
+      grid-template-columns: 1fr !important;
+
+      .social-links {
+        display: grid;
+        padding: var(--spacing-16);
+        padding-block-end: var(--spacing-8);
+        border-radius: var(--radius-8);
+        background-color: oklch(from var(--bg-color) calc(l - 0.02) c h);
+        gap: var(--spacing-8);
+
+        .label {
+          font: var(--font-label-md);
+        }
+
+        .links {
+          display: flex;
+          gap: var(--spacing-4);
+          margin-inline-start: calc(var(--spacing-8) * -1);
+        }
+      }
+    }
+  }
+}

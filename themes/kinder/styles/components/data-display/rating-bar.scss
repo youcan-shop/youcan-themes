@@ -1,0 +1,127 @@
+/* 
+  Component: Rating Bar
+
+  Accepts:
+    - data-variant: {String} basic | group
+
+  Usage:
+    - <div ui-slot="rating-bar" data-variant="group" role="group">
+        <label ui-slot="rating-item">
+          <input type="radio" name="my-rating-bar" value="1" />
+          Star 1 
+        </label>
+        <label ui-slot="rating-item">
+          <input type="radio" name="my-rating-bar" value="2" />
+          Star 2
+        </label>
+      </div>
+*/
+
+[ui-slot="rating-bar"] {
+  --color-active-star: #f7ca4d;
+  --color-inactive: color-mix(in srgb, var(--color-active-star) 20%, transparent);
+
+  display: flex;
+  width: fit-content;
+
+  /* Variant */
+  &[data-variant="basic"] {
+    --icon-size: 32px;
+    --item-size: 56px;
+
+    gap: var(--spacing-8);
+
+    [ui-slot="rating-item"] {
+      padding-inline: var(--spacing-16);
+      border: 1px solid color-mix(in srgb, var(--bg-shade-color) 88%, black);
+      border-radius: var(--radius-12);
+
+      &:not(:has(> svg)) {
+        width: var(--item-size);
+      }
+    }
+  }
+
+  &[data-variant="group"] {
+    --icon-size: 20px;
+    --item-size: 36px;
+
+    border: 1px solid red;
+
+    [ui-slot="rating-item"] {
+      padding-inline: calc(var(--spacing-24) - var(--spacing-4));
+
+      &:not(:last-child) {
+        border-inline-end: 1px solid red;
+      }
+    }
+  }
+
+  /* Style */
+  &[data-style="star"] {
+    --color-active: var(--color-active-star);
+  }
+
+  /* Item */
+  [ui-slot="rating-item"] {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    height: var(--item-size);
+    transition: all var(--transition-standard-default-spatial);
+    color: var(--color-active);
+    cursor: pointer;
+
+    &:not(:has(> svg)) {
+      --color-inactive: red;
+    }
+
+    & > input[type="radio"] {
+      position: absolute;
+      scale: 0;
+      opacity: 0;
+    }
+
+    /* Icon */
+    & > svg {
+      flex-shrink: 0;
+      width: var(--icon-size);
+      height: var(--icon-size);
+    }
+
+    /* Checked */
+    &:has(input[type="radio"]:checked) {
+      color: var(--color-active);
+
+      &:not(:has(> svg)) {
+        background-color: red;
+      }
+
+      & ~ [ui-slot="rating-item"] {
+        color: var(--color-inactive);
+      }
+    }
+
+    /* Hover */
+    &:hover {
+      border-color: transparent;
+      background-color: var(--bg-shade-color);
+    }
+  }
+
+  &:not(:has([ui-slot="rating-item"] > input[type="radio"]:checked)) {
+    [ui-slot="rating-item"] {
+      color: var(--color-inactive);
+    }
+  }
+
+  @media (width <= 769px) {
+    &[data-variant="basic"] {
+      --icon-size: 24px;
+      --item-size: 48px;
+
+      width: 100%;
+    }
+  }
+}

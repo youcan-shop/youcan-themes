@@ -1,0 +1,132 @@
+/* 
+  Component: File Upload
+
+  Usage:
+    - <label ui-slot="file-upload">
+        <input type="file" name="my-file-upload" />
+        <div ui-slot="file-upload-icon">
+          <i class="hgi hgi-stroke hgi-cloud-upload"></i>
+        </div>
+        <div ui-slot="file-upload-content">
+          <h4 ui-slot="file-upload-label">Label</h4>
+          <p ui-slot="file-upload-description">Description</p>
+        </div>
+        <div ui-slot="file-upload-button">Browse File</div>
+      </label>
+*/
+
+[ui-slot="file-upload"] {
+  --upload-area-bg: var(--bg-shade-color);
+  --upload-area-fg: var(--fg-color);
+
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-32);
+  transition: all var(--transition-standard-default-spatial);
+  border: 1px dashed color-mix(in srgb, var(--fg-color) 16%, transparent);
+  border-radius: var(--radius-16);
+  background-color: var(--upload-area-bg);
+  color: var(--upload-area-fg);
+  cursor: pointer;
+  gap: var(--spacing-16);
+
+  input[type="file"] {
+    position: absolute;
+    scale: 0;
+    opacity: 0;
+  }
+
+  /* Icon */
+  [ui-slot="file-upload-icon"] {
+    height: 24px;
+
+    & > i {
+      flex-shrink: 0;
+      font-size: 24px;
+    }
+  }
+
+  /* Content */
+  [ui-slot="file-upload-content"] {
+    display: grid;
+    gap: var(--spacing-6);
+    text-align: center;
+
+    [ui-slot="file-upload-label"] {
+      font: var(--font-body-md);
+    }
+
+    [ui-slot="file-upload-description"] {
+      font: var(--font-body-sm);
+    }
+  }
+
+  /* Button */
+  [ui-slot="file-upload-button"] {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding-inline: var(--spacing-16);
+    border-radius: var(--radius-8);
+    background-color: var(--bg-on-shade-color);
+    color: var(--fg-color);
+    font: var(--font-label-md);
+  }
+}
+
+/* Preview */
+[ui-slot="file-upload-preview"] {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-16);
+  gap: var(--spacing-16);
+
+  [ui-slot="file-upload-preview-thumb"] {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: var(--radius-12);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  [ui-slot="file-upload-preview-info"] {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    overflow: hidden;
+
+    [ui-slot="file-upload-preview-name"] {
+      overflow: hidden;
+      font: var(--font-label-md);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    [ui-slot="file-upload-preview-size"] {
+      color: color-mix(in srgb, var(--fg-color) 50%, transparent);
+      font: var(--font-body-sm);
+    }
+  }
+
+  [ui-slot="file-upload-preview-remove"] {
+    flex-shrink: 0;
+    height: 48px;
+    padding: var(--spacing-6) var(--spacing-12);
+    border-radius: var(--radius-8);
+    background-color: var(--bg-on-shade-color);
+    color: var(--fg-color);
+    font: var(--font-label-sm);
+  }
+}

@@ -1,0 +1,43 @@
+@layer sections {
+  [ui-section="page"] {
+    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-24);
+
+    [ui-slot="alert"] {
+      width: fit-content;
+    }
+
+    &:has(> form) {
+      align-items: center;
+      justify-content: center;
+    }
+
+    & > form {
+      display: grid;
+      gap: var(--spacing-24);
+      width: 100%;
+
+      @media (width >= 769px) {
+        width: 50%;
+      }
+
+      .fields {
+        display: grid;
+        gap: var(--spacing-24);
+
+        fieldset {
+          display: grid;
+          gap: var(--spacing-8);
+
+          [ui-slot="input"],
+          [ui-slot="textarea"] {
+            background-color: var(--bg-shade-color);
+          }
+        }
+      }
+    }
+  }
+}

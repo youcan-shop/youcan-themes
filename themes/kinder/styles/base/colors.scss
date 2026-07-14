@@ -1,0 +1,19 @@
+:root {
+  /* Utility (status) colors — brand-independent static seeds.
+     Each seed drives two roles, the same way --bg-color drives --bg-shade-color:
+       --color-*     a light background tint (derived from the seed)
+       --color-on-*  the seed itself: a darker, legible foreground for that tint */
+  --error: oklch(52% 0.21 25deg);
+  --success: oklch(54% 0.19 150deg);
+  --info: oklch(54% 0.19 260deg);
+  --warning: oklch(62% 0.19 48deg);
+  --_cs: 0.55; /* light-tint chroma scale */
+  --color-error: oklch(from var(--error) 93% calc(c * var(--_cs)) h);
+  --color-success: oklch(from var(--success) 93% calc(c * var(--_cs)) h);
+  --color-info: oklch(from var(--info) 93% calc(c * var(--_cs)) h);
+  --color-warning: oklch(from var(--warning) 93% calc(c * var(--_cs)) h);
+  --color-on-error: var(--error);
+  --color-on-success: var(--success);
+  --color-on-info: var(--info);
+  --color-on-warning: var(--warning);
+}
