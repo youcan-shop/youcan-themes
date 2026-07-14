@@ -51,7 +51,10 @@ if (!customElements.get("ui-carousel")) {
       });
 
       this.slides.forEach((slide, i) => {
-        slide.addEventListener("click", () => this.swipe(i));
+        slide.addEventListener("click", (event) => {
+          if (event.target.closest('a, button, input, select, textarea, label, [ui-slot="button"], ui-quantity')) return;
+          this.swipe(i);
+        });
       });
 
       this.wrapper.addEventListener("scroll", () => this.onScroll());
