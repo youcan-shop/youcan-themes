@@ -68,7 +68,7 @@
           {% endif %}
           <div class="media">
             {% if block.settings.image %}
-              {% assign alt = block.settings.heading | default: 'Slide {{ forloop.index }}' %}
+              {% assign alt = block.settings.image_alt | default: block.settings.heading | default: 'Slide {{ forloop.index }}' %}
 
               <img
                 src="{{ block.settings.image.src }}"
@@ -176,7 +176,13 @@
           "default": "#"
         },
         { "type": "header", "content": "t:common.headers.media" },
-        { "type": "image_picker", "id": "image", "label": "t:common.media.image" }
+        { "type": "image_picker", "id": "image", "label": "t:common.media.image" },
+        {
+          "type": "textarea",
+          "id": "image_alt",
+          "label": "t:common.media.alt.label",
+          "placeholder": "t:common.media.alt.placeholder"
+        }
       ]
     }
   ]

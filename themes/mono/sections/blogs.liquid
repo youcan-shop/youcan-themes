@@ -43,7 +43,7 @@
               {% if block.settings.image %}
                 <img
                   src="{{ block.settings.image.src }}"
-                  alt="{{ title }}"
+                  alt="{{ block.settings.image_alt | default: title }}"
                   height="100%"
                   width="100%"
                   loading="lazy"
@@ -128,7 +128,13 @@
       "settings": [
         { "type": "page", "id": "page", "label": "t:sections.blogs.blocks.page.label" },
         { "type": "header", "content": "t:common.headers.media" },
-        { "type": "image_picker", "id": "image", "label": "t:common.media.image" }
+        { "type": "image_picker", "id": "image", "label": "t:common.media.image" },
+        {
+          "type": "textarea",
+          "id": "image_alt",
+          "label": "t:common.media.alt.label",
+          "placeholder": "t:common.media.alt.placeholder"
+        }
       ]
     }
   ]

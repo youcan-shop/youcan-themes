@@ -79,7 +79,7 @@
                 {% if block.settings.image %}
                   <img
                     src="{{ block.settings.image.src }}"
-                    alt="Testimonial {{ forloop.index }}"
+                    alt="{{ block.settings.image_alt | default: 'Testimonial {{ forloop.index }}' }}"
                     height="100%"
                     width="100%"
                     loading="lazy"
@@ -176,6 +176,13 @@
           "type": "image_picker",
           "id": "image",
           "label": "t:common.media.image",
+          "visible_if": { "setting_id": "content_type", "value": "image" }
+        },
+        {
+          "type": "textarea",
+          "id": "image_alt",
+          "label": "t:common.media.alt.label",
+          "placeholder": "t:common.media.alt.placeholder",
           "visible_if": { "setting_id": "content_type", "value": "image" }
         }
       ]
