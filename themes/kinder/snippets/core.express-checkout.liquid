@@ -16,7 +16,7 @@
 {% assign has_phone_validation = checkout.phone_validation %}
 
 {% if style == 'open-drawer' %}
-  {% assign trigger_variant = product.selected_or_first_available_variant %}
+  {% assign trigger_variant = product.selected_or_first_available_variant | default: product.variants[0] %}
   <button
     ui-slot="button"
     data-variant="primary"
@@ -24,7 +24,7 @@
     type="button"
     popovertarget="express-checkout-{{ product.id }}"
     data-express-checkout-trigger
-    {% if product.trackingInventory and trigger_variant.available == false %}
+    {% if product.isTrackingInventory and trigger_variant.available == false %}
       disabled
     {% endif %}
   >

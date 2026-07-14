@@ -13,12 +13,12 @@
   {% render 'core-product-button', product: {...} %}
 {% endcomment %}
 
-{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign default_variant = product.selected_or_first_available_variant | default: product.variants[0] %}
 
 <ui-shop-button
   quantity="1"
   variant-id="{{ default_variant.id }}"
-  {% if product.trackingInventory and default_variant.available == false %}
+  {% if product.isTrackingInventory and default_variant.available == false %}
     not-available
   {% endif %}
   {% if product.skip_to_checkout %}
