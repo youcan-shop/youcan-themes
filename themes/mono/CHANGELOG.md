@@ -1,5 +1,16 @@
 # bella
 
+## 1.1.0
+
+### Minor Changes
+
+- 37a3212: Mono > add ability to change ALT of all static theme images
+
+### Patch Changes
+
+- 0320aad: Fix attached image issue (express checkout)
+- 0320aad: Fix variant image upload
+
 ## 1.0.1
 
 ### Patch Changes

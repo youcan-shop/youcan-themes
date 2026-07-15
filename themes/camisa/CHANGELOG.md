@@ -1,5 +1,12 @@
 # camisa
 
+## 1.0.2
+
+### Patch Changes
+
+- 0320aad: Fix attached image issue (express checkout)
+- 0320aad: Fix variant image upload
+
 ## 1.0.1
 
 ### Patch Changes
