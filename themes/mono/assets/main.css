@@ -66,7 +66,7 @@
   --info-h:260;
   --warning-h:95;
   --neutral-c:0;
-  --primary-c:max(0, min(var(--brand-chroma), 0.32));
+  --primary-c:clamp(0, var(--brand-chroma), 0.32);
   --success-c:0.19;
   --error-c:0.21;
   --info-c:0.19;
@@ -77,7 +77,7 @@
   --success-ch:var(--success-c) var(--success-h);
   --info-ch:var(--info-c) var(--info-h);
   --warning-ch:var(--warning-c) var(--warning-h);
-  --_l-max:max(0.25, min(calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55));
+  --_l-max:clamp(0.25, calc(var(--brand-lightness) - var(--_c) * 0.5), 0.55);
   --_c:var(--primary-c);
   --primary-l-max:var(--_l-max);
   --_c:var(--error-c);
@@ -128,7 +128,7 @@
 :root .youcan-section:has([data-theme=dark]),
 .youcan-section:has([data-custom-color]) [data-theme=dark],
 .youcan-section:has([data-custom-color]) .youcan-section:has([data-theme=dark]){
-  --primary-c:max(0.01, min(calc(var(--brand-chroma) * 0.95), 0.36));
+  --primary-c:clamp(0.01, calc(var(--brand-chroma) * 0.95), 0.36);
   --_l-min:calc(1 - var(--brand-lightness) + var(--_c) * 0.4);
   --_c:var(--primary-c);
   --primary-l-min:var(--_l-min);
@@ -146,7 +146,7 @@
   --color-success:oklch(clamp(var(--success-l-min), var(--_l-clamp)) var(--success-ch));
   --color-info:oklch(clamp(var(--info-l-min), var(--_l-clamp)) var(--info-ch));
   --color-warning:oklch(clamp(var(--warning-l-min), var(--_l-clamp)) var(--warning-ch));
-  --_on-l:max(0, min(var(--brand-lightness), 0.22));
+  --_on-l:clamp(0, var(--brand-lightness), 0.22);
   --color-on-primary:oklch(var(--_on-l) var(--primary-ch));
   --color-on-error:oklch(var(--_on-l) var(--error-ch));
   --color-on-success:oklch(var(--_on-l) var(--success-ch));
@@ -1844,8 +1844,8 @@ button[ui-slot=link-button]{
   transition:all 500ms cubic-bezier(0.27, 1.06, 0.18, 1);
   transition:all var(--transition-standard-default-spatial);
   border:1px dashed var(--color-primary);
-  border-radius:max(0px, min(var(--radius-button), 16px));
-  border-radius:max(0px, min(var(--radius-button), var(--radius-16)));
+  border-radius:clamp(0px, var(--radius-button), 16px);
+  border-radius:clamp(0px, var(--radius-button), var(--radius-16));
   background-color:transparent;
   cursor:pointer;
   gap:calc(24px - 4px);
