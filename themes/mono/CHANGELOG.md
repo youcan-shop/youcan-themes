@@ -1,5 +1,12 @@
 # bella
 
+## 1.1.1
+
+### Patch Changes
+
+- 0e724c0: Mono > testimonials > fix default alt value
+- fec93e4: Mono > Add some missing translation
+
 ## 1.1.0
 
 ### Minor Changes
