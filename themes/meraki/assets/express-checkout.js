@@ -1,11 +1,12 @@
-async function placeOrder() {
-  const expressCheckoutForm = document.querySelector('#express-checkout-form');
+async function placeOrder(button) {
+  const expressCheckoutForm = (button && button.closest('form')) || document.querySelector('#express-checkout-form');
 
   let fields = Object.fromEntries(new FormData(expressCheckoutForm));
 
   load('#loading__checkout');
   try {
     const productVariantId = document.getElementById('variantId')?.value;
+    const bundleId = document.querySelector('[data-bundle] input[type="checkbox"]:checked')?.value;
     const quantity = document.getElementById('quantity')?.value || 1;
     const attachedImage = document.querySelector('#yc-upload-link')?.value;
 
@@ -13,14 +14,18 @@ async function placeOrder() {
       fields = { ...fields, attachedImage };
     }
 
-    const response = await youcanjs.checkout.placeExpressCheckoutOrder({ productVariantId, quantity, fields });
+    const response = await youcanjs.checkout.placeExpressCheckoutOrder({
+      quantity,
+      fields,
+      ...(bundleId ? { bundleId, isBundle: true } : { productVariantId }),
+    });
 
     response
       .onSuccess((data, redirectToThankyouPage) => {
         redirectToThankyouPage();
       })
       .onValidationErr((err) => {
-        const form = document.querySelector('#express-checkout-form');
+        const form = expressCheckoutForm;
         const formFields = Object.keys(err.meta.fields);
 
         if (!form || !formFields) return;
