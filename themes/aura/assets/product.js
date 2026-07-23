@@ -594,12 +594,33 @@ function goToCheckoutStep(close = false) {
   showSelectedQuantity();
 }
 
+function setupBundles(parentSection) {
+  const bundleCheckboxes = parentSection.querySelectorAll('[data-bundle] input[type="checkbox"]');
+
+  if (!bundleCheckboxes.length) return;
+
+  bundleCheckboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+      bundleCheckboxes.forEach((cb) => {
+        if (cb !== checkbox) cb.checked = false;
+      });
+
+      const bundleIdInput = parentSection.querySelector('#bundleId');
+      if (bundleIdInput) {
+        bundleIdInput.value = checkbox.checked ? checkbox.value : '';
+      }
+    });
+  });
+}
+
 function setup() {
   const singleProductSections = document.querySelectorAll('.yc-single-product');
 
   if (!singleProductSections || typeof defaultVariant === 'undefined' ) return;
 
   singleProductSections.forEach((section) => {
+    setupBundles(section);
+
     const productDetails = section.querySelector('.product-options');
     const variant = defaultVariant;
 

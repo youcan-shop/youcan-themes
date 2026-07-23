@@ -1,3 +1,5 @@
+let LATEST_CART = null;
+
 async function addToCart(snippetId) {
   const parentSection = document.querySelector(`#s-${snippetId}`);
   const variantId = parentSection.querySelector(`#variantId`)?.value || undefined;
@@ -30,7 +32,6 @@ async function addToCart(snippetId) {
 
     if (response.error) throw new Error(response.error);
 
-    updateCartCount(response.count);
     await updateCartDrawer();
 
     stopLoad('#loading__cart');
@@ -48,10 +49,49 @@ async function addToCart(snippetId) {
       return;
     }
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     stopLoad('#loading__cart');
+    notify(err.message, 'error');
+  }
+}
+
+async function addBundleToCart(snippetId) {
+  const parentSection = document.querySelector(`#s-${snippetId}`);
+  const bundleId = parentSection.querySelector('[data-bundle] input[type="checkbox"]:checked')?.value;
+  const quantity = 1;
+
+  if (!bundleId) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.select_bundle, 'warning');
+  }
+
+  const cartItems = Array.isArray(LATEST_CART?.items) ? LATEST_CART.items : [];
+  const isBundleAlreadyInCart = cartItems.some(
+    (item) => item.extra_fields?.is_bundle_item && item.extra_fields?.bundle_id === bundleId,
+  );
+
+  if (isBundleAlreadyInCart) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.bundle_already_added, 'warning');
+  }
+
+  try {
+    requestAnimationFrame(() => {
+      load('#loading__bundle-cart');
+    });
+
+    const response = await youcanjs.cart.addItem({ bundleId, isBundle: true, quantity });
+
+    if (response.error) throw new Error(response.error);
+
+    await updateCartDrawer();
+
+    stopLoad('#loading__bundle-cart');
+
+    notify(CART_DRAWER_TRANSLATION.bundle_added, 'success');
+    toggleCartDrawer();
+  } catch (err) {
+    stopLoad('#loading__bundle-cart');
     notify(err.message, 'error');
   }
 }
@@ -64,11 +104,39 @@ async function attachRemoveItemListeners() {
 
       if (cartItemId && productVariantId) {
         await removeCartItem(cartItemId, productVariantId);
-        await updateCartDrawer();
-        updateCartCount(-1, true);
       }
     }),
   );
+}
+
+function attachBundleRemoveListeners() {
+  document.querySelectorAll('.remove-bundle-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const itemIds = (btn.getAttribute('data-bundle-item-ids') || '').split(',').map((s) => s.trim()).filter(Boolean);
+      const variantIds = (btn.getAttribute('data-bundle-variant-ids') || '').split(',').map((s) => s.trim()).filter(Boolean);
+
+      if (!itemIds.length) return;
+
+      const spinner = btn.querySelector('.spinner');
+      const removeText = btn.querySelector('.remove-text');
+      btn.disabled = true;
+      spinner?.classList.remove('hidden');
+      removeText?.classList.add('hidden');
+
+      try {
+        for (let i = 0; i < itemIds.length; i++) {
+          await youcanjs.cart.removeItem({ cartItemId: itemIds[i], productVariantId: variantIds[i] });
+        }
+
+        await updateCartDrawer();
+      } catch (error) {
+        btn.disabled = false;
+        spinner?.classList.add('hidden');
+        removeText?.classList.remove('hidden');
+        notify(error.message, 'error');
+      }
+    });
+  });
 }
 
 async function removeCartItem(cartItemId, productVariantId) {
@@ -188,6 +256,8 @@ async function updateCartDrawer() {
 
   try {
     const cartData = await youcanjs.cart.fetch();
+    LATEST_CART = cartData;
+    updateCartCount(cartData.count);
 
     document.querySelector('.cart-drawer__close').addEventListener('click', toggleCartDrawer);
 
@@ -207,11 +277,29 @@ async function updateCartDrawer() {
 
     cartDrawerContent.innerHTML += headerContainer;
 
-    // Check if the cart has items
-    if (cartData.count > 0) {
+    // Partition items into regular and bundle groups via extra_fields
+    const items = Array.isArray(cartData.items) ? cartData.items : [];
+    const bundleMap = new Map();
+    const regularItems = [];
+
+    items.forEach((item) => {
+      const extra = item.extra_fields;
+      if (extra?.is_bundle_item) {
+        if (!bundleMap.has(extra.bundle_id)) {
+          bundleMap.set(extra.bundle_id, { id: extra.bundle_id, title: extra.bundle_title, items: [] });
+        }
+        bundleMap.get(extra.bundle_id).items.push(item);
+      } else {
+        regularItems.push(item);
+      }
+    });
+
+    const cartBundles = [...bundleMap.values()];
+
+    if (regularItems.length > 0 || cartBundles.length > 0) {
       const products = document.createElement('ul');
 
-      for (const item of cartData.items) {
+      for (const item of regularItems) {
         item.price = formatCurrency(item.price, CURRENCY_CODE, CUSTOMER_LOCALE);
         item.productVariant.price = formatCurrency(item.productVariant.price, CURRENCY_CODE, CUSTOMER_LOCALE);
 
@@ -224,8 +312,13 @@ async function updateCartDrawer() {
 
       cartDrawerContent.appendChild(products);
 
+      cartBundles.forEach((bundle) => {
+        cartDrawerContent.appendChild(createBundleGroup(bundle));
+      });
+
       // Attach event listeners to the newly added remove buttons
       await attachRemoveItemListeners();
+      attachBundleRemoveListeners();
     } else {
       const p = document.createElement('p');
       p.classList.add('empty-cart');
@@ -258,6 +351,64 @@ async function updateCartDrawer() {
   } catch (error) {
     notify(error.message, 'error');
   }
+}
+
+function createBundleGroup(bundle) {
+  const groupTemplate = document.getElementById('cart-drawer-bundle-group');
+  const itemTemplate = document.getElementById('cart-drawer-bundle-item');
+  const group = groupTemplate.content.cloneNode(true);
+
+  group.querySelector('[ui-slot="title"]').textContent = bundle.title;
+
+  const total = bundle.items.reduce((sum, i) => sum + ((i.extra_fields?.bundle_product_price ?? i.price) * i.quantity), 0);
+  group.querySelector('[ui-slot="total"]').textContent = formatCurrency(total, CURRENCY_CODE, CUSTOMER_LOCALE);
+
+  const removeBtn = group.querySelector('[ui-slot="remove"]');
+  removeBtn.setAttribute('data-bundle-item-ids', bundle.items.map((i) => i.id).join(','));
+  removeBtn.setAttribute('data-bundle-variant-ids', bundle.items.map((i) => i.productVariant?.id ?? '').join(','));
+
+  const list = group.querySelector('[ui-slot="items"]');
+  bundle.items.forEach((item) => list.appendChild(createBundleItem(itemTemplate, item)));
+
+  return group;
+}
+
+function createBundleItem(itemTemplate, item) {
+  const el = itemTemplate.content.cloneNode(true);
+
+  const image = el.querySelector('[ui-slot="image"]');
+  image.src = item.productVariant?.image?.url ?? item.productVariant?.product?.thumbnail ?? defaultImage;
+  image.alt = item.productVariant?.product?.name ?? '';
+
+  const name = el.querySelector('[ui-slot="name"]');
+  name.textContent = item.productVariant?.product?.name ?? '';
+  if (item.productVariant?.product?.url) name.href = item.productVariant.product.url;
+
+  const variantsEl = el.querySelector('[ui-slot="variants"]');
+  const variations = item.productVariant?.variations || {};
+  const entries = Object.entries(variations).filter(([key]) => key !== 'default');
+  if (entries.length) {
+    variantsEl.innerHTML = entries.map(([key, value]) => `<span>${key}: ${value}</span>`).join('');
+    variantsEl.removeAttribute('hidden');
+  } else {
+    variantsEl.setAttribute('hidden', '');
+  }
+
+  const unitPrice = item.extra_fields?.bundle_product_price ?? item.price;
+  const subtotal = unitPrice * item.quantity;
+  const freeEl = el.querySelector('[ui-slot="free"]');
+  const priceEl = el.querySelector('[ui-slot="price"]');
+
+  if (subtotal === 0) {
+    freeEl.removeAttribute('hidden');
+    priceEl.setAttribute('hidden', '');
+  } else {
+    priceEl.textContent = formatCurrency(subtotal, CURRENCY_CODE, CUSTOMER_LOCALE);
+    priceEl.removeAttribute('hidden');
+    freeEl.setAttribute('hidden', '');
+  }
+
+  return el;
 }
 
 function updateCartCount(delta, relative = false) {
@@ -348,10 +499,9 @@ async function directAddToCart(productId) {
 
     if (response.error) throw new Error(response.error);
 
-    updateCartCount(response.count);
     await updateCartDrawer();
 
-    notify(ADD_TO_CART_EXPECTED_ERRORS.product_added, 'success');
+    notify(CART_DRAWER_TRANSLATION.product_added, 'success');
     toggleCartDrawer();
   } catch (err) {
     notify(err.message, 'error');

@@ -1,0 +1,5 @@
+---
+"aura": minor
+---
+
+Bundles feature

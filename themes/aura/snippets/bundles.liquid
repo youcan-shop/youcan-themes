@@ -1,0 +1,254 @@
+{{ 'bundles.css' | asset_url | stylesheet_tag }}
+
+{% for bundle in product.bundles.single %}
+  <label data-bundle="single" class="bundle-card">
+    <div class="bundle-card-head">
+      <input class="bundle-checkbox" type="checkbox" value="{{ bundle.id }}">
+      <h3 class="bundle-card-title">{{ bundle.title }}</h3>
+      {% if bundle.saving_percentage %}
+        <span class="bundle-discount-tag">
+          {{ 'general.you_save' | t }}
+          {{ bundle.saving_percentage }}%
+        </span>
+      {% endif %}
+    </div>
+
+    <div class="bundle-card-product">
+      <div class="media">
+        {% if product.preview_image %}
+          <img
+            src="{{ product.preview_image.original }}"
+            alt="{{ product.name }}"
+            height="65"
+            width="65"
+            loading="lazy"
+          >
+        {% endif %}
+      </div>
+      <div class="info">
+        <span class="name">{{ product.name }}</span>
+        <div class="price">
+          <span class="original">{{ bundle.total_price | money }}</span>
+          {% if bundle.compare_price %}
+            <span class="compare-at">{{ bundle.compare_price | money }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="bundle-card-variants">
+      {% assign seen_ids = '' %}
+      {% assign row_index = 0 %}
+      {% for bp in bundle.bundle_products %}
+        {% unless seen_ids contains bp.product_variant_id %}
+          {% assign seen_ids = seen_ids | append: bp.product_variant_id | append: ',' %}
+          {% assign row_index = row_index | plus: 1 %}
+
+          {% assign total_qty = 0 %}
+          {% for dup in bundle.bundle_products %}
+            {% if dup.product_variant_id == bp.product_variant_id %}
+              {% assign total_qty = total_qty | plus: dup.quantity %}
+            {% endif %}
+          {% endfor %}
+
+          <div class="bundle-variant-row">
+            <span class="bundle-variant-index">#{{ row_index }}</span>
+            <div class="bundle-variant-info">
+              {% unless bp.selected_variant.variations == null or bp.selected_variant.variations.default %}
+                {% for variation in bp.selected_variant.variations %}
+                  <div class="bundle-variant-group">
+                    <span class="bundle-variant-label">{{ variation[0] }} :</span>
+                    <span class="bundle-variant-value">{{ variation[1] }}</span>
+                  </div>
+                {% endfor %}
+              {% endunless %}
+              <div class="bundle-variant-group">
+                <span class="bundle-variant-label">{{ 'general.quantity' | t }} :</span>
+                <span class="bundle-variant-qty">x{{ total_qty }}</span>
+              </div>
+            </div>
+          </div>
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </label>
+{% endfor %}
+
+{% for bundle in product.bundles.multi %}
+  <label data-bundle="multi">
+    <div class="head">
+      <input class="bundle-checkbox" type="checkbox" value="{{ bundle.id }}">
+      <div class="detail">
+        <div class="box">
+          <h3 class="title">{{ bundle.title }}</h3>
+          <div class="price">
+            <span class="original">{{ bundle.total_price | money }}</span>
+            {% if bundle.compare_price %}
+              <span class="compare-at">{{ bundle.compare_price | money }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="box">
+          <span class="bundle-save-badge bundle-save-badge--stroke">x{{ bundle.bundle_products.size }}</span>
+          {% if bundle.saving_percentage %}
+            <span class="bundle-save-badge bundle-save-badge--success">
+              {{ 'general.you_save' | t }}
+              {{ bundle.saving_percentage }}%
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <ul class="list">
+      {% for item in bundle.bundle_products %}
+        {% assign p = item.selected_variant %}
+        <div class="item">
+          <div class="media">
+            {% if p.image %}
+              <img
+                src="https://cdn.youcan.shop/{{ p.image }}"
+                alt="{{ item.product.name }}"
+                width="65"
+                height="65"
+                loading="lazy"
+              >
+            {% elsif item.thumbnail %}
+              <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="65" height="65" loading="lazy">
+            {% endif %}
+          </div>
+          <div class="info">
+            <span class="name">{{ item.product.name }}</span>
+            <div class="price">
+              <span class="original">{{ item.price | money }}</span>
+              {% if item.discount_value %}
+                <span class="compare-at">{{ p.price | default: 0 | money }}</span>
+              {% endif %}
+            </div>
+            {% unless p.variations == null or p.variations.default %}
+              <div class="variants">
+                {% for variant in p.variations %}
+                  <span class="variant">{{ variant[1] }}</span>
+                {% endfor %}
+              </div>
+            {% endunless %}
+          </div>
+        </div>
+      {% endfor %}
+    </ul>
+  </label>
+{% endfor %}
+
+{% for bundle in product.bundles.buyxgety %}
+  <label data-bundle="buyxgety">
+    <div class="head">
+      <input class="bundle-checkbox" type="checkbox" value="{{ bundle.id }}">
+      <div class="detail">
+        <div class="box">
+          <h3 class="title">{{ bundle.title }}</h3>
+          <div class="price">
+            <span class="original">{{ bundle.total_price | money }}</span>
+            {% if bundle.compare_price %}
+              <span class="compare-at">{{ bundle.compare_price | money }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="box">
+          <span class="bundle-save-badge bundle-save-badge--stroke">x{{ bundle.bundle_products.size }}</span>
+        </div>
+      </div>
+    </div>
+    <ul class="list">
+      {% for item in bundle.bundle_products %}
+        {% assign p = item.selected_variant %}
+        {% unless item.discount_value %}
+          <div class="item">
+            <div class="media">
+              {% if p.image %}
+                <img
+                  src="https://cdn.youcan.shop/{{ p.image }}"
+                  alt="{{ item.product.name }}"
+                  width="65"
+                  height="65"
+                  loading="lazy"
+                >
+              {% elsif item.thumbnail %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="65" height="65" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="info">
+              <span class="name">{{ item.product.name }}</span>
+              <div class="price">
+                <span class="original">{{ item.price | money }}</span>
+              </div>
+              {% unless p.variations == null or p.variations.default %}
+                <div class="variants">
+                  {% for variant in p.variations %}
+                    <span class="variant">{{ variant[1] }}</span>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+            </div>
+          </div>
+        {% endunless %}
+      {% endfor %}
+    </ul>
+    <ul class="list">
+      {% for item in bundle.bundle_products %}
+        {% assign p = item.selected_variant %}
+        {% if item.discount_value %}
+          <div class="item item-free">
+            <div class="media">
+              {% if p.image %}
+                <img
+                  src="https://cdn.youcan.shop/{{ p.image }}"
+                  alt="{{ item.product.name }}"
+                  width="65"
+                  height="65"
+                  loading="lazy"
+                >
+              {% elsif item.thumbnail %}
+                <img src="{{ item.thumbnail }}" alt="{{ item.product.name }}" width="65" height="65" loading="lazy">
+              {% endif %}
+            </div>
+            <div class="info">
+              <span class="name">{{ item.product.name }}</span>
+              <div class="price free-gift">
+                <div class="gift">
+                  {% render 'gift-icon' %}
+                  <span class="free">{{ 'general.free' | t }}</span>
+                </div>
+                <span class="compare-at">{{ p.price | default: 0 | money }}</span>
+              </div>
+              {% unless p.variations == null or p.variations.default %}
+                <div class="variants">
+                  {% for variant in p.variations %}
+                    <span class="variant">{{ variant[1] }}</span>
+                  {% endfor %}
+                </div>
+              {% endunless %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </label>
+{% endfor %}
+
+{% assign has_express_checkout = false %}
+{% for block in section.blocks %}
+  {% if block.type == 'express_checkout' %}
+    {% assign has_express_checkout = true %}
+    {% assign express_settings = block.settings %}
+  {% endif %}
+{% endfor %}
+
+{% if has_express_checkout %}
+  {% render 'express-checkout', checkout: checkout, is_sticky: false, settings: express_settings, form_id: 'bundle-express-checkout-form' %}
+{% else %}
+  <div class="bundle-add-to-cart">
+    <button class="yc-btn add-to-cart-button w-full" data-type="" onclick="addBundleToCart('{{ snippetId }}')">
+      <span class="spinner hidden" id="loading__bundle-cart"></span>
+      <span class="btn-text">{{ 'general.add_bundle_to_cart' | t }}</span>
+    </button>
+  </div>
+{% endif %}
