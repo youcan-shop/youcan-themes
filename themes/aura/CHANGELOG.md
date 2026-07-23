@@ -1,5 +1,11 @@
 # aura
 
+## 4.4.14
+
+### Patch Changes
+
+- 6010b42: Correct template name of Collection section in HAM
+
 ## 4.4.13
 
 ### Patch Changes
