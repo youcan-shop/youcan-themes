@@ -1,7 +1,7 @@
 {{ 'cart.css' | asset_url | stylesheet_tag }}
 
 <div class='yc-cart mt-4'>
-  {%- if cart and cart.items %}
+  {%- if cart.count > 0 %}
     <div class='container cart-table'>
       {%- render 'breadcrumbs' -%}
       <div class="header-block">
@@ -9,7 +9,7 @@
           <h2>{{ 'cart.title' | t }}</h2>
           <p class='mt-1'>
             <span id="cart-items-count">
-              {{ 'cart.items_count' | t }}: {{ cart.items | size }}
+              {{ 'cart.items_count' | t }}: {{ cart.count | default: 0 }}
             </span>
           </p>
         </div>
@@ -74,6 +74,8 @@
             </div>
           </div>
         {% endfor %}
+
+        {% render 'cart-bundles', context: 'page' %}
       </div>
       <div class='summary-box'>
         <div id='summary'>
@@ -106,7 +108,7 @@
               </div>
             </form>
           {% endif %}
-          {%- if cart and cart.items %}
+          {%- if cart.count > 0 %}
           <template id="summary-item-template">
             <div class='flex justify-between text-sm box'>
               <div class='item-name capitalize'></div>
@@ -157,7 +159,7 @@
     </div>
   </div>
 {%- endif %}
-<div class='{% if cart and cart.items %}hidden {% endif %} container empty-cart pt-12'>
+<div class='{% if cart.count > 0 %}hidden {% endif %} container empty-cart pt-12'>
   <div class='flex flex-col justify-center text-center items-center gap-3'>
     <ion-icon
       name='cart-outline'

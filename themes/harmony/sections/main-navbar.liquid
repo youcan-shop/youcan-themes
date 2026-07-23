@@ -38,30 +38,31 @@
 {% endstyle %}
 
 {% if section.settings.toggle_navbar != true %}
-  <header class='yc-header {%if section.settings.navbar_always_on_top%} nav-fixed {%endif%}'>
+  <header class="yc-header {%if section.settings.navbar_always_on_top%} nav-fixed {%endif%}">
     {%- if section.settings.navbar_font_family -%}
       <link
-        href='https://fonts.googleapis.com/css2?family={{ section.settings.navbar_font_family }}:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap'
-        rel='stylesheet'
+        href="https://fonts.googleapis.com/css2?family={{ section.settings.navbar_font_family }}:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap"
+        rel="stylesheet"
       >
     {%- endif -%}
-    <nav class='yc-navbar container'>
+    <nav class="yc-navbar container">
       {%- for block in section.blocks -%}
         {%- case block.type %}
           {%- when 'logo' %}
-            <div class='logo'>
-              <a href='/' aria-label='home'>
+            <div class="logo">
+              <a href="/" aria-label="home">
                 <img
-                  src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-black-logo.webp' | asset_url }} {%- endif -%}'
-                  alt='{{ store.name }}'
-                  width="110" height="70"
+                  src="{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-black-logo.webp' | asset_url }} {%- endif -%}"
+                  alt="{{ store.name }}"
+                  width="110"
+                  height="70"
                 >
               </a>
             </div>
           {%- when 'menu' %}
             <div
-              class='menu'
-              style='
+              class="menu"
+              style="
                 --background-color: {{ block.settings.navbar_menu_background_color.hex }};
                 --border-radius: {{ block.settings.navbar_menu_border_radius }}%;
                 --color:{%- if block.settings.navbar_menu_icon_color.hex -%}
@@ -70,28 +71,28 @@
                           var(--yc-neutral-color)
                         {%- endif -%};
                 --size: {{ block.settings.navbar_menu_size }};
-              '
+              "
             >
               <button
-                class='menu-toggler text-3xl'
+                class="menu-toggler text-3xl"
                 onclick="openDrawer('.navbar-drawer')"
-                aria-label='open menu'
+                aria-label="open menu"
               >
-                <ion-icon name='menu-outline'></ion-icon>
+                <ion-icon name="menu-outline"></ion-icon>
               </button>
-              <ul class='menu-list'>
+              <ul class="menu-list">
                 {% for item in main-link-list.links %}
-                  <li class='menu-item {%-if item.active %} active {%-endif%}'>
-                    <a href='{{ item.url }}'>{{ item.title }}</a>
+                  <li class="menu-item {%-if item.active %} active {%-endif%}">
+                    <a href="{{ item.url }}">{{ item.title }}</a>
                   </li>
                 {% endfor %}
               </ul>
             </div>
           {%- when 'search_and_cart' %}
-            <div class='corner'>
-              <button class='cart relative' id='navbar-cart-icon' onclick='preventCartDrawerOpening("{{ template.name }}")'>
-                <span id='cart-items-badge'>
-                  {{- cart.items | size -}}
+            <div class="corner">
+              <button class="cart relative" id="navbar-cart-icon" onclick='preventCartDrawerOpening("{{ template.name }}")'>
+                <span id="cart-items-badge">
+                  {{- cart.count | default: 0 -}}
                 </span>
                 <svg width="25" height="27" viewBox="0 0 25 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M4.69231 1.3855L1 6.30858V23.5393C1 24.1922 1.25934 24.8183 1.72097 25.2799C2.1826 25.7415 2.8087 26.0009 3.46154 26.0009H20.6923C21.3451 26.0009 21.9713 25.7415 22.4329 25.2799C22.8945 24.8183 23.1538 24.1922 23.1538 23.5393V6.30858L19.4615 1.3855H4.69231Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,24 +100,24 @@
                   <path d="M17 11.2316C17 12.5373 16.4813 13.7895 15.558 14.7128C14.6348 15.636 13.3826 16.1547 12.0769 16.1547C10.7712 16.1547 9.519 15.636 8.59574 14.7128C7.67249 13.7895 7.15381 12.5373 7.15381 11.2316" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
-              <div id='searchInputHolder'>
-                <div class='container flex justify-center'>
+              <div id="searchInputHolder">
+                <div class="container flex justify-center">
                   <form
-                    action='/search'
-                    method='GET'
-                    class='input w-full flex gap-1 items-center'
+                    action="/search"
+                    method="GET"
+                    class="input w-full flex gap-1 items-center"
                   >
                     <input
-                      placeholder='{{ 'navbar.search.placeholder' | t }}'
-                      type='text'
-                      name='q'
-                      value=''
-                      class='w-full'
+                      placeholder="{{ 'navbar.search.placeholder' | t }}"
+                      type="text"
+                      name="q"
+                      value=""
+                      class="w-full"
                     >
                     <button
-                      type='submit'
-                      class='search-btn'
-                      aria-label='search'
+                      type="submit"
+                      class="search-btn"
+                      aria-label="search"
                     >
                       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.5 25C20.299 25 25 20.299 25 14.5C25 8.701 20.299 4 14.5 4C8.70101 4 4 8.701 4 14.5C4 20.299 8.70101 25 14.5 25Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -127,63 +128,63 @@
                 </div>
               </div>
               <button
-                class='search'
-                onclick='openSearch()'
+                class="search"
+                onclick="openSearch()"
                 aria-label="search"
               >
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14.5 25C20.299 25 25 20.299 25 14.5C25 8.701 20.299 4 14.5 4C8.70101 4 4 8.701 4 14.5C4 20.299 8.70101 25 14.5 25Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M21.9258 21.9258L28.0008 28.0008" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.5 25C20.299 25 25 20.299 25 14.5C25 8.701 20.299 4 14.5 4C8.70101 4 4 8.701 4 14.5C4 20.299 8.70101 25 14.5 25Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M21.9258 21.9258L28.0008 28.0008" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </button>
             </div>
         {%- endcase %}
       {%- endfor -%}
     </nav>
   </header>
-  <section class='navigation-drawer navbar-drawer block md:hidden'>
-    <div class='close-drawer-btn'>
-      <ion-icon name="close-outline" class='close-svg'></ion-icon>
+  <section class="navigation-drawer navbar-drawer block md:hidden">
+    <div class="close-drawer-btn">
+      <ion-icon name="close-outline" class="close-svg"></ion-icon>
     </div>
-    <div class='logo flex items-center justify-center'>
-      <a href='/' aria-label='home'>
+    <div class="logo flex items-center justify-center">
+      <a href="/" aria-label="home">
         <img
-          src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-black-logo.webp' | asset_url }} {%- endif -%}'
-          alt='{{ store.name }}'
-          width="110" height="70"
+          src="{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-black-logo.webp' | asset_url }} {%- endif -%}"
+          alt="{{ store.name }}"
+          width="110"
+          height="70"
         >
       </a>
     </div>
-      <form
-        action='/search'
-        method='GET'
-        class='mobile-search w-full flex gap-1 items-center'
-        >
-        <input
-          placeholder='{{ 'navbar.search.placeholder' | t }}'
-          type='text'
-          name='q'
-          value=''
-          class='w-full'
-        >
-        <button
-          type='submit'
-          aria-label='search'
-        >
-          <ion-icon name="search-outline" class="search-icon"></ion-icon>
-        </button>
-      </form>
-    <div class='flex flex-col items-wrapper'>
+    <form
+      action="/search"
+      method="GET"
+      class="mobile-search w-full flex gap-1 items-center"
+    >
+      <input
+        placeholder="{{ 'navbar.search.placeholder' | t }}"
+        type="text"
+        name="q"
+        value=""
+        class="w-full"
+      >
+      <button
+        type="submit"
+        aria-label="search"
+      >
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      </button>
+    </form>
+    <div class="flex flex-col items-wrapper">
       {% for item in main-link-list.links %}
         <a
-          class='items flex items-center justify-between'
-          href='{{ item.url }}'
+          class="items flex items-center justify-between"
+          href="{{ item.url }}"
         >
           <div>
             {{ item.title }}
           </div>
-          <ion-icon name='chevron-forward-outline'></ion-icon>
+          <ion-icon name="chevron-forward-outline"></ion-icon>
         </a>
       {% endfor %}
     </div>
