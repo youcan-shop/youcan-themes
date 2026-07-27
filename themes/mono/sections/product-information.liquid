@@ -198,6 +198,16 @@
   {% endjavascript %}
 {% endif %}
 
+{% if product %}
+  {% javascript %}
+    const globalProduct = JSON.parse({{ product | json }});
+
+    document.addEventListener('DOMContentLoaded', () => {
+      window.Dotshop.pixels.publish('view-content', globalProduct);
+    });
+  {% endjavascript %}
+{% endif %}
+
 {% schema %}
 {
   "label": "t:sections.product_information.label",

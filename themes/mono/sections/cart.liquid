@@ -165,7 +165,7 @@
           <span class="label">{{ 'cart.summary.total' | t }}</span>
           <span class="value" ui-summary-box="total">{{ cart.discounted_sub_total | default: 0 | money }}</span>
         </div>
-        <a ui-slot="button" data-mode="filled" data-size="lg" href="{{ cart.cart_submit_url }}">
+        <a ui-slot="button" data-mode="filled" data-size="lg" href="{{ cart.cart_submit_url }}" id="checkout-button">
           {{ 'cart.summary.checkout' | t }}
         </a>
       </div>
@@ -178,6 +178,27 @@
     {% render 'misc.empty', type: 'cart', hidden: true %}
   {% endunless %}
 </div>
+
+{% if cart %}
+  {% javascript %}
+    document.addEventListener('DOMContentLoaded', function () {
+      const checkoutButton = document.querySelector('#checkout-button');
+
+      if (!checkoutButton) return;
+
+      const cart = JSON.parse({{ cart | json }});
+      let updatedCart = cart;
+
+      subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+        updatedCart = payload.cartData;
+      });
+
+      checkoutButton.addEventListener('click', function () {
+        window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
+      });
+    });
+  {% endjavascript %}
+{% endif %}
 
 {% schema %}
 {
