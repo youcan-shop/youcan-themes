@@ -1,12 +1,17 @@
 async function placeOrder(button) {
   const expressCheckoutForm = (button && button.closest('form')) || document.querySelector('#express-checkout-form');
-
   let fields = Object.fromEntries(new FormData(expressCheckoutForm));
+
+  const isBundleForm = expressCheckoutForm?.id === 'bundle-express-checkout-form';
+  const productVariantId = document.getElementById('variantId')?.value;
+  const bundleId = document.querySelector('[data-bundle] input[type="checkbox"]:checked')?.value;
+
+  if (isBundleForm && !bundleId) {
+    return notify(ADD_TO_CART_EXPECTED_ERRORS.select_bundle, 'warning');
+  }
 
   load('#loading__checkout');
   try {
-    const productVariantId = document.getElementById('variantId')?.value;
-    const bundleId = document.querySelector('[data-bundle] input[type="checkbox"]:checked')?.value;
     const quantity = document.getElementById('quantity')?.value || 1;
     const attachedImage = document.querySelector('#yc-upload-link')?.value;
 
@@ -17,7 +22,7 @@ async function placeOrder(button) {
     const response = await youcanjs.checkout.placeExpressCheckoutOrder({
       quantity,
       fields,
-      ...(bundleId ? { bundleId, isBundle: true } : { productVariantId }),
+      ...(isBundleForm ? { bundleId, isBundle: true } : { productVariantId }),
     });
 
     response
