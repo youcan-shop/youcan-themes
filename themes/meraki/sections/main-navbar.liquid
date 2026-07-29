@@ -1,6 +1,5 @@
 {{ 'navbar.css' | asset_url | preload_tag }}
 
-
 {% style %}
   :root {
     --yc-nav-height: {{ section.settings.navbar_height }}px;
@@ -35,31 +34,32 @@
 {% endstyle %}
 
 {% if section.settings.toggle_navbar != true %}
-  <header class='yc-header {%if section.settings.navbar_always_on_top%} nav-fixed {%endif%}'>
+  <header class="yc-header {%if section.settings.navbar_always_on_top%} nav-fixed {%endif%}">
     {%- if section.settings.navbar_font_family -%}
       <link
-        href='https://fonts.googleapis.com/css2?family={{ section.settings.navbar_font_family }}:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap'
-        rel='stylesheet'
+        href="https://fonts.googleapis.com/css2?family={{ section.settings.navbar_font_family }}:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap"
+        rel="stylesheet"
       >
     {%- endif -%}
-    <section class='header-wrapper'>
-      <nav class='yc-navbar container'>
+    <section class="header-wrapper">
+      <nav class="yc-navbar container">
         {%- for block in section.blocks -%}
           {%- case block.type %}
             {%- when 'logo' %}
-              <div class='logo'>
-                <a href='/' aria-label='home'>
+              <div class="logo">
+                <a href="/" aria-label="home">
                   <img
-                    src='{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-white-logo.webp' | asset_url }} {%- endif -%}'
-                    alt='{{ store.name }}'
-                    width="110" height="65"
+                    src="{%- if section.settings.navbar_logo.src -%} {{ section.settings.navbar_logo.src }} {%- else -%} {{ 'default-white-logo.webp' | asset_url }} {%- endif -%}"
+                    alt="{{ store.name }}"
+                    width="110"
+                    height="65"
                   >
                 </a>
               </div>
             {%- when 'menu' %}
               <div
-                class='menu'
-                style='
+                class="menu"
+                style="
                   --background-color: {{ block.settings.navbar_menu_background_color.hex }};
                   --border-radius: {{ block.settings.navbar_menu_border_radius }}%;
                   --color:{%- if block.settings.navbar_menu_icon_color.hex -%}
@@ -68,55 +68,55 @@
                             var(--yc-nav-links-color)
                           {%- endif -%};
                   --size: {{ block.settings.navbar_menu_size }};
-                '
+                "
               >
-                <button id="menuButton" class='hamburger' aria-label="open menu">
+                <button id="menuButton" class="hamburger" aria-label="open menu">
                   <div>
                     <div class="bar"></div>
                     <div class="bar"></div>
                     <div class="bar"></div>
                   </div>
                 </button>
-                <ul class='menu-list'>
+                <ul class="menu-list">
                   {% for item in main-link-list.links %}
-                    <li class='menu-item {%-if item.active-%} active {%-endif%}'>
-                      <a href='{{ item.url }}'>{{ item.title }}</a>
+                    <li class="menu-item {%-if item.active-%} active {%-endif%}">
+                      <a href="{{ item.url }}">{{ item.title }}</a>
                     </li>
                   {% endfor %}
                 </ul>
               </div>
             {%- when 'search_and_cart' %}
-              <div class='corner'>
+              <div class="corner">
                 <button
-                  class='search'
-                  onclick='openSearch()'
-                  aria-label='search'
+                  class="search"
+                  onclick="openSearch()"
+                  aria-label="search"
                 >
                   <ion-icon name="search-outline"></ion-icon>
                 </button>
-                <div id='searchInputHolder'>
-                  <div class='container flex'>
+                <div id="searchInputHolder">
+                  <div class="container flex">
                     <form
-                      action='/search'
-                      method='GET'
-                      class='search-form'
+                      action="/search"
+                      method="GET"
+                      class="search-form"
                     >
                       <input
-                        placeholder='{{ 'navbar.search.placeholder' | t }}'
-                        type='text'
-                        name='q'
-                        value=''
-                        class='search-input'
+                        placeholder="{{ 'navbar.search.placeholder' | t }}"
+                        type="text"
+                        name="q"
+                        value=""
+                        class="search-input"
                       >
                     </form>
-                    <button id='close-search-btn'>
+                    <button id="close-search-btn">
                       <ion-icon name="close-outline"></ion-icon>
                     </button>
                   </div>
                 </div>
-                <button class='cart relative' id='navbar-cart-icon' onclick='preventCartDrawerOpening("{{ template.name }}")'>
-                  <span id='cart-items-badge'>
-                    {{- cart.items | size -}}
+                <button class="cart relative" id="navbar-cart-icon" onclick='preventCartDrawerOpening("{{ template.name }}")'>
+                  <span id="cart-items-badge">
+                    {{- cart.count | default: 0 -}}
                   </span>
                   <ion-icon name="cart-outline"></ion-icon>
                 </button>
@@ -124,17 +124,17 @@
           {%- endcase %}
         {%- endfor -%}
       </nav>
-      <div id='mobile-menu'>
-        <div class='flex flex-col items-wrapper'>
+      <div id="mobile-menu">
+        <div class="flex flex-col items-wrapper">
           {% for item in main-link-list.links %}
             <a
-              class='items flex items-center justify-between'
-              href='{{ item.url }}'
+              class="items flex items-center justify-between"
+              href="{{ item.url }}"
             >
               <div>
                 {{ item.title }}
               </div>
-              <ion-icon name='chevron-forward-outline'></ion-icon>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
             </a>
           {% endfor %}
         </div>
