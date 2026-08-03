@@ -1,5 +1,11 @@
 # camisa
 
+## 1.0.3
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+
 ## 1.0.2
 
 ### Patch Changes

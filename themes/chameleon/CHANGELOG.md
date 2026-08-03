@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.7.3
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+
 ## 4.7.2
 
 ### Patch Changes

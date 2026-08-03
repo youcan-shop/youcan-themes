@@ -1,5 +1,12 @@
 # bella
 
+## 1.1.2
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+- ad74f7c: Mono > Add missing pixels
+
 ## 1.1.1
 
 ### Patch Changes

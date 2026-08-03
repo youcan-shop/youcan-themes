@@ -1,5 +1,15 @@
 # meraki
 
+## 4.5.0
+
+### Minor Changes
+
+- d698669: implement bundles
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+
 ## 4.4.14
 
 ### Patch Changes

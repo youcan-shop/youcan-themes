@@ -1,5 +1,0 @@
----
-"harmony": minor
----
-
-Implement bundles
