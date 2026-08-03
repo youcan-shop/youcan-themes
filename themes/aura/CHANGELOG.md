@@ -1,5 +1,15 @@
 # aura
 
+## 4.5.0
+
+### Minor Changes
+
+- 956a053: Bundles feature
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+
 ## 4.4.14
 
 ### Patch Changes

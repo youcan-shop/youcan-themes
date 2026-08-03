@@ -1,5 +1,12 @@
 # kinder
 
+## 1.0.1
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+- ee2df10: Add missing avg rating label translation
+
 ## 1.0.0
 
 ### Major Changes

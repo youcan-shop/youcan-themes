@@ -1,5 +1,15 @@
 # harmony
 
+## 4.5.0
+
+### Minor Changes
+
+- 4389811: Implement bundles
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+
 ## 4.4.14
 
 ### Patch Changes

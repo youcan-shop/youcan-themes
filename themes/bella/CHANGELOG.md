@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.1
+
+### Patch Changes
+
+- 029b77a: Add support of "yc-sans" font
+
 ## 1.2.0
 
 ### Minor Changes
