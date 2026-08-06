@@ -1,9 +1,9 @@
-@use "color";
+@use "color" as *;
 
 @layer sections {
   [ui-section="image-with-text"] {
     .wrapper-area {
-      --bg-shade-color: #{color.shade(var(--bg-color))};
+      --bg-shade-color: #{shade(var(--bg-color))};
 
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -20,7 +20,7 @@
       [ui-block="media"] {
         height: inherit;
         overflow: hidden;
-        color: color.shade(var(--fg-color), -0.4);
+        color: shade(var(--fg-color), -0.4);
 
         & > img {
           object-fit: cover;

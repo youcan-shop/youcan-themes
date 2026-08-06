@@ -1,14 +1,14 @@
-@use "color";
+@use "color" as *;
 
 @layer reset, base, components, utilities, sections, snippets, overrides;
 
 @layer snippets {
   [ui-block="product"] {
     --bg-color: #fefefe;
-    --bg-shade-color: #{color.shade(var(--bg-color), -0.018, 0, 0)};
+    --bg-shade-color: #{shade(var(--bg-color), -0.018, 0, 0)};
     --fg-color: oklch(from var(--bg-color) clamp(0, calc((0.5 - l) * 9999), 1) 0 none);
     --quantity-bg: var(--bg-shade-color);
-    --shadow-color: #{color.shade(var(--bg-color))};
+    --shadow-color: #{shade(var(--bg-color))};
 
     display: flex;
     position: relative;
