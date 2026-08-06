@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "sass:string";
 
 /* Emits a channel term, omitting the calc() when the delta is a no-op. */
@@ -13,65 +14,88 @@
   @return "calc(#{$channel} + #{$delta})";
 }
 
-/* Emits the lightness term, flipping its direction on a dark origin. */
-@function _lightness($delta, $pivot) {
-  @if $delta == 0 {
+/* Emits the lightness term: flips direction on a dark origin, then lifts the
+   step further the closer the origin sits to black. */
+@function _lightness($delta, $lighten-below, $lift, $lift-below) {
+  $flip: "(1 - 2 * clamp(0, (#{$lighten-below} - l) * 9999, 1))";
+  $ramp: "clamp(0, (#{$lift-below} - l) * #{math.div(1, $lift-below)}, 1)";
+  $step: "l";
+
+  @if $delta < 0 {
+    $step: "l - #{-1 * $delta} * #{$flip}";
+  }
+
+  @if $delta > 0 {
+    $step: "l + #{$delta} * #{$flip}";
+  }
+
+  @if $lift == 0 and $delta == 0 {
     @return "l";
   }
 
-  $flip: "(1 - 2 * clamp(0, (#{$pivot} - l) * 9999, 1))";
-
-  @if $delta < 0 {
-    @return "calc(l - #{-1 * $delta} * #{$flip})";
+  @if $lift == 0 {
+    @return "calc(#{$step})";
   }
 
-  @return "calc(l + #{$delta} * #{$flip})";
+  @return "calc(#{$step} + #{$lift} * #{$ramp})";
 }
 
 /* Emits the chroma term, scaled by how chromatic the origin already is. */
-@function _chroma($delta, $gate) {
+@function _chroma($delta, $tint-above) {
   @if $delta == 0 {
     @return "c";
   }
 
+  $ramp: "clamp(0, c * #{math.div(1, $tint-above)}, 1)";
+
   @if $delta < 0 {
-    @return "calc(c - #{-1 * $delta} * clamp(0, c * #{$gate}, 1))";
+    @return "calc(c - #{-1 * $delta} * #{$ramp})";
   }
 
-  @return "calc(c + #{$delta} * clamp(0, c * #{$gate}, 1))";
+  @return "calc(c + #{$delta} * #{$ramp})";
 }
 
 /* Derives a shade from an origin color in OKLCH.
 
-   $from   origin color, e.g. var(--bg-color)
-   $l      lightness delta, expressed for a light origin and mirrored on a dark one
-   $c      chroma delta, reached in full once the origin's own chroma is 1 / $gate
-   $h      hue rotation, in degrees
-   $gate   inverse of the chroma at which $c applies in full
-   $pivot  lightness below which the origin counts as dark
+   $from           origin color, e.g. var(--bg-color)
+   $l              lightness delta, written for a light origin and mirrored on a dark one
+   $c              chroma delta, applied in full once the origin is at least $tint-above
+   $h              hue rotation, in degrees
+   $tint-above     chroma at which $c reaches full strength
+   $lighten-below  lightness under which the origin counts as dark and $l lightens instead
+   $lift           extra lightness added to the step on a pure black origin
+   $lift-below     lightness at which $lift has tapered back to nothing
 
-   The chroma delta is scaled by clamp(0, c * $gate, 1), which is 0 for an
-   achromatic origin and 1 once it is chromatic. Adding chroma unconditionally
-   tints greys: white is oklch(1 0 none), and a missing hue resolves to 0 in
-   calc(), so calc(c + 0.0181) calc(h + 6.6) turns a white background's shade
-   pink rather than leaving it neutral.
+   $l, $c and $h are named for the OKLCH channels they move, and are the only
+   arguments call sites pass. The rest are shared calibration.
 
-   $gate only has to separate "no chroma at all" from "a deliberate tint", so
-   it is steep. At 200 the delta is already at full strength by c = 0.005,
-   below any tint that reads as a color: #fef7ee sits at c = 0.0141 and keeps
-   the full warm shade it had before the gate existed. Lowering $gate does not
-   make tints subtler, it makes them weaker than designed.
+   CHROMA. Adding chroma unconditionally tints greys: white is oklch(1 0 none),
+   and a missing hue resolves to 0 in calc(), so calc(c + 0.0181) calc(h + 6.6)
+   turns a white background's shade pink rather than leaving it neutral. Ramping
+   $c by the origin's own chroma keeps greys grey. The ramp only has to separate
+   "no chroma at all" from "a deliberate tint", so $tint-above sits low: #fef7ee
+   is at c = 0.0141 and keeps the full warm shade it had before the ramp existed.
+   Raising $tint-above does not make tints subtler, it makes them weaker than
+   designed.
 
-   The lightness delta is multiplied by (1 - 2 * dark), which is 1 for a light
-   origin and -1 for a dark one, so $l always moves the shade away from the
-   origin. Subtracting unconditionally clamps at 0 on a near-black background
-   and the shade disappears. $pivot matches the threshold the --fg-color
-   contrast switches use, so the shade flips direction on the same colors that
-   flip the text.
+   LIGHTNESS. $l is multiplied by (1 - 2 * dark), which is 1 for a light origin
+   and -1 for a dark one, so the step always moves away from the origin.
+   Subtracting unconditionally clamps at 0 on a near-black background and the
+   shade disappears. $lighten-below matches the threshold the --fg-color contrast
+   switches use, so the shade flips direction on the same colors that flip the
+   text.
+
+   Flipping alone is not enough near black. OKLCH lightness is perceptually even,
+   but sRGB is not: L = 0.0225 off white gives #f7f7f7, while the same step off
+   black still quantizes to #000000. $lift adds ground clearance, ramped by how
+   close the origin is to black, so a black background shades to #121212 instead
+   of nothing. It tapers out by $lift-below, which keeps it away from mid-tones
+   and stops it compounding when one shade is derived from another. Light origins
+   never see it.
 
    Custom properties need interpolation, plain properties do not:
      --bg-shade-color: #{shade(var(--bg-color))};
      background-color: shade(var(--timer-bg), -0.058, 0.03, 0); */
-@function shade($from, $l: -0.0225, $c: 0.0181, $h: 6.6, $gate: 200, $pivot: 0.5) {
-  @return string.unquote("oklch(from #{$from} #{_lightness($l, $pivot)} #{_chroma($c, $gate)} #{_delta('h', $h)})");
+@function shade($from, $l: -0.0225, $c: 0.0181, $h: 6.6, $tint-above: 0.005, $lighten-below: 0.5, $lift: 0.16, $lift-below: 0.25) {
+  @return string.unquote("oklch(from #{$from} #{_lightness($l, $lighten-below, $lift, $lift-below)} #{_chroma($c, $tint-above)} #{_delta('h', $h)})");
 }
