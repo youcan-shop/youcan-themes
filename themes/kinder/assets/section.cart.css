@@ -1,6 +1,6 @@
 @layer sections{
   [ui-section=cart]{
-    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+    --bg-shade-color:oklch(from var(--bg-color) calc(l - 0.0225 * (1 - 2 * clamp(0, (0.5 - l) * 9999, 1))) calc(c + 0.0181 * clamp(0, c * 200, 1)) calc(h + 6.6));
     display:flex;
     gap:var(--spacing-48);
     flex-direction:column;
@@ -151,7 +151,7 @@
     gap:var(--spacing-8);
   }
   [ui-section=cart] .core-area .summary .coupon .output .info [ui-slot=status-badge]{
-    background-color:oklch(from var(--bg-shade-color) calc(l - 0.0444) calc(c + 0.0456) calc(h - 1));
+    background-color:oklch(from var(--bg-shade-color) calc(l - 0.0444 * (1 - 2 * clamp(0, (0.5 - l) * 9999, 1))) calc(c + 0.0456 * clamp(0, c * 200, 1)) calc(h - 1));
     color:var(--fg-color);
     font:var(--font-label-sm);
   }
