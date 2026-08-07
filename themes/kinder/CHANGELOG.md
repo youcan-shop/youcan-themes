@@ -1,5 +1,12 @@
 # kinder
 
+## 1.0.2
+
+### Patch Changes
+
+- 588de41: Added ability to hide faq section image
+- 64158c2: Refactor how we derrive shade color from bg color
+
 ## 1.0.1
 
 ### Patch Changes
