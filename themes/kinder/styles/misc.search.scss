@@ -1,3 +1,5 @@
+@use "color" as *;
+
 @layer snippets {
   #search[popover] {
     [ui-slot="sheet-body"] {
@@ -53,8 +55,8 @@
               border-radius: var(--radius-12);
 
               ui-image-fallback {
-                background-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
-                color: oklch(from var(--fg-color) calc(l - 0.4) calc(c + 0.0181) calc(h + 6.6));
+                background-color: shade(var(--bg-color), -0.018, 0, 0);
+                color: shade(var(--fg-color), -0.4);
               }
 
               & > img {
@@ -88,7 +90,7 @@
                 .category {
                   padding: var(--spacing-4) var(--spacing-8);
                   border-radius: var(--radius-rounded);
-                  background-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
+                  background-color: shade(var(--bg-color), -0.018, 0, 0);
                   font: var(--font-label-xs);
                   text-align: center;
                 }

@@ -14,14 +14,14 @@
     padding:var(--spacing-32);
     overflow:hidden;
     border-radius:var(--radius-card);
-    background-color:oklch(from var(--bg-color) calc(l - 0.0225) calc(c + 0.0181) calc(h + 6.6));
+    background-color:oklch(from var(--bg-color) calc(l - 0.0225 * (1 - 2 * clamp(0, (0.5 - l) * 9999, 1)) + 0.16 * clamp(0, (0.25 - l) * 4, 1)) calc(c + 0.0181 * clamp(0, c * 200, 1)) calc(h + 6.6));
   }
   [ui-section=image-banners] .banners .image-item [ui-block=image]{
     position:absolute;
     inset:0;
   }
   [ui-section=image-banners] .banners .image-item [ui-block=image] ui-image-fallback{
-    color:oklch(from var(--bg-color) calc(l - 0.4) calc(c + 0.0181) calc(h + 6.6));
+    color:oklch(from var(--bg-color) calc(l - 0.4 * (1 - 2 * clamp(0, (0.5 - l) * 9999, 1)) + 0.16 * clamp(0, (0.25 - l) * 4, 1)) calc(c + 0.0181 * clamp(0, c * 200, 1)) calc(h + 6.6));
   }
   [ui-section=image-banners] .banners .image-item [ui-block=image] img{
     -o-object-fit:cover;

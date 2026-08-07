@@ -1,7 +1,9 @@
+@use "color" as *;
+
 @layer snippets {
   ui-toast {
     --bg-color: #fefefe;
-    --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
+    --bg-shade-color: #{shade(var(--bg-color), -0.018, 0, 0)};
     --fg-color: oklch(from var(--bg-color) clamp(0, calc((0.5 - l) * 9999), 1) 0 none);
 
     inset: auto;
