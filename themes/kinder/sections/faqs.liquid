@@ -25,19 +25,21 @@
         <p class="description">{{ section.settings.description }}</p>
       </div>
       <div class="content">
-        <div class="media" data-image-placement="{{ section.settings.image_placement }}" data-image-ratio="{{ section.settings.image_ratio }}">
-          {% if section.settings.image.src %}
-            <img
-              src="{{ section.settings.image.src }}"
-              alt="FAQs"
-              height="100%"
-              width="100%"
-              loading="lazy"
-            >
-          {% else %}
-            {% render 'misc.image-fallback', icon_size: 100 %}
-          {% endif %}
-        </div>
+        {% if section.settings.show_image %}
+          <div class="media" data-image-placement="{{ section.settings.image_placement }}" data-image-ratio="{{ section.settings.image_ratio }}">
+            {% if section.settings.image.src %}
+              <img
+                src="{{ section.settings.image.src }}"
+                alt="FAQs"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback', icon_size: 100 %}
+            {% endif %}
+          </div>
+        {% endif %}
         <ul class="items-area" ui-slot="accordion">
           {% for faq in section.blocks %}
             {% render 'block.faq' %}
@@ -121,9 +123,19 @@
       "content": "t:common.headers.media"
     },
     {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "t:sections.faqs.show_image",
+      "default": true
+    },
+    {
       "type": "image_picker",
       "id": "image",
-      "label": "t:common.globals.image"
+      "label": "t:common.globals.image",
+      "visible_if": {
+        "setting_id": "show_image",
+        "value": true
+      }
     },
     {
       "type": "select",
@@ -134,6 +146,10 @@
         { "label": "t:common.layout.ratio.portrait", "value": "portrait" },
         { "label": "t:common.layout.ratio.landscape", "value": "landscape" }
       ],
+      "visible_if": {
+        "setting_id": "show_image",
+        "value": true
+      },
       "default": "portrait"
     },
     {
@@ -144,6 +160,10 @@
         { "label": "t:common.layout.image_placement.image_first", "value": "first" },
         { "label": "t:common.layout.image_placement.image_second", "value": "second" }
       ],
+      "visible_if": {
+        "setting_id": "show_image",
+        "value": true
+      },
       "default": "first"
     },
     {
