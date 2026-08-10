@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.2
+
+### Patch Changes
+
+- 4ee6bce: Fix product page js breaking when store lang is french
+
 ## 1.2.1
 
 ### Patch Changes
