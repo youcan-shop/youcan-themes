@@ -45,7 +45,7 @@ if (!customElements.get("ui-carousel")) {
         slide.addEventListener("click", () => this.swipe(i));
       });
 
-      this.wrapper.addEventListener("scroll", () => this.onScroll());
+      this.wrapper?.addEventListener("scroll", () => this.onScroll());
 
       this.updateMarkers();
       window.addEventListener("resize", () => this.updateMarkers());
