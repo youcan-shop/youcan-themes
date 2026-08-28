@@ -1,5 +1,11 @@
 # bella
 
+## 1.1.4
+
+### Patch Changes
+
+- 5ab178c: Mono > Fix undefined carousel wrapper error call
+
 ## 1.1.3
 
 ### Patch Changes
