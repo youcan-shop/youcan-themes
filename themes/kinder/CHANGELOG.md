@@ -1,5 +1,11 @@
 # kinder
 
+## 1.0.4
+
+### Patch Changes
+
+- 0ebfac8: Fix update quantity on cart page
+
 ## 1.0.3
 
 ### Patch Changes

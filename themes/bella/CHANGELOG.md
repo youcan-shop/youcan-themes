@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.3
+
+### Patch Changes
+
+- 0ebfac8: Fix update quantity on cart page
+
 ## 1.2.2
 
 ### Patch Changes

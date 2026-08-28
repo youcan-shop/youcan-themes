@@ -1,5 +1,11 @@
 # camisa
 
+## 1.0.5
+
+### Patch Changes
+
+- 0ebfac8: Fix update quantity on cart page
+
 ## 1.0.4
 
 ### Patch Changes
