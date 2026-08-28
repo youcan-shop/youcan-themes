@@ -723,6 +723,8 @@ class CartSummary extends HTMLElement {
   }
 
   updateCoupon(coupon, discountedPrice) {
+    if (!this.couponForm) return;
+    
     if (!coupon) {
       this.setShowCouponInSummary(false);
 
@@ -730,14 +732,14 @@ class CartSummary extends HTMLElement {
     }
 
     this.discount.textContent = this.getFormattedDiscountValue(coupon, discountedPrice);
-    this.couponCode.textContent = coupon.code;
+    if (this.couponCode) this.couponCode.textContent = coupon.code;
 
     this.setShowCouponInSummary(true);
   }
 
   setShowCouponInSummary(shouldShow) {
     this.discount?.toggleAttribute("hidden", !shouldShow);
-    this.couponCode.toggleAttribute("hidden", !shouldShow);
+    this.couponCode?.toggleAttribute("hidden", !shouldShow);
   }
 
   updateSummary(subTotal, total) {
