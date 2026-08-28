@@ -181,8 +181,6 @@ class BaseCartItem extends HTMLElement {
     this.updateItemVariant(elements.variant, item.productVariant.variations);
     this.updateItemQuantity(elements.quantity, item.quantity);
     this.updateItemPrice(elements.price, item.price);
-    // this.updateItemSubPrice(elements.subtotal, item.quantity, item.price);
-    // this.updateItemCompareAtPrice(elements.compareAtPrice, item.productVariant.compare_at_price, item.price, item.quantity);
     this.updateItemDeleteButtonAttributes(elements.deleteButton.parentElement, item.id, item.productVariant.id);
 
     this.additionalItemUpdates(elements, item);
@@ -634,7 +632,6 @@ class CartSummary extends HTMLElement {
 
     this.couponForm = this.querySelector('[ui-summary-box="coupon-form"]');
     this.subtotal = this.querySelector('[ui-summary-box="subtotal"]');
-    this.total = this.querySelector('[ui-summary-box="total"]');
     this.couponCode = this.querySelector('[ui-summary-box="coupon-code"]');
     this.discount = this.querySelector('[ui-summary-box="discount"]');
     this.removeCouponButton = this.querySelector('[ui-summary-box="remove-coupon"]');
@@ -655,17 +652,17 @@ class CartSummary extends HTMLElement {
     this.removeCouponButton?.addEventListener("click", this.handleRemoveCoupon.bind(this));
 
     subscribe(PUB_SUB_EVENTS.cartUpdate, (payload) => {
-      const { sub_total, discountedPrice, coupon, discounted_sub_total } = payload.cartData;
+      const { discountedPrice, coupon, discounted_sub_total } = payload.cartData;
 
       this.updateCoupon(coupon, discountedPrice);
-      this.updateSummary(sub_total, discounted_sub_total);
+      this.updateSummary(discounted_sub_total);
     });
 
     subscribe(PUB_SUB_EVENTS.couponUpdate, (payload) => {
-      const { sub_total, discountedPrice, coupon, discounted_sub_total } = payload.cartData;
+      const { discountedPrice, coupon, discounted_sub_total } = payload.cartData;
 
       this.updateCoupon(coupon, discountedPrice);
-      this.updateSummary(sub_total, discounted_sub_total);
+      this.updateSummary(discounted_sub_total);
     });
   }
 
@@ -715,29 +712,26 @@ class CartSummary extends HTMLElement {
   }
 
   updateCoupon(coupon, discountedPrice) {
+    if (!this.couponForm) return;
+
     if (!coupon) {
       this.setShowCouponInSummary(false);
 
       return;
     }
 
-    // this.discount.textContent = this.getFormattedDiscountValue(
-    //   coupon,
-    //   discountedPrice
-    // );
-    this.couponCode.textContent = coupon.code;
+    if (this.couponCode) this.couponCode.textContent = coupon.code;
 
     this.setShowCouponInSummary(true);
   }
 
   setShowCouponInSummary(shouldShow) {
     this.discount?.toggleAttribute("hidden", !shouldShow);
-    this.couponCode.toggleAttribute("hidden", !shouldShow);
+    this.couponCode?.toggleAttribute("hidden", !shouldShow);
   }
 
-  updateSummary(subTotal, total) {
+  updateSummary(subTotal) {
     this.subtotal.textContent = formatCurrency(subTotal);
-    // this.total.textContent = formatCurrency(total);
   }
 
   getFormattedDiscountValue(coupon, discountedPrice) {
