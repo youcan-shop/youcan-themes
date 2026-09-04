@@ -23,6 +23,16 @@
             <a href="{{ link.url }}" ui-link>
               {{ link.title }}
             </a>
+            {% if link.links.size %}
+              <div class="item sub-links">
+                {% for sub_link in link.links %}
+                  <a href="{{ sub_link.url }}" ui-link>
+                    {{ sub_link.title }}
+                    {% render 'ui-icon', name: 'arrow_right_alt' %}
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>

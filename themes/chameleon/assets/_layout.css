@@ -127,8 +127,57 @@
     gap: var(--spacing-16);
 
     .link {
-      a {
+      position: relative;
+
+      &:has(> a:hover, > a:focus-visible, .sub-links:hover),
+      &:focus-within {
+        .sub-links {
+          pointer-events: auto;
+          animation: open-sub-menu var(--transition-expressive-default-spatial) forwards;
+        }
+      }
+
+      & > a {
         color: var(--color-on-background);
+      }
+
+      .sub-links {
+        z-index: 50;
+        position: absolute;
+        left: 50%;
+        inset-block-start: calc(100% + var(--spacing-8));
+        width: 200px;
+        border-radius: var(--radius-md);
+        padding: var(--spacing-4);
+        background-color: var(--color-background);
+        box-shadow: color-mix(in srgb, currentColor 5%, transparent) 0px 7px 14px 0px;
+        opacity: 0;
+        transform: translateX(-50%) translateY(-8px) scale(0.95);
+        animation: close-sub-menu var(--transition-expressive-default-spatial);
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-4);
+
+        &::before {
+          content: "";
+          top: 0;
+          left: 25%;
+          position: absolute;
+          height: var(--spacing-16);
+          transform: translateY(-16px) translateX(50%);
+          width: 25%;
+        }
+
+        a {
+          justify-content: space-between;
+
+          span {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
       }
     }
   }
@@ -312,5 +361,29 @@
       margin: 0;
       grid-template-columns: 1fr;
     }
+  }
+}
+
+@keyframes open-sub-menu {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0px) scale(1);
+  }
+}
+
+@keyframes close-sub-menu {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0px) scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-8px) scale(0.95);
   }
 }
