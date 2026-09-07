@@ -15,6 +15,16 @@
         <a href="{{ link.url }}" ui-link>
           {{ link.title }}
         </a>
+        {% if link.links.size %}
+          <div class="sub-links">
+            {% for sub_link in link.links %}
+              <a href="{{ sub_link.url }}" ui-button data-variant="secondary" data-size="sm">
+                <span>{{ sub_link.title }}</span>
+                {% render 'ui-icon', name: 'arrow_right_alt' %}
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
       </li>
     {% endfor %}
     {% if settings.theme_mode == 'auto' %}
