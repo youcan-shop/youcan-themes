@@ -1,0 +1,31 @@
+{% comment %}
+  Renders a header menu link, with a dropdown when the link has nested links
+
+  Accepts:
+  - link: {Object} Menu link
+
+  Usage:
+  {% render 'misc.menu-link', link: link %}
+{% endcomment %}
+
+<li class="link" {% if link.links.size > 0 %}data-has-submenu="true"{% endif %}>
+  <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
+    {{ link.title }}
+    {% if link.links.size > 0 %}
+      {% render 'misc.icon', name: 'hgi-arrow-down-01', size: 16 %}
+    {% endif %}
+  </a>
+
+  {% if link.links.size > 0 %}
+    <ul class="sub-links">
+      {% for sub_link in link.links %}
+        <li class="sub-link">
+          <a ui-slot="link-button" data-size="sm" data-flip-icon-in-rtl href="{{ sub_link.url }}">
+            <span>{{ sub_link.title }}</span>
+            {% render 'misc.icon', name: 'hgi-arrow-right-02', size: 20 %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</li>

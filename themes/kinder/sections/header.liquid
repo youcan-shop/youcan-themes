@@ -22,6 +22,8 @@
     --bg-shade-color: oklch(from var(--bg-color) calc(l - 0.018) c h);
     --sheet-background: var(--bg-color);
 
+    position: relative;
+    z-index: 10;
     padding-inline: var(--spacing-16);
     transition: transform var(--transition-standard-slow-spatial);
     background-color: var(--bg-color);
@@ -103,11 +105,7 @@
 
           {% for index in (0..first_half_last_index) %}
             {% assign link = main-link-list.links[index] %}
-            <li class="link">
-              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
-                {{ link.title }}
-              </a>
-            </li>
+            {% render 'misc.menu-link', link: link %}
           {% endfor %}
         </ul>
       </div>
@@ -118,11 +116,7 @@
 
           {% for index in (second_half_first_index..second_half_last_index) %}
             {% assign link = main-link-list.links[index] %}
-            <li class="link">
-              <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
-                {{ link.title }}
-              </a>
-            </li>
+            {% render 'misc.menu-link', link: link %}
           {% endfor %}
         </ul>
         <div class="actions">
@@ -158,11 +152,7 @@
     {% else %}
       <ul class="links">
         {% for link in main-link-list.links %}
-          <li class="link">
-            <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
-              {{ link.title }}
-            </a>
-          </li>
+          {% render 'misc.menu-link', link: link %}
         {% endfor %}
       </ul>
       <div class="actions">
