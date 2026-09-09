@@ -72,6 +72,24 @@
               {{ link.title }}
               {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
             </a>
+            {% if link.links.size %}
+              <ul class="sub-links">
+                {% for sub_link in link.links %}
+                  <li class="link">
+                    <a
+                      ui-slot="button"
+                      data-mode="ghost"
+                      data-size="sm"
+                      data-flip-icon-in-rtl
+                      href="{{ sub_link.url}}"
+                    >
+                      {{ sub_link.title }}
+                      {% render 'misc.icon', name: 'hgi-arrow-right-02' %}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>

@@ -85,20 +85,24 @@
       {% endif %}
     </div>
   </div>
-  {% if compare_at_price and section.settings.show_discount_badge %}
+  {% if compare_at_price and section.settings.show_discount_badge or product.available == false %}
     <div
       class="badge"
       ui-slot="status-badge"
       data-variant="light"
       data-status="{{ settings.sale_badge_status }}"
     >
-      {% if settings.sale_badge_type == 'percentage' %}
-        {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
-        -{{ percentage }}%
+      {% if product.available == false %}
+        {{ 'general.out_of_stock' | t }}
       {% else %}
-        {% assign fixed = compare_at_price | minus: price %}
-        {{ 'general.save' | t }}
-        {{ fixed | money }}
+        {% if settings.sale_badge_type == 'percentage' %}
+          {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+          -{{ percentage }}%
+        {% else %}
+          {% assign fixed = compare_at_price | minus: price %}
+          {{ 'general.save' | t }}
+          {{ fixed | money }}
+        {% endif %}
       {% endif %}
     </div>
   {% endif %}
