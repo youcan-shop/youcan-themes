@@ -1,0 +1,41 @@
+{% comment %}
+  Renders a navbar menu item, with a hover dropdown when the item has nested links.
+
+  Accepts:
+  - item: {Object} Menu item
+
+  Usage:
+  {% render 'menu-link', item: item %}
+{% endcomment %}
+
+{% assign has_submenu = false %}
+{% if item.links.size > 0 %}
+  {% assign has_submenu = true %}
+{% endif %}
+
+<li
+  class="menu-item {%- if item.active %} active{% endif %}"
+  {% if has_submenu %}
+    data-has-submenu="true"
+  {% endif %}
+>
+  <a href="{{ item.url }}">
+    {{ item.title }}
+    {%- if has_submenu %}
+      <ion-icon class="submenu-caret" name="chevron-down-outline"></ion-icon>
+    {%- endif %}
+  </a>
+
+  {%- if has_submenu %}
+    <ul class="sub-links">
+      {% for sub_item in item.links %}
+        <li class="sub-link">
+          <a href="{{ sub_item.url }}" title="{{ sub_item.title | escape }}">
+            <span>{{ sub_item.title }}</span>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {%- endif %}
+</li>
