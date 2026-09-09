@@ -1,7 +1,7 @@
 ---
-"harmony": patch
-"meraki": patch
-"aura": patch
+"harmony": minor
+"meraki": minor
+"aura": minor
 ---
 
 HAM add nested submenu
