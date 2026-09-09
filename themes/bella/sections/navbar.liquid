@@ -141,6 +141,15 @@
           <a ui-slot="link-button" data-size="md" href="{{ link.url }}">
             {{ link.title }}
           </a>
+          {% if link.links.size %}
+            <ul class="sub-links">
+              {% for sub_link in link.links %}
+                <li class="sub-link">
+                  <a ui-slot="link-button" data-size="md" href="{{ sub_link.url }}"> {{ sub_link.title }} </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
         </li>
       {% endfor %}
     </ul>

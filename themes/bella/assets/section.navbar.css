@@ -1,10 +1,11 @@
 @layer sections{
   #youcan-section--navbar{
     --spring-width-offset:10px;
+    position:relative;
+    z-index:50;
   }
   #youcan-section--navbar:has([data-sticky-mode]:not([data-sticky-mode=none])){
     position:sticky;
-    z-index:50;
     inset-block-start:var(--spacing-0);
   }
   [ui-layout=navbar]{
@@ -15,9 +16,9 @@
     padding:var(--top-spacing) 8% var(--bottom-spacing);
     transform:translateY(0%);
     transition:box-shadow var(--transition-standard-fast-spatial), transform var(--transition-standard-slow-spatial);
-    background-color:inherit;
     grid-gap:var(--spacing-16);
     gap:var(--spacing-16);
+    background-color:var(--nav-bar-bg);
   }
   [ui-layout=navbar][data-shadow=true]{
     border-block-end:none;
@@ -64,6 +65,47 @@
   }
   [ui-layout=navbar] .links[data-split-menu=second-half]{
     grid-area:menu-right;
+  }
+  [ui-layout=navbar] .links .link{
+    position:relative;
+  }
+  [ui-layout=navbar] .links .link:has(> a:hover, > a:focus-visible, .sub-links:hover) > a::before, [ui-layout=navbar] .links .link:focus-within > a::before{
+    width:100%;
+  }
+  [ui-layout=navbar] .links .link:has(> a:hover, > a:focus-visible, .sub-links:hover) .sub-links, [ui-layout=navbar] .links .link:focus-within .sub-links{
+    animation:open-sub-menu var(--transition-expressive-default-spatial) forwards;
+    pointer-events:auto;
+  }
+  [ui-layout=navbar] .links .link .sub-links{
+    display:flex;
+    position:absolute;
+    z-index:50;
+    flex-direction:column;
+    width:250px;
+    padding:var(--spacing-24);
+    transform:translateY(-25%);
+    animation:close-sub-menu var(--transition-expressive-default-spatial);
+    border-radius:0 0 20px 20px;
+    opacity:0;
+    background-color:var(--nav-bar-bg);
+    box-shadow:var(--shadow-sm);
+    pointer-events:none;
+    gap:var(--spacing-12);
+    inset-inline-start:calc(var(--spacing-24) * -1);
+    inset-block-start:calc(100% + var(--spacing-32));
+  }
+  [ui-layout=navbar] .links .link .sub-links::before{
+    content:"";
+    position:absolute;
+    top:-32px;
+    left:0;
+    width:50%;
+    height:32px;
+  }
+  [ui-layout=navbar] .links .link .sub-links .sub-link a{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
   [ui-layout=navbar] .actions{
     display:flex;
@@ -150,9 +192,22 @@
     gap:var(--spacing-14);
   }
   #menu [ui-slot=sheet-body] .mobile-links .link [ui-slot=link-button]{
+    align-items:center;
     justify-content:space-between !important;
     width:100% !important;
     height:40px;
+  }
+  #menu [ui-slot=sheet-body] .mobile-links .sub-links{
+    display:flex;
+    flex-direction:column;
+    margin-inline-start:var(--spacing-12);
+    padding-inline-start:var(--spacing-12);
+    border-inline-start:1px solid var(--color-surface-variant);
+  }
+  #menu [ui-slot=sheet-body] .mobile-links .sub-links .link a span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
   #menu [ui-slot=sheet-footer]{
     grid-template-columns:1fr !important;
@@ -163,9 +218,29 @@
   }
   [data-intensity=as-solid-bg] [ui-layout=navbar],
   [data-intensity=as-foreground] [ui-layout=navbar]{
-    background-color:var(--color-on-primary);
+    --nav-bar-bg:var(--color-on-primary);
   }
   [data-intensity=as-light-bg] [ui-layout=navbar]{
-    background-color:var(--color-primary-container);
+    --nav-bar-bg:var(--color-primary-container);
+  }
+}
+@keyframes open-sub-menu{
+  from{
+    transform:translateY(-25%);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+@keyframes close-sub-menu{
+  from{
+    transform:translateY(0);
+    opacity:1;
+  }
+  to{
+    transform:translateY(-25%);
+    opacity:0;
   }
 }
