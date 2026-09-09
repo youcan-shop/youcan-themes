@@ -83,8 +83,11 @@
 
         &:has(> a:hover, > a:focus-visible, .sub-links:hover),
         &:focus-within {
-          & > a::before {
-            width: 100%;
+          & > a {
+            background-size: 100% 1px;
+            color: color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
+            background-position-x: left;
+            background-position-y: bottom;
           }
 
           .sub-links {
@@ -100,25 +103,16 @@
           flex-direction: column;
           width: 250px;
           padding: var(--spacing-24);
-          transform: translateY(-25%);
+          transform: translateY(-8px);
           animation: close-sub-menu var(--transition-expressive-default-spatial);
-          border-radius: 0 0 20px 20px;
+          border-radius: 20px;
           opacity: 0;
           background-color: var(--nav-bar-bg);
-          box-shadow: var(--shadow-sm);
+          box-shadow: color-mix(in srgb, currentcolor 9%, transparent) 0 3px 12px;
           pointer-events: none;
           gap: var(--spacing-12);
           inset-inline-start: calc(var(--spacing-24) * -1);
-          inset-block-start: calc(100% + var(--spacing-32));
-
-          &::before {
-            content: "";
-            position: absolute;
-            top: -32px;
-            left: 0;
-            width: 50%;
-            height: 32px;
-          }
+          inset-block-start: 100%;
 
           .sub-link a {
             overflow: hidden;
@@ -291,7 +285,7 @@
 
 @keyframes open-sub-menu {
   from {
-    transform: translateY(-25%);
+    transform: translateY(-8px);
     opacity: 0;
   }
 
@@ -308,7 +302,7 @@
   }
 
   to {
-    transform: translateY(-25%);
+    transform: translateY(-8px);
     opacity: 0;
   }
 }
