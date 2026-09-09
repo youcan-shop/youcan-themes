@@ -61,6 +61,49 @@
   [ui-layout=navbar] .links[data-split-menu=second-half]{
     grid-area:menu-right;
   }
+  [ui-layout=navbar] .links .link{
+    position:relative;
+  }
+  [ui-layout=navbar] .links .link:has(> a:hover, > a:focus-visible, .sub-links:hover) > a::before, [ui-layout=navbar] .links .link:focus-within > a::before{
+    width:100%;
+  }
+  [ui-layout=navbar] .links .link:has(> a:hover, > a:focus-visible, .sub-links:hover) .sub-links, [ui-layout=navbar] .links .link:focus-within .sub-links{
+    animation:open-sub-menu var(--transition-expressive-default-spatial) forwards;
+    pointer-events:auto;
+  }
+  [ui-layout=navbar] .links .link .sub-links{
+    display:flex;
+    position:absolute;
+    z-index:50;
+    flex-direction:column;
+    width:250px;
+    padding:var(--spacing-8);
+    transform:translateY(-8px);
+    animation:close-sub-menu var(--transition-expressive-default-spatial);
+    border:1px solid var(--color-surface-variant);
+    border-radius:var(--radius-button);
+    opacity:0;
+    background-color:var(--nav-bar-bg);
+    pointer-events:none;
+    inset-inline-start:calc(var(--spacing-24) * -1);
+    inset-block-start:calc(100% + var(--spacing-32));
+  }
+  [ui-layout=navbar] .links .link .sub-links::before{
+    content:"";
+    position:absolute;
+    top:-33px;
+    left:0;
+    width:50%;
+    height:33px;
+  }
+  [ui-layout=navbar]:not(#\#) .links .link .sub-links .sub-link [ui-slot=button]{
+    justify-content:space-between !important;
+  }
+  [ui-layout=navbar] .links .link .sub-links .sub-link [ui-slot=button] span{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
   [ui-layout=navbar] .actions{
     display:flex;
     grid-area:actions;
@@ -128,8 +171,28 @@
   }
   [data-intensity=as-solid-bg] [ui-layout=navbar],
   [data-intensity=as-foreground] [ui-layout=navbar]{
-    background-color:var(--color-on-primary);
+    --nav-bar-bg:var(--color-on-primary);
   }
   [data-intensity=as-light-bg] [ui-layout=navbar]{
-    background-color:var(--color-primary-container);
+    --nav-bar-bg:var(--color-primary-container);
   }
+@keyframes open-sub-menu{
+  from{
+    transform:translateY(-8px) scale(0.95);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0) scale(1);
+    opacity:1;
+  }
+}
+@keyframes close-sub-menu{
+  from{
+    transform:translateY(0) scale(1);
+    opacity:1;
+  }
+  to{
+    transform:translateY(-8px) scale(0.95);
+    opacity:0;
+  }
+}
