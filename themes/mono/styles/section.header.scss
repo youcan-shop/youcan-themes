@@ -108,8 +108,31 @@
         padding: var(--spacing-12);
 
         .link {
+          display: flex;
+          flex-direction: column;
+
           [ui-slot="button"] {
             justify-content: space-between;
+          }
+
+          &:has(.sub-links) {
+            border: 1px solid var(--color-primary);
+
+            & > [ui-slot="button"] {
+              background-color: var(--color-primary-container);
+            }
+          }
+
+          .sub-links {
+            display: flex;
+            flex-direction: column;
+            border-block-start: 1px solid var(--color-primary);
+
+            .link {
+              [ui-slot="button"] {
+                padding-inline-start: var(--spacing-24);
+              }
+            }
           }
         }
       }

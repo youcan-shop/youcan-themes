@@ -93,6 +93,24 @@
   gap:var(--spacing-12);
   padding:var(--spacing-12);
 }
+[ui-section=header] #menu [ui-slot=drawer-body] .links .link{
+  display:flex;
+  flex-direction:column;
+}
 [ui-section=header] #menu [ui-slot=drawer-body] .links .link [ui-slot=button]{
   justify-content:space-between;
+}
+[ui-section=header] #menu [ui-slot=drawer-body] .links .link:has(.sub-links){
+  border:1px solid var(--color-primary);
+}
+[ui-section=header] #menu [ui-slot=drawer-body] .links .link:has(.sub-links) > [ui-slot=button]{
+  background-color:var(--color-primary-container);
+}
+[ui-section=header] #menu [ui-slot=drawer-body] .links .link .sub-links{
+  display:flex;
+  flex-direction:column;
+  border-block-start:1px solid var(--color-primary);
+}
+[ui-section=header] #menu [ui-slot=drawer-body] .links .link .sub-links .link [ui-slot=button]{
+  padding-inline-start:var(--spacing-24);
 }
