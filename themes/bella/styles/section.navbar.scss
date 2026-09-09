@@ -2,9 +2,11 @@
   #youcan-section--navbar {
     --spring-width-offset: 10px;
 
+    position: relative;
+    z-index: 50;
+
     &:has([data-sticky-mode]:not([data-sticky-mode="none"])) {
       position: sticky;
-      z-index: 50;
       inset-block-start: var(--spacing-0);
     }
   }
@@ -19,8 +21,8 @@
     transition:
       box-shadow var(--transition-standard-fast-spatial),
       transform var(--transition-standard-slow-spatial);
-    background-color: inherit;
     gap: var(--spacing-16);
+    background-color: var(--nav-bar-bg);
 
     &[data-shadow="true"] {
       border-block-end: none;
@@ -74,6 +76,50 @@
 
       &[data-split-menu="second-half"] {
         grid-area: menu-right;
+      }
+
+      .link {
+        position: relative;
+
+        &:has(> a:hover, > a:focus-visible, .sub-links:hover),
+        &:focus-within {
+          & > a {
+            background-size: 100% 1px;
+            color: color-mix(in srgb, var(--color-link-button), var(--color-on-background) 30%);
+            background-position-x: left;
+            background-position-y: bottom;
+          }
+
+          .sub-links {
+            animation: open-sub-menu var(--transition-expressive-default-spatial) forwards;
+            pointer-events: auto;
+          }
+        }
+
+        .sub-links {
+          display: flex;
+          position: absolute;
+          z-index: 50;
+          flex-direction: column;
+          width: 250px;
+          padding: var(--spacing-24);
+          transform: translateY(-8px);
+          animation: close-sub-menu var(--transition-expressive-default-spatial);
+          border-radius: 20px;
+          opacity: 0;
+          background-color: var(--nav-bar-bg);
+          box-shadow: color-mix(in srgb, currentcolor 9%, transparent) 0 3px 12px;
+          pointer-events: none;
+          gap: var(--spacing-12);
+          inset-inline-start: calc(var(--spacing-24) * -1);
+          inset-block-start: 100%;
+
+          .sub-link a {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
       }
     }
 
@@ -188,9 +234,26 @@
 
         .link {
           [ui-slot="link-button"] {
+            align-items: center;
             justify-content: space-between !important;
             width: 100% !important;
             height: 40px;
+          }
+        }
+
+        .sub-links {
+          display: flex;
+          flex-direction: column;
+          margin-inline-start: var(--spacing-12);
+          padding-inline-start: var(--spacing-12);
+          border-inline-start: 1px solid var(--color-surface-variant);
+
+          .link a {
+            span {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
           }
         }
       }
@@ -209,13 +272,37 @@
   [data-intensity="as-solid-bg"],
   [data-intensity="as-foreground"] {
     [ui-layout="navbar"] {
-      background-color: var(--color-on-primary);
+      --nav-bar-bg: var(--color-on-primary);
     }
   }
 
   [data-intensity="as-light-bg"] {
     [ui-layout="navbar"] {
-      background-color: var(--color-primary-container);
+      --nav-bar-bg: var(--color-primary-container);
     }
+  }
+}
+
+@keyframes open-sub-menu {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes close-sub-menu {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-8px);
+    opacity: 0;
   }
 }
