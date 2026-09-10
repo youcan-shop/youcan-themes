@@ -148,7 +148,7 @@
       .sub-links {
         z-index: 50;
         position: absolute;
-        left: 50%;
+        inset-inline-start: 0;
         inset-block-start: calc(100% + var(--spacing-8));
         width: 200px;
         border-radius: var(--radius-md);
@@ -156,7 +156,7 @@
         background-color: var(--color-background);
         box-shadow: color-mix(in srgb, currentColor 5%, transparent) 0px 7px 14px 0px;
         opacity: 0;
-        transform: translateX(-50%) translateY(-8px) scale(0.95);
+        transform: translateY(-8px) scale(0.95);
         animation: close-sub-menu var(--transition-expressive-default-spatial);
         pointer-events: none;
         display: flex;
@@ -165,12 +165,10 @@
 
         &::before {
           content: "";
-          top: 0;
-          left: 25%;
           position: absolute;
-          height: var(--spacing-16);
-          transform: translateY(-16px) translateX(50%);
-          width: 25%;
+          height: var(--spacing-8);
+          inset-block-end: 100%;
+          inset-inline: 0;
         }
 
         a {
@@ -371,23 +369,23 @@
 @keyframes open-sub-menu {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-8px) scale(0.95);
+    transform: translateY(-8px) scale(0.95);
   }
 
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0px) scale(1);
+    transform: translateY(0px) scale(1);
   }
 }
 
 @keyframes close-sub-menu {
   from {
     opacity: 1;
-    transform: translateX(-50%) translateY(0px) scale(1);
+    transform: translateY(0px) scale(1);
   }
 
   to {
     opacity: 0;
-    transform: translateX(-50%) translateY(-8px) scale(0.95);
+    transform: translateY(-8px) scale(0.95);
   }
 }
