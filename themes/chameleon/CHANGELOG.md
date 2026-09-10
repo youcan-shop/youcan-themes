@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.0
+
+### Minor Changes
+
+- 753e712: Chameleon > Add submenu support
+
 ## 4.7.4
 
 ### Patch Changes

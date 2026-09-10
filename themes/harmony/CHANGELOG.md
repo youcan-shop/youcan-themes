@@ -1,5 +1,11 @@
 # harmony
 
+## 4.6.0
+
+### Minor Changes
+
+- d87008f: HAM add nested submenu
+
 ## 4.5.0
 
 ### Minor Changes

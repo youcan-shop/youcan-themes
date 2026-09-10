@@ -1,5 +1,11 @@
 # kinder
 
+## 1.1.0
+
+### Minor Changes
+
+- e4434c1: Kinder > Add submenu support
+
 ## 1.0.4
 
 ### Patch Changes

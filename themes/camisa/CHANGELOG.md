@@ -1,5 +1,12 @@
 # camisa
 
+## 1.1.0
+
+### Minor Changes
+
+- 0381eda: Camisa > Add nested menus support
+- ccc7774: Bella/Camisa: Product card > Add "out of stoke" badge
+
 ## 1.0.5
 
 ### Patch Changes

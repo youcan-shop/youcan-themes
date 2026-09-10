@@ -1,5 +1,12 @@
 # bella
 
+## 1.3.0
+
+### Minor Changes
+
+- 00972e0: Bella > Add nested menus support
+- ccc7774: Bella/Camisa: Product card > Add "out of stoke" badge
+
 ## 1.2.3
 
 ### Patch Changes
