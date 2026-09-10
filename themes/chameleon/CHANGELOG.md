@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.1
+
+### Patch Changes
+
+- 80fd2d4: Chameleon > Submenu fixes: align dropdown panels with the start of their parent link, flip submenu arrows in RTL, and make drawer menu links span the full row
+
 ## 4.8.0
 
 ### Minor Changes
