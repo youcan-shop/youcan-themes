@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.0
+
+### Minor Changes
+
+- 2d1c603: Mono > Add nested menus support
+
 ## 1.1.4
 
 ### Patch Changes
