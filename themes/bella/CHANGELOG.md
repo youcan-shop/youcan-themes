@@ -1,5 +1,11 @@
 # bella
 
+## 1.3.1
+
+### Patch Changes
+
+- 9aebd31: Bella > Fix nested menus not showing in the split navbar layout
+
 ## 1.3.0
 
 ### Minor Changes
