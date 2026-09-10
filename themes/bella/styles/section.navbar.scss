@@ -64,6 +64,9 @@
     }
 
     .links {
+      --sub-menu-inset-start: calc(var(--spacing-24) * -1);
+      --sub-menu-inset-end: auto;
+
       display: flex;
       grid-area: menu;
       flex-wrap: wrap;
@@ -74,7 +77,12 @@
         grid-area: menu-left;
       }
 
+      /* This half sits against the inline end, so its panels open inwards to
+         keep them from bleeding past the viewport */
       &[data-split-menu="second-half"] {
+        --sub-menu-inset-start: auto;
+        --sub-menu-inset-end: calc(var(--spacing-24) * -1);
+
         grid-area: menu-right;
       }
 
@@ -111,7 +119,7 @@
           box-shadow: color-mix(in srgb, currentcolor 9%, transparent) 0 3px 12px;
           pointer-events: none;
           gap: var(--spacing-12);
-          inset-inline-start: calc(var(--spacing-24) * -1);
+          inset-inline: var(--sub-menu-inset-start) var(--sub-menu-inset-end);
           inset-block-start: 100%;
 
           .sub-link a {
