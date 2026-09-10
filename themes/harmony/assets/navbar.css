@@ -8,7 +8,7 @@
 .yc-header{
   background-color:var(--yc-nav-background);
   transition:opacity 0.3s, transform 0.3s;
-  border-bottom:1px solid rgba(0, 0, 0, 0.1);
+  border-bottom:var(--yc-nav-border);
 }
 .yc-header.nav-fixed.fixed{
   position:fixed;
@@ -142,7 +142,7 @@
   color:var(--yc-nav-links-color);
   font-weight:600;
 }
-.yc-header .yc-navbar .menu-item.active ::after, .yc-header .yc-navbar .menu-item:hover ::after{
+.yc-header .yc-navbar .menu-item.active > a::after, .yc-header .yc-navbar .menu-item:hover > a::after{
   display:block;
   content:"";
   position:absolute;
@@ -161,6 +161,90 @@
   100%{
     width:40%;
   }
+}
+.yc-header .yc-navbar .menu-item[data-has-submenu=true]{
+  position:relative;
+}
+.yc-header .yc-navbar .menu-item[data-has-submenu=true] > a{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  width:-moz-max-content;
+  width:max-content;
+}
+.yc-header .yc-navbar .menu-item[data-has-submenu=true] .submenu-caret{
+  font-size:14px;
+  font-weight:500;
+  transition:transform 0.2s ease-in-out;
+}
+.yc-header .yc-navbar .menu-item[data-has-submenu=true]:hover .submenu-caret, .yc-header .yc-navbar .menu-item[data-has-submenu=true]:focus-within .submenu-caret{
+  transform:rotate(180deg);
+}
+.yc-header .yc-navbar .menu-item[data-has-submenu=true]:hover .sub-links, .yc-header .yc-navbar .menu-item[data-has-submenu=true]:focus-within .sub-links{
+  visibility:visible;
+  opacity:1;
+  pointer-events:auto;
+  transform:translateX(-50%) translateY(0) scale(1);
+}
+.yc-header .yc-navbar .menu-item .sub-links{
+  display:flex;
+  flex-direction:column;
+  position:absolute;
+  z-index:50;
+  top:calc(100% + 8px);
+  left:50%;
+  min-width:200px;
+  max-width:260px;
+  margin:0;
+  padding:8px;
+  list-style:none;
+  border-radius:12px;
+  background-color:var(--yc-nav-background);
+  box-shadow:var(--yc-main-shadow);
+  visibility:hidden;
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(-50%) translateY(-8px) scale(0.97);
+  transition:opacity 0.2s ease-in-out, transform 0.2s ease-in-out, visibility 0.2s ease-in-out;
+}
+.yc-header .yc-navbar .menu-item .sub-links::before{
+  content:"";
+  position:absolute;
+  bottom:100%;
+  inset-inline:0;
+  height:8px;
+}
+.yc-header .yc-navbar .menu-item .sub-links .sub-link:not(:last-child){
+  border-bottom:1px solid color-mix(in srgb, var(--yc-nav-links-color) 15%, transparent);
+}
+.yc-header .yc-navbar .menu-item .sub-links .sub-link a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  width:100%;
+  height:auto;
+  padding:12px 8px;
+  font-size:14px;
+  text-align:start;
+  transition:background-color 0.2s ease-in-out;
+  opacity:1;
+  filter:none;
+}
+.yc-header .yc-navbar .menu-item .sub-links .sub-link a:hover{
+  opacity:1;
+  background-color:color-mix(in srgb, var(--yc-nav-links-color) 1.5%, transparent);
+}
+.yc-header .yc-navbar .menu-item .sub-links .sub-link a span{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.yc-header .yc-navbar .menu-item .sub-links .sub-link a ion-icon{
+  flex-shrink:0;
+  font-size:16px;
+  opacity:0.5;
 }
 .yc-header .yc-navbar .menu-item a,
 .yc-header .yc-navbar .corner a{
@@ -264,6 +348,42 @@
 }
 .navigation-drawer .items-wrapper{
   border-bottom:1px solid;
+  height:80vh;
+  overflow-y:auto;
+}
+.navigation-drawer .drawer-item{
+  display:flex;
+  flex-direction:column;
+}
+.navigation-drawer .sub-links{
+  display:flex;
+  flex-direction:column;
+  margin:0;
+  padding-block-end:12px;
+  padding-inline-start:38px;
+  list-style:none;
+}
+.navigation-drawer .sub-links .sub-link a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding-block:10px;
+  padding-inline-end:16px;
+  font-size:14px;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+  opacity:0.75;
+}
+.navigation-drawer .sub-links .sub-link a span{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.navigation-drawer .sub-links .sub-link a ion-icon{
+  flex-shrink:0;
+  font-size:14px;
 }
 .navigation-drawer .items-wrapper,
 .navigation-drawer .items{

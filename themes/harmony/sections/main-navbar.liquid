@@ -35,6 +35,10 @@
   .menu .menu-toggler ion-icon {
     color: var(--color) !important;
   }
+
+  .sub-links {
+    display: none;
+  }
 {% endstyle %}
 
 {% if section.settings.toggle_navbar != true %}
@@ -82,9 +86,7 @@
               </button>
               <ul class="menu-list">
                 {% for item in main-link-list.links %}
-                  <li class="menu-item {%-if item.active %} active {%-endif%}">
-                    <a href="{{ item.url }}">{{ item.title }}</a>
-                  </li>
+                  {% render 'menu-link', item: item %}
                 {% endfor %}
               </ul>
             </div>
@@ -177,15 +179,7 @@
     </form>
     <div class="flex flex-col items-wrapper">
       {% for item in main-link-list.links %}
-        <a
-          class="items flex items-center justify-between"
-          href="{{ item.url }}"
-        >
-          <div>
-            {{ item.title }}
-          </div>
-          <ion-icon name="chevron-forward-outline"></ion-icon>
-        </a>
+        {% render 'menu-drawer-link', item: item %}
       {% endfor %}
     </div>
   </section>

@@ -1,0 +1,43 @@
+{% comment %}
+  Renders a mobile drawer menu item, with an inline nested list when the item has nested links.
+
+  Accepts:
+  - item: {Object} Menu item
+
+  Usage:
+  {% render 'menu-drawer-link', item: item %}
+{% endcomment %}
+
+{% assign has_submenu = false %}
+{% if item.links.size > 0 %}
+  {% assign has_submenu = true %}
+{% endif %}
+
+<div class="drawer-item">
+  <a
+    class="items flex items-center justify-between"
+    href="{{ item.url }}"
+  >
+    <div>
+      {{ item.title }}
+    </div>
+    <ion-icon name="chevron-forward-outline"></ion-icon>
+  </a>
+
+  {%- if has_submenu %}
+    <ul class="sub-links">
+      {% for sub_item in item.links %}
+        <li class="sub-link">
+          <a
+            class="flex items-center justify-between"
+            href="{{ sub_item.url }}"
+            title="{{ sub_item.title | escape }}"
+          >
+            <span>{{ sub_item.title }}</span>
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {%- endif %}
+</div>
