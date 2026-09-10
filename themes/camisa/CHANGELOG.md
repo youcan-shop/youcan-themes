@@ -1,5 +1,11 @@
 # camisa
 
+## 1.1.1
+
+### Patch Changes
+
+- fa57da8: Camisa > Fix the submenu hover bridge not mirroring in RTL
+
 ## 1.1.0
 
 ### Minor Changes
