@@ -19,8 +19,7 @@
   <body
     style="
       --brand-color: {{ settings.brand_color.hex }};
-      --brand-lightness: {{ settings.brand_color.lightness | divided_by: 100.0 }};
-      --on-brand: oklch(clamp(0, (0.6 - var(--brand-lightness)) * 99999, 1) 0 0deg);
+      --on-brand: oklch(from var(--brand-color) clamp(0, (0.72 - l) * 99999, 1) 0 0);
     "
   >
     {% section 'announcement-bar' %}
