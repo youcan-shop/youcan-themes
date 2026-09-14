@@ -1,5 +1,11 @@
 # kinder
 
+## 1.1.1
+
+### Patch Changes
+
+- 4265df8: Fix kinder on-brand color gen
+
 ## 1.1.0
 
 ### Minor Changes

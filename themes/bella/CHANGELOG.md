@@ -1,5 +1,11 @@
 # bella
 
+## 1.3.2
+
+### Patch Changes
+
+- 43fec86: Bella > Fix slideshow autoplay setting
+
 ## 1.3.1
 
 ### Patch Changes
