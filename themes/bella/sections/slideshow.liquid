@@ -15,6 +15,10 @@
       --item-size: 92%
     {% endif %}
   "
+  {% if section.settings.auto_rotate %}
+    autoplay
+    interval="{{ section.settings.change_every | times: 1000 }}"
+  {% endif %}
   {% if section.settings.override_global_colors %}
     data-scoped-color
     data-intensity="{{ section.settings.color_intensity }}"
@@ -26,10 +30,6 @@
     ui-slot="carousel"
     aria-orientation="vertical"
     data-align="center"
-    {% if section.settings.auto_rotate %}
-      autoplay
-      interval="{{ section.settings.change_every | times: 1000 }}"
-    {% endif %}
   >
     {% for slide in section.blocks %}
       {% render 'block.slide' %}
