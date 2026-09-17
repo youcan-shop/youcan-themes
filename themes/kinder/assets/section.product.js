@@ -205,7 +205,7 @@ if (!customElements.get("ui-product")) {
       }
 
       const qtyEl = this.querySelector("ui-quantity");
-      const qty = qtyEl ? qtyEl.quantityValue : 1;
+      const qty = parseInt(qtyEl?.getAttribute("quantity"), 10) || 1;
 
       subtotalEls.forEach((subtotalEl) => {
         subtotalEl.textContent = formatCurrency(this.currentPrice * qty);
