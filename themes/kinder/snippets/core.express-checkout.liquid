@@ -15,6 +15,13 @@
 {% assign has_linked_fields = checkout.linked_fields %}
 {% assign has_phone_validation = checkout.phone_validation %}
 
+{% assign show_subtotal = false %}
+{% for shop_buttons_block in section.blocks %}
+  {% if shop_buttons_block.type == 'block_shop_buttons' %}
+    {% assign show_subtotal = shop_buttons_block.settings.show_subtotal %}
+  {% endif %}
+{% endfor %}
+
 {% if style == 'open-drawer' %}
   {% assign trigger_variant = product.selected_or_first_available_variant | default: product.variants[0] %}
   <button
@@ -145,7 +152,7 @@
               <p class="price">{{ price | default: 0 | money }}</p>
             </div>
             {% render 'core.quantity', product: product %}
-            {% if block.settings.show_subtotal %}
+            {% if show_subtotal %}
               <div class="subtotal">
                 <span class="label">{{ 'product.subtotal' | t }}</span>
                 <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
@@ -246,12 +253,14 @@
       {% render 'core.quantity', size: 'md' %}
       {% render 'core.shop-button', is_express_checkout: true %}
     </div>
-    <div class="subtotal">
-      <span class="label">{{ 'product.subtotal' | t }}</span>
-      <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
-        {{ price | default: 0 | money }}
-      </span>
-    </div>
+    {% if show_subtotal %}
+      <div class="subtotal">
+        <span class="label">{{ 'product.subtotal' | t }}</span>
+        <span ui-block="subtotal" data-price="{{ price | default: 0 }}">
+          {{ price | default: 0 | money }}
+        </span>
+      </div>
+    {% endif %}
   </form>
 {% endif %}
 
