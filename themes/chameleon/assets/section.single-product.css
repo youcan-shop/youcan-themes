@@ -224,21 +224,32 @@
       inset-block-end: var(--spacing-16);
       display: none;
       align-items: center;
-      gap: var(--spacing-8);
       justify-content: center;
 
       .page {
-        width: 6px;
-        height: 6px;
+        width: 24px;
+        height: 24px;
+        padding: 0;
         border: none;
         outline: none;
         cursor: pointer;
-        filter: contrast(0);
-        border-radius: var(--radius-rounded);
-        background-color: var(--color-on-background);
-        transition: var(--transition-standard-default-effects);
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        &[aria-selected="true"] {
+        &::before {
+          content: "";
+          display: block;
+          width: 6px;
+          height: 6px;
+          filter: contrast(0);
+          border-radius: var(--radius-rounded);
+          background-color: var(--color-on-background);
+          transition: var(--transition-standard-default-effects);
+        }
+
+        &[aria-selected="true"]::before {
           width: 24px;
           filter: contrast(1);
         }
