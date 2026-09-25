@@ -94,7 +94,7 @@ if (!customElements.get("ui-carousel")) {
       }
 
       this.markers?.forEach((marker, i) => {
-        marker.setAttribute("aria-selected", currentPage === i);
+        marker.setAttribute("aria-current", currentPage === i);
       });
 
       if (this.arrows.previous && this.arrows.next) this.setArrowsState();

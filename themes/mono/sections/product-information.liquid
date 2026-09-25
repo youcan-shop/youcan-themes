@@ -23,7 +23,7 @@
   {% endif %}
 >
   <ui-carousel class="media" ui-product="media">
-    <div class="list" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+    <div class="list" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
       {% if product.images.size %}
         {% for image in product.images %}
           <div class="image-item" ui-carousel="item" ui-slot="carousel-item">
@@ -32,8 +32,9 @@
               alt="{{ product.name }}"
               height="100%"
               width="100%"
-              {% if forloop.index0 %}
+              {% if forloop.first %}
                 loading="eager"
+                fetchpriority="high"
               {% else %}
                 loading="lazy"
               {% endif %}
@@ -51,7 +52,7 @@
           data-center="true"
         {% endif %}
         ui-slot="carousel"
-        aria-orientation="vertical"
+        data-orientation="vertical"
       >
         {% for marker in product.images %}
           <button
@@ -59,7 +60,7 @@
             ui-carousel="marker"
             ui-slot="carousel-item"
             {% if forloop.first %}
-              aria-selected="true"
+              aria-current="true"
             {% endif %}
           >
             <img
@@ -67,7 +68,7 @@
               alt="{{ product.name }}"
               height="100%"
               width="100%"
-              loading="eager"
+              loading="lazy"
             >
           </button>
         {% endfor %}
