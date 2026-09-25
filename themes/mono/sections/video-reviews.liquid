@@ -53,15 +53,19 @@
       </div>
     {% endif %}
     {% if section.blocks.size %}
-      <ul class="list" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+      <ul class="list" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
         {% for block in section.blocks %}
           {% if block.settings.url %}
             {% assign has_video = true %}
           {% endif %}
 
+          {% assign video_label = 'video_reviews.title' | t | append: ' ' | append: forloop.index %}
+          {% assign video_label = block.settings.thumbnail_alt | default: video_label %}
+
           <li ui-carousel="item" ui-slot="carousel-item" {{ block.youcan_attributes }}>
             <button
               class="video-item"
+              aria-label="{{ video_label }}"
               data-aspect-ratio="{{ section.settings.aspect_ratio }}"
               {% if has_video == true %}
                 ui-video-reviews="item"
@@ -71,7 +75,7 @@
               {% if block.settings.thumbnail %}
                 <img
                   src="{{ block.settings.thumbnail.src }}"
-                  alt="{{ block.settings.thumbnail_alt | default: 'Video {{ forloop.index }}' }}"
+                  alt="{{ video_label }}"
                   height="100%"
                   width="100%"
                   loading="lazy"
