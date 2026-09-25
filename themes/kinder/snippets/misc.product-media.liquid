@@ -11,7 +11,7 @@
       class="main-media"
       ui-carousel="wrapper"
       ui-slot="carousel"
-      aria-orientation="vertical"
+      data-orientation="vertical"
       data-align="center"
     >
       {% if product.images.size > 1 %}
@@ -62,14 +62,14 @@
     </div>
   </div>
   {% if product.images.size > 1 %}
-    <div class="markers" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+    <div class="markers" ui-slot="carousel" data-orientation="vertical" data-align="center">
       {% for marker in product.images %}
         <button
           class="marker"
           ui-carousel="marker"
           ui-slot="carousel-item"
           {% if forloop.first %}
-            aria-selected="true"
+            aria-current="true"
           {% endif %}
         >
           <img

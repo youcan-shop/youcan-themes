@@ -26,7 +26,13 @@
   data-alignment="{{ settings.product_alignment }}"
   {{ attributes }}
 >
-  <a href="{{ product.url }}" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+  {% assign placeholder = 'product.title' | t %}
+  <a
+    href="{{ product.url }}"
+    class="media"
+    data-image-ratio="{{ settings.product_image_ratio }}"
+    aria-label="{{ product.name | default: placeholder }}"
+  >
     {% if product.preview_image %}
       <img
         srcset="
