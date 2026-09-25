@@ -1,5 +1,11 @@
 # kinder
 
+## 1.1.2
+
+### Patch Changes
+
+- 9e0f0c7: Fix subtotal in product page
+
 ## 1.1.1
 
 ### Patch Changes
