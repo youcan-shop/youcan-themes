@@ -29,7 +29,11 @@
           alt="first-img"
           height="100%"
           width="100%"
-          loading="lazy"
+          {% if forloop.first %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
         >
       </div>
     {% endif %}
@@ -97,10 +101,14 @@
             <img
               src="{{ slide.settings.desktop_content_image.src | default: slide.settings.mobile_content_image.src }}"
               alt="content-image"
-              loading="lazy"
               width="100%"
               height="100%"
-              loading="lazy"
+              {% if forloop.first %}
+                loading="eager"
+                fetchpriority="high"
+              {% else %}
+                loading="lazy"
+              {% endif %}
             >
           </picture>
         </div>
@@ -113,7 +121,11 @@
           alt="first-img"
           height="100%"
           width="100%"
-          loading="lazy"
+          {% if forloop.first %}
+            loading="eager"
+          {% else %}
+            loading="lazy"
+          {% endif %}
         >
       </div>
     {% endif %}
