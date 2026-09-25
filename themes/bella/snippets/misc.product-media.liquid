@@ -27,8 +27,9 @@
             alt="{{ product.name }}"
             height="100%"
             width="100%"
-            {% if forloop.index0 %}
+            {% if forloop.first %}
               loading="eager"
+              fetchpriority="high"
             {% else %}
               loading="lazy"
             {% endif %}
@@ -65,7 +66,7 @@
             alt="{{ product.name }}"
             height="100%"
             width="100%"
-            loading="eager"
+            loading="lazy"
           >
         </button>
       {% endfor %}
@@ -83,6 +84,9 @@
             height="100%"
             width="100%"
             loading="eager"
+            {% if forloop.first %}
+              fetchpriority="high"
+            {% endif %}
           >
         </div>
       {% endfor %}
