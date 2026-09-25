@@ -62,6 +62,7 @@
                 type="radio"
                 name="{{ unique_name }}"
                 value="{{ opt.value }}"
+                aria-label="{{ opt.value }}"
                 {% if opt.value == default %}
                   checked
                 {% endif %}
@@ -70,7 +71,7 @@
           {% endfor %}
         </div>
       {% elsif variant.type == 'dropdown' %}
-        <select ui-slot="input" data-size="lg" name="{{ unique_name }}">
+        <select ui-slot="input" data-size="lg" name="{{ unique_name }}" aria-label="{{ variant.name }}">
           {% for opt in variant.values %}
             <option
               value="{{ opt }}"
