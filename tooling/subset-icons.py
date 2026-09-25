@@ -30,7 +30,9 @@ def collect_names(theme_path):
         for path in (theme_path / folder).rglob("*"):
             if path.suffix in (".liquid", ".json"):
                 names |= set(re.findall(r"hgi-[a-z0-9-]+", path.read_text()))
-    return names - {"hgi-stroke", "hgi-stroke-rounded", "hgi-subset"}
+    for path in (theme_path / "assets").glob("*.js"):
+        names |= set(re.findall(r"hgi-[a-z0-9-]+", path.read_text()))
+    return names - {"hgi-stroke", "hgi-stroke-rounded", "hgi-rounded", "hgi-subset"}
 
 
 def main():
