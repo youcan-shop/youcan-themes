@@ -2,4 +2,4 @@
 "bella": patch
 ---
 
-Theme accessibility fixes
+Theme accessibility and performance improvements
