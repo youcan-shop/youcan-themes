@@ -236,27 +236,25 @@
   </div>
 </div>
 
-{% if cart %}
-  {% javascript %}
-    document.addEventListener('DOMContentLoaded', function () {
-      const checkoutButton = document.querySelector('#checkout-button');
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkoutButton = document.querySelector('#checkout-button');
 
-      if (!checkoutButton) return;
+    if (!checkoutButton) return;
 
-      const cart = JSON.parse({{ cart | json }});
+    const cart = JSON.parse({{ cart | json }});
 
-      let updatedCart = cart;
+    let updatedCart = cart;
 
-      subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
-        updatedCart = payload.cartData;
-      });
-
-      checkoutButton.addEventListener('click', function () {
-        window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
-      });
+    subscribe(PUB_SUB_EVENTS.cartUpdate, function (payload) {
+      updatedCart = payload.cartData;
     });
-  {% endjavascript %}
-{% endif %}
+
+    checkoutButton.addEventListener('click', function () {
+      window.Dotshop.pixels.publish('initiate-checkout', updatedCart);
+    });
+  });
+{% endjavascript %}
 
 {% schema %}
 {
