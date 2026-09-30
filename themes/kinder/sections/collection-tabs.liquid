@@ -46,8 +46,14 @@
               <button
                 class="tab-trigger"
                 ui-carousel="marker"
+                type="button"
+                role="tab"
+                id="{{ section.id }}-tab-{{ forloop.index }}"
+                aria-controls="{{ section.id }}-tabpanel-{{ forloop.index }}"
                 {% if forloop.first %}
                   aria-selected="true"
+                {% else %}
+                  aria-selected="false"
                 {% endif %}
                 {{ collection_block.youcan_attributes }}
               >
@@ -63,7 +69,7 @@
           </div>
         {% endif %}
       </aside>
-      <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+      <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
         {% for collection_block in section.blocks %}
           {% assign max_products = section.settings.max_products_to_show %}
           {% if collection_block.settings.collection.id %}
@@ -72,7 +78,11 @@
                 class="tab-content"
                 ui-carousel="item"
                 ui-slot="carousel-item"
-                role="tabpanel"
+                {% if section.blocks.size > 1 %}
+                  role="tabpanel"
+                  id="{{ section.id }}-tabpanel-{{ forloop.index }}"
+                  aria-labelledby="{{ section.id }}-tab-{{ forloop.index }}"
+                {% endif %}
                 style="
                   --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
                   --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
@@ -106,20 +116,26 @@
               </div>
             {% endpaginate %}
           {% else %}
-            <ul
-              class="items"
+            <div
+              class="tab-content"
               ui-carousel="item"
               ui-slot="carousel-item"
-              role="tabpanel"
+              {% if section.blocks.size > 1 %}
+                role="tabpanel"
+                id="{{ section.id }}-tabpanel-{{ forloop.index }}"
+                aria-labelledby="{{ section.id }}-tab-{{ forloop.index }}"
+              {% endif %}
               style="
                 --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
                 --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
               "
             >
-              {% for product in (1..max_products) %}
-                {% render 'block.product-tab', product: product %}
-              {% endfor %}
-            </ul>
+              <ul class="items">
+                {% for product in (1..max_products) %}
+                  {% render 'block.product-tab', product: product %}
+                {% endfor %}
+              </ul>
+            </div>
           {% endif %}
         {% endfor %}
       </div>

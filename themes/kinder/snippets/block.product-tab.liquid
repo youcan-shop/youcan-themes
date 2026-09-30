@@ -9,7 +9,13 @@
 {% endcomment %}
 
 <li ui-carousel="item" ui-block="product-tab" ui-slot="carousel-item" {{ product.youcan_attributes }}>
-  <a href="/products/{{ product.slug }}" class="media" data-image-ratio="square">
+  {% assign placeholder = 'product.title' | t %}
+  <a
+    href="/products/{{ product.slug }}"
+    class="media"
+    data-image-ratio="square"
+    aria-label="{{ product.name | default: placeholder }}"
+  >
     {% if product.preview_image %}
       <img
         srcset="

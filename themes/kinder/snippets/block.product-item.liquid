@@ -17,7 +17,12 @@
   product-id="{{ product.settings.block_product.id }}"
   {{ product.youcan_attributes }}
 >
-  <a class="media" href="/products/{{ product.settings.block_product.slug }}">
+  {% assign placeholder = 'product.title' | t %}
+  <a
+    class="media"
+    href="/products/{{ product.settings.block_product.slug }}"
+    aria-label="{{ product.settings.block_product.name | default: placeholder }}"
+  >
     {% if product.settings.block_product.preview_image %}
       <img
         src="{{ product.settings.block_product.preview_image.original }}"
@@ -53,7 +58,7 @@
         {% endfor %}
 
         <div ui-variant="{{ variant.type }}">
-          <select ui-slot="input" data-size="sm" name="{{ unique_name }}">
+          <select ui-slot="input" data-size="sm" name="{{ unique_name }}" aria-label="{{ variant.name }}">
             {% for opt in variant.values %}
               {% assign label = opt %}
               {% assign value = opt %}

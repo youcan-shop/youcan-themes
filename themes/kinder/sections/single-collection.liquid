@@ -30,7 +30,7 @@
     </div>
     {% paginate collection.products by 24 cod, category_id: category.id %}
       {% if subCategories.size > 0 %}
-        <ul class="sub-collections-area" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+        <ul class="sub-collections-area" ui-slot="carousel" data-orientation="vertical" data-align="center">
           {% for subCollection in subCategories %}
             <li class="sub-collection" ui-slot="carousel-item">
               <a href="/collections/{{ subCollection.slug }}">
@@ -47,7 +47,7 @@
                     {% render 'misc.image-fallback' %}
                   {% endif %}
                 </div>
-                <h4 class="title">{{ subCollection.name }}</h4>
+                <h2 class="title">{{ subCollection.name }}</h2>
               </a>
             </li>
           {% endfor %}
@@ -56,10 +56,10 @@
       <div class="core-area">
         {% if items.size > 0 %}
           <div class="controller">
-            <h4 class="result">
+            <p class="result">
               {{ items.size }}
               {{ 'general.products' | t }}
-            </h4>
+            </p>
             <div class="sort">
               <label for="sort">{{ 'general.sort.label' | t }}</label>
               {% render 'misc.sort', url: previous_page %}

@@ -21,6 +21,7 @@
   data-size="lg"
   data-as-icon
   popovertarget="product-drawer-{{ product.id }}"
+  aria-label="{{ 'general.choose_options' | t }}"
 >
   {% render 'misc.icon', name: settings.cart_icon %}
 </button>
@@ -40,7 +41,7 @@
   </div>
   <ui-product ui-slot="sheet-body" product-id="{{ product.id }}">
     <ui-carousel class="media-area" data-layout="carousel">
-      <ul class="images" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+      <ul class="images" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
         {% if product.images.size %}
           {% for image in product.images %}
             <li class="image" ui-carousel="item" ui-slot="carousel-item">
@@ -60,13 +61,13 @@
         {% endif %}
       </ul>
       {% if product.images.size > 1 %}
-        <div class="markers" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+        <div class="markers" ui-slot="carousel" data-orientation="vertical" data-align="center">
           {% for marker in product.images %}
             <button
               ui-carousel="marker"
               aria-label="Slide {{ forloop.index }}"
               {% if forloop.first %}
-                aria-selected="true"
+                aria-current="true"
               {% endif %}
             ></button>
           {% endfor %}

@@ -107,7 +107,7 @@ if (!customElements.get("ui-carousel")) {
 
       this.markers?.forEach((marker, i) => {
         const selected = currentPage === i;
-        marker.setAttribute("aria-selected", selected);
+        marker.setAttribute(marker.getAttribute("role") === "tab" ? "aria-selected" : "aria-current", selected);
         if (selected) this.scrollMarkerIntoView(marker);
       });
 
