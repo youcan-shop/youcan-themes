@@ -99,7 +99,7 @@ if (!customElements.get("ui-carousel")) {
       }
 
       this.markers?.forEach((marker, i) => {
-        marker.setAttribute("aria-selected", currentPage === i);
+        marker.setAttribute("aria-current", currentPage === i);
       });
 
       if (this.arrows.previous && this.arrows.next) this.setArrowsState();
@@ -167,7 +167,7 @@ if (!customElements.get("ui-carousel")) {
     }
 
     get orientation() {
-      return this.wrapper.getAttribute("aria-orientation");
+      return this.wrapper.getAttribute("data-orientation");
     }
   }
 

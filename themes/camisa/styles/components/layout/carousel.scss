@@ -2,7 +2,7 @@
   Component: Carousel
 
   Accepts:
-    - aria-orientation: {String} vertical | horizontal
+    - data-orientation: {String} vertical | horizontal
     - data-align: {String} (Optional) start | center
 
   Variables:
@@ -11,7 +11,7 @@
     - item-size: {Percentage} (Optional) Only use it if you've "one" item per page | >= 60%
 
   Usage:
-    - <div ui-slot="carousel" aria-orientation="vertical" style="--per-page: 1; width: 100%; height: 150px;">
+    - <div ui-slot="carousel" data-orientation="vertical" style="--per-page: 1; width: 100%; height: 150px;">
         <div ui-slot="carousel-item"> 1 </div>
         <div ui-slot="carousel-item"> 2 </div>
         <div ui-slot="carousel-item"> 3 </div>
@@ -43,7 +43,7 @@
   }
 
   /* Orientation */
-  &[aria-orientation="vertical"] {
+  &[data-orientation="vertical"] {
     flex-direction: row;
     overflow: scroll hidden;
     scroll-snap-type: x mandatory;
@@ -54,7 +54,7 @@
     }
   }
 
-  &[aria-orientation="horizontal"] {
+  &[data-orientation="horizontal"] {
     flex-direction: column;
     overflow: hidden scroll;
     scroll-snap-type: y mandatory;

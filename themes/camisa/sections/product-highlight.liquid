@@ -38,7 +38,7 @@
         class="items"
         ui-carousel="wrapper"
         ui-slot="carousel"
-        aria-orientation="horizontal"
+        data-orientation="horizontal"
         data-image-ratio="{{ settings.product_image_ratio }}"
       >
         {% if product.images.size %}
@@ -49,8 +49,9 @@
                 alt="{{ product.name }}"
                 height="100%"
                 width="100%"
-                {% if forloop.index0 %}
+                {% if forloop.first %}
                   loading="eager"
+                  fetchpriority="high"
                 {% else %}
                   loading="lazy"
                 {% endif %}
@@ -68,7 +69,7 @@
               class="marker"
               ui-carousel="marker"
               {% if forloop.first %}
-                aria-selected="true"
+                aria-current="true"
               {% endif %}
             ></button>
           {% endfor %}
