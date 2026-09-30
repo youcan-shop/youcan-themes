@@ -25,8 +25,14 @@
           <button
             class="tab-trigger"
             ui-carousel="marker"
+            type="button"
+            role="tab"
+            id="product-tab-{{ forloop.index }}"
+            aria-controls="product-tabpanel-{{ forloop.index }}"
             {% if forloop.first %}
               aria-selected="true"
+            {% else %}
+              aria-selected="false"
             {% endif %}
             {{ collection_block.youcan_attributes }}
           >
@@ -43,36 +49,52 @@
       {% assign max_products = section.settings.max_products_to_show %}
       {% if collection_block.settings.collection.id %}
         {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
-          <ul
-            class="items"
+          <div
+            class="panel"
             ui-carousel="item"
             ui-slot="carousel-item"
+            {% if section.blocks.size > 1 %}
+              role="tabpanel"
+              id="product-tabpanel-{{ forloop.index }}"
+              aria-labelledby="product-tab-{{ forloop.index }}"
+            {% endif %}
+          >
+            <ul
+              class="items"
+              style="
+                --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
+                --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
+              "
+            >
+              {% for product in items %}
+                {% render 'block.product' %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endpaginate %}
+      {% else %}
+        <div
+          class="panel"
+          ui-carousel="item"
+          ui-slot="carousel-item"
+          {% if section.blocks.size > 1 %}
             role="tabpanel"
+            id="product-tabpanel-{{ forloop.index }}"
+            aria-labelledby="product-tab-{{ forloop.index }}"
+          {% endif %}
+        >
+          <ul
+            class="items"
             style="
               --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
               --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
             "
           >
-            {% for product in items %}
+            {% for product in (1..max_products) %}
               {% render 'block.product' %}
             {% endfor %}
           </ul>
-        {% endpaginate %}
-      {% else %}
-        <ul
-          class="items"
-          ui-carousel="item"
-          ui-slot="carousel-item"
-          role="tabpanel"
-          style="
-            --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
-            --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
-          "
-        >
-          {% for product in (1..max_products) %}
-            {% render 'block.product' %}
-          {% endfor %}
-        </ul>
+        </div>
       {% endif %}
     {% endfor %}
   </div>

@@ -8,6 +8,8 @@
   {% render 'block.product', product: {...} %}
 {% endcomment %}
 
+{% assign placeholder = 'product.title' | t %}
+{% assign product_title = product.name | default: placeholder %}
 {% assign default_variant = product.selected_or_first_available_variant %}
 {% assign price = default_variant.price | default: product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
@@ -18,7 +20,7 @@
   {{ product.youcan_attributes }}
 >
   <div class="media" data-image-ratio="{{ settings.product_image_ratio }}">
-    <a href="{{ product.url }}">
+    <a href="{{ product.url | default: '#' }}" aria-label="{{ product_title }}">
       {% if product.preview_image %}
         <img
           srcset="
@@ -33,7 +35,7 @@
             33vw
           "
           src="{{ product.preview_image.original }}"
-          alt="{{ product.name }}"
+          alt="{{ product_title }}"
           height="100%"
           width="100%"
           {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
@@ -71,8 +73,7 @@
   </div>
   <div class="content">
     <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="/products/{{ product.slug }}">
-      {% assign placeholder = 'product.title' | t %}
-      {{ product.name | default: placeholder }}
+      {{ product_title }}
     </a>
     <div class="price">
       <span class="original-price">
