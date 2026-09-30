@@ -45,7 +45,7 @@
   </div>
   <div ui-slot="drawer-body">
     <ui-carousel class="notes">
-      <ul class="group" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
+      <ul class="group" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
         {% for i in (1..3) %}
           {% assign title = 'note_title_' | append: i %}
           {% assign description = 'note_description_' | append: i %}
@@ -71,7 +71,7 @@
               ui-carousel="marker"
               aria-label="Note {{ forloop.index }}"
               {% if forloop.first %}
-                aria-selected="true"
+                aria-current="true"
               {% endif %}
             ></button>
           {% endfor %}
@@ -177,7 +177,7 @@
             </div>
           {% endif %}
           {% if items.size %}
-            <ul class="group" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical" data-align="center">
+            <ul class="group" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical" data-align="center">
               {% for item in items %}
                 {% assign default_variant = item.selected_or_first_available_variant %}
                 {% assign price = default_variant.price | default: item.price %}
