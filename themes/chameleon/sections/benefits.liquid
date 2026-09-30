@@ -1,5 +1,13 @@
 {{ 'section.benefits.css' | asset_url | stylesheet_tag }}
 
+{% capture benefit_icons %}
+  {{- benefit_icons -}}
+  {%- for benefit in section.blocks -%}
+    {{- benefit.settings.icon | strip -}},
+  {%- endfor -%}
+{% endcapture %}
+{% render 'config-google-icons', icons: benefit_icons %}
+
 <ul
   section="benefits"
   {% if settings.enable_global_theme_style %}

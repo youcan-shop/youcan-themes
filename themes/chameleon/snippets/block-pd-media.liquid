@@ -37,6 +37,9 @@
             alt="{{ product.name }}"
             height="100%"
             width="100%"
+            {% if forloop.first %}
+              fetchpriority="high"
+            {% endif %}
           >
         {% endif %}
       {% endfor %}
@@ -46,10 +49,11 @@
   </div>
   {% if product.images.size > 1 %}
     <div class="controller" ui-media-pagination="images">
-      <div class="controller-wrapper">
+      <div class="controller-wrapper" role="tablist" aria-label="Product media navigation">
         {% for image in product.images %}
           <button
-            aria-label="product"
+            role="tab"
+            aria-label="Go to media {{ forloop.index }}"
             {% if forloop.first %}
               aria-selected="true"
             {% else %}
@@ -68,11 +72,12 @@
     </div>
   {% endif %}
   {% if product.images.size > 1 %}
-    <div class="pagination" ui-media-pagination="dots">
+    <div class="pagination" ui-media-pagination="dots" role="tablist" aria-label="Product media pagination">
       {% for image in product.images %}
         <button
           class="page"
-          aria-label="page-{{ forloop.index }}"
+          role="tab"
+          aria-label="Go to media {{ forloop.index }}"
           {% if forloop.first %}
             aria-selected="true"
           {% else %}
