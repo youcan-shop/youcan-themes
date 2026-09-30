@@ -9,4 +9,4 @@
 "mono": patch
 ---
 
-Fix cart page empty state detection and remove null cart checks now that the cart is always provided
+Fix cart page empty state detection and check the cart count instead of a null cart
