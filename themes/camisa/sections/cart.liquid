@@ -22,7 +22,7 @@
       {% render 'core.cart-item', product: product %}
     </template>
     <ui-cart-items
-      {% unless cart.items.size > 0 or cart.bundles %}
+      {% unless cart.count > 0 %}
         hidden
       {% endunless %}
     >
@@ -119,7 +119,7 @@
 
     <ui-summary-box
       class="summary"
-      {% unless cart.items.size > 0 %}
+      {% unless cart.count > 0 %}
         hidden
       {% endunless %}
     >
@@ -221,7 +221,7 @@
   </div>
 </div>
 
-{% if cart %}
+{% if cart.count > 0 %}
   {% javascript %}
     document.addEventListener('DOMContentLoaded', function () {
       const checkoutButton = document.querySelector('#checkout-button');
