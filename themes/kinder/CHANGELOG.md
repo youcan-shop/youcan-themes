@@ -1,5 +1,13 @@
 # kinder
 
+## 1.1.2
+
+### Patch Changes
+
+- 2276448: Fix cart page empty state detection and check the cart count instead of a null cart
+- 5c550d9: Theme accessibility and performance improvements
+- 9e0f0c7: Fix subtotal in product page
+
 ## 1.1.1
 
 ### Patch Changes
