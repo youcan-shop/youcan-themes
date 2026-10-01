@@ -1,5 +1,12 @@
 # camisa
 
+## 1.1.2
+
+### Patch Changes
+
+- 2276448: Fix cart page empty state detection and check the cart count instead of a null cart
+- 97ead40: Theme accessibility and performance improvements, and fix the nested menu flashing on page load
+
 ## 1.1.1
 
 ### Patch Changes

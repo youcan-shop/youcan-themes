@@ -1,5 +1,12 @@
 # bella
 
+## 1.3.3
+
+### Patch Changes
+
+- 2276448: Fix cart page empty state detection and check the cart count instead of a null cart
+- 9185978: Theme accessibility and performance improvements
+
 ## 1.3.2
 
 ### Patch Changes

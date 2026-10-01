@@ -1,5 +1,11 @@
 # meraki
 
+## 4.6.1
+
+### Patch Changes
+
+- 2276448: Fix cart page empty state detection and check the cart count instead of a null cart
+
 ## 4.6.0
 
 ### Minor Changes

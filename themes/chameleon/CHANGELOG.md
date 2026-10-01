@@ -1,5 +1,12 @@
 # chameleon
 
+## 4.8.2
+
+### Patch Changes
+
+- 2276448: Fix cart page empty state detection and check the cart count instead of a null cart
+- 77535a8: Theme performance improvements
+
 ## 4.8.1
 
 ### Patch Changes
