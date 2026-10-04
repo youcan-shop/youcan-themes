@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.3
+
+### Patch Changes
+
+- 1eedd3d: load the token, misc, toast and search stylesheets directly instead of through relative imports
+
 ## 4.8.2
 
 ### Patch Changes
