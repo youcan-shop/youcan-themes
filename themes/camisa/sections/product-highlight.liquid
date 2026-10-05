@@ -10,7 +10,7 @@
   product-id="{{ product.id }}"
   {% if section.settings.override_global_colors %}
     style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100.0 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
       --brand-hue: {{ section.settings.main_color.oklch_hue }};
     "
@@ -89,7 +89,7 @@
                 {{ block.youcan_attributes }}
               >
                 {% if settings.sale_badge_type == 'percentage' %}
-                  {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+                  {% assign percentage = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round %}
                   -{{ percentage }}%
                 {% else %}
                   {% assign fixed = compare_at_price | minus: price %}

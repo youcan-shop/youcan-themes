@@ -14,7 +14,7 @@
   ui-layout="navbar"
   {% if section.settings.override_global_colors %}
     style="
-      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100 }};
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100.0 }};
       --brand-chroma: {{ section.settings.main_color.chroma }};
       --brand-hue: {{ section.settings.main_color.oklch_hue }};
     "
@@ -61,7 +61,7 @@
   {% if section.settings.header_layout == 'logo-center-menu-split' %}
     <div class="left-split">
       <ul class="links" data-split-menu="first-half">
-        {% assign second_half_first_index = main-link-list.links.size | divided_by: 2 | floor %}
+        {% assign second_half_first_index = main-link-list.links.size | divided_by: 2.0 | floor %}
         {% assign first_half_last_index = second_half_first_index | minus: 1 %}
 
         {% for index in (0..first_half_last_index) %}
@@ -97,7 +97,7 @@
     <div class="right-split">
       <ul class="links" data-split-menu="second-half">
         {% assign second_half_last_index = main-link-list.links.size | minus: 1 %}
-        {% assign second_half_first_index = main-link-list.links.size | divided_by: 2 | floor %}
+        {% assign second_half_first_index = main-link-list.links.size | divided_by: 2.0 | floor %}
 
         {% for index in (second_half_first_index..second_half_last_index) %}
           {% assign link = main-link-list.links[index] %}

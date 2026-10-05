@@ -62,7 +62,14 @@
             </div>
             <div class="order-info">
               {% for bundle_item in bundle.items %}
-                {% if forloop.first and t == 'single' or t == 'multi' or t == 'buyxgety' %}
+                {% liquid
+  assign show_bundle_item = false
+  if forloop.first and t == 'single'
+    assign show_bundle_item = true
+  elsif t == 'multi' or t == 'buyxgety'
+    assign show_bundle_item = true
+  endif
+%}{% if show_bundle_item %}
                   <div class="product">
                     <div class="image">
                       {% if bundle_item.image %}

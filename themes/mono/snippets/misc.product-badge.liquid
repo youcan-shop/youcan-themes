@@ -29,7 +29,7 @@
   {% case badge_type %}
     {% when 'discount-percentage' %}
       {% if compare_at_price %}
-        {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+        {% assign percentage = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round %}
         <span>-{{ percentage }}%</span>
       {% endif %}
     {% when 'discount-amount' %}

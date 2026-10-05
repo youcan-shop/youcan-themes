@@ -50,7 +50,7 @@
   {% elsif count > threshold %}
     {% assign progress_value = 100 %}
   {% else %}
-    {% assign progress_value = count | times: 100 | divided_by: threshold %}
+    {% assign progress_value = count | times: 100.0 | divided_by: threshold %}
   {% endif %}
   <progress ui-slot="progress-bar" value="{{ progress_value }}" max="100"></progress>
 </div>
