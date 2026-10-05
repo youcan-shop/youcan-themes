@@ -1,5 +1,11 @@
 # bella
 
+## 1.3.4
+
+### Patch Changes
+
+- 6d0a440: read product, variant and cart data in scripts as objects instead of parsing a JSON string
+
 ## 1.3.3
 
 ### Patch Changes
