@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.6
+
+### Patch Changes
+
+- ce7c8f0: use float divisors and explicit conditions so math and conditions render the same under reference Liquid
+
 ## 4.8.5
 
 ### Patch Changes
