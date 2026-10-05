@@ -38,7 +38,14 @@
           alt="{{ product_title }}"
           height="100%"
           width="100%"
-          {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
+          {% liquid
+  assign eager_image = false
+  if template.name == 'collection' or template.name == 'search'
+    if forloop.index < 5
+      assign eager_image = true
+    endif
+  endif
+%}{% if eager_image %}
             loading="eager"
           {% else %}
             loading="lazy"
@@ -86,7 +93,14 @@
       {% endif %}
     </div>
   </div>
-  {% if compare_at_price and section.settings.show_discount_badge or product.available == false %}
+  {% liquid
+  assign show_badge = false
+  if product.available == false
+    assign show_badge = true
+  elsif compare_at_price and section.settings.show_discount_badge
+    assign show_badge = true
+  endif
+%}{% if show_badge %}
     <div
       class="badge"
       ui-slot="status-badge"
@@ -97,7 +111,7 @@
         {{ 'general.out_of_stock' | t }}
       {% else %}
         {% if settings.sale_badge_type == 'percentage' %}
-          {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+          {% assign percentage = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round %}
           -{{ percentage }}%
         {% else %}
           {% assign fixed = compare_at_price | minus: price %}

@@ -88,7 +88,7 @@
           data-status="{{ settings.sale_badge_status }}"
         >
           {% if settings.sale_badge_type == 'percentage' %}
-            {% assign percentage = compare_at_price | minus: price | times: 100 | divided_by: compare_at_price | round %}
+            {% assign percentage = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round %}
             -{{ percentage }}%
           {% else %}
             {% assign fixed = compare_at_price | minus: price %}

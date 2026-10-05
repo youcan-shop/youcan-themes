@@ -50,7 +50,14 @@
         alt="{{ product.name }}"
         height="100%"
         width="100%"
-        {% if template.name == 'collection' or template.name == 'search' and forloop.index < 5 %}
+        {% liquid
+  assign eager_image = false
+  if template.name == 'collection' or template.name == 'search'
+    if forloop.index < 5
+      assign eager_image = true
+    endif
+  endif
+%}{% if eager_image %}
           loading="eager"
         {% else %}
           loading="lazy"
