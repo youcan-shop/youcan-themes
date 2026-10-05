@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.3
+
+### Patch Changes
+
+- 92e7497: print product, variant and cart data with the json filter
+
 ## 1.2.2
 
 ### Patch Changes

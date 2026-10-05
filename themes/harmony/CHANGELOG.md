@@ -1,5 +1,11 @@
 # harmony
 
+## 4.6.3
+
+### Patch Changes
+
+- 92e7497: print product, variant and cart data with the json filter
+
 ## 4.6.2
 
 ### Patch Changes

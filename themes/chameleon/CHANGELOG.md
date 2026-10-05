@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.5
+
+### Patch Changes
+
+- 92e7497: print product, variant and cart data with the json filter
+
 ## 4.8.4
 
 ### Patch Changes
