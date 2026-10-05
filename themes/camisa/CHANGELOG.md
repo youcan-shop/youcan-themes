@@ -1,5 +1,12 @@
 # camisa
 
+## 1.1.5
+
+### Patch Changes
+
+- ce7c8f0: use float divisors and explicit conditions so math and conditions render the same under reference Liquid
+- c4e86c6: use a float dividend for the review skeleton width
+
 ## 1.1.4
 
 ### Patch Changes

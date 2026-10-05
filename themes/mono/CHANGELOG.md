@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.4
+
+### Patch Changes
+
+- ce7c8f0: use float divisors and explicit conditions so math and conditions render the same under reference Liquid
+
 ## 1.2.3
 
 ### Patch Changes
