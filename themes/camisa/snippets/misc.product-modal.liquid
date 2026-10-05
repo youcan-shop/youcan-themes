@@ -137,7 +137,7 @@
 {% if product and product.options.size %}
   {% javascript %}
     if (!window.productsVariants["{{ product.id }}"]) {
-      window.productsVariants["{{ product.id }}"] = JSON.parse({{ product.variants | json }});
+      window.productsVariants["{{ product.id }}"] = {{ product.variants | json_raw }};
     }
   {% endjavascript %}
 {% endif %}

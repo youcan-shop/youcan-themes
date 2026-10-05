@@ -445,16 +445,14 @@
 
 {%- javascript -%}
   {% if selected_product %}
-    const variantStr = `{{ selected_product.variants | json }}`;
-    const variants = JSON.parse(variantStr.slice(1, -1));
+    const variants = {{ selected_product.variants | json_raw }};
 
     /**
      * Well technically, if the seller didn't choos a default variant, we shouldn't select one.
      * The customer should be prompted to select one, if not, they get a warning message.
      */
     const defaultVariant = variants.find(variant => variant.is_default) || variants[0];
-    const globalProductStr = `{{ selected_product | json }}`;
-    const globalProduct = JSON.parse(globalProductStr.slice(1, -1));
+    const globalProduct = {{ selected_product | json_raw }};
 
     const sectionProductId = '{{ selected_product.id }}';
     const sizeBigMessage = "{{ 'general.size_big_message' | t }}";
