@@ -29,14 +29,14 @@
 {% if product and product.options.size %}
   {% javascript %}
     if (!window.productsVariants["{{ product.id }}"]) {
-      window.productsVariants["{{ product.id }}"] = {{ product.variants | json_raw }};
+      window.productsVariants["{{ product.id }}"] = {{ product.variants | json }};
     }
   {% endjavascript %}
 {% endif %}
 
 {% if product %}
   {% javascript %}
-    const product = {{ product | json_raw }};
+    const product = {{ product | json }};
 
     document.addEventListener('DOMContentLoaded', () => {
       window.Dotshop.pixels.publish('view-content', product);

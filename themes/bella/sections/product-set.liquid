@@ -83,7 +83,7 @@
     {% if product.settings.block_product and product.settings.block_product.options.size %}
       {% javascript %}
         if (!window.productsVariants["{{ product.settings.block_product.id }}"]) {
-          window.productsVariants["{{ product.settings.block_product.id }}"] = {{ product.settings.block_product.variants | json_raw }};
+          window.productsVariants["{{ product.settings.block_product.id }}"] = {{ product.settings.block_product.variants | json }};
         }
       {% endjavascript %}
     {% endif %}
