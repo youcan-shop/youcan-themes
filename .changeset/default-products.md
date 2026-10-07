@@ -9,4 +9,4 @@
 "mono": patch
 ---
 
-product and collection list blocks without a picked item show the store's newest products and its collections, and placeholder illustrations when the store has none
+product and collection list blocks without a picked item show the store's newest products and its collections
