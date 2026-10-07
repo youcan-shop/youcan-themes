@@ -51,19 +51,26 @@
   {% if section.blocks.size %}
     <ul class="list" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
       {% for block in section.blocks %}
+        {%- assign block_index = forloop.index0 -%}
+        {%- assign block_collection = block.settings.collection -%}
+        {%- unless block_collection -%}
+          {%- for latest in collections offset: block_index limit: 1 -%}
+            {%- assign block_collection = latest -%}
+          {%- endfor -%}
+        {%- endunless -%}
         {% assign default_title = 'general.collection' | t | append: ' ' | append: forloop.index %}
-        {% assign title = block.settings.collection.name | default: default_title %}
+        {% assign title = block_collection.name | default: default_title %}
 
         <li ui-carousel="item" ui-slot="carousel-item" {{ block.youcan_attributes }}>
           <a
             class="collection-item"
-            href="/collections/{{ block.settings.collection.slug }}"
+            href="/collections/{{ block_collection.slug }}"
             title="{{ title}}"
           >
             <div class="media" data-aspect-ratio="{{ section.settings.image_aspect_ratio }}">
-              {% if block.settings.collection.preview_image %}
+              {% if block_collection.preview_image %}
                 <img
-                  src="{{ block.settings.collection.preview_image.original }}"
+                  src="{{ block_collection.preview_image.original }}"
                   alt="{{ title }}"
                   height="40"
                   width="40"

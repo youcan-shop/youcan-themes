@@ -13,8 +13,15 @@
   </div>
   <ul class="section-core">
     {% for block in section.blocks %}
+      {%- assign block_index = forloop.index0 -%}
+      {%- assign block_collection = block.settings.collection -%}
+      {%- unless block_collection -%}
+        {%- for latest in collections offset: block_index limit: 1 -%}
+          {%- assign block_collection = latest -%}
+        {%- endfor -%}
+      {%- endunless -%}
       {% render 'block-collection',
-        collection: block.settings.collection,
+        collection: block_collection,
         action: block.settings.button_text,
         youcan_attributes: block.youcan_attributes
       %}

@@ -20,7 +20,14 @@
   </div>
   <div class='collections-list'>
     {%- for block in section.blocks -%}
-      {%- render 'collection-preview', category: block.settings.category -%}
+      {%- assign block_index = forloop.index0 -%}
+      {%- assign block_collection = block.settings.category -%}
+      {%- unless block_collection -%}
+        {%- for latest in collections offset: block_index limit: 1 -%}
+          {%- assign block_collection = latest -%}
+        {%- endfor -%}
+      {%- endunless -%}
+      {%- render 'collection-preview', category: block_collection -%}
     {%- endfor -%}
   </div>
 </section>

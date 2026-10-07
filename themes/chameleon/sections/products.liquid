@@ -6,7 +6,14 @@
   </div>
   <ul class="section-core">
     {% for block in section.blocks %}
-      {% render 'block-product', product: block.settings.product, badge: block.settings.badge, youcan_attributes: block.youcan_attributes %}
+      {%- assign block_index = forloop.index0 -%}
+      {%- assign block_product = block.settings.product -%}
+      {%- unless block_product -%}
+        {%- for latest in collections.all.products offset: block_index limit: 1 -%}
+          {%- assign block_product = latest -%}
+        {%- endfor -%}
+      {%- endunless -%}
+      {% render 'block-product', product: block_product, badge: block.settings.badge, youcan_attributes: block.youcan_attributes %}
     {% endfor %}
   </ul>
 </div>

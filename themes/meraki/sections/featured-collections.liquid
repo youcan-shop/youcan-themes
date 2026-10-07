@@ -24,21 +24,28 @@
   </h1>
   <div class='yc-featured-collections'>
     {%- for block in section.blocks -%}
+      {%- assign block_index = forloop.index0 -%}
+      {%- assign block_collection = block.settings.category -%}
+      {%- unless block_collection -%}
+        {%- for latest in collections offset: block_index limit: 1 -%}
+          {%- assign block_collection = latest -%}
+        {%- endfor -%}
+      {%- endunless -%}
       <div class='categories-container'>
         <div class='category-block'>
           <div class='product-block' {{ block.youcan_attributes }}>
             <div class="category-text">
-              <h2 class="category-name">{{ block.settings.category.name }}</h2>
-              {% if block.settings.category.slug %}
+              <h2 class="category-name">{{ block_collection.name }}</h2>
+              {% if block_collection.slug %}
                 <div class="category-link">
-                  <a href='/collections/{{ block.settings.category.slug }}'>
+                  <a href='/collections/{{ block_collection.slug }}'>
                     {{ 'general.show_more_button' | t }}
                   </a>
                 </div>
               {% endif %}
             </div>
-            {% if block.settings.category.image %}
-                <img src='{{ block.settings.category.image }}' class="category-img" alt='{{ block.settings.category.name }}'>
+            {% if block_collection.image %}
+                <img src='{{ block_collection.image }}' class="category-img" alt='{{ block_collection.name }}'>
             {% endif %}
           </div>
         </div>

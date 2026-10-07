@@ -55,9 +55,16 @@
   <h2 class='yc-section-title'>{{ section.settings.title | default: 'featured_products.title' | t }}</h2>
   <div class='product-list product-container-{{ id }}'>
     {% for block in section.blocks %}
-      {% if block.settings.product %}
+      {%- assign block_index = forloop.index0 -%}
+      {%- assign block_product = block.settings.product -%}
+      {%- if products_exist == false -%}
+        {%- for latest in collections.all.products offset: block_index limit: 1 -%}
+          {%- assign block_product = latest -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {% if block_product %}
         <div {{ block.youcan_attributes }} class="product-item-{{ id }}">
-          {%- render 'product-preview', item: block.settings.product, block_settings: block.settings, section_settings: section.settings -%}
+          {%- render 'product-preview', item: block_product, block_settings: block.settings, section_settings: section.settings -%}
         </div>
       {% elsif products_exist == false %}
         {%- assign index = forloop.index0 | modulo: 4 -%}

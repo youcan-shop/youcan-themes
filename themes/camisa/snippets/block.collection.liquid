@@ -9,7 +9,9 @@
   {% render 'block.collection', collection: {...} %}
 {% endcomment %}
 
-{% assign collection = collection.settings.collection | default: collection %}
+{% if collection.settings %}
+  {% assign collection = collection.settings.collection | default: fallback | default: collection %}
+{% endif %}
 
 <li ui-block="collection" {{ collection.youcan_attributes }}>
   <a href="/collections/{{ collection.slug }}">

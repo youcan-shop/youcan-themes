@@ -62,7 +62,14 @@
       {% endunless %}
     >
       {% for collection in section.blocks %}
-        {% render 'block.collection' %}
+        {%- assign block_index = forloop.index0 -%}
+        {%- assign block_collection = collection.settings.collection -%}
+        {%- unless block_collection -%}
+          {%- for latest in collections offset: block_index limit: 1 -%}
+            {%- assign block_collection = latest -%}
+          {%- endfor -%}
+        {%- endunless -%}
+        {% render 'block.collection', fallback: block_collection %}
       {% endfor %}
     </ul>
 

@@ -8,7 +8,9 @@
   {% render 'block.collection', collection: {...} %}
 {% endcomment %}
 
-{% assign collection = collection.settings.collection | default: collection %}
+{% if collection.settings %}
+  {% assign collection = collection.settings.collection | default: fallback | default: collection %}
+{% endif %}
 
 <li ui-carousel="item" ui-block="collection" ui-slot="carousel-item" {{ collection.youcan_attributes }}>
   {% assign collection_placeholder = 'collection.title' | t %}

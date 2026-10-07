@@ -50,19 +50,26 @@
 >
   <div class='splide__track'>
     <ul class='splide__list'>
-      {% if products_exist %}
+      {% if products_exist or collections.all.products.size > 0 %}
         {%- for block in blocks %}
+          {%- assign block_index = forloop.index0 -%}
+          {%- assign block_product = block.settings.product -%}
+          {%- if products_exist == false -%}
+            {%- for latest in collections.all.products offset: block_index limit: 1 -%}
+              {%- assign block_product = latest -%}
+            {%- endfor -%}
+          {%- endif -%}
           <li
             class='splide__slide'
             {{ block.youcan_attributes }}
           >
-            <a href="{{ block.settings.product.url }}" class='product-block'>
+            <a href="{{ block_product.url }}" class='product-block'>
               <div class="product-slider">
                 <div class='product-thumbnail'>
                   <img
                     loading='lazy'
-                    src='{%- if block.settings.product.thumbnail -%} {{ block.settings.product.thumbnail }} {%- else -%} {{ 'default_product.jpeg' | asset_url }} {%- endif -%}'
-                    alt='{{ block.settings.product.name }}'
+                    src='{%- if block_product.thumbnail -%} {{ block_product.thumbnail }} {%- else -%} {{ 'default_product.jpeg' | asset_url }} {%- endif -%}'
+                    alt='{{ block_product.name }}'
                   >
                     {% if block.settings.tag_text %}
                       <div
@@ -73,8 +80,8 @@
                       </div>
                     {% endif %}
                     <div class="product-link">
-                      {% if settings.direct_add_to_cart and block.settings.product.variants.size <= 1 and block.settings.product.skip_to_checkout == false %}
-                        <button class="yc-btn" onclick="directAddToCart(event, '{{ block.settings.product.variants[0].id }}');">
+                      {% if settings.direct_add_to_cart and block_product.variants.size <= 1 and block_product.skip_to_checkout == false %}
+                        <button class="yc-btn" onclick="directAddToCart(event, '{{ block_product.variants[0].id }}');">
                           {{ 'general.direct_add_to_cart' | t }}
                         </button>
                       {% else %}
@@ -85,23 +92,23 @@
                     </div>
                 </div>
                 <div class='product-details'>
-                  <span class='product-title'>{{ block.settings.product.name }}</span>
+                  <span class='product-title'>{{ block_product.name }}</span>
                 </div>
                 <div class='prices'>
-                  {% if block.settings.product.price %}
-                    <span class='product-price'>{{ block.settings.product.price | money }}</span>
+                  {% if block_product.price %}
+                    <span class='product-price'>{{ block_product.price | money }}</span>
                   {% endif %}
-                  {% if section.settings.show_compare_at_price and block.settings.product.compare_at_price %}
-                    <span class='compare-at-price'>{{ block.settings.product.compare_at_price | money }}</span>
+                  {% if section.settings.show_compare_at_price and block_product.compare_at_price %}
+                    <span class='compare-at-price'>{{ block_product.compare_at_price | money }}</span>
                   {% endif %}
                 </div>
                   <div class="product-link">
-                    {% if settings.direct_add_to_cart and block.settings.product.variants.size <= 1 %}
-                      <button class="yc-btn" onclick="directAddToCart(event, '{{ block.settings.product.variants[0].id }}', {{ block.settings.product.variants[0].inventory }}, {{ block.settings.product.isTrackingInventory }});">
+                    {% if settings.direct_add_to_cart and block_product.variants.size <= 1 %}
+                      <button class="yc-btn" onclick="directAddToCart(event, '{{ block_product.variants[0].id }}', {{ block_product.variants[0].inventory }}, {{ block_product.isTrackingInventory }});">
                         {{ 'general.add_to_cart' | t }}
                       </button>
                     {% else %}
-                    <a href="{{ block.settings.product.url }}" class="yc-btn">
+                    <a href="{{ block_product.url }}" class="yc-btn">
                       {{ 'general.buy_now' | t }}
                     </a>
                     {% endif %}

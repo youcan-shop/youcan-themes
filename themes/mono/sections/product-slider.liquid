@@ -51,24 +51,31 @@
   {% if section.blocks.size %}
     <ul class="list" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
       {% for block in section.blocks %}
-        {% assign default_variant = block.settings.product.selected_or_first_available_variant %}
-        {% assign price = default_variant.price | default: block.settings.product.price %}
-        {% assign compare_at_price = default_variant.compare_at_price | default: block.settings.product.compare_at_price %}
+        {%- assign block_index = forloop.index0 -%}
+        {%- assign block_product = block.settings.product -%}
+        {%- unless block_product -%}
+          {%- for latest in collections.all.products offset: block_index limit: 1 -%}
+            {%- assign block_product = latest -%}
+          {%- endfor -%}
+        {%- endunless -%}
+        {% assign default_variant = block_product.selected_or_first_available_variant %}
+        {% assign price = default_variant.price | default: block_product.price %}
+        {% assign compare_at_price = default_variant.compare_at_price | default: block_product.compare_at_price %}
 
         <li ui-carousel="item" ui-slot="carousel-item" {{ block.youcan_attributes }}>
           {% assign default_title = 'general.product' | t | append: ' ' | append: forloop.index %}
-          {% assign title = block.settings.product.name | default: default_title %}
+          {% assign title = block_product.name | default: default_title %}
 
           <div class="product-item">
             <a
               class="media"
               data-aspect-ratio="{{ section.settings.aspect_ratio }}"
-              href="{{ block.settings.product.url | default: '#' }}"
+              href="{{ block_product.url | default: '#' }}"
               title="{{ title }}"
             >
-              {% if block.settings.product.preview_image %}
+              {% if block_product.preview_image %}
                 <img
-                  src="{{ block.settings.product.preview_image.original }}"
+                  src="{{ block_product.preview_image.original }}"
                   alt="{{ title }}"
                   height="100%"
                   width="100%"
@@ -97,33 +104,33 @@
               {% endif %}
             </a>
             <div class="content">
-              <a class="name" href="{{ block.settings.product.url }}" title="{{ title }}">{{ title }}</a>
+              <a class="name" href="{{ block_product.url }}" title="{{ title }}">{{ title }}</a>
               <div class="price">
                 <span class="original">{{ price | default: 0 | money }}</span>
                 {% if compare_at_price %}
                   <span class="compare-at">{{ compare_at_price | default: 0 | money }}</span>
                 {% endif %}
               </div>
-              {% if section.settings.inventory_tracking and block.settings.product.isTrackingInventory %}
+              {% if section.settings.inventory_tracking and block_product.isTrackingInventory %}
                 {% render 'misc.inventory-badge', count: default_variant.inventory, threshold: section.settings.inventory_threshold %}
               {% endif %}
               {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
-                {% if block.settings.product.variants.size > 1 %}
+                {% if block_product.variants.size > 1 %}
                   <button
                     ui-slot="button"
                     data-mode="stroke"
                     data-size="sm"
-                    popovertarget="product-{{ block.settings.product.id }}"
+                    popovertarget="product-{{ block_product.id }}"
                   >
                     {{ 'general.quick_look' | t }}
                   </button>
                 {% else %}
-                  {% render 'core.shop-button', product: block.settings.product, size: 'sm' %}
+                  {% render 'core.shop-button', product: block_product, size: 'sm' %}
                 {% endif %}
               {% else %}
                 {% if default_variant.available %}
-                  {% if block.settings.product.variants.size > 1 %}
-                    <a ui-slot="button" data-mode="stroke" data-size="sm" href="{{ block.settings.product.url }}">
+                  {% if block_product.variants.size > 1 %}
+                    <a ui-slot="button" data-mode="stroke" data-size="sm" href="{{ block_product.url }}">
                       {{ 'general.view' | t }}
                     </a>
                   {% else %}
@@ -132,7 +139,7 @@
                       data-mode="filled"
                       data-size="sm"
                       type="button"
-                      popovertarget="express-checkout-{{ block.settings.product.id }}"
+                      popovertarget="express-checkout-{{ block_product.id }}"
                     >
                       {{ 'general.buy_now' | t }}
                     </button>
@@ -149,12 +156,12 @@
 
         {% if default_variant.available %}
           {% if settings.shopping_flow == 'cart' or settings.shopping_flow == 'both' %}
-            {% if block.settings.product.variants.size > 1 %}
-              {% render 'misc.product-detail', product: block.settings.product %}
+            {% if block_product.variants.size > 1 %}
+              {% render 'misc.product-detail', product: block_product %}
             {% endif %}
           {% else %}
-            {% unless block.settings.product.variants.size > 1 %}
-              {% render 'core.express-checkout', product: block.settings.product, style: 'open-drawer' %}
+            {% unless block_product.variants.size > 1 %}
+              {% render 'core.express-checkout', product: block_product, style: 'open-drawer' %}
             {% endunless %}
           {% endif %}
         {% endif %}
