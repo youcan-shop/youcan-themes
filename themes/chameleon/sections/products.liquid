@@ -13,7 +13,8 @@
           {%- assign block_product = latest -%}
         {%- endfor -%}
       {%- endunless -%}
-      {% render 'block-product', product: block_product, badge: block.settings.badge, youcan_attributes: block.youcan_attributes %}
+      {%- assign block_placeholder = block_index | modulo: 5 | plus: 1 | prepend: 'product-' -%}
+      {% render 'block-product', product: block_product, placeholder_image: block_placeholder, badge: block.settings.badge, youcan_attributes: block.youcan_attributes %}
     {% endfor %}
   </ul>
 </div>

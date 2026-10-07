@@ -14,8 +14,13 @@
         {% endfor %}
       {% endpaginate %}
     {% else %}
-      {% for item in (1..4) %}
-        {% render 'block-product' %}
+      {% for item in collections.all.products limit: 4 %}
+        {% render 'block-product', product: item %}
+      {% else %}
+        {% for index in (1..4) %}
+          {%- assign block_placeholder = 'product-' | append: index -%}
+          {% render 'block-product', placeholder_image: block_placeholder %}
+        {% endfor %}
       {% endfor %}
     {% endif %}
   </ul>

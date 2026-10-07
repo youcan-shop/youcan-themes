@@ -39,7 +39,8 @@
           {%- assign block_collection = latest -%}
         {%- endfor -%}
       {%- endunless -%}
-      {% render 'block.collection', fallback: block_collection, variant: 'stroke' %}
+      {%- assign block_placeholder = block_index | modulo: 3 | plus: 1 | prepend: 'collection-' -%}
+      {% render 'block.collection', fallback: block_collection, placeholder_image: block_placeholder, variant: 'stroke' %}
     {% endfor %}
   </ul>
 </div>

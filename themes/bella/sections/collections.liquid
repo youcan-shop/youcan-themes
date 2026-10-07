@@ -60,7 +60,8 @@
           {%- assign block_collection = latest -%}
         {%- endfor -%}
       {%- endunless -%}
-      {% render 'block.collection', fallback: block_collection %}
+      {%- assign block_placeholder = block_index | modulo: 3 | plus: 1 | prepend: 'collection-' -%}
+      {% render 'block.collection', fallback: block_collection, placeholder_image: block_placeholder %}
     {% endfor %}
   </ul>
 </ui-carousel>

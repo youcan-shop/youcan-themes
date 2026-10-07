@@ -58,6 +58,7 @@
             {%- assign block_collection = latest -%}
           {%- endfor -%}
         {%- endunless -%}
+        {%- assign block_placeholder = block_index | modulo: 3 | plus: 1 | prepend: 'collection-' -%}
         {% assign default_title = 'general.collection' | t | append: ' ' | append: forloop.index %}
         {% assign title = block_collection.name | default: default_title %}
 
@@ -76,6 +77,8 @@
                   width="40"
                   loading="lazy"
                 >
+              {% elsif block_collection == nil %}
+                {{ block_placeholder | placeholder_svg_tag }}
               {% else %}
                 {% render 'misc.image-fallback', type: 'collection' %}
               {% endif %}

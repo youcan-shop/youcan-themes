@@ -20,8 +20,10 @@
           {%- assign block_collection = latest -%}
         {%- endfor -%}
       {%- endunless -%}
+      {%- assign block_placeholder = block_index | modulo: 3 | plus: 1 | prepend: 'collection-' -%}
       {% render 'block-collection',
         collection: block_collection,
+        placeholder_image: block_placeholder,
         action: block.settings.button_text,
         youcan_attributes: block.youcan_attributes
       %}

@@ -58,6 +58,7 @@
             {%- assign block_product = latest -%}
           {%- endfor -%}
         {%- endunless -%}
+        {%- assign block_placeholder = block_index | modulo: 5 | plus: 1 | prepend: 'product-' -%}
         {% assign default_variant = block_product.selected_or_first_available_variant %}
         {% assign price = default_variant.price | default: block_product.price %}
         {% assign compare_at_price = default_variant.compare_at_price | default: block_product.compare_at_price %}
@@ -81,6 +82,8 @@
                   width="100%"
                   loading="lazy"
                 >
+              {% elsif block_product == nil %}
+                {{ block_placeholder | placeholder_svg_tag }}
               {% else %}
                 {% render 'misc.image-fallback', type: 'product', icon_size: 40 %}
               {% endif %}
