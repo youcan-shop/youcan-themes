@@ -77,7 +77,8 @@
                 width="100%"
               >
             {% else %}
-              {% render 'misc.image-fallback', icon_size: 40 %}
+              {%- assign slide_placeholder = forloop.index0 | modulo: 3 | plus: 1 | prepend: 'hero-' -%}
+              <picture>{{ slide_placeholder | placeholder_svg_tag }}</picture>
             {% endif %}
           </div>
         </li>
