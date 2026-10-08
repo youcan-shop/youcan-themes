@@ -33,11 +33,13 @@
     <div class="container">
       <h1 class='yc-section-title'>{{ category.name }}</h1>
       <div class='product-list'>
-        {%- for item in category.products limit: number_of_products -%}
-        <div {{ block.youcan_attributes }} class="product-block">
-          {%- render 'product-preview', item: item -%}
-        </div>
-        {%- endfor -%}
+        {%- paginate category.products by number_of_products -%}
+          {%- for item in category.products -%}
+          <div {{ block.youcan_attributes }} class="product-block">
+            {%- render 'product-preview', item: item -%}
+          </div>
+          {%- endfor -%}
+        {%- endpaginate -%}
       </div>
       {% if section.settings.link_of_collection_by_category == true %}
         <div class='button-container'>
