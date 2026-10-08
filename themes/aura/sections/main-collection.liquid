@@ -3,8 +3,8 @@
 
 {%- assign per_page = section.settings.items_per_page -%}
 <div class='yc-product-listing-container'>
-  {%- paginate collection.products by per_page cod, category_id: category.id %}
-    {% if items or subCategories.size > 0 %}
+  {%- paginate collection.products by per_page %}
+    {% if collection.products.size > 0 or subCategories.size > 0 %}
       <div class="breadcrumbs-container">
         {%- render 'breadcrumbs' -%}
         <div class="breadcrumbs-name">
@@ -20,12 +20,12 @@
         {% endfor %}
       </div>
       <div class='product-list'>
-        {% for product in items %}
+        {% for product in collection.products %}
           {% render 'product-preview', item: product %}
         {% endfor %}
       </div>
 
-      {%- render 'main-pagination', has_more: has_more, next_page: next_page, previous_page: previous_page, current: current, last: last -%}
+      {%- render 'main-pagination', current: paginate.current_page, last: paginate.pages, param: paginate.page_param -%}
     {% else %}
       <div class='flex flex-col justify-center text-center items-center gap-3 pt-12'>
         <div class='text-2xl'>{{ 'search.empty.title' | t }}</div>

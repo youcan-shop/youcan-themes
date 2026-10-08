@@ -7,7 +7,8 @@ const query = urlParams.get('q');
 const sortField = urlParams.get('sort_field');
 const sortOrder = urlParams.get('sort_order');
 const sortSelect = document.querySelector('.sort-select');
-let page = +urlParams.get('page[cod]');
+const pageParam = document.querySelector('.yc-pagination-wrapper')?.dataset.param || 'page[cod]';
+let page = +urlParams.get(pageParam);
 
 const updateUrl = (key, value, url) => {
   if (url.searchParams.has(key)) {
@@ -38,15 +39,15 @@ if (page <= 1 || !page) {
 }
 
 if (paginateBtnPrev) {
-  paginateBtnPrev.setAttribute('href', convertUrl('page[cod]', page - 1));
+  paginateBtnPrev.setAttribute('href', convertUrl(pageParam, page - 1));
 }
 
 if (paginateBtnNext) {
-  paginateBtnNext.setAttribute('href', convertUrl('page[cod]', page + 1));
+  paginateBtnNext.setAttribute('href', convertUrl(pageParam, page + 1));
 }
 
 if (paginateBtnCurrent) {
-  paginateBtnCurrent.forEach((btn) => btn.setAttribute('href', convertUrl('page[cod]', btn.dataset.index)));
+  paginateBtnCurrent.forEach((btn) => btn.setAttribute('href', convertUrl(pageParam, btn.dataset.index)));
 }
 
 if (searchTitle) {
