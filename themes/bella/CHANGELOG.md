@@ -1,5 +1,11 @@
 # bella
 
+## 1.3.8
+
+### Patch Changes
+
+- 24fc36d: footer menus, product thumbnails, collection pagination and collection product lists use supported Liquid, and the previous and next page links are no longer swapped
+
 ## 1.3.7
 
 ### Patch Changes
