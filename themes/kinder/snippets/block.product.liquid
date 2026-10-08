@@ -63,6 +63,9 @@
           loading="lazy"
         {% endif %}
       >
+    {% elsif product.id == nil %}
+      {%- assign placeholder_name = forloop.index0 | modulo: 5 | plus: 1 | prepend: 'product-' | append: '-transparent' -%}
+      {{ placeholder_name | placeholder_svg_tag }}
     {% else %}
       {% render 'misc.image-fallback', icon_size: 40 %}
     {% endif %}

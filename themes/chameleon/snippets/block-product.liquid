@@ -35,6 +35,9 @@
           height="100%"
           width="100%"
         >
+      {% elsif product.id == nil %}
+        {%- assign placeholder_name = forloop.index0 | modulo: 5 | plus: 1 | prepend: 'product-' | append: '-transparent' -%}
+        {{ placeholder_name | placeholder_svg_tag }}
       {% else %}
         {% render 'ui-icon', name: 'image', size: 60, filled: true %}
       {% endif %}

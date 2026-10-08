@@ -25,7 +25,8 @@
       >
     </picture>
   {% else %}
-    {% render 'ui-icon', name: 'web_stories', size: 60, filled: true %}
+    {%- assign placeholder_name = forloop.index0 | modulo: 3 | plus: 1 | prepend: 'hero-' -%}
+    <picture>{{ placeholder_name | placeholder_svg_tag: 'placeholder-hero' }}</picture>
   {% endif %}
   {% if settings.heading or settings.subheading or settings.button_text %}
     <div class="content">
