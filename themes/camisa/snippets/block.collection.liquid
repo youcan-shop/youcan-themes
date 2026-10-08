@@ -37,6 +37,9 @@
             loading="lazy"
           {% endif %}
         >
+      {% elsif collection.settings %}
+        {%- assign placeholder_name = forloop.index0 | modulo: 3 | plus: 1 | prepend: 'collection-' | append: '-transparent' -%}
+        {{ placeholder_name | placeholder_svg_tag }}
       {% else %}
         {% render 'misc.image-fallback', icon_size: 40 %}
       {% endif %}
