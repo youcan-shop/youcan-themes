@@ -72,49 +72,47 @@
       <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical">
         {% for collection_block in section.blocks %}
           {% assign max_products = section.settings.max_products_to_show %}
-          {% if collection_block.settings.collection.id %}
-            {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
-              <div
-                class="tab-content"
-                ui-carousel="item"
-                ui-slot="carousel-item"
-                {% if section.blocks.size > 1 %}
-                  role="tabpanel"
-                  id="{{ section.id }}-tabpanel-{{ forloop.index }}"
-                  aria-labelledby="{{ section.id }}-tab-{{ forloop.index }}"
+          {% if collection_block.settings.collection %}
+            <div
+              class="tab-content"
+              ui-carousel="item"
+              ui-slot="carousel-item"
+              {% if section.blocks.size > 1 %}
+                role="tabpanel"
+                id="{{ section.id }}-tabpanel-{{ forloop.index }}"
+                aria-labelledby="{{ section.id }}-tab-{{ forloop.index }}"
+              {% endif %}
+              style="
+                --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
+                --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
+              "
+            >
+              <div class="tab-head">
+                <h2 class="collection-name">{{ collection_block.settings.collection.name }}</h2>
+                {% if section.settings.show_view_all_button %}
+                  <a
+                    ui-slot="link-button"
+                    data-size="md"
+                    data-underline="true"
+                    href="/collections/{{ collection_block.settings.collection.slug }}"
+                  >
+                    {{ 'collection-tabs.view_all' | t }}
+                  </a>
                 {% endif %}
-                style="
-                  --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
-                  --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
-                "
-              >
-                <div class="tab-head">
-                  <h2 class="collection-name">{{ collection_block.settings.collection.name }}</h2>
-                  {% if section.settings.show_view_all_button %}
-                    <a
-                      ui-slot="link-button"
-                      data-size="md"
-                      data-underline="true"
-                      href="/collections/{{ collection_block.settings.collection.slug }}"
-                    >
-                      {{ 'collection-tabs.view_all' | t }}
-                    </a>
-                  {% endif %}
-                </div>
-                {% if items.size == 0 %}
-                  <div class="empty-message">
-                    <p>
-                      {{ 'single-collection.empty.title' | t }}
-                    </p>
-                  </div>
-                {% endif %}
-                <ul class="items">
-                  {% for product in items %}
-                    {% render 'block.product-tab', product: product %}
-                  {% endfor %}
-                </ul>
               </div>
-            {% endpaginate %}
+              {% if collection_block.settings.collection.products.size == 0 %}
+                <div class="empty-message">
+                  <p>
+                    {{ 'single-collection.empty.title' | t }}
+                  </p>
+                </div>
+              {% endif %}
+              <ul class="items">
+                {% for product in collection_block.settings.collection.products limit: max_products %}
+                  {% render 'block.product-tab', product: product %}
+                {% endfor %}
+              </ul>
+            </div>
           {% else %}
             <div
               class="tab-content"

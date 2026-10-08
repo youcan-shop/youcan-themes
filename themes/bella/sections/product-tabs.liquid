@@ -47,31 +47,29 @@
   <div class="products-area" ui-carousel="wrapper" ui-slot="carousel" aria-orientation="vertical">
     {% for collection_block in section.blocks %}
       {% assign max_products = section.settings.max_products_to_show %}
-      {% if collection_block.settings.collection.id %}
-        {% paginate collection.products by max_products id category_id: collection_block.settings.collection.id %}
-          <div
-            class="panel"
-            ui-carousel="item"
-            ui-slot="carousel-item"
-            {% if section.blocks.size > 1 %}
-              role="tabpanel"
-              id="product-tabpanel-{{ forloop.index }}"
-              aria-labelledby="product-tab-{{ forloop.index }}"
-            {% endif %}
+      {% if collection_block.settings.collection %}
+        <div
+          class="panel"
+          ui-carousel="item"
+          ui-slot="carousel-item"
+          {% if section.blocks.size > 1 %}
+            role="tabpanel"
+            id="product-tabpanel-{{ forloop.index }}"
+            aria-labelledby="product-tab-{{ forloop.index }}"
+          {% endif %}
+        >
+          <ul
+            class="items"
+            style="
+              --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
+              --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
+            "
           >
-            <ul
-              class="items"
-              style="
-                --nbr-columns-desktop: {{ section.settings.nbr_columns_desktop }};
-                --nbr-columns-mobile: {{ section.settings.nbr_columns_mobile }};
-              "
-            >
-              {% for product in items %}
-                {% render 'block.product' %}
-              {% endfor %}
-            </ul>
-          </div>
-        {% endpaginate %}
+            {% for product in collection_block.settings.collection.products limit: max_products %}
+              {% render 'block.product' %}
+            {% endfor %}
+          </ul>
+        </div>
       {% else %}
         <div
           class="panel"
