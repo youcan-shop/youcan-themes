@@ -4,7 +4,7 @@ COD-theme is a starter template to initialize a cash on delivery theme, it inclu
 
 
 # Getting started
-To use the COD-theme, you must first install the [YouCan CLI](https://developer.youcan.shop/themes/cli/introduction.html) by running the following command
+To use the COD-theme, you must first install the [YouCan CLI](https://docs.youcan.shop/themes/cli/introduction.html) by running the following command
 ```
 npm i @youcan/cli -g
 ```
