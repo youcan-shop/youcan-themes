@@ -1,5 +1,11 @@
 # kinder
 
+## 1.1.7
+
+### Patch Changes
+
+- 24fc36d: footer menus, product thumbnails, collection pagination and collection product lists use supported Liquid, and the previous and next page links are no longer swapped
+
 ## 1.1.6
 
 ### Patch Changes

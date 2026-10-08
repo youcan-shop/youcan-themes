@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.8
+
+### Patch Changes
+
+- 24fc36d: footer menus, product thumbnails, collection pagination and collection product lists use supported Liquid, and the previous and next page links are no longer swapped
+
 ## 4.8.7
 
 ### Patch Changes
