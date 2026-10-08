@@ -143,82 +143,80 @@
     {% endunless %}
 
     {% if section.settings.recommended_collection %}
-      {% paginate collection.products by 8 cod, category_id: section.settings.recommended_collection.id %}
-        <ui-carousel class="recommendation">
-          {% if section.settings.recommendations_header %}
-            <div class="head">
-              <h4 class="title">{{ section.settings.recommendations_header }}</h4>
-              {% if items.size > 1 %}
-                <div class="arrows">
-                  <button
-                    ui-carousel="arrow-previous"
-                    ui-slot="button"
-                    data-mode="stroke"
-                    data-size="xs"
-                    data-as-icon
-                    data-flip-icon-in-rtl
-                    aria-label="Previous"
-                  >
-                    {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-                  </button>
-                  <button
-                    ui-carousel="arrow-next"
-                    ui-slot="button"
-                    data-mode="stroke"
-                    data-size="xs"
-                    data-as-icon
-                    data-flip-icon-in-rtl
-                    aria-label="Next"
-                  >
-                    {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-                  </button>
-                </div>
-              {% endif %}
-            </div>
-          {% endif %}
-          {% if items.size %}
-            <ul class="group" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical" data-align="center">
-              {% for item in items %}
-                {% assign default_variant = item.selected_or_first_available_variant %}
-                {% assign price = default_variant.price | default: item.price %}
-                {% assign compare_at_price = default_variant.compare_at_price | default: item.compare_at_price %}
+      <ui-carousel class="recommendation">
+        {% if section.settings.recommendations_header %}
+          <div class="head">
+            <h4 class="title">{{ section.settings.recommendations_header }}</h4>
+            {% if section.settings.recommended_collection.products.size > 1 %}
+              <div class="arrows">
+                <button
+                  ui-carousel="arrow-previous"
+                  ui-slot="button"
+                  data-mode="stroke"
+                  data-size="xs"
+                  data-as-icon
+                  data-flip-icon-in-rtl
+                  aria-label="Previous"
+                >
+                  {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                </button>
+                <button
+                  ui-carousel="arrow-next"
+                  ui-slot="button"
+                  data-mode="stroke"
+                  data-size="xs"
+                  data-as-icon
+                  data-flip-icon-in-rtl
+                  aria-label="Next"
+                >
+                  {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if section.settings.recommended_collection.products.size %}
+          <ul class="group" ui-carousel="wrapper" ui-slot="carousel" data-orientation="vertical" data-align="center">
+            {% for item in section.settings.recommended_collection.products limit: 8 %}
+              {% assign default_variant = item.selected_or_first_available_variant %}
+              {% assign price = default_variant.price | default: item.price %}
+              {% assign compare_at_price = default_variant.compare_at_price | default: item.compare_at_price %}
 
-                <li ui-carousel="item" ui-slot="carousel-item">
-                  <a class="product-item" href="{{ item.url }}">
-                    <div class="media">
-                      {% if item.preview_image %}
-                        <img
-                          src="{{ item.preview_image.original }}"
-                          alt="{{ item.name }}"
-                          height="65"
-                          width="65"
-                          loading="lazy"
-                        >
-                      {% else %}
-                        {% render 'misc.image-fallback', type: 'product', icon_size: 20 %}
-                      {% endif %}
-                      {% unless default_variant.available %}
-                        <div class="sold-out">
-                          <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
-                        </div>
-                      {% endunless %}
-                    </div>
-                    <div class="info">
-                      <span class="name">{{ item.name }}</span>
-                      <div class="price">
-                        <span class="original">{{ price | money }}</span>
-                        {% if compare_at_price %}
-                          <span class="compare-at">{{ compare_at_price | money }}</span>
-                        {% endif %}
+              <li ui-carousel="item" ui-slot="carousel-item">
+                <a class="product-item" href="{{ item.url }}">
+                  <div class="media">
+                    {% if item.preview_image %}
+                      <img
+                        src="{{ item.preview_image.original }}"
+                        alt="{{ item.name }}"
+                        height="65"
+                        width="65"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      {% render 'misc.image-fallback', type: 'product', icon_size: 20 %}
+                    {% endif %}
+                    {% unless default_variant.available %}
+                      <div class="sold-out">
+                        <span ui-slot="status-badge" data-variant="stroke" data-status="failed" data-size="xs">{{ 'general.sold_out' | t }}</span>
                       </div>
+                    {% endunless %}
+                  </div>
+                  <div class="info">
+                    <span class="name">{{ item.name }}</span>
+                    <div class="price">
+                      <span class="original">{{ price | money }}</span>
+                      {% if compare_at_price %}
+                        <span class="compare-at">{{ compare_at_price | money }}</span>
+                      {% endif %}
                     </div>
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% endif %}
-        </ui-carousel>
-      {% endpaginate %}
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </ui-carousel>
     {% endif %}
   </div>
   <div

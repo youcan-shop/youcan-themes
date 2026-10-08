@@ -5,7 +5,7 @@
 
   Accepts:
   - keywords: {String} (optional) Most searched keywords
-  - collection_id: {String} (optional) Recommended collection id
+  - search_collection: {Object} (optional) Recommended collection
 
   Usage:
   {% render 'misc.search' %}
@@ -50,45 +50,43 @@
         </div>
       </div>
     {% endif %}
-    {% if collection_id %}
+    {% if search_collection %}
       <hr ui-slot="divider" data-variant="line">
       <div class="products">
         <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}</h4>
-        {% paginate collection.products by 8 id category_id: collection_id %}
-          <div class="items">
-            {% for product in items %}
-              <div class="item">
-                <a href="{{product.url}}" class="media">
-                  {% if product.preview_image %}
-                    <img
-                      src="{{ product.preview_image.original }}"
-                      alt="{{ product.name }}"
-                      height="100%"
-                      width="100%"
-                      loading="lazy"
-                    >
-                  {% else %}
-                    {% render 'misc.image-fallback' %}
-                  {% endif %}
-                </a>
-                <div class="content">
-                  <a
-                    class="title"
-                    ui-slot="link-button"
-                    data-variant="black"
-                    data-size="md"
-                    class="title"
-                    href="{{ product.url }}"
+        <div class="items">
+          {% for product in search_collection.products limit: 8 %}
+            <div class="item">
+              <a href="{{product.url}}" class="media">
+                {% if product.preview_image %}
+                  <img
+                    src="{{ product.preview_image.original }}"
+                    alt="{{ product.name }}"
+                    height="100%"
+                    width="100%"
+                    loading="lazy"
                   >
-                    {{ product.name }}
-                  </a>
-                  {% assign price = default_variant.price | default: product.price %}
-                  <span class="price">{{ price | money }}</span>
-                </div>
+                {% else %}
+                  {% render 'misc.image-fallback' %}
+                {% endif %}
+              </a>
+              <div class="content">
+                <a
+                  class="title"
+                  ui-slot="link-button"
+                  data-variant="black"
+                  data-size="md"
+                  class="title"
+                  href="{{ product.url }}"
+                >
+                  {{ product.name }}
+                </a>
+                {% assign price = default_variant.price | default: product.price %}
+                <span class="price">{{ price | money }}</span>
               </div>
-            {% endfor %}
-          </div>
-        {% endpaginate %}
+            </div>
+          {% endfor %}
+        </div>
       </div>
     {% endif %}
   </div>

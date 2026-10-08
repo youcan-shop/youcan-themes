@@ -4,7 +4,7 @@
   Renders a cart drawer
 
    Accepts:
-  - collection_id: {String} (optional) Recommended collection id
+  - cart_collection: {Object} (optional) Recommended collection
   - show_products: {String} (optional) Control recommend products visibility
 
   Usage:
@@ -34,82 +34,80 @@
     {% render 'core.cart-form' %}
     {% if show_products %}
       <ui-carousel class="products">
-        {% if collection_id %}
-          {% paginate collection.products by 8 id category_id: collection_id %}
-            <div class="head">
-              <h3 class="label">{{ 'search.drawer.products_recommendations' | t }}</h3>
-              {% if items.size > 1 %}
-                <div class="arrows">
-                  <button
-                    ui-carousel="arrow-previous"
-                    ui-slot="button"
-                    data-variant="primary"
-                    data-mode="stroke"
-                    data-size="xs"
-                    data-as-icon
-                    data-flip-icon-in-rtl
-                    aria-label="Previous"
-                  >
-                    {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
-                  </button>
-                  <button
-                    ui-carousel="arrow-next"
-                    ui-slot="button"
-                    data-variant="primary"
-                    data-mode="stroke"
-                    data-size="xs"
-                    data-as-icon
-                    data-flip-icon-in-rtl
-                    aria-label="Next"
-                  >
-                    {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
-                  </button>
-                </div>
-              {% endif %}
-            </div>
-            <div
-              ui-carousel="wrapper"
-              ui-slot="carousel"
-              data-orientation="vertical"
-              class="items"
-            >
-              {% for product in items %}
-                <div
-                  ui-carousel="item"
-                  ui-slot="carousel-item"
-                  class="item"
+        {% if cart_collection %}
+          <div class="head">
+            <h3 class="label">{{ 'search.drawer.products_recommendations' | t }}</h3>
+            {% if cart_collection.products.size > 1 %}
+              <div class="arrows">
+                <button
+                  ui-carousel="arrow-previous"
+                  ui-slot="button"
+                  data-variant="primary"
+                  data-mode="stroke"
+                  data-size="xs"
+                  data-as-icon
+                  data-flip-icon-in-rtl
+                  aria-label="Previous"
                 >
-                  <a href="{{product.url}}" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
-                    {% if product.preview_image %}
-                      <img
-                        src="{{ product.preview_image.original }}"
-                        alt="{{ product.name }}"
-                        height="100%"
-                        width="100%"
-                        loading="lazy"
-                      >
-                    {% else %}
-                      {% render 'misc.image-fallback' %}
-                    {% endif %}
-                  </a>
-                  <div class="content">
-                    <a
-                      class="title"
-                      ui-slot="link-button"
-                      data-variant="gray"
-                      data-size="md"
-                      class="title"
-                      href="{{ product.url }}"
+                  {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                </button>
+                <button
+                  ui-carousel="arrow-next"
+                  ui-slot="button"
+                  data-variant="primary"
+                  data-mode="stroke"
+                  data-size="xs"
+                  data-as-icon
+                  data-flip-icon-in-rtl
+                  aria-label="Next"
+                >
+                  {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                </button>
+              </div>
+            {% endif %}
+          </div>
+          <div
+            ui-carousel="wrapper"
+            ui-slot="carousel"
+            data-orientation="vertical"
+            class="items"
+          >
+            {% for product in cart_collection.products limit: 8 %}
+              <div
+                ui-carousel="item"
+                ui-slot="carousel-item"
+                class="item"
+              >
+                <a href="{{product.url}}" class="media" data-image-ratio="{{ settings.product_image_ratio }}">
+                  {% if product.preview_image %}
+                    <img
+                      src="{{ product.preview_image.original }}"
+                      alt="{{ product.name }}"
+                      height="100%"
+                      width="100%"
+                      loading="lazy"
                     >
-                      {{ product.name }}
-                    </a>
-                    {% assign price = default_variant.price | default: product.price %}
-                    <span class="price">{{ price | money }}</span>
-                  </div>
+                  {% else %}
+                    {% render 'misc.image-fallback' %}
+                  {% endif %}
+                </a>
+                <div class="content">
+                  <a
+                    class="title"
+                    ui-slot="link-button"
+                    data-variant="gray"
+                    data-size="md"
+                    class="title"
+                    href="{{ product.url }}"
+                  >
+                    {{ product.name }}
+                  </a>
+                  {% assign price = default_variant.price | default: product.price %}
+                  <span class="price">{{ price | money }}</span>
                 </div>
-              {% endfor %}
-            </div>
-          {% endpaginate %}
+              </div>
+            {% endfor %}
+          </div>
         {% else %}
           <div class="head">
             <h3 class="label">{{ 'search.drawer.products_recommendations' | t }}</h3>
