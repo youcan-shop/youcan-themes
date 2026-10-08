@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.5
+
+### Patch Changes
+
+- 0bb924a: the homepage collection section lists all products by default, and empty product, collection and slide blocks show placeholder illustrations
+
 ## 1.2.4
 
 ### Patch Changes
