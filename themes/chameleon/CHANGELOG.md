@@ -1,5 +1,12 @@
 # chameleon
 
+## 4.8.7
+
+### Patch Changes
+
+- 96ccece: Chameleon > fix pagination overflows on mobile
+- 0bb924a: the homepage collection section lists all products by default, and empty product, collection and slide blocks show placeholder illustrations
+
 ## 4.8.6
 
 ### Patch Changes
