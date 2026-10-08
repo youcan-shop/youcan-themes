@@ -5,7 +5,7 @@
 
   Accepts:
   - keywords: {String} (optional) Most searched keywords
-  - search_collection: {Object} (optional) Recommended collection
+  - collection_id: {String} (optional) Recommended collection id
 
   Usage:
   {% render 'misc.search' %}
@@ -69,51 +69,53 @@
         </div>
       </div>
     {% endif %}
-    {% if search_collection %}
+    {% if collection_id %}
       <div class="products">
         <h4 class="label">{{ 'search.drawer.products_recommendations' | t }}:</h4>
-        <div class="items">
-          {% for product in search_collection.products limit: 8 %}
-            <a class="item" href="{{product.url}}">
-              <div class="media">
-                {% if product.preview_image %}
-                  <img
-                    src="{{ product.preview_image.original }}"
-                    alt="{{ product.name }}"
-                    height="100%"
-                    width="100%"
-                    loading="lazy"
+        {% paginate collection.products by 8 id category_id: collection_id %}
+          <div class="items">
+            {% for product in items %}
+              <a class="item" href="{{product.url}}">
+                <div class="media">
+                  {% if product.preview_image %}
+                    <img
+                      src="{{ product.preview_image.original }}"
+                      alt="{{ product.name }}"
+                      height="100%"
+                      width="100%"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'misc.image-fallback', icon_size: 32 %}
+                  {% endif %}
+                </div>
+                <div class="content">
+                  <span
+                    class="title"
+                    href="{{ product.url }}"
                   >
-                {% else %}
-                  {% render 'misc.image-fallback', icon_size: 32 %}
-                {% endif %}
-              </div>
-              <div class="content">
-                <span
-                  class="title"
-                  href="{{ product.url }}"
-                >
-                  {{ product.name }}
-                </span>
-                {% assign price = default_variant.price | default: product.price %}
-                <span class="price">{{ price | money }}</span>
-                {% if product.categories.size > 0 %}
-                  <div class="categories">
-                    {% for category in product.categories limit: 2 %}
-                      <span class="category">
-                        {{ category.name -}}
-                      </span>
-                    {% endfor %}
-                    {% assign remaining = product.categories.size | minus: 2 %}
-                    {% if remaining > 0 %}
-                      <span class="category">+{{ remaining }}</span>
-                    {% endif %}
-                  </div>
-                {% endif %}
-              </div>
-            </a>
-          {% endfor %}
-        </div>
+                    {{ product.name }}
+                  </span>
+                  {% assign price = default_variant.price | default: product.price %}
+                  <span class="price">{{ price | money }}</span>
+                  {% if product.categories.size > 0 %}
+                    <div class="categories">
+                      {% for category in product.categories limit: 2 %}
+                        <span class="category">
+                          {{ category.name -}}
+                        </span>
+                      {% endfor %}
+                      {% assign remaining = product.categories.size | minus: 2 %}
+                      {% if remaining > 0 %}
+                        <span class="category">+{{ remaining }}</span>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endpaginate %}
       </div>
     {% endif %}
   </div>
