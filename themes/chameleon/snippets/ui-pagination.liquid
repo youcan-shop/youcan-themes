@@ -29,7 +29,8 @@
 {% unless terms == null or terms == '' %}
   {% assign page_params = page_params | append: 'q=' | append: terms | append: '&' %}
 {% endunless %}
-{% assign page_params = page_params | append: 'page%5Bcod%5D=%p' %}
+{% assign page_param = param | default: 'page%5Bcod%5D' %}
+{% assign page_params = page_params | append: page_param | append: '=%p' %}
 
 {% if last > 1 %}
   <div ui-pagination>

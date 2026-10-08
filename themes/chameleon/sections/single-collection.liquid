@@ -32,15 +32,15 @@
     </a>
   </div>
 
-  {% paginate collection.products by 24 cod, category_id: category.id %}
+  {% paginate collection.products by 24 %}
     <div class="collection-core">
-      {% if items.size > 0 %}
+      {% if collection.products.size > 0 %}
         <ul class="collection-products">
-          {% for product in items %}
+          {% for product in collection.products %}
             {% render 'block-product', product: product %}
           {% endfor %}
         </ul>
-        {% render 'ui-pagination', next_page_url: next_page, previous_page_url: previous_page, current: current, last: last, terms: terms %}
+        {% render 'ui-pagination', next_page_url: paginate.next.url, previous_page_url: paginate.previous.url, current: paginate.current_page, last: paginate.pages, param: paginate.page_param %}
       {% else %}
         {% assign empty_content = 'single-collection.empty.title' | t %}
         {% render 'ui-empty', content: empty_content %}
