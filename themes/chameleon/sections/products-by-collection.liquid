@@ -8,11 +8,9 @@
   </div>
   <ul class="section-core">
     {% if collection %}
-      {% paginate collection.products by 4 id category_id: collection.id %}
-        {% for item in items %}
-          {% render 'block-product', product: item %}
-        {% endfor %}
-      {% endpaginate %}
+      {% for item in collection.products limit: 4 %}
+        {% render 'block-product', product: item %}
+      {% endfor %}
     {% else %}
       {% for item in (1..4) %}
         {% render 'block-product' %}

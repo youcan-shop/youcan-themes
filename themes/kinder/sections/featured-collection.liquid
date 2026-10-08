@@ -54,14 +54,12 @@
     <div class="products">
       {% assign max_products = section.settings.max_products_to_show %}
 
-      {% if section.settings.collection.id %}
-        {% paginate collection.products by max_products id category_id: section.settings.collection.id %}
-          <ul ui-block="products">
-            {% for product in items %}
-              {% render 'block.product', product: product %}
-            {% endfor %}
-          </ul>
-        {% endpaginate %}
+      {% if section.settings.collection %}
+        <ul ui-block="products">
+          {% for product in section.settings.collection.products limit: max_products %}
+            {% render 'block.product', product: product %}
+          {% endfor %}
+        </ul>
       {% else %}
         <ul ui-block="products">
           {% for product in (1..max_products) %}
