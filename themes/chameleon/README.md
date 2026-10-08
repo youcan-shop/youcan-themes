@@ -37,4 +37,4 @@ youcan theme:init -i
 pnpm run dev
 ```
 
-For detailed instructions, visit the [YouCan Theme Get Started Guide](https://developer.youcan.shop/themes/get_started).
+For detailed instructions, visit the [YouCan Theme Get Started Guide](https://docs.youcan.shop/themes/get_started).
