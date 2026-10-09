@@ -100,7 +100,7 @@
   function loadCachedTheme() {
     try {
       const cached = JSON.parse(localStorage.getItem(THEME_KEY));
-      if (cached && cached.primaryColor === primaryColor) {
+      if (cached?.primaryColor === primaryColor && cached.lightTokens && cached.darkTokens) {
         return cached;
       }
     } catch {}
