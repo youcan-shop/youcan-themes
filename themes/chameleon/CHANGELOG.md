@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.8.9
+
+### Patch Changes
+
+- 533660c: a stale color cache in the browser no longer leaves the page hidden behind the loader
+
 ## 4.8.8
 
 ### Patch Changes
