@@ -1,5 +1,11 @@
 # camisa
 
+## 1.1.8
+
+### Patch Changes
+
+- b27f40f: the current sort is kept in pagination links, and on kinder product cards the stock and price of the right product are shown when every variant is sold out
+
 ## 1.1.7
 
 ### Patch Changes
