@@ -8,13 +8,7 @@
   {% render 'block.product', product: {...} %}
 {% endcomment %}
 
-{% if product.has_only_default_variant %}
-  {% assign default_variant = product.variants[0] %}
-{% endif %}
-
-{% if product.selected_or_first_available_variant %}
-  {% assign default_variant = product.selected_or_first_available_variant %}
-{% endif %}
+{% assign default_variant = product.selected_or_first_available_variant | default: product.variants[0] %}
 
 {% assign price = default_variant.price | default: product.price %}
 {% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
