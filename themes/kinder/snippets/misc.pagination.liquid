@@ -21,7 +21,18 @@
   {% assign page_params = '/search?' %}
 {% endif %}
 
-{% if sort_order and sort_field %}
+{% assign sort_field = '' %}
+{% assign sort_order = '' %}
+{% assign query_params = previous_page_url | split: '?' | last | split: '&' %}
+{% for param in query_params %}
+  {% if param contains 'sort_field=' %}
+    {% assign sort_field = param | split: '=' | last %}
+  {% elsif param contains 'sort_order=' %}
+    {% assign sort_order = param | split: '=' | last %}
+  {% endif %}
+{% endfor %}
+
+{% if sort_order != '' and sort_field != '' %}
   {% assign page_params = page_params | append: 'sort_field=' | append: sort_field %}
   {% assign page_params = page_params | append: '&sort_order=' | append: sort_order | append: '&' %}
 {% endif %}
