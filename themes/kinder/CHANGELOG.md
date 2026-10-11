@@ -1,5 +1,11 @@
 # kinder
 
+## 1.1.9
+
+### Patch Changes
+
+- 2a97afb: an `if` tag is used for printed boolean settings, and `1` or nothing is printed for them on every Liquid version
+
 ## 1.1.8
 
 ### Patch Changes
