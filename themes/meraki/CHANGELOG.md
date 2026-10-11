@@ -1,5 +1,11 @@
 # meraki
 
+## 4.6.6
+
+### Patch Changes
+
+- 2a97afb: an `if` tag is used for printed boolean settings, and `1` or nothing is printed for them on every Liquid version
+
 ## 4.6.5
 
 ### Patch Changes
