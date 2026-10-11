@@ -35,12 +35,12 @@
 
       const desktopSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__desktop`, {
         type: products < 4 ? 'slide' : '{{ section.settings.slider_transition_type }}',
-        arrows: products == desktopBlocksPerPage ? false : ('{{ section.settings.slider_arrows }}' ? true : false),
-        autoplay: '{{ section.settings.slider_autoplay }}' ? true : false,
+        arrows: products == desktopBlocksPerPage ? false : ('{% if section.settings.slider_arrows %}1{% endif %}' ? true : false),
+        autoplay: '{% if section.settings.slider_autoplay %}1{% endif %}' ? true : false,
         cover: true,
         pagination: false,
-        pauseOnHover: '{{ section.settings.slider_pause_on_hover }}' ? true : false,
-        pauseOnFocus: '{{ section.settings.slider_pause_on_focus }}' ? true : false,
+        pauseOnHover: '{% if section.settings.slider_pause_on_hover %}1{% endif %}' ? true : false,
+        pauseOnFocus: '{% if section.settings.slider_pause_on_focus %}1{% endif %}' ? true : false,
         interval: '{{ section.settings.duration_between_each_slide | times: 1000 }}',
         rewind: true,
         drag: 'free',
@@ -57,7 +57,7 @@
       const mobileSlider = new Splide(`#yc_slider_{{ id }}.yc-slider__mobile`, {
         type: '{{ section.settings.slider_mobile_transition_type }}',
         arrows: false,
-        autoplay: '{{ section.settings.slider_mobile_autoplay }}' ? true : false,
+        autoplay: '{% if section.settings.slider_mobile_autoplay %}1{% endif %}' ? true : false,
         cover: true,
         pagination: false,
         interval: '{{ section.settings.slider_mobile_timeout | times: 1000 }}',
