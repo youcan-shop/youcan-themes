@@ -156,7 +156,7 @@
                 id="{{ field.name }}"
                 class="w-full"
                 placeholder="{{ field.placeholder }}"
-                required="{{ field.required }}"
+                required="{% if field.required %}1{% endif %}"
                 min
               ></textarea>
             {% else %}
@@ -198,14 +198,14 @@
                   id="{{ field.name }}"
                   class="w-full"
                   placeholder="{{ field.placeholder }}"
-                  required="{{ field.required }}"
+                  required="{% if field.required %}1{% endif %}"
                 >
               {% endif %}
           {% endcase %}
         {% else %}
           <select
             data-linked-field="{{ field.name }}"
-            required="{{ field.required }}"
+            required="{% if field.required %}1{% endif %}"
             name="{{ field.name }}"
             class="w-full"
           ></select>
