@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.7
+
+### Patch Changes
+
+- 36be8ce: Add missing tag of content_for_footer
+
 ## 1.2.6
 
 ### Patch Changes
