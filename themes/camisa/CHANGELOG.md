@@ -1,5 +1,11 @@
 # camisa
 
+## 1.1.10
+
+### Patch Changes
+
+- 36be8ce: Add missing tag of content_for_footer
+
 ## 1.1.9
 
 ### Patch Changes
