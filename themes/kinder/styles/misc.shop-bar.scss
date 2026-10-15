@@ -11,6 +11,7 @@
     justify-content: space-between;
     width: 60%;
     padding: var(--spacing-16);
+    gap: var(--spacing-24);
     transform: translate(-50%, calc(100% + var(--safe-area)));
     transition: var(--transition-expressive-default-spatial);
     border-radius: var(--radius-20);
@@ -23,10 +24,13 @@
 
     .product {
       display: flex;
+      flex: 1 1 auto;
       align-items: center;
+      min-width: 0;
       gap: var(--spacing-12);
 
       .image {
+        flex-shrink: 0;
         width: 90px;
         height: 90px;
         overflow: hidden;
@@ -40,10 +44,14 @@
       .info {
         display: flex;
         flex-direction: column;
+        min-width: 0;
         gap: var(--spacing-4);
 
         .title {
+          overflow: hidden;
           font: var(--font-body-lg);
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .price {
@@ -62,6 +70,7 @@
 
     .actions {
       display: flex;
+      flex-shrink: 0;
       align-items: center;
       gap: var(--spacing-12);
 
