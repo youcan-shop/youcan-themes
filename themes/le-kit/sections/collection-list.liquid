@@ -25,7 +25,7 @@
   <ui-carousel
     class="page-width collection-list"
     style="--per-page: {{ s.columns }}; --per-page-mobile: {{ s.columns_mobile | plus: 0.15 }};"
-    {% if s.layout == 'grid' %}data-static{% endif %}
+    {% unless s.layout == 'carousel' %}data-static{% endunless %}
   >
     {% render 'section-header',
       heading: s.heading,
@@ -36,7 +36,7 @@
     %}
 
     <ul
-      class="{% if s.layout == 'grid' %}grid{% else %}slider__track{% endif %}"
+      class="{% if s.layout == 'carousel' %}slider__track{% else %}grid grid--{{ s.layout }}{% endif %}"
       style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};"
       role="list"
       data-carousel-track
@@ -83,7 +83,9 @@
       "label": "t:settings.layout",
       "options": [
         { "value": "grid", "label": "t:options.grid" },
-        { "value": "carousel", "label": "t:options.carousel" }
+        { "value": "carousel", "label": "t:options.carousel" },
+        { "value": "bento", "label": "t:options.bento" },
+        { "value": "editorial", "label": "t:options.editorial" }
       ],
       "default": "grid"
     },
@@ -116,7 +118,9 @@
     { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
   ],
   "presets": [
-    { "name": "t:names.collection_list", "category": "t:categories.collections" }
+    { "name": "t:names.collection_list", "category": "t:categories.collections" },
+    { "name": "t:names.collections_bento", "category": "t:categories.collections", "settings": { "layout": "bento", "card_style": "overlay", "columns": 4 } },
+    { "name": "t:names.collections_editorial", "category": "t:categories.collections", "settings": { "layout": "editorial", "ratio": "portrait" } }
   ]
 }
 {% endschema %}

@@ -352,7 +352,7 @@ h6,
   min-width: 0;
 }
 
-.layout-panel[data-direction="row"] > :is(.group-block, .text-block, .image-block, .video-block, .accordion-block, .product-list-block) {
+.layout-panel[data-direction="row"] > :is(.group-block, .text-block, .image-block, .video-block, .accordion-block, .product-list-block, .comparison, .featured-collection-block) {
   flex: 1 1 0;
 }
 
@@ -791,6 +791,7 @@ h6,
 
 /* Mobile: the list becomes a bottom drawer */
 .select-popup--drawer {
+  opacity: 1;
   inset: auto 0 0 0;
   width: 100%;
   max-width: none;
@@ -800,7 +801,8 @@ h6,
   border-radius: var(--radius-surface) var(--radius-surface) 0 0;
   scale: 1;
   translate: 0 100%;
-  transition-duration: var(--duration);
+  transition-duration: 320ms;
+  transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .select-popup--drawer:popover-open {
@@ -809,6 +811,7 @@ h6,
 
 @starting-style {
   .select-popup--drawer:popover-open {
+    opacity: 1;
     translate: 0 100%;
   }
 }
@@ -972,7 +975,12 @@ input[type="checkbox"]:focus-visible {
 }
 
 /* ---------- Drawers (sheets) & dialogs: native popover / <dialog> ---------- */
+/*
+ * Sheets slide in from their edge and fully out of the viewport (no fade).
+ * --sheet-offset is the distance needed to leave the screen, including the inset gap on desktop.
+ */
 .drawer {
+  --sheet-offset: 100%;
   position: fixed;
   inset: 0 0 0 auto;
   width: min(var(--drawer-width), calc(100vw - 48px));
@@ -989,34 +997,33 @@ input[type="checkbox"]:focus-visible {
   background-color: var(--color-background);
   color: var(--color-foreground);
   box-shadow: var(--shadow-lg);
-  opacity: 0;
-  translate: 32px 0;
+  translate: var(--sheet-offset) 0;
   transition:
-    opacity var(--duration) var(--ease),
-    translate var(--duration) var(--ease),
-    overlay var(--duration) allow-discrete,
-    display var(--duration) allow-discrete;
+    translate 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
 }
 
 .drawer--start {
   inset: 0 auto 0 0;
   border-inline: 0 1px solid var(--color-border);
-  translate: -32px 0;
+  translate: calc(-1 * var(--sheet-offset)) 0;
 }
 
 [dir="rtl"] .drawer {
   inset: 0 auto 0 0;
-  translate: -32px 0;
+  translate: calc(-1 * var(--sheet-offset)) 0;
 }
 
 [dir="rtl"] .drawer--start {
   inset: 0 0 0 auto;
-  translate: 32px 0;
+  translate: var(--sheet-offset) 0;
 }
 
 @media (min-width: 750px) {
   /* Floating sheet, inset from the viewport edges */
   .drawer {
+    --sheet-offset: calc(100% + 16px);
     inset: 8px 8px 8px auto;
     height: calc(100dvh - 16px);
     border: 1px solid var(--color-border);
@@ -1035,23 +1042,21 @@ input[type="checkbox"]:focus-visible {
 
 .drawer:popover-open {
   display: flex;
-  opacity: 1;
   translate: 0 0;
 }
 
 @starting-style {
   .drawer:popover-open {
-    opacity: 0;
-    translate: 32px 0;
+    translate: var(--sheet-offset) 0;
   }
 
   .drawer--start:popover-open,
   [dir="rtl"] .drawer:popover-open {
-    translate: -32px 0;
+    translate: calc(-1 * var(--sheet-offset)) 0;
   }
 
   [dir="rtl"] .drawer--start:popover-open {
-    translate: 32px 0;
+    translate: var(--sheet-offset) 0;
   }
 }
 
@@ -1173,8 +1178,11 @@ dialog[open] {
     border-inline: 0;
     border-block-end: 0;
     border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+    opacity: 1;
     scale: 1;
-    translate: 0 16px;
+    translate: 0 100%;
+    transition-duration: 320ms;
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   dialog[open] {
@@ -1183,7 +1191,8 @@ dialog[open] {
 
   @starting-style {
     dialog[open] {
-      translate: 0 16px;
+      opacity: 1;
+      translate: 0 100%;
     }
   }
 }
@@ -1253,6 +1262,24 @@ ui-carousel {
 .slider__dot[aria-current="true"] {
   opacity: 1;
 }
+
+/* ---------- Marquee (section + block) ---------- */
+.marquee { display: block; overflow: hidden; }
+.marquee__track { display: flex; width: max-content; }
+.marquee__group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--space-xl);
+  padding-inline-end: var(--space-xl);
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
+}
+.marquee[data-reverse] .marquee__group { animation-direction: reverse; }
+.marquee[data-pause-on-hover]:hover .marquee__group { animation-play-state: paused; }
+[dir="rtl"] .marquee__group { animation-name: marquee-rtl; }
+.marquee__group.text-xl { font-size: var(--h3); }
+@keyframes marquee { to { transform: translateX(-100%); } }
+@keyframes marquee-rtl { to { transform: translateX(100%); } }
 
 /* ---------- Product card ---------- */
 .product-card {
@@ -1726,7 +1753,7 @@ ui-carousel {
   transition: transform var(--duration) var(--ease);
 }
 
-.accordion[open] > .accordion__summary > .icon:last-child {
+.accordion[open]:not([data-state="closed"]) > .accordion__summary > .icon:last-child {
   transform: rotate(180deg);
 }
 
@@ -1759,26 +1786,22 @@ ui-carousel {
   animation: pop-in var(--duration) var(--ease);
 }
 
-/* Search bar slides down */
+/* Search bar: a top sheet that slides down from the edge */
 .search-modal {
-  opacity: 0;
-  translate: 0 -12px;
+  translate: 0 -100%;
   transition:
-    opacity var(--duration) var(--ease),
-    translate var(--duration) var(--ease),
-    overlay var(--duration) allow-discrete,
-    display var(--duration) allow-discrete;
+    translate 320ms cubic-bezier(0.32, 0.72, 0, 1),
+    overlay 320ms allow-discrete,
+    display 320ms allow-discrete;
 }
 
 .search-modal:popover-open {
-  opacity: 1;
   translate: 0 0;
 }
 
 @starting-style {
   .search-modal:popover-open {
-    opacity: 0;
-    translate: 0 -12px;
+    translate: 0 -100%;
   }
 }
 

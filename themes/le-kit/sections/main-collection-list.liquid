@@ -20,7 +20,7 @@
     </header>
     {% paginate collections by 24 cod %}
       {% if items.size > 0 %}
-        <ul class="grid" style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};" role="list">
+        <ul class="grid grid--{{ s.layout | default: 'grid' }}" style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};" role="list">
           {% for collection in items %}
             <li>{% render 'collection-card', collection: collection, ratio: ratio, style: s.card_style, sizes: '(min-width: 750px) 33vw, 50vw' %}</li>
           {% endfor %}
@@ -39,6 +39,17 @@
   "templates": ["list-collections"],
   "limit": 1,
   "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        { "value": "grid", "label": "t:options.grid" },
+        { "value": "bento", "label": "t:options.bento" },
+        { "value": "editorial", "label": "t:options.editorial" }
+      ],
+      "default": "grid"
+    },
     { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 5, "step": 1, "default": 3 },
     { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
     {

@@ -160,39 +160,56 @@ for (const event of ["invalid", "input"]) {
   );
 }
 
-// Smooth open / close for accordions and menu drawer sub menus
+// Smooth open / close for accordions and menu drawer sub menus.
+// The <details> height is animated between the summary height and the full height,
+// with overflow clipped so the content never spills out while closing.
 const ANIMATED_DETAILS = "details.accordion, details.menu-drawer__details";
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const DETAILS_TIMING = { duration: 280, easing: "cubic-bezier(0.4, 0, 0.2, 1)" };
+
+function animateDetails(details, summary, open) {
+  const content = [...details.children].filter((child) => child !== summary);
+  const from = details.getBoundingClientRect().height;
+
+  details.getAnimations().forEach((animation) => animation.cancel());
+  content.forEach((child) => child.getAnimations().forEach((animation) => animation.cancel()));
+
+  if (open) details.open = true;
+  const to = open ? details.scrollHeight : summary.getBoundingClientRect().height;
+
+  details.style.overflow = "hidden";
+  details.toggleAttribute("data-animating", true);
+
+  const animation = details.animate([{ height: `${from}px` }, { height: `${to}px` }], DETAILS_TIMING);
+  content.forEach((child) =>
+    child.animate(open ? [{ opacity: 0, translate: "0 -4px" }, { opacity: 1, translate: "0 0" }] : [{ opacity: 1 }, { opacity: 0 }], {
+      ...DETAILS_TIMING,
+      duration: open ? DETAILS_TIMING.duration : DETAILS_TIMING.duration * 0.6,
+      fill: "forwards",
+    }),
+  );
+
+  animation.onfinish = () => {
+    if (!open) details.open = false;
+    details.style.overflow = "";
+    details.removeAttribute("data-animating");
+    content.forEach((child) => child.getAnimations().forEach((a) => a.cancel()));
+  };
+}
 
 document.addEventListener("click", (event) => {
   const summary = event.target.closest("summary");
   const details = summary?.parentElement;
 
-  if (!details?.matches(ANIMATED_DETAILS) || reduceMotion.matches) return;
+  if (!details?.matches(ANIMATED_DETAILS) || summary !== details.querySelector(":scope > summary")) return;
+  if (reduceMotion.matches) return;
 
   event.preventDefault();
 
-  const content = [...details.children].filter((child) => child !== summary);
-  const startHeight = details.offsetHeight;
-
-  details.getAnimations().forEach((animation) => animation.cancel());
-
-  if (details.open) {
-    const endHeight = summary.offsetHeight;
-    details.setAttribute("data-closing", "");
-    details
-      .animate([{ height: `${startHeight}px` }, { height: `${endHeight}px` }], { duration: 220, easing: "ease-out" })
-      .finished.then(() => {
-        details.open = false;
-        details.removeAttribute("data-closing");
-      })
-      .catch(() => {});
-  } else {
-    details.open = true;
-    const endHeight = details.offsetHeight;
-    details.animate([{ height: `${startHeight}px` }, { height: `${endHeight}px` }], { duration: 220, easing: "ease-out" });
-    content.forEach((child) => child.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" }));
-  }
+  // data-state holds the target state, so quick double clicks reverse the running animation
+  const isOpen = details.dataset.state ? details.dataset.state === "open" : details.open;
+  details.dataset.state = isOpen ? "closed" : "open";
+  animateDetails(details, summary, !isOpen);
 });
 
 // Reveal sections on scroll
