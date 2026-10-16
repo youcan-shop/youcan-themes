@@ -27,10 +27,30 @@
   href="{{ favicon }}"
 >
 
+{% comment %} Product image ratio {% endcomment %}
+{% assign product_image_ratio = '1 / 1' %}
+{% assign product_image_box_ratio = '1 / 1' %}
+{% assign product_image_fit = 'cover' %}
+
+{% case settings.product_image_ratio %}
+  {% when 'auto' %}
+    {% assign product_image_ratio = 'auto' %}
+    {% assign product_image_fit = 'contain' %}
+  {% when 'portrait' %}
+    {% assign product_image_ratio = '3 / 4' %}
+    {% assign product_image_box_ratio = '3 / 4' %}
+  {% when 'landscape' %}
+    {% assign product_image_ratio = '4 / 3' %}
+    {% assign product_image_box_ratio = '4 / 3' %}
+{% endcase %}
+
 {% comment %} Tokens {% endcomment %}
 {% style %}
   :root {
     --font-family: '{{ settings.font_family | replace: '+', ' '  }}', sans-serif, yc-sans;
+    --product-image-ratio: {{ product_image_ratio }};
+    --product-image-box-ratio: {{ product_image_box_ratio }};
+    --product-image-fit: {{ product_image_fit }};
   }
 {% endstyle %}
 
