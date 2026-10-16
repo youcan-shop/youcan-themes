@@ -1,5 +1,9 @@
+<div
+  class="slideshow-wrapper{% if section.settings.width == 'page' %} page-width{% endif %}"
+  style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;"
+>
 <ui-carousel
-  class="slideshow color-scheme color-{{ section.settings.color_scheme }}"
+  class="slideshow color-scheme color-{{ section.settings.color_scheme }}{% if section.settings.width == 'page' %} slideshow--boxed{% endif %}"
   data-height="{{ section.settings.height }}"
   {% if section.settings.autoplay %}autoplay interval="{{ section.settings.speed | times: 1000 }}"{% endif %}
   aria-roledescription="carousel"
@@ -11,9 +15,12 @@
 
   {% if section.blocks.size > 1 %}
     <div class="slideshow__controls page-width">
+      {% if section.settings.show_arrows %}
       <button class="button button--secondary button--icon" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">
         {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
       </button>
+      {% endif %}
+      {% if section.settings.show_dots %}
       <div class="slideshow__dots">
         {% for b in section.blocks %}
           <button
@@ -25,15 +32,20 @@
           ></button>
         {% endfor %}
       </div>
+      {% endif %}
+      {% if section.settings.show_arrows %}
       <button class="button button--secondary button--icon" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">
         {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
       </button>
+      {% endif %}
     </div>
   {% endif %}
 </ui-carousel>
+</div>
 
 {% stylesheet %}
   .slideshow { --slider-gap: 0px; position: relative; }
+  .slideshow--boxed { overflow: hidden; border-radius: var(--radius-surface); }
   .slideshow__controls {
     position: absolute;
     inset-inline: 0;
@@ -67,6 +79,18 @@
       ],
       "default": "large"
     },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "full", "label": "t:options.full_width" },
+        { "value": "page", "label": "t:options.page" }
+      ],
+      "default": "full"
+    },
+    { "type": "checkbox", "id": "show_arrows", "label": "t:settings.show_arrows", "default": true },
+    { "type": "checkbox", "id": "show_dots", "label": "t:settings.show_dots", "default": true },
     { "type": "checkbox", "id": "autoplay", "label": "t:settings.autoplay", "default": true },
     {
       "type": "range",
@@ -79,7 +103,10 @@
       "default": 5,
       "visible_if": { "setting_id": "autoplay", "value": true }
     },
-    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-4" }
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-4" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 0 }
   ],
   "presets": [
     {

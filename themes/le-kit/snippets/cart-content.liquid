@@ -16,6 +16,29 @@
 
   {% if cart.count > 0 %}
     <div class="cart__body{% if context == 'drawer' %} drawer__body{% endif %}">
+      {% assign threshold = settings.free_shipping_threshold | default: 0 | plus: 0 %}
+      {% if threshold > 0 %}
+        {%- liquid
+          assign subtotal = cart.sub_total | default: 0
+          assign remaining = threshold | minus: subtotal
+          assign remaining_money = remaining | money
+          assign progress = subtotal | times: 100.0 | divided_by: threshold | round
+          if progress > 100
+            assign progress = 100
+          endif
+        -%}
+        <div class="free-shipping">
+          <p class="free-shipping__text">
+            {% render 'icon', name: 'truck', px: 16 %}
+            {% if remaining > 0 %}
+              {{ 'cart.free_shipping.remaining' | t | replace: '[amount]', remaining_money }}
+            {% else %}
+              {{ 'cart.free_shipping.unlocked' | t }}
+            {% endif %}
+          </p>
+          <progress class="free-shipping__bar" value="{{ progress }}" max="100">{{ progress }}%</progress>
+        </div>
+      {% endif %}
       <ul class="cart__lines" role="list">
         {% for item in cart.items %}
           {% render 'cart-line', item: item %}

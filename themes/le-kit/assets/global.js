@@ -215,7 +215,13 @@ if (!customElements.get("ui-header")) {
 
       document.addEventListener("click", this.onDocumentClick);
       document.addEventListener("keyup", this.onKeyUp);
-      if (this.dataset.sticky === "scroll-up") window.addEventListener("scroll", this.onScroll, { passive: true });
+      if (this.dataset.sticky === "scroll-up" || this.hasAttribute("data-transparent")) {
+        window.addEventListener("scroll", this.onScroll, { passive: true });
+        this.handleScroll();
+      }
+
+      // Keep the header solid while a dropdown is open over a transparent header
+      this.dropdowns.forEach((dropdown) => dropdown.addEventListener("toggle", () => this.updateTransparency()));
     }
 
     disconnectedCallback() {
@@ -226,16 +232,104 @@ if (!customElements.get("ui-header")) {
 
     handleScroll() {
       const current = window.scrollY;
-      const isScrollingDown = current > this.lastScroll && current > this.offsetHeight;
 
-      this.toggleAttribute("data-hidden", isScrollingDown);
-      if (isScrollingDown) this.dropdowns.forEach((dropdown) => (dropdown.open = false));
+      if (this.dataset.sticky === "scroll-up") {
+        const isScrollingDown = current > this.lastScroll && current > this.offsetHeight;
+
+        this.toggleAttribute("data-hidden", isScrollingDown);
+        if (isScrollingDown) this.dropdowns.forEach((dropdown) => (dropdown.open = false));
+      }
 
       this.lastScroll = current;
+      this.updateTransparency();
+    }
+
+    updateTransparency() {
+      if (!this.hasAttribute("data-transparent")) return;
+
+      const solid = window.scrollY > 8 || this.dropdowns.some((dropdown) => dropdown.open);
+      const { schemeClass, transparentClass } = this.dataset;
+
+      this.toggleAttribute("data-transparent-active", !solid);
+      this.classList.toggle(schemeClass, solid);
+      this.classList.toggle(transparentClass, !solid);
     }
   }
 
   customElements.define("ui-header", Header);
+}
+
+// Countdown: counts down to the "end" attribute (YYYY-MM-DDTHH:MM, visitor's local time)
+if (!customElements.get("ui-countdown")) {
+  class Countdown extends HTMLElement {
+    static UNITS = [
+      ["days", 86400000],
+      ["hours", 3600000],
+      ["minutes", 60000],
+      ["seconds", 1000],
+    ];
+
+    connectedCallback() {
+      this.end = new Date(this.getAttribute("end"));
+      if (isNaN(this.end)) return;
+
+      this.tick();
+      this.timer = setInterval(() => this.tick(), 1000);
+    }
+
+    disconnectedCallback() {
+      clearInterval(this.timer);
+    }
+
+    tick() {
+      let remaining = Math.max(0, this.end - Date.now());
+
+      Countdown.UNITS.forEach(([unit, ms]) => {
+        const value = Math.floor(remaining / ms);
+        remaining -= value * ms;
+
+        const element = this.querySelector(`[data-${unit}]`);
+        if (element) element.textContent = String(value).padStart(2, "0");
+      });
+
+      if (this.end - Date.now() <= 0) {
+        clearInterval(this.timer);
+        if (this.hasAttribute("hide-when-expired")) this.hidden = true;
+      }
+    }
+  }
+
+  customElements.define("ui-countdown", Countdown);
+}
+
+// Video card (video reviews): tap to play with sound, tap again to pause
+if (!customElements.get("ui-video-card")) {
+  class VideoCard extends HTMLElement {
+    connectedCallback() {
+      this.video = this.querySelector("video");
+      this.querySelector("button")?.addEventListener("click", () => this.toggle());
+    }
+
+    toggle() {
+      if (!this.video) return;
+
+      if (this.video.paused) {
+        document.querySelectorAll("ui-video-card[data-playing]").forEach((card) => card !== this && card.pause());
+        this.video.muted = false;
+        this.video.play();
+        this.setAttribute("data-playing", "");
+      } else {
+        this.pause();
+      }
+    }
+
+    pause() {
+      this.video?.pause();
+      this.removeAttribute("data-playing");
+    }
+  }
+
+  customElements.define("ui-video-card", VideoCard);
 }
 
 // Video: replace the poster with the embed on click

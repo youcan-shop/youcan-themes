@@ -5,12 +5,25 @@
   endif
   assign logo = settings.logo
   assign store_name = store.name | escape
+  assign scheme_class = 'color-' | append: section.settings.color_scheme
+  assign transparent = false
+  if section.settings.transparent_home and template.name == 'index'
+    assign transparent = true
+    assign transparent_class = 'color-' | append: section.settings.transparent_color_scheme
+  endif
 -%}
 
 <ui-header
-  class="site-header color-scheme color-{{ section.settings.color_scheme }}"
+  class="site-header color-scheme {% if transparent %}{{ transparent_class }}{% else %}{{ scheme_class }}{% endif %}"
   data-sticky="{{ section.settings.sticky }}"
   data-logo-position="{{ section.settings.logo_position }}"
+  data-menu-position="{{ section.settings.menu_position }}"
+  {% if transparent %}
+    data-transparent
+    data-transparent-active
+    data-scheme-class="{{ scheme_class }}"
+    data-transparent-class="{{ transparent_class }}"
+  {% endif %}
   {% if section.settings.border %}data-border{% endif %}
 >
   <div class="page-width site-header__inner">
@@ -143,6 +156,13 @@
     transition: transform var(--duration) var(--ease);
   }
   .header-wrapper:has(> .site-header[data-hidden]) { transform: translateY(-100%); }
+  .header-wrapper:has(> .site-header[data-transparent]) { position: relative; z-index: 20; margin-block-end: calc(-1 * var(--header-height)); }
+  .header-wrapper:has(> .site-header[data-transparent][data-sticky="always"]),
+  .header-wrapper:has(> .site-header[data-transparent][data-sticky="scroll-up"]) { position: sticky; }
+  .site-header { transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease), border-color var(--duration) var(--ease); }
+  .site-header[data-transparent-active] { background-color: transparent; border-color: transparent; }
+  .site-header__inner { height: var(--header-height); min-height: 0; }
+  .site-header[data-menu-position="center"] .header-menu { justify-content: center; }
   /* If the header group renders inside its own container, let the header stick relative to the page */
   :not(body):has(> .header-wrapper > .site-header:is([data-sticky="always"], [data-sticky="scroll-up"])) { display: contents; }
 
@@ -212,28 +232,28 @@
     list-style: none;
   }
   .header-menu__link::-webkit-details-marker { display: none; }
-  .header-menu__link:hover { background: var(--color-subtle); }
+  .header-menu__link:hover { background: var(--color-accent); }
   .header-menu__dropdown[open] .header-menu__link .icon { transform: rotate(180deg); }
   .header-menu__submenu {
     position: absolute;
     inset-block-start: calc(100% + 6px);
     inset-inline-start: 0;
     z-index: 10;
-    min-width: 220px;
-    padding: var(--space-xs);
+    min-width: 224px;
+    padding: 4px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-popover);
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-lg);
     list-style: none;
   }
   .header-menu__sublink {
     display: block;
     padding: var(--space-xs) var(--space-sm);
-    border-radius: calc(var(--radius-card) - 4px);
+    border-radius: calc(var(--radius-surface) - 6px);
     font-size: var(--text-sm);
     text-decoration: none;
   }
-  .header-menu__sublink:hover { background: var(--color-subtle); }
+  .header-menu__sublink:hover { background: var(--color-accent); }
 
   .menu-drawer__list, .menu-drawer__sublist { display: grid; padding: 0; list-style: none; }
   .menu-drawer__link {
@@ -308,11 +328,31 @@
       ],
       "default": "always"
     },
+    {
+      "type": "select",
+      "id": "menu_position",
+      "label": "t:settings.menu_position",
+      "options": [
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "start",
+      "info": "t:info.menu_position"
+    },
     { "type": "checkbox", "id": "show_search", "label": "t:settings.show_search", "default": true },
     { "type": "checkbox", "id": "border", "label": "t:settings.border", "default": true },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "color_scheme", "id": "menu_color_scheme", "label": "t:settings.menu_color_scheme", "default": "scheme-1" }
+    { "type": "color_scheme", "id": "menu_color_scheme", "label": "t:settings.menu_color_scheme", "default": "scheme-1" },
+    { "type": "header", "content": "t:content.home_page" },
+    { "type": "checkbox", "id": "transparent_home", "label": "t:settings.transparent_home", "default": false, "info": "t:info.transparent_home" },
+    {
+      "type": "color_scheme",
+      "id": "transparent_color_scheme",
+      "label": "t:settings.transparent_color_scheme",
+      "default": "scheme-4",
+      "visible_if": { "setting_id": "transparent_home", "value": true }
+    }
   ]
 }
 {% endschema %}

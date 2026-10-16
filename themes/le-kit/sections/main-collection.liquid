@@ -21,13 +21,18 @@
             </ol>
           </nav>
         {% endif %}
+        {% if s.show_image and category.image != blank %}
+          <div class="media listing__banner" style="--ratio: 3 / 1;">
+            {% render 'image', image: category.image, alt: category.name, sizes: '100vw', eager: true %}
+          </div>
+        {% endif %}
         <h1 class="h2">{{ category.name }}</h1>
         {% if s.show_description and category.description != blank %}
           <div class="rte text-muted listing__description">{{ category.description }}</div>
         {% endif %}
       </header>
 
-      {% if subCategories.size > 0 %}
+      {% if s.show_subcollections and subCategories.size > 0 %}
         <ul class="listing__subcollections" role="list">
           {% for sub in subCategories %}
             <li><a class="button button--secondary button--sm" href="/collections/{{ sub.slug }}">{{ sub.name }}</a></li>
@@ -66,6 +71,8 @@
   "settings": [
     { "type": "checkbox", "id": "show_breadcrumbs", "label": "t:settings.show_breadcrumbs", "default": true },
     { "type": "checkbox", "id": "show_description", "label": "t:settings.show_description", "default": true },
+    { "type": "checkbox", "id": "show_image", "label": "t:settings.show_collection_image", "default": false },
+    { "type": "checkbox", "id": "show_subcollections", "label": "t:settings.show_subcollections", "default": true },
     { "type": "checkbox", "id": "show_sort", "label": "t:settings.show_sort", "default": true },
     { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 5, "step": 1, "default": 4 },
     { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },

@@ -31,7 +31,8 @@
       heading: s.heading,
       description: s.description,
       link: link,
-      arrows: arrows
+      arrows: arrows,
+      alignment: s.header_alignment
     %}
 
     <ul
@@ -63,6 +64,16 @@
   "settings": [
     { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.collections_heading" },
     { "type": "text", "id": "description", "label": "t:settings.description" },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "t:settings.header_alignment",
+      "options": [
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "start"
+    },
     { "type": "collection_list", "id": "collections", "label": "t:settings.collections", "limit": 12 },
     { "type": "checkbox", "id": "show_view_all", "label": "t:settings.show_view_all", "default": false },
     { "type": "header", "content": "t:content.layout" },

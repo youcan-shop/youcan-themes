@@ -3,12 +3,15 @@
 -%}
 
 <div
-  class="hero color-scheme color-{{ s.color_scheme }}"
+  class="hero color-scheme color-{{ s.color_scheme }}{% if s.width == 'page' %} hero--boxed page-width{% endif %}"
   data-height="{{ s.height }}"
+  data-focal="{{ s.image_position }}"
   style="--overlay-opacity: {{ s.overlay_opacity | divided_by: 100.0 }}; --section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
 >
   <div class="hero__media media" aria-hidden="true">
-    {% if s.image != blank %}
+    {% if s.video != blank %}
+      <video src="{{ s.video }}" autoplay muted loop playsinline {% if s.image != blank %}poster="{{ s.image | image_url: width: 1600 }}"{% endif %}></video>
+    {% elsif s.image != blank %}
       {% if s.image_mobile != blank %}
         <picture>
           <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 750 }} 750w, {{ s.image_mobile | image_url: width: 1100 }} 1100w" sizes="100vw">
@@ -22,7 +25,7 @@
     {% endif %}
   </div>
 
-  <div class="hero__content section page-width">
+  <div class="hero__content section{% unless s.width == 'page' %} page-width{% endunless %}">
     <div class="layout-panel hero__panel" {% render 'layout-style', settings: s %}>
       {% content_for 'blocks' %}
     </div>
@@ -45,7 +48,12 @@
     background: #000;
     opacity: var(--overlay-opacity, 0);
   }
-  .hero__media picture, .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__media picture, .hero__media img, .hero__media video { width: 100%; height: 100%; object-fit: cover; }
+  .hero[data-focal="top"] .hero__media :is(img, video) { object-position: center top; }
+  .hero[data-focal="bottom"] .hero__media :is(img, video) { object-position: center bottom; }
+  .hero--boxed { background: none; }
+  .hero--boxed .hero__media { inset-inline: var(--page-gutter); border-radius: var(--radius-surface); overflow: hidden; }
+  .hero--boxed .hero__content { padding-inline: clamp(20px, 4vw, 56px); }
   .hero__content { display: flex; }
   .hero__panel { max-width: var(--hero-content-width, 100%); }
   .hero[data-height="small"] .hero__content { min-height: 360px; }
@@ -67,6 +75,18 @@
     { "type": "image_picker", "id": "image", "label": "t:settings.image" },
     { "type": "image_picker", "id": "image_mobile", "label": "t:settings.image_mobile" },
     {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:settings.image_position",
+      "options": [
+        { "value": "top", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "bottom", "label": "t:options.bottom" }
+      ],
+      "default": "center"
+    },
+    { "type": "url", "id": "video", "label": "t:settings.video_file_url", "info": "t:info.video_file_url" },
+    {
       "type": "range",
       "id": "overlay_opacity",
       "label": "t:settings.overlay_opacity",
@@ -87,6 +107,16 @@
         { "value": "screen", "label": "t:options.full_screen" }
       ],
       "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "full", "label": "t:options.full_width" },
+        { "value": "page", "label": "t:options.page" }
+      ],
+      "default": "full"
     },
     { "type": "header", "content": "t:content.layout" },
     {

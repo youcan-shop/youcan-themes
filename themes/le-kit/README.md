@@ -17,6 +17,10 @@ locales/    en / fr / ar, storefront and schema translations
 templates/  JSON templates
 ```
 
+## Design
+
+Neutral and quiet by default. Controls (buttons, inputs, pills, quantity) share a 10px radius, a subtle shadow with an inner highlight and a 3px focus ring. Surfaces (drawers, dialogs, cards) are rounder (`--radius-surface`, 1.6× the button radius). Drawers float inset from the viewport edges on desktop. Dialogs sit slightly above center on desktop and become bottom sheets on mobile. Every radius and color comes from Theme settings.
+
 ## Concepts
 
 - **Sections are containers, blocks are content.** Most sections accept `@theme` blocks, so sellers compose pages from the same small set of blocks (heading, text, button, image, video, icon, group, accordion, ...). The generic `section` ships with presets (rich text, multicolumn, icons with text, FAQ, newsletter, video).

@@ -5,7 +5,7 @@
   style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
 >
   <ui-product
-    class="page-width product-main product-main--media-{{ section.settings.media_position }} product-main--media-medium"
+    class="page-width product-main product-main--media-{{ section.settings.media_position }} product-main--media-{{ section.settings.media_width }}"
     product-id="{{ featured.id }}"
   >
     {% if featured %}
@@ -17,7 +17,7 @@
     </div>
 
     <div class="product-main__info">
-      <div class="layout-panel product-main__details" style="--gap: 20px;">
+      <div class="layout-panel product-main__details" style="--gap: {{ section.settings.gap }}px;">
         {% if featured == blank %}
           <h2 class="h3">{{ 'product.placeholder_title' | t }}</h2>
           <p class="text-muted">{{ 'product.placeholder_info' | t }}</p>
@@ -44,6 +44,17 @@
       ],
       "default": "start"
     },
+    {
+      "type": "select",
+      "id": "media_width",
+      "label": "t:settings.media_width",
+      "options": [
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" }
+      ],
+      "default": "medium"
+    },
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 48, "step": 4, "unit": "px", "default": 20 },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
     { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },

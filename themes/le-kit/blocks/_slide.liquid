@@ -8,8 +8,12 @@
   role="group"
   aria-roledescription="slide"
   style="--overlay-opacity: {{ s.overlay_opacity | divided_by: 100.0 }};"
+  data-focal="{{ s.image_position }}"
   {{ block.youcan_attributes }}
 >
+  {% if s.link != blank %}
+    <a class="slide__link" href="{{ s.link }}" tabindex="-1" aria-hidden="true"></a>
+  {% endif %}
   <div class="slide__media media" aria-hidden="true">
     {% if s.image != blank %}
       {% if s.image_mobile != blank %}
@@ -41,6 +45,11 @@
   .slide__media { position: absolute; inset: 0; z-index: -1; }
   .slide__media::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--overlay-opacity, 0); }
   .slide__media picture, .slide__media img { width: 100%; height: 100%; object-fit: cover; }
+  .slide[data-focal="top"] .slide__media img { object-position: center top; }
+  .slide[data-focal="bottom"] .slide__media img { object-position: center bottom; }
+  .slide__link { position: absolute; inset: 0; z-index: 0; }
+  .slide__content { position: relative; z-index: 1; pointer-events: none; }
+  .slide__content :is(a, button, input, .button) { pointer-events: auto; }
   .slide__content { display: flex; padding-block-end: calc(var(--space-2xl) + 40px); }
   .slideshow[data-height="small"] .slide__content { min-height: 360px; }
   .slideshow[data-height="medium"] .slide__content { min-height: 520px; }
@@ -61,7 +70,19 @@
   "settings": [
     { "type": "image_picker", "id": "image", "label": "t:settings.image" },
     { "type": "image_picker", "id": "image_mobile", "label": "t:settings.image_mobile" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:settings.image_position",
+      "options": [
+        { "value": "top", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "bottom", "label": "t:options.bottom" }
+      ],
+      "default": "center"
+    },
     { "type": "range", "id": "overlay_opacity", "label": "t:settings.overlay_opacity", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 20 },
+    { "type": "url", "id": "link", "label": "t:settings.slide_link", "info": "t:info.slide_link" },
     { "type": "header", "content": "t:content.layout" },
     {
       "type": "select",

@@ -298,8 +298,22 @@ if (!customElements.get("ui-shop-button")) {
 
       if (this.hasAttribute("not-available") || this.button.hasAttribute("data-loading")) return;
 
+      // Special offer: suggest related products once before adding the main product
+      const offer = document.querySelector("ui-special-offer");
+      const skipOffer = this.hasAttribute("skip-offer");
+      this.removeAttribute("skip-offer");
+
+      if (offer?.hasItems && !skipOffer && this.source === "product-form" && !this.hasAttribute("bulk")) {
+        offer.open(this);
+        return;
+      }
+
       const variantIds = (this.getAttribute("variant-id") ?? "").split(",").filter(Boolean);
       const [mainId, ...addOnIds] = variantIds;
+
+      // Products accepted from the special offer apply to this purchase only
+      addOnIds.push(...(this.offerIds ?? []).filter((id) => !addOnIds.includes(id) && id !== mainId));
+      this.offerIds = null;
       const bundleId = this.getAttribute("bundle-id");
       const attachedImage = this.getAttribute("attached-image");
 
@@ -414,6 +428,66 @@ if (!customElements.get("ui-shop-button")) {
   customElements.define("ui-shop-button", ShopButton);
 }
 
+if (!customElements.get("ui-special-offer")) {
+  class SpecialOffer extends HTMLElement {
+    connectedCallback() {
+      this.items = [...this.querySelectorAll("[data-offer-item]")];
+      this.submit = this.querySelector("[data-offer-submit]");
+
+      this.items.forEach((item) => item.addEventListener("change", () => this.updateSubmit()));
+      this.submit?.addEventListener("click", () => this.accept());
+      this.querySelectorAll("[data-offer-skip]").forEach((button) => button.addEventListener("click", () => this.skip()));
+      this.addEventListener("toggle", (event) => {
+        if (event.newState === "closed") this.reset();
+      });
+    }
+
+    get hasItems() {
+      return this.items?.some((item) => !item.disabled);
+    }
+
+    get checked() {
+      return this.items.filter((item) => item.checked).map((item) => item.value);
+    }
+
+    open(shopButton) {
+      this.shopButton = shopButton;
+      this.showPopover();
+    }
+
+    updateSubmit() {
+      if (this.submit) this.submit.disabled = this.checked.length === 0;
+    }
+
+    accept() {
+      const button = this.shopButton;
+      if (!button) return;
+
+      button.offerIds = this.checked;
+      this.continue(button);
+    }
+
+    skip() {
+      if (this.shopButton) this.continue(this.shopButton);
+      else this.hidePopover();
+    }
+
+    continue(button) {
+      button.setAttribute("skip-offer", "");
+      this.shopButton = null;
+      this.hidePopover();
+      button.onBuy(new Event("click"));
+    }
+
+    reset() {
+      this.items.forEach((item) => (item.checked = false));
+      this.updateSubmit();
+    }
+  }
+
+  customElements.define("ui-special-offer", SpecialOffer);
+}
+
 if (!customElements.get("ui-quick-add")) {
   class QuickAdd extends HTMLElement {
     connectedCallback() {
@@ -443,6 +517,11 @@ if (!customElements.get("ui-quick-add")) {
         if (!product) throw new Error("Product section not found");
 
         product.classList.add("product-main--quick-add");
+        product.classList.remove("page-width");
+        product.querySelectorAll(".product-media--grid, .product-media--stack").forEach((media) => {
+          media.classList.remove("product-media--grid", "product-media--stack");
+          media.classList.add("product-media--carousel");
+        });
         product.querySelectorAll("[data-quick-add-hide]").forEach((element) => element.remove());
         content.replaceChildren(product);
       } catch (error) {

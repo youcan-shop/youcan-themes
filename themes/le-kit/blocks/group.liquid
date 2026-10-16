@@ -8,11 +8,17 @@
 <div
   class="group-block {{ scheme_class }}"
   data-width="{{ block.settings.width }}"
+  data-min-height="{{ block.settings.min_height }}"
   {% if block.settings.border %}data-border{% endif %}
   {% if block.settings.rounded %}data-rounded{% endif %}
   style="--group-padding: {{ block.settings.padding }}px;"
   {{ block.youcan_attributes }}
 >
+  {% if block.settings.background_image != blank %}
+    <div class="group-block__background media" aria-hidden="true" style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};">
+      {% render 'image', image: block.settings.background_image, alt: '', sizes: '(min-width: 750px) 50vw, 100vw' %}
+    </div>
+  {% endif %}
   {% if block.settings.link != blank %}
     <a class="group-block__link" href="{{ block.settings.link }}" aria-label="{{ block.settings.link_label | escape }}"></a>
   {% endif %}
@@ -30,9 +36,16 @@
   .group-block[data-width="fit"] { width: fit-content; }
   .group-block[data-width="fill"] { width: 100%; }
   .group-block[data-border] { border: 1px solid var(--color-border); }
-  .group-block[data-rounded] { border-radius: var(--radius-card); overflow: hidden; }
+  .group-block[data-rounded] { border-radius: var(--radius-surface); overflow: hidden; }
+  .group-block[data-border] { box-shadow: var(--shadow-xs); }
   .group-block > .layout-panel { height: 100%; }
   .group-block__link { position: absolute; inset: 0; z-index: 1; }
+  .group-block:has(> .group-block__background) { isolation: isolate; overflow: hidden; }
+  .group-block__background { position: absolute; inset: 0; z-index: -1; border-radius: inherit; }
+  .group-block__background::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--overlay-opacity, 0); }
+  .group-block[data-min-height="small"] { min-height: 240px; }
+  .group-block[data-min-height="medium"] { min-height: 360px; }
+  .group-block[data-min-height="large"] { min-height: 480px; }
 {% endstylesheet %}
 
 {% schema %}
@@ -105,6 +118,18 @@
       "default": "fill"
     },
     {
+      "type": "select",
+      "id": "min_height",
+      "label": "t:settings.height",
+      "options": [
+        { "value": "auto", "label": "t:options.auto" },
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" }
+      ],
+      "default": "auto"
+    },
+    {
       "type": "range",
       "id": "padding",
       "label": "t:settings.padding",
@@ -127,6 +152,18 @@
       "label": "t:settings.color_scheme",
       "default": "scheme-1",
       "visible_if": { "setting_id": "use_color_scheme", "value": true }
+    },
+    { "type": "image_picker", "id": "background_image", "label": "t:settings.background_image" },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "t:settings.overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 0,
+      "visible_if": "{{ block.settings.background_image != blank }}"
     },
     { "type": "checkbox", "id": "border", "label": "t:settings.border", "default": false },
     { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": false },

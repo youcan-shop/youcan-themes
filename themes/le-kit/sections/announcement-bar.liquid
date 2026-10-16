@@ -4,7 +4,7 @@
   aria-label="{{ 'accessibility.announcements' | t }}"
 >
   <div class="page-width announcement-bar__inner">
-    {% if section.blocks.size > 1 %}
+    {% if section.blocks.size > 1 and section.settings.show_arrows %}
       <button class="announcement-bar__arrow" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">
         {% render 'icon', name: 'chevron-left', px: 16, class: 'icon--flip' %}
       </button>
@@ -12,7 +12,7 @@
     <div class="slider__track announcement-bar__track" data-carousel-track>
       {% content_for 'blocks' %}
     </div>
-    {% if section.blocks.size > 1 %}
+    {% if section.blocks.size > 1 and section.settings.show_arrows %}
       <button class="announcement-bar__arrow" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">
         {% render 'icon', name: 'chevron-right', px: 16, class: 'icon--flip' %}
       </button>
@@ -44,6 +44,7 @@
   "blocks": [{ "type": "_announcement" }],
   "enabled_on": { "groups": ["header"] },
   "settings": [
+    { "type": "checkbox", "id": "show_arrows", "label": "t:settings.show_arrows", "default": true },
     { "type": "checkbox", "id": "autoplay", "label": "t:settings.autoplay", "default": true },
     { "type": "range", "id": "speed", "label": "t:settings.change_every", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 5 },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" }

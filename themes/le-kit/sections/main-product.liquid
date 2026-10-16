@@ -7,7 +7,7 @@
   style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
 >
   <ui-product
-    class="page-width product-main product-main--media-{{ section.settings.media_position }} product-main--media-{{ section.settings.media_width }}"
+    class="page-width product-main product-main--media-{{ section.settings.media_position }} product-main--media-{{ section.settings.media_width }}{% unless section.settings.sticky_info %} product-main--static-info{% endunless %}"
     product-id="{{ product.id }}"
     data-product-main
   >
@@ -63,6 +63,7 @@
       "default": "large"
     },
     { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 0, "max": 48, "step": 4, "unit": "px", "default": 20 },
+    { "type": "checkbox", "id": "sticky_info", "label": "t:settings.sticky_info", "default": true },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
     { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 24 },

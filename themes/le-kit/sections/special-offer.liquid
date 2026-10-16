@@ -1,0 +1,72 @@
+{% assign p = closest.product | default: product %}
+
+{% if section.settings.enabled and settings.shopping_flow != 'express_checkout' and p.related_products.size > 0 %}
+  <ui-special-offer
+    class="drawer special-offer color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}"
+    id="special-offer"
+    popover
+  >
+    <div class="drawer__header">
+      <div>
+        <h2 class="drawer__title">{{ section.settings.heading }}</h2>
+        {% if section.settings.note != blank %}
+          <p class="text-sm text-muted">{{ section.settings.note }}</p>
+        {% endif %}
+      </div>
+      <button class="button button--ghost button--icon" type="button" aria-label="{{ 'accessibility.close' | t }}" data-offer-skip>
+        {% render 'icon', name: 'close' %}
+      </button>
+    </div>
+    <div class="drawer__body">
+      <ul class="add-ons__list" role="list">
+        {% for item in p.related_products limit: section.settings.limit %}
+          {% assign v = item.selected_or_first_available_variant %}
+          <li>
+            <label class="add-on">
+              <input type="checkbox" value="{{ v.id }}" data-offer-item {% unless v.available %}disabled{% endunless %}>
+              <span class="media add-on__media" style="--ratio: 1 / 1;">
+                {% render 'image', image: item.preview_image, alt: item.name, width: 160, sizes: '56px', placeholder: 'product-1' %}
+              </span>
+              <span class="add-on__info">
+                <span class="add-on__name">{{ item.name }}</span>
+                {% unless v.variations == null or v.variations.default %}
+                  <span class="text-xs text-muted">
+                    {% for variation in v.variations %}{{ variation[1] }}{% unless forloop.last %} / {% endunless %}{% endfor %}
+                  </span>
+                {% endunless %}
+                {% unless v.available %}<span class="badge badge--muted">{{ 'product.sold_out' | t }}</span>{% endunless %}
+              </span>
+              {% render 'price', product: item, class: 'text-sm' %}
+            </label>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="drawer__footer">
+      <button class="button button--lg button--full" type="button" data-offer-submit disabled>
+        {{ 'special_offer.add_selected' | t }}
+      </button>
+      <button class="button button--ghost button--full" type="button" data-offer-skip>
+        {{ 'special_offer.skip' | t }}
+      </button>
+    </div>
+  </ui-special-offer>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.special_offer",
+  "enabled_on": { "templates": ["product"] },
+  "limit": 1,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.special_offer" },
+    { "type": "checkbox", "id": "enabled", "label": "t:settings.enabled", "default": true },
+    { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.special_offer_heading" },
+    { "type": "textarea", "id": "note", "label": "t:settings.description", "default": "t:defaults.special_offer_note" },
+    { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 1, "max": 8, "step": 1, "default": 4 }
+  ],
+  "presets": [
+    { "name": "t:names.special_offer", "category": "t:categories.products" }
+  ]
+}
+{% endschema %}
