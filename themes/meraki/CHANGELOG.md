@@ -1,5 +1,11 @@
 # meraki
 
+## 4.6.7
+
+### Patch Changes
+
+- fe7afc4: Keep the default list styling in the product description so lists from the rich text editor show as written
+
 ## 4.6.6
 
 ### Patch Changes
