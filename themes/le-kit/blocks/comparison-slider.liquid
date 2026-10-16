@@ -1,0 +1,129 @@
+{%- liquid
+  case block.settings.ratio
+    when 'square'
+      assign ratio = '1 / 1'
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'wide'
+      assign ratio = '16 / 9'
+    else
+      assign ratio = '4 / 3'
+  endcase
+-%}
+
+<ui-comparison
+  class="comparison media"
+  style="--ratio: {{ ratio }}; --position: {{ block.settings.start }}%;"
+  data-orientation="{{ block.settings.orientation }}"
+  {{ block.youcan_attributes }}
+>
+  <div class="comparison__layer">
+    {% render 'image', image: block.settings.image_after, alt: block.settings.label_after, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-2' %}
+    {% if block.settings.label_after != blank %}<span class="badge badge--muted comparison__label comparison__label--after">{{ block.settings.label_after | escape }}</span>{% endif %}
+  </div>
+  <div class="comparison__layer comparison__layer--before">
+    {% render 'image', image: block.settings.image_before, alt: block.settings.label_before, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-1' %}
+    {% if block.settings.label_before != blank %}<span class="badge badge--muted comparison__label comparison__label--before">{{ block.settings.label_before | escape }}</span>{% endif %}
+  </div>
+  <span class="comparison__handle" aria-hidden="true">{% render 'icon', name: 'chevron-left', px: 14 %}{% render 'icon', name: 'chevron-right', px: 14 %}</span>
+  <input
+    class="comparison__range"
+    type="range"
+    min="0"
+    max="100"
+    value="{{ block.settings.start }}"
+    aria-label="{{ 'accessibility.comparison' | t }}"
+  >
+</ui-comparison>
+
+{% stylesheet %}
+  .comparison { width: 100%; border-radius: var(--radius-surface); user-select: none; }
+  .comparison__layer { position: absolute; inset: 0; }
+  .comparison__layer img, .comparison__layer svg { width: 100%; height: 100%; object-fit: cover; }
+  .comparison__layer--before { clip-path: inset(0 calc(100% - var(--position)) 0 0); }
+  [dir="rtl"] .comparison__layer--before { clip-path: inset(0 0 0 calc(100% - var(--position))); }
+  .comparison[data-orientation="vertical"] .comparison__layer--before { clip-path: inset(0 0 calc(100% - var(--position)) 0); }
+  .comparison__label { position: absolute; inset-block-start: var(--space-sm); }
+  .comparison__label--before { inset-inline-start: var(--space-sm); }
+  .comparison__label--after { inset-inline-end: var(--space-sm); }
+  .comparison__handle {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: var(--position);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2px;
+    background: #fff;
+    pointer-events: none;
+  }
+  .comparison__handle::before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: var(--shadow-popover);
+  }
+  .comparison__handle .icon { position: relative; color: #262626; }
+  .comparison[data-orientation="vertical"] .comparison__handle {
+    inset-block: var(--position) auto;
+    inset-inline: 0;
+    width: auto;
+    height: 2px;
+    rotate: 0deg;
+  }
+  .comparison[data-orientation="vertical"] .comparison__handle .icon { rotate: 90deg; }
+  .comparison__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    appearance: none;
+  }
+  .comparison[data-orientation="vertical"] .comparison__range { cursor: ns-resize; writing-mode: vertical-lr; }
+  .comparison__range:focus-visible + .comparison__handle, .comparison:has(.comparison__range:focus-visible) .comparison__handle::before { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.comparison_slider",
+  "tag": null,
+  "settings": [
+    { "type": "image_picker", "id": "image_before", "label": "t:settings.image_before" },
+    { "type": "text", "id": "label_before", "label": "t:settings.label_before", "default": "t:defaults.before" },
+    { "type": "image_picker", "id": "image_after", "label": "t:settings.image_after" },
+    { "type": "text", "id": "label_after", "label": "t:settings.label_after", "default": "t:defaults.after" },
+    {
+      "type": "select",
+      "id": "orientation",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "horizontal", "label": "t:options.horizontal" },
+        { "value": "vertical", "label": "t:options.vertical" }
+      ],
+      "default": "horizontal"
+    },
+    { "type": "range", "id": "start", "label": "t:settings.start_position", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 50 },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "landscape", "label": "t:options.landscape" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" },
+        { "value": "wide", "label": "t:options.wide" }
+      ],
+      "default": "landscape"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.comparison_slider", "category": "t:categories.media" }
+  ]
+}
+{% endschema %}

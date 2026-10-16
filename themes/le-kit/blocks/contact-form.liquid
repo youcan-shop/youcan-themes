@@ -1,0 +1,59 @@
+<div class="contact-form-block" {{ block.youcan_attributes }}>
+  {% form 'contact', class: 'contact-form' %}
+    {% if form.posted_successfully %}
+      <p class="alert" role="status">{% render 'icon', name: 'check-circle', px: 18 %} {{ 'contact.success' | t }}</p>
+    {% elsif form.errors %}
+      <div class="alert alert--error" role="alert">
+        {% render 'icon', name: 'alert', px: 18 %}
+        <div>
+          <p>{{ 'contact.error' | t }}</p>
+          <ul>{% for error in form.errors %}<li>{{ error[1] }}</li>{% endfor %}</ul>
+        </div>
+      </div>
+    {% endif %}
+    <label class="field">
+      <span class="field__label">{{ 'contact.email' | t }}</span>
+      <input class="input" type="email" name="email" autocomplete="email" required>
+    </label>
+    <label class="field">
+      <span class="field__label">{{ 'contact.subject' | t }}</span>
+      <input class="input" type="text" name="subject" required>
+    </label>
+    <label class="field">
+      <span class="field__label">{{ 'contact.message' | t }}</span>
+      <textarea class="textarea" name="message" rows="5" minlength="5" required></textarea>
+    </label>
+    <button class="button button--{{ block.settings.button_style }}" type="submit">
+      {% if block.settings.button_label != blank %}{{ block.settings.button_label | escape }}{% else %}{{ 'contact.send' | t }}{% endif %}
+    </button>
+  {% endform %}
+</div>
+
+{% stylesheet %}
+  .contact-form-block { width: 100%; max-width: 640px; text-align: start; }
+  .contact-form-block .contact-form { display: grid; gap: var(--space-md); }
+  .contact-form-block .button { justify-self: start; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.contact_form",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "button_label", "label": "t:settings.button_label" },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:settings.button_style",
+      "options": [
+        { "value": "primary", "label": "t:options.primary" },
+        { "value": "secondary", "label": "t:options.secondary" }
+      ],
+      "default": "primary"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.contact_form", "category": "t:categories.forms" }
+  ]
+}
+{% endschema %}

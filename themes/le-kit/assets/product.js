@@ -67,7 +67,12 @@ if (!customElements.get("ui-product")) {
       this.disableUnavailableOptions();
     }
 
-    async updateVariant({ id, available, inventory, price, compare_at_price, image }) {
+    async updateVariant({ id, available, inventory, price, compare_at_price, image, sku }) {
+      this.querySelectorAll("[data-product-sku]").forEach((element) => {
+        element.textContent = sku ?? "";
+        element.parentElement.hidden = !sku;
+      });
+
       this.shopButtons.forEach((button) => {
         button.setAttribute("variant-id", id);
         button.toggleAttribute("not-available", !available);
@@ -350,6 +355,7 @@ if (!customElements.get("ui-shop-button")) {
         window.Dotshop?.pixels?.publish("add-to-cart", addedItem);
 
         publish(PUB_SUB_EVENTS.cartUpdate, {
+          image: this.closest("ui-product, .product-card")?.querySelector("[data-carousel-item][data-active] img, .product-card__media img, .product-media img"),
           source: this.source,
           skipCart: this.hasAttribute("skip-cart"),
           skipToCheckout: this.hasAttribute("skip-to-checkout"),
@@ -532,4 +538,62 @@ if (!customElements.get("ui-quick-add")) {
   }
 
   customElements.define("ui-quick-add", QuickAdd);
+}
+
+// Quick order list: add several variants of a product at once
+if (!customElements.get("ui-quick-order")) {
+  class QuickOrder extends HTMLElement {
+    connectedCallback() {
+      this.button = this.querySelector("[data-add-all]");
+      this.total = this.querySelector("[data-total]");
+
+      this.addEventListener("input", (event) => {
+        if (event.target.matches("[data-quantity]")) this.update();
+      });
+      this.button?.addEventListener("click", () => this.addAll());
+    }
+
+    get lines() {
+      return [...this.querySelectorAll("[data-variant-id]")]
+        .map((row) => {
+          const input = row.querySelector("[data-quantity]");
+          const max = parseInt(input?.max, 10);
+          let quantity = Math.max(0, parseInt(input?.value, 10) || 0);
+          if (max && quantity > max) quantity = max;
+          return { id: row.dataset.variantId, price: Number(row.dataset.price) || 0, quantity };
+        })
+        .filter((line) => line.quantity > 0);
+    }
+
+    update() {
+      const lines = this.lines;
+      this.total.textContent = formatCurrency(lines.reduce((sum, line) => sum + line.price * line.quantity, 0));
+      this.button.disabled = lines.length === 0;
+    }
+
+    async addAll() {
+      const lines = this.lines;
+      if (!lines.length) return;
+
+      this.button.setAttribute("data-loading", "");
+
+      try {
+        let cartData;
+        for (const line of lines) {
+          cartData = await youcanjs.cart.addItem({ productVariantId: line.id, quantity: line.quantity });
+        }
+
+        this.querySelectorAll("[data-quantity]").forEach((input) => (input.value = 0));
+        this.update();
+        publish(PUB_SUB_EVENTS.cartUpdate, { source: "product-form", cartData });
+      } catch (error) {
+        console.error(error);
+        toast?.show(error.message, "error");
+      } finally {
+        this.button.removeAttribute("data-loading");
+      }
+    }
+  }
+
+  customElements.define("ui-quick-order", QuickOrder);
 }

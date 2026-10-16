@@ -31,12 +31,21 @@
       {% if items.size > 0 %}
         <ul class="grid" style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};" role="list">
           {% for product in items %}
-            <li>{% render 'product-card', product: product, sizes: sizes %}</li>
+            <li>{% content_for 'block', type: '_product-card', id: 'product-card', card_product: product, sizes: sizes %}</li>
           {% endfor %}
         </ul>
         {% render 'pagination', current: current, last: last, previous_page: previous_page, next_page: next_page %}
       {% elsif terms != blank %}
         {% render 'empty-state', type: 'search' %}
+        {% assign fallback = settings.search_empty_collection %}
+        {% if fallback.products.size > 0 %}
+          <h2 class="h4 listing__fallback-title">{{ 'search.you_may_like' | t }}</h2>
+          <ul class="grid" style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};" role="list">
+            {% for product in fallback.products limit: s.columns %}
+              <li>{% render 'product-card', product: product, sizes: sizes %}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
       {% endif %}
     {% endpaginate %}
   </div>
@@ -45,6 +54,7 @@
 {% schema %}
 {
   "name": "t:names.search_results",
+  "blocks": [{ "type": "_product-card" }],
   "templates": ["search"],
   "limit": 1,
   "settings": [

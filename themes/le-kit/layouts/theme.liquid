@@ -15,6 +15,10 @@
     {% render 'favicon' %}
     {% render 'theme-styles' %}
 
+    {% if settings.page_transitions %}
+      <style>@view-transition { navigation: auto; }</style>
+    {% endif %}
+
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'commerce.css' | asset_url | stylesheet_tag }}
 
@@ -25,6 +29,7 @@
     {{ 'carousel.js' | asset_url | script_tag_deferred }}
     {{ 'cart.js' | asset_url | script_tag_deferred }}
     {{ 'product.js' | asset_url | script_tag_deferred }}
+    {{ 'select.js' | asset_url | script_tag_deferred }}
 
     {% if checkout.phone_validation %}
       {{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
@@ -37,6 +42,11 @@
     <script>
       window.theme = {
         cartType: {{ settings.cart_type | default: 'drawer' | json }},
+        autoOpenCart: {% if settings.auto_open_cart == false %}false{% else %}true{% endif %},
+        cartAnimation: {% if settings.add_to_cart_animation %}true{% else %}false{% endif %},
+        strings: {
+          addedToCart: {{ 'cart.added' | t | json }},
+        },
         loadMarketCountries: {% if checkout.phone_validation or checkout.linked_fields %}true{% else %}false{% endif %},
       };
 
@@ -52,7 +62,10 @@
     </script>
   </head>
 
-  <body>
+  <body
+    data-card-hover="{{ settings.card_hover_effect | default: 'zoom' }}"
+    {% if settings.reveal_on_scroll %}data-reveal{% endif %}
+  >
     <a class="skip-link button" href="#main-content">{{ 'accessibility.skip_to_content' | t }}</a>
 
     {% sections 'header-group' %}

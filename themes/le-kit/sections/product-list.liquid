@@ -43,13 +43,13 @@
       {% if products.size > 0 %}
         {% for product in products limit: s.limit %}
           <li data-carousel-item>
-            {% render 'product-card', product: product, sizes: sizes, eager: false %}
+            {% content_for 'block', type: '_product-card', id: 'product-card', card_product: product, sizes: sizes %}
           </li>
         {% endfor %}
       {% else %}
         {% for i in (1..s.limit) %}
           <li data-carousel-item>
-            {% render 'product-card', product: blank, placeholder_index: forloop.index0 %}
+            {% content_for 'block', type: '_product-card', id: 'product-card', card_product: blank, placeholder_index: forloop.index0 %}
           </li>
         {% endfor %}
       {% endif %}
@@ -60,6 +60,7 @@
 {% schema %}
 {
   "name": "t:names.product_list",
+  "blocks": [{ "type": "_product-card" }],
   "settings": [
     { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.products_heading" },
     { "type": "text", "id": "description", "label": "t:settings.description" },

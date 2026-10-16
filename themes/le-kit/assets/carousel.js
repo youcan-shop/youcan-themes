@@ -48,7 +48,8 @@ if (!customElements.get("ui-carousel")) {
     }
 
     get items() {
-      return [...this.track.children].filter((item) => item.hasAttribute("data-carousel-item"));
+      const children = [...this.track.children];
+      return this.hasAttribute("data-all-items") ? children : children.filter((item) => item.hasAttribute("data-carousel-item"));
     }
 
     get isRtl() {

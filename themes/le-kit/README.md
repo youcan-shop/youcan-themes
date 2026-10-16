@@ -21,6 +21,10 @@ templates/  JSON templates
 
 Neutral and quiet by default. Controls (buttons, inputs, pills, quantity) share a 10px radius, a subtle shadow with an inner highlight and a 3px focus ring. Surfaces (drawers, dialogs, cards) are rounder (`--radius-surface`, 1.6× the button radius). Drawers float inset from the viewport edges on desktop. Dialogs sit slightly above center on desktop and become bottom sheets on mobile. Every radius and color comes from Theme settings.
 
+Selects are enhanced by `assets/select.js`: a listbox popup on desktop and a bottom drawer on mobile. The native `<select>` stays in the DOM, so forms, validation and `change` listeners keep working. Add `data-native` to opt out.
+
+Motion: drawers, dialogs, selects, search and dropdowns animate in and out; accordions animate their height; sections can reveal on scroll (Theme settings > Animations).
+
 ## Concepts
 
 - **Sections are containers, blocks are content.** Most sections accept `@theme` blocks, so sellers compose pages from the same small set of blocks (heading, text, button, image, video, icon, group, accordion, ...). The generic `section` ships with presets (rich text, multicolumn, icons with text, FAQ, newsletter, video).

@@ -1,0 +1,63 @@
+{%- liquid
+  assign c = block.settings.collection | default: closest.collection | default: category
+  assign tag = block.settings.tag | default: 'h2'
+-%}
+
+{% if c %}
+  <div class="collection-title" {{ block.youcan_attributes }}>
+    <{{ tag }} class="{{ block.settings.size }}">
+      {%- if block.settings.link -%}
+        <a href="/collections/{{ c.slug }}">{{ c.name }}</a>
+      {%- else -%}
+        {{ c.name }}
+      {%- endif -%}
+    </{{ tag }}>
+    {% if block.settings.show_description and c.description != blank %}
+      <div class="rte text-muted">{{ c.description }}</div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% stylesheet %}
+  .collection-title { display: grid; gap: var(--space-xs); }
+  .collection-title a { text-decoration: none; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.collection_title",
+  "tag": null,
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "t:settings.collection", "info": "t:info.collection_title" },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "t:settings.html_tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "t:options.paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ],
+      "default": "h3"
+    },
+    { "type": "checkbox", "id": "show_description", "label": "t:settings.show_description", "default": false },
+    { "type": "checkbox", "id": "link", "label": "t:settings.link_to_collection", "default": true }
+  ],
+  "presets": [
+    { "name": "t:names.collection_title", "category": "t:categories.collections" }
+  ]
+}
+{% endschema %}

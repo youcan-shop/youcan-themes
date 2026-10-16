@@ -1,0 +1,54 @@
+<ui-jumbo-text
+  class="jumbo-text"
+  {% if block.settings.fit %}data-fit{% endif %}
+  data-align="{{ block.settings.alignment }}"
+  style="--jumbo-size: {{ block.settings.size }}vw;"
+  {{ block.youcan_attributes }}
+>
+  {{- block.settings.text | escape -}}
+</ui-jumbo-text>
+
+{% stylesheet %}
+  .jumbo-text {
+    display: block;
+    width: 100%;
+    font-family: var(--font-heading-family);
+    font-size: var(--jumbo-size, 12vw);
+    font-weight: var(--font-heading-weight);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: var(--font-heading-case);
+    white-space: nowrap;
+    color: var(--color-heading, inherit);
+  }
+  .jumbo-text[data-align="center"] { text-align: center; }
+  .jumbo-text[data-align="right"] { text-align: end; }
+  .jumbo-text[data-fit] { visibility: hidden; }
+  .jumbo-text[data-fitted] { visibility: visible; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.jumbo_text",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "text", "label": "t:settings.text", "default": "t:defaults.jumbo_text" },
+    { "type": "checkbox", "id": "fit", "label": "t:settings.fit_to_width", "default": true },
+    { "type": "range", "id": "size", "label": "t:settings.size", "min": 4, "max": 30, "step": 1, "unit": "vw", "default": 12, "visible_if": { "setting_id": "fit", "value": false } },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "left", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "right", "label": "t:options.end" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.jumbo_text", "category": "t:categories.text" }
+  ]
+}
+{% endschema %}

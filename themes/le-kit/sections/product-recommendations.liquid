@@ -27,7 +27,7 @@
         data-carousel-track
       >
         {% for item in p.related_products limit: s.limit %}
-          <li data-carousel-item>{% render 'product-card', product: item, sizes: sizes %}</li>
+          <li data-carousel-item>{% content_for 'block', type: '_product-card', id: 'product-card', card_product: item, sizes: sizes %}</li>
         {% endfor %}
       </ul>
     </ui-carousel>
@@ -37,6 +37,7 @@
 {% schema %}
 {
   "name": "t:names.product_recommendations",
+  "blocks": [{ "type": "_product-card" }],
   "enabled_on": { "templates": ["product"] },
   "settings": [
     { "type": "paragraph", "content": "t:info.product_recommendations" },

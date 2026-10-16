@@ -1,0 +1,62 @@
+{%- liquid
+  assign dialog_id = 'popup-' | append: block.id
+  assign heading = block.settings.heading
+  if heading == blank and block.settings.page != blank
+    assign heading = block.settings.page.name
+  endif
+-%}
+
+<div class="popup-link" {{ block.youcan_attributes }}>
+  <button class="button button--{{ block.settings.style }}" type="button" data-open-dialog="{{ dialog_id }}">
+    {{ block.settings.label | escape }}
+  </button>
+  <dialog class="popup-link__dialog" id="{{ dialog_id }}" aria-labelledby="{{ dialog_id }}-title">
+    <div class="popup-link__header">
+      <h2 class="drawer__title" id="{{ dialog_id }}-title">{{ heading | escape }}</h2>
+      <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+        {% render 'icon', name: 'close', px: 18 %}
+      </button>
+    </div>
+    <div class="popup-link__body rte">
+      {% if block.settings.page != blank %}
+        {{ block.settings.page.content }}
+      {% else %}
+        {{ block.settings.content }}
+      {% endif %}
+    </div>
+  </dialog>
+</div>
+
+{% stylesheet %}
+  .popup-link__dialog[open] { display: flex; flex-direction: column; }
+  .popup-link__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-md); padding: var(--space-lg) var(--space-lg) var(--space-sm); }
+  .popup-link__body { overflow-y: auto; padding: var(--space-xs) var(--space-lg) var(--space-lg); color: var(--color-muted); font-size: var(--text-sm); text-align: start; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.popup_link",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "label", "label": "t:settings.label", "default": "t:defaults.popup_label" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.style",
+      "options": [
+        { "value": "link", "label": "t:options.link" },
+        { "value": "secondary", "label": "t:options.secondary" },
+        { "value": "primary", "label": "t:options.primary" }
+      ],
+      "default": "link"
+    },
+    { "type": "header", "content": "t:content.popup" },
+    { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.popup_heading" },
+    { "type": "richtext", "id": "content", "label": "t:settings.content", "default": "t:defaults.popup_content" },
+    { "type": "page", "id": "page", "label": "t:settings.page", "info": "t:info.popup_page" }
+  ],
+  "presets": [
+    { "name": "t:names.popup_link", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

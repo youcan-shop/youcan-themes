@@ -160,6 +160,62 @@ for (const event of ["invalid", "input"]) {
   );
 }
 
+// Smooth open / close for accordions and menu drawer sub menus
+const ANIMATED_DETAILS = "details.accordion, details.menu-drawer__details";
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+document.addEventListener("click", (event) => {
+  const summary = event.target.closest("summary");
+  const details = summary?.parentElement;
+
+  if (!details?.matches(ANIMATED_DETAILS) || reduceMotion.matches) return;
+
+  event.preventDefault();
+
+  const content = [...details.children].filter((child) => child !== summary);
+  const startHeight = details.offsetHeight;
+
+  details.getAnimations().forEach((animation) => animation.cancel());
+
+  if (details.open) {
+    const endHeight = summary.offsetHeight;
+    details.setAttribute("data-closing", "");
+    details
+      .animate([{ height: `${startHeight}px` }, { height: `${endHeight}px` }], { duration: 220, easing: "ease-out" })
+      .finished.then(() => {
+        details.open = false;
+        details.removeAttribute("data-closing");
+      })
+      .catch(() => {});
+  } else {
+    details.open = true;
+    const endHeight = details.offsetHeight;
+    details.animate([{ height: `${startHeight}px` }, { height: `${endHeight}px` }], { duration: 220, easing: "ease-out" });
+    content.forEach((child) => child.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, easing: "ease-out" }));
+  }
+});
+
+// Reveal sections on scroll
+if (document.body.hasAttribute("data-reveal") && "IntersectionObserver" in window && !reduceMotion.matches) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.setAttribute("data-revealed", "");
+        observer.unobserve(entry.target);
+      });
+    },
+    { rootMargin: "0px 0px -10% 0px" },
+  );
+
+  document.querySelectorAll("main .youcan-section").forEach((section) => {
+    if (section.getBoundingClientRect().top < window.innerHeight) return;
+
+    section.setAttribute("data-reveal-pending", "");
+    observer.observe(section);
+  });
+}
+
 // Close a <dialog> from any [data-close-dialog] button inside it, or by clicking the backdrop
 document.addEventListener("click", (event) => {
   const closer = event.target.closest("[data-close-dialog]");
@@ -386,4 +442,110 @@ if (!customElements.get("ui-marquee")) {
   }
 
   customElements.define("ui-marquee", Marquee);
+}
+
+// Open a <dialog> by id from any [data-open-dialog] trigger (popup link block)
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest("[data-open-dialog]");
+  if (!trigger) return;
+
+  document.getElementById(trigger.dataset.openDialog)?.showModal();
+});
+
+// Layered slideshow: one panel expanded at a time
+if (!customElements.get("ui-layered")) {
+  class Layered extends HTMLElement {
+    connectedCallback() {
+      this.layers = [...this.querySelectorAll("[data-layer]")];
+      if (!this.layers.length) return;
+
+      this.activate(0);
+
+      this.layers.forEach((layer, index) => {
+        layer.addEventListener("click", () => this.activate(index));
+        if (this.dataset.trigger === "hover") layer.addEventListener("mouseenter", () => this.activate(index));
+      });
+
+      if (this.hasAttribute("autoplay") && this.layers.length > 1) {
+        const interval = parseInt(this.getAttribute("interval"), 10) || 6000;
+        const play = () => (this.timer = setInterval(() => this.activate((this.index + 1) % this.layers.length), interval));
+        play();
+        this.addEventListener("mouseenter", () => clearInterval(this.timer));
+        this.addEventListener("mouseleave", play);
+      }
+    }
+
+    disconnectedCallback() {
+      clearInterval(this.timer);
+    }
+
+    activate(index) {
+      this.index = index;
+      this.layers.forEach((layer, i) => {
+        layer.toggleAttribute("data-active", i === index);
+        layer.querySelector("[data-layer-tab]")?.setAttribute("aria-expanded", String(i === index));
+      });
+    }
+  }
+
+  customElements.define("ui-layered", Layered);
+}
+
+// Collection links: the hovered / focused link drives the spotlight image
+if (!customElements.get("ui-collection-links")) {
+  class CollectionLinks extends HTMLElement {
+    connectedCallback() {
+      const activate = (event) => {
+        const link = event.target.closest("[data-index]");
+        if (!link || !this.contains(link) || link.classList.contains("collection-links__image")) return;
+
+        this.querySelectorAll("[data-index]").forEach((element) => element.toggleAttribute("data-active", element.dataset.index === link.dataset.index));
+      };
+
+      this.addEventListener("mouseover", activate);
+      this.addEventListener("focusin", activate);
+    }
+  }
+
+  customElements.define("ui-collection-links", CollectionLinks);
+}
+
+// Before / after comparison slider
+if (!customElements.get("ui-comparison")) {
+  class Comparison extends HTMLElement {
+    connectedCallback() {
+      const range = this.querySelector("input[type='range']");
+      range?.addEventListener("input", () => this.style.setProperty("--position", `${range.value}%`));
+    }
+  }
+
+  customElements.define("ui-comparison", Comparison);
+}
+
+// Jumbo text: scales the font so one line fills the available width
+if (!customElements.get("ui-jumbo-text")) {
+  class JumboText extends HTMLElement {
+    connectedCallback() {
+      if (!this.hasAttribute("data-fit")) return;
+
+      this.fit = (force = false) => {
+        if (!force && this.clientWidth === this.lastWidth) return;
+        this.lastWidth = this.clientWidth;
+        this.style.fontSize = "100px";
+        const ratio = this.clientWidth / this.scrollWidth;
+        this.style.fontSize = `${Math.floor(100 * ratio * 0.98)}px`;
+        this.setAttribute("data-fitted", "");
+      };
+
+      this.observer = new ResizeObserver(() => this.fit());
+      this.observer.observe(this);
+      document.fonts?.ready.then(() => this.fit(true));
+    }
+
+    disconnectedCallback() {
+      this.observer?.disconnect();
+    }
+  }
+
+  customElements.define("ui-jumbo-text", JumboText);
 }

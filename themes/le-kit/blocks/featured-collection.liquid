@@ -1,0 +1,40 @@
+{%- liquid
+  assign c = block.settings.collection | default: closest.collection
+  assign columns = block.settings.columns
+  assign card_vw = 100 | divided_by: columns
+  assign sizes = '(min-width: 990px) ' | append: card_vw | append: 'vw, 50vw'
+-%}
+
+<div class="featured-collection-block" {{ block.youcan_attributes }}>
+  <ul class="grid" style="--columns: {{ columns }}; --columns-mobile: {{ block.settings.columns_mobile }};" role="list">
+    {% if c.products.size > 0 %}
+      {% for product in c.products limit: block.settings.limit %}
+        <li>{% render 'product-card', product: product, sizes: sizes %}</li>
+      {% endfor %}
+    {% else %}
+      {% for i in (1..block.settings.limit) %}
+        <li>{% render 'product-card', product: blank, placeholder_index: forloop.index0 %}</li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+</div>
+
+{% stylesheet %}
+  .featured-collection-block { width: 100%; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.featured_collection",
+  "tag": null,
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "t:settings.collection" },
+    { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 1, "max": 12, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 1, "max": 6, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 }
+  ],
+  "presets": [
+    { "name": "t:names.featured_collection", "category": "t:categories.products" }
+  ]
+}
+{% endschema %}

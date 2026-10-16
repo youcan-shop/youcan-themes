@@ -1,0 +1,97 @@
+<div
+  class="layered-slide{% if block.settings.use_color_scheme %} color-scheme color-{{ block.settings.color_scheme }}{% endif %}"
+  style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"
+  data-layer
+  {{ block.youcan_attributes }}
+>
+  <div class="layered-slide__media" aria-hidden="true">
+    {% if block.settings.image != blank %}
+      {% render 'image', image: block.settings.image, alt: '', sizes: '(min-width: 750px) 70vw, 100vw' %}
+    {% else %}
+      {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+  <button class="layered-slide__tab" type="button" data-layer-tab>{{ block.settings.title | escape }}</button>
+  <div class="layered-slide__content">
+    <div class="layout-panel" {% render 'layout-style', settings: block.settings %}>
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.layered_slide",
+  "tag": null,
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    { "type": "text", "id": "title", "label": "t:settings.tab_label", "default": "t:defaults.layer_1" },
+    { "type": "image_picker", "id": "image", "label": "t:settings.image" },
+    { "type": "range", "id": "overlay_opacity", "label": "t:settings.overlay_opacity", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 25 },
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "checkbox",
+      "id": "vertical_on_mobile",
+      "label": "t:settings.stack_on_mobile",
+      "default": true,
+      "visible_if": { "setting_id": "content_direction", "value": "row" }
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.horizontal_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "t:settings.vertical_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.middle" },
+        { "value": "flex-end", "label": "t:options.bottom" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 12
+    },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "checkbox", "id": "use_color_scheme", "label": "t:settings.use_color_scheme", "default": true },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-4",
+      "visible_if": { "setting_id": "use_color_scheme", "value": true }
+    }
+  ],
+  "presets": [
+    { "name": "t:names.layered_slide" }
+  ]
+}
+{% endschema %}
