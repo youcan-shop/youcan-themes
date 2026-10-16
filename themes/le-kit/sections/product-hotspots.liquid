@@ -1,0 +1,46 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width hotspots">
+    {% render 'section-header', heading: section.settings.heading, description: section.settings.description %}
+    <div class="hotspots__canvas media">
+      {% render 'image', image: section.settings.image, alt: section.settings.image_alt, sizes: '100vw', placeholder: 'hero-1' %}
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .hotspots__canvas { border-radius: var(--radius-card); overflow: visible; }
+  .hotspots__canvas > img, .hotspots__canvas > svg { border-radius: var(--radius-card); }
+  .hotspots__canvas > svg { aspect-ratio: 16 / 9; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.product_hotspots",
+  "max_blocks": 10,
+  "blocks": [{ "type": "_hotspot" }],
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.hotspots_heading" },
+    { "type": "text", "id": "description", "label": "t:settings.description" },
+    { "type": "image_picker", "id": "image", "label": "t:settings.image" },
+    { "type": "text", "id": "image_alt", "label": "t:settings.alt_text" },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    {
+      "name": "t:names.product_hotspots",
+      "category": "t:categories.products",
+      "blocks": [
+        { "type": "_hotspot", "settings": { "x": 30, "y": 40 } },
+        { "type": "_hotspot", "settings": { "x": 65, "y": 60 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

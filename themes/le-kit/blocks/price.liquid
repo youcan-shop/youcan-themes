@@ -1,0 +1,31 @@
+{% assign p = closest.product | default: product %}
+
+{% if p %}
+  <div class="price-block text-{{ block.settings.size }}" {{ block.youcan_attributes }}>
+    {% render 'price', product: p, show_badge: block.settings.show_badge %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.price",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "md", "label": "t:options.medium" },
+        { "value": "lg", "label": "t:options.large" },
+        { "value": "xl", "label": "t:options.extra_large" }
+      ],
+      "default": "lg"
+    },
+    { "type": "checkbox", "id": "show_badge", "label": "t:settings.show_sale_badge", "default": true }
+  ],
+  "presets": [
+    { "name": "t:names.price", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

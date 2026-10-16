@@ -1,0 +1,42 @@
+{% assign p = closest.product | default: product %}
+
+{% if p %}
+  {% assign tag = block.settings.tag | default: 'h1' %}
+  <{{ tag }} class="product-title {{ block.settings.size }}" {{ block.youcan_attributes }}>{{ p.name }}</{{ tag }}>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.product_title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "t:settings.html_tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "t:options.paragraph" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ],
+      "default": "h3"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.product_title", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

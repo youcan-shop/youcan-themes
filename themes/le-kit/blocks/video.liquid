@@ -1,0 +1,109 @@
+{%- liquid
+  assign url = block.settings.video | append: ''
+  assign provider = ''
+  assign video_id = ''
+
+  if url contains 'youtu'
+    assign provider = 'youtube'
+    if url contains 'youtu.be/'
+      assign video_id = url | split: 'youtu.be/' | last | split: '?' | first
+    elsif url contains 'shorts/'
+      assign video_id = url | split: 'shorts/' | last | split: '?' | first
+    elsif url contains 'embed/'
+      assign video_id = url | split: 'embed/' | last | split: '?' | first
+    else
+      assign video_id = url | split: 'v=' | last | split: '&' | first
+    endif
+  elsif url contains 'vimeo'
+    assign provider = 'vimeo'
+    assign video_id = url | split: '?' | first | split: '/' | last
+  endif
+
+  case block.settings.ratio
+    when 'square'
+      assign ratio = '1 / 1'
+    when 'portrait'
+      assign ratio = '9 / 16'
+    else
+      assign ratio = '16 / 9'
+  endcase
+
+  if provider == 'youtube'
+    assign embed = 'https://www.youtube-nocookie.com/embed/' | append: video_id | append: '?autoplay=1&rel=0&playsinline=1'
+  elsif provider == 'vimeo'
+    assign embed = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=1'
+  endif
+-%}
+
+<ui-video
+  class="video-block media{% if block.settings.rounded %} image-block--rounded{% endif %}"
+  style="--ratio: {{ ratio }};"
+  data-embed="{{ embed }}"
+  {{ block.youcan_attributes }}
+>
+  {% if block.settings.cover != blank %}
+    {% render 'image', image: block.settings.cover, alt: block.settings.alt, sizes: '(min-width: 750px) 60vw, 100vw' %}
+  {% elsif provider == 'youtube' %}
+    <img src="https://i.ytimg.com/vi/{{ video_id }}/hqdefault.jpg" alt="{{ block.settings.alt | escape }}" loading="lazy" width="480" height="360">
+  {% else %}
+    {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
+  {% endif %}
+  {% if embed %}
+    <button class="video-block__play" type="button" aria-label="{{ 'accessibility.play_video' | t }}">
+      {% render 'icon', name: 'play', px: 28 %}
+    </button>
+  {% endif %}
+</ui-video>
+
+{% stylesheet %}
+  .video-block { width: 100%; }
+  .video-block__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: var(--shadow-popover);
+    transition: transform var(--duration) var(--ease);
+  }
+  .video-block__play:hover { transform: scale(1.06); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.video",
+  "tag": null,
+  "settings": [
+    {
+      "type": "video_url",
+      "id": "video",
+      "label": "t:settings.video_url",
+      "accept": ["youtube", "vimeo"],
+      "placeholder": "https://www.youtube.com/watch?v=..."
+    },
+    { "type": "image_picker", "id": "cover", "label": "t:settings.cover_image" },
+    { "type": "text", "id": "alt", "label": "t:settings.alt_text" },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "wide", "label": "t:options.wide" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" }
+      ],
+      "default": "wide"
+    },
+    { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": true }
+  ],
+  "presets": [
+    { "name": "t:names.video", "category": "t:categories.media" }
+  ]
+}
+{% endschema %}

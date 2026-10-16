@@ -1,0 +1,32 @@
+{% comment %}
+  Renders previous / next pagination links (paginate tag, page[id] form)
+
+  Accepts:
+  - current: {Number} Current page
+  - last: {Number} Last page
+  - previous_page: {String} Previous page URL
+  - next_page: {String} Next page URL
+
+  Usage:
+  {% render 'pagination', current: current, last: last, previous_page: previous_page, next_page: next_page %}
+{% endcomment %}
+
+{% if last > 1 %}
+  <nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
+    {% if current > 1 %}
+      <a class="button button--secondary button--icon" href="{{ previous_page }}" aria-label="{{ 'accessibility.previous' | t }}">
+        {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
+      </a>
+    {% else %}
+      <span class="button button--secondary button--icon" aria-disabled="true">{% render 'icon', name: 'chevron-left', class: 'icon--flip' %}</span>
+    {% endif %}
+    <span class="pagination__current">{{ 'general.page_of' | t | replace: '[current]', current | replace: '[last]', last }}</span>
+    {% if current < last %}
+      <a class="button button--secondary button--icon" href="{{ next_page }}" aria-label="{{ 'accessibility.next' | t }}">
+        {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
+      </a>
+    {% else %}
+      <span class="button button--secondary button--icon" aria-disabled="true">{% render 'icon', name: 'chevron-right', class: 'icon--flip' %}</span>
+    {% endif %}
+  </nav>
+{% endif %}

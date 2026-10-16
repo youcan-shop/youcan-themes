@@ -1,0 +1,69 @@
+{% comment %}
+  Renders the express checkout form (order without cart).
+
+  Accepts:
+  - product: {Object} Product
+  - style: {String} (Optional) inline | drawer
+
+  Usage:
+  {% render 'express-checkout', product: product %}
+  {% render 'express-checkout', product: product, style: 'drawer' %}
+{% endcomment %}
+
+{% if style == 'drawer' %}
+  <form
+    class="drawer express-checkout express-checkout--drawer color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}"
+    id="express-checkout-{{ product.id }}"
+    popover
+    data-order-form
+  >
+    <div class="drawer__header">
+      <h2 class="drawer__title">{{ 'express_checkout.title' | t }}</h2>
+      <button
+        class="button button--ghost button--icon"
+        type="button"
+        aria-label="{{ 'accessibility.close' | t }}"
+        popovertarget="express-checkout-{{ product.id }}"
+        popovertargetaction="hide"
+      >
+        {% render 'icon', name: 'close' %}
+      </button>
+    </div>
+    <div class="drawer__body">
+      <div class="express-checkout__product">
+        <div class="media express-checkout__media" style="--ratio: 1 / 1;">
+          {% render 'image', image: product.preview_image, alt: product.name, width: 200, sizes: '80px', placeholder: 'product-1' %}
+        </div>
+        <div>
+          <p class="express-checkout__name">{{ product.name }}</p>
+          {% render 'price', product: product %}
+        </div>
+      </div>
+      {% render 'checkout-fields' %}
+    </div>
+    <div class="drawer__footer">
+      <div class="express-checkout__actions">
+        {% render 'quantity' %}
+        {% render 'shop-button', product: product, is_express_checkout: true, button_size: 'lg', full_width: true %}
+      </div>
+    </div>
+  </form>
+{% else %}
+  <form class="express-checkout express-checkout--inline" data-order-form>
+    {% if settings.form_heading != blank or settings.form_description != blank %}
+      <div class="express-checkout__header">
+        {% if settings.form_heading != blank %}
+          <h2 class="h5">{{ settings.form_heading }}</h2>
+        {% endif %}
+        {% if settings.form_description != blank %}
+          <p class="text-sm text-muted">{{ settings.form_description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% render 'checkout-fields' %}
+    <div class="express-checkout__actions">
+      {% render 'quantity' %}
+      {% render 'shop-button', product: product, is_express_checkout: true, button_size: 'lg', full_width: true %}
+    </div>
+  </form>
+{% endif %}

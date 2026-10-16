@@ -1,0 +1,45 @@
+<div
+  class="site-footer section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width site-footer__grid" style="--footer-gap: {{ section.settings.gap }}px;">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .site-footer__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: var(--footer-gap, 32px);
+    align-items: start;
+  }
+  @media (min-width: 990px) {
+    .site-footer__grid > :first-child:not(:only-child) { grid-column: span 2; max-width: 420px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.footer",
+  "tag": "footer",
+  "enabled_on": { "groups": ["footer"] },
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    { "type": "range", "id": "gap", "label": "t:settings.gap", "min": 16, "max": 80, "step": 4, "unit": "px", "default": 32 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-2" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 56 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 }
+  ],
+  "presets": [
+    {
+      "name": "t:names.footer",
+      "blocks": [
+        { "type": "group", "settings": { "gap": 12 }, "blocks": [{ "type": "logo" }, { "type": "text", "settings": { "size": "sm", "muted": true, "text": "t:defaults.footer_text" } }, { "type": "social-links" }] },
+        { "type": "menu" },
+        { "type": "group", "settings": { "gap": 12 }, "blocks": [{ "type": "heading", "settings": { "tag": "p", "size": "h6", "heading": "t:defaults.newsletter_heading" } }, { "type": "email-signup" }] }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,167 @@
+{%- liquid
+  assign s = section.settings
+-%}
+
+<div
+  class="hero color-scheme color-{{ s.color_scheme }}"
+  data-height="{{ s.height }}"
+  style="--overlay-opacity: {{ s.overlay_opacity | divided_by: 100.0 }}; --section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+>
+  <div class="hero__media media" aria-hidden="true">
+    {% if s.image != blank %}
+      {% if s.image_mobile != blank %}
+        <picture>
+          <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 750 }} 750w, {{ s.image_mobile | image_url: width: 1100 }} 1100w" sizes="100vw">
+          {% render 'image', image: s.image, alt: '', sizes: '100vw', eager: true, width: 2400 %}
+        </picture>
+      {% else %}
+        {% render 'image', image: s.image, alt: '', sizes: '100vw', eager: true, width: 2400 %}
+      {% endif %}
+    {% else %}
+      {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+
+  <div class="hero__content section page-width">
+    <div class="layout-panel hero__panel" {% render 'layout-style', settings: s %}>
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .hero {
+    position: relative;
+    display: grid;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero > * { grid-area: 1 / 1; }
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  .hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #000;
+    opacity: var(--overlay-opacity, 0);
+  }
+  .hero__media picture, .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__content { display: flex; }
+  .hero__panel { max-width: var(--hero-content-width, 100%); }
+  .hero[data-height="small"] .hero__content { min-height: 360px; }
+  .hero[data-height="medium"] .hero__content { min-height: 520px; }
+  .hero[data-height="large"] .hero__content { min-height: 680px; }
+  .hero[data-height="screen"] .hero__content { min-height: calc(100svh - var(--header-height)); }
+  @media (max-width: 749px) {
+    .hero[data-height="small"] .hero__content { min-height: 280px; }
+    .hero[data-height="medium"] .hero__content { min-height: 420px; }
+    .hero[data-height="large"] .hero__content { min-height: 540px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.hero",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:settings.image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "t:settings.image_mobile" },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "t:settings.overlay_opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:settings.height",
+      "options": [
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "screen", "label": "t:options.full_screen" }
+      ],
+      "default": "large"
+    },
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "checkbox",
+      "id": "vertical_on_mobile",
+      "label": "t:settings.stack_on_mobile",
+      "default": true,
+      "visible_if": { "setting_id": "content_direction", "value": "row" }
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.horizontal_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "t:settings.vertical_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.middle" },
+        { "value": "flex-end", "label": "t:options.bottom" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-4" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    {
+      "name": "t:names.hero",
+      "category": "t:categories.banners",
+      "blocks": [
+        { "type": "heading", "settings": { "tag": "h1", "heading": "t:defaults.hero_heading", "max_width": "normal" } },
+        { "type": "text", "settings": { "text": "t:defaults.hero_text", "max_width": "narrow" } },
+        {
+          "type": "group",
+          "settings": { "content_direction": "row", "vertical_on_mobile": false, "width": "fit", "gap": 12 },
+          "blocks": [
+            { "type": "button", "settings": { "label": "t:defaults.shop_now", "link": "/collections" } },
+            { "type": "button", "settings": { "label": "t:defaults.learn_more", "style": "secondary" } }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

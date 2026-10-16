@@ -1,0 +1,40 @@
+{% comment %}
+  Renders a phone field with a country code picker and validation (libphonenumber).
+
+  Accepts:
+  - field: {Object} Phone checkout field
+
+  Usage:
+  {% render 'phone-validation', field: field %}
+{% endcomment %}
+
+<ui-phone-validation>
+  <label class="field">
+    <input type="hidden" name="{{ field.name }}" ui-phone-hidden-input>
+    <span class="field__label">{{ field.display_name }}</span>
+    <div class="input phone-input" ui-phone-validator="input-wrapper" dir="ltr">
+      <div class="phone-input__country" ui-phone-validator="countries">
+        <span ui-phone-validator="displayed-country-code"></span>
+        {% render 'icon', name: 'chevron-down', px: 14 %}
+        <select
+          name="phone_country_code"
+          autocomplete="tel-country-code"
+          aria-label="{{ 'checkout.country_code' | t }}"
+          ui-phone-validator="select-country-code"
+        ></select>
+      </div>
+      <input
+        type="{{ field.type }}"
+        inputmode="tel"
+        name="phone_number"
+        placeholder="{{ field.placeholder }}"
+        autocomplete="tel-national"
+        ui-phone-validator="number"
+        {% if field.required %}required{% endif %}
+      >
+    </div>
+    <span class="phone-input__error" data-hidden="true" ui-phone-validator="error">
+      {{ 'errors.invalid_phone_number' | t }}
+    </span>
+  </label>
+</ui-phone-validation>

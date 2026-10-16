@@ -1,0 +1,54 @@
+{% assign p = closest.product | default: product %}
+
+{% if p.related_products.size > 0 and settings.shopping_flow != 'express_checkout' %}
+  <div class="add-ons" {{ block.youcan_attributes }}>
+    {% if block.settings.heading != blank or block.settings.description != blank %}
+      <div class="add-ons__header">
+        {% if block.settings.heading != blank %}
+          <p class="h6">{{ block.settings.heading | escape }}</p>
+        {% endif %}
+        {% if block.settings.description != blank %}
+          <p class="text-sm text-muted">{{ block.settings.description | escape }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    <ul class="add-ons__list" role="list">
+      {% for item in p.related_products limit: block.settings.limit %}
+        {% assign v = item.selected_or_first_available_variant %}
+        <li>
+          <label class="add-on">
+            <input type="checkbox" value="{{ v.id }}" data-add-on {% unless v.available %}disabled{% endunless %}>
+            <span class="media add-on__media" style="--ratio: 1 / 1;">
+              {% render 'image', image: item.preview_image, alt: item.name, width: 160, sizes: '56px', placeholder: 'product-1' %}
+            </span>
+            <span class="add-on__info">
+              <a class="add-on__name" href="{{ item.url }}">{{ item.name }}</a>
+              {% unless v.variations == null or v.variations.default %}
+                <span class="add-on__variants text-xs text-muted">
+                  {% for variation in v.variations %}{{ variation[1] }}{% unless forloop.last %} / {% endunless %}{% endfor %}
+                </span>
+              {% endunless %}
+            </span>
+            {% render 'price', product: item, class: 'text-sm' %}
+          </label>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.add_ons",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.add_ons" },
+    { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.add_ons_heading" },
+    { "type": "text", "id": "description", "label": "t:settings.description" },
+    { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 1, "max": 6, "step": 1, "default": 3 }
+  ],
+  "presets": [
+    { "name": "t:names.add_ons", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

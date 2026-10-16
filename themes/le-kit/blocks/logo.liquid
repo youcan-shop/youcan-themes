@@ -1,0 +1,33 @@
+{% assign logo = settings.logo %}
+{% assign store_name = store.name | escape %}
+
+<a class="logo-block" href="/" style="--logo-width: {{ block.settings.width }}px;" {{ block.youcan_attributes }}>
+  {% if logo != blank %}
+    {{
+      logo
+      | image_url: width: 600
+      | image_tag: alt: store_name, widths: '150, 300, 450, 600', sizes: '(min-width: 750px) 300px, 200px', loading: 'lazy'
+    }}
+  {% else %}
+    <span class="logo-block__text h4">{{ store_name }}</span>
+  {% endif %}
+</a>
+
+{% stylesheet %}
+  .logo-block { display: inline-flex; text-decoration: none; }
+  .logo-block img { width: var(--logo-width, 120px); height: auto; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.logo",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.logo_global" },
+    { "type": "range", "id": "width", "label": "t:settings.width", "min": 40, "max": 400, "step": 10, "unit": "px", "default": 120 }
+  ],
+  "presets": [
+    { "name": "t:names.logo", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,44 @@
+{%- liquid
+  assign p = closest.product | default: product
+  assign count = p.selected_or_first_available_variant.inventory
+  assign threshold = block.settings.threshold
+  assign status = 'high-stock'
+  if count == 0 or count == null
+    assign status = 'sold-out'
+  elsif count == 1
+    assign status = 'last-item'
+  elsif count <= threshold
+    assign status = 'low-stock'
+  endif
+-%}
+
+{% if p.isTrackingInventory %}
+  <div class="inventory" data-threshold="{{ threshold }}" {{ block.youcan_attributes }}>
+    <p class="inventory__status" data-inventory-status="sold-out" {% unless status == 'sold-out' %}hidden{% endunless %}>
+      <span class="inventory__dot inventory__dot--out"></span>{{ 'product.inventory.sold_out' | t }}
+    </p>
+    <p class="inventory__status" data-inventory-status="last-item" {% unless status == 'last-item' %}hidden{% endunless %}>
+      <span class="inventory__dot inventory__dot--low"></span>{{ 'product.inventory.last_item' | t }}
+    </p>
+    <p class="inventory__status" data-inventory-status="low-stock" {% unless status == 'low-stock' %}hidden{% endunless %}>
+      <span class="inventory__dot inventory__dot--low"></span>
+      <span data-template="{{ 'product.inventory.low_stock' | t | escape }}">{{ 'product.inventory.low_stock' | t | replace: '[count]', count }}</span>
+    </p>
+    <p class="inventory__status" data-inventory-status="high-stock" {% unless status == 'high-stock' %}hidden{% endunless %}>
+      <span class="inventory__dot"></span>{{ 'product.inventory.in_stock' | t }}
+    </p>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.inventory",
+  "tag": null,
+  "settings": [
+    { "type": "range", "id": "threshold", "label": "t:settings.low_stock_threshold", "min": 2, "max": 100, "step": 1, "default": 10 }
+  ],
+  "presets": [
+    { "name": "t:names.inventory", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

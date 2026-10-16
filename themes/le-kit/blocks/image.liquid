@@ -1,0 +1,81 @@
+{%- liquid
+  case block.settings.ratio
+    when 'square'
+      assign ratio = '1 / 1'
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'landscape'
+      assign ratio = '4 / 3'
+    when 'wide'
+      assign ratio = '16 / 9'
+    else
+      assign ratio = 'auto'
+  endcase
+  assign width = block.settings.width | default: 100
+  assign tag = 'div'
+  if block.settings.link != blank
+    assign tag = 'a'
+  endif
+-%}
+
+<{{ tag }}
+  class="image-block media{% if block.settings.rounded %} image-block--rounded{% endif %}"
+  {% if tag == 'a' %}href="{{ block.settings.link }}"{% endif %}
+  style="--ratio: {{ ratio }}; --image-width: {{ width }}%;"
+  {% if block.settings.image == blank %}data-placeholder{% endif %}
+  {{ block.youcan_attributes }}
+>
+  {% render 'image',
+    image: block.settings.image,
+    alt: block.settings.alt,
+    sizes: '(min-width: 750px) 50vw, 100vw',
+    placeholder: 'hero-1'
+  %}
+</{{ tag }}>
+
+{% stylesheet %}
+  .image-block { width: var(--image-width, 100%); max-width: 100%; }
+  .layout-panel[data-direction="column"] > .image-block { align-self: auto; }
+  .image-block--rounded { border-radius: var(--radius-card); }
+  .image-block[data-placeholder] { aspect-ratio: var(--ratio, 4 / 3); }
+  .image-block:not([style*="auto"]) img { height: 100%; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.image",
+  "tag": null,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:settings.image" },
+    { "type": "text", "id": "alt", "label": "t:settings.alt_text" },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "adapt", "label": "t:options.adapt_to_image" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" },
+        { "value": "landscape", "label": "t:options.landscape" },
+        { "value": "wide", "label": "t:options.wide" }
+      ],
+      "default": "adapt"
+    },
+    {
+      "type": "range",
+      "id": "width",
+      "label": "t:settings.width",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": true },
+    { "type": "url", "id": "link", "label": "t:settings.link" }
+  ],
+  "presets": [
+    { "name": "t:names.image", "category": "t:categories.media" }
+  ]
+}
+{% endschema %}

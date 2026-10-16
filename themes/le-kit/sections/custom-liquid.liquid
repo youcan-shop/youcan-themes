@@ -1,0 +1,23 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width">
+    {{ section.settings.custom_liquid }}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.custom_liquid",
+  "settings": [
+    { "type": "liquid", "id": "custom_liquid", "label": "t:settings.custom_liquid", "info": "t:info.custom_liquid" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 32 }
+  ],
+  "presets": [
+    { "name": "t:names.custom_liquid", "category": "t:categories.advanced" }
+  ]
+}
+{% endschema %}

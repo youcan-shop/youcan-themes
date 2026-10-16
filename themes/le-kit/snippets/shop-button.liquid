@@ -1,0 +1,51 @@
+{% comment %}
+  Renders the add to cart / buy now / place order button.
+
+  Accepts:
+  - product: {Object} Product
+  - style: {String} (Optional) primary | secondary
+  - button_size: {String} (Optional) sm | md | lg
+  - source: {String} (Optional) Shopping flow source (product-form | product-card)
+  - is_express_checkout: {Boolean} (Optional) Places an express checkout order from the closest order form
+  - skip_to_checkout: {Boolean} (Optional) Skip the cart, go straight to checkout
+  - full_width: {Boolean} (Optional)
+
+  Usage:
+  {% render 'shop-button', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign default_variant = product.selected_or_first_available_variant
+  if is_express_checkout
+    assign label = 'product.place_order' | t
+  elsif product.skip_to_checkout or skip_to_checkout
+    assign label = 'product.buy_now' | t
+  else
+    assign label = 'product.add_to_cart' | t
+  endif
+-%}
+
+<ui-shop-button
+  class="shop-button"
+  quantity="1"
+  variant-id="{{ default_variant.id }}"
+  {% unless default_variant.available %}not-available{% endunless %}
+  {% if product.skip_to_checkout %}skip-cart{% endif %}
+  {% if source %}source="{{ source }}"{% endif %}
+  {% if is_express_checkout %}checkout-type="express"{% endif %}
+  {% if skip_to_checkout %}skip-to-checkout{% endif %}
+>
+  <button
+    class="button button--{{ style | default: 'primary' }} button--{{ button_size | default: 'md' }}{% if full_width %} button--full{% endif %}"
+    type="{% if is_express_checkout %}submit{% else %}button{% endif %}"
+    {% unless default_variant.available %}aria-disabled="true"{% endunless %}
+  >
+    <span data-label="{{ label | escape }}">
+      {%- if default_variant.available -%}
+        {{ label }}
+      {%- else -%}
+        {{ 'product.sold_out' | t }}
+      {%- endif -%}
+    </span>
+  </button>
+</ui-shop-button>

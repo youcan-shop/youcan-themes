@@ -1,0 +1,78 @@
+{%- liquid
+  assign s = section.settings
+  assign card_vw = 100 | divided_by: s.columns
+  assign card_vw_mobile = 100 | divided_by: s.columns_mobile
+  assign sizes = '(min-width: 990px) ' | append: card_vw | append: 'vw, ' | append: card_vw_mobile | append: 'vw'
+-%}
+
+<div
+  class="section color-scheme color-{{ s.color_scheme }}"
+  style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+>
+  <div class="page-width listing">
+    {% paginate collection.products by 24 cod, category_id: category.id %}
+      <header class="listing__header">
+        {% if s.show_breadcrumbs %}
+          <nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+            <ol>
+              <li><a href="/">{{ 'general.home' | t }}</a></li>
+              <li><a href="/collections">{{ 'collections.title' | t }}</a></li>
+              <li aria-current="page">{{ category.name }}</li>
+            </ol>
+          </nav>
+        {% endif %}
+        <h1 class="h2">{{ category.name }}</h1>
+        {% if s.show_description and category.description != blank %}
+          <div class="rte text-muted listing__description">{{ category.description }}</div>
+        {% endif %}
+      </header>
+
+      {% if subCategories.size > 0 %}
+        <ul class="listing__subcollections" role="list">
+          {% for sub in subCategories %}
+            <li><a class="button button--secondary button--sm" href="/collections/{{ sub.slug }}">{{ sub.name }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <div class="listing__toolbar">
+        <p class="text-sm text-muted">{{ 'collections.products_count' | t | replace: '[count]', total }}</p>
+        {% if s.show_sort %}
+          {% render 'sort', url: previous_page %}
+        {% endif %}
+      </div>
+
+      {% if items.size > 0 %}
+        <ul class="grid" style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};" role="list">
+          {% for product in items %}
+            {% assign eager = false %}
+            {% if forloop.index <= s.columns %}{% assign eager = true %}{% endif %}
+            <li>{% render 'product-card', product: product, sizes: sizes, eager: eager %}</li>
+          {% endfor %}
+        </ul>
+        {% render 'pagination', current: current, last: last, previous_page: previous_page, next_page: next_page %}
+      {% else %}
+        {% render 'empty-state', type: 'collection' %}
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.collection_products",
+  "templates": ["collection"],
+  "limit": 1,
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "t:settings.show_breadcrumbs", "default": true },
+    { "type": "checkbox", "id": "show_description", "label": "t:settings.show_description", "default": true },
+    { "type": "checkbox", "id": "show_sort", "label": "t:settings.show_sort", "default": true },
+    { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

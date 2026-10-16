@@ -1,0 +1,177 @@
+
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width thank-you">
+    <header class="thank-you__header">
+      <span class="thank-you__icon">{% render 'icon', name: 'check', px: 28 %}</span>
+      <h1 class="h2">{{ section.settings.heading | default: store.name }}</h1>
+      {% if section.settings.text != blank %}
+        <p class="text-muted">{{ section.settings.text }}</p>
+      {% endif %}
+    </header>
+
+    <div class="thank-you__card">
+      {% if order.order_variants.size > 0 %}
+        <ul class="cart__lines" role="list">
+          {% for item in order.order_variants %}
+            <li class="cart-line">
+              <span class="media cart-line__media" style="--ratio: 1 / 1;">
+                {% if item.image %}
+                  {% render 'image', image: item.image, alt: '', width: 240, sizes: '96px' %}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+                <span class="thank-you__qty">{{ item.quantity }}</span>
+              </span>
+              <div class="cart-line__info">
+                <a class="cart-line__name" href="/products/{{ item.slug }}">{{ item.name }}</a>
+                {% if item.variations.size > 0 %}
+                  <p class="cart-line__variants">{% for variation in item.variations %}{{ variation[1] }}{% unless forloop.last %} / {% endunless %}{% endfor %}</p>
+                {% endif %}
+                <div class="price text-sm">
+                  <span>{{ item.price | default: 0 | money }}</span>
+                  {% if item.compare_at_price %}<s class="price__compare">{{ item.compare_at_price | money }}</s>{% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if order.bundles %}
+        {% assign types = 'single,multi,buyxgety' | split: ',' %}
+        {% for type in types %}
+          {% for bundle in order.bundles[type] %}
+            <div class="cart-bundle">
+              <div class="cart-bundle__header">
+                <span class="cart-bundle__title">{% render 'icon', name: 'gift', px: 16 %} {{ bundle.title }}</span>
+                <span class="price text-sm"><span>{{ bundle.total_price | money }}</span></span>
+              </div>
+              <ul class="cart__lines" role="list">
+                {% for bundle_item in bundle.items %}
+                  <li class="cart-line cart-line--bundled">
+                    <span class="media cart-line__media" style="--ratio: 1 / 1;">
+                      {% if bundle_item.image %}
+                        {% render 'image', image: bundle_item.image, alt: '', width: 240, sizes: '96px' %}
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      {% endif %}
+                    </span>
+                    <div class="cart-line__info">
+                      <a class="cart-line__name" href="/products/{{ bundle_item.slug }}">{{ bundle_item.name }}</a>
+                      {% if bundle_item.price %}
+                        <span class="price text-sm">{{ bundle_item.price | money }}</span>
+                      {% else %}
+                        <span class="badge badge--sale">{% render 'icon', name: 'gift', px: 12 %} {{ 'general.free' | t }}</span>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endif %}
+
+      <dl class="cart__totals">
+        <div class="cart__total-row">
+          <dt>{{ 'thank_you.status' | t }}</dt>
+          <dd>
+            {% assign status_key = 'thank_you.payment_status.' | append: order.paymentStatusSlug %}
+            <span class="badge badge--muted">{{ status_key | t }}</span>
+          </dd>
+        </div>
+        <div class="cart__total-row">
+          <dt>{{ 'thank_you.payment_method' | t }}</dt>
+          <dd>{% render 'payment-gateway', type: order.gatewayType %}</dd>
+        </div>
+        <div class="cart__total-row">
+          <dt>{{ 'cart.subtotal' | t }}</dt>
+          <dd>{{ order.sub_total | default: 0 | money }}</dd>
+        </div>
+        {% if order.vat != 0 and order.vat != null %}
+          <div class="cart__total-row">
+            <dt>{{ 'thank_you.vat' | t }} ({{ order.vat | times: 100 }}%)</dt>
+            <dd>{{ order.total_tax_amount | default: 0 | money }}</dd>
+          </div>
+        {% endif %}
+        <div class="cart__total-row">
+          <dt>{{ 'thank_you.shipping' | t }}</dt>
+          <dd>
+            {% if order.shippingCost == 0 or order.shippingCost == null %}
+              {{ 'general.free' | t }}
+            {% else %}
+              {{ order.shippingCost | money }}
+            {% endif %}
+          </dd>
+        </div>
+        <div class="cart__total-row cart__total-row--total">
+          <dt>{{ 'cart.total' | t }}</dt>
+          <dd>{{ order.total | default: 0 | money }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="thank-you__actions">
+      <a class="button button--lg" href="/">{{ 'thank_you.continue_shopping' | t }}</a>
+      {% if section.settings.show_whatsapp_share %}
+        {%- capture message -%}
+{{ 'thank_you.share_message' | t | replace: '[store]', store.name }}
+https://{{ store.domain }}
+        {%- endcapture -%}
+        <a class="button button--secondary button--lg" href="https://wa.me/?text={{ message | strip | url_encode }}" target="_blank" rel="noopener">
+          {% render 'social-icon', name: 'whatsapp' %}
+          {{ 'thank_you.share_whatsapp' | t }}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .thank-you { display: grid; gap: var(--space-xl); max-width: calc(640px + 2 * var(--page-gutter)); }
+  .thank-you__header { display: grid; justify-items: center; gap: var(--space-sm); text-align: center; }
+  .thank-you__icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+  .thank-you__card { display: grid; gap: var(--space-lg); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
+  .thank-you__qty {
+    position: absolute;
+    inset-block-start: 4px;
+    inset-inline-end: 4px;
+    display: grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .thank-you__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.thank_you",
+  "templates": ["thankyou"],
+  "limit": 1,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.thank_you_heading" },
+    { "type": "textarea", "id": "text", "label": "t:settings.text", "default": "t:defaults.thank_you_text" },
+    { "type": "checkbox", "id": "show_whatsapp_share", "label": "t:settings.show_whatsapp_share", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,93 @@
+{%- liquid
+  assign s = section.settings
+  assign products = s.products
+  if products == blank or products.size == 0
+    assign products = s.collection.products
+  endif
+  assign columns = s.columns
+  assign card_vw = 100 | divided_by: columns
+  assign sizes = '(min-width: 990px) ' | append: card_vw | append: 'vw, 50vw'
+  assign arrows = false
+  if s.layout == 'carousel'
+    assign arrows = true
+  endif
+  assign link = blank
+  if s.show_view_all and s.collection.slug
+    assign link = '/collections/' | append: s.collection.slug
+  endif
+-%}
+
+<div
+  class="section color-scheme color-{{ s.color_scheme }}"
+  style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+>
+  <ui-carousel
+    class="page-width product-list"
+    style="--per-page: {{ columns }}; --per-page-mobile: {{ s.columns_mobile | plus: 0.15 }};"
+    {% if s.layout == 'grid' %}data-static{% endif %}
+  >
+    {% render 'section-header',
+      heading: s.heading,
+      description: s.description,
+      link: link,
+      arrows: arrows
+    %}
+
+    <ul
+      class="{% if s.layout == 'grid' %}grid{% else %}slider__track{% endif %}"
+      style="--columns: {{ columns }}; --columns-mobile: {{ s.columns_mobile }};"
+      role="list"
+      data-carousel-track
+    >
+      {% if products.size > 0 %}
+        {% for product in products limit: s.limit %}
+          <li data-carousel-item>
+            {% render 'product-card', product: product, sizes: sizes, eager: false %}
+          </li>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..s.limit) %}
+          <li data-carousel-item>
+            {% render 'product-card', product: blank, placeholder_index: forloop.index0 %}
+          </li>
+        {% endfor %}
+      {% endif %}
+    </ul>
+  </ui-carousel>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.product_list",
+  "settings": [
+    { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.products_heading" },
+    { "type": "text", "id": "description", "label": "t:settings.description" },
+    { "type": "header", "content": "t:content.products" },
+    { "type": "collection", "id": "collection", "label": "t:settings.collection" },
+    { "type": "product_list", "id": "products", "label": "t:settings.products", "limit": 24, "info": "t:info.product_list" },
+    { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 2, "max": 24, "step": 1, "default": 8 },
+    { "type": "checkbox", "id": "show_view_all", "label": "t:settings.show_view_all", "default": true },
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        { "value": "grid", "label": "t:options.grid" },
+        { "value": "carousel", "label": "t:options.carousel" }
+      ],
+      "default": "grid"
+    },
+    { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    { "name": "t:names.product_list", "category": "t:categories.products" },
+    { "name": "t:names.product_carousel", "category": "t:categories.products", "settings": { "layout": "carousel" } }
+  ]
+}
+{% endschema %}

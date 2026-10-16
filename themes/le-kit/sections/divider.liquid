@@ -1,0 +1,21 @@
+<div class="{% if section.settings.full_width == false %}page-width{% endif %}" style="padding-block: {{ section.settings.padding }}px;">
+  <hr class="section-divider" style="border-block-start-width: {{ section.settings.thickness }}px;">
+</div>
+
+{% stylesheet %}
+  .section-divider { border: 0; border-block-start: 1px solid var(--color-border); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.divider",
+  "settings": [
+    { "type": "range", "id": "thickness", "label": "t:settings.thickness", "min": 1, "max": 8, "step": 1, "unit": "px", "default": 1 },
+    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 },
+    { "type": "checkbox", "id": "full_width", "label": "t:settings.full_width", "default": false }
+  ],
+  "presets": [
+    { "name": "t:names.divider", "category": "t:categories.layout" }
+  ]
+}
+{% endschema %}

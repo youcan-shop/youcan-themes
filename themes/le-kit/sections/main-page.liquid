@@ -1,0 +1,74 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width page-content" data-width="{{ section.settings.content_width }}">
+    {% if page.template == 'contact' %}
+      <h1 class="h2">{% if page.name != blank %}{{ page.name }}{% else %}{{ 'contact.title' | t }}{% endif %}</h1>
+      {% if page.content != blank %}
+        <div class="rte text-muted">{{ page.content }}</div>
+      {% endif %}
+      {% form 'contact', class: 'contact-form' %}
+        {% if form.posted_successfully %}
+          <p class="alert" role="status">{% render 'icon', name: 'check-circle', px: 18 %} {{ 'contact.success' | t }}</p>
+        {% elsif form.errors %}
+          <div class="alert alert--error" role="alert">
+            {% render 'icon', name: 'alert', px: 18 %}
+            <div>
+              <p>{{ 'contact.error' | t }}</p>
+              <ul>
+                {% for error in form.errors %}<li>{{ error[1] }}</li>{% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+        <label class="field">
+          <span class="field__label">{{ 'contact.email' | t }}</span>
+          <input class="input" type="email" name="email" autocomplete="email" required>
+        </label>
+        <label class="field">
+          <span class="field__label">{{ 'contact.subject' | t }}</span>
+          <input class="input" type="text" name="subject" required>
+        </label>
+        <label class="field">
+          <span class="field__label">{{ 'contact.message' | t }}</span>
+          <textarea class="textarea" name="message" rows="6" minlength="5" required></textarea>
+        </label>
+        <button class="button button--lg" type="submit">{{ 'contact.send' | t }}</button>
+      {% endform %}
+    {% else %}
+      <h1 class="h2">{{ page.name }}</h1>
+      <div class="rte">{{ page.content }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .page-content { display: grid; gap: var(--space-lg); }
+  .page-content[data-width="narrow"] { max-width: calc(760px + 2 * var(--page-gutter)); }
+  .contact-form { display: grid; gap: var(--space-md); max-width: 640px; }
+  .contact-form .button { justify-self: start; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.page",
+  "templates": ["page"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "t:settings.width",
+      "options": [
+        { "value": "narrow", "label": "t:options.narrow" },
+        { "value": "page", "label": "t:options.page" }
+      ],
+      "default": "narrow"
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

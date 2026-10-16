@@ -4,7 +4,7 @@ const path = require("path");
 const postcss = require("postcss");
 const nesting = require("postcss-nesting");
 
-const FOLDERS = ["layouts", "sections", "locales", "snippets", "assets", "config", "templates"];
+const FOLDERS = ["layout", "layouts", "sections", "blocks", "locales", "snippets", "assets", "config", "templates"];
 const ROOT = path.resolve(__dirname, "..");
 const THEMES = path.join(ROOT, "themes");
 const DIST = path.join(ROOT, "dist");
@@ -32,9 +32,9 @@ async function zipTheme(theme) {
   for (const folder of FOLDERS) {
     const folderPath = path.join(themePath, folder);
 
-    if (folder === "assets") {
-      if (!fs.existsSync(folderPath)) continue;
+    if (!fs.existsSync(folderPath)) continue;
 
+    if (folder === "assets") {
       for (const file of fs.readdirSync(folderPath)) {
         const src = path.join(folderPath, file);
         const zipPath = `assets/${file}`;

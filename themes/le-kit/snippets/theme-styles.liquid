@@ -1,0 +1,65 @@
+{% comment %}
+  Outputs fonts and global CSS custom properties (typography, layout, radii, color schemes).
+
+  Usage:
+  {% render 'theme-styles' %}
+{% endcomment %}
+
+{% assign heading_font = settings.heading_font %}
+{% assign body_font = settings.body_font %}
+
+{% unless body_font.system? and heading_font.system? %}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% endunless %}
+
+{% style %}
+  {% unless heading_font.system? %}{{ heading_font | font_face: font_display: 'swap' }}{% endunless %}
+  {% unless body_font.system? %}{{ body_font | font_face: font_display: 'swap' }}{% endunless %}
+
+  :root {
+    --font-body-family: {{ body_font.family }}, {{ body_font.fallback_families }}, yc-sans;
+    --font-body-weight: {{ body_font.weight }};
+    --font-body-style: {{ body_font.style }};
+    --font-body-scale: {{ settings.body_scale | default: 100 | divided_by: 100.0 }};
+
+    --font-heading-family: {{ heading_font.family }}, {{ heading_font.fallback_families }}, yc-sans;
+    --font-heading-weight: {{ heading_font.weight }};
+    --font-heading-style: {{ heading_font.style }};
+    --font-heading-scale: {{ settings.heading_scale | default: 100 | divided_by: 100.0 }};
+    --font-heading-case: {{ settings.heading_case | default: 'none' }};
+
+    {% case settings.page_width %}
+      {% when 'narrow' %}
+        --page-width: 1100px;
+      {% when 'wide' %}
+        --page-width: 1600px;
+      {% else %}
+        --page-width: 1360px;
+    {% endcase %}
+
+    --radius-button: {{ settings.button_radius | default: 8 }}px;
+    --radius-input: {{ settings.input_radius | default: 8 }}px;
+    --radius-card: {{ settings.card_radius | default: 8 }}px;
+    --radius-badge: {{ settings.badge_radius | default: 999 }}px;
+    --button-case: {{ settings.button_case | default: 'none' }};
+
+    --card-ratio: {% case settings.card_image_ratio %}{% when 'portrait' %}3 / 4{% when 'landscape' %}4 / 3{% when 'tall' %}2 / 3{% else %}1 / 1{% endcase %};
+    --card-image-fit: {{ settings.card_image_fit | default: 'cover' }};
+    --card-text-align: {{ settings.card_text_alignment | default: 'start' }};
+  }
+
+  {% for scheme in settings.color_schemes %}
+    {% if forloop.first %}:root,{% endif %}
+    .color-{{ scheme.id }} {
+      --color-background: {{ scheme.settings.background }};
+      --color-foreground: {{ scheme.settings.foreground }};
+      --color-heading: {{ scheme.settings.heading | default: scheme.settings.foreground }};
+      --color-primary: {{ scheme.settings.primary }};
+      --color-primary-foreground: {{ scheme.settings.primary_foreground }};
+      --color-secondary: {{ scheme.settings.secondary }};
+      --color-secondary-foreground: {{ scheme.settings.secondary_foreground }};
+      --color-border: {{ scheme.settings.border }};
+      --color-sale: {{ scheme.settings.sale | default: '#c53030' }};
+    }
+  {% endfor %}
+{% endstyle %}

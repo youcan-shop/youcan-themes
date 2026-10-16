@@ -1,0 +1,27 @@
+<p class="announcement" data-carousel-item {{ block.youcan_attributes }}>
+  {% if block.settings.link != blank %}
+    <a href="{{ block.settings.link }}">{{ block.settings.text }}</a>
+  {% else %}
+    {{ block.settings.text }}
+  {% endif %}
+</p>
+
+{% stylesheet %}
+  .announcement { text-align: center; padding-block: var(--space-xs); font-weight: 500; letter-spacing: 0.02em; }
+  .announcement a { text-decoration: none; }
+  .announcement a:hover { text-decoration: underline; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.announcement",
+  "tag": null,
+  "settings": [
+    { "type": "inline_richtext", "id": "text", "label": "t:settings.text", "default": "t:defaults.announcement" },
+    { "type": "url", "id": "link", "label": "t:settings.link" }
+  ],
+  "presets": [
+    { "name": "t:names.announcement" }
+  ]
+}
+{% endschema %}

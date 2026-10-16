@@ -1,0 +1,43 @@
+{%- liquid
+  assign s = section.settings
+  assign p = closest.product | default: product
+  assign card_vw = 100 | divided_by: s.columns
+  assign sizes = '(min-width: 990px) ' | append: card_vw | append: 'vw, 50vw'
+-%}
+
+{% if p.related_products.size > 0 %}
+  <div
+    class="section color-scheme color-{{ s.color_scheme }}"
+    style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+  >
+    <ui-carousel class="page-width" style="--per-page: {{ s.columns }}; --per-page-mobile: {{ s.columns_mobile | plus: 0.15 }};">
+      {% render 'section-header', heading: s.heading, arrows: true %}
+      <ul class="slider__track" role="list" data-carousel-track>
+        {% for item in p.related_products limit: s.limit %}
+          <li data-carousel-item>{% render 'product-card', product: item, sizes: sizes %}</li>
+        {% endfor %}
+      </ul>
+    </ui-carousel>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.product_recommendations",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "t:info.product_recommendations" },
+    { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.recommendations_heading" },
+    { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 2, "max": 12, "step": 1, "default": 8 },
+    { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    { "name": "t:names.product_recommendations", "category": "t:categories.products" }
+  ]
+}
+{% endschema %}

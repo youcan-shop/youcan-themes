@@ -1,0 +1,89 @@
+<!doctype html>
+{% assign lang = store.store_locale.iso_code | default: 'en' %}
+{% assign direction = 'ltr' %}
+{% if lang == 'ar' %}
+  {% assign direction = 'rtl' %}
+{% endif %}
+
+<html lang="{{ lang }}" dir="{{ direction }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="{{ request.url }}">
+
+    {% render 'meta-tags' %}
+    {% render 'favicon' %}
+    {% render 'theme-styles' %}
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'commerce.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+
+    <script src="https://unpkg.com/@youcan/js@latest/dist/index.umd.js" defer></script>
+    {{ 'global.js' | asset_url | script_tag_deferred }}
+    {{ 'carousel.js' | asset_url | script_tag_deferred }}
+    {{ 'cart.js' | asset_url | script_tag_deferred }}
+    {{ 'product.js' | asset_url | script_tag_deferred }}
+
+    {% if checkout.phone_validation %}
+      {{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
+      {{ 'phone-validation.js' | asset_url | script_tag_deferred }}
+    {% endif %}
+    {% if checkout.linked_fields %}
+      {{ 'linked-fields.js' | asset_url | script_tag_deferred }}
+    {% endif %}
+
+    <script>
+      window.theme = {
+        cartType: {{ settings.cart_type | default: 'drawer' | json }},
+        loadMarketCountries: {% if checkout.phone_validation or checkout.linked_fields %}true{% else %}false{% endif %},
+      };
+
+      window.errorStrings = {
+        checkout: `{{ form.errors | first }}`,
+        insufficient_inventory: `{{ 'errors.insufficient_inventory' | t }}`,
+        large_file: `{{ 'errors.large_file' | t }}`,
+      };
+
+      window.actions = {
+        out_of_stock: `{{ 'product.sold_out' | t }}`,
+      };
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link button" href="#main-content">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="main-content" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
+
+    <dialog class="quick-add color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}" id="quick-add">
+      <button
+        class="button button--ghost button--icon quick-add__close"
+        type="button"
+        aria-label="{{ 'accessibility.close' | t }}"
+        data-close-dialog
+      >
+        {% render 'icon', name: 'close' %}
+      </button>
+      <div class="quick-add__content" data-quick-add-content></div>
+    </dialog>
+
+    <ui-toast class="toast" id="toast" popover="manual" role="status">
+      <span class="toast__message" data-toast-message></span>
+      <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.close' | t }}" data-toast-close>
+        {% render 'icon', name: 'close', px: 16 %}
+      </button>
+    </ui-toast>
+
+    {{ content_for_footer }}
+  </body>
+</html>

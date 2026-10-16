@@ -1,0 +1,82 @@
+{% comment %}
+  Renders a product card. Display options come from theme settings (Product cards).
+
+  Accepts:
+  - product: {Object} Product
+  - eager: {Boolean} (Optional) Load the image immediately (first row)
+  - sizes: {String} (Optional) Image sizes attribute
+  - placeholder_index: {Number} (Optional) Placeholder variation when product is blank
+
+  Usage:
+  {% render 'product-card', product: product, sizes: '(min-width: 750px) 25vw, 50vw' %}
+{% endcomment %}
+
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+  assign variant = product.selected_or_first_available_variant
+  assign available = variant.available
+  if product == blank
+    assign available = true
+  endif
+  assign price = variant.price | default: product.price | default: 0
+  assign compare_at_price = variant.compare_at_price | default: product.compare_at_price
+  assign secondary_image = nil
+  if settings.card_show_secondary_image and product.images.size > 1
+    assign secondary_image = product.images[1]
+  endif
+  assign title = product.name
+  if title == blank
+    assign title = 'product.placeholder_title' | t
+  endif
+-%}
+
+<article class="product-card">
+  <a class="media product-card__media" href="{{ product.url | default: '#' }}" tabindex="-1" aria-hidden="true">
+    {% if product.preview_image %}
+      {% render 'image', image: product.preview_image, alt: product.name, width: 900, sizes: sizes, eager: eager %}
+      {% if secondary_image %}
+        {% render 'image', image: secondary_image, alt: '', width: 900, sizes: sizes, class: 'product-card__image--secondary' %}
+      {% endif %}
+    {% else %}
+      {% assign placeholder = placeholder_index | default: 0 | modulo: 5 | plus: 1 | prepend: 'product-' %}
+      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </a>
+
+  <div class="product-card__badges" data-position="{{ settings.badge_position | default: 'top-left' }}">
+    {% if available == false %}
+      <span class="badge badge--muted">{{ 'product.sold_out' | t }}</span>
+    {% else %}
+      {% render 'product-badge', product: product, price: price, compare_at_price: compare_at_price %}
+    {% endif %}
+  </div>
+
+  <div class="product-card__info">
+    <a class="product-card__title" href="{{ product.url | default: '#' }}">{{ title }}</a>
+    {% if settings.card_show_rating and product.averageRating > 0 %}
+      <span class="rating text-xs">
+        {% render 'icon', name: 'star', px: 14 %}
+        {{ product.averageRating }}
+      </span>
+    {% endif %}
+    {% render 'price', product: product %}
+  </div>
+
+  {% if settings.card_show_quick_add and product != blank and available %}
+    <div class="product-card__action">
+      {% if settings.shopping_flow != 'express_checkout' and product.variants.size <= 1 and product.is_bundle != true %}
+        {% render 'shop-button', product: product, style: 'secondary', button_size: 'sm', source: 'product-card', full_width: true %}
+      {% else %}
+        <ui-quick-add data-url="{{ product.url }}">
+          <button class="button button--secondary button--sm button--full" type="button">
+            {%- if settings.shopping_flow == 'express_checkout' -%}
+              {{ 'product.buy_now' | t }}
+            {%- else -%}
+              {{ 'product.choose_options' | t }}
+            {%- endif -%}
+          </button>
+        </ui-quick-add>
+      {% endif %}
+    </div>
+  {% endif %}
+</article>

@@ -1,0 +1,103 @@
+<ui-carousel
+  class="slideshow color-scheme color-{{ section.settings.color_scheme }}"
+  data-height="{{ section.settings.height }}"
+  {% if section.settings.autoplay %}autoplay interval="{{ section.settings.speed | times: 1000 }}"{% endif %}
+  aria-roledescription="carousel"
+  aria-label="{{ 'accessibility.slideshow' | t }}"
+>
+  <div class="slider__track slideshow__track" data-carousel-track>
+    {% content_for 'blocks' %}
+  </div>
+
+  {% if section.blocks.size > 1 %}
+    <div class="slideshow__controls page-width">
+      <button class="button button--secondary button--icon" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">
+        {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
+      </button>
+      <div class="slideshow__dots">
+        {% for b in section.blocks %}
+          <button
+            class="slider__dot"
+            type="button"
+            data-carousel-dot
+            aria-label="{{ 'accessibility.go_to_slide' | t | replace: '[index]', forloop.index }}"
+            {% if forloop.first %}aria-current="true"{% endif %}
+          ></button>
+        {% endfor %}
+      </div>
+      <button class="button button--secondary button--icon" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">
+        {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
+      </button>
+    </div>
+  {% endif %}
+</ui-carousel>
+
+{% stylesheet %}
+  .slideshow { --slider-gap: 0px; position: relative; }
+  .slideshow__controls {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    pointer-events: none;
+  }
+  .slideshow__controls > * { pointer-events: auto; }
+  .slideshow__dots { display: flex; gap: 6px; color: #fff; }
+  .slideshow .slider__dot { background-color: #fff; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.slideshow",
+  "max_blocks": 8,
+  "blocks": [{ "type": "_slide" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:settings.height",
+      "options": [
+        { "value": "small", "label": "t:options.small" },
+        { "value": "medium", "label": "t:options.medium" },
+        { "value": "large", "label": "t:options.large" },
+        { "value": "screen", "label": "t:options.full_screen" }
+      ],
+      "default": "large"
+    },
+    { "type": "checkbox", "id": "autoplay", "label": "t:settings.autoplay", "default": true },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:settings.change_every",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "visible_if": { "setting_id": "autoplay", "value": true }
+    },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-4" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.slideshow",
+      "category": "t:categories.banners",
+      "blocks": [
+        { "type": "_slide", "blocks": [
+          { "type": "heading", "settings": { "tag": "h2", "size": "h1", "heading": "t:defaults.slide_heading" } },
+          { "type": "text", "settings": { "text": "t:defaults.slide_text", "max_width": "narrow" } },
+          { "type": "button", "settings": { "label": "t:defaults.shop_now", "link": "/collections" } }
+        ] },
+        { "type": "_slide", "blocks": [
+          { "type": "heading", "settings": { "tag": "h2", "size": "h1", "heading": "t:defaults.slide_heading" } },
+          { "type": "text", "settings": { "text": "t:defaults.slide_text", "max_width": "narrow" } },
+          { "type": "button", "settings": { "label": "t:defaults.shop_now", "link": "/collections" } }
+        ] }
+      ]
+    }
+  ]
+}
+{% endschema %}
