@@ -142,7 +142,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
-    height: 85vh;
+    aspect-ratio: var(--product-image-box-ratio);
     background-color: var(--color-surface-container);
 
     &:not(:has(.images img:nth-child(2))) {
@@ -152,11 +152,14 @@
     .images {
       img,
       iframe {
+        display: block;
         width: 100%;
-        height: 85vh;
-        object-fit: cover;
+        height: auto;
+        aspect-ratio: var(--product-image-box-ratio);
+        object-fit: var(--product-image-fit);
         scroll-snap-align: center;
         scroll-snap-stop: always;
+        border-radius: var(--radius-md);
         border: 1px solid var(--color-surface-container);
       }
 
@@ -166,6 +169,19 @@
         translate: -50% -50%;
         left: 50%;
         inset-block-start: 50%;
+      }
+    }
+
+    &[data-ratio="auto"] {
+      height: 85vh;
+      aspect-ratio: auto;
+
+      .images {
+        img,
+        iframe {
+          height: 85vh;
+          aspect-ratio: auto;
+        }
       }
     }
 
@@ -193,7 +209,8 @@
           border: 0;
           outline: 0;
           width: 60px;
-          height: 60px;
+          height: auto;
+          aspect-ratio: var(--product-image-box-ratio);
           cursor: pointer;
           overflow: hidden;
           border-radius: var(--radius-sm);
@@ -203,7 +220,7 @@
           img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: var(--product-image-fit);
           }
 
           &[aria-selected="false"] {
@@ -273,7 +290,9 @@
 @media (max-width: 769px) {
   [section="single-product"] {
     [block="pd-media"] {
-      height: 38vh;
+      &[data-ratio="auto"] {
+        height: 38vh;
+      }
 
       .images {
         display: flex;
@@ -286,8 +305,14 @@
 
         img,
         iframe {
-          height: 38vh;
           min-width: 100%;
+        }
+      }
+
+      &[data-ratio="auto"] .images {
+        img,
+        iframe {
+          height: 38vh;
         }
       }
 

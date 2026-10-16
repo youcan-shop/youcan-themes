@@ -1,7 +1,6 @@
 [block="product"] {
   overflow: hidden;
   position: relative;
-  height: 450px;
   border-radius: var(--radius-md);
 
   & > a,
@@ -12,10 +11,17 @@
     color: var(--color-on-background);
 
     .media {
-      height: 100%;
       background-color: var(--color-surface-container);
 
+      &:not(:has(img)) {
+        aspect-ratio: var(--product-image-box-ratio);
+      }
+
       img {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: var(--product-image-ratio);
         object-fit: cover;
         transition: var(--transition-standard-default-effects);
       }
@@ -136,26 +142,31 @@
       gap: var(--spacing-8);
 
       .media {
-        height: 250px;
+        grid-area: 1 / 1;
         overflow: hidden;
         border-radius: 0 0 var(--radius-md) var(--radius-md);
       }
 
-      .head {
-        inset-block-start: auto;
-        inset-block-end: calc(var(--spacing-48) + var(--spacing-12));
+      /* Overlays the media so badge/button follow its height */
+      .head,
+      .head:has(.badge):has(ui-product-button) {
+        grid-area: 1 / 1;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
 
         .price {
           display: none;
         }
 
         .badge {
-          position: absolute;
-          inset-inline-start: var(--spacing-12);
-          inset-block-end: calc(250px - 28px - var(--spacing-12));
+          order: 0;
         }
 
         ui-product-button {
+          margin-block-start: auto;
           justify-content: flex-start !important;
         }
       }
