@@ -7,7 +7,7 @@ Le Kit is the first YouCan theme built on the new Liquid core: theme blocks, sec
 ## Structure
 
 ```
-layout/     theme.liquid (header and footer groups, cart drawer, quick add dialog, toast)
+layouts/    theme.liquid (header and footer groups, cart drawer, quick add dialog, toast)
 sections/   page sections + header-group.json / footer-group.json
 blocks/     theme blocks (public) and private blocks (_name, used by one section or block)
 snippets/   shared rendering helpers (image, icon, price, product card, cart, checkout forms)
