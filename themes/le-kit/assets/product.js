@@ -514,13 +514,7 @@ if (!customElements.get("ui-quick-add")) {
       dialog.showModal();
 
       try {
-        const response = await fetch(`${url}${url.includes("?") ? "&" : "?"}section_id=main`);
-        if (!response.ok) throw new Error(response.statusText);
-
-        const html = new DOMParser().parseFromString(await response.text(), "text/html");
-        const product = html.querySelector("[data-product-main]");
-
-        if (!product) throw new Error("Product section not found");
+        const product = await this.fetchProduct(url);
 
         product.classList.add("product-main--quick-add");
         product.classList.remove("page-width");
@@ -534,6 +528,29 @@ if (!customElements.get("ui-quick-add")) {
         console.error(error);
         window.location.href = url;
       }
+    }
+
+    // Prefer the Section Rendering API (only the product section); fall back to the full product page
+    async fetchProduct(url) {
+      const separator = url.includes("?") ? "&" : "?";
+      const attempts = [`${url}${separator}section_id=main`, url];
+
+      for (const attempt of attempts) {
+        try {
+          const response = await fetch(attempt, { headers: { Accept: "text/html" } });
+          if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+
+          const html = new DOMParser().parseFromString(await response.text(), "text/html");
+          const product = html.querySelector("[data-product-main]");
+          if (product) return product;
+
+          throw new Error("[data-product-main] not found in the response");
+        } catch (error) {
+          console.warn(`[le-kit] Quick add could not load ${attempt}`, error);
+        }
+      }
+
+      throw new Error("Quick add: the product could not be loaded");
     }
   }
 

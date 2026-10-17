@@ -1,6 +1,6 @@
 {%- liquid
   assign s = section.settings
-  assign nav = s.navigation | default: 'arrows'
+  assign nav = s.navigation | default: 'large_arrows'
   assign icon_size = 20
   if nav == 'large_arrows' or nav == 'large_chevrons'
     assign icon_size = 28
@@ -23,7 +23,7 @@
     data-height="{{ s.height }}"
     data-content-position="{{ s.content_position | default: 'on_media' }}"
     data-nav="{{ nav }}"
-    data-nav-background="{{ s.navigation_background | default: 'circle' }}"
+    data-nav-background="{{ s.navigation_background | default: 'none' }}"
     {% if s.autoplay %}autoplay interval="{{ s.speed | times: 1000 }}"{% endif %}
     aria-roledescription="carousel"
     aria-label="{{ 'accessibility.slideshow' | t }}"
@@ -101,6 +101,15 @@
   .slideshow__arrow--prev { inset-inline-start: var(--space-md); }
   .slideshow__arrow--next { inset-inline-end: var(--space-md); }
   .slideshow__arrow:disabled { opacity: 0.4; cursor: default; }
+
+  /* Desktop with a mouse: arrows appear while hovering the slideshow (or when focused with the keyboard) */
+  @media (hover: hover) and (min-width: 750px) {
+    .slideshow__arrow { opacity: 0; transition: opacity var(--duration) var(--ease), background-color var(--duration-fast) var(--ease), scale var(--duration-fast) var(--ease); }
+    .slideshow:hover .slideshow__arrow,
+    .slideshow:focus-within .slideshow__arrow { opacity: 1; }
+    .slideshow:hover .slideshow__arrow:disabled,
+    .slideshow:focus-within .slideshow__arrow:disabled { opacity: 0.4; }
+  }
   .slideshow__arrow:active:not(:disabled) { scale: 0.94; }
   .slideshow[data-nav^="large"] .slideshow__arrow { --arrow-size: 56px; }
   .slideshow[data-nav-background="none"] .slideshow__arrow .icon { filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.45)); }
@@ -250,7 +259,7 @@
           "label": "t:options.none"
         }
       ],
-      "default": "arrows"
+      "default": "large_arrows"
     },
     {
       "type": "select",
@@ -270,7 +279,7 @@
           "label": "t:options.square"
         }
       ],
-      "default": "circle",
+      "default": "none",
       "visible_if": "{{ section.settings.navigation != 'none' }}"
     },
     {
@@ -508,87 +517,15 @@
         "height": "large",
         "padding_top": 24,
         "padding_bottom": 24,
-        "navigation": "chevrons",
-        "navigation_background": "circle",
-        "pagination": "dots"
-      },
-      "blocks": [
-        {
-          "type": "_slide",
-          "blocks": [
-            {
-              "type": "heading",
-              "settings": {
-                "tag": "h2",
-                "size": "h1",
-                "heading": "t:defaults.slide_heading"
-              }
-            },
-            {
-              "type": "text",
-              "settings": {
-                "text": "t:defaults.slide_text",
-                "max_width": "narrow"
-              }
-            },
-            {
-              "type": "button",
-              "settings": {
-                "label": "t:defaults.shop_now",
-                "link": "/collections"
-              }
-            }
-          ]
-        },
-        {
-          "type": "_slide",
-          "blocks": [
-            {
-              "type": "heading",
-              "settings": {
-                "tag": "h2",
-                "size": "h1",
-                "heading": "t:defaults.slide_heading"
-              }
-            },
-            {
-              "type": "text",
-              "settings": {
-                "text": "t:defaults.slide_text",
-                "max_width": "narrow"
-              }
-            },
-            {
-              "type": "button",
-              "settings": {
-                "label": "t:defaults.shop_now",
-                "link": "/collections"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "t:names.slideshow_below",
-      "category": "t:categories.banners",
-      "settings": {
-        "content_position": "below_media",
-        "color_scheme": "scheme-1",
-        "height": "medium",
-        "navigation": "chevrons",
+        "navigation": "large_arrows",
+        "navigation_background": "none",
         "pagination": "dots",
-        "width": "page",
-        "padding_top": 32,
-        "padding_bottom": 32
+        "content_position": "below_media",
+        "color_scheme": "scheme-1"
       },
       "blocks": [
         {
           "type": "_slide",
-          "settings": {
-            "overlay_opacity": 0,
-            "horizontal_alignment": "center"
-          },
           "blocks": [
             {
               "type": "heading",
@@ -602,7 +539,7 @@
               "type": "text",
               "settings": {
                 "text": "t:defaults.slide_text",
-                "muted": true
+                "max_width": "narrow"
               }
             },
             {
@@ -613,14 +550,13 @@
                 "style": "secondary"
               }
             }
-          ]
+          ],
+          "settings": {
+            "overlay_opacity": 0
+          }
         },
         {
           "type": "_slide",
-          "settings": {
-            "overlay_opacity": 0,
-            "horizontal_alignment": "center"
-          },
           "blocks": [
             {
               "type": "heading",
@@ -634,7 +570,7 @@
               "type": "text",
               "settings": {
                 "text": "t:defaults.slide_text",
-                "muted": true
+                "max_width": "narrow"
               }
             },
             {
@@ -645,39 +581,10 @@
                 "style": "secondary"
               }
             }
-          ]
-        },
-        {
-          "type": "_slide",
+          ],
           "settings": {
-            "overlay_opacity": 0,
-            "horizontal_alignment": "center"
-          },
-          "blocks": [
-            {
-              "type": "heading",
-              "settings": {
-                "tag": "h2",
-                "size": "h3",
-                "heading": "t:defaults.slide_heading"
-              }
-            },
-            {
-              "type": "text",
-              "settings": {
-                "text": "t:defaults.slide_text",
-                "muted": true
-              }
-            },
-            {
-              "type": "button",
-              "settings": {
-                "label": "t:defaults.shop_now",
-                "link": "/collections",
-                "style": "secondary"
-              }
-            }
-          ]
+            "overlay_opacity": 0
+          }
         }
       ]
     }

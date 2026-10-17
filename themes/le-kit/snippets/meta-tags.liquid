@@ -7,35 +7,55 @@
 
 {% assign store_title = store.title | default: store.name %}
 
-<title>
-  {% if page %}
-    {{ page.name }} - {{ store_title }}
-  {% elsif product %}
-    {{ product.meta.title }} - {{ store_title }}
-  {% elsif category %}
-    {{ category.name }} - {{ store_title }}
-  {% elsif template %}
-    {% case template.name %}
-      {% when 'index' %}
-        {{ store_title }}
-      {% when 'search' %}
-        {% paginate search.products by 24 cod %}
-          {% capture t %}"{{ terms | escape }}"{% endcapture %}
-          {{ 'meta.search' | t | replace: '[count]', items.size | replace: '[term]', t }} - {{ store_title }}
-        {% endpaginate %}
-      {% when 'list-collections' %}
-        {{ 'meta.collections' | t }} - {{ store_title }}
-      {% when 'cart' %}
-        {{ 'meta.cart' | t }} - {{ store_title }}
-      {% when '404' %}
-        {{ 'not_found.title' | t }} - {{ store_title }}
-      {% when 'thankyou' %}
-        {{ 'meta.thank_you' | t }} - {{ store_title }}
-      {% else %}
-        {{ template.name }} - {{ store_title }}
-    {% endcase %}
-  {% endif %}
-</title>
+{%- liquid
+  case template.name
+    when 'index'
+      assign page_title = ''
+    when 'product'
+      assign page_title = product.meta.title | default: product.name
+    when 'collection'
+      assign page_title = category.meta.title | default: category.name
+    when 'page'
+      assign page_title = page.name
+    when 'list-collections'
+      assign page_title = 'meta.collections' | t
+    when 'cart'
+      assign page_title = 'meta.cart' | t
+    when '404'
+      assign page_title = 'not_found.title' | t
+    when 'thankyou'
+      assign page_title = 'meta.thank_you' | t
+    when 'upsell'
+      assign page_title = 'meta.upsell' | t
+    when 'customer-login'
+      if request.url contains '/account/recover'
+        assign page_title = 'account.recover.title' | t
+      else
+        assign page_title = 'account.login.title' | t
+      endif
+    when 'customer-register'
+      assign page_title = 'meta.register' | t
+    when 'customer-account'
+      assign page_title = 'account.title' | t
+    when 'customer-order'
+      assign page_title = 'account.order.title' | t | replace: '[name]', order.name
+    when 'customer-addresses'
+      assign page_title = 'account.addresses' | t
+    when 'customer-reset-password'
+      assign page_title = 'account.reset.title' | t
+    when 'search'
+      assign search_terms = search.terms | default: terms
+      if search_terms != blank
+        assign quoted_terms = search_terms | escape | prepend: '"' | append: '"'
+        assign page_title = 'meta.search_results' | t | replace: '[term]', quoted_terms
+      else
+        assign page_title = 'search.title' | t
+      endif
+    else
+      assign page_title = page.name | default: product.name | default: category.name | default: template.name
+  endcase
+-%}
+<title>{% if page_title != blank %}{{ page_title }} - {% endif %}{{ store_title }}</title>
 {% assign og_title = store.title | default: store.name %}
 {% assign og_type = 'website' %}
 {% assign og_url = request.url %}

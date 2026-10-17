@@ -1534,7 +1534,6 @@ ui-carousel {
     height: 32px;
     gap: 6px;
     padding-inline: 11px;
-    font-size: var(--text-xs);
   }
 }
 
@@ -1886,5 +1885,78 @@ ui-carousel {
 @keyframes fade-in {
   from {
     opacity: 0;
+  }
+}
+
+/* ---------- Bottom sheets on mobile (swipe down to close, see assets/global.js) ---------- */
+.sheet-handle {
+  display: none;
+}
+
+@media (max-width: 749px) {
+  /* Drawers that become bottom sheets on mobile (express checkout) */
+  .drawer.drawer--sheet-mobile {
+    --sheet-offset: 100%;
+    inset: auto 0 0 0;
+    width: 100%;
+    height: auto;
+    max-height: 92dvh;
+    border: 0;
+    border-block-start: 1px solid var(--color-border);
+    border-radius: var(--radius-surface) var(--radius-surface) 0 0;
+    translate: 0 100%;
+  }
+
+  .drawer.drawer--sheet-mobile:popover-open {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .drawer.drawer--sheet-mobile:popover-open {
+      translate: 0 100%;
+    }
+  }
+
+  .sheet-handle {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    height: 22px;
+    padding-block-start: 8px;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .sheet-handle::before {
+    content: "";
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--color-input);
+  }
+
+  dialog,
+  .drawer--sheet-mobile {
+    padding-block-start: 10px;
+  }
+
+  /* Headers of sheets are drag zones too */
+  :is(dialog, .drawer--sheet-mobile) :is(.drawer__header, .account-dialog__header, .review-form__header, .popup-link__header),
+  .select-popup--drawer .select-popup__header {
+    touch-action: none;
+  }
+
+  dialog::backdrop,
+  .drawer--sheet-mobile::backdrop,
+  .select-popup--drawer::backdrop {
+    background-color: rgb(0 0 0 / calc(0.32 * var(--sheet-backdrop, 1)));
+  }
+
+  [data-sheet-dragging] {
+    transition: none !important;
+    user-select: none;
   }
 }

@@ -661,3 +661,97 @@ if (!customElements.get("ui-share")) {
 
   customElements.define("ui-share", Share);
 }
+
+/*
+ * Bottom sheets on mobile: drag the handle (or header) down to close.
+ * Applies to <dialog>s, .drawer--sheet-mobile popovers and the mobile select drawer.
+ * The sheet follows the finger; a fast flick or a drag past 30% of its height closes it,
+ * otherwise it springs back.
+ */
+(() => {
+  const MOBILE = window.matchMedia("(max-width: 749px)");
+  const SHEETS = "dialog[open], .drawer--sheet-mobile:popover-open, .select-popup--drawer:popover-open";
+  const ZONES = ".sheet-handle, .drawer__header, .account-dialog__header, .review-form__header, .popup-link__header, .select-popup__header";
+  const SPRING = "translate 360ms cubic-bezier(0.32, 0.72, 0, 1)";
+
+  // Every dialog and mobile sheet drawer gets a handle (hidden on desktop by CSS)
+  const addHandles = (root = document) =>
+    root.querySelectorAll?.("dialog, .drawer--sheet-mobile").forEach((sheet) => {
+      if (sheet.querySelector(":scope > .sheet-handle")) return;
+      const handle = document.createElement("div");
+      handle.className = "sheet-handle";
+      handle.setAttribute("aria-hidden", "true");
+      sheet.prepend(handle);
+    });
+
+  addHandles();
+  new MutationObserver((mutations) =>
+    mutations.forEach((mutation) => mutation.addedNodes.forEach((node) => node.nodeType === 1 && addHandles(node.parentElement ?? node))),
+  ).observe(document.body, { childList: true, subtree: true });
+
+  let drag = null;
+
+  const close = (sheet) => {
+    if (sheet instanceof HTMLDialogElement) sheet.close();
+    else if (sheet.matches(":popover-open")) sheet.hidePopover();
+  };
+
+  const reset = (sheet) => {
+    sheet.style.removeProperty("translate");
+    sheet.style.removeProperty("transition");
+    sheet.style.removeProperty("--sheet-backdrop");
+  };
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!MOBILE.matches || event.button !== 0) return;
+
+    const zone = event.target.closest(ZONES);
+    const sheet = zone?.closest(SHEETS);
+    if (!sheet || event.target.closest("button, a, input, select, textarea, label")) return;
+
+    drag = { sheet, startY: event.clientY, startTime: performance.now(), height: sheet.getBoundingClientRect().height, dy: 0, pointerId: event.pointerId };
+    zone.setPointerCapture?.(event.pointerId);
+    sheet.setAttribute("data-sheet-dragging", "");
+  });
+
+  document.addEventListener("pointermove", (event) => {
+    if (!drag || event.pointerId !== drag.pointerId) return;
+
+    const raw = event.clientY - drag.startY;
+    // Rubber band when pulling up, 1:1 when pulling down
+    drag.dy = raw < 0 ? -Math.sqrt(-raw) * 2 : raw;
+    drag.sheet.style.translate = `0 ${drag.dy}px`;
+    drag.sheet.style.setProperty("--sheet-backdrop", String(Math.max(0, 1 - Math.max(0, drag.dy) / drag.height)));
+  });
+
+  const end = (event) => {
+    if (!drag || event.pointerId !== drag.pointerId) return;
+
+    const { sheet, dy, height, startTime } = drag;
+    const velocity = dy / Math.max(1, performance.now() - startTime);
+    drag = null;
+    sheet.removeAttribute("data-sheet-dragging");
+
+    if (dy > height * 0.3 || (dy > 24 && velocity > 0.5)) {
+      sheet.style.transition = SPRING;
+      sheet.style.translate = "0 100%";
+      sheet.style.setProperty("--sheet-backdrop", "0");
+      sheet.addEventListener(
+        "transitionend",
+        () => {
+          close(sheet);
+          requestAnimationFrame(() => reset(sheet));
+        },
+        { once: true },
+      );
+    } else {
+      sheet.style.transition = SPRING;
+      sheet.style.translate = "0 0";
+      sheet.style.removeProperty("--sheet-backdrop");
+      sheet.addEventListener("transitionend", () => reset(sheet), { once: true });
+    }
+  };
+
+  document.addEventListener("pointerup", end);
+  document.addEventListener("pointercancel", end);
+})();
