@@ -1499,3 +1499,91 @@ a.orders__row:hover {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ---------- Sticky add to cart bar ---------- */
+.sticky-buy {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 30;
+  display: none;
+  border-block-start: 1px solid var(--color-border);
+  box-shadow: 0 -8px 24px -12px rgb(0 0 0 / 0.18);
+  translate: 0 100%;
+  transition: translate 320ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (max-width: 749px) {
+  .sticky-buy[data-mobile] {
+    display: block;
+  }
+}
+
+@media (min-width: 750px) {
+  .sticky-buy[data-desktop] {
+    display: block;
+  }
+}
+
+.sticky-buy[data-visible] {
+  translate: 0 0;
+}
+
+.quick-add .sticky-buy {
+  display: none !important;
+}
+
+.sticky-buy__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-block: var(--space-sm);
+  padding-block-end: max(var(--space-sm), env(safe-area-inset-bottom));
+}
+
+.sticky-buy__media {
+  flex: 0 0 48px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+}
+
+.sticky-buy__info {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.sticky-buy__name {
+  overflow: hidden;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sticky-buy__button {
+  flex-shrink: 0;
+}
+
+@media (max-width: 749px) {
+  .sticky-buy__media {
+    display: none;
+  }
+}
+
+/* ---------- Read more ---------- */
+.read-more {
+  display: grid;
+  gap: var(--space-xs);
+  justify-items: start;
+}
+
+.read-more[data-clamped]:not([data-open]) .read-more__content {
+  max-height: var(--read-more-height, 160px);
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 55%, transparent);
+}
+
+.read-more__content {
+  width: 100%;
+}

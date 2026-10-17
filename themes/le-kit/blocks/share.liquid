@@ -1,0 +1,54 @@
+{%- liquid
+  assign p = closest.product | default: product
+  if p
+    assign share_title = p.name
+  else
+    assign share_title = page.name | default: store.name
+  endif
+-%}
+
+<ui-share class="share" data-title="{{ share_title | escape }}" {{ block.youcan_attributes }}>
+  {% if block.settings.label != blank %}
+    <span class="share__label text-sm text-muted">{{ block.settings.label | escape }}</span>
+  {% endif %}
+  <div class="share__buttons">
+    {% if block.settings.show_facebook %}
+      <a class="button button--secondary button--icon button--sm" href="#" data-share="facebook" target="_blank" rel="noopener" aria-label="Facebook">{% render 'social-icon', name: 'facebook' %}</a>
+    {% endif %}
+    {% if block.settings.show_x %}
+      <a class="button button--secondary button--icon button--sm" href="#" data-share="x" target="_blank" rel="noopener" aria-label="X">{% render 'social-icon', name: 'x_twitter' %}</a>
+    {% endif %}
+    {% if block.settings.show_whatsapp %}
+      <a class="button button--secondary button--icon button--sm" href="#" data-share="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">{% render 'social-icon', name: 'whatsapp' %}</a>
+    {% endif %}
+    {% if block.settings.show_copy %}
+      <button class="button button--secondary button--sm" type="button" data-share="copy" data-copied-label="{{ 'share.copied' | t | escape }}">
+        {% render 'icon', name: 'tag', px: 16 %}
+        <span>{{ 'share.copy_link' | t }}</span>
+      </button>
+    {% endif %}
+  </div>
+</ui-share>
+
+{% stylesheet %}
+  .share { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
+  .share__buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+  .share .button--icon .icon { width: 16px; height: 16px; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.share",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "label", "label": "t:settings.label" },
+    { "type": "checkbox", "id": "show_facebook", "label": "Facebook", "default": true },
+    { "type": "checkbox", "id": "show_x", "label": "X (Twitter)", "default": true },
+    { "type": "checkbox", "id": "show_whatsapp", "label": "WhatsApp", "default": true },
+    { "type": "checkbox", "id": "show_copy", "label": "t:settings.show_copy_link", "default": true }
+  ],
+  "presets": [
+    { "name": "t:names.share", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

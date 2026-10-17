@@ -597,3 +597,44 @@ if (!customElements.get("ui-quick-order")) {
 
   customElements.define("ui-quick-order", QuickOrder);
 }
+
+// Sticky add to cart bar: shows when the main buy buttons scroll out of view; its button runs the main action
+if (!customElements.get("ui-sticky-buy")) {
+  class StickyBuy extends HTMLElement {
+    connectedCallback() {
+      this.buyButtons = this.closest(".buy-buttons");
+      this.product = this.closest("ui-product");
+      if (!this.buyButtons || this.closest("dialog")) return;
+
+      this.querySelector("[data-sticky-buy-trigger]")?.addEventListener("click", () => this.trigger());
+
+      this.observer = new IntersectionObserver(
+        ([entry]) => {
+          const below = entry.boundingClientRect.top < 0;
+          this.toggleAttribute("data-visible", !entry.isIntersecting && below);
+          this.setAttribute("aria-hidden", String(!this.hasAttribute("data-visible")));
+        },
+        { threshold: 0 },
+      );
+      this.observer.observe(this.buyButtons);
+    }
+
+    disconnectedCallback() {
+      this.observer?.disconnect();
+    }
+
+    trigger() {
+      const main = this.buyButtons.querySelector(".buy-buttons__row .shop-button button, .buy-buttons__row > .button, .express-checkout__actions button");
+
+      // Options still need a choice (or an inline form to fill): bring the customer back to the product form
+      if (!main || main.disabled || this.buyButtons.querySelector(".express-checkout--inline")) {
+        (this.product ?? this.buyButtons).scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+
+      main.click();
+    }
+  }
+
+  customElements.define("ui-sticky-buy", StickyBuy);
+}

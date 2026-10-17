@@ -596,3 +596,68 @@ if (!customElements.get("ui-auth")) {
 
   customElements.define("ui-auth", Auth);
 }
+
+// Read more: clamps long content and reveals it on demand
+if (!customElements.get("ui-read-more")) {
+  class ReadMore extends HTMLElement {
+    connectedCallback() {
+      this.content = this.querySelector("[data-read-more-content]");
+      this.toggle = this.querySelector("[data-read-more-toggle]");
+      if (!this.content || !this.toggle) return;
+
+      requestAnimationFrame(() => {
+        const limit = parseFloat(getComputedStyle(this).getPropertyValue("--read-more-height")) || 160;
+        if (this.content.scrollHeight <= limit + 24) return;
+
+        this.setAttribute("data-clamped", "");
+        this.toggle.hidden = false;
+        this.toggle.addEventListener("click", () => this.setOpen(!this.hasAttribute("data-open")));
+      });
+    }
+
+    setOpen(open) {
+      const from = this.content.getBoundingClientRect().height;
+      this.toggleAttribute("data-open", open);
+      const to = open ? this.content.scrollHeight : parseFloat(getComputedStyle(this).getPropertyValue("--read-more-height"));
+
+      this.content.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: 280, easing: "cubic-bezier(0.4, 0, 0.2, 1)" });
+      this.toggle.setAttribute("aria-expanded", String(open));
+      this.toggle.querySelector("[data-label-more]").hidden = open;
+      this.toggle.querySelector("[data-label-less]").hidden = !open;
+    }
+  }
+
+  customElements.define("ui-read-more", ReadMore);
+}
+
+// Share links (product page share block)
+if (!customElements.get("ui-share")) {
+  class Share extends HTMLElement {
+    connectedCallback() {
+      const url = encodeURIComponent(window.location.href.split("?")[0]);
+      const text = encodeURIComponent(this.dataset.title ?? document.title);
+      const links = {
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        x: `https://x.com/intent/post?url=${url}&text=${text}`,
+        whatsapp: `https://wa.me/?text=${text}%20${url}`,
+      };
+
+      this.querySelectorAll("a[data-share]").forEach((link) => (link.href = links[link.dataset.share]));
+
+      this.querySelector("[data-share='copy']")?.addEventListener("click", async (event) => {
+        const button = event.currentTarget;
+        try {
+          await navigator.clipboard.writeText(window.location.href.split("?")[0]);
+          const label = button.querySelector("span");
+          const original = label.textContent;
+          label.textContent = button.dataset.copiedLabel;
+          setTimeout(() => (label.textContent = original), 2000);
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    }
+  }
+
+  customElements.define("ui-share", Share);
+}

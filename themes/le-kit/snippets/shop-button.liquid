@@ -9,6 +9,7 @@
   - is_express_checkout: {Boolean} (Optional) Places an express checkout order from the closest order form
   - skip_to_checkout: {Boolean} (Optional) Skip the cart, go straight to checkout
   - full_width: {Boolean} (Optional)
+  - custom_label: {String} (Optional) Replaces the "Add to cart" label
 
   Usage:
   {% render 'shop-button', product: product %}
@@ -22,6 +23,9 @@
     assign label = 'product.buy_now' | t
   else
     assign label = 'product.add_to_cart' | t
+    if custom_label != blank
+      assign label = custom_label
+    endif
   endif
 -%}
 
