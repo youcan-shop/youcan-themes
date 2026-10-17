@@ -566,3 +566,33 @@ if (!customElements.get("ui-jumbo-text")) {
 
   customElements.define("ui-jumbo-text", JumboText);
 }
+
+// Forms inside dialogs (account profile, addresses): reopen the dialog when the server returned errors
+document.querySelectorAll("dialog [data-form-has-errors]").forEach((alert) => alert.closest("dialog")?.showModal());
+
+// Ask for confirmation before submitting destructive forms (remove an address)
+document.addEventListener("submit", (event) => {
+  const button = event.submitter?.closest("[data-confirm-message]");
+  if (button && !window.confirm(button.dataset.confirmMessage)) event.preventDefault();
+});
+
+// Login page: switch between the login and the password recovery forms without a reload
+if (!customElements.get("ui-auth")) {
+  class Auth extends HTMLElement {
+    connectedCallback() {
+      if (window.location.pathname.includes("/account/recover")) this.dataset.view = "recover";
+
+      this.addEventListener("click", (event) => {
+        const link = event.target.closest("[data-auth-switch]");
+        if (!link) return;
+
+        event.preventDefault();
+        this.dataset.view = link.dataset.authSwitch;
+        history.replaceState(null, "", link.href);
+        this.querySelector(`[data-auth-view="${this.dataset.view}"] input`)?.focus();
+      });
+    }
+  }
+
+  customElements.define("ui-auth", Auth);
+}

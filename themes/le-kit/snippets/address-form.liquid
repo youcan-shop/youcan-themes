@@ -1,0 +1,72 @@
+{% comment %}
+  Renders the fields of a customer_address form (add or edit).
+  Countries and regions are loaded by <ui-address-fields> (assets/account.js).
+
+  Accepts:
+  - address: {Object} Address to edit, or customer.new_address
+  - uid: {String} Unique id prefix for inputs
+
+  Usage:
+  {% render 'address-form', address: address, uid: 'edit-1' %}
+{% endcomment %}
+
+<ui-address-fields class="address-form" data-country="{{ address.country_code }}" data-region="{{ address.province | escape }}">
+  <div class="address-form__row">
+    <label class="field">
+      <span class="field__label">{{ 'account.address.first_name' | t }}</span>
+      <input class="input" type="text" name="first_name" value="{{ address.first_name | escape }}" autocomplete="given-name">
+    </label>
+    <label class="field">
+      <span class="field__label">{{ 'account.address.last_name' | t }}</span>
+      <input class="input" type="text" name="last_name" value="{{ address.last_name | escape }}" autocomplete="family-name">
+    </label>
+  </div>
+  <label class="field">
+    <span class="field__label">{{ 'account.address.phone' | t }}</span>
+    <input class="input" type="tel" name="phone" value="{{ address.phone | escape }}" autocomplete="tel">
+  </label>
+  <label class="field">
+    <span class="field__label">{{ 'account.address.address1' | t }}</span>
+    <input class="input" type="text" name="first_line" value="{{ address.address1 | escape }}" autocomplete="address-line1" required>
+  </label>
+  <label class="field">
+    <span class="field__label">{{ 'account.address.address2' | t }}</span>
+    <input class="input" type="text" name="second_line" value="{{ address.address2 | escape }}" autocomplete="address-line2">
+  </label>
+  <div class="address-form__row">
+    <label class="field">
+      <span class="field__label">{{ 'account.address.country' | t }}</span>
+      <select class="select" name="country_code" autocomplete="country" required data-country-select>
+        {% if address.country_code != blank %}
+          <option value="{{ address.country_code }}" selected>{{ address.country | default: address.country_code }}</option>
+        {% endif %}
+      </select>
+    </label>
+    <label class="field">
+      <span class="field__label">{{ 'account.address.region' | t }}</span>
+      <select class="select" name="region" autocomplete="address-level1" data-region-select>
+        {% if address.province != blank %}
+          <option value="{{ address.province | escape }}" selected>{{ address.province }}</option>
+        {% endif %}
+      </select>
+    </label>
+  </div>
+  <div class="address-form__row">
+    <label class="field">
+      <span class="field__label">{{ 'account.address.city' | t }}</span>
+      <input class="input" type="text" name="city" value="{{ address.city | escape }}" autocomplete="address-level2" required>
+    </label>
+    <label class="field">
+      <span class="field__label">{{ 'account.address.zip' | t }}</span>
+      <input class="input" type="text" name="zip_code" value="{{ address.zip | escape }}" autocomplete="postal-code">
+    </label>
+  </div>
+  <label class="field">
+    <span class="field__label">{{ 'account.address.company' | t }}</span>
+    <input class="input" type="text" name="company" value="{{ address.company | escape }}" autocomplete="organization">
+  </label>
+  <label class="checkbox-field">
+    <input type="checkbox" name="default" value="1" {% if address.default %}checked{% endif %}>
+    {{ 'account.address.set_default' | t }}
+  </label>
+</ui-address-fields>

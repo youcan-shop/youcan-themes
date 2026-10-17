@@ -1,0 +1,151 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width account">
+    <header class="account__header">
+      <div>
+        <p class="text-sm text-muted">{{ 'account.title' | t }}</p>
+        {% assign greeting_name = customer.first_name | default: customer.name %}
+        <h1 class="h2">{{ 'account.greeting' | t | replace: '[name]', greeting_name }}</h1>
+      </div>
+      {% render 'account-nav', current: 'orders' %}
+    </header>
+
+    <div class="account__layout">
+      <aside class="account__aside">
+        <div class="account-card">
+          <div class="account-card__header">
+            <h2 class="h6">{{ 'account.profile.title' | t }}</h2>
+            <button class="button button--ghost button--sm" type="button" data-open-dialog="profile-dialog">{{ 'account.edit' | t }}</button>
+          </div>
+          <dl class="account-card__list">
+            <div><dt>{{ 'account.profile.name' | t }}</dt><dd>{{ customer.name | default: '—' }}</dd></div>
+            <div><dt>{{ 'account.email' | t }}</dt><dd>{{ customer.email }}</dd></div>
+            {% if customer.phone != blank %}<div><dt>{{ 'account.address.phone' | t }}</dt><dd dir="ltr">{{ customer.phone }}</dd></div>{% endif %}
+            <div><dt>{{ 'account.profile.orders' | t }}</dt><dd>{{ customer.orders_count | default: 0 }}</dd></div>
+          </dl>
+        </div>
+
+        <div class="account-card">
+          <div class="account-card__header">
+            <h2 class="h6">{{ 'account.default_address' | t }}</h2>
+            <a class="button button--ghost button--sm" href="{{ routes.account_addresses_url }}">{{ 'account.manage' | t }}</a>
+          </div>
+          {% if customer.default_address %}
+            {% render 'address-summary', address: customer.default_address %}
+          {% else %}
+            <p class="text-sm text-muted">{{ 'account.no_address' | t }}</p>
+          {% endif %}
+        </div>
+      </aside>
+
+      <div class="account__main">
+        <h2 class="h5 account__section-title">{{ 'account.order_history' | t }}</h2>
+        {% paginate customer.orders by 10 %}
+          {% if customer.orders.size > 0 %}
+            <div class="orders" role="table" aria-label="{{ 'account.order_history' | t }}">
+              <div class="orders__row orders__row--head" role="row">
+                <span role="columnheader">{{ 'account.order.number' | t }}</span>
+                <span role="columnheader">{{ 'account.order.date' | t }}</span>
+                <span role="columnheader">{{ 'account.order.status' | t }}</span>
+                <span role="columnheader">{{ 'cart.total' | t }}</span>
+              </div>
+              {% for order in customer.orders %}
+                <a class="orders__row" href="{{ order.customer_url }}" role="row">
+                  <span class="orders__number" role="cell">{{ order.name }}</span>
+                  <span class="text-sm text-muted" role="cell">{{ order.created_at | date: '%d/%m/%Y' }}</span>
+                  <span role="cell">{% render 'order-status', order: order %}</span>
+                  <span class="orders__total" role="cell">{{ order.total | money }}</span>
+                </a>
+              {% endfor %}
+            </div>
+            {% if paginate.pages > 1 %}
+              <nav class="pagination" aria-label="{{ 'accessibility.pagination' | t }}">
+                {% if paginate.previous %}
+                  <a class="button button--secondary button--icon" href="{{ paginate.previous.url }}" aria-label="{{ 'accessibility.previous' | t }}">{% render 'icon', name: 'chevron-left', class: 'icon--flip' %}</a>
+                {% endif %}
+                <span class="pagination__current">{{ 'general.page_of' | t | replace: '[current]', paginate.current_page | replace: '[last]', paginate.pages }}</span>
+                {% if paginate.next %}
+                  <a class="button button--secondary button--icon" href="{{ paginate.next.url }}" aria-label="{{ 'accessibility.next' | t }}">{% render 'icon', name: 'chevron-right', class: 'icon--flip' %}</a>
+                {% endif %}
+              </nav>
+            {% endif %}
+          {% else %}
+            <div class="empty-state">
+              <span class="empty-state__icon">{% render 'icon', name: 'cart', px: 24 %}</span>
+              <h3 class="h5">{{ 'account.no_orders' | t }}</h3>
+              <a class="button button--secondary" href="{{ routes.collections_url | default: '/collections' }}">{{ 'empty.cart.button' | t }}</a>
+            </div>
+          {% endif %}
+        {% endpaginate %}
+      </div>
+    </div>
+
+    <dialog class="account-dialog" id="profile-dialog" aria-labelledby="profile-dialog-title">
+      {% form 'customer_update', class: 'account-dialog__form' %}
+        <div class="account-dialog__header">
+          <h2 class="drawer__title" id="profile-dialog-title">{{ 'account.profile.edit' | t }}</h2>
+          <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>{% render 'icon', name: 'close', px: 18 %}</button>
+        </div>
+        <div class="account-dialog__body">
+          {% render 'form-errors', form: form %}
+          {% if form.posted_successfully %}<p class="alert" role="status">{% render 'icon', name: 'check-circle', px: 18 %} {{ 'account.saved' | t }}</p>{% endif %}
+          <div class="address-form__row">
+            <label class="field">
+              <span class="field__label">{{ 'account.address.first_name' | t }}</span>
+              <input class="input" type="text" name="first_name" value="{{ customer.first_name | escape }}" minlength="2" autocomplete="given-name" required>
+            </label>
+            <label class="field">
+              <span class="field__label">{{ 'account.address.last_name' | t }}</span>
+              <input class="input" type="text" name="last_name" value="{{ customer.last_name | escape }}" minlength="2" autocomplete="family-name" required>
+            </label>
+          </div>
+          <label class="field">
+            <span class="field__label">{{ 'account.email' | t }}</span>
+            <input class="input" type="email" name="email" value="{{ customer.email | escape }}" autocomplete="email" required>
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'account.address.phone' | t }}</span>
+            <input class="input" type="tel" name="phone" value="{{ customer.phone | escape }}" autocomplete="tel">
+          </label>
+          <details class="accordion">
+            <summary class="accordion__summary">{{ 'account.profile.change_password' | t }} {% render 'icon', name: 'chevron-down', px: 18 %}</summary>
+            <div class="accordion__content account-dialog__password">
+              <label class="field">
+                <span class="field__label">{{ 'account.new_password' | t }}</span>
+                <input class="input" type="password" name="password" minlength="6" maxlength="72" autocomplete="new-password">
+              </label>
+              <label class="field">
+                <span class="field__label">{{ 'account.password_confirmation' | t }}</span>
+                <input class="input" type="password" name="password_confirmation" minlength="6" maxlength="72" autocomplete="new-password">
+              </label>
+            </div>
+          </details>
+          <label class="field">
+            <span class="field__label">{{ 'account.current_password' | t }}</span>
+            <input class="input" type="password" name="current_password" autocomplete="current-password">
+            <span class="text-xs text-muted">{{ 'account.current_password_hint' | t }}</span>
+          </label>
+        </div>
+        <div class="account-dialog__footer">
+          <button class="button button--secondary" type="button" data-close-dialog>{{ 'reviews.form.cancel' | t }}</button>
+          <button class="button" type="submit">{{ 'account.save' | t }}</button>
+        </div>
+      {% endform %}
+    </dialog>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.customer_account",
+  "templates": ["customer-account"],
+  "limit": 1,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

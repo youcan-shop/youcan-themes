@@ -85,6 +85,11 @@
           {% render 'icon', name: 'search' %}
         </button>
       {% endif %}
+      {% if section.settings.show_account %}
+        <a class="button button--ghost button--icon site-header__account" href="{{ routes.account_url | default: '/account' }}" aria-label="{% if customer %}{{ 'header.account' | t }}{% else %}{{ 'header.login' | t }}{% endif %}">
+          {% render 'icon', name: 'user' %}
+        </a>
+      {% endif %}
       {% if settings.cart_type == 'page' %}
         <a class="button button--ghost button--icon site-header__cart" href="/cart" aria-label="{{ 'header.cart' | t }}">
           {% render 'icon', name: 'cart' %}
@@ -130,6 +135,14 @@
         {% endfor %}
       </ul>
     </nav>
+    {% if section.settings.show_account %}
+      <div class="drawer__footer">
+        <a class="button button--secondary button--full" href="{{ routes.account_url | default: '/account' }}">
+          {% render 'icon', name: 'user', px: 18 %}
+          {% if customer %}{{ 'header.account' | t }}{% else %}{{ 'header.login' | t }}{% endif %}
+        </a>
+      </div>
+    {% endif %}
   </div>
 
   {% if section.settings.show_search %}
@@ -193,6 +206,7 @@
   .site-header__nav { grid-area: nav; display: none; min-width: 0; }
   .site-header__actions { grid-area: actions; display: flex; align-items: center; justify-content: flex-end; margin-inline-end: -10px; }
   .site-header__cart { position: relative; }
+  @media (max-width: 989px) { .site-header__account { display: none; } }
   .cart-bubble {
     position: absolute;
     inset-block-start: 2px;
@@ -353,6 +367,7 @@
       "info": "t:info.menu_position"
     },
     { "type": "checkbox", "id": "show_search", "label": "t:settings.show_search", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "t:settings.show_account", "default": true, "info": "t:info.show_account" },
     { "type": "checkbox", "id": "border", "label": "t:settings.border", "default": true },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },

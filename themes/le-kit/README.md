@@ -34,6 +34,10 @@ Motion: drawers, dialogs, selects, search and dropdowns animate in and out; acco
 - **Cart** changes go through `youcanjs`. The cart drawer and cart page are then re-rendered server side with `?sections=` (see `assets/cart.js`).
 - **Quick add** loads the product page's `main` section with `?section_id=main` into a dialog.
 
+## Customer accounts
+
+Templates for every customer page YouCan supports: login (with password recovery), register, account (profile + order history), order, addresses and reset password. They only show when customer accounts are enabled in the store settings. YouCan has no 404, password or gift card template types.
+
 ## Shopping flows
 
 The flow set in Theme settings > Shopping flow (cart, express checkout or both) is applied by the `buy-buttons` block and product cards. Express checkout, phone validation, linked location fields, bundles, add-ons and the upsell / thank you pages reuse the logic of the other YouCan themes.
