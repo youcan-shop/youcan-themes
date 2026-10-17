@@ -1,0 +1,37 @@
+{% assign networks = 'facebook,instagram,x_twitter,tiktok,whatsapp,messenger,snapchat,pinterest,youtube,linkedin,website' | split: ',' %}
+
+<ul class="social-links" role="list" {{ block.youcan_attributes }}>
+  {% for network in networks %}
+    {% assign href = settings[network] %}
+    {% if href != blank %}
+      <li>
+        <a
+          class="button button--ghost button--icon"
+          href="{{ href }}"
+          target="_blank"
+          rel="noopener"
+          aria-label="{{ network | replace: '_', ' ' | capitalize }}"
+        >
+          {% render 'social-icon', name: network %}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+{% stylesheet %}
+  .social-links { display: flex; flex-wrap: wrap; gap: var(--space-2xs); margin-inline: -10px; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.social_links",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.social_links" }
+  ],
+  "presets": [
+    { "name": "t:names.social_links", "category": "t:categories.navigation" }
+  ]
+}
+{% endschema %}

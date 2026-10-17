@@ -1,0 +1,90 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
+  assign repeat = 4
+-%}
+
+<ui-marquee
+  class="marquee marquee-block"
+  style="--marquee-duration: {{ block.settings.speed }}s;"
+  {% if block.settings.reverse %}data-reverse{% endif %}
+  data-pause-on-hover
+  {{ block.youcan_attributes }}
+>
+  <div class="marquee__track">
+    <div class="marquee__group marquee-block__group {{ block.settings.size }}" data-marquee-group>
+      {% for i in (1..repeat) %}
+        <span class="marquee-item">
+          {% if block.settings.icon != 'none' %}{% render 'icon', name: block.settings.icon, px: 24 %}{% endif %}
+          {{ td_text }}
+        </span>
+      {% endfor %}
+    </div>
+  </div>
+</ui-marquee>
+
+{% stylesheet %}
+  .marquee-block { width: 100%; }
+  .layout-panel > .marquee-block { align-self: stretch; }
+  .marquee-block__group { font-family: var(--font-heading-family); font-weight: var(--font-heading-weight); letter-spacing: var(--font-heading-letter-spacing); line-height: 1.1; }
+  .marquee-block__group .icon { width: 0.6em; height: 0.6em; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.marquee",
+  "tag": null,
+  "settings": [
+    { "type": "inline_richtext", "id": "text", "label": "t:settings.text", "default": "t:defaults.marquee_block" },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:settings.separator_icon",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "check-circle", "label": "t:options.icons.check" },
+        { "value": "truck", "label": "t:options.icons.truck" },
+        { "value": "return", "label": "t:options.icons.return" },
+        { "value": "shield", "label": "t:options.icons.shield" },
+        { "value": "lock", "label": "t:options.icons.lock" },
+        { "value": "gift", "label": "t:options.icons.gift" },
+        { "value": "heart", "label": "t:options.icons.heart" },
+        { "value": "star", "label": "t:options.icons.star" },
+        { "value": "sparkle", "label": "t:options.icons.sparkle" },
+        { "value": "leaf", "label": "t:options.icons.leaf" },
+        { "value": "tag", "label": "t:options.icons.tag" },
+        { "value": "clock", "label": "t:options.icons.clock" },
+        { "value": "chat", "label": "t:options.icons.chat" },
+        { "value": "mail", "label": "t:options.icons.mail" },
+        { "value": "phone", "label": "t:options.icons.phone" },
+        { "value": "map-pin", "label": "t:options.icons.map_pin" },
+        { "value": "user", "label": "t:options.icons.user" },
+        { "value": "cart", "label": "t:options.icons.cart" },
+        { "value": "info", "label": "t:options.icons.info" }
+      ],
+      "default": "sparkle"
+    },
+    { "type": "range", "id": "speed", "label": "t:settings.duration", "min": 10, "max": 80, "step": 5, "unit": "s", "default": 30 },
+    { "type": "checkbox", "id": "reverse", "label": "t:settings.reverse_direction", "default": false }
+  ],
+  "presets": [
+    { "name": "t:names.marquee", "category": "t:categories.text" }
+  ]
+}
+{% endschema %}

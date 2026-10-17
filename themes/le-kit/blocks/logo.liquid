@@ -1,0 +1,59 @@
+{% assign logo = settings.logo %}
+{% assign store_name = store.name | escape %}
+
+{%- liquid
+  if block.settings.unit == 'percent'
+    assign logo_width = block.settings.percent_width | append: '%'
+  else
+    assign logo_width = block.settings.width | append: 'px'
+  endif
+-%}
+
+<a class="logo-block" href="/" style="--logo-width: {{ logo_width }};" data-unit="{{ block.settings.unit }}" {{ block.youcan_attributes }}>
+  {% if logo != blank %}
+    {{
+      logo
+      | image_url: width: 600
+      | image_tag: alt: store_name, widths: '150, 300, 450, 600', sizes: '(min-width: 750px) 300px, 200px', loading: 'lazy'
+    }}
+  {% else %}
+    {% if block.settings.unit == 'percent' %}
+      <ui-jumbo-text class="jumbo-text logo-block__jumbo" data-fit>{{ store_name }}</ui-jumbo-text>
+    {% else %}
+      <span class="logo-block__text h4">{{ store_name }}</span>
+    {% endif %}
+  {% endif %}
+</a>
+
+{% stylesheet %}
+  .logo-block { display: inline-flex; text-decoration: none; }
+  .logo-block img { width: var(--logo-width, 120px); height: auto; }
+  .logo-block[data-unit="percent"] { display: flex; justify-content: center; width: 100%; }
+  .logo-block[data-unit="percent"] img { width: var(--logo-width); }
+  .layout-panel > .logo-block[data-unit="percent"] { align-self: stretch; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.logo",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.logo_global" },
+    {
+      "type": "select",
+      "id": "unit",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "pixel", "label": "t:options.fixed_width" },
+        { "value": "percent", "label": "t:options.full_width_logo" }
+      ],
+      "default": "pixel"
+    },
+    { "type": "range", "id": "width", "label": "t:settings.width", "min": 40, "max": 400, "step": 10, "unit": "px", "default": 120, "visible_if": { "setting_id": "unit", "value": "pixel" } },
+    { "type": "range", "id": "percent_width", "label": "t:settings.width", "min": 10, "max": 100, "step": 5, "unit": "%", "default": 100, "visible_if": { "setting_id": "unit", "value": "percent" } }
+  ],
+  "presets": [
+    { "name": "t:names.logo", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

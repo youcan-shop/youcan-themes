@@ -1,0 +1,83 @@
+{%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
+  assign s = section.settings
+  assign p = closest.product | default: product
+  assign card_vw = 100 | divided_by: s.columns
+  assign sizes = '(min-width: 990px) ' | append: card_vw | append: 'vw, 50vw'
+  assign arrows = false
+  if s.layout == 'carousel'
+    assign arrows = true
+  endif
+-%}
+
+{% if p.related_products.size > 0 %}
+  <div
+    class="section color-scheme color-{{ s.color_scheme }}"
+    style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+  >
+    <ui-carousel
+      class="page-width"
+      style="--per-page: {{ s.columns }}; --per-page-mobile: {{ s.columns_mobile | plus: 0.15 }};"
+      {% if s.layout == 'grid' %}data-static{% endif %}
+    >
+      {% render 'section-header', heading: td_heading, arrows: arrows, alignment: s.header_alignment %}
+      <ul
+        class="{% if s.layout == 'grid' %}grid{% else %}slider__track{% endif %}"
+        style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};"
+        role="list"
+        data-carousel-track
+      >
+        {% for item in p.related_products limit: s.limit %}
+          <li data-carousel-item>{% content_for 'block', type: '_product-card', id: 'product-card', card_product: item, sizes: sizes %}</li>
+        {% endfor %}
+      </ul>
+    </ui-carousel>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.product_recommendations",
+  "blocks": [{ "type": "_product-card" }],
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "paragraph", "content": "t:info.product_recommendations" },
+    { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.recommendations_heading" },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "t:settings.header_alignment",
+      "options": [
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "start"
+    },
+    { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 2, "max": 12, "step": 1, "default": 8 },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        { "value": "grid", "label": "t:options.grid" },
+        { "value": "carousel", "label": "t:options.carousel" }
+      ],
+      "default": "carousel"
+    },
+    { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    { "name": "t:names.product_recommendations", "category": "t:categories.products" }
+  ]
+}
+{% endschema %}

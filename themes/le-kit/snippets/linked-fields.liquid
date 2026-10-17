@@ -1,0 +1,22 @@
+{% comment %}
+  Renders the linked location fields: country, region and city (each optional).
+
+  Accepts:
+  - fields: {Array} Checkout fields
+
+  Usage:
+  {% render 'linked-fields', fields: checkout.fields %}
+{% endcomment %}
+
+{% assign linked_fields = 'country,region,city' %}
+
+<ui-linked-fields class="checkout-fields__linked">
+  {% for field in fields %}
+    {% if linked_fields contains field.name %}
+      <label class="field">
+        <span class="field__label">{{ field.display_name }}</span>
+        <select class="select" name="{{ field.name }}" {% if field.required %}required{% endif %}></select>
+      </label>
+    {% endif %}
+  {% endfor %}
+</ui-linked-fields>

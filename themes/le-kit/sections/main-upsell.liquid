@@ -1,0 +1,56 @@
+{{ 'upsell.js' | asset_url | script_tag_deferred }}
+
+{% capture product_offers -%}
+  {
+  {%- for offer in upsell.products -%}
+    "{{ offer.id }}": "{{ offer.variants[0].id }}"{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+  }
+{%- endcapture %}
+
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <ui-upsell
+    class="page-width upsell"
+    upsell-id="{{ upsell.id }}"
+    order-id="{{ order.id }}"
+    product-offers="{{ product_offers | strip_newlines | strip | escape }}"
+  >
+    <header class="upsell__header">
+      <span class="badge">{{ 'upsell.badge' | t }}</span>
+      <h1 class="h2">{{ 'upsell.title' | t }}</h1>
+    </header>
+    {% if upsell.description %}
+      <div class="rte upsell__description">{{ upsell.description }}</div>
+    {% endif %}
+    <div class="upsell__actions">
+      <button class="button button--lg" type="button" name="yes">{{ upsell.actions.btn_yes.title }}</button>
+      <button class="button button--secondary button--lg" type="button" name="no">{{ upsell.actions.btn_no.title }}</button>
+    </div>
+    {% if upsell.footer %}
+      <div class="rte text-sm text-muted upsell__footer">{{ upsell.footer }}</div>
+    {% endif %}
+  </ui-upsell>
+</div>
+
+{% stylesheet %}
+  .upsell { display: grid; gap: var(--space-lg); max-width: calc(760px + 2 * var(--page-gutter)); text-align: center; }
+  .upsell__header { display: grid; justify-items: center; gap: var(--space-sm); }
+  .upsell__description img { margin-inline: auto; }
+  .upsell__actions { display: grid; gap: var(--space-sm); max-width: 420px; width: 100%; margin-inline: auto; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.upsell",
+  "templates": ["upsell"],
+  "limit": 1,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

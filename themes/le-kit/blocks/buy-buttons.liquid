@@ -1,0 +1,101 @@
+{%- liquid
+  assign p = closest.product | default: product
+  assign flow = settings.shopping_flow | default: 'cart'
+  assign form_style = settings.form_style | default: 'inline'
+-%}
+
+{% if p %}
+  <div class="buy-buttons" {{ block.youcan_attributes }}>
+    {% if p.is_bundle and block.settings.show_bundles %}
+      {% render 'bundles', product: p %}
+    {% endif %}
+
+    {% if flow == 'express_checkout' and form_style == 'inline' %}
+      {% render 'express-checkout', product: p %}
+    {% else %}
+      <p class="buy-buttons__bundle-note" data-bundle-selected hidden>
+        {% render 'icon', name: 'check-circle', px: 16 %}
+        {{ 'product.bundle_selected' | t }}
+      </p>
+      <div class="buy-buttons__row">
+        {% if block.settings.show_quantity %}
+          {% render 'quantity' %}
+        {% endif %}
+        {% case flow %}
+          {% when 'express_checkout' %}
+            <button
+              class="button button--lg button--full"
+              type="button"
+              popovertarget="express-checkout-{{ p.id }}"
+              {% unless p.selected_or_first_available_variant.available %}disabled{% endunless %}
+            >
+              {{ 'product.buy_now' | t }}
+            </button>
+          {% when 'both' %}
+            {% render 'shop-button', product: p, style: 'secondary', button_size: 'lg', full_width: true, custom_label: block.settings.button_label %}
+          {% else %}
+            {% render 'shop-button', product: p, button_size: 'lg', full_width: true, custom_label: block.settings.button_label %}
+        {% endcase %}
+      </div>
+      {% if flow == 'both' %}
+        {% render 'shop-button', product: p, skip_to_checkout: true, button_size: 'lg', full_width: true %}
+      {% endif %}
+    {% endif %}
+
+    {% if flow == 'express_checkout' and form_style == 'drawer' %}
+      {% render 'express-checkout', product: p, style: 'drawer' %}
+    {% endif %}
+
+    {% if block.settings.sticky_mobile or block.settings.sticky_desktop %}
+      {%- liquid
+        if flow == 'express_checkout' and form_style == 'drawer'
+          assign sticky_label = 'product.buy_now' | t
+        elsif flow == 'express_checkout'
+          assign sticky_label = 'product.place_order' | t
+        elsif block.settings.button_label != blank
+          assign sticky_label = block.settings.button_label
+        else
+          assign sticky_label = 'product.add_to_cart' | t
+        endif
+      -%}
+      <ui-sticky-buy
+        class="sticky-buy color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}"
+        {% if block.settings.sticky_mobile %}data-mobile{% endif %}
+        {% if block.settings.sticky_desktop %}data-desktop{% endif %}
+        aria-hidden="true"
+      >
+        <div class="page-width sticky-buy__inner">
+          <span class="media sticky-buy__media" style="--ratio: 1 / 1;">
+            {% render 'image', image: p.preview_image, alt: '', width: 120, sizes: '48px', placeholder: 'product-1' %}
+          </span>
+          <span class="sticky-buy__info">
+            <span class="sticky-buy__name">{{ p.name }}</span>
+            {% render 'price', product: p, class: 'text-sm' %}
+          </span>
+          <button class="button sticky-buy__button" type="button" tabindex="-1" data-sticky-buy-trigger {% unless p.selected_or_first_available_variant.available %}disabled{% endunless %}>
+            {{ sticky_label }}
+          </button>
+        </div>
+      </ui-sticky-buy>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.buy_buttons",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.buy_buttons" },
+    { "type": "checkbox", "id": "show_quantity", "label": "t:settings.show_quantity", "default": true },
+    { "type": "checkbox", "id": "show_bundles", "label": "t:settings.show_bundles", "default": true },
+    { "type": "text", "id": "button_label", "label": "t:settings.add_to_cart_label", "info": "t:info.add_to_cart_label" },
+    { "type": "header", "content": "t:content.sticky_bar" },
+    { "type": "checkbox", "id": "sticky_mobile", "label": "t:settings.sticky_mobile", "default": true },
+    { "type": "checkbox", "id": "sticky_desktop", "label": "t:settings.sticky_desktop", "default": false }
+  ],
+  "presets": [
+    { "name": "t:names.buy_buttons", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

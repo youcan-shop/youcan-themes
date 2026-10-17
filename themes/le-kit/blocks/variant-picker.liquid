@@ -1,0 +1,20 @@
+{% assign p = closest.product | default: product %}
+
+{% if p and p.options.size > 0 %}
+  <div class="variant-picker-block" {{ block.youcan_attributes }}>
+    {% render 'variant-picker', product: p %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.variant_picker",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.variant_picker" }
+  ],
+  "presets": [
+    { "name": "t:names.variant_picker", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

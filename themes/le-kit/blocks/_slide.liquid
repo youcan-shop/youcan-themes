@@ -1,0 +1,160 @@
+{%- liquid
+  assign s = block.settings
+-%}
+
+<div
+  class="slide{% if s.use_color_scheme %} color-scheme color-{{ s.color_scheme }}{% endif %}"
+  data-carousel-item
+  role="group"
+  aria-roledescription="slide"
+  style="--overlay-opacity: {{ s.overlay_opacity | divided_by: 100.0 }};"
+  data-focal="{{ s.image_position }}"
+  {{ block.youcan_attributes }}
+>
+  {% if s.link != blank %}
+    <a class="slide__link" href="{{ s.link }}" tabindex="-1" aria-hidden="true"></a>
+  {% endif %}
+  <div class="slide__media media" aria-hidden="true">
+    {% if s.image != blank %}
+      {% if s.image_mobile != blank %}
+        <picture>
+          <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 750 }} 750w, {{ s.image_mobile | image_url: width: 1100 }} 1100w" sizes="100vw">
+          {% render 'image', image: s.image, alt: '', sizes: '100vw', width: 2400 %}
+        </picture>
+      {% else %}
+        {% render 'image', image: s.image, alt: '', sizes: '100vw', width: 2400 %}
+      {% endif %}
+    {% else %}
+      {{ 'hero-2' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </div>
+  <div class="slide__content section page-width">
+    <div class="layout-panel" {% render 'layout-style', settings: s %}>
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .slide {
+    position: relative;
+    display: grid;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .slide__media { position: absolute; inset: 0; z-index: -1; }
+  .slide__media::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--overlay-opacity, 0); }
+  .slide__media picture, .slide__media img, .slide__media svg { width: 100%; height: 100%; object-fit: cover; }
+  .slide[data-focal="top"] .slide__media img { object-position: center top; }
+  .slide[data-focal="bottom"] .slide__media img { object-position: center bottom; }
+  .slide__link { position: absolute; inset: 0; z-index: 0; }
+  .slide__content { position: relative; z-index: 1; display: flex; pointer-events: none; }
+  .slide__content :is(a, button, input, .button) { pointer-events: auto; }
+
+  /* Content on the media */
+  [data-content-position="on_media"] .slide__content {
+    min-height: var(--slide-height);
+    padding-block-end: calc(var(--space-2xl) + 40px);
+  }
+
+  /* Content below the media */
+  [data-content-position="below_media"] .slide { align-content: start; }
+  [data-content-position="below_media"] .slide__media { position: relative; z-index: 0; height: var(--slide-height); }
+  [data-content-position="below_media"] .slide__link { bottom: auto; height: var(--slide-height); }
+  [data-content-position="below_media"] .slide__content { padding-block: var(--space-lg) 0; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.slide",
+  "tag": null,
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "t:settings.image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "t:settings.image_mobile" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:settings.image_position",
+      "options": [
+        { "value": "top", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "bottom", "label": "t:options.bottom" }
+      ],
+      "default": "center"
+    },
+    { "type": "range", "id": "overlay_opacity", "label": "t:settings.overlay_opacity", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 20 },
+    { "type": "url", "id": "link", "label": "t:settings.slide_link", "info": "t:info.slide_link" },
+    { "type": "header", "content": "t:content.layout" },
+    {
+      "type": "select",
+      "id": "content_direction",
+      "label": "t:settings.direction",
+      "options": [
+        { "value": "column", "label": "t:options.vertical" },
+        { "value": "row", "label": "t:options.horizontal" }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "checkbox",
+      "id": "vertical_on_mobile",
+      "label": "t:settings.stack_on_mobile",
+      "default": true,
+      "visible_if": { "setting_id": "content_direction", "value": "row" }
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "t:settings.horizontal_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "flex-end", "label": "t:options.end" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "t:settings.vertical_alignment",
+      "options": [
+        { "value": "flex-start", "label": "t:options.top" },
+        { "value": "center", "label": "t:options.middle" },
+        { "value": "flex-end", "label": "t:options.bottom" },
+        { "value": "space-between", "label": "t:options.space_between" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "t:settings.gap",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "checkbox", "id": "use_color_scheme", "label": "t:settings.use_color_scheme", "default": false },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-4",
+      "visible_if": { "setting_id": "use_color_scheme", "value": true }
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.slide",
+      "blocks": [
+        { "type": "heading", "settings": { "tag": "h2", "size": "h1", "heading": "t:defaults.slide_heading" } },
+        { "type": "button", "settings": { "label": "t:defaults.shop_now", "link": "/collections" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

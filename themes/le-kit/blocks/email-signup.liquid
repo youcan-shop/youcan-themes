@@ -1,0 +1,71 @@
+{%- liquid
+  assign placeholder = block.settings.placeholder
+  if placeholder == blank
+    assign placeholder = 'newsletter.email' | t
+  endif
+  assign button_label = block.settings.button_label
+  if button_label == blank
+    assign button_label = 'newsletter.subscribe' | t
+  endif
+-%}
+
+<div class="email-signup" {{ block.youcan_attributes }}>
+  {% form 'customer', class: 'email-signup__form' %}
+    {% if form.posted_successfully %}
+      <p class="alert" role="status">
+        {% render 'icon', name: 'check-circle', px: 18 %}
+        {{ 'newsletter.success' | t }}
+      </p>
+    {% else %}
+      {% if form.errors %}
+        <p class="alert alert--error" role="alert">{{ form.errors | first | last }}</p>
+      {% endif %}
+      <div class="email-signup__field">
+        <label class="visually-hidden" for="email-{{ block.id }}">{{ 'newsletter.email' | t }}</label>
+        <input
+          class="input"
+          id="email-{{ block.id }}"
+          type="email"
+          name="email"
+          autocomplete="email"
+          placeholder="{{ placeholder | escape }}"
+          required
+        >
+        <button class="button button--{{ block.settings.button_style }}" type="submit">
+          {{ button_label | escape }}
+        </button>
+      </div>
+    {% endif %}
+  {% endform %}
+</div>
+
+{% stylesheet %}
+  .email-signup { width: 100%; max-width: 480px; }
+  .layout-panel[style*="--align-items: center"] > .email-signup { margin-inline: auto; }
+  .email-signup__field { display: flex; gap: var(--space-xs); }
+  .email-signup__field .input { flex: 1; min-width: 0; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.email_signup",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "placeholder", "label": "t:settings.placeholder" },
+    { "type": "text", "id": "button_label", "label": "t:settings.button_label" },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:settings.button_style",
+      "options": [
+        { "value": "primary", "label": "t:options.primary" },
+        { "value": "secondary", "label": "t:options.secondary" }
+      ],
+      "default": "primary"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.email_signup", "category": "t:categories.forms" }
+  ]
+}
+{% endschema %}

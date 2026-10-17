@@ -1,0 +1,104 @@
+{%- liquid
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
+  assign tag = block.settings.tag | default: 'h2'
+  assign size_class = block.settings.size
+  if size_class == 'auto' or size_class == blank
+    assign size_class = tag
+  endif
+-%}
+
+{% if td_heading != blank %}
+  <{{ tag }}
+    class="heading-block {{ size_class }}"
+    data-align="{{ block.settings.alignment }}"
+    {% if block.settings.max_width != 'none' %}data-max-width="{{ block.settings.max_width }}"{% endif %}
+    {{ block.youcan_attributes }}
+  >
+    {{- td_heading -}}
+  </{{ tag }}>
+{% endif %}
+
+{% stylesheet %}
+  .heading-block[data-align="left"] { text-align: start; }
+  .heading-block[data-align="center"] { text-align: center; }
+  .heading-block[data-align="right"] { text-align: end; }
+  .heading-block[data-max-width="narrow"] { max-width: 20ch; }
+  .heading-block[data-max-width="normal"] { max-width: 32ch; }
+  .heading-block p { display: inline; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "t:defaults.heading"
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "t:settings.html_tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" },
+        { "value": "p", "label": "t:options.paragraph" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "auto", "label": "t:options.auto" },
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" },
+        { "value": "h5", "label": "H5" },
+        { "value": "h6", "label": "H6" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "inherit", "label": "t:options.inherit" },
+        { "value": "left", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "right", "label": "t:options.end" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "t:settings.max_width",
+      "options": [
+        { "value": "narrow", "label": "t:options.narrow" },
+        { "value": "normal", "label": "t:options.normal" },
+        { "value": "none", "label": "t:options.none" }
+      ],
+      "default": "none"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.heading", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

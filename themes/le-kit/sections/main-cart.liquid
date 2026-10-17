@@ -1,0 +1,23 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width cart-page">
+    <h1 class="h2 cart-page__title">{{ 'cart.title' | t }}</h1>
+    {% render 'cart-content', context: 'page', show_coupon: section.settings.show_coupon %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.cart",
+  "templates": ["cart"],
+  "limit": 1,
+  "settings": [
+    { "type": "checkbox", "id": "show_coupon", "label": "t:settings.show_coupon", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

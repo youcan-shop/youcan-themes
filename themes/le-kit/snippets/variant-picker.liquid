@@ -1,0 +1,104 @@
+{% comment %}
+  Renders the product options (variants) picker. Every option type set by the seller is supported:
+  textual_buttons, radio_buttons, color_base_buttons, dropdown, image_based_buttons, upload_image_zone.
+
+  Accepts:
+  - product: {Object} Product
+
+  Usage:
+  {% render 'variant-picker', product: product %}
+{% endcomment %}
+
+{% assign uid = 1000 | rand: 999999 %}
+
+<div class="variant-picker">
+  {% for option in product.options %}
+    {% assign selected = '' %}
+    {% for variation in product.selected_or_first_available_variant.variations %}
+      {% if variation[0] == option.name %}
+        {% assign selected = variation[1] %}
+      {% endif %}
+    {% endfor %}
+    {% assign input_name = 'option-' | append: uid | append: '-' | append: forloop.index %}
+
+    <fieldset
+      class="variant-option variant-option--{{ option.type }}"
+      data-variant-option="{{ option.type }}"
+      data-option-name="{{ option.name | escape }}"
+    >
+      <legend class="variant-option__label">
+        {{ option.name }}
+        {% if option.type == 'color_base_buttons' or option.type == 'image_based_buttons' %}
+          <span class="variant-option__value" data-selected-value>{{ selected }}</span>
+        {% endif %}
+      </legend>
+
+      {% case option.type %}
+        {% when 'dropdown' %}
+          <select class="select" name="{{ input_name }}" aria-label="{{ option.name | escape }}">
+            {% for value in option.values %}
+              <option value="{{ value | escape }}" {% if value == selected %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+          </select>
+
+        {% when 'color_base_buttons' %}
+          <div class="variant-option__values">
+            {% for value in option.values %}
+              <label class="swatch" style="--swatch: {{ value.preview }};" title="{{ value.value | escape }}">
+                <input class="visually-hidden" type="radio" name="{{ input_name }}" value="{{ value.value | escape }}" {% if value.value == selected %}checked{% endif %}>
+                <span class="visually-hidden">{{ value.value }}</span>
+              </label>
+            {% endfor %}
+          </div>
+
+        {% when 'image_based_buttons' %}
+          <div class="variant-option__values">
+            {% for value in option.values %}
+              <label class="image-swatch" title="{{ value.value | escape }}">
+                <input class="visually-hidden" type="radio" name="{{ input_name }}" value="{{ value.value | escape }}" {% if value.value == selected %}checked{% endif %}>
+                {% if value.preview %}
+                  <img src="{{ value.preview }}" alt="{{ value.value | escape }}" width="64" height="64" loading="lazy">
+                {% else %}
+                  <span class="image-swatch__fallback">{% render 'icon', name: 'image' %}</span>
+                {% endif %}
+              </label>
+            {% endfor %}
+          </div>
+
+        {% when 'radio_buttons' %}
+          <div class="variant-option__values variant-option__values--stack">
+            {% for value in option.values %}
+              <label class="radio-option">
+                <input type="radio" name="{{ input_name }}" value="{{ value | escape }}" {% if value == selected %}checked{% endif %}>
+                <span>{{ value }}</span>
+              </label>
+            {% endfor %}
+          </div>
+
+        {% when 'upload_image_zone' %}
+          <label class="upload-zone">
+            <input class="visually-hidden" type="file" name="{{ input_name }}" accept="image/png, image/gif, image/jpg, image/jpeg, image/webp">
+            {% render 'icon', name: 'upload', px: 24 %}
+            <span class="upload-zone__label">{{ 'product.upload_image.label' | t }}</span>
+            <span class="upload-zone__hint">{{ 'product.upload_image.accept' | t }}</span>
+          </label>
+          <div class="upload-preview" data-upload-preview hidden>
+            <img src="" alt="" width="64" height="64">
+            <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.remove' | t }}">
+              {% render 'icon', name: 'trash', px: 16 %}
+            </button>
+          </div>
+
+        {% else %}
+          <div class="variant-option__values">
+            {% for value in option.values %}
+              <label class="pill">
+                <input class="visually-hidden" type="radio" name="{{ input_name }}" value="{{ value | escape }}" {% if value == selected %}checked{% endif %}>
+                <span>{{ value }}</span>
+              </label>
+            {% endfor %}
+          </div>
+      {% endcase %}
+    </fieldset>
+  {% endfor %}
+</div>

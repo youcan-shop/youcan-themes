@@ -1,0 +1,59 @@
+{% comment %}
+  Renders the store's checkout fields for express checkout forms.
+
+  Usage:
+  {% render 'checkout-fields' %}
+{% endcomment %}
+
+{% assign linked_fields = 'country,region,city' %}
+{% assign has_linked_fields = checkout.linked_fields %}
+{% assign has_phone_validation = checkout.phone_validation %}
+
+<div class="checkout-fields">
+  {% for field in checkout.fields %}
+    {% assign field_name = field.name %}
+    {% if field.custom %}
+      {% assign field_name = 'extra_fields[' | append: field.name | append: ']' %}
+    {% endif %}
+
+    {% unless has_linked_fields and linked_fields contains field.name %}
+      {% if field.name == 'phone' and has_phone_validation %}
+        {% render 'phone-validation', field: field %}
+      {% elsif field.type == 'hidden' %}
+        <input type="hidden" name="{{ field_name }}" value="{{ field.default_value }}">
+      {% else %}
+        <label class="field">
+          <span class="field__label">{{ field.display_name }}</span>
+          {% case field.type %}
+            {% when 'textarea' %}
+              <textarea
+                class="textarea"
+                name="{{ field_name }}"
+                placeholder="{{ field.placeholder }}"
+                {% if field.required %}required{% endif %}
+              ></textarea>
+            {% when 'select' %}
+              <select class="select" name="{{ field_name }}" {% if field.required %}required{% endif %}>
+                {% for option in field.options %}
+                  <option value="{{ option }}" {% if option == field.default_value %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+              </select>
+            {% else %}
+              <input
+                class="input"
+                type="{{ field.type }}"
+                name="{{ field_name }}"
+                value="{{ field.default_value }}"
+                placeholder="{{ field.placeholder }}"
+                {% if field.required %}required{% endif %}
+              >
+          {% endcase %}
+        </label>
+      {% endif %}
+    {% endunless %}
+  {% endfor %}
+
+  {% if has_linked_fields %}
+    {% render 'linked-fields', fields: checkout.fields %}
+  {% endif %}
+</div>
