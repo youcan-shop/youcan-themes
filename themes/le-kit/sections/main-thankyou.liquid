@@ -1,3 +1,13 @@
+{%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+  assign td_text = section.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
 
 <div
   class="section color-scheme color-{{ section.settings.color_scheme }}"
@@ -6,9 +16,9 @@
   <div class="page-width thank-you">
     <header class="thank-you__header">
       <span class="thank-you__icon">{% render 'icon', name: 'check', px: 28 %}</span>
-      <h1 class="h2">{{ section.settings.heading | default: store.name }}</h1>
-      {% if section.settings.text != blank %}
-        <p class="text-muted">{{ section.settings.text }}</p>
+      <h1 class="h2">{{ td_heading | default: store.name }}</h1>
+      {% if td_text != blank %}
+        <p class="text-muted">{{ td_text }}</p>
       {% endif %}
     </header>
 

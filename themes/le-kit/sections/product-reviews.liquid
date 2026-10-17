@@ -1,3 +1,9 @@
+{%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
 {{ 'reviews.js' | asset_url | script_tag_deferred }}
 
 {%- liquid
@@ -15,13 +21,19 @@
     <ui-reviews class="page-width reviews" product-id="{{ p.id }}" data-limit="{{ s.limit }}">
       <header class="reviews__header">
         <div class="reviews__summary">
-          {% if s.heading != blank %}
-            <h2 class="h3">{{ s.heading }}</h2>
+          {% if td_heading != blank %}
+            <h2 class="h3">{{ td_heading }}</h2>
           {% endif %}
           <div class="reviews__average">
             <span class="reviews__stars" aria-hidden="true">
               {% for i in (1..5) %}
-                <span {% if i > rounded_rating %}class="reviews__star--empty"{% endif %}>{% render 'icon', name: 'star', px: 18 %}</span>
+                <span
+                  {% if i > rounded_rating %}
+                    class="reviews__star--empty"
+                  {% endif %}
+                >
+                  {%- render 'icon', name: 'star', px: 18 -%}
+                </span>
               {% endfor %}
             </span>
             <span class="reviews__score">{{ rating }} / 5</span>
@@ -69,7 +81,12 @@
             <div class="review-form__header">
               <h2 class="drawer__title" id="review-form-title-{{ section.id }}">{{ 'reviews.form.title' | t }}</h2>
               <p class="text-sm text-muted">{{ p.name }}</p>
-              <button class="button button--ghost button--icon button--sm review-form__close" type="button" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>
+              <button
+                class="button button--ghost button--icon button--sm review-form__close"
+                type="button"
+                aria-label="{{ 'accessibility.close' | t }}"
+                data-close-dialog
+              >
                 {% render 'icon', name: 'close', px: 18 %}
               </button>
             </div>
@@ -79,7 +96,16 @@
                 <legend class="field__label">{{ 'reviews.form.rating' | t }}</legend>
                 <div class="rating-input__stars">
                   {% for star in (1..5) reversed %}
-                    <input class="visually-hidden" type="radio" id="rating-{{ section.id }}-{{ star }}" name="rating" value="{{ star }}" {% if star == 5 %}checked{% endif %}>
+                    <input
+                      class="visually-hidden"
+                      type="radio"
+                      id="rating-{{ section.id }}-{{ star }}"
+                      name="rating"
+                      value="{{ star }}"
+                      {% if star == 5 %}
+                        checked
+                      {% endif %}
+                    >
                     <label for="rating-{{ section.id }}-{{ star }}" title="{{ star }}/5">
                       {% render 'icon', name: 'star', px: 28 %}
                       <span class="visually-hidden">{{ star }}/5</span>
@@ -90,20 +116,28 @@
               <div class="review-form__row">
                 <label class="field">
                   <span class="field__label">{{ 'reviews.form.first_name' | t }}</span>
-                  <input class="input" type="text" name="first_name" autocomplete="given-name" required>
+                  <input placeholder="{{ 'placeholders.first_name' | t }}" class="input" type="text" name="first_name" autocomplete="given-name" required>
                 </label>
                 <label class="field">
                   <span class="field__label">{{ 'reviews.form.last_name' | t }}</span>
-                  <input class="input" type="text" name="last_name" autocomplete="family-name">
+                  <input placeholder="{{ 'placeholders.last_name' | t }}" class="input" type="text" name="last_name" autocomplete="family-name">
                 </label>
               </div>
               <label class="field">
                 <span class="field__label">{{ 'reviews.form.email' | t }}</span>
-                <input class="input" type="email" name="email" autocomplete="email" required>
+                <input placeholder="{{ 'placeholders.email' | t }}" class="input" type="email" name="email" autocomplete="email" required>
               </label>
               <label class="field">
                 <span class="field__label">{{ 'reviews.form.review' | t }}</span>
-                <textarea class="textarea" name="content" minlength="5" maxlength="2000" rows="4" placeholder="{{ 'reviews.form.review_placeholder' | t }}" required></textarea>
+                <textarea
+                  class="textarea"
+                  name="content"
+                  minlength="5"
+                  maxlength="2000"
+                  rows="4"
+                  placeholder="{{ 'reviews.form.review_placeholder' | t }}"
+                  required
+                ></textarea>
               </label>
               <div class="field">
                 <span class="field__label">{{ 'reviews.form.images' | t }}</span>
@@ -111,7 +145,13 @@
                   <label class="review-form__upload">
                     {% render 'icon', name: 'upload', px: 18 %}
                     <span class="visually-hidden">{{ 'reviews.form.images' | t }}</span>
-                    <input class="visually-hidden" type="file" accept="image/png, image/gif, image/jpeg, image/jpg, image/webp" multiple data-review-upload>
+                    <input
+                      class="visually-hidden"
+                      type="file"
+                      accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
+                      multiple
+                      data-review-upload
+                    >
                   </label>
                 </div>
               </div>
@@ -135,14 +175,44 @@
 {% endif %}
 
 {% stylesheet %}
-  .reviews { display: grid; gap: var(--space-lg); }
-  .reviews__header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-md); }
-  .reviews__summary { display: grid; gap: var(--space-xs); }
-  .reviews__average { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); }
-  .reviews__score { font-weight: 600; }
-  .reviews__stars { display: inline-flex; color: #f5a623; }
-  .reviews__star--empty { opacity: 0.25; }
-  .reviews__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--space-md); padding: 0; list-style: none; }
+  .reviews {
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .reviews__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+  .reviews__summary {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  .reviews__average {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  .reviews__score {
+    font-weight: 600;
+  }
+  .reviews__stars {
+    display: inline-flex;
+    color: #f5a623;
+  }
+  .reviews__star--empty {
+    opacity: 0.25;
+  }
+  .reviews__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: var(--space-md);
+    padding: 0;
+    list-style: none;
+  }
   .review {
     display: flex;
     flex-direction: column;
@@ -159,18 +229,61 @@
     background-size: 200% 100%;
     animation: shimmer 2s linear infinite;
   }
-  .review__content { flex: 1; font-size: var(--text-sm); }
-  .review__images { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
-  .review__images img { width: 56px; height: 56px; object-fit: cover; border: 1px solid var(--color-border); border-radius: var(--radius-input); }
-  .reviews__more { justify-self: center; }
+  .review__content {
+    flex: 1;
+    font-size: var(--text-sm);
+  }
+  .review__images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+  .review__images img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-input);
+  }
+  .reviews__more {
+    justify-self: center;
+  }
 
-  .review-form { width: min(520px, calc(100vw - 32px)); }
-  .review-form[open] { display: flex; }
-  .review-form__form { display: flex; flex: 1; flex-direction: column; min-height: 0; }
-  .review-form__header { position: relative; display: grid; gap: 4px; padding: var(--space-lg) var(--space-lg) var(--space-sm); padding-inline-end: 56px; }
-  .review-form__close { position: absolute; inset-block-start: var(--space-md); inset-inline-end: var(--space-md); }
-  .review-form__body { display: grid; gap: var(--space-md); padding: var(--space-sm) var(--space-lg) var(--space-lg); overflow-y: auto; }
-  .review-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+  .review-form {
+    width: min(520px, calc(100vw - 32px));
+  }
+  .review-form[open] {
+    display: flex;
+  }
+  .review-form__form {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .review-form__header {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    padding: var(--space-lg) var(--space-lg) var(--space-sm);
+    padding-inline-end: 56px;
+  }
+  .review-form__close {
+    position: absolute;
+    inset-block-start: var(--space-md);
+    inset-inline-end: var(--space-md);
+  }
+  .review-form__body {
+    display: grid;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-lg) var(--space-lg);
+    overflow-y: auto;
+  }
+  .review-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
   .review-form__footer {
     display: flex;
     justify-content: flex-end;
@@ -179,8 +292,13 @@
     border-block-start: 1px solid var(--color-border);
     background-color: color-mix(in srgb, var(--color-foreground) 2.5%, var(--color-background));
   }
-  .review-form__images { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
-  .review-form__upload, .review-form__preview {
+  .review-form__images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+  .review-form__upload,
+  .review-form__preview {
     position: relative;
     display: grid;
     place-items: center;
@@ -190,17 +308,50 @@
     border-radius: var(--radius-input);
     cursor: pointer;
   }
-  .review-form__preview { overflow: hidden; border-style: solid; cursor: default; }
-  .review-form__preview img { width: 100%; height: 100%; object-fit: cover; }
-  .review-form__preview button { position: absolute; inset-block-start: 2px; inset-inline-end: 2px; width: 24px; height: 24px; }
+  .review-form__preview {
+    overflow: hidden;
+    border-style: solid;
+    cursor: default;
+  }
+  .review-form__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .review-form__preview button {
+    position: absolute;
+    inset-block-start: 2px;
+    inset-inline-end: 2px;
+    width: 24px;
+    height: 24px;
+  }
 
-  .rating-input { margin: 0; padding: 0; border: 0; }
-  .rating-input__stars { display: inline-flex; flex-direction: row-reverse; justify-content: flex-end; gap: 2px; }
-  .rating-input__stars label { color: color-mix(in srgb, var(--color-foreground) 18%, var(--color-background)); cursor: pointer; transition: color var(--duration-fast) var(--ease); }
+  .rating-input {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .rating-input__stars {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 2px;
+  }
+  .rating-input__stars label {
+    color: color-mix(in srgb, var(--color-foreground) 18%, var(--color-background));
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease);
+  }
   .rating-input__stars input:checked ~ label,
   .rating-input__stars label:hover,
-  .rating-input__stars label:hover ~ label { color: #f5a623; }
-  .rating-input__stars input:focus-visible + label { outline: 2px solid var(--color-ring); outline-offset: 2px; border-radius: 4px; }
+  .rating-input__stars label:hover ~ label {
+    color: #f5a623;
+  }
+  .rating-input__stars input:focus-visible + label {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -216,8 +367,6 @@
     { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
     { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
   ],
-  "presets": [
-    { "name": "t:names.product_reviews", "category": "t:categories.products" }
-  ]
+  "presets": [{ "name": "t:names.product_reviews", "category": "t:categories.products" }]
 }
 {% endschema %}

@@ -1,11 +1,17 @@
+{%- liquid
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
 {% assign p = closest.product | default: product %}
 
 {% if p.related_products.size > 0 and settings.shopping_flow != 'express_checkout' %}
   <div class="add-ons" {{ block.youcan_attributes }}>
-    {% if block.settings.heading != blank or block.settings.description != blank %}
+    {% if td_heading != blank or block.settings.description != blank %}
       <div class="add-ons__header">
-        {% if block.settings.heading != blank %}
-          <p class="h6">{{ block.settings.heading | escape }}</p>
+        {% if td_heading != blank %}
+          <p class="h6">{{ td_heading | escape }}</p>
         {% endif %}
         {% if block.settings.description != blank %}
           <p class="text-sm text-muted">{{ block.settings.description | escape }}</p>

@@ -4,14 +4,21 @@
 >
   <div class="page-width not-found">
     <p class="not-found__code" aria-hidden="true">404</p>
-    <h1 class="h2">{% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'not_found.title' | t }}{% endif %}</h1>
-    <p class="text-muted not-found__text">{% if section.settings.text != blank %}{{ section.settings.text }}{% else %}{{ 'not_found.text' | t }}{% endif %}</p>
+    <h1 class="h2">
+      {% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'not_found.title' | t }}{% endif %}
+    </h1>
+    <p class="text-muted not-found__text">
+      {% if section.settings.text != blank %}{{ section.settings.text }}{% else %}{{ 'not_found.text' | t }}{% endif %}
+    </p>
 
     {% if section.settings.show_search %}
       <form class="search-form not-found__search" action="/search" method="get" role="search">
         <label class="visually-hidden" for="not-found-search">{{ 'header.search' | t }}</label>
         <input class="input" id="not-found-search" type="search" name="q" placeholder="{{ 'header.search_placeholder' | t }}">
-        <button class="button button--secondary" type="submit">{% render 'icon', name: 'search', px: 18 %} {{ 'search.submit' | t }}</button>
+        <button class="button button--secondary" type="submit">
+          {% render 'icon', name: 'search', px: 18 %}
+          {{ 'search.submit' | t }}
+        </button>
       </form>
     {% endif %}
 
@@ -22,7 +29,13 @@
 </div>
 
 {% stylesheet %}
-  .not-found { display: grid; justify-items: center; gap: var(--space-md); max-width: calc(560px + 2 * var(--page-gutter)); text-align: center; }
+  .not-found {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-md);
+    max-width: calc(560px + 2 * var(--page-gutter));
+    text-align: center;
+  }
   .not-found__code {
     font-family: var(--font-heading-family);
     font-size: clamp(5rem, 3rem + 12vw, 10rem);
@@ -31,8 +44,13 @@
     letter-spacing: -0.04em;
     color: color-mix(in srgb, var(--color-foreground) 12%, var(--color-background));
   }
-  .not-found__text { max-width: 44ch; }
-  .not-found__search { width: 100%; margin-block: var(--space-xs); }
+  .not-found__text {
+    max-width: 44ch;
+  }
+  .not-found__search {
+    width: 100%;
+    margin-block: var(--space-xs);
+  }
 {% endstylesheet %}
 
 {% schema %}

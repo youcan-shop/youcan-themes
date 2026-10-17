@@ -1,4 +1,10 @@
-{% assign label = block.settings.label %}
+{%- liquid
+  assign td_label = block.settings.label
+  if td_label contains 't:defaults.'
+    assign td_label = td_label | remove_first: 't:' | t
+  endif
+-%}
+{% assign label = td_label %}
 
 {% if label != blank %}
   <a

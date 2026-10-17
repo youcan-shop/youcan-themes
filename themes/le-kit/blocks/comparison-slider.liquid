@@ -1,4 +1,14 @@
 {%- liquid
+  assign td_label_before = block.settings.label_before
+  if td_label_before contains 't:defaults.'
+    assign td_label_before = td_label_before | remove_first: 't:' | t
+  endif
+  assign td_label_after = block.settings.label_after
+  if td_label_after contains 't:defaults.'
+    assign td_label_after = td_label_after | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   case block.settings.ratio
     when 'square'
       assign ratio = '1 / 1'
@@ -18,12 +28,12 @@
   {{ block.youcan_attributes }}
 >
   <div class="comparison__layer">
-    {% render 'image', image: block.settings.image_after, alt: block.settings.label_after, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-2' %}
-    {% if block.settings.label_after != blank %}<span class="badge badge--muted comparison__label comparison__label--after">{{ block.settings.label_after | escape }}</span>{% endif %}
+    {% render 'image', image: block.settings.image_after, alt: td_label_after, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-2' %}
+    {% if td_label_after != blank %}<span class="badge badge--muted comparison__label comparison__label--after">{{ td_label_after | escape }}</span>{% endif %}
   </div>
   <div class="comparison__layer comparison__layer--before">
-    {% render 'image', image: block.settings.image_before, alt: block.settings.label_before, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-1' %}
-    {% if block.settings.label_before != blank %}<span class="badge badge--muted comparison__label comparison__label--before">{{ block.settings.label_before | escape }}</span>{% endif %}
+    {% render 'image', image: block.settings.image_before, alt: td_label_before, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-1' %}
+    {% if td_label_before != blank %}<span class="badge badge--muted comparison__label comparison__label--before">{{ td_label_before | escape }}</span>{% endif %}
   </div>
   <span class="comparison__handle" aria-hidden="true">{% render 'icon', name: 'chevron-left', px: 14 %}{% render 'icon', name: 'chevron-right', px: 14 %}</span>
   <input

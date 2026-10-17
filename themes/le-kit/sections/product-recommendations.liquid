@@ -1,4 +1,10 @@
 {%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   assign s = section.settings
   assign p = closest.product | default: product
   assign card_vw = 100 | divided_by: s.columns
@@ -19,7 +25,7 @@
       style="--per-page: {{ s.columns }}; --per-page-mobile: {{ s.columns_mobile | plus: 0.15 }};"
       {% if s.layout == 'grid' %}data-static{% endif %}
     >
-      {% render 'section-header', heading: s.heading, arrows: arrows, alignment: s.header_alignment %}
+      {% render 'section-header', heading: td_heading, arrows: arrows, alignment: s.header_alignment %}
       <ul
         class="{% if s.layout == 'grid' %}grid{% else %}slider__track{% endif %}"
         style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};"

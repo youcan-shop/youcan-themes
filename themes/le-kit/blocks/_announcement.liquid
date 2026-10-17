@@ -1,8 +1,14 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
 <p class="announcement" data-carousel-item {{ block.youcan_attributes }}>
   {% if block.settings.link != blank %}
-    <a href="{{ block.settings.link }}">{{ block.settings.text }}</a>
+    <a href="{{ block.settings.link }}">{{ td_text }}</a>
   {% else %}
-    {{ block.settings.text }}
+    {{ td_text }}
   {% endif %}
 </p>
 

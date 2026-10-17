@@ -1,6 +1,20 @@
 {%- liquid
+  assign td_label = block.settings.label
+  if td_label contains 't:defaults.'
+    assign td_label = td_label | remove_first: 't:' | t
+  endif
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+  assign td_content = block.settings.content
+  if td_content contains 't:defaults.'
+    assign td_content = td_content | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   assign dialog_id = 'popup-' | append: block.id
-  assign heading = block.settings.heading
+  assign heading = td_heading
   if heading == blank and block.settings.page != blank
     assign heading = block.settings.page.name
   endif
@@ -8,7 +22,7 @@
 
 <div class="popup-link" {{ block.youcan_attributes }}>
   <button class="button button--{{ block.settings.style }}" type="button" data-open-dialog="{{ dialog_id }}">
-    {{ block.settings.label | escape }}
+    {{ td_label | escape }}
   </button>
   <dialog class="popup-link__dialog" id="{{ dialog_id }}" aria-labelledby="{{ dialog_id }}-title">
     <div class="popup-link__header">
@@ -21,7 +35,7 @@
       {% if block.settings.page != blank %}
         {{ block.settings.page.content }}
       {% else %}
-        {{ block.settings.content }}
+        {{ td_content }}
       {% endif %}
     </div>
   </dialog>

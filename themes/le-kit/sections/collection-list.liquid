@@ -1,4 +1,10 @@
 {%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   assign s = section.settings
   case s.ratio
     when 'portrait'
@@ -28,7 +34,7 @@
     {% unless s.layout == 'carousel' %}data-static{% endunless %}
   >
     {% render 'section-header',
-      heading: s.heading,
+      heading: td_heading,
       description: s.description,
       link: link,
       arrows: arrows,

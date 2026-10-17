@@ -1,4 +1,10 @@
 {%- liquid
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   assign tag = block.settings.tag | default: 'h2'
   assign size_class = block.settings.size
   if size_class == 'auto' or size_class == blank
@@ -6,14 +12,14 @@
   endif
 -%}
 
-{% if block.settings.heading != blank %}
+{% if td_heading != blank %}
   <{{ tag }}
     class="heading-block {{ size_class }}"
     data-align="{{ block.settings.alignment }}"
     {% if block.settings.max_width != 'none' %}data-max-width="{{ block.settings.max_width }}"{% endif %}
     {{ block.youcan_attributes }}
   >
-    {{- block.settings.heading -}}
+    {{- td_heading -}}
   </{{ tag }}>
 {% endif %}
 

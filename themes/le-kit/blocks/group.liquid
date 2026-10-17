@@ -14,9 +14,13 @@
   style="--group-padding: {{ block.settings.padding }}px;"
   {{ block.youcan_attributes }}
 >
-  {% if block.settings.background_image != blank %}
+  {% if block.settings.background_image != blank or block.settings.background_placeholder %}
     <div class="group-block__background media" aria-hidden="true" style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};">
-      {% render 'image', image: block.settings.background_image, alt: '', sizes: '(min-width: 750px) 50vw, 100vw' %}
+      {% if block.settings.background_image != blank %}
+        {% render 'image', image: block.settings.background_image, alt: '', sizes: '(min-width: 750px) 50vw, 100vw' %}
+      {% else %}
+        {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
     </div>
   {% endif %}
   {% if block.settings.link != blank %}
@@ -42,6 +46,7 @@
   .group-block__link { position: absolute; inset: 0; z-index: 1; }
   .group-block:has(> .group-block__background) { isolation: isolate; overflow: hidden; }
   .group-block__background { position: absolute; inset: 0; z-index: -1; border-radius: inherit; }
+  .group-block__background > img, .group-block__background > svg { width: 100%; height: 100%; object-fit: cover; }
   .group-block__background::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--overlay-opacity, 0); }
   .group-block[data-min-height="small"] { min-height: 240px; }
   .group-block[data-min-height="medium"] { min-height: 360px; }
@@ -163,7 +168,14 @@
       "step": 5,
       "unit": "%",
       "default": 0,
-      "visible_if": "{{ block.settings.background_image != blank }}"
+      "visible_if": "{{ block.settings.background_image != blank or block.settings.background_placeholder }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "background_placeholder",
+      "label": "t:settings.background_placeholder",
+      "default": false,
+      "visible_if": "{{ block.settings.background_image == blank }}"
     },
     { "type": "checkbox", "id": "border", "label": "t:settings.border", "default": false },
     { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": false },

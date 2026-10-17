@@ -1,3 +1,9 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
 <ui-jumbo-text
   class="jumbo-text"
   {% if block.settings.fit %}data-fit{% endif %}
@@ -5,7 +11,7 @@
   style="--jumbo-size: {{ block.settings.size }}vw;"
   {{ block.youcan_attributes }}
 >
-  {{- block.settings.text | escape -}}
+  {{- td_text | escape -}}
 </ui-jumbo-text>
 
 {% stylesheet %}

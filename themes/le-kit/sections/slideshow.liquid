@@ -1,64 +1,157 @@
-<div
-  class="slideshow-wrapper{% if section.settings.width == 'page' %} page-width{% endif %}"
-  style="padding-block: {{ section.settings.padding_top }}px {{ section.settings.padding_bottom }}px;"
->
-<ui-carousel
-  class="slideshow color-scheme color-{{ section.settings.color_scheme }}{% if section.settings.width == 'page' %} slideshow--boxed{% endif %}"
-  data-height="{{ section.settings.height }}"
-  {% if section.settings.autoplay %}autoplay interval="{{ section.settings.speed | times: 1000 }}"{% endif %}
-  aria-roledescription="carousel"
-  aria-label="{{ 'accessibility.slideshow' | t }}"
->
-  <div class="slider__track slideshow__track" data-carousel-track>
-    {% content_for 'blocks' %}
-  </div>
+{%- liquid
+  assign s = section.settings
+  assign nav = s.navigation | default: 'arrows'
+  assign icon_size = 20
+  if nav == 'large_arrows' or nav == 'large_chevrons'
+    assign icon_size = 28
+  endif
+  if nav contains 'chevrons'
+    assign prev_icon = 'chevron-left'
+    assign next_icon = 'chevron-right'
+  else
+    assign prev_icon = 'arrow-left'
+    assign next_icon = 'arrow-right'
+  endif
+-%}
 
-  {% if section.blocks.size > 1 %}
-    <div class="slideshow__controls page-width">
-      {% if section.settings.show_arrows %}
-      <button class="button button--secondary button--icon" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">
-        {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
-      </button>
-      {% endif %}
-      {% if section.settings.show_dots %}
-      <div class="slideshow__dots">
-        {% for b in section.blocks %}
-          <button
-            class="slider__dot"
-            type="button"
-            data-carousel-dot
-            aria-label="{{ 'accessibility.go_to_slide' | t | replace: '[index]', forloop.index }}"
-            {% if forloop.first %}aria-current="true"{% endif %}
-          ></button>
-        {% endfor %}
-      </div>
-      {% endif %}
-      {% if section.settings.show_arrows %}
-      <button class="button button--secondary button--icon" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">
-        {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
-      </button>
-      {% endif %}
+<div
+  class="slideshow-wrapper{% if s.width == 'page' %} page-width{% endif %}"
+  style="padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;"
+>
+  <ui-carousel
+    class="slideshow color-scheme color-{{ s.color_scheme }}{% if s.width == 'page' %} slideshow--boxed{% endif %}"
+    data-height="{{ s.height }}"
+    data-content-position="{{ s.content_position | default: 'on_media' }}"
+    data-nav="{{ nav }}"
+    data-nav-background="{{ s.navigation_background | default: 'circle' }}"
+    {% if s.autoplay %}autoplay interval="{{ s.speed | times: 1000 }}"{% endif %}
+    aria-roledescription="carousel"
+    aria-label="{{ 'accessibility.slideshow' | t }}"
+  >
+    <div class="slider__track slideshow__track" data-carousel-track>
+      {% content_for 'blocks' %}
     </div>
-  {% endif %}
-</ui-carousel>
+
+    {% if section.blocks.size > 1 %}
+      {% unless nav == 'none' %}
+        <button class="slideshow__arrow slideshow__arrow--prev" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">
+          {% render 'icon', name: prev_icon, px: icon_size, class: 'icon--flip' %}
+        </button>
+        <button class="slideshow__arrow slideshow__arrow--next" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">
+          {% render 'icon', name: next_icon, px: icon_size, class: 'icon--flip' %}
+        </button>
+      {% endunless %}
+
+      {% case s.pagination %}
+        {% when 'dots' %}
+          <div class="slideshow__pagination slideshow__dots">
+            {% for b in section.blocks %}
+              <button
+                class="slider__dot"
+                type="button"
+                data-carousel-dot
+                aria-label="{{ 'accessibility.go_to_slide' | t | replace: '[index]', forloop.index }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
+              ></button>
+            {% endfor %}
+          </div>
+        {% when 'counter' %}
+          <p class="slideshow__pagination slideshow__counter" aria-live="polite">
+            <span data-carousel-current>1</span>
+            <span aria-hidden="true">/</span>
+            <span>{{ section.blocks.size }}</span>
+          </p>
+      {% endcase %}
+    {% endif %}
+  </ui-carousel>
 </div>
 
 {% stylesheet %}
-  .slideshow { --slider-gap: 0px; position: relative; }
+  .slideshow { --slider-gap: 0px; --slide-height: 680px; position: relative; display: block; }
+  .slideshow[data-height="small"] { --slide-height: 360px; }
+  .slideshow[data-height="medium"] { --slide-height: 520px; }
+  .slideshow[data-height="screen"] { --slide-height: calc(100svh - var(--header-height)); }
+  @media (max-width: 749px) {
+    .slideshow { --slide-height: 540px; }
+    .slideshow[data-height="small"] { --slide-height: 280px; }
+    .slideshow[data-height="medium"] { --slide-height: 420px; }
+  }
   .slideshow--boxed { overflow: hidden; border-radius: var(--radius-surface); }
-  .slideshow__controls {
+  .slideshow[data-content-position="below_media"].slideshow--boxed { border-radius: 0; }
+  .slideshow[data-content-position="below_media"].slideshow--boxed .slide__media { border-radius: var(--radius-surface); overflow: hidden; }
+
+  /* Arrows: on the sides, centered on the media */
+  .slideshow__arrow {
+    --arrow-size: 44px;
+    position: absolute;
+    inset-block-start: calc(var(--slide-height) / 2);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: var(--arrow-size);
+    height: var(--arrow-size);
+    padding: 0;
+    border: 0;
+    translate: 0 -50%;
+    color: #fff;
+    background: none;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease), scale var(--duration-fast) var(--ease);
+  }
+  .slideshow__arrow--prev { inset-inline-start: var(--space-md); }
+  .slideshow__arrow--next { inset-inline-end: var(--space-md); }
+  .slideshow__arrow:disabled { opacity: 0.4; cursor: default; }
+  .slideshow__arrow:active:not(:disabled) { scale: 0.94; }
+  .slideshow[data-nav^="large"] .slideshow__arrow { --arrow-size: 56px; }
+  .slideshow[data-nav-background="none"] .slideshow__arrow .icon { filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.45)); }
+  /* Arrows sit on the image: always a light surface with a dark icon, whatever the color scheme */
+  .slideshow[data-nav-background="circle"] .slideshow__arrow,
+  .slideshow[data-nav-background="square"] .slideshow__arrow {
+    background: #fff;
+    color: #171717;
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.2);
+  }
+  .slideshow[data-nav-background="circle"] .slideshow__arrow { border-radius: 50%; }
+  .slideshow[data-nav-background="square"] .slideshow__arrow { border-radius: var(--radius-input); }
+  .slideshow[data-nav-background="circle"] .slideshow__arrow:hover:not(:disabled),
+  .slideshow[data-nav-background="square"] .slideshow__arrow:hover:not(:disabled) { background: #f2f2f2; }
+
+  /* Keep the slide content clear of the arrows */
+  @media (min-width: 750px) {
+    .slideshow[data-content-position="on_media"]:not([data-nav="none"]) .slide__content {
+      padding-inline: max(var(--page-gutter), calc(var(--space-md) + 44px + var(--space-lg)));
+    }
+    .slideshow[data-content-position="on_media"][data-nav^="large"] .slide__content {
+      padding-inline: max(var(--page-gutter), calc(var(--space-md) + 56px + var(--space-lg)));
+    }
+  }
+  @media (max-width: 749px) {
+    /* On small screens slides are swiped; on-media arrows would cover the content */
+    .slideshow[data-content-position="on_media"] .slideshow__arrow { display: none; }
+    .slideshow:not([data-nav^="large"]) .slideshow__arrow { --arrow-size: 36px; }
+    .slideshow__arrow--prev { inset-inline-start: var(--space-xs); }
+    .slideshow__arrow--next { inset-inline-end: var(--space-xs); }
+  }
+
+  /* Pagination: on the media (bottom) or below the slides */
+  .slideshow__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .slideshow[data-content-position="on_media"] .slideshow__pagination {
     position: absolute;
     inset-inline: 0;
     inset-block-end: var(--space-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-md);
+    z-index: 2;
+    color: #fff;
     pointer-events: none;
   }
-  .slideshow__controls > * { pointer-events: auto; }
-  .slideshow__dots { display: flex; gap: 6px; color: #fff; }
-  .slideshow .slider__dot { background-color: #fff; }
+  .slideshow[data-content-position="on_media"] .slideshow__pagination > * { pointer-events: auto; }
+  .slideshow[data-content-position="below_media"] .slideshow__pagination { padding-block: var(--space-md) 0; }
+  .slideshow[data-content-position="on_media"] .slider__dot { background-color: #fff; box-shadow: 0 0 2px rgb(0 0 0 / 0.4); }
+  .slideshow__counter { align-items: baseline; font-size: var(--text-sm); font-variant-numeric: tabular-nums; font-weight: 500; }
+  .slideshow[data-content-position="on_media"] .slideshow__counter { text-shadow: 0 1px 3px rgb(0 0 0 / 0.45); }
 {% endstylesheet %}
 
 {% schema %}
@@ -71,6 +164,22 @@
     }
   ],
   "settings": [
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:options.full_width"
+        },
+        {
+          "value": "page",
+          "label": "t:options.page"
+        }
+      ],
+      "default": "full"
+    },
     {
       "type": "select",
       "id": "height",
@@ -97,31 +206,92 @@
     },
     {
       "type": "select",
-      "id": "width",
-      "label": "t:settings.width",
+      "id": "content_position",
+      "label": "t:settings.content_position",
       "options": [
         {
-          "value": "full",
-          "label": "t:options.full_width"
+          "value": "on_media",
+          "label": "t:options.on_media"
         },
         {
-          "value": "page",
-          "label": "t:options.page"
+          "value": "below_media",
+          "label": "t:options.below_media"
         }
       ],
-      "default": "full"
+      "default": "on_media"
     },
     {
-      "type": "checkbox",
-      "id": "show_arrows",
-      "label": "t:settings.show_arrows",
-      "default": true
+      "type": "header",
+      "content": "t:content.navigation"
     },
     {
-      "type": "checkbox",
-      "id": "show_dots",
-      "label": "t:settings.show_dots",
-      "default": true
+      "type": "select",
+      "id": "navigation",
+      "label": "t:settings.navigation_icons",
+      "options": [
+        {
+          "value": "arrows",
+          "label": "t:options.arrows"
+        },
+        {
+          "value": "chevrons",
+          "label": "t:options.chevrons"
+        },
+        {
+          "value": "large_arrows",
+          "label": "t:options.large_arrows"
+        },
+        {
+          "value": "large_chevrons",
+          "label": "t:options.large_chevrons"
+        },
+        {
+          "value": "none",
+          "label": "t:options.none"
+        }
+      ],
+      "default": "arrows"
+    },
+    {
+      "type": "select",
+      "id": "navigation_background",
+      "label": "t:settings.icon_background",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "circle",
+          "label": "t:options.circle"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        }
+      ],
+      "default": "circle",
+      "visible_if": "{{ section.settings.navigation != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "pagination",
+      "label": "t:settings.pagination",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "dots",
+          "label": "t:options.dots"
+        },
+        {
+          "value": "counter",
+          "label": "t:options.counter"
+        }
+      ],
+      "default": "dots"
     },
     {
       "type": "checkbox",
@@ -233,7 +403,8 @@
             }
           ]
         }
-      ]
+      ],
+      "settings": {}
     },
     {
       "name": "t:names.slideshow_full_frame",
@@ -241,8 +412,9 @@
       "settings": {
         "width": "full",
         "height": "screen",
-        "show_arrows": true,
-        "show_dots": true
+        "navigation": "large_arrows",
+        "navigation_background": "none",
+        "pagination": "counter"
       },
       "blocks": [
         {
@@ -335,7 +507,10 @@
         "width": "page",
         "height": "large",
         "padding_top": 24,
-        "padding_bottom": 24
+        "padding_bottom": 24,
+        "navigation": "chevrons",
+        "navigation_background": "circle",
+        "pagination": "dots"
       },
       "blocks": [
         {
@@ -388,6 +563,118 @@
               "settings": {
                 "label": "t:defaults.shop_now",
                 "link": "/collections"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:names.slideshow_below",
+      "category": "t:categories.banners",
+      "settings": {
+        "content_position": "below_media",
+        "color_scheme": "scheme-1",
+        "height": "medium",
+        "navigation": "chevrons",
+        "pagination": "dots",
+        "width": "page",
+        "padding_top": 32,
+        "padding_bottom": 32
+      },
+      "blocks": [
+        {
+          "type": "_slide",
+          "settings": {
+            "overlay_opacity": 0,
+            "horizontal_alignment": "center"
+          },
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h3",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "muted": true
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections",
+                "style": "secondary"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "settings": {
+            "overlay_opacity": 0,
+            "horizontal_alignment": "center"
+          },
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h3",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "muted": true
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections",
+                "style": "secondary"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "settings": {
+            "overlay_opacity": 0,
+            "horizontal_alignment": "center"
+          },
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h3",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "muted": true
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections",
+                "style": "secondary"
               }
             }
           ]

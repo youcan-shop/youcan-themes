@@ -1,11 +1,17 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
 <span class="marquee-item" {{ block.youcan_attributes }}>
   {% if block.settings.icon != 'none' %}
     {% render 'icon', name: block.settings.icon, px: 20 %}
   {% endif %}
   {% if block.settings.link != blank %}
-    <a href="{{ block.settings.link }}">{{ block.settings.text }}</a>
+    <a href="{{ block.settings.link }}">{{ td_text }}</a>
   {% else %}
-    {{ block.settings.text }}
+    {{ td_text }}
   {% endif %}
 </span>
 

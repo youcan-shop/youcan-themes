@@ -122,6 +122,7 @@ if (!customElements.get("ui-carousel")) {
       if (this.next) this.next.disabled = atEnd && !loop;
 
       this.dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === this.index)));
+      this.querySelectorAll("[data-carousel-current]").forEach((counter) => (counter.textContent = this.index + 1));
       this.items.forEach((item, i) => item.toggleAttribute("data-active", i === this.index));
 
       this.dispatchEvent(new CustomEvent("carousel:change", { detail: { index: this.index } }));

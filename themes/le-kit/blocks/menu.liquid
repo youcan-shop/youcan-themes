@@ -1,8 +1,14 @@
+{%- liquid
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
 {% assign menu = block.settings.menu %}
 
-<nav class="menu-block" aria-label="{{ block.settings.heading | default: menu.title | escape }}" {{ block.youcan_attributes }}>
-  {% if block.settings.heading != blank %}
-    <p class="menu-block__heading h6">{{ block.settings.heading | escape }}</p>
+<nav class="menu-block" aria-label="{{ td_heading | default: menu.title | escape }}" {{ block.youcan_attributes }}>
+  {% if td_heading != blank %}
+    <p class="menu-block__heading h6">{{ td_heading | escape }}</p>
   {% endif %}
   {% if menu.links.size > 0 %}
     <ul class="menu-block__list" role="list">

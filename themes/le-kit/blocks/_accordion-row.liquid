@@ -1,15 +1,25 @@
+{%- liquid
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+  assign td_content = block.settings.content
+  if td_content contains 't:defaults.'
+    assign td_content = td_content | remove_first: 't:' | t
+  endif
+-%}
 <details class="accordion" {% if block.settings.open %}open{% endif %} {{ block.youcan_attributes }}>
   <summary class="accordion__summary">
     <span class="accordion__heading">
       {%- if block.settings.icon != 'none' -%}
         {% render 'icon', name: block.settings.icon, px: 20 %}
       {%- endif -%}
-      {{ block.settings.heading | escape }}
+      {{ td_heading | escape }}
     </span>
     {% render 'icon', name: 'chevron-down', px: 18 %}
   </summary>
   <div class="accordion__content rte">
-    {{ block.settings.content }}
+    {{ td_content }}
     {% content_for 'blocks' %}
   </div>
 </details>

@@ -10,6 +10,17 @@
   {% render 'express-checkout', product: product, style: 'drawer' %}
 {% endcomment %}
 
+{%- liquid
+  assign form_heading = settings.form_heading
+  if form_heading contains 't:defaults.'
+    assign form_heading = form_heading | remove_first: 't:' | t
+  endif
+  assign form_description = settings.form_description
+  if form_description contains 't:defaults.'
+    assign form_description = form_description | remove_first: 't:' | t
+  endif
+-%}
+
 {% if style == 'drawer' %}
   <form
     class="drawer express-checkout express-checkout--drawer color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}"
@@ -50,13 +61,13 @@
   </form>
 {% else %}
   <form class="express-checkout express-checkout--inline" data-order-form>
-    {% if settings.form_heading != blank or settings.form_description != blank %}
+    {% if form_heading != blank or form_description != blank %}
       <div class="express-checkout__header">
-        {% if settings.form_heading != blank %}
-          <h2 class="h5">{{ settings.form_heading }}</h2>
+        {% if form_heading != blank %}
+          <h2 class="h5">{{ form_heading }}</h2>
         {% endif %}
-        {% if settings.form_description != blank %}
-          <p class="text-sm text-muted">{{ settings.form_description }}</p>
+        {% if form_description != blank %}
+          <p class="text-sm text-muted">{{ form_description }}</p>
         {% endif %}
       </div>
     {% endif %}

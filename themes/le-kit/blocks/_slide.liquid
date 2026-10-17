@@ -44,22 +44,24 @@
   }
   .slide__media { position: absolute; inset: 0; z-index: -1; }
   .slide__media::after { content: ""; position: absolute; inset: 0; background: #000; opacity: var(--overlay-opacity, 0); }
-  .slide__media picture, .slide__media img { width: 100%; height: 100%; object-fit: cover; }
+  .slide__media picture, .slide__media img, .slide__media svg { width: 100%; height: 100%; object-fit: cover; }
   .slide[data-focal="top"] .slide__media img { object-position: center top; }
   .slide[data-focal="bottom"] .slide__media img { object-position: center bottom; }
   .slide__link { position: absolute; inset: 0; z-index: 0; }
-  .slide__content { position: relative; z-index: 1; pointer-events: none; }
+  .slide__content { position: relative; z-index: 1; display: flex; pointer-events: none; }
   .slide__content :is(a, button, input, .button) { pointer-events: auto; }
-  .slide__content { display: flex; padding-block-end: calc(var(--space-2xl) + 40px); }
-  .slideshow[data-height="small"] .slide__content { min-height: 360px; }
-  .slideshow[data-height="medium"] .slide__content { min-height: 520px; }
-  .slideshow[data-height="large"] .slide__content { min-height: 680px; }
-  .slideshow[data-height="screen"] .slide__content { min-height: calc(100svh - var(--header-height)); }
-  @media (max-width: 749px) {
-    .slideshow[data-height="small"] .slide__content { min-height: 300px; }
-    .slideshow[data-height="medium"] .slide__content { min-height: 440px; }
-    .slideshow[data-height="large"] .slide__content { min-height: 560px; }
+
+  /* Content on the media */
+  [data-content-position="on_media"] .slide__content {
+    min-height: var(--slide-height);
+    padding-block-end: calc(var(--space-2xl) + 40px);
   }
+
+  /* Content below the media */
+  [data-content-position="below_media"] .slide { align-content: start; }
+  [data-content-position="below_media"] .slide__media { position: relative; z-index: 0; height: var(--slide-height); }
+  [data-content-position="below_media"] .slide__link { bottom: auto; height: var(--slide-height); }
+  [data-content-position="below_media"] .slide__content { padding-block: var(--space-lg) 0; }
 {% endstylesheet %}
 
 {% schema %}

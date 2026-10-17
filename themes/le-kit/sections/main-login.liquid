@@ -30,7 +30,7 @@
         {% render 'form-errors', form: form %}
         <label class="field">
           <span class="field__label">{{ 'account.email' | t }}</span>
-          <input class="input" type="email" name="email" value="{{ form.email | escape }}" autocomplete="email" required>
+          <input placeholder="{{ 'placeholders.email' | t }}" class="input" type="email" name="email" value="{{ form.email | escape }}" autocomplete="email" required>
         </label>
         <label class="field">
           <span class="field__label auth__label-row">
@@ -39,9 +39,9 @@
               {{- 'account.login.forgot' | t -}}
             </a>
           </span>
-          <input class="input" type="password" name="password" autocomplete="current-password" required>
+          <input placeholder="{{ 'placeholders.password' | t }}" class="input" type="password" name="password" autocomplete="current-password" required>
         </label>
-        <button class="button button--lg button--full" type="submit">{{ 'account.login.submit' | t }}</button>
+        <button class="button button--full" type="submit">{{ 'account.login.submit' | t }}</button>
       {% endform %}
       <p class="auth__footer text-sm text-muted">
         {{ 'account.login.no_account' | t }}
@@ -64,9 +64,9 @@
         {% render 'form-errors', form: form %}
         <label class="field">
           <span class="field__label">{{ 'account.email' | t }}</span>
-          <input class="input" type="email" name="email" autocomplete="email" required>
+          <input placeholder="{{ 'placeholders.email' | t }}" class="input" type="email" name="email" autocomplete="email" required>
         </label>
-        <button class="button button--lg button--full" type="submit">{{ 'account.recover.submit' | t }}</button>
+        <button class="button button--full" type="submit">{{ 'account.recover.submit' | t }}</button>
       {% endform %}
       <p class="auth__footer text-sm text-muted">
         <a href="{{ routes.account_login_url }}" data-auth-switch="login">{{ 'account.recover.back' | t }}</a>

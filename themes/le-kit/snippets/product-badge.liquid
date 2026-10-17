@@ -27,7 +27,9 @@
       <span class="badge">{{ 'product.low_stock' | t | replace: '[count]', inventory }}</span>
     {% endif %}
   {% when 'custom-text' %}
-    {% if settings.badge_text != blank %}
-      <span class="badge">{{ settings.badge_text | escape }}</span>
+    {% assign badge_text = settings.badge_text %}
+    {% if badge_text contains 't:defaults.' %}{% assign badge_text = badge_text | remove_first: 't:' | t %}{% endif %}
+    {% if badge_text != blank %}
+      <span class="badge">{{ badge_text | escape }}</span>
     {% endif %}
 {% endcase %}

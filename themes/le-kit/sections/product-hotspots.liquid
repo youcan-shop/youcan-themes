@@ -1,4 +1,10 @@
 {%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   assign s = section.settings
   case s.height
     when 'small'
@@ -20,7 +26,7 @@
 >
   <div class="hotspots{% if s.width == 'page' %} page-width{% endif %}">
     <div class="{% if s.width == 'full' %}page-width{% endif %}">
-      {% render 'section-header', heading: s.heading, description: s.description, alignment: s.header_alignment %}
+      {% render 'section-header', heading: td_heading, description: s.description, alignment: s.header_alignment %}
     </div>
     <div
       class="hotspots__canvas media{% if s.width == 'full' %} hotspots__canvas--full{% endif %}"

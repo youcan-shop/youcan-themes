@@ -130,13 +130,15 @@
     {% endif %}
   </div>
 
-  {% if settings.card_show_quick_add and product != blank and available %}
+  {% if settings.card_show_quick_add and product != blank %}
     <div class="product-card__action{% if settings.card_quick_add_mobile == false %} product-card__action--desktop{% endif %}">
-      {% if settings.shopping_flow != 'express_checkout' and product.variants.size <= 1 and product.is_bundle != true %}
-        {% render 'shop-button', product: product, style: 'secondary', button_size: 'sm', source: 'product-card', full_width: true %}
+      {% if available == false %}
+        <button class="button button--secondary button--full" type="button" disabled>{{ 'product.sold_out' | t }}</button>
+      {% elsif settings.shopping_flow != 'express_checkout' and product.variants.size <= 1 and product.is_bundle != true %}
+        {% render 'shop-button', product: product, style: 'secondary', source: 'product-card', full_width: true %}
       {% else %}
         <ui-quick-add data-url="{{ product.url }}">
-          <button class="button button--secondary button--sm button--full" type="button">
+          <button class="button button--secondary button--full" type="button">
             {%- if settings.shopping_flow == 'express_checkout' -%}
               {{ 'product.buy_now' | t }}
             {%- else -%}

@@ -1,4 +1,10 @@
 {%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
   assign repeat = 4
 -%}
 
@@ -14,7 +20,7 @@
       {% for i in (1..repeat) %}
         <span class="marquee-item">
           {% if block.settings.icon != 'none' %}{% render 'icon', name: block.settings.icon, px: 24 %}{% endif %}
-          {{ block.settings.text }}
+          {{ td_text }}
         </span>
       {% endfor %}
     </div>
