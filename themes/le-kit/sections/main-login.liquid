@@ -9,11 +9,22 @@
   class="section color-scheme color-{{ section.settings.color_scheme }}"
   style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
 >
-  <ui-auth class="page-width auth" {% if show_recover %}data-view="recover"{% else %}data-view="login"{% endif %}>
+  <ui-auth
+    class="page-width auth"
+    {% if show_recover %}
+      data-view="recover"
+    {% else %}
+      data-view="login"
+    {% endif %}
+  >
     <div class="auth__card" data-auth-view="login">
       <header class="auth__header">
-        <h1 class="h3">{% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'account.login.title' | t }}{% endif %}</h1>
-        {% if section.settings.text != blank %}<p class="text-sm text-muted">{{ section.settings.text }}</p>{% endif %}
+        <h1 class="h3">
+          {% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'account.login.title' | t }}{% endif %}
+        </h1>
+        {% if section.settings.text != blank %}
+          <p class="text-sm text-muted">{{ section.settings.text }}</p>
+        {% endif %}
       </header>
       {% form 'customer_login', class: 'auth__form' %}
         {% render 'form-errors', form: form %}
@@ -24,7 +35,9 @@
         <label class="field">
           <span class="field__label auth__label-row">
             {{ 'account.password' | t }}
-            <a class="auth__link" href="{{ routes.account_recover_url | default: '/account/recover' }}" data-auth-switch="recover">{{ 'account.login.forgot' | t }}</a>
+            <a class="auth__link" href="{{ routes.account_recover_url | default: '/account/recover' }}" data-auth-switch="recover">
+              {{- 'account.login.forgot' | t -}}
+            </a>
           </span>
           <input class="input" type="password" name="password" autocomplete="current-password" required>
         </label>
@@ -43,7 +56,10 @@
       </header>
       {% form 'recover_customer_password', class: 'auth__form' %}
         {% if form.posted_successfully %}
-          <p class="alert" role="status">{% render 'icon', name: 'mail', px: 18 %} {{ 'account.recover.success' | t }}</p>
+          <p class="alert" role="status">
+            {% render 'icon', name: 'mail', px: 18 %}
+            {{ 'account.recover.success' | t }}
+          </p>
         {% endif %}
         {% render 'form-errors', form: form %}
         <label class="field">

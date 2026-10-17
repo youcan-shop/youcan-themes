@@ -36,7 +36,7 @@ Motion: drawers, dialogs, selects, search and dropdowns animate in and out; acco
 
 ## Customer accounts
 
-Templates for every customer page YouCan supports: login (with password recovery), register, account (profile + order history), order, addresses and reset password. They only show when customer accounts are enabled in the store settings. YouCan has no 404, password or gift card template types.
+Templates for every customer page YouCan supports: login (with password recovery), register, account (profile + order history), order, addresses and reset password. They only show when customer accounts are enabled in the store settings. A 404 template (`404.json` + `main-404`) covers missing pages.
 
 ## Shopping flows
 
