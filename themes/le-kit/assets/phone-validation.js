@@ -57,6 +57,9 @@ if (!customElements.get("ui-phone-validation")) {
 
           option.value = country.phone;
           option.dataset.country = country.code;
+          // Read by the custom select (assets/select.js): flag in the list, short code in the trigger
+          option.dataset.flag = country.code;
+          option.dataset.short = `+${country.phone}`;
           option.textContent = isRtl
             ? `${country.name} (${country.phone}+)`
             : `${country.name} (+${country.phone})`;

@@ -4,12 +4,34 @@
  * - Mobile (< 750px): a bottom drawer.
  * The native <select> stays in the DOM (visually hidden) so forms, validation and
  * existing "change" listeners keep working. Programmatic option changes are synced.
+ *
+ * Option data attributes:
+ *   data-flag="MA"   shows the country flag before the label
+ *   data-short="+212" text shown in the trigger instead of the full label
+ * Select attributes:
+ *   data-select-compact   minimal trigger (used inside the phone field)
+ * Long lists (more than 12 options) get a search field.
  */
 (() => {
   const MOBILE = window.matchMedia("(max-width: 749px)");
   const CHECK_ICON =
     '<svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
   let uid = 0;
+  const SEARCH_THRESHOLD = 12;
+
+  const flagImage = (code) => {
+    if (!code) return null;
+    const img = document.createElement("img");
+    img.className = "select-flag";
+    img.src = `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
+    img.alt = "";
+    img.width = 20;
+    img.height = 15;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.onerror = () => img.remove();
+    return img;
+  };
 
   function labelFor(select) {
     if (select.getAttribute("aria-label")) return select.getAttribute("aria-label");
@@ -31,7 +53,8 @@
 
       this.trigger = document.createElement("button");
       this.trigger.type = "button";
-      this.trigger.className = `${select.className} select-trigger`;
+      this.compact = select.hasAttribute("data-select-compact");
+      this.trigger.className = this.compact ? "select-trigger select-trigger--compact" : `${select.className} select-trigger`;
       this.trigger.setAttribute("aria-haspopup", "listbox");
       this.trigger.setAttribute("aria-expanded", "false");
       this.trigger.setAttribute("aria-controls", this.id);
@@ -63,7 +86,12 @@
 
     sync() {
       const option = this.select.selectedOptions[0];
-      this.trigger.querySelector(".select-trigger__value").textContent = option?.textContent.trim() ?? "";
+      const value = this.trigger.querySelector(".select-trigger__value");
+      value.textContent = option?.dataset.short ?? option?.textContent.trim() ?? "";
+      this.trigger.querySelector(".select-flag")?.remove();
+      const flag = flagImage(option?.dataset.flag);
+      if (flag) value.before(flag);
+      this.trigger.setAttribute("aria-label", option?.textContent.trim() ?? "");
       this.trigger.disabled = this.select.disabled;
       if (this.select.value) this.trigger.removeAttribute("aria-invalid");
       if (this.popup?.matches(":popover-open")) this.renderOptions();
@@ -85,9 +113,18 @@
           <span class="select-popup__handle" aria-hidden="true"></span>
           <p class="select-popup__title"></p>
         </div>
-        <div class="select-popup__list"></div>`;
+        <div class="select-popup__search" hidden>
+          <input class="input" type="search" autocomplete="off" spellcheck="false" aria-label="">
+        </div>
+        <div class="select-popup__list"></div>
+        <p class="select-popup__empty" hidden></p>`;
 
       this.list = this.popup.querySelector(".select-popup__list");
+      this.search = this.popup.querySelector(".select-popup__search input");
+      this.search.placeholder = window.theme?.strings?.selectSearch ?? "Search";
+      this.search.setAttribute("aria-label", this.search.placeholder);
+      this.popup.querySelector(".select-popup__empty").textContent = window.theme?.strings?.selectEmpty ?? "No results";
+      this.search.addEventListener("input", () => this.filter(this.search.value));
       this.popup.addEventListener("keydown", (event) => this.onListKey(event));
       this.popup.addEventListener("click", (event) => {
         // The popup can sit inside a <label>: don't let the label forward the click to the hidden select
@@ -126,9 +163,27 @@
           if (option.disabled) item.setAttribute("aria-disabled", "true");
           item.innerHTML = `<span class="select-popup__check">${CHECK_ICON}</span><span class="select-popup__label"></span>`;
           item.querySelector(".select-popup__label").textContent = option.textContent.trim();
+          const flag = flagImage(option.dataset.flag);
+          if (flag) item.querySelector(".select-popup__label").before(flag);
           return item;
         }),
       );
+    }
+
+    filter(query) {
+      const needle = query.trim().toLowerCase();
+      let first = -1;
+
+      [...this.list.children].forEach((item, index) => {
+        const option = this.options[index];
+        const haystack = `${option.textContent} ${option.value} ${option.dataset.short ?? ""} ${option.dataset.flag ?? ""}`.toLowerCase();
+        const match = !needle || haystack.includes(needle);
+        item.hidden = !match;
+        if (match && first === -1 && !option.disabled) first = index;
+      });
+
+      this.popup.querySelector(".select-popup__empty").hidden = first !== -1;
+      if (first !== -1) this.highlight(first, true);
     }
 
     toggle() {
@@ -141,7 +196,14 @@
 
       this.popup.querySelector(".select-popup__title").textContent = labelFor(this.select);
       this.popup.classList.toggle("select-popup--drawer", MOBILE.matches);
+      this.popup.classList.toggle("select-popup--wide", this.compact);
       this.renderOptions();
+
+      const searchable = this.options.length > SEARCH_THRESHOLD;
+      this.search.closest(".select-popup__search").hidden = !searchable;
+      this.search.value = "";
+      this.popup.querySelector(".select-popup__empty").hidden = true;
+
       this.popup.showPopover();
       this.position();
 
@@ -151,7 +213,9 @@
       }
 
       this.highlight(Math.max(0, this.select.selectedIndex), true);
-      this.popup.focus({ preventScroll: true });
+      // On mobile, focusing the search would open the keyboard over the drawer: only do it on desktop
+      if (searchable && !MOBILE.matches) this.search.focus({ preventScroll: true });
+      else this.popup.focus({ preventScroll: true });
     }
 
     close(focusTrigger = true) {
@@ -171,7 +235,7 @@
       const popupHeight = this.popup.offsetHeight;
       const spaceBelow = window.innerHeight - rect.bottom;
       const above = spaceBelow < popupHeight + 8 && rect.top > spaceBelow;
-      const width = Math.max(rect.width, 160);
+      const width = Math.max(rect.width, this.compact ? 300 : 160);
       const left = Math.min(Math.max(8, rect.left), window.innerWidth - width - 8);
 
       this.popup.style.minWidth = `${width}px`;
@@ -196,7 +260,7 @@
 
       for (let i = 0; i < items.length; i++) {
         index = (index + step + items.length) % items.length;
-        if (items[index].getAttribute("aria-disabled") !== "true") break;
+        if (items[index].getAttribute("aria-disabled") !== "true" && !items[index].hidden) break;
       }
 
       this.highlight(index, true);
@@ -234,6 +298,9 @@
     }
 
     onListKey(event) {
+      // Typing in the search field: let it handle text, keep list navigation keys
+      if (event.target === this.search && !["ArrowDown", "ArrowUp", "Enter", "Tab"].includes(event.key)) return;
+
       switch (event.key) {
         case "ArrowDown":
           event.preventDefault();
@@ -245,11 +312,13 @@
           break;
         case "Home":
           event.preventDefault();
-          this.highlight(0, true);
+          this.highlighted = -1;
+          this.move(1);
           break;
         case "End":
           event.preventDefault();
-          this.highlight(this.options.length - 1, true);
+          this.highlighted = this.options.length;
+          this.move(-1);
           break;
         case "Enter":
         case " ":

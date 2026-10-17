@@ -708,6 +708,46 @@ h6,
   border-color: color-mix(in srgb, var(--color-sale) 48%, var(--color-background));
 }
 
+/* Compact trigger (phone country code): flag + short code + chevrons, no field chrome */
+.select-trigger--compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding-inline: 4px 22px;
+  border: 0;
+  border-radius: calc(var(--radius-input) - 4px);
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 15 5 5 5-5M7 9l5-5 5 5'/%3E%3C/svg%3E") no-repeat right 4px center;
+  color: inherit;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+[dir="rtl"] .select-trigger--compact {
+  padding-inline: 22px 4px;
+  background-position: left 4px center;
+}
+
+.select-trigger--compact:hover,
+.select-trigger--compact[aria-expanded="true"] {
+  background-color: var(--color-accent);
+  box-shadow: none;
+}
+
+.select-trigger--compact .select-trigger__value {
+  flex: none;
+}
+
+.select-flag {
+  flex-shrink: 0;
+  width: 20px;
+  height: 15px;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
+}
+
 .select-trigger:disabled {
   opacity: 0.64;
   cursor: not-allowed;
@@ -766,6 +806,31 @@ h6,
 .select-popup__list {
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+.select-popup__search {
+  padding: 4px 4px 6px;
+}
+
+.select-popup__search .input {
+  min-height: 36px;
+  padding-block: 6px;
+  font-size: var(--text-sm);
+}
+
+.select-popup__empty {
+  padding: var(--space-sm);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.select-popup--wide {
+  max-height: min(380px, 60vh);
+}
+
+.select-popup__option:has(.select-flag) {
+  grid-template-columns: 16px 20px minmax(0, 1fr);
 }
 
 .select-popup__option {
@@ -851,6 +916,10 @@ h6,
 
 .select-popup__title:empty {
   display: none;
+}
+
+.select-popup--drawer .select-popup__search {
+  padding: 0 4px 8px;
 }
 
 .select-popup--drawer .select-popup__option {

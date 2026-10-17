@@ -654,11 +654,20 @@
   font-size: var(--text-sm);
 }
 
-.phone-input__country select {
+/* Without JS the native select sits on top of the code; once enhanced, the compact trigger replaces both */
+.phone-input__country select:not(.select--enhanced) {
   position: absolute;
   inset: 0;
   opacity: 0;
   cursor: pointer;
+}
+
+.phone-input__country:has(.select-trigger) {
+  padding-inline-end: 0;
+}
+
+.phone-input__country:has(.select-trigger) > :is([ui-phone-validator="displayed-country-code"], .icon) {
+  display: none;
 }
 
 .phone-input input {
