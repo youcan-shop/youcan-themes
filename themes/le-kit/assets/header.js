@@ -3,13 +3,20 @@ import { Component } from "@theme/component";
 /**
  * Site header: closes desktop dropdowns on outside click / Escape, hides on scroll down
  * (`data-sticky="scroll-up"`) and swaps the transparent scheme once the page scrolls.
+ * Its rendered height is shared as `--header-height`, it grows with a tall logo.
  */
 class HeaderComponent extends Component {
   #lastScroll = 0;
 
+  #resizeObserver = new ResizeObserver(() =>
+    document.documentElement.style.setProperty("--header-height", `${Math.round(this.getBoundingClientRect().height)}px`),
+  );
+
   connectedCallback() {
     super.connectedCallback();
     const { signal } = this;
+
+    this.#resizeObserver.observe(this);
 
     this.dropdowns.forEach((dropdown) =>
       dropdown.addEventListener(
@@ -29,6 +36,11 @@ class HeaderComponent extends Component {
       window.addEventListener("scroll", () => this.#onScroll(), { passive: true, signal });
       this.#onScroll();
     }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.#resizeObserver.disconnect();
   }
 
   /** @returns {HTMLDetailsElement[]} */
