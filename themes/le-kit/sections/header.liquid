@@ -201,7 +201,13 @@
   }
   .site-header__menu-toggle { grid-area: toggle; margin-inline-start: -10px; }
   .site-header__logo { grid-area: logo; display: inline-flex; text-decoration: none; }
-  .site-header__logo img { width: var(--logo-width-mobile); height: auto; }
+  .site-header__logo img {
+    width: auto;
+    height: auto;
+    max-width: var(--logo-width-mobile);
+    max-height: calc(var(--header-height) - 16px);
+    object-fit: contain;
+  }
   .site-header__store-name { font-family: var(--font-heading-family); font-weight: var(--font-heading-weight); font-size: var(--text-xl); }
   .site-header__nav { grid-area: nav; display: none; min-width: 0; }
   .site-header__actions { grid-area: actions; display: flex; align-items: center; justify-content: flex-end; margin-inline-end: -10px; }
@@ -233,7 +239,7 @@
 
   @media (min-width: 990px) {
     .site-header__menu-toggle { display: none; }
-    .site-header__logo img { width: var(--logo-width); }
+    .site-header__logo img { max-width: var(--logo-width); }
     .site-header__nav { display: block; }
     .site-header[data-logo-position="center"] .site-header__inner {
       grid-template-columns: 1fr auto 1fr;
