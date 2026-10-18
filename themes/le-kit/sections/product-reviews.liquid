@@ -4,7 +4,6 @@
     assign td_heading = td_heading | remove_first: 't:' | t
   endif
 -%}
-{{ 'reviews.js' | asset_url | script_tag_deferred }}
 
 {%- liquid
   assign s = section.settings
@@ -18,7 +17,7 @@
     class="section color-scheme color-{{ s.color_scheme }}"
     style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
   >
-    <ui-reviews class="page-width reviews" product-id="{{ p.id }}" data-limit="{{ s.limit }}">
+    <ui-reviews class="page-width reviews" product-id="{{ p.id }}" data-limit="{{ s.limit }}" data-submitted-message="{{ 'reviews.submitted' | t | escape }}">
       <header class="reviews__header">
         <div class="reviews__summary">
           {% if td_heading != blank %}
@@ -37,30 +36,30 @@
               {% endfor %}
             </span>
             <span class="reviews__score">{{ rating }} / 5</span>
-            <span class="text-sm text-muted" data-reviews-count hidden></span>
+            <span class="text-sm text-muted" ref="count" hidden></span>
           </div>
         </div>
         {% if s.show_add_review %}
-          <button class="button button--secondary" type="button" data-open-review-form>
+          <button class="button button--secondary" type="button" ref="openFormButton">
             {% render 'icon', name: 'plus', px: 16 %}
             {{ 'reviews.write' | t }}
           </button>
         {% endif %}
       </header>
 
-      <ul class="reviews__list" role="list" data-reviews-list>
+      <ul class="reviews__list" role="list" ref="list">
         {% for i in (1..3) %}
           <li class="review review--skeleton" aria-hidden="true"></li>
         {% endfor %}
       </ul>
 
-      <p class="reviews__empty text-muted" data-reviews-empty hidden>{{ 'reviews.empty' | t }}</p>
+      <p class="reviews__empty text-muted" ref="empty" hidden>{{ 'reviews.empty' | t }}</p>
 
-      <button class="button button--secondary reviews__more" type="button" data-reviews-more hidden>
+      <button class="button button--secondary reviews__more" type="button" ref="moreButton" hidden>
         {{ 'reviews.show_all' | t }}
       </button>
 
-      <template data-review-template>
+      <template ref="reviewTemplate">
         <li class="review">
           <div class="review__header">
             <span class="reviews__stars" data-review-stars aria-hidden="true"></span>
@@ -71,13 +70,13 @@
           <p class="review__author text-sm text-muted" data-review-author>{{ 'reviews.anonymous' | t }}</p>
         </li>
       </template>
-      <template data-star-template>
+      <template ref="starTemplate">
         <span>{% render 'icon', name: 'star', px: 16 %}</span>
       </template>
 
       {% if s.show_add_review %}
-        <dialog class="review-form" data-review-dialog aria-labelledby="review-form-title-{{ section.id }}">
-          <form class="review-form__form" method="dialog" data-review-form>
+        <dialog class="review-form" ref="dialog" aria-labelledby="review-form-title-{{ section.id }}">
+          <form class="review-form__form" method="dialog" ref="form">
             <div class="review-form__header">
               <h2 class="drawer__title" id="review-form-title-{{ section.id }}">{{ 'reviews.form.title' | t }}</h2>
               <p class="text-sm text-muted">{{ p.name }}</p>
@@ -141,7 +140,7 @@
               </label>
               <div class="field">
                 <span class="field__label">{{ 'reviews.form.images' | t }}</span>
-                <div class="review-form__images" data-review-previews>
+                <div class="review-form__images" ref="previews">
                   <label class="review-form__upload">
                     {% render 'icon', name: 'upload', px: 18 %}
                     <span class="visually-hidden">{{ 'reviews.form.images' | t }}</span>
@@ -150,7 +149,7 @@
                       type="file"
                       accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
                       multiple
-                      data-review-upload
+                      ref="upload"
                     >
                   </label>
                 </div>
@@ -167,11 +166,7 @@
     </ui-reviews>
   </div>
 
-  <script>
-    window.successStrings = Object.assign(window.successStrings ?? {}, {
-      review_submitted: {{ 'reviews.submitted' | t | json }},
-    });
-  </script>
+  <script type="module" src="{{ 'reviews.js' | asset_url }}"></script>
 {% endif %}
 
 {% stylesheet %}

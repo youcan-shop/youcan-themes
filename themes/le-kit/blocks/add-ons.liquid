@@ -23,7 +23,7 @@
         {% assign v = item.selected_or_first_available_variant %}
         <li>
           <label class="add-on">
-            <input type="checkbox" value="{{ v.id }}" data-add-on {% unless v.available %}disabled{% endunless %}>
+            <input type="checkbox" value="{{ v.id }}" ref="addOns[]" {% unless v.available %}disabled{% endunless %}>
             <span class="media add-on__media" style="--ratio: 1 / 1;">
               {% render 'image', image: item.preview_image, alt: item.name, width: 160, sizes: '56px', placeholder: 'product-1' %}
             </span>

@@ -8,7 +8,7 @@
   {% for unit in units %}
     {% assign label_key = 'countdown.' | append: unit %}
     <span class="countdown__unit">
-      <span class="countdown__value" data-{{ unit }}>00</span>
+      <span class="countdown__value" ref="{{ unit }}">00</span>
       {% if block.settings.show_labels %}
         <span class="countdown__label">{{ label_key | t }}</span>
       {% endif %}
@@ -16,6 +16,8 @@
     {% unless forloop.last or block.settings.style == 'boxed' %}<span class="countdown__separator" aria-hidden="true">:</span>{% endunless %}
   {% endfor %}
 </ui-countdown>
+
+<script type="module" src="{{ 'countdown.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .countdown { display: inline-flex; align-items: flex-start; gap: var(--space-xs); font-variant-numeric: tabular-nums; }

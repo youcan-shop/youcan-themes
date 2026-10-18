@@ -72,7 +72,7 @@
             <span class="sticky-buy__name">{{ p.name }}</span>
             {% render 'price', product: p, class: 'text-sm' %}
           </span>
-          <button class="button sticky-buy__button" type="button" tabindex="-1" data-sticky-buy-trigger {% unless p.selected_or_first_available_variant.available %}disabled{% endunless %}>
+          <button class="button sticky-buy__button" type="button" tabindex="-1" ref="trigger" {% unless p.selected_or_first_available_variant.available %}disabled{% endunless %}>
             {{ sticky_label }}
           </button>
         </div>
@@ -80,6 +80,8 @@
     {% endif %}
   </div>
 {% endif %}
+
+<script type="module" src="{{ 'sticky-buy.js' | asset_url }}"></script>
 
 {% schema %}
 {

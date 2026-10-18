@@ -4,6 +4,7 @@
   <ui-video-card class="media video-review__media" style="--ratio: var(--video-ratio, 9 / 16);">
     {% if block.settings.video != blank %}
       <video
+        ref="video"
         src="{{ block.settings.video }}"
         {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url: width: 800 }}"{% endif %}
         preload="metadata"
@@ -11,7 +12,7 @@
         loop
         muted
       ></video>
-      <button class="video-review__toggle" type="button" aria-label="{{ 'accessibility.play_video' | t }}">
+      <button class="video-review__toggle" type="button" ref="playButton" aria-label="{{ 'accessibility.play_video' | t }}">
         {% render 'icon', name: 'play', px: 22 %}
       </button>
     {% elsif block.settings.poster != blank %}
@@ -32,6 +33,8 @@
     </a>
   {% endif %}
 </div>
+
+<script type="module" src="{{ 'video.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .video-review { display: grid; gap: var(--space-sm); }

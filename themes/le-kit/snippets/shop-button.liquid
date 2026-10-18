@@ -43,8 +43,9 @@
     class="button button--{{ style | default: 'primary' }} button--{{ button_size | default: 'md' }}{% if full_width %} button--full{% endif %}"
     type="{% if is_express_checkout %}submit{% else %}button{% endif %}"
     {% unless default_variant.available %}aria-disabled="true"{% endunless %}
+    ref="button"
   >
-    <span data-label="{{ label | escape }}">
+    <span ref="label" data-label="{{ label | escape }}">
       {%- if default_variant.available -%}
         {{ label }}
       {%- else -%}

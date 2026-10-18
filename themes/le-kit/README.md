@@ -11,7 +11,7 @@ layouts/    theme.liquid (header and footer groups, cart drawer, quick add dialo
 sections/   page sections + header-group.json / footer-group.json
 blocks/     theme blocks (public) and private blocks (_name, used by one section or block)
 snippets/   shared rendering helpers (image, icon, price, product card, cart, checkout forms)
-assets/     base.css, commerce.css and plain JS (custom elements, no build step)
+assets/     base.css, commerce.css and JavaScript modules (custom elements, no build step)
 config/     settings_schema.json, settings_data.json (color schemes)
 locales/    en / fr / ar, storefront and schema translations
 templates/  JSON templates
@@ -33,6 +33,39 @@ Motion: drawers, dialogs, selects, search and dropdowns animate in and out; acco
 - **Product blocks** (`product-title`, `price`, `variant-picker`, `buy-buttons`, ...) read their product from `closest.product`. They work on the product page and in `featured-product`.
 - **Cart** changes go through `youcanjs`. The cart drawer and cart page are then re-rendered server side with `?sections=` (see `assets/cart.js`).
 - **Quick add** loads the product page's `main` section with `?section_id=main` into a dialog.
+
+## JavaScript
+
+Plain ES modules, no build step. `layouts/theme.liquid` prints an import map, so modules import each other as `@theme/<file>`:
+
+```js
+import { Component } from "@theme/component";
+import { ThemeEvents, CartUpdateEvent } from "@theme/events";
+import { translate, formatMoney } from "@theme/utilities";
+```
+
+Modules used on every page (cart, product, toast, select, dialogs, ...) load from the layout. The others load from the section or block that needs them, with `<script type="module" src="{{ 'marquee.js' | asset_url }}"></script>`. The browser runs a module only once, however many times the tag is printed.
+
+**Components** are custom elements (`ui-*`) that extend `Component` (`assets/component.js`):
+
+- Mark the elements a component needs with `ref`. Use `ref="name"` for one element and `ref="name[]"` for a list. They are available as `this.refs.name`. A ref belongs to the closest custom element around it, so nested components keep their own refs.
+- Put the refs a component can't work without in `requiredRefs`. A missing one throws, with the component's name.
+- Pass `{ signal: this.signal }` to `addEventListener`. The listeners are removed when the element disconnects.
+- Refs are refreshed when the component's children change, for example when the theme editor re-renders a block.
+
+```liquid
+<ui-quantity quantity="1">
+  <button type="button" ref="decrease">-</button>
+  <span ref="value">1</span>
+  <button type="button" ref="increase">+</button>
+</ui-quantity>
+```
+
+**Events** are typed `CustomEvent`s dispatched on `document` (`assets/events.js`). `cart:update` (`CartUpdateEvent`) fires after any cart change. The cart drawer, cart page and cart bubbles listen for it. Dispatch it from new code instead of updating the cart UI directly.
+
+**Strings and settings** that the JS needs live in `window.theme`, printed by the layout. Read strings with `translate("key", { name: value })`, which replaces `[name]`.
+
+**Data attributes** carry state (`data-active`, `data-loading`, `data-open`) and, for behavior delegated on `document`, actions (`data-open-dialog`, `data-close-dialog`, `data-cart-remove`, `data-sort-select`). Inside a component, find elements with refs. The exception is markup a component shares with nested components, such as prices inside the sticky add to cart bar.
 
 ## Customer accounts
 

@@ -9,7 +9,7 @@
       {% if s.collections.size > 0 %}
         {% for collection in s.collections %}
           <li>
-            <a class="collection-links__link {{ s.text_size }}" href="/collections/{{ collection.slug }}" data-index="{{ forloop.index0 }}" {% if forloop.first %}data-active{% endif %}>
+            <a class="collection-links__link {{ s.text_size }}" href="/collections/{{ collection.slug }}" ref="links[]" {% if forloop.first %}data-active{% endif %}>
               {{ collection.name }}
               {% if s.show_count %}<sup class="collection-links__count">{{ collection.products_count }}</sup>{% endif %}
             </a>
@@ -17,7 +17,7 @@
         {% endfor %}
       {% else %}
         {% for i in (1..4) %}
-          <li><a class="collection-links__link {{ s.text_size }}" href="#" data-index="{{ forloop.index0 }}" {% if forloop.first %}data-active{% endif %}>{{ 'collections.placeholder_title' | t }} {{ i }}</a></li>
+          <li><a class="collection-links__link {{ s.text_size }}" href="#" ref="links[]" {% if forloop.first %}data-active{% endif %}>{{ 'collections.placeholder_title' | t }} {{ i }}</a></li>
         {% endfor %}
       {% endif %}
     </ul>
@@ -25,13 +25,13 @@
       <div class="collection-links__media">
         {% if s.collections.size > 0 %}
           {% for collection in s.collections %}
-            <div class="media collection-links__image" data-index="{{ forloop.index0 }}" {% if forloop.first %}data-active{% endif %}>
+            <div class="media collection-links__image" ref="images[]" {% if forloop.first %}data-active{% endif %}>
               {% render 'image', image: collection.preview_image, alt: '', sizes: '(min-width: 750px) 45vw, 100vw', placeholder: 'collection-1' %}
             </div>
           {% endfor %}
         {% else %}
           {% for i in (1..4) %}
-            <div class="media collection-links__image" data-index="{{ forloop.index0 }}" {% if forloop.first %}data-active{% endif %}>
+            <div class="media collection-links__image" ref="images[]" {% if forloop.first %}data-active{% endif %}>
               {% assign placeholder = forloop.index0 | modulo: 3 | plus: 1 | prepend: 'collection-' %}
               {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
             </div>
@@ -41,6 +41,8 @@
     {% endif %}
   </ui-collection-links>
 </div>
+
+<script type="module" src="{{ 'collection-links.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .collection-links { display: grid; gap: var(--space-2xl); align-items: center; }

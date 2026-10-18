@@ -15,8 +15,8 @@
   data-pause-on-hover
   {{ block.youcan_attributes }}
 >
-  <div class="marquee__track">
-    <div class="marquee__group marquee-block__group {{ block.settings.size }}" data-marquee-group>
+  <div class="marquee__track" ref="track">
+    <div class="marquee__group marquee-block__group {{ block.settings.size }}" ref="group">
       {% for i in (1..repeat) %}
         <span class="marquee-item">
           {% if block.settings.icon != 'none' %}{% render 'icon', name: block.settings.icon, px: 24 %}{% endif %}
@@ -26,6 +26,8 @@
     </div>
   </div>
 </ui-marquee>
+
+<script type="module" src="{{ 'marquee.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .marquee-block { width: 100%; }

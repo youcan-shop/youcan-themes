@@ -43,7 +43,7 @@
                   value="0"
                   inputmode="numeric"
                   aria-label="{{ 'quick_order.quantity' | t }}"
-                  data-quantity
+                  ref="quantities[]"
                 >
               {% endif %}
             </span>
@@ -53,13 +53,15 @@
       <div class="quick-order__footer">
         <p class="quick-order__summary">
           <span class="text-sm text-muted">{{ 'quick_order.total' | t }}</span>
-          <span class="quick-order__total" data-total>{{ 0 | money }}</span>
+          <span class="quick-order__total" ref="total">{{ 0 | money }}</span>
         </p>
-        <button class="button button--lg" type="button" data-add-all disabled>{{ 'quick_order.add_all' | t }}</button>
+        <button class="button button--lg" type="button" ref="addButton" disabled>{{ 'quick_order.add_all' | t }}</button>
       </div>
     </ui-quick-order>
   </div>
 {% endif %}
+
+<script type="module" src="{{ 'quick-order.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .quick-order { display: grid; gap: var(--space-lg); }

@@ -4,12 +4,14 @@
   {% if section.settings.reverse %}data-reverse{% endif %}
   {% if section.settings.pause_on_hover %}data-pause-on-hover{% endif %}
 >
-  <div class="marquee__track section">
-    <div class="marquee__group text-{{ section.settings.size }}" data-marquee-group>
+  <div class="marquee__track section" ref="track">
+    <div class="marquee__group text-{{ section.settings.size }}" ref="group">
       {% content_for 'blocks' %}
     </div>
   </div>
 </ui-marquee>
+
+<script type="module" src="{{ 'marquee.js' | asset_url }}"></script>
 
 {% schema %}
 {

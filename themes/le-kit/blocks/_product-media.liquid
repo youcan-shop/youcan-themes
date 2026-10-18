@@ -15,11 +15,11 @@
 <ui-carousel
   class="product-media product-media--{{ block.settings.layout }}"
   style="--ratio: {{ ratio }}; --fit: {{ block.settings.fit }};"
-  data-product-media
+  ref="media"
   {{ block.youcan_attributes }}
 >
   {% if p.images.size > 0 %}
-    <ul class="slider__track product-media__track" role="list" data-carousel-track>
+    <ul class="slider__track product-media__track" role="list" ref="track">
       {% for image in p.images %}
         <li class="media product-media__item" data-carousel-item data-image="{{ image }}">
           {% render 'image',
@@ -39,7 +39,7 @@
           <button
             class="media product-media__thumbnail"
             type="button"
-            data-carousel-dot
+            ref="dots[]"
             aria-label="{{ 'accessibility.go_to_image' | t | replace: '[index]', forloop.index }}"
             {% if forloop.first %}aria-current="true"{% endif %}
           >

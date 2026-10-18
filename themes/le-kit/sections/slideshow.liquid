@@ -28,16 +28,16 @@
     aria-roledescription="carousel"
     aria-label="{{ 'accessibility.slideshow' | t }}"
   >
-    <div class="slider__track slideshow__track" data-carousel-track>
+    <div class="slider__track slideshow__track" ref="track">
       {% content_for 'blocks' %}
     </div>
 
     {% if section.blocks.size > 1 %}
       {% unless nav == 'none' %}
-        <button class="slideshow__arrow slideshow__arrow--prev" type="button" data-carousel-prev aria-label="{{ 'accessibility.previous' | t }}">
+        <button class="slideshow__arrow slideshow__arrow--prev" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
           {% render 'icon', name: prev_icon, px: icon_size, class: 'icon--flip' %}
         </button>
-        <button class="slideshow__arrow slideshow__arrow--next" type="button" data-carousel-next aria-label="{{ 'accessibility.next' | t }}">
+        <button class="slideshow__arrow slideshow__arrow--next" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
           {% render 'icon', name: next_icon, px: icon_size, class: 'icon--flip' %}
         </button>
       {% endunless %}
@@ -49,7 +49,7 @@
               <button
                 class="slider__dot"
                 type="button"
-                data-carousel-dot
+                ref="dots[]"
                 aria-label="{{ 'accessibility.go_to_slide' | t | replace: '[index]', forloop.index }}"
                 {% if forloop.first %}aria-current="true"{% endif %}
               ></button>
@@ -57,7 +57,7 @@
           </div>
         {% when 'counter' %}
           <p class="slideshow__pagination slideshow__counter" aria-live="polite">
-            <span data-carousel-current>1</span>
+            <span ref="counter">1</span>
             <span aria-hidden="true">/</span>
             <span>{{ section.blocks.size }}</span>
           </p>

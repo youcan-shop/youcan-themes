@@ -7,7 +7,7 @@
 <div
   class="layered-slide{% if block.settings.use_color_scheme %} color-scheme color-{{ block.settings.color_scheme }}{% endif %}"
   style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"
-  data-layer
+  ref="layers[]"
   {{ block.youcan_attributes }}
 >
   <div class="layered-slide__media" aria-hidden="true">
@@ -17,7 +17,7 @@
       {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
     {% endif %}
   </div>
-  <button class="layered-slide__tab" type="button" data-layer-tab>{{ td_title | escape }}</button>
+  <button class="layered-slide__tab" type="button" ref="tabs[]">{{ td_title | escape }}</button>
   <div class="layered-slide__content">
     <div class="layout-panel" {% render 'layout-style', settings: block.settings %}>
       {% content_for 'blocks' %}

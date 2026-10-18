@@ -13,22 +13,24 @@
   {% endif %}
   <div class="share__buttons">
     {% if block.settings.show_facebook %}
-      <a class="button button--secondary button--icon button--sm" href="#" data-share="facebook" target="_blank" rel="noopener" aria-label="Facebook">{% render 'social-icon', name: 'facebook' %}</a>
+      <a class="button button--secondary button--icon button--sm" href="#" ref="links[]" data-network="facebook" target="_blank" rel="noopener" aria-label="Facebook">{% render 'social-icon', name: 'facebook' %}</a>
     {% endif %}
     {% if block.settings.show_x %}
-      <a class="button button--secondary button--icon button--sm" href="#" data-share="x" target="_blank" rel="noopener" aria-label="X">{% render 'social-icon', name: 'x_twitter' %}</a>
+      <a class="button button--secondary button--icon button--sm" href="#" ref="links[]" data-network="x" target="_blank" rel="noopener" aria-label="X">{% render 'social-icon', name: 'x_twitter' %}</a>
     {% endif %}
     {% if block.settings.show_whatsapp %}
-      <a class="button button--secondary button--icon button--sm" href="#" data-share="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">{% render 'social-icon', name: 'whatsapp' %}</a>
+      <a class="button button--secondary button--icon button--sm" href="#" ref="links[]" data-network="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp">{% render 'social-icon', name: 'whatsapp' %}</a>
     {% endif %}
     {% if block.settings.show_copy %}
-      <button class="button button--secondary button--sm" type="button" data-share="copy" data-copied-label="{{ 'share.copied' | t | escape }}">
+      <button class="button button--secondary button--sm" type="button" ref="copyButton" data-copied-label="{{ 'share.copied' | t | escape }}">
         {% render 'icon', name: 'tag', px: 16 %}
-        <span>{{ 'share.copy_link' | t }}</span>
+        <span ref="copyLabel">{{ 'share.copy_link' | t }}</span>
       </button>
     {% endif %}
   </div>
 </ui-share>
+
+<script type="module" src="{{ 'share.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .share { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }

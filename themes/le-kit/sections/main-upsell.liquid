@@ -1,4 +1,4 @@
-{{ 'upsell.js' | asset_url | script_tag_deferred }}
+<script type="module" src="{{ 'upsell.js' | asset_url }}"></script>
 
 {% capture product_offers -%}
   {
@@ -16,8 +16,8 @@
     class="page-width upsell"
     upsell-id="{{ upsell.id }}"
     order-id="{{ order.id }}"
-    product-offers="{{ product_offers | strip_newlines | strip | escape }}"
   >
+    <script type="application/json" ref="offers">{{ product_offers | strip_newlines | strip }}</script>
     <header class="upsell__header">
       <span class="badge">{{ 'upsell.badge' | t }}</span>
       <h1 class="h2">{{ 'upsell.title' | t }}</h1>
@@ -26,8 +26,8 @@
       <div class="rte upsell__description">{{ upsell.description }}</div>
     {% endif %}
     <div class="upsell__actions">
-      <button class="button button--lg" type="button" name="yes">{{ upsell.actions.btn_yes.title }}</button>
-      <button class="button button--secondary button--lg" type="button" name="no">{{ upsell.actions.btn_no.title }}</button>
+      <button class="button button--lg" type="button" name="yes" ref="actions[]">{{ upsell.actions.btn_yes.title }}</button>
+      <button class="button button--secondary button--lg" type="button" name="no" ref="actions[]">{{ upsell.actions.btn_no.title }}</button>
     </div>
     {% if upsell.footer %}
       <div class="rte text-sm text-muted upsell__footer">{{ upsell.footer }}</div>

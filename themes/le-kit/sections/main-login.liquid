@@ -17,7 +17,7 @@
       data-view="login"
     {% endif %}
   >
-    <div class="auth__card" data-auth-view="login">
+    <div class="auth__card" ref="views[]" data-auth-view="login">
       <header class="auth__header">
         <h1 class="h3">
           {% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'account.login.title' | t }}{% endif %}
@@ -34,8 +34,8 @@
         </label>
         <label class="field">
           <span class="field__label auth__label-row">
-            {{ 'account.password' | t }}
-            <a class="auth__link" href="{{ routes.account_recover_url | default: '/account/recover' }}" data-auth-switch="recover">
+            <span>{{ 'account.password' | t }}</span>
+            <a class="auth__link" href="{{ routes.account_recover_url | default: '/account/recover' }}" ref="switchLinks[]" data-auth-switch="recover">
               {{- 'account.login.forgot' | t -}}
             </a>
           </span>
@@ -49,7 +49,7 @@
       </p>
     </div>
 
-    <div class="auth__card" data-auth-view="recover">
+    <div class="auth__card" ref="views[]" data-auth-view="recover">
       <header class="auth__header">
         <h1 class="h3">{{ 'account.recover.title' | t }}</h1>
         <p class="text-sm text-muted">{{ 'account.recover.text' | t }}</p>
@@ -69,11 +69,13 @@
         <button class="button button--full" type="submit">{{ 'account.recover.submit' | t }}</button>
       {% endform %}
       <p class="auth__footer text-sm text-muted">
-        <a href="{{ routes.account_login_url }}" data-auth-switch="login">{{ 'account.recover.back' | t }}</a>
+        <a href="{{ routes.account_login_url }}" ref="switchLinks[]" data-auth-switch="login">{{ 'account.recover.back' | t }}</a>
       </p>
     </div>
   </ui-auth>
 </div>
+
+<script type="module" src="{{ 'auth.js' | asset_url }}"></script>
 
 {% schema %}
 {

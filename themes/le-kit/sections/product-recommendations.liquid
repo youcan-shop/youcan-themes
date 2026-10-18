@@ -30,7 +30,7 @@
         class="{% if s.layout == 'grid' %}grid{% else %}slider__track{% endif %}"
         style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};"
         role="list"
-        data-carousel-track
+        ref="track"
       >
         {% for item in p.related_products limit: s.limit %}
           <li data-carousel-item>{% content_for 'block', type: '_product-card', id: 'product-card', card_product: item, sizes: sizes %}</li>

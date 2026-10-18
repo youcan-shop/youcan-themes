@@ -49,11 +49,13 @@
     {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
   {% endif %}
   {% if embed %}
-    <button class="video-block__play" type="button" aria-label="{{ 'accessibility.play_video' | t }}">
+    <button class="video-block__play" type="button" ref="playButton" aria-label="{{ 'accessibility.play_video' | t }}">
       {% render 'icon', name: 'play', px: 28 %}
     </button>
   {% endif %}
 </ui-video>
+
+<script type="module" src="{{ 'video.js' | asset_url }}"></script>
 
 {% stylesheet %}
   .video-block { width: 100%; }

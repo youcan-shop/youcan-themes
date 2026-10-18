@@ -21,11 +21,11 @@
     {% if item.inventory %}inventory="{{ item.inventory }}"{% endif %}
   {% endif %}
 >
-  <button class="quantity__button" type="button" name="minus" aria-label="{{ 'accessibility.decrease_quantity' | t }}">
+  <button class="quantity__button" type="button" name="minus" ref="decrease" aria-label="{{ 'accessibility.decrease_quantity' | t }}">
     {% render 'icon', name: 'minus', px: 16 %}
   </button>
-  <span class="quantity__value" data-quantity-value aria-live="polite">{{ quantity }}</span>
-  <button class="quantity__button" type="button" name="plus" aria-label="{{ 'accessibility.increase_quantity' | t }}">
+  <span class="quantity__value" ref="value" aria-live="polite">{{ quantity }}</span>
+  <button class="quantity__button" type="button" name="plus" ref="increase" aria-label="{{ 'accessibility.increase_quantity' | t }}">
     {% render 'icon', name: 'plus', px: 16 %}
   </button>
 </ui-quantity>
