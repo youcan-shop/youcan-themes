@@ -1,5 +1,5 @@
 <!doctype html>
-{% assign lang = store.store_locale.iso_code | default: 'en' %}
+{% assign lang = request.locale.iso_code | default: store.store_locale.iso_code | default: 'en' %}
 {% assign direction = 'ltr' %}
 {% if lang == 'ar' %}
   {% assign direction = 'rtl' %}
@@ -9,11 +9,31 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="{{ request.url }}">
+    <link rel="preconnect" href="https://cdn.youcan.shop">
 
     {% render 'meta-tags' %}
+    {% render 'structured-data' %}
     {% render 'favicon' %}
     {% render 'theme-styles' %}
+
+    {% unless request.design_mode %}
+      <script type="speculationrules">
+        {
+          "prefetch": [
+            {
+              "where": {
+                "and": [
+                  { "href_matches": "/*" },
+                  { "not": { "href_matches": ["/cart*", "/checkout*", "/account*", "/*/cart*", "/*/checkout*", "/*/account*", "/*\\?*"] } },
+                  { "not": { "selector_matches": "[rel~=nofollow], [target=_blank], [data-no-prefetch]" } }
+                ]
+              },
+              "eagerness": "moderate"
+            }
+          ]
+        }
+      </script>
+    {% endunless %}
 
     {% if settings.page_transitions %}
       <style>@view-transition { navigation: auto; }</style>
@@ -21,6 +41,9 @@
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
     {{ 'commerce.css' | asset_url | stylesheet_tag }}
+    {% if template.name contains 'customer' %}
+      {{ 'account.css' | asset_url | stylesheet_tag }}
+    {% endif %}
 
     {{ content_for_header }}
 
@@ -82,7 +105,11 @@
       }
     </script>
 
-    <script src="https://unpkg.com/@youcan/js@latest/dist/index.umd.js" defer></script>
+    <link rel="modulepreload" href="{{ 'component.js' | asset_url }}">
+    <link rel="modulepreload" href="{{ 'utilities.js' | asset_url }}">
+    <link rel="modulepreload" href="{{ 'events.js' | asset_url }}">
+
+    <script src="https://unpkg.com/@youcan/js@1.3.0/dist/index.umd.js" defer></script>
     {% if checkout.phone_validation %}
       <script src="https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js" defer></script>
       <script type="module" src="{{ 'phone-input.js' | asset_url }}"></script>

@@ -192,7 +192,19 @@ function flyToCart(image) {
     .finished.finally(() => clone.remove());
 }
 
+/** Prefetched pages were rendered with the previous cart. Replacing the rules discards them. */
+function resetPrefetches() {
+  const rules = document.querySelector("script[type='speculationrules']");
+  if (!rules) return;
+
+  const copy = document.createElement("script");
+  copy.type = "speculationrules";
+  copy.textContent = rules.textContent;
+  rules.replaceWith(copy);
+}
+
 document.addEventListener(ThemeEvents.cartUpdate, async (event) => {
+  resetPrefetches();
   const { cart, source, skipCart, skipToCheckout, image } = /** @type {CartUpdateEvent} */ (event).detail;
   const fromProduct = source === "product-form" || source === "product-card";
 
@@ -219,4 +231,16 @@ document.addEventListener(ThemeEvents.cartUpdate, async (event) => {
   }
 });
 
-document.addEventListener(ThemeEvents.couponUpdate, () => refreshCarts());
+document.addEventListener(ThemeEvents.couponUpdate, () => {
+  resetPrefetches();
+  refreshCarts();
+});
+
+// Pages restored from the back/forward cache show the cart as it was when they were left
+window.addEventListener("pageshow", async (event) => {
+  if (!event.persisted) return;
+
+  await refreshCarts();
+  const cart = readJson(document.querySelector("[data-cart-json]"));
+  if (cart) document.querySelectorAll("ui-cart-bubble").forEach((bubble) => /** @type {CartBubbleComponent} */ (bubble).update(cart.count ?? 0));
+});

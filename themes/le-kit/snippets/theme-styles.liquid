@@ -13,6 +13,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {% endunless %}
 
+{%- comment -%} font_url is the Latin subset, only worth preloading when the store language uses it {%- endcomment -%}
+{% unless request.locale.iso_code == 'ar' or store.store_locale.iso_code == 'ar' %}
+  {% unless body_font.system? %}{{ body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}{% endunless %}
+  {% unless heading_font.system? or heading_font.family == body_font.family %}{{ heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}{% endunless %}
+{% endunless %}
+
 {% style %}
   {% unless heading_font.system? %}{{ heading_font | font_face: font_display: 'swap' }}{% endunless %}
   {% unless body_font.system? %}{{ body_font | font_face: font_display: 'swap' }}{% endunless %}

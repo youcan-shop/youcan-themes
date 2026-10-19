@@ -1,5 +1,5 @@
 {% comment %}
-  Renders the page title and meta tags (description, keywords, Open Graph, Twitter)
+  Renders the page title and SEO tags: canonical, description, robots, hreflang, Open Graph and Twitter.
 
   Usage:
   {% render 'meta-tags' %}
@@ -56,66 +56,91 @@
   endcase
 -%}
 <title>{% if page_title != blank %}{{ page_title }} - {% endif %}{{ store_title }}</title>
-{% assign og_title = store.title | default: store.name %}
-{% assign og_type = 'website' %}
-{% assign og_url = request.url %}
-{% assign og_image = settings.og_image.src %}
 
-{% assign meta_description = store.description | default: store.name %}
+{%- liquid
+  assign canonical_url = request.url | split: '?' | first
+  if request.url contains 'page='
+    assign canonical_url = request.url
+  endif
+  assign og_title = store_title
+  assign og_type = 'website'
+  assign og_image = settings.og_image.src
+  assign meta_description = store.description | default: store.name
 
-{% if template.name == 'product' %}
-  {% assign og_type = 'product' %}
-  {% assign og_title = product.meta.title %}
-  {% assign og_image = product.thumbnail %}
-  {% assign meta_description = product.meta.description | default: meta_description %}
-{% endif %}
+  case template.name
+    when 'product'
+      assign og_type = 'product'
+      assign og_title = product.meta.title | default: product.name
+      assign og_image = product.thumbnail | default: og_image
+      assign meta_description = product.meta.description | default: product.description | strip_html | strip_newlines | truncate: 160 | default: meta_description
+    when 'collection'
+      assign og_title = category.meta.title | default: category.name
+      assign meta_description = category.meta.description | default: category.description | strip_html | strip_newlines | truncate: 160 | default: meta_description
+    when 'page'
+      assign og_title = page.name
+      assign meta_description = page.content | strip_html | strip_newlines | truncate: 160 | default: meta_description
+  endcase
 
-{% assign locale = store.store_locale.iso_code %}
-{% assign keywords = settings.keywords %}
+  assign noindex = false
+  case template.name
+    when 'search', 'cart', 'thankyou', 'upsell', '404', 'customer-login', 'customer-register', 'customer-account', 'customer-order', 'customer-addresses', 'customer-reset-password'
+      assign noindex = true
+  endcase
+-%}
 
-{% unless keywords %}
-  {% case locale %}
-    {% when 'en' %}
-      {% assign keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
-    {% when 'fr' %}
-      {% assign keywords = 'commerce en ligne, achats en ligne, bonnes affaires, livraison rapide, produits de qualité, prix abordables, articles tendance, achetez maintenant, cadeaux uniques, offres spéciales' %}
-    {% when 'ar' %}
-      {% assign keywords = 'تجارة إلكترونية, تسوق عبر الإنترنت, صفقات رائعة, شحن سريع, منتجات عالية الجودة, أسعار معقولة, عناصر عصرية, اشترِ الآن, هدايا فريدة, عروض المتجر' %}
-    {% else %}
-      {% assign keywords = 'e-commerce, online shopping, great deals, fast shipping, quality products, affordable prices, trendy items, buy now, unique gifts, store specials' %}
-  {% endcase %}
-{% endunless %}
-
+<link rel="canonical" href="{{ canonical_url }}">
 <meta name="description" content="{{ meta_description | escape }}">
-<meta property="keywords" content="{{ keywords }}">
+{%- if noindex %}
+  <meta name="robots" content="noindex, follow">
+{%- endif %}
+{%- if settings.keywords != blank %}
+  <meta name="keywords" content="{{ settings.keywords | escape }}">
+{%- endif %}
 
-<meta property="og:site_name" content="{{ store.name }}">
-<meta property="og:url" content="{{ og_url }}">
+{%- if localization.available_languages.size > 1 %}
+  {%- assign current_root = localization.language.root_url | default: request.locale.root_url %}
+  {%- assign path = request.path %}
+  {%- if current_root != blank and current_root != '/' %}
+    {%- assign path = path | remove_first: current_root %}
+  {%- endif %}
+  {%- for language in localization.available_languages %}
+    {%- assign root = language.root_url | default: '' %}
+    {%- if root == '/' %}{% assign root = '' %}{% endif %}
+    <link rel="alternate" hreflang="{{ language.iso_code }}" href="https://{{ request.host }}{{ root }}{{ path }}">
+    {%- if language.primary %}
+      <link rel="alternate" hreflang="x-default" href="https://{{ request.host }}{{ root }}{{ path }}">
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}
+
+<meta property="og:site_name" content="{{ store.name | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:title" content="{{ og_title | escape }}">
 <meta property="og:type" content="{{ og_type }}">
 <meta property="og:description" content="{{ meta_description | escape }}">
-
-{%- if og_image %}
+{%- if og_image != blank %}
   <meta property="og:image" content="{{ og_image }}">
   <meta property="og:image:secure_url" content="{{ og_image }}">
-{% endif %}
-
-{% if template.name == 'product' %}
+{%- endif %}
+{%- if template.name == 'product' %}
   <meta property="og:price:amount" content="{{ product.price | default: 0 }}">
   <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
-{% endif %}
+{%- endif %}
 
-{% if store.brand.social_links.twitter contains 'twitter.com/' %}
-  {% assign twitter_site = store.brand.social_links.twitter | split: 'twitter.com/' | last | prepend: '@' %}
-{% endif %}
-{% if store.brand.social_links.twitter contains 'x.com/' %}
-  {% assign twitter_site = store.brand.social_links.twitter | split: 'x.com/' | last | prepend: '@' %}
-{% endif %}
-
-{% if twitter_site %}
+{%- liquid
+  assign twitter = store.brand.social_links.twitter
+  if twitter contains 'twitter.com/'
+    assign twitter_site = twitter | split: 'twitter.com/' | last | prepend: '@'
+  elsif twitter contains 'x.com/'
+    assign twitter_site = twitter | split: 'x.com/' | last | prepend: '@'
+  endif
+-%}
+{%- if twitter_site %}
   <meta name="twitter:site" content="{{ twitter_site }}">
-{% endif %}
-
+{%- endif %}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{ og_title | escape }}">
 <meta name="twitter:description" content="{{ meta_description | escape }}">
+{%- if og_image != blank %}
+  <meta name="twitter:image" content="{{ og_image }}">
+{%- endif %}

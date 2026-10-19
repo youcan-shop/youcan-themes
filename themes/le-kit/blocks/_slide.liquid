@@ -1,5 +1,9 @@
 {%- liquid
   assign s = block.settings
+  assign eager = false
+  if section.blocks.first.id == block.id or section.blocks == blank
+    assign eager = true
+  endif
 -%}
 
 <div
@@ -19,10 +23,10 @@
       {% if s.image_mobile != blank %}
         <picture>
           <source media="(max-width: 749px)" srcset="{{ s.image_mobile | image_url: width: 750 }} 750w, {{ s.image_mobile | image_url: width: 1100 }} 1100w" sizes="100vw">
-          {% render 'image', image: s.image, alt: '', sizes: '100vw', width: 2400 %}
+          {% render 'image', image: s.image, alt: '', sizes: '100vw', width: 2400, eager: eager %}
         </picture>
       {% else %}
-        {% render 'image', image: s.image, alt: '', sizes: '100vw', width: 2400 %}
+        {% render 'image', image: s.image, alt: '', sizes: '100vw', width: 2400, eager: eager %}
       {% endif %}
     {% else %}
       {{ 'hero-2' | placeholder_svg_tag: 'placeholder-svg' }}
