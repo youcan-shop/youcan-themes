@@ -135,15 +135,9 @@ if (!customElements.get("ui-carousel")) {
       const markerRect = marker.getBoundingClientRect();
       if (markerRect.left >= containerRect.left && markerRect.right <= containerRect.right) return;
 
-      const delta = markerRect.left + markerRect.width / 2 - (containerRect.left + containerRect.width / 2);
+      const delta = markerRect.left < containerRect.left ? markerRect.left - containerRect.left : markerRect.right - containerRect.right;
 
-      container.style.scrollSnapType = "none";
       container.scrollBy({ left: delta, behavior: "smooth" });
-
-      const restoreSnap = () => (container.style.scrollSnapType = "");
-      container.addEventListener("scrollend", restoreSnap, { once: true });
-      clearTimeout(this._snapRestoreTimer);
-      this._snapRestoreTimer = setTimeout(restoreSnap, 600);
     }
 
     updateMarkers() {
