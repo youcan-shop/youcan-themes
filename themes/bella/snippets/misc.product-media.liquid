@@ -22,18 +22,32 @@
     {% if product.images.size %}
       {% for image in product.images %}
         <div ui-carousel="item" ui-slot="carousel-item">
-          <img
-            src="{{ image }}"
-            alt="{{ product.name }}"
-            height="100%"
-            width="100%"
-            {% if forloop.first %}
-              loading="eager"
-              fetchpriority="high"
-            {% else %}
+          {% if image contains 'youtube.com/vi' %}
+            {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/{{ youtube_video_id }}"
+              title="{{ product.name }}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
               loading="lazy"
-            {% endif %}
-          >
+            ></iframe>
+          {% else %}
+            <img
+              src="{{ image }}"
+              alt="{{ product.name }}"
+              height="100%"
+              width="100%"
+              {% if forloop.first %}
+                loading="eager"
+                fetchpriority="high"
+              {% else %}
+                loading="lazy"
+              {% endif %}
+            >
+          {% endif %}
         </div>
       {% endfor %}
     {% else %}
@@ -78,16 +92,30 @@
     {% if product.images.size %}
       {% for image in product.images %}
         <div class="image">
-          <img
-            src="{{ image }}"
-            alt="{{ product.name }}"
-            height="100%"
-            width="100%"
-            loading="eager"
-            {% if forloop.first %}
-              fetchpriority="high"
-            {% endif %}
-          >
+          {% if image contains 'youtube.com/vi' %}
+            {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/{{ youtube_video_id }}"
+              title="{{ product.name }}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          {% else %}
+            <img
+              src="{{ image }}"
+              alt="{{ product.name }}"
+              height="100%"
+              width="100%"
+              loading="eager"
+              {% if forloop.first %}
+                fetchpriority="high"
+              {% endif %}
+            >
+          {% endif %}
         </div>
       {% endfor %}
     {% else %}

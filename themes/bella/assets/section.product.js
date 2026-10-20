@@ -118,8 +118,8 @@ if (!customElements.get("ui-product")) {
     updateMainImage(image_src) {
       if (!this.productMedia) return;
 
-      const images = this.productMedia.querySelectorAll("img");
-      const index = [...images].findIndex((img) => img.src === image_src);
+      const slides = this.productMedia.querySelectorAll('[ui-carousel="item"]');
+      const index = [...slides].findIndex((slide) => slide.querySelector("img")?.src === image_src);
 
       if (index !== -1) {
         this.productMedia.swipe(index);
