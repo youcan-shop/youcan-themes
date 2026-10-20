@@ -41,16 +41,8 @@
         <div class="item" ui-carousel="item" ui-slot="carousel-item">
           {% if image contains 'youtube.com/vi' %}
             {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/{{ youtube_video_id }}?enablejsapi=1"
-              title="{{ product.name }}"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-              loading="lazy"
-            ></iframe>
+            {% assign youtube_video_url = 'https://www.youtube.com/watch?v=' | append: youtube_video_id %}
+            {{ youtube_video_url | external_video_url | external_video_tag: title: product.name, loading: 'lazy' }}
           {% else %}
             <img
               src="{{ image }}"
