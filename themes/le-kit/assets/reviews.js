@@ -5,25 +5,26 @@ import { translate } from "@theme/utilities";
 const MAX_UPLOAD_MB = 2;
 
 /**
- * Product reviews loaded with youcanjs, and the "write a review" dialog.
+ * Product reviews loaded with youcanjs, and the "write a review" dialog with a `product_review` form.
  *
  * Refs: `list`, `empty`, `count`, `moreButton`, `reviewTemplate`, `starTemplate`,
- * and for the form: `openFormButton`, `dialog`, `form`, `upload`, `previews`.
+ * and for the form: `openFormButton`, `dialog`, `upload`, `previews`.
  */
 class ReviewsComponent extends Component {
   requiredRefs = ["list", "empty", "reviewTemplate", "starTemplate"];
 
-  /** @type {string[]} Uploaded images as data URLs */
-  images = [];
-
   connectedCallback() {
     super.connectedCallback();
-    const { moreButton, openFormButton, form, upload, dialog } = this.refs;
+    const { moreButton, openFormButton, upload, dialog } = this.refs;
 
     moreButton?.addEventListener("click", () => this.load(), { signal: this.signal });
     openFormButton?.addEventListener("click", () => dialog?.showModal(), { signal: this.signal });
-    form?.addEventListener("submit", (/** @type {SubmitEvent} */ event) => this.#onSubmit(event), { signal: this.signal });
     upload?.addEventListener("change", () => this.#onUpload(), { signal: this.signal });
+    dialog?.querySelector("form")?.addEventListener("submit", (event) => {
+      /** @type {SubmitEvent} */ (event).submitter?.setAttribute("data-loading", "");
+    }, { signal: this.signal });
+
+    if (this.querySelector("[data-review-submitted]")) showToast(this.dataset.submittedMessage ?? "", "success");
 
     this.load(this.limit);
   }
@@ -102,18 +103,30 @@ class ReviewsComponent extends Component {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = () => this.#addPreview(/** @type {string} */ (reader.result));
-      reader.readAsDataURL(file);
+      this.#upload(file);
     });
 
     input.value = "";
   }
 
-  /** @param {string} source */
-  #addPreview(source) {
-    this.images.push(source);
+  /** @param {File} file */
+  async #upload(file) {
+    const token = /** @type {HTMLInputElement | null} */ (this.querySelector("input[name='_token']"))?.value ?? "";
+    const body = new FormData();
+    body.append("image", file);
+    body.append("_token", token);
 
+    try {
+      const response = await fetch("/upload/image", { method: "POST", body, headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error((await response.json().catch(() => ({}))).message ?? response.statusText);
+      this.#addPreview((await response.json()).link);
+    } catch (error) {
+      showToast(/** @type {Error} */ (error).message, "error");
+    }
+  }
+
+  /** @param {string} link */
+  #addPreview(link) {
     const preview = document.createElement("div");
     preview.className = "review-form__preview";
 
@@ -123,46 +136,14 @@ class ReviewsComponent extends Component {
       textContent: "×",
     });
     remove.setAttribute("aria-label", "×");
-    remove.addEventListener("click", () => {
-      this.images = this.images.filter((image) => image !== source);
-      preview.remove();
-    });
+    remove.addEventListener("click", () => preview.remove());
 
-    preview.append(Object.assign(document.createElement("img"), { src: source, alt: "" }), remove);
+    preview.append(
+      Object.assign(document.createElement("img"), { src: link, alt: "" }),
+      Object.assign(document.createElement("input"), { type: "hidden", name: "images[]", value: link }),
+      remove,
+    );
     this.refs.previews?.append(preview);
-  }
-
-  /** @param {SubmitEvent} event */
-  async #onSubmit(event) {
-    event.preventDefault();
-
-    /** @type {HTMLFormElement} */
-    const form = this.refs.form;
-    const data = new FormData(form);
-    const button = form.querySelector("button[type='submit']");
-    button?.setAttribute("data-loading", "");
-
-    try {
-      await youcanjs.product.submitReview(this.productId, {
-        images: this.images,
-        first_name: data.get("first_name"),
-        last_name: data.get("last_name"),
-        email: data.get("email"),
-        content: data.get("content"),
-        ratings: Number(data.get("rating")),
-      });
-
-      form.reset();
-      this.images = [];
-      this.querySelectorAll(".review-form__preview").forEach((preview) => preview.remove());
-      this.refs.dialog?.close();
-      showToast(this.dataset.submittedMessage ?? "", "success");
-    } catch (/** @type {any} */ error) {
-      console.error(error);
-      showToast(error.meta?.fields?.content?.[0] ?? error.message, "error");
-    } finally {
-      button?.removeAttribute("data-loading");
-    }
   }
 }
 
