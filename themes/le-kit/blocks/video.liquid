@@ -1,23 +1,6 @@
 {%- liquid
-  assign url = block.settings.video | append: ''
-  assign provider = ''
-  assign video_id = ''
-
-  if url contains 'youtu'
-    assign provider = 'youtube'
-    if url contains 'youtu.be/'
-      assign video_id = url | split: 'youtu.be/' | last | split: '?' | first
-    elsif url contains 'shorts/'
-      assign video_id = url | split: 'shorts/' | last | split: '?' | first
-    elsif url contains 'embed/'
-      assign video_id = url | split: 'embed/' | last | split: '?' | first
-    else
-      assign video_id = url | split: 'v=' | last | split: '&' | first
-    endif
-  elsif url contains 'vimeo'
-    assign provider = 'vimeo'
-    assign video_id = url | split: '?' | first | split: '/' | last
-  endif
+  assign provider = block.settings.video.type
+  assign video_id = block.settings.video.id
 
   case block.settings.ratio
     when 'square'

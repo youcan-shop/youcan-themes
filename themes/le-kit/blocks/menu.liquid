@@ -6,18 +6,20 @@
 -%}
 {% assign menu = block.settings.menu %}
 
-<nav class="menu-block" aria-label="{{ td_heading | default: menu.title | escape }}" {{ block.youcan_attributes }}>
-  {% if td_heading != blank %}
-    <p class="menu-block__heading h6">{{ td_heading | escape }}</p>
-  {% endif %}
-  {% if menu.links.size > 0 %}
-    <ul class="menu-block__list" role="list">
-      {% for link in menu.links %}
-        <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-</nav>
+{% if menu.links.size > 0 or request.design_mode %}
+  <nav class="menu-block" aria-label="{{ td_heading | default: menu.title | escape }}" {{ block.youcan_attributes }}>
+    {% if td_heading != blank %}
+      <p class="menu-block__heading h6">{{ td_heading | escape }}</p>
+    {% endif %}
+    {% if menu.links.size > 0 %}
+      <ul class="menu-block__list" role="list">
+        {% for link in menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </nav>
+{% endif %}
 
 {% stylesheet %}
   .menu-block { display: grid; gap: var(--space-sm); }

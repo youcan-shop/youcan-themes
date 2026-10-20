@@ -22,12 +22,12 @@
 -%}
 
 {% if style == 'drawer' %}
-  <form
-    class="drawer drawer--sheet-mobile express-checkout express-checkout--drawer color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}"
-    id="express-checkout-{{ product.id }}"
-    popover
-    data-order-form
-  >
+  {%- liquid
+    assign scheme = settings.drawer_color_scheme | default: 'scheme-1'
+    assign drawer_class = 'drawer drawer--sheet-mobile express-checkout express-checkout--drawer color-scheme color-' | append: scheme
+    assign drawer_id = 'express-checkout-' | append: product.id
+  -%}
+  {% form 'express_checkout', product, class: drawer_class, id: drawer_id, popover: '', data-order-form: '' %}
     <div class="drawer__header">
       <h2 class="drawer__title">{{ 'express_checkout.title' | t }}</h2>
       <button
@@ -41,6 +41,7 @@
       </button>
     </div>
     <div class="drawer__body">
+      {% render 'form-errors', form: form %}
       <div class="express-checkout__product">
         <div class="media express-checkout__media" style="--ratio: 1 / 1;">
           {% render 'image', image: product.preview_image, alt: product.name, width: 200, sizes: '80px', placeholder: 'product-1' %}
@@ -50,17 +51,18 @@
           {% render 'price', product: product %}
         </div>
       </div>
-      {% render 'checkout-fields' %}
+      {% render 'checkout-fields', form: form %}
     </div>
     <div class="drawer__footer">
       <div class="express-checkout__actions">
+        <input type="hidden" name="quantity" value="1">
         {% render 'quantity' %}
         {% render 'shop-button', product: product, is_express_checkout: true, button_size: 'lg', full_width: true %}
       </div>
     </div>
-  </form>
+  {% endform %}
 {% else %}
-  <form class="express-checkout express-checkout--inline" data-order-form>
+  {% form 'express_checkout', product, class: 'express-checkout express-checkout--inline', data-order-form: '' %}
     {% if form_heading != blank or form_description != blank %}
       <div class="express-checkout__header">
         {% if form_heading != blank %}
@@ -71,10 +73,12 @@
         {% endif %}
       </div>
     {% endif %}
-    {% render 'checkout-fields' %}
+    {% render 'form-errors', form: form %}
+    {% render 'checkout-fields', form: form %}
     <div class="express-checkout__actions">
+      <input type="hidden" name="quantity" value="1">
       {% render 'quantity' %}
       {% render 'shop-button', product: product, is_express_checkout: true, button_size: 'lg', full_width: true %}
     </div>
-  </form>
+  {% endform %}
 {% endif %}
