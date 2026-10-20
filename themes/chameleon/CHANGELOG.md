@@ -1,5 +1,15 @@
 # chameleon
 
+## 4.9.0
+
+### Minor Changes
+
+- 465f15a: Chameleon > add a global product image ratio setting (auto, square, portrait, landscape)
+
+### Patch Changes
+
+- fe7afc4: Keep the default list styling in the product description so lists from the rich text editor show as written
+
 ## 4.8.9
 
 ### Patch Changes
