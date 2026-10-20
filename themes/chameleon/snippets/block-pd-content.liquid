@@ -35,7 +35,7 @@
     {% if product.options.size > 0 %}
       {% render 'misc-variants' %}
     {% endif %}
-    {% if product.isTrackingInventory %}
+    {% if product.isTrackingInventory and section.settings.show_inventory_status != false %}
       {% render 'const-inventory-status', count: inventory_value, threshold: 10 %}
     {% endif %}
     {% if settings.checkout_type == 'express' %}
