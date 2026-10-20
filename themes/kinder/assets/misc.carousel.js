@@ -112,6 +112,18 @@ if (!customElements.get("ui-carousel")) {
       });
 
       if (this.arrows.previous && this.arrows.next) this.setArrowsState();
+
+      this.pauseHiddenVideos();
+    }
+
+    pauseHiddenVideos() {
+      this.slides.forEach((slide, i) => {
+        if (i >= this.index && i < this.index + this.perPage) return;
+
+        slide.querySelectorAll('iframe[src*="youtube.com/embed"]').forEach((iframe) => {
+          iframe.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', "https://www.youtube.com");
+        });
+      });
     }
 
     // When the markers strip overflows, keep the selected marker visible without scrolling the page.
