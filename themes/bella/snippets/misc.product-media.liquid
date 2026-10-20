@@ -24,8 +24,7 @@
         <div ui-carousel="item" ui-slot="carousel-item">
           {% if image contains 'youtube.com/vi' %}
             {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
-            {% assign youtube_video_url = 'https://www.youtube.com/watch?v=' | append: youtube_video_id %}
-            {{ youtube_video_url | external_video_url | external_video_tag: title: product.name, loading: 'lazy' }}
+            {{ 'https://www.youtube.com/embed/' | append: youtube_video_id | append: '?enablejsapi=1' | external_video_tag: title: product.name, loading: 'lazy' }}
           {% else %}
             <img
               src="{{ image }}"
@@ -86,8 +85,7 @@
         <div class="image">
           {% if image contains 'youtube.com/vi' %}
             {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
-            {% assign youtube_video_url = 'https://www.youtube.com/watch?v=' | append: youtube_video_id %}
-            {{ youtube_video_url | external_video_url | external_video_tag: title: product.name, loading: 'lazy' }}
+            {{ 'https://www.youtube.com/embed/' | append: youtube_video_id | append: '?enablejsapi=1' | external_video_tag: title: product.name, loading: 'lazy' }}
           {% else %}
             <img
               src="{{ image }}"
