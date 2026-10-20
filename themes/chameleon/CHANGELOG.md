@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.9.1
+
+### Patch Changes
+
+- 5694214: chameleon > product information > Add toggle to show/hide inventory status
+
 ## 4.9.0
 
 ### Minor Changes
