@@ -72,19 +72,19 @@
     <div class="cart__summary{% if context == 'drawer' %} drawer__footer{% endif %}">
       {% if show_coupon %}
         {% if cart.coupon %}
-          <div class="cart__coupon-applied">
+          {% form 'coupon_remove', class: 'cart__coupon-applied', data-coupon-form: '' %}
             {% render 'icon', name: 'tag', px: 16 %}
             <span class="cart__coupon-code">{{ cart.coupon.code }}</span>
-            <button class="button button--ghost button--icon button--sm" type="button" data-coupon-remove aria-label="{{ 'cart.coupon.remove' | t }}">
+            <button class="button button--ghost button--icon button--sm" type="submit" aria-label="{{ 'cart.coupon.remove' | t }}">
               {% render 'icon', name: 'close', px: 14 %}
             </button>
-          </div>
+          {% endform %}
         {% else %}
-          <form class="cart__coupon" data-coupon-form>
+          {% form 'coupon', class: 'cart__coupon', data-coupon-form: '' %}
             <label class="visually-hidden" for="coupon-{{ section.id }}">{{ 'cart.coupon.label' | t }}</label>
-            <input class="input" id="coupon-{{ section.id }}" type="text" name="coupon_code" placeholder="{{ 'cart.coupon.placeholder' | t }}" autocomplete="off">
+            <input class="input" id="coupon-{{ section.id }}" type="text" name="coupon" value="{{ form.coupon | escape }}" placeholder="{{ 'cart.coupon.placeholder' | t }}" autocomplete="off" required>
             <button class="button button--secondary" type="submit">{{ 'cart.coupon.apply' | t }}</button>
-          </form>
+          {% endform %}
         {% endif %}
       {% endif %}
 

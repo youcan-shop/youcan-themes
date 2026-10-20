@@ -4,7 +4,7 @@ import { showToast } from "@theme/toast";
 import { debounce, fetchSections, mediaQueries, parseElement, readJson, theme, translate } from "@theme/utilities";
 
 /**
- * Cart contents (drawer and cart page). Changes go through youcanjs, then every `<ui-cart>`
+ * Cart contents (drawer and cart page). Item changes go through youcanjs and coupons through their forms, then every `<ui-cart>`
  * on the page is re-rendered with the Section Rendering API.
  */
 class CartComponent extends Component {
@@ -22,12 +22,11 @@ class CartComponent extends Component {
       const target = /** @type {HTMLElement} */ (event.target);
       const remove = target.closest("[data-cart-remove]");
       if (remove) this.#removeItems(/** @type {HTMLButtonElement} */ (remove));
-      if (target.closest("[data-coupon-remove]")) this.#removeCoupon(/** @type {HTMLButtonElement} */ (target.closest("[data-coupon-remove]")));
       if (target.closest("[data-checkout-button]")) window.Dotshop?.pixels?.publish("initiate-checkout", this.cart);
     }, { signal });
 
     this.addEventListener("submit", (event) => {
-      if (/** @type {HTMLElement} */ (event.target).matches("[data-coupon-form]")) this.#applyCoupon(event);
+      if (/** @type {HTMLElement} */ (event.target).matches("[data-coupon-form]")) this.#submitCoupon(event);
     }, { signal });
   }
 
@@ -81,28 +80,18 @@ class CartComponent extends Component {
   }
 
   /** @param {SubmitEvent} event */
-  async #applyCoupon(event) {
+  async #submitCoupon(event) {
     event.preventDefault();
     const form = /** @type {HTMLFormElement} */ (event.target);
-    const code = new FormData(form).get("coupon_code");
-    const button = /** @type {HTMLButtonElement} */ (form.querySelector("button"));
-    if (!code) return;
+    const button = /** @type {HTMLButtonElement} */ (event.submitter ?? form.querySelector("button"));
+    const body = new FormData(form);
+    body.delete("form_type");
 
     this.#setLoading(button, true);
     try {
-      document.dispatchEvent(new CouponUpdateEvent({ cart: await youcanjs.checkout.applyCoupon(code) }));
-    } catch (error) {
-      showToast(/** @type {Error} */ (error).message, "error");
-    } finally {
-      this.#setLoading(button, false);
-    }
-  }
-
-  /** @param {HTMLButtonElement} button */
-  async #removeCoupon(button) {
-    this.#setLoading(button, true);
-    try {
-      document.dispatchEvent(new CouponUpdateEvent({ cart: await youcanjs.checkout.removeCoupons() }));
+      const response = await fetch(form.action, { method: "POST", body, headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error((await response.json().catch(() => ({}))).detail ?? response.statusText);
+      document.dispatchEvent(new CouponUpdateEvent({ cart: null }));
     } catch (error) {
       showToast(/** @type {Error} */ (error).message, "error");
     } finally {
