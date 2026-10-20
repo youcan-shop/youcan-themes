@@ -1,5 +1,14 @@
 # kinder
 
+## 1.1.11
+
+### Patch Changes
+
+- 2ee8873: Product page > add YouTube videos support in the product media
+- fe7afc4: Keep the default list styling in the product description so lists from the rich text editor show as written
+- 203691e: - Truncate long product names in the shop bar so the buy button stays inside the floating bar
+  - Add an aria-label to the breadcrumb back button
+
 ## 1.1.10
 
 ### Patch Changes

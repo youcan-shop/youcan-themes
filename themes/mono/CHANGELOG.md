@@ -1,5 +1,11 @@
 # bella
 
+## 1.2.8
+
+### Patch Changes
+
+- fe7afc4: Keep the default list styling in the product description so lists from the rich text editor show as written
+
 ## 1.2.7
 
 ### Patch Changes
