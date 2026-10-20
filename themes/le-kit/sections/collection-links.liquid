@@ -1,0 +1,130 @@
+{% assign s = section.settings %}
+
+<div
+  class="section color-scheme color-{{ s.color_scheme }}"
+  style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+>
+  <ui-collection-links class="page-width collection-links collection-links--{{ s.layout }}" data-align="{{ s.alignment }}">
+    <ul class="collection-links__list" role="list">
+      {% if s.collections.size > 0 %}
+        {% for collection in s.collections %}
+          <li>
+            <a class="collection-links__link {{ s.text_size }}" href="/collections/{{ collection.slug }}" ref="links[]" {% if forloop.first %}data-active{% endif %}>
+              {{ collection.name }}
+              {% if s.show_count %}<sup class="collection-links__count">{{ collection.products_count }}</sup>{% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}
+          <li><a class="collection-links__link {{ s.text_size }}" href="#" ref="links[]" {% if forloop.first %}data-active{% endif %}>{{ 'collections.placeholder_title' | t }} {{ i }}</a></li>
+        {% endfor %}
+      {% endif %}
+    </ul>
+    {% if s.layout == 'spotlight' %}
+      <div class="collection-links__media">
+        {% if s.collections.size > 0 %}
+          {% for collection in s.collections %}
+            <div class="media collection-links__image" ref="images[]" {% if forloop.first %}data-active{% endif %}>
+              {% render 'image', image: collection.preview_image, alt: '', sizes: '(min-width: 750px) 45vw, 100vw', placeholder: 'collection-1' %}
+            </div>
+          {% endfor %}
+        {% else %}
+          {% for i in (1..4) %}
+            <div class="media collection-links__image" ref="images[]" {% if forloop.first %}data-active{% endif %}>
+              {% assign placeholder = forloop.index0 | modulo: 3 | plus: 1 | prepend: 'collection-' %}
+              {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </ui-collection-links>
+</div>
+
+<script type="module" src="{{ 'collection-links.js' | asset_url }}"></script>
+
+{% stylesheet %}
+  .collection-links { display: grid; gap: var(--space-2xl); align-items: center; }
+  .collection-links__list { display: grid; gap: var(--space-2xs); padding: 0; list-style: none; }
+  .collection-links[data-align="center"] .collection-links__list { justify-items: center; text-align: center; }
+  .collection-links__link {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    line-height: 1.1;
+    letter-spacing: var(--font-heading-letter-spacing);
+    text-decoration: none;
+    opacity: 0.32;
+    transition: opacity var(--duration) var(--ease);
+  }
+  .collection-links__link[data-active], .collection-links__link:hover, .collection-links__link:focus-visible { opacity: 1; }
+  .collection-links__count { font-family: var(--font-body-family); font-size: var(--text-xs); font-weight: 500; opacity: 0.7; }
+  .collection-links__media { position: relative; display: grid; }
+  .collection-links__image {
+    grid-area: 1 / 1;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-surface);
+    opacity: 0;
+    scale: 1.03;
+    transition: opacity 500ms var(--ease), scale 700ms var(--ease);
+  }
+  .collection-links__image[data-active] { opacity: 1; scale: 1; }
+  @media (min-width: 750px) {
+    .collection-links--spotlight { grid-template-columns: 1.2fr 1fr; }
+  }
+  @media (max-width: 749px) {
+    .collection-links__media { order: -1; }
+    .collection-links__image { aspect-ratio: 4 / 3; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.collection_links",
+  "settings": [
+    { "type": "collection_list", "id": "collections", "label": "t:settings.collections", "limit": 12 },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        { "value": "spotlight", "label": "t:options.text_with_image" },
+        { "value": "text", "label": "t:options.text_only" }
+      ],
+      "default": "spotlight"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "t:settings.text_size",
+      "options": [
+        { "value": "h3", "label": "t:options.medium" },
+        { "value": "h2", "label": "t:options.large" },
+        { "value": "h1", "label": "t:options.extra_large" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "start"
+    },
+    { "type": "checkbox", "id": "show_count", "label": "t:settings.show_product_count", "default": true },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ],
+  "presets": [
+    { "name": "t:names.collection_links", "category": "t:categories.collections" }
+  ]
+}
+{% endschema %}

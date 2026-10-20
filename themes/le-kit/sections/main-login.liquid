@@ -1,0 +1,93 @@
+{%- liquid
+  assign show_recover = false
+  if request.url contains '/account/recover'
+    assign show_recover = true
+  endif
+-%}
+
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <ui-auth
+    class="page-width auth"
+    {% if show_recover %}
+      data-view="recover"
+    {% else %}
+      data-view="login"
+    {% endif %}
+  >
+    <div class="auth__card" ref="views[]" data-auth-view="login">
+      <header class="auth__header">
+        <h1 class="h3">
+          {% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'account.login.title' | t }}{% endif %}
+        </h1>
+        {% if section.settings.text != blank %}
+          <p class="text-sm text-muted">{{ section.settings.text }}</p>
+        {% endif %}
+      </header>
+      {% form 'customer_login', class: 'auth__form' %}
+        {% render 'form-errors', form: form %}
+        <label class="field">
+          <span class="field__label">{{ 'account.email' | t }}</span>
+          <input placeholder="{{ 'placeholders.email' | t }}" class="input" type="email" name="email" value="{{ form.email | escape }}" autocomplete="email" required>
+        </label>
+        <label class="field">
+          <span class="field__label auth__label-row">
+            <span>{{ 'account.password' | t }}</span>
+            <a class="auth__link" href="{{ routes.account_recover_url | default: '/account/recover' }}" ref="switchLinks[]" data-auth-switch="recover">
+              {{- 'account.login.forgot' | t -}}
+            </a>
+          </span>
+          <input placeholder="{{ 'placeholders.password' | t }}" class="input" type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <button class="button button--full" type="submit">{{ 'account.login.submit' | t }}</button>
+      {% endform %}
+      <p class="auth__footer text-sm text-muted">
+        {{ 'account.login.no_account' | t }}
+        <a href="{{ routes.account_register_url }}">{{ 'account.login.create' | t }}</a>
+      </p>
+    </div>
+
+    <div class="auth__card" ref="views[]" data-auth-view="recover">
+      <header class="auth__header">
+        <h1 class="h3">{{ 'account.recover.title' | t }}</h1>
+        <p class="text-sm text-muted">{{ 'account.recover.text' | t }}</p>
+      </header>
+      {% form 'recover_customer_password', class: 'auth__form' %}
+        {% if form.posted_successfully %}
+          <p class="alert" role="status">
+            {% render 'icon', name: 'mail', px: 18 %}
+            {{ 'account.recover.success' | t }}
+          </p>
+        {% endif %}
+        {% render 'form-errors', form: form %}
+        <label class="field">
+          <span class="field__label">{{ 'account.email' | t }}</span>
+          <input placeholder="{{ 'placeholders.email' | t }}" class="input" type="email" name="email" autocomplete="email" required>
+        </label>
+        <button class="button button--full" type="submit">{{ 'account.recover.submit' | t }}</button>
+      {% endform %}
+      <p class="auth__footer text-sm text-muted">
+        <a href="{{ routes.account_login_url }}" ref="switchLinks[]" data-auth-switch="login">{{ 'account.recover.back' | t }}</a>
+      </p>
+    </div>
+  </ui-auth>
+</div>
+
+<script type="module" src="{{ 'auth.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "t:names.customer_login",
+  "templates": ["customer-login"],
+  "limit": 1,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:settings.heading" },
+    { "type": "textarea", "id": "text", "label": "t:settings.text" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

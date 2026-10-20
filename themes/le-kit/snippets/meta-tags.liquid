@@ -1,0 +1,146 @@
+{% comment %}
+  Renders the page title and SEO tags: canonical, description, robots, hreflang, Open Graph and Twitter.
+
+  Usage:
+  {% render 'meta-tags' %}
+{% endcomment %}
+
+{% assign store_title = store.title | default: store.name %}
+
+{%- liquid
+  case template.name
+    when 'index'
+      assign page_title = ''
+    when 'product'
+      assign page_title = product.meta.title | default: product.name
+    when 'collection'
+      assign page_title = category.meta.title | default: category.name
+    when 'page'
+      assign page_title = page.name
+    when 'list-collections'
+      assign page_title = 'meta.collections' | t
+    when 'cart'
+      assign page_title = 'meta.cart' | t
+    when '404'
+      assign page_title = 'not_found.title' | t
+    when 'thankyou'
+      assign page_title = 'meta.thank_you' | t
+    when 'upsell'
+      assign page_title = 'meta.upsell' | t
+    when 'customer-login'
+      if request.url contains '/account/recover'
+        assign page_title = 'account.recover.title' | t
+      else
+        assign page_title = 'account.login.title' | t
+      endif
+    when 'customer-register'
+      assign page_title = 'meta.register' | t
+    when 'customer-account'
+      assign page_title = 'account.title' | t
+    when 'customer-order'
+      assign page_title = 'account.order.title' | t | replace: '[name]', order.name
+    when 'customer-addresses'
+      assign page_title = 'account.addresses' | t
+    when 'customer-reset-password'
+      assign page_title = 'account.reset.title' | t
+    when 'search'
+      assign search_terms = search.terms | default: terms
+      if search_terms != blank
+        assign quoted_terms = search_terms | escape | prepend: '"' | append: '"'
+        assign page_title = 'meta.search_results' | t | replace: '[term]', quoted_terms
+      else
+        assign page_title = 'search.title' | t
+      endif
+    else
+      assign page_title = page.name | default: product.name | default: category.name | default: template.name
+  endcase
+-%}
+<title>{% if page_title != blank %}{{ page_title }} - {% endif %}{{ store_title }}</title>
+
+{%- liquid
+  assign canonical_url = request.url | split: '?' | first
+  if request.url contains 'page='
+    assign canonical_url = request.url
+  endif
+  assign og_title = store_title
+  assign og_type = 'website'
+  assign og_image = settings.og_image.src
+  assign meta_description = store.description | default: store.name
+
+  case template.name
+    when 'product'
+      assign og_type = 'product'
+      assign og_title = product.meta.title | default: product.name
+      assign og_image = product.thumbnail | default: og_image
+      assign meta_description = product.meta.description | default: product.description | strip_html | strip_newlines | truncate: 160 | default: meta_description
+    when 'collection'
+      assign og_title = category.meta.title | default: category.name
+      assign meta_description = category.meta.description | default: category.description | strip_html | strip_newlines | truncate: 160 | default: meta_description
+    when 'page'
+      assign og_title = page.name
+      assign meta_description = page.content | strip_html | strip_newlines | truncate: 160 | default: meta_description
+  endcase
+
+  assign noindex = false
+  case template.name
+    when 'search', 'cart', 'thankyou', 'upsell', '404', 'customer-login', 'customer-register', 'customer-account', 'customer-order', 'customer-addresses', 'customer-reset-password'
+      assign noindex = true
+  endcase
+-%}
+
+<link rel="canonical" href="{{ canonical_url }}">
+<meta name="description" content="{{ meta_description | escape }}">
+{%- if noindex %}
+  <meta name="robots" content="noindex, follow">
+{%- endif %}
+{%- if settings.keywords != blank %}
+  <meta name="keywords" content="{{ settings.keywords | escape }}">
+{%- endif %}
+
+{%- if localization.available_languages.size > 1 %}
+  {%- assign current_root = localization.language.root_url | default: request.locale.root_url %}
+  {%- assign path = request.path %}
+  {%- if current_root != blank and current_root != '/' %}
+    {%- assign path = path | remove_first: current_root %}
+  {%- endif %}
+  {%- for language in localization.available_languages %}
+    {%- assign root = language.root_url | default: '' %}
+    {%- if root == '/' %}{% assign root = '' %}{% endif %}
+    <link rel="alternate" hreflang="{{ language.iso_code }}" href="https://{{ request.host }}{{ root }}{{ path }}">
+    {%- if language.primary %}
+      <link rel="alternate" hreflang="x-default" href="https://{{ request.host }}{{ root }}{{ path }}">
+    {%- endif %}
+  {%- endfor %}
+{%- endif %}
+
+<meta property="og:site_name" content="{{ store.name | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta property="og:title" content="{{ og_title | escape }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ meta_description | escape }}">
+{%- if og_image != blank %}
+  <meta property="og:image" content="{{ og_image }}">
+  <meta property="og:image:secure_url" content="{{ og_image }}">
+{%- endif %}
+{%- if template.name == 'product' %}
+  <meta property="og:price:amount" content="{{ product.price | default: 0 }}">
+  <meta property="og:price:currency" content="{{ store.currency.iso_code }}">
+{%- endif %}
+
+{%- liquid
+  assign twitter = store.brand.social_links.twitter
+  if twitter contains 'twitter.com/'
+    assign twitter_site = twitter | split: 'twitter.com/' | last | prepend: '@'
+  elsif twitter contains 'x.com/'
+    assign twitter_site = twitter | split: 'x.com/' | last | prepend: '@'
+  endif
+-%}
+{%- if twitter_site %}
+  <meta name="twitter:site" content="{{ twitter_site }}">
+{%- endif %}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title | escape }}">
+<meta name="twitter:description" content="{{ meta_description | escape }}">
+{%- if og_image != blank %}
+  <meta name="twitter:image" content="{{ og_image }}">
+{%- endif %}

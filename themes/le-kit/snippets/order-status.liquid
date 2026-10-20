@@ -1,0 +1,21 @@
+{% comment %}
+  Renders the payment and fulfillment status badges of an order.
+
+  Accepts:
+  - order: {Object} Order
+
+  Usage:
+  {% render 'order-status', order: order %}
+{% endcomment %}
+
+<span class="order-status">
+  {% if order.paymentStatusSlug != blank %}
+    {% assign payment_key = 'thank_you.payment_status.' | append: order.paymentStatusSlug %}
+    <span class="badge badge--muted" data-status="{{ order.paymentStatusSlug }}">
+      <span class="status-dot"></span>{{ payment_key | t }}
+    </span>
+  {% endif %}
+  {% if order.fulfillment_status != blank %}
+    <span class="badge badge--muted">{{ order.fulfillment_status | capitalize }}</span>
+  {% endif %}
+</span>

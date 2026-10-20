@@ -1,0 +1,69 @@
+{%- liquid
+  assign methods = 'cod,visa,mastercard,paypal,stripe,youcan_pay,bank_transfer' | split: ','
+-%}
+
+<ul class="payment-icons" role="list" aria-label="{{ 'payment_icons.label' | t }}" {{ block.youcan_attributes }}>
+  {% for method in methods %}
+    {% assign enabled_key = 'show_' | append: method %}
+    {% if block.settings[enabled_key] %}
+      <li class="payment-icon payment-icon--{{ method }}">
+        {% case method %}
+          {% when 'paypal' %}
+            {% render 'payment-gateway', type: '3' %}
+          {% when 'stripe' %}
+            {% render 'payment-gateway', type: '2' %}
+          {% when 'youcan_pay' %}
+            {% render 'payment-gateway', type: '6' %}
+          {% when 'cod' %}
+            {% render 'icon', name: 'truck', px: 16 %}<span>{{ 'payment_icons.cod' | t }}</span>
+          {% when 'bank_transfer' %}
+            {% render 'icon', name: 'lock', px: 16 %}<span>{{ 'payment_icons.bank_transfer' | t }}</span>
+          {% when 'visa' %}
+            <span class="payment-icon__wordmark payment-icon__wordmark--visa">VISA</span>
+          {% when 'mastercard' %}
+            <span class="payment-icon__mc" aria-hidden="true"><span></span><span></span></span><span class="visually-hidden">Mastercard</span>
+        {% endcase %}
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+{% stylesheet %}
+  .payment-icons { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; list-style: none; }
+  .payment-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding-inline: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-background);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .payment-icon svg:not(.icon) { width: auto; height: 16px; }
+  .payment-icon__wordmark--visa { color: #1a1f71; font-style: italic; font-weight: 800; letter-spacing: 0.02em; }
+  .payment-icon__mc { display: inline-flex; }
+  .payment-icon__mc span { width: 14px; height: 14px; border-radius: 50%; background: #eb001b; }
+  .payment-icon__mc span + span { margin-inline-start: -6px; background: #f79e1b; mix-blend-mode: multiply; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.payment_icons",
+  "tag": null,
+  "settings": [
+    { "type": "checkbox", "id": "show_cod", "label": "t:settings.cash_on_delivery", "default": true },
+    { "type": "checkbox", "id": "show_visa", "label": "Visa", "default": true },
+    { "type": "checkbox", "id": "show_mastercard", "label": "Mastercard", "default": true },
+    { "type": "checkbox", "id": "show_paypal", "label": "PayPal", "default": false },
+    { "type": "checkbox", "id": "show_stripe", "label": "Stripe", "default": false },
+    { "type": "checkbox", "id": "show_youcan_pay", "label": "YouCan Pay", "default": true },
+    { "type": "checkbox", "id": "show_bank_transfer", "label": "t:settings.bank_transfer", "default": false }
+  ],
+  "presets": [
+    { "name": "t:names.payment_icons", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

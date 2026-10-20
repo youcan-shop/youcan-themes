@@ -1,0 +1,89 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width account">
+    <header class="account__header">
+      <div>
+        <a class="button button--link button--sm account__back" href="{{ routes.account_url }}">
+          {% render 'icon', name: 'arrow-left', px: 16, class: 'icon--flip' %}
+          {{ 'account.back_to_orders' | t }}
+        </a>
+        <h1 class="h2">{{ 'account.order.title' | t | replace: '[name]', order.name }}</h1>
+        {% assign placed_on = order.created_at | date: '%d/%m/%Y' %}
+        <p class="text-sm text-muted">{{ 'account.order.placed_on' | t | replace: '[date]', placed_on }}</p>
+      </div>
+      {% render 'order-status', order: order %}
+    </header>
+
+    <div class="account__layout account__layout--order">
+      <div class="account__main">
+        <div class="account-card">
+          <ul class="cart__lines" role="list">
+            {% for item in order.order_variants %}
+              <li class="cart-line">
+                <a class="media cart-line__media" href="/products/{{ item.slug }}" style="--ratio: 1 / 1;" tabindex="-1" aria-hidden="true">
+                  {% if item.image %}
+                    {% render 'image', image: item.image, alt: '', width: 240, sizes: '96px' %}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% endif %}
+                </a>
+                <div class="cart-line__info">
+                  <a class="cart-line__name" href="/products/{{ item.slug }}">{{ item.name }}</a>
+                  {% if item.variations.size > 0 %}
+                    <p class="cart-line__variants">{% for variation in item.variations %}{{ variation[1] }}{% unless forloop.last %} / {% endunless %}{% endfor %}</p>
+                  {% endif %}
+                  <p class="text-sm text-muted">{{ item.price | money }} × {{ item.quantity }}</p>
+                </div>
+                <p class="cart-line__total">{{ item.price | times: item.quantity | money }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+          <dl class="cart__totals">
+            <div class="cart__total-row"><dt>{{ 'cart.subtotal' | t }}</dt><dd>{{ order.sub_total | default: 0 | money }}</dd></div>
+            {% if order.coupon %}
+              <div class="cart__total-row cart__total-row--discount"><dt>{{ 'cart.discount' | t }} ({{ order.coupon.code }})</dt><dd>{% render 'discount-value', coupon: order.coupon %}</dd></div>
+            {% endif %}
+            <div class="cart__total-row">
+              <dt>{{ 'thank_you.shipping' | t }}</dt>
+              <dd>{% if order.shippingCost == 0 or order.shippingCost == blank %}{{ 'general.free' | t }}{% else %}{{ order.shippingCost | money }}{% endif %}</dd>
+            </div>
+            {% if order.vat != 0 and order.vat != blank %}
+              <div class="cart__total-row"><dt>{{ 'thank_you.vat' | t }}</dt><dd>{{ order.total_tax_amount | default: 0 | money }}</dd></div>
+            {% endif %}
+            <div class="cart__total-row cart__total-row--total"><dt>{{ 'cart.total' | t }}</dt><dd>{{ order.total | default: 0 | money }}</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <aside class="account__aside">
+        <div class="account-card">
+          <h2 class="h6">{{ 'account.order.shipping_address' | t }}</h2>
+          {% if order.shipping_address %}
+            {% render 'address-summary', address: order.shipping_address %}
+          {% else %}
+            <p class="text-sm text-muted">—</p>
+          {% endif %}
+        </div>
+        <div class="account-card">
+          <h2 class="h6">{{ 'thank_you.payment_method' | t }}</h2>
+          <div class="text-sm">{% render 'payment-gateway', type: order.gatewayType %}</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.customer_order",
+  "templates": ["customer-order"],
+  "limit": 1,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

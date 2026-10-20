@@ -1,0 +1,59 @@
+<ui-carousel
+  class="announcement-bar color-scheme color-{{ section.settings.color_scheme }}"
+  {% if section.settings.autoplay and section.blocks.size > 1 %}autoplay interval="{{ section.settings.speed | times: 1000 }}"{% endif %}
+  aria-label="{{ 'accessibility.announcements' | t }}"
+>
+  <div class="page-width announcement-bar__inner">
+    {% if section.blocks.size > 1 and section.settings.show_arrows %}
+      <button class="announcement-bar__arrow" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+        {% render 'icon', name: 'chevron-left', px: 16, class: 'icon--flip' %}
+      </button>
+    {% endif %}
+    <div class="slider__track announcement-bar__track" ref="track">
+      {% content_for 'blocks' %}
+    </div>
+    {% if section.blocks.size > 1 and section.settings.show_arrows %}
+      <button class="announcement-bar__arrow" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+        {% render 'icon', name: 'chevron-right', px: 16, class: 'icon--flip' %}
+      </button>
+    {% endif %}
+  </div>
+</ui-carousel>
+
+{% stylesheet %}
+  .announcement-bar { --slider-gap: 0px; display: block; font-size: var(--text-xs); }
+  .announcement-bar__inner { display: flex; align-items: center; gap: var(--space-xs); min-height: 40px; }
+  .announcement-bar__track { flex: 1; }
+  .announcement-bar__arrow {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: none;
+    opacity: 0.7;
+  }
+  .announcement-bar__arrow:hover { opacity: 1; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.announcement_bar",
+  "max_blocks": 6,
+  "blocks": [{ "type": "_announcement" }],
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "checkbox", "id": "show_arrows", "label": "t:settings.show_arrows", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "t:settings.autoplay", "default": true },
+    { "type": "range", "id": "speed", "label": "t:settings.change_every", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 5 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.announcement_bar",
+      "blocks": [{ "type": "_announcement" }]
+    }
+  ]
+}
+{% endschema %}

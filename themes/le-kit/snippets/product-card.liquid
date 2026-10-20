@@ -1,0 +1,152 @@
+{% comment %}
+  Renders a product card.
+  Behaviour (quick add, second image, image carousel, swatches) comes from Theme settings > Product cards.
+  Layout and content can be overridden per section by the product card block (card).
+
+  Accepts:
+  - product: {Object} Product
+  - card: {Object} (Optional) Product card block settings: ratio, alignment, show_badges, show_rating, show_swatches
+  - eager: {Boolean} (Optional) Load the image immediately (first row)
+  - sizes: {String} (Optional) Image sizes attribute
+  - placeholder_index: {Number} (Optional) Placeholder variation when product is blank
+  - attributes: {String} (Optional) Extra attributes for the root element (theme editor)
+
+  Usage:
+  {% render 'product-card', product: product, card: block.settings %}
+{% endcomment %}
+
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+  assign variant = product.selected_or_first_available_variant
+  assign available = variant.available
+  if product == blank
+    assign available = true
+  endif
+  assign price = variant.price | default: product.price | default: 0
+  assign compare_at_price = variant.compare_at_price | default: product.compare_at_price
+  assign title = product.name
+  if title == blank
+    assign title = 'product.placeholder_title' | t
+  endif
+
+  assign show_badges = true
+  assign show_swatches = settings.card_show_swatches
+  assign show_rating = settings.card_show_rating
+  assign card_style = ''
+  if card
+    assign show_badges = card.show_badges
+    assign show_rating = card.show_rating
+    if card.show_swatches == false
+      assign show_swatches = false
+    endif
+    case card.ratio
+      when 'square'
+        assign card_style = card_style | append: '--card-ratio: 1 / 1;'
+      when 'portrait'
+        assign card_style = card_style | append: '--card-ratio: 3 / 4;'
+      when 'tall'
+        assign card_style = card_style | append: '--card-ratio: 2 / 3;'
+      when 'landscape'
+        assign card_style = card_style | append: '--card-ratio: 4 / 3;'
+    endcase
+    if card.alignment == 'start' or card.alignment == 'center'
+      assign card_style = card_style | append: '--card-text-align: ' | append: card.alignment | append: ';'
+    endif
+  endif
+
+  assign use_carousel = false
+  if settings.card_image_carousel and product.images.size > 1
+    assign use_carousel = true
+  endif
+  assign secondary_image = nil
+  if use_carousel == false and settings.card_show_secondary_image and product.images.size > 1
+    assign secondary_image = product.images[1]
+  endif
+-%}
+
+<article class="product-card" {% if card_style != '' %}style="{{ card_style }}"{% endif %} {{ attributes }}>
+  {% if use_carousel %}
+    <ui-carousel class="media product-card__media product-card__media--carousel">
+      <a class="slider__track" href="{{ product.url }}" tabindex="-1" aria-hidden="true" ref="track">
+        {% for image in product.images limit: 5 %}
+          <span class="media" data-carousel-item>
+            {% render 'image', image: image, alt: '', width: 900, sizes: sizes, eager: eager %}
+          </span>
+        {% endfor %}
+      </a>
+      <span class="product-card__dots" aria-hidden="true">
+        {% for image in product.images limit: 5 %}
+          <button class="slider__dot" type="button" tabindex="-1" ref="dots[]" {% if forloop.first %}aria-current="true"{% endif %}></button>
+        {% endfor %}
+      </span>
+    </ui-carousel>
+  {% else %}
+    <a class="media product-card__media" href="{{ product.url | default: '#' }}" tabindex="-1" aria-hidden="true">
+      {% if product.preview_image %}
+        {% render 'image', image: product.preview_image, alt: product.name, width: 900, sizes: sizes, eager: eager %}
+        {% if secondary_image %}
+          {% render 'image', image: secondary_image, alt: '', width: 900, sizes: sizes, class: 'product-card__image--secondary' %}
+        {% endif %}
+      {% else %}
+        {% assign placeholder = placeholder_index | default: 0 | modulo: 5 | plus: 1 | prepend: 'product-' %}
+        {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </a>
+  {% endif %}
+
+  {% if show_badges %}
+    <div class="product-card__badges" data-position="{{ settings.badge_position | default: 'top-left' }}">
+      {% if available == false %}
+        <span class="badge badge--muted">{{ 'product.sold_out' | t }}</span>
+      {% else %}
+        {% render 'product-badge', product: product, price: price, compare_at_price: compare_at_price %}
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="product-card__info">
+    <a class="product-card__title" href="{{ product.url | default: '#' }}">{{ title }}</a>
+    {% if show_rating and product.averageRating > 0 %}
+      <span class="rating text-xs">
+        {% render 'icon', name: 'star', px: 14 %}
+        {{ product.averageRating }}
+      </span>
+    {% endif %}
+    {% render 'price', product: product %}
+    {% if show_swatches %}
+      {% for option in product.options %}
+        {% if option.type == 'color_base_buttons' and option.values.size > 1 %}
+          <span class="product-card__swatches" aria-label="{{ option.name | escape }}">
+            {% for value in option.values limit: 5 %}
+              <span class="product-card__swatch" style="--swatch: {{ value.preview }};" title="{{ value.value | escape }}"></span>
+            {% endfor %}
+            {% if option.values.size > 5 %}
+              <span class="product-card__swatch-more">+{{ option.values.size | minus: 5 }}</span>
+            {% endif %}
+          </span>
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  {% if settings.card_show_quick_add and product != blank %}
+    <div class="product-card__action{% if settings.card_quick_add_mobile == false %} product-card__action--desktop{% endif %}">
+      {% if available == false %}
+        <button class="button button--secondary button--full" type="button" disabled>{{ 'product.sold_out' | t }}</button>
+      {% elsif settings.shopping_flow != 'express_checkout' and product.variants.size <= 1 and product.is_bundle != true %}
+        {% render 'shop-button', product: product, style: 'secondary', source: 'product-card', full_width: true %}
+      {% else %}
+        <ui-quick-add data-url="{{ product.url }}">
+          <button class="button button--secondary button--full" type="button" ref="button">
+            {%- if settings.shopping_flow == 'express_checkout' -%}
+              {{ 'product.buy_now' | t }}
+            {%- else -%}
+              {{ 'product.choose_options' | t }}
+            {%- endif -%}
+          </button>
+        </ui-quick-add>
+      {% endif %}
+    </div>
+  {% endif %}
+</article>

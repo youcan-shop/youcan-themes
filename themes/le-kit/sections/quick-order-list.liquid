@@ -1,0 +1,101 @@
+{%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{%- liquid
+  assign s = section.settings
+  assign p = closest.product | default: product
+-%}
+
+{% if p and p.variants.size > 0 and settings.shopping_flow != 'express_checkout' %}
+  <div
+    class="section color-scheme color-{{ s.color_scheme }}"
+    style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+  >
+    <ui-quick-order class="page-width quick-order">
+      {% render 'section-header', heading: td_heading, description: s.description %}
+      <div class="quick-order__table" role="table" aria-label="{{ td_heading | strip_html | escape }}">
+        <div class="quick-order__row quick-order__row--head" role="row">
+          <span role="columnheader">{{ 'quick_order.variant' | t }}</span>
+          <span role="columnheader">{{ 'quick_order.price' | t }}</span>
+          <span role="columnheader">{{ 'quick_order.quantity' | t }}</span>
+        </div>
+        {% for variant in p.variants %}
+          <div class="quick-order__row" role="row" data-variant-id="{{ variant.id }}" data-price="{{ variant.price }}">
+            <span class="quick-order__variant" role="cell">
+              {% if variant.variations == null or variant.variations.default %}
+                {{ p.name }}
+              {% else %}
+                {% for variation in variant.variations %}{{ variation[1] }}{% unless forloop.last %} / {% endunless %}{% endfor %}
+              {% endif %}
+              {% unless variant.available %}<span class="badge badge--muted">{{ 'product.sold_out' | t }}</span>{% endunless %}
+            </span>
+            <span class="text-sm" role="cell">{{ variant.price | money }}</span>
+            <span role="cell">
+              {% if variant.available %}
+                <input
+                  class="input quick-order__qty"
+                  type="number"
+                  min="0"
+                  {% if variant.inventory and p.isTrackingInventory %}max="{{ variant.inventory }}"{% endif %}
+                  value="0"
+                  inputmode="numeric"
+                  aria-label="{{ 'quick_order.quantity' | t }}"
+                  ref="quantities[]"
+                >
+              {% endif %}
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="quick-order__footer">
+        <p class="quick-order__summary">
+          <span class="text-sm text-muted">{{ 'quick_order.total' | t }}</span>
+          <span class="quick-order__total" ref="total">{{ 0 | money }}</span>
+        </p>
+        <button class="button button--lg" type="button" ref="addButton" disabled>{{ 'quick_order.add_all' | t }}</button>
+      </div>
+    </ui-quick-order>
+  </div>
+{% endif %}
+
+<script type="module" src="{{ 'quick-order.js' | asset_url }}"></script>
+
+{% stylesheet %}
+  .quick-order { display: grid; gap: var(--space-lg); }
+  .quick-order__table { overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-surface); box-shadow: var(--shadow-xs); }
+  .quick-order__row { display: grid; grid-template-columns: minmax(0, 2fr) 1fr 110px; align-items: center; gap: var(--space-md); padding: var(--space-sm) var(--space-lg); border-block-start: 1px solid var(--color-border); }
+  .quick-order__row--head { border: 0; background: color-mix(in srgb, var(--color-foreground) 2.5%, var(--color-background)); color: var(--color-muted); font-size: var(--text-xs); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .quick-order__variant { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs); font-size: var(--text-sm); font-weight: 500; }
+  .quick-order__qty { min-height: 36px; text-align: center; }
+  .quick-order__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
+  .quick-order__summary { display: grid; justify-items: end; }
+  .quick-order__total { font-size: var(--text-xl); font-weight: 600; }
+  @media (max-width: 749px) {
+    .quick-order__row { grid-template-columns: minmax(0, 1fr) 88px; padding-inline: var(--space-md); }
+    .quick-order__row > :nth-child(2) { grid-row: 2; }
+    .quick-order__row > :nth-child(3) { grid-row: 1 / span 2; grid-column: 2; }
+    .quick-order__row--head > :nth-child(2) { display: none; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.quick_order_list",
+  "settings": [
+    { "type": "paragraph", "content": "t:info.quick_order_list" },
+    { "type": "product", "id": "product", "label": "t:settings.product" },
+    { "type": "inline_richtext", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.quick_order_heading" },
+    { "type": "text", "id": "description", "label": "t:settings.description" },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+  ],
+  "presets": [
+    { "name": "t:names.quick_order_list", "category": "t:categories.products" }
+  ]
+}
+{% endschema %}

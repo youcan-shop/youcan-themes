@@ -1,0 +1,47 @@
+{% comment %}
+  Outputs the attributes that drive a .layout-panel container (direction, alignment, gap).
+
+  Accepts:
+  - settings: {Object} section.settings or block.settings with:
+    content_direction (column | row), vertical_on_mobile, horizontal_alignment,
+    vertical_alignment, gap
+
+  Usage:
+  <div class="layout-panel" {% render 'layout-style', settings: block.settings %}>
+{% endcomment %}
+
+{%- liquid
+  assign h = settings.horizontal_alignment | default: 'flex-start'
+  assign v = settings.vertical_alignment | default: 'flex-start'
+  assign gap = settings.gap | default: 16
+
+  case h
+    when 'center'
+      assign text_align = 'center'
+    when 'flex-end'
+      assign text_align = 'end'
+    else
+      assign text_align = 'start'
+  endcase
+
+  if settings.content_direction == 'row'
+    assign align_items = v
+    if align_items == 'space-between'
+      assign align_items = 'stretch'
+    endif
+    capture style
+      echo '--direction: row; --justify-content: ' | append: h | append: '; --align-items: ' | append: align_items | append: '; --align-items-mobile: ' | append: h | append: ';'
+    endcapture
+  else
+    assign align_items = h
+    if align_items == 'space-between'
+      assign align_items = 'stretch'
+    endif
+    capture style
+      echo '--direction: column; --align-items: ' | append: align_items | append: '; --justify-content: ' | append: v | append: ';'
+    endcapture
+  endif
+-%}
+data-direction="{{ settings.content_direction | default: 'column' }}"
+{% if settings.content_direction == 'row' and settings.vertical_on_mobile != false %}data-mobile-stack{% endif %}
+style="{{ style }} --gap: {{ gap }}px; --text-align: {{ text_align }};"

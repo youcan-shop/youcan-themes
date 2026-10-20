@@ -1,0 +1,122 @@
+{% comment %}
+  Renders the cart content: lines, bundles, coupon and summary.
+  Used by the cart drawer and the cart page. The whole <ui-cart> is re-rendered
+  with the Section Rendering API after every cart change (see assets/cart.js).
+
+  Accepts:
+  - context: {String} drawer | page
+  - show_coupon: {Boolean} (Optional)
+
+  Usage:
+  {% render 'cart-content', context: 'drawer' %}
+{% endcomment %}
+
+<ui-cart class="cart cart--{{ context }}" data-cart-section="{{ section.id }}">
+  <script type="application/json" data-cart-json>{{ cart | json }}</script>
+
+  {% if cart.count > 0 %}
+    <div class="cart__body{% if context == 'drawer' %} drawer__body{% endif %}">
+      {% assign threshold = settings.free_shipping_threshold | default: 0 | plus: 0 %}
+      {% if threshold > 0 %}
+        {%- liquid
+          assign subtotal = cart.sub_total | default: 0
+          assign remaining = threshold | minus: subtotal
+          assign remaining_money = remaining | money
+          assign progress = subtotal | times: 100.0 | divided_by: threshold | round
+          if progress > 100
+            assign progress = 100
+          endif
+        -%}
+        <div class="free-shipping">
+          <p class="free-shipping__text">
+            {% render 'icon', name: 'truck', px: 16 %}
+            {% if remaining > 0 %}
+              {{ 'cart.free_shipping.remaining' | t | replace: '[amount]', remaining_money }}
+            {% else %}
+              {{ 'cart.free_shipping.unlocked' | t }}
+            {% endif %}
+          </p>
+          <progress class="free-shipping__bar" value="{{ progress }}" max="100">{{ progress }}%</progress>
+        </div>
+      {% endif %}
+      <ul class="cart__lines" role="list">
+        {% for item in cart.items %}
+          {% render 'cart-line', item: item %}
+        {% endfor %}
+
+        {% if cart.bundles %}
+          {% assign types = 'single,multi,buyxgety' | split: ',' %}
+          {% for type in types %}
+            {% for bundle in cart.bundles[type] %}
+              {%- capture item_ids -%}{% for bundle_item in bundle.items %}{{ bundle_item.id }}{% unless forloop.last %},{% endunless %}{% endfor %}{%- endcapture -%}
+              {%- capture variant_ids -%}{% for bundle_item in bundle.items %}{{ bundle_item.product_variant_id }}{% unless forloop.last %},{% endunless %}{% endfor %}{%- endcapture -%}
+              <li class="cart-bundle">
+                <div class="cart-bundle__header">
+                  <span class="cart-bundle__title">{% render 'icon', name: 'gift', px: 16 %} {{ bundle.title }}</span>
+                  <button class="button button--link button--sm" type="button" data-cart-remove data-item="{{ item_ids }}" data-variant="{{ variant_ids }}">
+                    {{ 'cart.remove' | t }}
+                  </button>
+                </div>
+                <ul class="cart__lines" role="list">
+                  {% for bundle_item in bundle.items %}
+                    {% render 'cart-line', item: bundle_item, bundled: true %}
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      </ul>
+    </div>
+
+    <div class="cart__summary{% if context == 'drawer' %} drawer__footer{% endif %}">
+      {% if show_coupon %}
+        {% if cart.coupon %}
+          <div class="cart__coupon-applied">
+            {% render 'icon', name: 'tag', px: 16 %}
+            <span class="cart__coupon-code">{{ cart.coupon.code }}</span>
+            <button class="button button--ghost button--icon button--sm" type="button" data-coupon-remove aria-label="{{ 'cart.coupon.remove' | t }}">
+              {% render 'icon', name: 'close', px: 14 %}
+            </button>
+          </div>
+        {% else %}
+          <form class="cart__coupon" data-coupon-form>
+            <label class="visually-hidden" for="coupon-{{ section.id }}">{{ 'cart.coupon.label' | t }}</label>
+            <input class="input" id="coupon-{{ section.id }}" type="text" name="coupon_code" placeholder="{{ 'cart.coupon.placeholder' | t }}" autocomplete="off">
+            <button class="button button--secondary" type="submit">{{ 'cart.coupon.apply' | t }}</button>
+          </form>
+        {% endif %}
+      {% endif %}
+
+      <dl class="cart__totals">
+        <div class="cart__total-row">
+          <dt>{{ 'cart.subtotal' | t }}</dt>
+          <dd>{{ cart.sub_total | default: 0 | money }}</dd>
+        </div>
+        {% if cart.coupon %}
+          <div class="cart__total-row cart__total-row--discount">
+            <dt>{{ 'cart.discount' | t }}</dt>
+            <dd>{% render 'discount-value', coupon: cart.coupon %}</dd>
+          </div>
+        {% endif %}
+        <div class="cart__total-row cart__total-row--total">
+          <dt>{{ 'cart.total' | t }}</dt>
+          <dd>{{ cart.discounted_sub_total | default: cart.sub_total | default: 0 | money }}</dd>
+        </div>
+      </dl>
+      <p class="cart__note text-xs text-muted">{{ 'cart.taxes_note' | t }}</p>
+
+      <a class="button button--lg button--full" href="{{ cart.cart_submit_url }}" data-checkout-button>
+        {% render 'icon', name: 'lock', px: 16 %}
+        {{ 'cart.checkout' | t }}
+      </a>
+      {% if context == 'drawer' and settings.cart_type != 'page' %}
+        <a class="button button--link button--sm cart__view-cart" href="/cart">{{ 'cart.view_cart' | t }}</a>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="cart__body{% if context == 'drawer' %} drawer__body{% endif %}">
+      {% render 'empty-state', type: 'cart' %}
+    </div>
+  {% endif %}
+</ui-cart>

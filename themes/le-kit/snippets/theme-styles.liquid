@@ -1,0 +1,97 @@
+{% comment %}
+  Outputs fonts and global CSS custom properties (typography, layout, radii, color schemes).
+
+  Usage:
+  {% render 'theme-styles' %}
+{% endcomment %}
+
+{% assign heading_font = settings.heading_font %}
+{% assign body_font = settings.body_font %}
+{% assign accent_font = settings.accent_font | default: body_font %}
+
+{% unless body_font.system? and heading_font.system? %}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% endunless %}
+
+{%- comment -%} font_url is the Latin subset, only worth preloading when the store language uses it {%- endcomment -%}
+{% unless request.locale.iso_code == 'ar' or store.store_locale.iso_code == 'ar' %}
+  {% unless body_font.system? %}{{ body_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}{% endunless %}
+  {% unless heading_font.system? or heading_font.family == body_font.family %}{{ heading_font | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}{% endunless %}
+{% endunless %}
+
+{% style %}
+  {% unless heading_font.system? %}{{ heading_font | font_face: font_display: 'swap' }}{% endunless %}
+  {% unless body_font.system? %}{{ body_font | font_face: font_display: 'swap' }}{% endunless %}
+  {% unless accent_font.system? or accent_font.family == body_font.family or accent_font.family == heading_font.family %}{{ accent_font | font_face: font_display: 'swap' }}{% endunless %}
+
+  :root {
+    --font-body-family: {{ body_font.family }}, {{ body_font.fallback_families }}, yc-sans;
+    --font-body-weight: {{ body_font.weight }};
+    --font-body-style: {{ body_font.style }};
+    --font-body-scale: {{ settings.body_scale | default: 100 | divided_by: 100.0 }};
+
+    --font-heading-family: {{ heading_font.family }}, {{ heading_font.fallback_families }}, yc-sans;
+    --font-heading-weight: {{ heading_font.weight }};
+    --font-heading-style: {{ heading_font.style }};
+    --font-heading-scale: {{ settings.heading_scale | default: 100 | divided_by: 100.0 }};
+    --font-heading-case: {{ settings.heading_case | default: 'none' }};
+    --font-heading-line-height: {% case settings.heading_line_height %}{% when 'normal' %}1.25{% when 'relaxed' %}1.4{% else %}1.12{% endcase %};
+    --font-heading-letter-spacing: {% case settings.heading_letter_spacing %}{% when 'normal' %}0em{% when 'wide' %}0.02em{% else %}-0.02em{% endcase %};
+
+    --font-accent-family: {{ accent_font.family }}, {{ accent_font.fallback_families }}, yc-sans;
+    --font-accent-weight: {{ accent_font.weight }};
+    --font-button-family: {% case settings.button_font %}{% when 'heading' %}var(--font-heading-family){% when 'accent' %}var(--font-accent-family){% else %}var(--font-body-family){% endcase %};
+
+    {% case settings.page_width %}
+      {% when 'narrow' %}
+        --page-width: 1100px;
+      {% when 'wide' %}
+        --page-width: 1600px;
+      {% else %}
+        --page-width: 1360px;
+    {% endcase %}
+
+    --radius-button: {{ settings.button_radius | default: 10 }}px;
+    --radius-input: {{ settings.input_radius | default: 10 }}px;
+    --radius-card: {{ settings.card_radius | default: 12 }}px;
+    --radius-badge: {{ settings.badge_radius | default: 6 }}px;
+    --button-case: {{ settings.button_case | default: 'none' }};
+    --button-border-width: {{ settings.button_border_width | default: 1 }}px;
+    --input-border-width: {{ settings.input_border_width | default: 1 }}px;
+    --radius-variant: {{ settings.variant_radius | default: 10 }}px;
+    --radius-surface: {{ settings.popover_radius | default: 16 }}px;
+    --swatch-size: {{ settings.swatch_size | default: 32 }}px;
+    --swatch-radius: {% if settings.swatch_shape == 'square' %}calc(var(--swatch-size) / 5){% else %}50%{% endif %};
+    --icon-stroke: {{ settings.icon_stroke | default: 16 | divided_by: 10.0 }};
+    --badge-case: {{ settings.badge_case | default: 'none' }};
+    {% case settings.popover_shadow %}
+      {% when 'none' %}
+        --shadow-lg: none;
+        --shadow-popover: none;
+      {% when 'strong' %}
+        --shadow-lg: 0 24px 48px -12px rgb(0 0 0 / 0.25), 0 8px 16px -8px rgb(0 0 0 / 0.1);
+        --shadow-popover: 0 24px 48px -12px rgb(0 0 0 / 0.25), 0 8px 16px -8px rgb(0 0 0 / 0.1);
+    {% endcase %}
+
+    --card-ratio: {% case settings.card_image_ratio %}{% when 'portrait' %}3 / 4{% when 'landscape' %}4 / 3{% when 'tall' %}2 / 3{% else %}1 / 1{% endcase %};
+    --card-image-fit: {{ settings.card_image_fit | default: 'cover' }};
+    --card-text-align: {{ settings.card_text_alignment | default: 'start' }};
+  }
+
+  {% for scheme in settings.color_schemes %}
+    {% if forloop.first %}:root,{% endif %}
+    .color-{{ scheme.id }} {
+      --color-background: {{ scheme.settings.background }};
+      --color-foreground: {{ scheme.settings.foreground }};
+      --color-heading: {{ scheme.settings.heading | default: scheme.settings.foreground }};
+      --color-primary: {{ scheme.settings.primary }};
+      --color-primary-foreground: {{ scheme.settings.primary_foreground }};
+      --color-secondary: {{ scheme.settings.secondary }};
+      --color-secondary-foreground: {{ scheme.settings.secondary_foreground }};
+      --color-border: {{ scheme.settings.border }};
+      --color-sale: {{ scheme.settings.sale | default: '#ef4444' }};
+      {%- assign check_color = scheme.settings.primary_foreground.hex | default: '#ffffff' | remove: '#' %}
+      --check-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23{{ check_color }}' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+    }
+  {% endfor %}
+{% endstyle %}

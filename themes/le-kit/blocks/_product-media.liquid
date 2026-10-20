@@ -1,0 +1,99 @@
+{%- liquid
+  assign p = closest.product | default: product
+  case block.settings.ratio
+    when 'square'
+      assign ratio = '1 / 1'
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'landscape'
+      assign ratio = '4 / 3'
+    else
+      assign ratio = 'auto'
+  endcase
+-%}
+
+<ui-carousel
+  class="product-media product-media--{{ block.settings.layout }}"
+  style="--ratio: {{ ratio }}; --fit: {{ block.settings.fit }};"
+  ref="media"
+  {{ block.youcan_attributes }}
+>
+  {% if p.images.size > 0 %}
+    <ul class="slider__track product-media__track" role="list" ref="track">
+      {% for image in p.images %}
+        <li class="media product-media__item" data-carousel-item data-image="{{ image }}">
+          {% render 'image',
+            image: image,
+            alt: p.name,
+            width: 1600,
+            sizes: '(min-width: 990px) 55vw, 100vw',
+            eager: forloop.first
+          %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% if p.images.size > 1 %}
+      <div class="product-media__thumbnails" role="list">
+        {% for image in p.images %}
+          <button
+            class="media product-media__thumbnail"
+            type="button"
+            ref="dots[]"
+            aria-label="{{ 'accessibility.go_to_image' | t | replace: '[index]', forloop.index }}"
+            {% if forloop.first %}aria-current="true"{% endif %}
+          >
+            {% render 'image', image: image, alt: '', width: 200, sizes: '80px' %}
+          </button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="media product-media__item" style="--ratio: 1 / 1;">
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+  {% endif %}
+</ui-carousel>
+
+{% schema %}
+{
+  "name": "t:names.product_media",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        { "value": "carousel", "label": "t:options.carousel" },
+        { "value": "grid", "label": "t:options.grid" },
+        { "value": "stack", "label": "t:options.stacked" }
+      ],
+      "default": "carousel",
+      "info": "t:info.media_layout"
+    },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "adapt", "label": "t:options.adapt_to_image" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" },
+        { "value": "landscape", "label": "t:options.landscape" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "select",
+      "id": "fit",
+      "label": "t:settings.image_fit",
+      "options": [
+        { "value": "cover", "label": "t:options.cover" },
+        { "value": "contain", "label": "t:options.contain" }
+      ],
+      "default": "cover"
+    }
+  ]
+}
+{% endschema %}

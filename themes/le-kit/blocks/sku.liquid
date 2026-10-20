@@ -1,0 +1,23 @@
+{%- liquid
+  assign p = closest.product | default: product
+  assign sku = p.selected_or_first_available_variant.sku
+-%}
+
+{% if p %}
+  <p class="sku text-sm text-muted" {% if sku == blank %}hidden{% endif %} {{ block.youcan_attributes }}>
+    {{ 'product.sku' | t }}: <span ref="skus[]">{{ sku }}</span>
+  </p>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.sku",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.sku" }
+  ],
+  "presets": [
+    { "name": "t:names.sku", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

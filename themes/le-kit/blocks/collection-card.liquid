@@ -1,0 +1,52 @@
+{%- liquid
+  case block.settings.ratio
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'landscape'
+      assign ratio = '4 / 3'
+    else
+      assign ratio = '1 / 1'
+  endcase
+-%}
+
+<div class="collection-card-block" {{ block.youcan_attributes }}>
+  {% render 'collection-card', collection: block.settings.collection, ratio: ratio, style: block.settings.style, sizes: '(min-width: 750px) 33vw, 50vw' %}
+</div>
+
+{% stylesheet %}
+  .collection-card-block { width: 100%; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.collection_card",
+  "tag": null,
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "t:settings.collection" },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" },
+        { "value": "landscape", "label": "t:options.landscape" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.title_position",
+      "options": [
+        { "value": "below", "label": "t:options.below_image" },
+        { "value": "overlay", "label": "t:options.on_image" }
+      ],
+      "default": "below"
+    }
+  ],
+  "presets": [
+    { "name": "t:names.collection_card", "category": "t:categories.collections" }
+  ]
+}
+{% endschema %}

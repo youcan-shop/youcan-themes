@@ -1,0 +1,29 @@
+<nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}" {{ block.youcan_attributes }}>
+  <ol>
+    <li><a href="/">{{ 'general.home' | t }}</a></li>
+    {% if template.name == 'product' %}
+      {% if product.categories.size > 0 %}
+        <li><a href="/collections/{{ product.categories[0].slug }}">{{ product.categories[0].name }}</a></li>
+      {% else %}
+        <li><a href="/collections">{{ 'collections.title' | t }}</a></li>
+      {% endif %}
+      <li aria-current="page">{{ product.name }}</li>
+    {% elsif template.name == 'collection' %}
+      <li><a href="/collections">{{ 'collections.title' | t }}</a></li>
+      <li aria-current="page">{{ category.name }}</li>
+    {% elsif page %}
+      <li aria-current="page">{{ page.name }}</li>
+    {% endif %}
+  </ol>
+</nav>
+
+{% schema %}
+{
+  "name": "t:names.breadcrumbs",
+  "tag": null,
+  "settings": [],
+  "presets": [
+    { "name": "t:names.breadcrumbs", "category": "t:categories.navigation" }
+  ]
+}
+{% endschema %}

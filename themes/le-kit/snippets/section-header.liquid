@@ -1,0 +1,42 @@
+{% comment %}
+  Renders a section header: heading, description, "view all" link and slider arrows.
+
+  Accepts:
+  - heading: {String} (Optional)
+  - description: {String} (Optional)
+  - link: {String} (Optional) "View all" URL
+  - link_label: {String} (Optional)
+  - arrows: {Boolean} (Optional) Show slider arrows (inside ui-carousel)
+  - alignment: {String} (Optional) start | center
+
+  Usage:
+  {% render 'section-header', heading: section.settings.heading %}
+{% endcomment %}
+
+{% if heading != blank or description != blank or link != blank or arrows %}
+  <div class="section-header" data-align="{{ alignment | default: 'start' }}">
+    {% if heading != blank or description != blank %}
+      <div class="section-header__text">
+        {% if heading != blank %}
+          <h2 class="h3">{{ heading }}</h2>
+        {% endif %}
+        {% if description != blank %}
+          <p class="text-muted">{{ description }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="slider__controls">
+      {% if link != blank %}
+        <a class="button button--link" href="{{ link }}">{% if link_label != blank %}{{ link_label }}{% else %}{{ 'general.view_all' | t }}{% endif %}</a>
+      {% endif %}
+      {% if arrows %}
+        <button class="button button--secondary button--icon" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+          {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
+        </button>
+        <button class="button button--secondary button--icon" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+          {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
+        </button>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,30 @@
+{% assign pg = block.settings.page | default: closest.page | default: page %}
+
+<div class="page-content-block" {{ block.youcan_attributes }}>
+  {% if pg %}
+    {% if block.settings.show_title %}
+      <h2 class="h3">{{ pg.name }}</h2>
+    {% endif %}
+    <div class="rte">{{ pg.content }}</div>
+  {% else %}
+    <p class="text-muted">{{ 'page_content.placeholder' | t }}</p>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .page-content-block { display: grid; gap: var(--space-md); width: 100%; max-width: 72ch; text-align: start; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.page_content",
+  "tag": null,
+  "settings": [
+    { "type": "page", "id": "page", "label": "t:settings.page" },
+    { "type": "checkbox", "id": "show_title", "label": "t:settings.show_title", "default": true }
+  ],
+  "presets": [
+    { "name": "t:names.page_content", "category": "t:categories.text" }
+  ]
+}
+{% endschema %}

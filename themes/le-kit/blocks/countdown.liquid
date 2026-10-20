@@ -1,0 +1,77 @@
+<ui-countdown
+  class="countdown countdown--{{ block.settings.style }} countdown--{{ block.settings.size }}"
+  end="{{ block.settings.end_date | strip }}T{{ block.settings.end_time | default: '23:59' | strip }}"
+  {% if block.settings.hide_when_expired %}hide-when-expired{% endif %}
+  {{ block.youcan_attributes }}
+>
+  {% assign units = 'days,hours,minutes,seconds' | split: ',' %}
+  {% for unit in units %}
+    {% assign label_key = 'countdown.' | append: unit %}
+    <span class="countdown__unit">
+      <span class="countdown__value" ref="{{ unit }}">00</span>
+      {% if block.settings.show_labels %}
+        <span class="countdown__label">{{ label_key | t }}</span>
+      {% endif %}
+    </span>
+    {% unless forloop.last or block.settings.style == 'boxed' %}<span class="countdown__separator" aria-hidden="true">:</span>{% endunless %}
+  {% endfor %}
+</ui-countdown>
+
+<script type="module" src="{{ 'countdown.js' | asset_url }}"></script>
+
+{% stylesheet %}
+  .countdown { display: inline-flex; align-items: flex-start; gap: var(--space-xs); font-variant-numeric: tabular-nums; }
+  .countdown__unit { display: grid; justify-items: center; gap: 2px; }
+  .countdown__value { font-family: var(--font-heading-family); font-weight: 600; line-height: 1; }
+  .countdown__label { color: var(--color-muted); font-size: var(--text-xs); }
+  .countdown__separator { font-weight: 600; line-height: 1; opacity: 0.4; }
+  .countdown--sm .countdown__value, .countdown--sm .countdown__separator { font-size: var(--text-lg); }
+  .countdown--md .countdown__value, .countdown--md .countdown__separator { font-size: var(--h4); }
+  .countdown--lg .countdown__value, .countdown--lg .countdown__separator { font-size: var(--h2); }
+  .countdown--boxed .countdown__unit {
+    min-width: 64px;
+    padding: var(--space-sm) var(--space-xs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-surface);
+    background: var(--color-background);
+    box-shadow: var(--shadow-xs);
+  }
+  .countdown--boxed.countdown--sm .countdown__unit { min-width: 52px; padding: var(--space-xs); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.countdown",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "end_date", "label": "t:settings.end_date", "placeholder": "2026-12-31", "info": "t:info.end_date" },
+    { "type": "text", "id": "end_time", "label": "t:settings.end_time", "default": "23:59", "info": "t:info.end_time" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.style",
+      "options": [
+        { "value": "boxed", "label": "t:options.boxed" },
+        { "value": "plain", "label": "t:options.plain" }
+      ],
+      "default": "boxed"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "sm", "label": "t:options.small" },
+        { "value": "md", "label": "t:options.medium" },
+        { "value": "lg", "label": "t:options.large" }
+      ],
+      "default": "md"
+    },
+    { "type": "checkbox", "id": "show_labels", "label": "t:settings.show_labels", "default": true },
+    { "type": "checkbox", "id": "hide_when_expired", "label": "t:settings.hide_when_expired", "default": false }
+  ],
+  "presets": [
+    { "name": "t:names.countdown", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

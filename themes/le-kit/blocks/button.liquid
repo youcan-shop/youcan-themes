@@ -1,0 +1,84 @@
+{%- liquid
+  assign td_label = block.settings.label
+  if td_label contains 't:defaults.'
+    assign td_label = td_label | remove_first: 't:' | t
+  endif
+-%}
+{% assign label = td_label %}
+
+{% if label != blank %}
+  <a
+    class="button-block button button--{{ block.settings.style }} button--{{ block.settings.size }}{% if block.settings.full_width %} button--full{% endif %}"
+    href="{{ block.settings.link | default: '#' }}"
+    {% if block.settings.new_tab %}target="_blank" rel="noopener"{% endif %}
+    {{ block.youcan_attributes }}
+  >
+    {{- label | escape -}}
+    {% if block.settings.show_arrow %}
+      {% render 'icon', name: 'arrow-right', px: 16, class: 'icon--flip' %}
+    {% endif %}
+  </a>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:settings.label",
+      "default": "t:defaults.button"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:settings.link"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "t:settings.open_new_tab",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.style",
+      "options": [
+        { "value": "primary", "label": "t:options.primary" },
+        { "value": "secondary", "label": "t:options.secondary" },
+        { "value": "link", "label": "t:options.link" }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "sm", "label": "t:options.small" },
+        { "value": "md", "label": "t:options.medium" },
+        { "value": "lg", "label": "t:options.large" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:settings.full_width",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "t:settings.show_arrow",
+      "default": false
+    }
+  ],
+  "presets": [
+    { "name": "t:names.button", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,82 @@
+{%- liquid
+  assign s = section.settings
+  case s.ratio
+    when 'portrait'
+      assign ratio = '4 / 5'
+    when 'landscape'
+      assign ratio = '4 / 3'
+    else
+      assign ratio = '1 / 1'
+  endcase
+-%}
+
+<div
+  class="section color-scheme color-{{ s.color_scheme }}"
+  style="--section-pt: {{ s.padding_top }}px; --section-pb: {{ s.padding_bottom }}px;"
+>
+  <div class="page-width listing">
+    <header class="listing__header">
+      <h1 class="h2">{{ 'collections.title' | t }}</h1>
+    </header>
+    {% paginate collections by 24 cod %}
+      {% if items.size > 0 %}
+        <ul class="grid grid--{{ s.layout | default: 'grid' }}" style="--columns: {{ s.columns }}; --columns-mobile: {{ s.columns_mobile }};" role="list">
+          {% for collection in items %}
+            <li>{% render 'collection-card', collection: collection, ratio: ratio, style: s.card_style, sizes: '(min-width: 750px) 33vw, 50vw' %}</li>
+          {% endfor %}
+        </ul>
+        {% render 'pagination', current: current, last: last, previous_page: previous_page, next_page: next_page %}
+      {% else %}
+        {% render 'empty-state', type: 'collections' %}
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:names.collections_list_page",
+  "templates": ["list-collections"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "t:settings.layout",
+      "options": [
+        { "value": "grid", "label": "t:options.grid" },
+        { "value": "bento", "label": "t:options.bento" },
+        { "value": "editorial", "label": "t:options.editorial" }
+      ],
+      "default": "grid"
+    },
+    { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 2, "max": 5, "step": 1, "default": 3 },
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" },
+        { "value": "landscape", "label": "t:options.landscape" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "t:settings.title_position",
+      "options": [
+        { "value": "below", "label": "t:options.below_image" },
+        { "value": "overlay", "label": "t:options.on_image" }
+      ],
+      "default": "below"
+    },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+  ]
+}
+{% endschema %}

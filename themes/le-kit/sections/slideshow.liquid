@@ -1,0 +1,593 @@
+{%- liquid
+  assign s = section.settings
+  assign nav = s.navigation | default: 'large_arrows'
+  assign icon_size = 20
+  if nav == 'large_arrows' or nav == 'large_chevrons'
+    assign icon_size = 28
+  endif
+  if nav contains 'chevrons'
+    assign prev_icon = 'chevron-left'
+    assign next_icon = 'chevron-right'
+  else
+    assign prev_icon = 'arrow-left'
+    assign next_icon = 'arrow-right'
+  endif
+-%}
+
+<div
+  class="slideshow-wrapper{% if s.width == 'page' %} page-width{% endif %}"
+  style="padding-block: {{ s.padding_top }}px {{ s.padding_bottom }}px;"
+>
+  <ui-carousel
+    class="slideshow color-scheme color-{{ s.color_scheme }}{% if s.width == 'page' %} slideshow--boxed{% endif %}"
+    data-height="{{ s.height }}"
+    data-content-position="{{ s.content_position | default: 'on_media' }}"
+    data-nav="{{ nav }}"
+    data-nav-background="{{ s.navigation_background | default: 'none' }}"
+    {% if s.autoplay %}autoplay interval="{{ s.speed | times: 1000 }}"{% endif %}
+    aria-roledescription="carousel"
+    aria-label="{{ 'accessibility.slideshow' | t }}"
+  >
+    <div class="slider__track slideshow__track" ref="track">
+      {% content_for 'blocks' %}
+    </div>
+
+    {% if section.blocks.size > 1 %}
+      {% unless nav == 'none' %}
+        <button class="slideshow__arrow slideshow__arrow--prev" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+          {% render 'icon', name: prev_icon, px: icon_size, class: 'icon--flip' %}
+        </button>
+        <button class="slideshow__arrow slideshow__arrow--next" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+          {% render 'icon', name: next_icon, px: icon_size, class: 'icon--flip' %}
+        </button>
+      {% endunless %}
+
+      {% case s.pagination %}
+        {% when 'dots' %}
+          <div class="slideshow__pagination slideshow__dots">
+            {% for b in section.blocks %}
+              <button
+                class="slider__dot"
+                type="button"
+                ref="dots[]"
+                aria-label="{{ 'accessibility.go_to_slide' | t | replace: '[index]', forloop.index }}"
+                {% if forloop.first %}aria-current="true"{% endif %}
+              ></button>
+            {% endfor %}
+          </div>
+        {% when 'counter' %}
+          <p class="slideshow__pagination slideshow__counter" aria-live="polite">
+            <span ref="counter">1</span>
+            <span aria-hidden="true">/</span>
+            <span>{{ section.blocks.size }}</span>
+          </p>
+      {% endcase %}
+    {% endif %}
+  </ui-carousel>
+</div>
+
+{% stylesheet %}
+  .slideshow { --slider-gap: 0px; --slide-height: 680px; position: relative; display: block; }
+  .slideshow[data-height="small"] { --slide-height: 360px; }
+  .slideshow[data-height="medium"] { --slide-height: 520px; }
+  .slideshow[data-height="screen"] { --slide-height: calc(100svh - var(--header-height)); }
+  @media (max-width: 749px) {
+    .slideshow { --slide-height: 540px; }
+    .slideshow[data-height="small"] { --slide-height: 280px; }
+    .slideshow[data-height="medium"] { --slide-height: 420px; }
+  }
+  .slideshow--boxed { overflow: hidden; border-radius: var(--radius-surface); }
+  .slideshow[data-content-position="below_media"].slideshow--boxed { border-radius: 0; }
+  .slideshow[data-content-position="below_media"].slideshow--boxed .slide__media { border-radius: var(--radius-surface); overflow: hidden; }
+
+  /* Arrows: on the sides, centered on the media */
+  .slideshow__arrow {
+    --arrow-size: 44px;
+    position: absolute;
+    inset-block-start: calc(var(--slide-height) / 2);
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: var(--arrow-size);
+    height: var(--arrow-size);
+    padding: 0;
+    border: 0;
+    translate: 0 -50%;
+    color: #fff;
+    background: none;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease), opacity var(--duration-fast) var(--ease), scale var(--duration-fast) var(--ease);
+  }
+  .slideshow__arrow--prev { inset-inline-start: var(--space-md); }
+  .slideshow__arrow--next { inset-inline-end: var(--space-md); }
+  .slideshow__arrow:disabled { opacity: 0.4; cursor: default; }
+
+  /* Desktop with a mouse: arrows appear while hovering the slideshow (or when focused with the keyboard) */
+  @media (hover: hover) and (min-width: 750px) {
+    .slideshow__arrow { opacity: 0; transition: opacity var(--duration) var(--ease), background-color var(--duration-fast) var(--ease), scale var(--duration-fast) var(--ease); }
+    .slideshow:hover .slideshow__arrow,
+    .slideshow:focus-within .slideshow__arrow { opacity: 1; }
+    .slideshow:hover .slideshow__arrow:disabled,
+    .slideshow:focus-within .slideshow__arrow:disabled { opacity: 0.4; }
+  }
+  .slideshow__arrow:active:not(:disabled) { scale: 0.94; }
+  .slideshow[data-nav^="large"] .slideshow__arrow { --arrow-size: 56px; }
+  .slideshow[data-nav-background="none"] .slideshow__arrow .icon { filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.45)); }
+  /* Arrows sit on the image: always a light surface with a dark icon, whatever the color scheme */
+  .slideshow[data-nav-background="circle"] .slideshow__arrow,
+  .slideshow[data-nav-background="square"] .slideshow__arrow {
+    background: #fff;
+    color: #171717;
+    box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.2);
+  }
+  .slideshow[data-nav-background="circle"] .slideshow__arrow { border-radius: 50%; }
+  .slideshow[data-nav-background="square"] .slideshow__arrow { border-radius: var(--radius-input); }
+  .slideshow[data-nav-background="circle"] .slideshow__arrow:hover:not(:disabled),
+  .slideshow[data-nav-background="square"] .slideshow__arrow:hover:not(:disabled) { background: #f2f2f2; }
+
+  /* Keep the slide content clear of the arrows */
+  @media (min-width: 750px) {
+    .slideshow[data-content-position="on_media"]:not([data-nav="none"]) .slide__content {
+      padding-inline: max(var(--page-gutter), calc(var(--space-md) + 44px + var(--space-lg)));
+    }
+    .slideshow[data-content-position="on_media"][data-nav^="large"] .slide__content {
+      padding-inline: max(var(--page-gutter), calc(var(--space-md) + 56px + var(--space-lg)));
+    }
+  }
+  @media (max-width: 749px) {
+    /* On small screens slides are swiped; on-media arrows would cover the content */
+    .slideshow[data-content-position="on_media"] .slideshow__arrow { display: none; }
+    .slideshow:not([data-nav^="large"]) .slideshow__arrow { --arrow-size: 36px; }
+    .slideshow__arrow--prev { inset-inline-start: var(--space-xs); }
+    .slideshow__arrow--next { inset-inline-end: var(--space-xs); }
+  }
+
+  /* Pagination: on the media (bottom) or below the slides */
+  .slideshow__pagination {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+  }
+  .slideshow[data-content-position="on_media"] .slideshow__pagination {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: var(--space-lg);
+    z-index: 2;
+    color: #fff;
+    pointer-events: none;
+  }
+  .slideshow[data-content-position="on_media"] .slideshow__pagination > * { pointer-events: auto; }
+  .slideshow[data-content-position="below_media"] .slideshow__pagination { padding-block: var(--space-md) 0; }
+  .slideshow[data-content-position="on_media"] .slider__dot { background-color: #fff; box-shadow: 0 0 2px rgb(0 0 0 / 0.4); }
+  .slideshow__counter { align-items: baseline; font-size: var(--text-sm); font-variant-numeric: tabular-nums; font-weight: 500; }
+  .slideshow[data-content-position="on_media"] .slideshow__counter { text-shadow: 0 1px 3px rgb(0 0 0 / 0.45); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.slideshow",
+  "max_blocks": 8,
+  "blocks": [
+    {
+      "type": "_slide"
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "width",
+      "label": "t:settings.width",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:options.full_width"
+        },
+        {
+          "value": "page",
+          "label": "t:options.page"
+        }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "t:settings.height",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:options.small"
+        },
+        {
+          "value": "medium",
+          "label": "t:options.medium"
+        },
+        {
+          "value": "large",
+          "label": "t:options.large"
+        },
+        {
+          "value": "screen",
+          "label": "t:options.full_screen"
+        }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "t:settings.content_position",
+      "options": [
+        {
+          "value": "on_media",
+          "label": "t:options.on_media"
+        },
+        {
+          "value": "below_media",
+          "label": "t:options.below_media"
+        }
+      ],
+      "default": "on_media"
+    },
+    {
+      "type": "header",
+      "content": "t:content.navigation"
+    },
+    {
+      "type": "select",
+      "id": "navigation",
+      "label": "t:settings.navigation_icons",
+      "options": [
+        {
+          "value": "arrows",
+          "label": "t:options.arrows"
+        },
+        {
+          "value": "chevrons",
+          "label": "t:options.chevrons"
+        },
+        {
+          "value": "large_arrows",
+          "label": "t:options.large_arrows"
+        },
+        {
+          "value": "large_chevrons",
+          "label": "t:options.large_chevrons"
+        },
+        {
+          "value": "none",
+          "label": "t:options.none"
+        }
+      ],
+      "default": "large_arrows"
+    },
+    {
+      "type": "select",
+      "id": "navigation_background",
+      "label": "t:settings.icon_background",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "circle",
+          "label": "t:options.circle"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        }
+      ],
+      "default": "none",
+      "visible_if": "{{ section.settings.navigation != 'none' }}"
+    },
+    {
+      "type": "select",
+      "id": "pagination",
+      "label": "t:settings.pagination",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "dots",
+          "label": "t:options.dots"
+        },
+        {
+          "value": "counter",
+          "label": "t:options.counter"
+        }
+      ],
+      "default": "dots"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:settings.autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "t:settings.change_every",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "visible_if": {
+        "setting_id": "autoplay",
+        "value": true
+      }
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.slideshow",
+      "category": "t:categories.banners",
+      "blocks": [
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h1",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h1",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections"
+              }
+            }
+          ]
+        }
+      ],
+      "settings": {}
+    },
+    {
+      "name": "t:names.slideshow_full_frame",
+      "category": "t:categories.banners",
+      "settings": {
+        "width": "full",
+        "height": "screen",
+        "navigation": "large_arrows",
+        "navigation_background": "none",
+        "pagination": "counter"
+      },
+      "blocks": [
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h1",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h1",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections"
+              }
+            }
+          ]
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h1",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "t:names.slideshow_inset",
+      "category": "t:categories.banners",
+      "settings": {
+        "width": "page",
+        "height": "large",
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "navigation": "large_arrows",
+        "navigation_background": "none",
+        "pagination": "dots",
+        "content_position": "below_media",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": [
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h3",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections",
+                "style": "secondary"
+              }
+            }
+          ],
+          "settings": {
+            "overlay_opacity": 0
+          }
+        },
+        {
+          "type": "_slide",
+          "blocks": [
+            {
+              "type": "heading",
+              "settings": {
+                "tag": "h2",
+                "size": "h3",
+                "heading": "t:defaults.slide_heading"
+              }
+            },
+            {
+              "type": "text",
+              "settings": {
+                "text": "t:defaults.slide_text",
+                "max_width": "narrow"
+              }
+            },
+            {
+              "type": "button",
+              "settings": {
+                "label": "t:defaults.shop_now",
+                "link": "/collections",
+                "style": "secondary"
+              }
+            }
+          ],
+          "settings": {
+            "overlay_opacity": 0
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

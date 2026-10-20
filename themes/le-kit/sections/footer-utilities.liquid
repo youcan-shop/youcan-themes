@@ -1,0 +1,67 @@
+{%- liquid
+  assign year = 'now' | date: '%Y'
+  assign copyright = section.settings.copyright | replace: '[year]', year | replace: '[store]', store.name
+-%}
+
+<div class="footer-utilities color-scheme color-{{ section.settings.color_scheme }}">
+  <div class="page-width footer-utilities__inner" style="padding-block: {{ section.settings.padding }}px;">
+    <p class="footer-utilities__copyright">{{ copyright }}</p>
+    {% if section.settings.show_social %}
+      {% assign networks = 'facebook,instagram,x_twitter,tiktok,whatsapp,messenger,snapchat,pinterest,youtube,linkedin,website' | split: ',' %}
+      <ul class="footer-utilities__social" role="list">
+        {% for network in networks %}
+          {% if settings[network] != blank %}
+            <li>
+              <a class="button button--ghost button--icon button--sm" href="{{ settings[network] }}" target="_blank" rel="noopener" aria-label="{{ network | replace: '_', ' ' | capitalize }}">
+                {% render 'social-icon', name: network %}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if section.settings.menu.links.size > 0 %}
+      <ul class="footer-utilities__links" role="list">
+        {% for link in section.settings.menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .footer-utilities__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm) var(--space-lg);
+    padding-block: var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+  .footer-utilities__social { display: flex; gap: 2px; padding: 0; list-style: none; }
+  .footer-utilities__social .icon { width: 16px; height: 16px; }
+  .footer-utilities__links { display: flex; flex-wrap: wrap; gap: var(--space-md); padding: 0; list-style: none; }
+  .footer-utilities__links a { text-decoration: none; }
+  .footer-utilities__links a:hover { color: var(--color-foreground); }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.footer_utilities",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    { "type": "text", "id": "copyright", "label": "t:settings.copyright", "default": "© [year] [store]", "info": "t:info.copyright" },
+    { "type": "link_list", "id": "menu", "label": "t:settings.policies_menu" },
+    { "type": "checkbox", "id": "show_social", "label": "t:settings.show_social", "default": false },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-2" },
+    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 8, "max": 48, "step": 4, "unit": "px", "default": 16 }
+  ],
+  "presets": [
+    { "name": "t:names.footer_utilities" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,72 @@
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width not-found">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1 class="h2">
+      {% if section.settings.heading != blank %}{{ section.settings.heading }}{% else %}{{ 'not_found.title' | t }}{% endif %}
+    </h1>
+    <p class="text-muted not-found__text">
+      {% if section.settings.text != blank %}{{ section.settings.text }}{% else %}{{ 'not_found.text' | t }}{% endif %}
+    </p>
+
+    {% if section.settings.show_search %}
+      <form class="search-form not-found__search" action="/search" method="get" role="search">
+        <label class="visually-hidden" for="not-found-search">{{ 'header.search' | t }}</label>
+        <input class="input" id="not-found-search" type="search" name="q" placeholder="{{ 'header.search_placeholder' | t }}">
+        <button class="button button--secondary" type="submit">
+          {% render 'icon', name: 'search', px: 18 %}
+          {{ 'search.submit' | t }}
+        </button>
+      </form>
+    {% endif %}
+
+    <a class="button button--lg" href="{{ section.settings.button_link | default: routes.collections_url | default: '/collections' }}">
+      {% if section.settings.button_label != blank %}{{ section.settings.button_label | escape }}{% else %}{{ 'not_found.button' | t }}{% endif %}
+    </a>
+  </div>
+</div>
+
+{% stylesheet %}
+  .not-found {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-md);
+    max-width: calc(560px + 2 * var(--page-gutter));
+    text-align: center;
+  }
+  .not-found__code {
+    font-family: var(--font-heading-family);
+    font-size: clamp(5rem, 3rem + 12vw, 10rem);
+    font-weight: var(--font-heading-weight);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: color-mix(in srgb, var(--color-foreground) 12%, var(--color-background));
+  }
+  .not-found__text {
+    max-width: 44ch;
+  }
+  .not-found__search {
+    width: 100%;
+    margin-block: var(--space-xs);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.not_found",
+  "templates": ["404"],
+  "limit": 1,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:settings.heading" },
+    { "type": "textarea", "id": "text", "label": "t:settings.text" },
+    { "type": "checkbox", "id": "show_search", "label": "t:settings.show_search", "default": true },
+    { "type": "text", "id": "button_label", "label": "t:settings.button_label" },
+    { "type": "url", "id": "button_link", "label": "t:settings.link" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 }
+  ]
+}
+{% endschema %}
