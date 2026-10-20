@@ -24,11 +24,26 @@ if (!customElements.get("ui-product")) {
       }
 
       this.setupImageUploads();
+      this.lockMediaRatio();
 
       if (!this.productVariants) return;
 
       this.onVariantChanged();
       this.variants.forEach((variant) => variant.addEventListener("change", () => this.onVariantChanged()));
+    }
+
+    lockMediaRatio() {
+      if (this.dataset.imageRatio !== "adapt" || !this.productMedia) return;
+
+      const image = this.productMedia.querySelector('[ui-carousel="item"] img');
+      if (!image) return;
+
+      const apply = () => {
+        if (!image.naturalWidth) return;
+        this.productMedia.style.setProperty("--media-ratio", `${image.naturalWidth} / ${image.naturalHeight}`);
+      };
+
+      image.complete ? apply() : image.addEventListener("load", apply, { once: true });
     }
 
     setupImageUploads() {
@@ -263,8 +278,8 @@ if (!customElements.get("ui-product")) {
     updateMainImage(image_src) {
       if (!this.productMedia) return;
 
-      const images = this.productMedia.querySelectorAll("img");
-      const index = [...images].findIndex((img) => img.src === image_src);
+      const slides = this.productMedia.querySelectorAll('[ui-carousel="item"]');
+      const index = [...slides].findIndex((slide) => slide.querySelector("img")?.src === image_src);
 
       if (index !== -1) {
         this.productMedia.swipe(index);

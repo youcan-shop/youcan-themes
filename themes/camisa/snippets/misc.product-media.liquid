@@ -39,18 +39,23 @@
     {% if product.images.size %}
       {% for image in product.images %}
         <div class="item" ui-carousel="item" ui-slot="carousel-item">
-          <img
-            src="{{ image }}"
-            alt="{{ product.name }}"
-            height="100%"
-            width="100%"
-            {% if forloop.first %}
-              loading="eager"
-              fetchpriority="high"
-            {% else %}
-              loading="lazy"
-            {% endif %}
-          >
+          {% if image contains 'youtube.com/vi' %}
+            {% assign youtube_video_id = image | split: '/' | slice: -2 | first %}
+            {{ 'https://www.youtube.com/embed/' | append: youtube_video_id | append: '?enablejsapi=1' | external_video_tag: title: product.name, loading: 'lazy' }}
+          {% else %}
+            <img
+              src="{{ image }}"
+              alt="{{ product.name }}"
+              height="100%"
+              width="100%"
+              {% if forloop.first %}
+                loading="eager"
+                fetchpriority="high"
+              {% else %}
+                loading="lazy"
+              {% endif %}
+            >
+          {% endif %}
         </div>
       {% endfor %}
     {% else %}
