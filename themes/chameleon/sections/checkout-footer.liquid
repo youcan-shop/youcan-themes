@@ -1,0 +1,44 @@
+{{ 'section.checkout-footer.css' | asset_url | stylesheet_tag }}
+
+<footer section="checkout-footer">
+  {% if section.settings.policies.links.size > 0 %}
+    <nav class="policies" aria-label="{{ 'checkout.policies' | t }}">
+      <ul>
+        {% for link in section.settings.policies.links %}
+          <li>
+            <a href="{{ link.url }}" ui-link>{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+
+  {% if section.settings.show_powered_by %}
+    <p class="powered-by">{{ 'checkout.powered_by' | t }} <strong>YouCan</strong></p>
+  {% endif %}
+</footer>
+
+{% schema %}
+{
+  "label": "t:sections.checkout_footer.label",
+  "tag": "div",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "policies",
+      "label": "t:sections.checkout_footer.policies"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.checkout_footer.policies_paragraph"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_powered_by",
+      "label": "t:sections.checkout_footer.show_powered_by",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
