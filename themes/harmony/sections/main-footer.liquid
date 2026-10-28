@@ -28,6 +28,9 @@
         {% if section.settings.footer_logo.src %}
           <img
             src="{{ section.settings.footer_logo.src }}"
+            {% if section.settings.footer_logo.focal_point %}
+              style="object-position: {{ section.settings.footer_logo.focal_point.x }}% {{ section.settings.footer_logo.focal_point.y }}%"
+            {% endif %}
             alt="{{ store.name }}"
             width="110" height="70"
             >
@@ -58,7 +61,7 @@
           {%- for block in section.blocks -%}
             {%- if block.settings.social_media_icon_image.src -%}
               <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">
-                <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links'>
+                <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}"{% if block.settings.social_media_icon_image.focal_point %} style="object-position: {{ block.settings.social_media_icon_image.focal_point.x }}% {{ block.settings.social_media_icon_image.focal_point.y }}%"{% endif %} alt='social links'>
               </a>
               {% else %}
               <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">

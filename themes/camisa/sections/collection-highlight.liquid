@@ -19,7 +19,14 @@
     data-nbr-columns-desktop="{{ section.settings.nbr_columns_desktop }}"
     data-nbr-columns-mobile="{{ section.settings.nbr_columns_mobile }}"
   >
-    <li style="background-image: url({{ section.settings.image.src }});">
+    <li
+      style="
+        background-image: url({{ section.settings.image.src }});
+        {% if section.settings.image.focal_point %}
+          background-position: {{ section.settings.image.focal_point.x }}% {{ section.settings.image.focal_point.y }}%;
+        {% endif %}
+      "
+    >
       <div
         ui-block="content"
         data-text-alignment="{{ section.settings.text_alignment }}"

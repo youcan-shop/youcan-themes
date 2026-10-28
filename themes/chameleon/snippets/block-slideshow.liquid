@@ -10,6 +10,18 @@
 
 <li block="slideshow-slide">
   {% if settings.image.src or settings.mobile_image.src %}
+    {% liquid
+      assign desktop_image = settings.image
+      assign mobile_image = settings.mobile_image
+
+      unless desktop_image.src
+        assign desktop_image = settings.mobile_image
+      endunless
+
+      unless mobile_image.src
+        assign mobile_image = settings.image
+      endunless
+    %}
     <picture>
       {% if settings.mobile_image.src %}
         <source srcset="{{ settings.mobile_image.src }}" media="(max-width: 768px)">
@@ -19,6 +31,14 @@
       {% endif %}
       <img
         src="{{ settings.image.src | default: settings.mobile_image.src }}"
+        style="
+          {% if desktop_image.focal_point %}
+            --focal-point: {{ desktop_image.focal_point.x }}% {{ desktop_image.focal_point.y }}%;
+          {% endif %}
+          {% if mobile_image.focal_point %}
+            --focal-point-mobile: {{ mobile_image.focal_point.x }}% {{ mobile_image.focal_point.y }}%;
+          {% endif %}
+        "
         alt="{{ "slide " | append: forloop.index }}"
         height="100%"
         width="100%"

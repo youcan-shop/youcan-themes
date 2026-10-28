@@ -25,6 +25,9 @@
       {% if section.settings.logo %}
         <img
           src="{{ section.settings.logo.src }}"
+          {% if section.settings.logo.focal_point %}
+            style="object-position: {{ section.settings.logo.focal_point.x }}% {{ section.settings.logo.focal_point.y }}%"
+          {% endif %}
           alt="{{ section.settings.logo_alt | default: section.settings.heading | default: store.name }}"
           height="80"
           width="80"

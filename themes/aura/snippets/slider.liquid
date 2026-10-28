@@ -31,12 +31,18 @@
 
     #yc_slider_{{ id }} .hero-image-{{ forloop.index }} {
       background: center center / cover no-repeat url('{%- if block.settings.image.src -%} {{ block.settings.image.src }} {%- else -%} {{ 'hero.png' | asset_url }} {%- endif -%}');
+      {% if block.settings.image.focal_point %}
+        background-position: {{ block.settings.image.focal_point.x }}% {{ block.settings.image.focal_point.y }}%;
+      {% endif %}
     }
 
     {%- if block.settings.mobile_image.src -%}
       @media screen and (max-width: 768px) {
         #yc_slider_{{ id }} .hero-image-{{ forloop.index }} {
           background: center center / cover no-repeat url('{{ block.settings.mobile_image.src }}');
+          {% if block.settings.mobile_image.focal_point %}
+            background-position: {{ block.settings.mobile_image.focal_point.x }}% {{ block.settings.mobile_image.focal_point.y }}%;
+          {% endif %}
         }
       }
     {%- endif -%}

@@ -1,0 +1,32 @@
+{% comment %}
+  Renders the focal point CSS variables of an image displayed through a <picture>
+  with separate desktop and mobile sources. When one of the images is missing,
+  the other one is displayed instead, so its focal point is used.
+
+  Accepts:
+  - desktop: {Image} Image displayed on desktop
+  - mobile: {Image} Image displayed on mobile
+
+  Usage:
+  <img data-focal-point style="{% render 'misc.focal-point', desktop: settings.logo_desktop, mobile: settings.logo_mobile %}">
+{% endcomment %}
+
+{%- liquid
+  assign desktop_image = desktop
+  assign mobile_image = mobile
+
+  unless desktop_image.src
+    assign desktop_image = mobile
+  endunless
+
+  unless mobile_image.src
+    assign mobile_image = desktop
+  endunless
+-%}
+
+{%- if desktop_image.focal_point -%}
+  --focal-point: {{ desktop_image.focal_point.x }}% {{ desktop_image.focal_point.y }}%;
+{%- endif -%}
+{%- if mobile_image.focal_point -%}
+  --focal-point-mobile: {{ mobile_image.focal_point.x }}% {{ mobile_image.focal_point.y }}%;
+{%- endif -%}

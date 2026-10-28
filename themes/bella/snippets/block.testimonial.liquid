@@ -13,6 +13,9 @@
     {% if testimonial.settings.testimonial_image.src %}
       <img
         src="{{ testimonial.settings.testimonial_image.src }}"
+        {% if testimonial.settings.testimonial_image.focal_point %}
+          style="object-position: {{ testimonial.settings.testimonial_image.focal_point.x }}% {{ testimonial.settings.testimonial_image.focal_point.y }}%"
+        {% endif %}
         alt="{{ testimonial.settings.testimonial_product.name | default :testimonial.settings.testimonial_author }}"
         height="100%"
         width="100%"

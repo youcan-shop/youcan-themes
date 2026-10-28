@@ -12,6 +12,9 @@
         {% if section.settings.footer_logo.src %}
           <img
             src="{{ section.settings.footer_logo.src }}"
+            {% if section.settings.footer_logo.focal_point %}
+              style="object-position: {{ section.settings.footer_logo.focal_point.x }}% {{ section.settings.footer_logo.focal_point.y }}%"
+            {% endif %}
             alt="{{ store.name }}"
             height="100%"
             width="{{ section.settings.logo_width }}"

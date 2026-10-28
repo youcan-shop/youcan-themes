@@ -28,6 +28,9 @@
             {% if item.settings.image %}
               <img
                 src="{{ item.settings.image.src }}"
+                {% if item.settings.image.focal_point %}
+                  style="object-position: {{ item.settings.image.focal_point.x }}% {{ item.settings.image.focal_point.y }}%"
+                {% endif %}
                 alt="image-{{ forloop.index }}"
                 height="100%"
                 width="100%"

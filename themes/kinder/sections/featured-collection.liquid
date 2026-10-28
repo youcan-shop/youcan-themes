@@ -40,6 +40,9 @@
             <picture>
               <img
                 src="{{ section.settings.banner_image.src }}"
+                {% if section.settings.banner_image.focal_point %}
+                  style="object-position: {{ section.settings.banner_image.focal_point.x }}% {{ section.settings.banner_image.focal_point.y }}%"
+                {% endif %}
                 alt="content-image"
                 loading="lazy"
                 width="100%"

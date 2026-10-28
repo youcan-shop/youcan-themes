@@ -44,6 +44,9 @@
                     {% if item.settings.logo %}
                       <img
                         src="{{ item.settings.logo.src }}"
+                        {% if item.settings.logo.focal_point %}
+                          style="object-position: {{ item.settings.logo.focal_point.x }}% {{ item.settings.logo.focal_point.y }}%"
+                        {% endif %}
                         alt="logo-{{ forloop.index }}"
                         height="100%"
                         width="100%"
@@ -66,6 +69,9 @@
                 {% if item.settings.logo %}
                   <img
                     src="{{ item.settings.logo.src }}"
+                    {% if item.settings.logo.focal_point %}
+                      style="object-position: {{ item.settings.logo.focal_point.x }}% {{ item.settings.logo.focal_point.y }}%"
+                    {% endif %}
                     alt="logo-{{ forloop.index }}"
                     height="100%"
                     width="100%"
