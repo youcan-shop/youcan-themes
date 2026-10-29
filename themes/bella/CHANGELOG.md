@@ -1,5 +1,15 @@
 # bella
 
+## 1.4.0
+
+### Minor Changes
+
+- 601c3f4: Respect the focal point set in the gallery manager
+
+### Patch Changes
+
+- 3e31ee5: All themes > stop iOS from zooming in when tapping form fields on mobile
+
 ## 1.3.11
 
 ### Patch Changes
