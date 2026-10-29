@@ -28,6 +28,7 @@
         {% if section.settings.footer_logo.src %}
           <img
             src="{{ section.settings.footer_logo.src }}"
+            style="object-position: {{ section.settings.footer_logo.presentation.focal_point }}"
             alt="{{ store.name }}"
             width="110" height="70"
             >
@@ -58,7 +59,7 @@
           {%- for block in section.blocks -%}
             {%- if block.settings.social_media_icon_image.src -%}
               <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">
-                <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links'>
+                <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" style="object-position: {{ block.settings.social_media_icon_image.presentation.focal_point }}" alt='social links'>
               </a>
               {% else %}
               <a class='social-icon' href="{{ block.settings.social_media_url }}" target="_blank">

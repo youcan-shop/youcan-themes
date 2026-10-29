@@ -38,11 +38,13 @@
         {% if slide.settings.slide_mobile_image.src %}
           <source srcset="{{ slide.settings.slide_mobile_image.src }}" media="(max-width: 768px)">
         {% endif %}
-        {% if settings.image.src %}
+        {% if slide.settings.slide_desktop_image.src %}
           <source srcset="{{ slide.settings.slide_desktop_image.src }}" media="(min-width: 769px)">
         {% endif %}
         <img
           src="{{ slide.settings.slide_desktop_image.src | default: slide.settings.slide_mobile_image.src }}"
+          data-focal-point
+          style="{% render 'misc.focal-point', desktop: slide.settings.slide_desktop_image, mobile: slide.settings.slide_mobile_image %}"
           alt="Slide {{forloop.index }}"
           height="100%"
           width="100%"

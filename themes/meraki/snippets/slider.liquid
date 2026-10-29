@@ -32,12 +32,14 @@
 
     #yc_slider_{{ id }} .hero-image-{{ forloop.index }} {
       background: center center / cover no-repeat url('{%- if block.settings.image.src -%} {{ block.settings.image.src }} {%- else -%} {{ 'hero.png' | asset_url }} {%- endif -%}');
+      background-position: {{ block.settings.image.presentation.focal_point }};
     }
 
     {%- if block.settings.mobile_image.src -%}
       @media screen and (max-width: 768px) {
         #yc_slider_{{ id }} .hero-image-{{ forloop.index }} {
           background: center center / cover no-repeat url('{{ block.settings.mobile_image.src }}');
+          background-position: {{ block.settings.mobile_image.presentation.focal_point }};
         }
       }
     {%- endif -%}
