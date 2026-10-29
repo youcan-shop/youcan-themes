@@ -25,7 +25,7 @@
     {%- if section.settings.footer_logo.src -%}
       <div class='footer-logo column'>
         <img
-          loading='lazy' src='{{ section.settings.footer_logo.src }}'{% if section.settings.footer_logo.focal_point %} style="object-position: {{ section.settings.footer_logo.focal_point.x }}% {{ section.settings.footer_logo.focal_point.y }}%"{% endif %} alt='logo'
+          loading='lazy' src='{{ section.settings.footer_logo.src }}' style="object-position: {{ section.settings.footer_logo.presentation.focal_point }}" alt='logo'
           width="85" height="23"
         >
       </div>
@@ -42,7 +42,7 @@
         {%- for block in section.blocks -%}
           {%- if block.settings.social_media_icon_image.src -%}
             <a class='link' href="{{ block.settings.social_media_url }}" target="_blank">
-              <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links' style="width: 100%; height: 100%;{% if block.settings.social_media_icon_image.focal_point %} object-position: {{ block.settings.social_media_icon_image.focal_point.x }}% {{ block.settings.social_media_icon_image.focal_point.y }}%;{% endif %}">
+              <img loading='lazy' class='image' src="{{ block.settings.social_media_icon_image.src }}" alt='social links' style="width: 100%; height: 100%;object-position: {{ block.settings.social_media_icon_image.presentation.focal_point }};">
             </a>
             {% else %}
             <a class='link' href="{{ block.settings.social_media_url }}" target="_blank">
