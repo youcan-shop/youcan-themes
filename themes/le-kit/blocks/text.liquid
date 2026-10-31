@@ -1,0 +1,89 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
+{% if td_text != blank %}
+  <div
+    class="text-block rte text-{{ block.settings.size }}{% if block.settings.muted %} text-muted{% endif %}"
+    data-align="{{ block.settings.alignment }}"
+    {% if block.settings.max_width != 'none' %}data-max-width="{{ block.settings.max_width }}"{% endif %}
+    {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
+  >
+    {{ td_text }}
+  </div>
+{% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .text-block[data-align="left"] { text-align: start; }
+  .text-block[data-align="center"] { text-align: center; }
+  .text-block[data-align="right"] { text-align: end; }
+  .text-block[data-max-width="narrow"] { max-width: 42ch; }
+  .text-block[data-max-width="normal"] { max-width: 64ch; }
+  .layout-panel[data-direction="column"] > .text-block[data-max-width] { margin-inline: inherit; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.text",
+  "tag": null,
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "t:defaults.text"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "sm", "label": "t:options.small" },
+        { "value": "md", "label": "t:options.medium" },
+        { "value": "lg", "label": "t:options.large" },
+        { "value": "xl", "label": "t:options.extra_large" }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "checkbox",
+      "id": "muted",
+      "label": "t:settings.muted_color",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "inherit", "label": "t:options.inherit" },
+        { "value": "left", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" },
+        { "value": "right", "label": "t:options.end" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "max_width",
+      "label": "t:settings.max_width",
+      "options": [
+        { "value": "narrow", "label": "t:options.narrow" },
+        { "value": "normal", "label": "t:options.normal" },
+        { "value": "none", "label": "t:options.none" }
+      ],
+      "default": "normal"
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.text", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,16 @@
+{% comment %}
+  Renders the errors of the current form in an alert.
+
+  Accepts:
+  - form: {Object} The form object (inside a form tag)
+
+  Usage:
+  {% render 'form-errors', form: form %}
+{% endcomment %}
+
+{% if form.errors %}
+  <div class="alert alert--error" role="alert" data-form-has-errors>
+    {% render 'icon', name: 'alert', px: 18 %}
+    <div class="form-errors">{{ form.errors | default_errors }}</div>
+  </div>
+{% endif %}

@@ -1,0 +1,19 @@
+<div class="custom-liquid-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {{ block.settings.custom_liquid }}
+</div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% schema %}
+{
+  "name": "t:names.custom_liquid",
+  "tag": null,
+  "settings": [
+    { "type": "liquid", "id": "custom_liquid", "label": "t:settings.custom_liquid" },
+    { "type": "paragraph", "content": "t:info.custom_liquid" }, { "type": "header", "content": "t:content.advanced" }, { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" }, { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.custom_liquid", "category": "t:categories.advanced" }
+  ]
+}
+{% endschema %}

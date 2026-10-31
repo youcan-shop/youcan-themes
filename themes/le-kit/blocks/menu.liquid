@@ -1,0 +1,48 @@
+{%- liquid
+  assign td_heading = block.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+-%}
+{% assign menu = block.settings.menu %}
+
+{% if menu.links.size > 0 or request.design_mode %}
+  <nav class="menu-block" aria-label="{{ td_heading | default: menu.title | escape }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+    {% if td_heading != blank %}
+      <p class="menu-block__heading h6">{{ td_heading | escape }}</p>
+    {% endif %}
+    {% if menu.links.size > 0 %}
+      <ul class="menu-block__list" role="list">
+        {% for link in menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </nav>
+{% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .menu-block { display: grid; gap: var(--space-sm); }
+  .menu-block__list { display: grid; gap: var(--space-xs); font-size: var(--text-sm); }
+  .menu-block__list a { color: var(--color-muted); text-decoration: none; }
+  .menu-block__list a:hover { color: var(--color-foreground); text-decoration: underline; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.menu",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.menu_heading" },
+    { "type": "link_list", "id": "menu", "label": "t:settings.menu", "default": "main-menu" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.menu", "category": "t:categories.navigation" }
+  ]
+}
+{% endschema %}

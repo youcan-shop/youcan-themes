@@ -1,0 +1,67 @@
+{% assign p = block.settings.product %}
+
+<div class="video-review" data-carousel-item {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% render 'video-player', url: block.settings.video, mode: 'click', poster: block.settings.poster, sizes: '(min-width: 750px) 25vw, 60vw', loop: true, class: 'media video-review__media', style: '--ratio: var(--video-ratio, 9 / 16);' %}
+  {% if p %}
+    <a class="video-review__product" href="{{ p.url }}">
+      <span class="media video-review__thumb" style="--ratio: 1 / 1;">
+        {% render 'image', image: p.preview_image, alt: '', width: 120, sizes: '40px', placeholder: 'product-1' %}
+      </span>
+      <span class="video-review__product-info">
+        <span class="video-review__product-name">{{ p.name }}</span>
+        {% render 'price', product: p, class: 'text-xs' %}
+      </span>
+    </a>
+  {% endif %}
+</div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .video-review { display: grid; gap: var(--space-sm); }
+  .video-review__media { border-radius: var(--radius-surface); }
+  .video-review__media .video-player__play { width: 100%; height: 100%; border-radius: 0; background: linear-gradient(to top, rgb(0 0 0 / 0.24), transparent 40%); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .video-review__media .video-player__play:hover { scale: 1; }
+  .video-review__media .video-player__play .icon {
+    box-sizing: content-box;
+    padding: 14px;
+    border-radius: 50%;
+    background-color: rgb(46 46 46 / 0.45);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+  .video-review__media[data-playing] .video-player__play { background: none; }
+  .video-review__media[data-playing] .video-player__play .icon { opacity: 0; }
+  .video-review__product {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-xs);
+    text-decoration: none;
+  }
+  .video-review__thumb { flex: 0 0 40px; border-radius: var(--radius-item); }
+  .video-review__product-info { display: grid; min-width: 0; }
+  .video-review__product-name { overflow: hidden; font-size: var(--text-sm); font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.video_review",
+  "tag": null,
+  "settings": [
+    { "type": "url", "id": "video", "label": "t:settings.video_link" },
+    { "type": "paragraph", "content": "t:info.video_link" },
+    { "type": "image_picker", "id": "poster", "label": "t:settings.cover_image" },
+    { "type": "product", "id": "product", "label": "t:settings.product" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.video_review" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,93 @@
+{% if section.settings.style == 'marquee' %}
+  <ui-marquee
+    class="announcement-bar announcement-bar--marquee color-scheme color-{{ section.settings.color_scheme }}"
+    style="--marquee-duration: {{ section.settings.speed | times: 6 }}s;"
+    data-pause-on-hover
+    aria-label="{{ 'accessibility.announcements' | t }}"
+  >
+    <div class="marquee__track" ref="track">
+      <div class="marquee__group announcement-bar__group" ref="group">
+        {% content_for 'blocks' %}
+      </div>
+    </div>
+  </ui-marquee>
+  <script type="module" src="{{ 'marquee.js' | asset_url }}"></script>
+{% else %}
+  <ui-carousel
+    class="announcement-bar color-scheme color-{{ section.settings.color_scheme }}"
+    {% if section.settings.autoplay and section.blocks.size > 1 %}autoplay interval="{{ section.settings.speed | times: 1000 }}"{% endif %}
+    aria-label="{{ 'accessibility.announcements' | t }}"
+  >
+    <div class="page-width announcement-bar__inner">
+      {% if section.blocks.size > 1 and section.settings.show_arrows %}
+        <button class="announcement-bar__arrow" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+          {% render 'icon', name: 'chevron-left', px: 16, class: 'icon--flip' %}
+        </button>
+      {% endif %}
+      <div class="slider__track announcement-bar__track" ref="track">
+        {% content_for 'blocks' %}
+      </div>
+      {% if section.blocks.size > 1 and section.settings.show_arrows %}
+        <button class="announcement-bar__arrow" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+          {% render 'icon', name: 'chevron-right', px: 16, class: 'icon--flip' %}
+        </button>
+      {% endif %}
+    </div>
+  </ui-carousel>
+{% endif %}
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
+{% stylesheet %}
+  .announcement-bar { --slider-gap: 0px; display: block; font-size: var(--text-sm); }
+  .announcement-bar__inner { display: flex; align-items: center; gap: var(--space-xs); min-height: 40px; }
+  .announcement-bar__track { flex: 1; }
+  .announcement-bar__arrow {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: none;
+    opacity: 0.7;
+  }
+  .announcement-bar__arrow:hover { opacity: 1; }
+  .announcement-bar--marquee .marquee__track { align-items: center; min-height: 40px; }
+  .announcement-bar__group { gap: 0; padding-inline-end: 0; }
+  .announcement-bar__group .announcement { padding-inline: var(--space-2xl); white-space: nowrap; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.announcement_bar",
+  "max_blocks": 6,
+  "blocks": [{ "type": "_announcement" }],
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:settings.style",
+      "options": [
+        { "value": "marquee", "label": "t:options.marquee" },
+        { "value": "carousel", "label": "t:options.carousel" }
+      ],
+      "default": "marquee"
+    },
+    { "type": "checkbox", "id": "show_arrows", "label": "t:settings.show_arrows", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "t:settings.autoplay", "default": true },
+    { "type": "range", "id": "speed", "label": "t:settings.change_every", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 5 },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.announcement_bar",
+      "blocks": [{ "type": "_announcement" }]
+    }
+  ]
+}
+{% endschema %}

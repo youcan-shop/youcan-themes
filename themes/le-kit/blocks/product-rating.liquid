@@ -1,0 +1,35 @@
+{% assign p = closest.product | default: product %}
+
+{% if p and p.averageRating > 0 %}
+  {% assign rating = p.averageRating | round %}
+  <div class="rating product-rating" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+    <span class="product-rating__stars" aria-hidden="true">
+      {% for i in (1..5) %}
+        <span {% if i > rating %}class="product-rating__star--empty"{% endif %}>{% render 'icon', name: 'star', px: 16 %}</span>
+      {% endfor %}
+    </span>
+    <span>{{ p.averageRating }} / 5</span>
+  </div>
+{% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .product-rating__stars { display: inline-flex; }
+  .product-rating__star--empty { opacity: 0.25; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.rating",
+  "tag": null,
+  "settings": [
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.rating", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

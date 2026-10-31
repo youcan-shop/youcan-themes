@@ -1,0 +1,90 @@
+<script type="module" src="{{ 'address-fields.js' | asset_url }}"></script>
+
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width account">
+    <header class="account__header">
+      <div>
+        <p class="text-sm text-muted">{{ 'account.title' | t }}</p>
+        <h1 class="h2">{{ 'account.addresses' | t }}</h1>
+      </div>
+      {% render 'account-nav', current: 'addresses' %}
+    </header>
+
+    <div class="addresses">
+      {% for address in customer.addresses %}
+        <div class="account-card address-card">
+          <div class="account-card__header">
+            {% if address.default %}<span class="badge">{{ 'account.address.default' | t }}</span>{% else %}<span></span>{% endif %}
+            <div class="address-card__actions">
+              <button class="button button--ghost button--sm" type="button" data-open-dialog="address-{{ address.id }}">{{ 'account.edit' | t }}</button>
+              {% form 'customer_address_remove', address, class: 'address-card__remove' %}
+                <button class="button button--ghost button--sm" type="submit" data-confirm-message="{{ 'account.address.confirm_remove' | t | escape }}">{{ 'cart.remove' | t }}</button>
+              {% endform %}
+            </div>
+          </div>
+          {% render 'address-summary', address: address %}
+        </div>
+
+        <dialog class="account-dialog" id="address-{{ address.id }}" aria-labelledby="address-{{ address.id }}-title">
+          {% form 'customer_address', address, class: 'account-dialog__form' %}
+            <div class="account-dialog__header">
+              <h2 class="drawer__title" id="address-{{ address.id }}-title">{{ 'account.address.edit' | t }}</h2>
+              <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>{% render 'icon', name: 'close', px: 18 %}</button>
+            </div>
+            <div class="account-dialog__body">
+              {% render 'form-errors', form: form %}
+              {% render 'address-form', address: address %}
+            </div>
+            <div class="account-dialog__footer">
+              <button class="button button--secondary" type="button" data-close-dialog>{{ 'reviews.form.cancel' | t }}</button>
+              <button class="button" type="submit">{{ 'account.save' | t }}</button>
+            </div>
+          {% endform %}
+        </dialog>
+      {% endfor %}
+
+      <button class="account-card address-card address-card--new" type="button" data-open-dialog="address-new">
+        {% render 'icon', name: 'plus', px: 20 %}
+        {{ 'account.address.add' | t }}
+      </button>
+    </div>
+
+    <dialog class="account-dialog" id="address-new" aria-labelledby="address-new-title">
+      {% form 'customer_address', customer.new_address, class: 'account-dialog__form' %}
+        <div class="account-dialog__header">
+          <h2 class="drawer__title" id="address-new-title">{{ 'account.address.add' | t }}</h2>
+          <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.close' | t }}" data-close-dialog>{% render 'icon', name: 'close', px: 18 %}</button>
+        </div>
+        <div class="account-dialog__body">
+          {% render 'form-errors', form: form %}
+          {% render 'address-form', address: customer.new_address %}
+        </div>
+        <div class="account-dialog__footer">
+          <button class="button button--secondary" type="button" data-close-dialog>{{ 'reviews.form.cancel' | t }}</button>
+          <button class="button" type="submit">{{ 'account.save' | t }}</button>
+        </div>
+      {% endform %}
+    </dialog>
+  </div>
+</div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
+{% schema %}
+{
+  "name": "t:names.customer_addresses",
+  "templates": ["customer-addresses"],
+  "limit": 1,
+  "settings": [
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
+  ]
+}
+{% endschema %}
