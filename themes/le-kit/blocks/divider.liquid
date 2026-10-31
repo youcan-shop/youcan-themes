@@ -1,8 +1,10 @@
 <hr
   class="divider-block"
   style="--divider-width: {{ block.settings.length }}%; --divider-thickness: {{ block.settings.thickness }}px;"
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .divider-block {
@@ -11,6 +13,7 @@
     border-block-start: var(--divider-thickness, 1px) solid var(--color-border);
     margin-inline: auto;
   }
+  .divider-block + .divider-block { display: none; }
 {% endstylesheet %}
 
 {% schema %}
@@ -19,7 +22,10 @@
   "tag": null,
   "settings": [
     { "type": "range", "id": "thickness", "label": "t:settings.thickness", "min": 1, "max": 8, "step": 1, "unit": "px", "default": 1 },
-    { "type": "range", "id": "length", "label": "t:settings.length", "min": 10, "max": 100, "step": 5, "unit": "%", "default": 100 }
+    { "type": "range", "id": "length", "label": "t:settings.length", "min": 10, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.divider", "category": "t:categories.layout" }

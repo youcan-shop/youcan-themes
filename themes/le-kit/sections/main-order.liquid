@@ -63,7 +63,7 @@
           {% if order.shipping_address %}
             {% render 'address-summary', address: order.shipping_address %}
           {% else %}
-            <p class="text-sm text-muted">—</p>
+            <p class="text-sm text-muted">-</p>
           {% endif %}
         </div>
         <div class="account-card">
@@ -75,6 +75,8 @@
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% schema %}
 {
   "name": "t:names.customer_order",
@@ -82,8 +84,11 @@
   "limit": 1,
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ]
 }
 {% endschema %}

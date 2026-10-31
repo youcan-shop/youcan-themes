@@ -2,8 +2,10 @@
 
 {% if p %}
   {% assign tag = block.settings.tag | default: 'h1' %}
-  <{{ tag }} class="product-title {{ block.settings.size }}" {{ block.youcan_attributes }}>{{ p.name }}</{{ tag }}>
+  <{{ tag }} class="product-title {{ block.settings.size }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">{{ p.name }}</{{ tag }}>
 {% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
@@ -33,7 +35,10 @@
         { "value": "h4", "label": "H4" }
       ],
       "default": "h3"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.product_title", "category": "t:categories.product" }

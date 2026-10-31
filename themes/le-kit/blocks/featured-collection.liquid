@@ -5,7 +5,7 @@
   assign sizes = '(min-width: 990px) ' | append: card_vw | append: 'vw, 50vw'
 -%}
 
-<div class="featured-collection-block" {{ block.youcan_attributes }}>
+<div class="featured-collection-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   <ul class="grid" style="--columns: {{ columns }}; --columns-mobile: {{ block.settings.columns_mobile }};" role="list">
     {% if c.products.size > 0 %}
       {% for product in c.products limit: block.settings.limit %}
@@ -19,6 +19,8 @@
   </ul>
 </div>
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% stylesheet %}
   .featured-collection-block { width: 100%; }
 {% endstylesheet %}
@@ -31,7 +33,10 @@
     { "type": "collection", "id": "collection", "label": "t:settings.collection" },
     { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 1, "max": 12, "step": 1, "default": 4 },
     { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 1, "max": 6, "step": 1, "default": 4 },
-    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 }
+    { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.featured_collection", "category": "t:categories.products" }

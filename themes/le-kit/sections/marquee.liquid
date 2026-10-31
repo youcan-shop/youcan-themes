@@ -13,6 +13,8 @@
 
 <script type="module" src="{{ 'marquee.js' | asset_url }}"></script>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% schema %}
 {
   "name": "t:names.marquee",
@@ -35,7 +37,10 @@
     },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" },
-    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 }
+    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

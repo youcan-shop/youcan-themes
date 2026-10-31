@@ -24,14 +24,44 @@ class ProductComponent extends Component {
       "change",
       (event) => {
         const target = /** @type {HTMLInputElement} */ (event.target);
-        if (target.closest("[data-variant-option]")) this.#onVariantChange();
+        if (target.closest("[data-variant-option]")) this.#onVariantChange(true);
         if (target.matches("[ref='addOns[]']")) this.updateAddOns();
         if (target.matches("[ref='bundles[]']")) this.#onBundleChange(target);
       },
       { signal: this.signal },
     );
 
-    if (this.variants.length) this.#onVariantChange();
+    if (this.variants.length) {
+      this.#restoreVariantFromUrl();
+      this.#onVariantChange();
+    }
+  }
+
+  /** The product page keeps the selected variant in `?variant=`. */
+  get #syncsUrl() {
+    return this.hasAttribute("data-product-main") && !this.closest("#quick-add");
+  }
+
+  #restoreVariantFromUrl() {
+    if (!this.#syncsUrl) return;
+    const id = new URL(window.location.href).searchParams.get("variant");
+    const variant = id && this.variants.find((item) => String(item.id) === id);
+    if (!variant) return;
+
+    this.options.forEach((option) => {
+      const value = variant.variations?.[option.dataset.optionName ?? ""];
+      if (value == null) return;
+
+      const select = option.querySelector("select");
+      if (select) {
+        select.value = value;
+        select.dispatchEvent(new Event("change"));
+      } else {
+        option.querySelectorAll("input[type='radio']").forEach((input) => {
+          /** @type {HTMLInputElement} */ (input).checked = /** @type {HTMLInputElement} */ (input).value === value;
+        });
+      }
+    });
   }
 
   /** @returns {HTMLElement[]} */
@@ -66,7 +96,8 @@ class ProductComponent extends Component {
     return this.variants.find((variant) => JSON.stringify(variant.variations) === key);
   }
 
-  async #onVariantChange() {
+  /** @param {boolean} [updateUrl] */
+  async #onVariantChange(updateUrl = false) {
     this.options.forEach((option) => {
       const label = option.querySelector("[data-selected-value]");
       const checked = /** @type {HTMLInputElement | null} */ (option.querySelector("input:checked"));
@@ -75,6 +106,11 @@ class ProductComponent extends Component {
 
     const variant = this.findVariant(this.selectedOptions);
     if (variant) await this.#selectVariant(variant);
+    if (variant && updateUrl && this.#syncsUrl) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("variant", String(variant.id));
+      window.history.replaceState(window.history.state, "", url);
+    }
 
     this.#disableUnavailableOptions();
   }
@@ -95,13 +131,13 @@ class ProductComponent extends Component {
     if (attachedImage) this.shopButtons.forEach((button) => button.setAttribute("attached-image", attachedImage));
 
     if (image) this.#showMedia(image);
-    this.#updatePrice(price, compare_at_price);
+    this.#updatePrice(price, compare_at_price, available);
     this.#updateInventory(inventory);
     this.updateAddOns();
   }
 
-  /** @param {number} price @param {number | null} compareAtPrice */
-  #updatePrice(price, compareAtPrice) {
+  /** @param {number} price @param {number | null} compareAtPrice @param {boolean} available */
+  #updatePrice(price, compareAtPrice, available) {
     const onSale = Boolean(compareAtPrice && compareAtPrice > price);
 
     this.querySelectorAll("[data-price]").forEach((container) => {
@@ -110,14 +146,17 @@ class ProductComponent extends Component {
       const current = container.querySelector("[data-product-price]");
       const compare = /** @type {HTMLElement | null} */ (container.querySelector("[data-product-compare-price]"));
       const save = /** @type {HTMLElement | null} */ (container.querySelector("[data-product-save]"));
+      const soldOut = /** @type {HTMLElement | null} */ (container.querySelector("[data-product-sold-out]"));
 
       if (current) current.textContent = formatMoney(price);
       if (compare) {
         compare.textContent = onSale && compareAtPrice ? formatMoney(compareAtPrice) : "";
         compare.hidden = !onSale;
       }
+      // Sold out wins over the discount badge
+      if (soldOut) soldOut.hidden = available;
       if (save) {
-        save.hidden = !onSale;
+        save.hidden = !onSale || !available;
         const value = save.querySelector("[data-product-save-value]");
         if (value && onSale && compareAtPrice) value.textContent = String(Math.round(((compareAtPrice - price) * 100) / compareAtPrice));
       }

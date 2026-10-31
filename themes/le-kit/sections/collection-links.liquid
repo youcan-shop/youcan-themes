@@ -44,6 +44,8 @@
 
 <script type="module" src="{{ 'collection-links.js' | asset_url }}"></script>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
   .collection-links { display: grid; gap: var(--space-2xl); align-items: center; }
   .collection-links__list { display: grid; gap: var(--space-2xs); padding: 0; list-style: none; }
@@ -120,8 +122,11 @@
     { "type": "checkbox", "id": "show_count", "label": "t:settings.show_product_count", "default": true },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     { "name": "t:names.collection_links", "category": "t:categories.collections" }

@@ -48,6 +48,8 @@
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
   .hotspots__canvas { overflow: visible; border-radius: var(--radius-surface); background: none; }
   .hotspots__canvas--full { border-radius: 0; }
@@ -77,9 +79,10 @@
       "label": "t:settings.header_alignment",
       "options": [
         { "value": "start", "label": "t:options.start" },
-        { "value": "center", "label": "t:options.center" }
+        { "value": "center", "label": "t:options.center" },
+        { "value": "split", "label": "t:options.split" }
       ],
-      "default": "start"
+      "default": "split"
     },
     { "type": "header", "content": "t:content.media" },
     { "type": "image_picker", "id": "image", "label": "t:settings.image" },
@@ -96,9 +99,9 @@
         { "value": "large", "label": "t:options.large" },
         { "value": "screen", "label": "t:options.full_screen" }
       ],
-      "default": "adapt",
-      "info": "t:info.hotspots_height"
+      "default": "adapt"
     },
+    { "type": "paragraph", "content": "t:info.hotspots_height" },
     {
       "type": "select",
       "id": "width",
@@ -111,8 +114,11 @@
     },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

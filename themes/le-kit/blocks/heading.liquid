@@ -17,11 +17,13 @@
     class="heading-block {{ size_class }}"
     data-align="{{ block.settings.alignment }}"
     {% if block.settings.max_width != 'none' %}data-max-width="{{ block.settings.max_width }}"{% endif %}
-    {{ block.youcan_attributes }}
+    {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
   >
     {{- td_heading -}}
   </{{ tag }}>
 {% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .heading-block[data-align="left"] { text-align: start; }
@@ -95,7 +97,10 @@
         { "value": "none", "label": "t:options.none" }
       ],
       "default": "none"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.heading", "category": "t:categories.basic" }

@@ -36,7 +36,7 @@
     --font-heading-scale: {{ settings.heading_scale | default: 100 | divided_by: 100.0 }};
     --font-heading-case: {{ settings.heading_case | default: 'none' }};
     --font-heading-line-height: {% case settings.heading_line_height %}{% when 'normal' %}1.25{% when 'relaxed' %}1.4{% else %}1.12{% endcase %};
-    --font-heading-letter-spacing: {% case settings.heading_letter_spacing %}{% when 'normal' %}0em{% when 'wide' %}0.02em{% else %}-0.02em{% endcase %};
+    --font-heading-letter-spacing: {% case settings.heading_letter_spacing %}{% when 'normal' %}0em{% when 'wide' %}0.03em{% else %}-0.02em{% endcase %};
 
     --font-accent-family: {{ accent_font.family }}, {{ accent_font.fallback_families }}, yc-sans;
     --font-accent-weight: {{ accent_font.weight }};
@@ -47,6 +47,8 @@
         --page-width: 1100px;
       {% when 'wide' %}
         --page-width: 1600px;
+      {% when 'full' %}
+        --page-width: 100vw;
       {% else %}
         --page-width: 1360px;
     {% endcase %}
@@ -64,6 +66,7 @@
     --swatch-radius: {% if settings.swatch_shape == 'square' %}calc(var(--swatch-size) / 5){% else %}50%{% endif %};
     --icon-stroke: {{ settings.icon_stroke | default: 16 | divided_by: 10.0 }};
     --badge-case: {{ settings.badge_case | default: 'none' }};
+    --color-badge-sale: {{ settings.badge_sale_color | default: '#e1116f' }};
     {% case settings.popover_shadow %}
       {% when 'none' %}
         --shadow-lg: none;

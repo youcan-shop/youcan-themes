@@ -2,7 +2,7 @@
   assign methods = 'cod,visa,mastercard,paypal,stripe,youcan_pay,bank_transfer' | split: ','
 -%}
 
-<ul class="payment-icons" role="list" aria-label="{{ 'payment_icons.label' | t }}" {{ block.youcan_attributes }}>
+<ul class="payment-icons" role="list" aria-label="{{ 'payment_icons.label' | t }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% for method in methods %}
     {% assign enabled_key = 'show_' | append: method %}
     {% if block.settings[enabled_key] %}
@@ -27,6 +27,8 @@
     {% endif %}
   {% endfor %}
 </ul>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .payment-icons { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; list-style: none; }
@@ -60,7 +62,10 @@
     { "type": "checkbox", "id": "show_paypal", "label": "PayPal", "default": false },
     { "type": "checkbox", "id": "show_stripe", "label": "Stripe", "default": false },
     { "type": "checkbox", "id": "show_youcan_pay", "label": "YouCan Pay", "default": true },
-    { "type": "checkbox", "id": "show_bank_transfer", "label": "t:settings.bank_transfer", "default": false }
+    { "type": "checkbox", "id": "show_bank_transfer", "label": "t:settings.bank_transfer", "default": false },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.payment_icons", "category": "t:categories.basic" }

@@ -19,7 +19,7 @@
   <div class="{% if s.width == 'page' %}page-width{% endif %} media-content__grid media-content__grid--{{ s.media_position }} media-content__grid--{{ s.media_width }}{% if s.width == 'full' %} media-content__grid--full{% endif %}{% if s.media_position_mobile == 'bottom' %} media-content__grid--media-last{% endif %}{% unless s.rounded %} media-content__grid--square{% endunless %}">
     <div class="media-content__media media" style="--ratio: {{ ratio }};">
       {% if s.video != blank %}
-        <video src="{{ s.video }}" autoplay muted loop playsinline {% if s.image != blank %}poster="{{ s.image | image_url: width: 1600 }}"{% endif %}></video>
+        {% render 'video-player', url: s.video, mode: 'background', poster: s.image, alt: s.image_alt, sizes: '(min-width: 750px) 50vw, 100vw', class: 'media-content__video' %}
       {% else %}
         {% render 'image', image: s.image, alt: s.image_alt, sizes: '(min-width: 750px) 50vw, 100vw', placeholder: 'hero-2' %}
       {% endif %}
@@ -31,6 +31,8 @@
     </div>
   </div>
 </div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
 
 {% schema %}
 {
@@ -57,9 +59,9 @@
     {
       "type": "url",
       "id": "video",
-      "label": "t:settings.video_file_url",
-      "info": "t:info.video_file_url"
+      "label": "t:settings.video_link"
     },
+    { "type": "paragraph", "content": "t:info.video_background" },
     {
       "type": "select",
       "id": "ratio",
@@ -260,7 +262,7 @@
       "max": 160,
       "step": 4,
       "unit": "px",
-      "default": 48
+      "default": 80
     },
     {
       "type": "range",
@@ -270,8 +272,11 @@
       "max": 160,
       "step": 4,
       "unit": "px",
-      "default": 48
-    }
+      "default": 80
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

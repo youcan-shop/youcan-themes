@@ -9,6 +9,7 @@ const UNITS = /** @type {const} */ ([
 
 /**
  * Counts down to the `end` attribute (YYYY-MM-DDTHH:MM, the visitor's local time).
+ * Without a date (`THH:MM`) it counts down to that time every day.
  * Refs: `days`, `hours`, `minutes`, `seconds`.
  */
 class CountdownComponent extends Component {
@@ -29,7 +30,11 @@ class CountdownComponent extends Component {
   }
 
   get end() {
-    return new Date(this.getAttribute("end") ?? "").getTime();
+    const end = this.getAttribute("end") ?? "";
+    if (!end.startsWith("T")) return new Date(end).getTime();
+
+    const [hours, minutes] = end.slice(1).split(":").map(Number);
+    return new Date().setHours(hours, minutes, 59, 999);
   }
 
   #tick() {
@@ -41,7 +46,7 @@ class CountdownComponent extends Component {
       if (this.refs[unit]) this.refs[unit].textContent = String(value).padStart(2, "0");
     }
 
-    if (this.end > Date.now()) return;
+    if (this.end > Date.now() || this.getAttribute("end")?.startsWith("T")) return;
     clearInterval(this.#timer);
     if (this.hasAttribute("hide-when-expired")) this.hidden = true;
   }

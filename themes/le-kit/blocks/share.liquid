@@ -7,7 +7,7 @@
   endif
 -%}
 
-<ui-share class="share" data-title="{{ share_title | escape }}" {{ block.youcan_attributes }}>
+<ui-share class="share" data-title="{{ share_title | escape }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% if block.settings.label != blank %}
     <span class="share__label text-sm text-muted">{{ block.settings.label | escape }}</span>
   {% endif %}
@@ -32,6 +32,8 @@
 
 <script type="module" src="{{ 'share.js' | asset_url }}"></script>
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% stylesheet %}
   .share { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
   .share__buttons { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -47,7 +49,10 @@
     { "type": "checkbox", "id": "show_facebook", "label": "Facebook", "default": true },
     { "type": "checkbox", "id": "show_x", "label": "X (Twitter)", "default": true },
     { "type": "checkbox", "id": "show_whatsapp", "label": "WhatsApp", "default": true },
-    { "type": "checkbox", "id": "show_copy", "label": "t:settings.show_copy_link", "default": true }
+    { "type": "checkbox", "id": "show_copy", "label": "t:settings.show_copy_link", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.share", "category": "t:categories.product" }

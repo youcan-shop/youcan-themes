@@ -9,7 +9,7 @@
   endif
 -%}
 
-<a class="logo-block" href="/" style="--logo-width: {{ logo_width }};" data-unit="{{ block.settings.unit }}" {{ block.youcan_attributes }}>
+<a class="logo-block" href="/" style="--logo-width: {{ logo_width }};" data-unit="{{ block.settings.unit }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% if logo != blank %}
     {{
       logo
@@ -26,6 +26,8 @@
 </a>
 
 <script type="module" src="{{ 'jumbo-text.js' | asset_url }}"></script>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .logo-block { display: inline-flex; text-decoration: none; }
@@ -52,7 +54,10 @@
       "default": "pixel"
     },
     { "type": "range", "id": "width", "label": "t:settings.width", "min": 40, "max": 400, "step": 10, "unit": "px", "default": 120, "visible_if": { "setting_id": "unit", "value": "pixel" } },
-    { "type": "range", "id": "percent_width", "label": "t:settings.width", "min": 10, "max": 100, "step": 5, "unit": "%", "default": 100, "visible_if": { "setting_id": "unit", "value": "percent" } }
+    { "type": "range", "id": "percent_width", "label": "t:settings.width", "min": 10, "max": 100, "step": 5, "unit": "%", "default": 100, "visible_if": { "setting_id": "unit", "value": "percent" } },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.logo", "category": "t:categories.basic" }

@@ -15,14 +15,31 @@
 >
   <div class="page-width thank-you">
     <header class="thank-you__header">
-      <span class="thank-you__icon">{% render 'icon', name: 'check', px: 28 %}</span>
-      <h1 class="h2">{{ td_heading | default: store.name }}</h1>
+      <p class="inventory__status thank-you__status">{% render 'icon', name: 'check', px: 14 %}{{ 'thank_you.confirmed' | t }}</p>
+      <h1 class="thank-you__title">{{ td_heading | default: store.name }}</h1>
       {% if td_text != blank %}
-        <p class="text-muted">{{ td_text }}</p>
+        <p class="thank-you__text">{{ td_text }}</p>
       {% endif %}
+      <div class="thank-you__actions">
+        <a class="button button--arrow" href="/">
+          {{- 'thank_you.continue_shopping' | t -}}
+          {% render 'icon', name: 'caret-right', px: 10, class: 'button__arrow' %}
+        </a>
+        {% if section.settings.show_whatsapp_share %}
+          {%- capture message -%}
+{{ 'thank_you.share_message' | t | replace: '[store]', store.name }}
+https://{{ store.domain }}
+          {%- endcapture -%}
+          <a class="button button--secondary" href="https://wa.me/?text={{ message | strip | url_encode }}" target="_blank" rel="noopener">
+            {% render 'social-icon', name: 'whatsapp' %}
+            {{ 'thank_you.share_whatsapp' | t }}
+          </a>
+        {% endif %}
+      </div>
     </header>
 
-    <div class="thank-you__card">
+    <div class="thank-you__card color-scheme color-{{ section.settings.summary_color_scheme | default: 'scheme-3' }}">
+      <h2 class="thank-you__card-title">{{ 'thank_you.summary' | t }}</h2>
       {% if order.order_variants.size > 0 %}
         <ul class="cart__lines" role="list">
           {% for item in order.order_variants %}
@@ -124,35 +141,31 @@
       </dl>
     </div>
 
-    <div class="thank-you__actions">
-      <a class="button button--lg" href="/">{{ 'thank_you.continue_shopping' | t }}</a>
-      {% if section.settings.show_whatsapp_share %}
-        {%- capture message -%}
-{{ 'thank_you.share_message' | t | replace: '[store]', store.name }}
-https://{{ store.domain }}
-        {%- endcapture -%}
-        <a class="button button--secondary button--lg" href="https://wa.me/?text={{ message | strip | url_encode }}" target="_blank" rel="noopener">
-          {% render 'social-icon', name: 'whatsapp' %}
-          {{ 'thank_you.share_whatsapp' | t }}
-        </a>
-      {% endif %}
-    </div>
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
-  .thank-you { display: grid; gap: var(--space-xl); max-width: calc(640px + 2 * var(--page-gutter)); }
-  .thank-you__header { display: grid; justify-items: center; gap: var(--space-sm); text-align: center; }
-  .thank-you__icon {
+  .thank-you { display: grid; gap: var(--space-2xl); align-items: start; }
+  .thank-you__header { display: grid; justify-items: start; gap: var(--space-md); }
+  .thank-you__status .icon { width: 14px; height: 14px; }
+  .thank-you__title { font-size: var(--h1); }
+  .thank-you__text { max-width: 44ch; color: var(--color-muted); font-size: var(--text-md); }
+  .thank-you__actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-block-start: var(--space-sm); }
+  .thank-you__card {
     display: grid;
-    place-items: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--color-primary);
-    color: var(--color-primary-foreground);
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    border-radius: var(--radius-card);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
-  .thank-you__card { display: grid; gap: var(--space-lg); padding: var(--space-lg); border: 1px solid var(--color-border); border-radius: var(--radius-card); }
+  .thank-you__card-title { font-size: var(--h4); }
+  .thank-you__card .cart-line__media { background-color: #fff; }
+  .thank-you__card .cart__total-row--discount dd { color: inherit; }
+  .thank-you__card .cart__totals { padding-block-start: var(--space-lg); border-block-start: 1px solid var(--color-border); }
+  .thank-you__card .cart__total-row--total { padding-block-start: var(--space-sm); font-size: var(--text-xl); font-weight: 500; }
   .thank-you__qty {
     position: absolute;
     inset-block-start: 4px;
@@ -167,7 +180,13 @@ https://{{ store.domain }}
     font-size: 11px;
     font-weight: 600;
   }
-  .thank-you__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-sm); }
+  @media (min-width: 990px) {
+    .thank-you { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); column-gap: var(--space-3xl); }
+    .thank-you__header { position: sticky; top: calc(var(--header-height) + var(--space-xl)); }
+  }
+  @media (max-width: 749px) {
+    .thank-you__card { padding: var(--space-lg); }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -180,8 +199,12 @@ https://{{ store.domain }}
     { "type": "textarea", "id": "text", "label": "t:settings.text", "default": "t:defaults.thank_you_text" },
     { "type": "checkbox", "id": "show_whatsapp_share", "label": "t:settings.show_whatsapp_share", "default": true },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+    { "type": "color_scheme", "id": "summary_color_scheme", "label": "t:settings.summary_color_scheme", "default": "scheme-3" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ]
 }
 {% endschema %}

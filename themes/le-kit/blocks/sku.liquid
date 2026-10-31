@@ -4,17 +4,19 @@
 -%}
 
 {% if p %}
-  <p class="sku text-sm text-muted" {% if sku == blank %}hidden{% endif %} {{ block.youcan_attributes }}>
+  <p class="sku text-sm text-muted" {% if sku == blank %}hidden{% endif %} {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
     {{ 'product.sku' | t }}: <span ref="skus[]">{{ sku }}</span>
   </p>
 {% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
   "name": "t:names.sku",
   "tag": null,
   "settings": [
-    { "type": "paragraph", "content": "t:info.sku" }
+    { "type": "paragraph", "content": "t:info.sku" }, { "type": "header", "content": "t:content.advanced" }, { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" }, { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.sku", "category": "t:categories.product" }

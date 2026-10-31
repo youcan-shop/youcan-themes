@@ -3,7 +3,8 @@ import { Component } from "@theme/component";
 /**
  * Progressive enhancement over a CSS scroll-snap track.
  *
- * Refs: `track` (scroll container), `previous`, `next`, `dots[]`, `counter`.
+ * Refs: `track` (scroll container), `previous`, `next`, `dots[]`, `counter`, `progress` (scroll position bar),
+ * `nextPreview` with `nextImage` and `nextTitle` (a card showing the next slide's image and first heading).
  * Slides are the track children with `data-carousel-item` (or every child with `data-all-items`).
  * Attributes: `autoplay`, `interval` (ms), `data-static` (grid layout, no behaviour).
  *
@@ -26,19 +27,25 @@ export class CarouselComponent extends Component {
     const { previous, next, dots = [], track } = this.refs;
 
     previous?.addEventListener("click", () => this.goTo(this.index - this.perPage), { signal });
+    this.refs.nextPreview?.addEventListener("click", () => this.goTo((this.index + 1) % this.items.length), { signal });
     next?.addEventListener("click", () => this.goTo(this.index + this.perPage), { signal });
     dots.forEach((/** @type {HTMLElement} */ dot, /** @type {number} */ index) => dot.addEventListener("click", () => this.goTo(index), { signal }));
+    this.refs.progress?.addEventListener("click", (event) => this.#seek(event), { signal });
 
     track.addEventListener(
       "scroll",
       () => {
         cancelAnimationFrame(this.#frame ?? 0);
-        this.#frame = requestAnimationFrame(() => this.#syncIndex());
+        this.#frame = requestAnimationFrame(() => {
+          this.#syncIndex();
+          this.#updateProgress();
+        });
       },
       { passive: true, signal },
     );
 
     this.#update();
+    if (this.refs.progress) new ResizeObserver(() => this.#updateProgress()).observe(track);
 
     if (this.hasAttribute("autoplay") && this.items.length > 1) {
       this.play();
@@ -121,6 +128,71 @@ export class CarouselComponent extends Component {
     }
   }
 
+  #updateNextPreview() {
+    const { nextPreview, nextImage, nextTitle } = this.refs;
+    if (!nextPreview || this.items.length < 2) return;
+
+    const next = this.items[(this.index + 1) % this.items.length];
+    const image = next.querySelector("img");
+    const heading = next.querySelector("h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4");
+
+    if (nextImage) this.#swapNextImage(nextImage, image);
+    if (nextTitle) nextTitle.textContent = heading?.textContent?.trim() ?? "";
+    nextPreview.hidden = false;
+  }
+
+  /** Scrolls the track to the clicked point of the progress bar. @param {MouseEvent} event */
+  #seek(event) {
+    const { track, progress } = this.refs;
+    const rect = progress.getBoundingClientRect();
+    let ratio = Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width));
+    if (this.#isRtl) ratio = 1 - ratio;
+
+    const left = ratio * (track.scrollWidth - track.clientWidth);
+    track.scrollTo({ left: this.#isRtl ? -left : left, behavior: "smooth" });
+  }
+
+  /**
+   * Shows the next slide's image once it's decoded, so the card never flashes.
+   * @param {HTMLImageElement} target
+   * @param {HTMLImageElement | null} image
+   */
+  #swapNextImage(target, image) {
+    if (!image) {
+      target.hidden = true;
+      delete target.dataset.source;
+      return;
+    }
+
+    const source = image.srcset || image.src;
+    if (target.dataset.source === source) return;
+    target.dataset.source = source;
+
+    const loader = new Image();
+    loader.sizes = "124px";
+    if (image.srcset) loader.srcset = image.srcset;
+    loader.src = image.src;
+    loader
+      .decode()
+      .catch(() => {})
+      .then(() => {
+        if (target.dataset.source !== source) return;
+        target.src = loader.currentSrc || image.src;
+        target.hidden = false;
+      });
+  }
+
+  #updateProgress() {
+    const { track, progress } = this.refs;
+    if (!progress) return;
+
+    const size = track.scrollWidth ? Math.min(1, track.clientWidth / track.scrollWidth) : 1;
+    const scrollable = track.scrollWidth - track.clientWidth;
+    progress.style.setProperty("--progress-size", String(size));
+    progress.style.setProperty("--progress-offset", String(scrollable > 0 ? Math.abs(track.scrollLeft) / scrollable : 0));
+    progress.hidden = size >= 1;
+  }
+
   #update() {
     const { previous, next, dots = [], counter } = this.refs;
     const loop = this.hasAttribute("autoplay");
@@ -129,7 +201,14 @@ export class CarouselComponent extends Component {
     if (next) next.disabled = this.index >= this.#maxIndex && !loop;
     dots.forEach((/** @type {HTMLElement} */ dot, /** @type {number} */ index) => dot.setAttribute("aria-current", String(index === this.index)));
     if (counter) counter.textContent = String(this.index + 1);
-    this.items.forEach((item, index) => item.toggleAttribute("data-active", index === this.index));
+    this.items.forEach((item, index) => {
+      item.toggleAttribute("data-active", index === this.index);
+      // Lazy images in a horizontal track load late
+      if (index === this.index || index === (this.index + 1) % this.items.length) {
+        item.querySelectorAll("img[loading='lazy']").forEach((img) => (img.loading = "eager"));
+      }
+    });
+    this.#updateNextPreview();
 
     this.dispatchEvent(new CustomEvent("carousel:change", { detail: { index: this.index } }));
   }

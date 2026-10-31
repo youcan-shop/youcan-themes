@@ -31,7 +31,11 @@ document.addEventListener("click", (event) => {
   if (target instanceof HTMLDialogElement) target.close();
 });
 
-document.querySelectorAll("dialog [data-form-has-errors]").forEach((alert) => alert.closest("dialog")?.showModal());
+document.querySelectorAll("[data-form-has-errors]").forEach((alert) => {
+  const sheet = alert.closest("dialog, [popover]");
+  if (sheet instanceof HTMLDialogElement) sheet.showModal();
+  else /** @type {HTMLElement | null} */ (sheet)?.showPopover();
+});
 
 addSheetHandles();
 new MutationObserver((mutations) =>

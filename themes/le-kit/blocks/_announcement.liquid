@@ -4,13 +4,15 @@
     assign td_text = td_text | remove_first: 't:' | t
   endif
 -%}
-<p class="announcement" data-carousel-item data-visibility="{{ block.settings.visibility | default: 'all' }}" {{ block.youcan_attributes }}>
+<p class="announcement" data-carousel-item data-visibility="{{ block.settings.visibility | default: 'all' }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% if block.settings.link != blank %}
     <a href="{{ block.settings.link }}">{{ td_text }}</a>
   {% else %}
     {{ td_text }}
   {% endif %}
 </p>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .announcement { text-align: center; padding-block: var(--space-xs); font-weight: 500; letter-spacing: 0.02em; }
@@ -37,7 +39,10 @@
         { "value": "desktop", "label": "t:options.desktop_only" }
       ],
       "default": "all"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.announcement" }

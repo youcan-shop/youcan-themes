@@ -23,7 +23,7 @@
   {% if tag == 'a' %}href="{{ block.settings.link }}"{% endif %}
   style="--ratio: {{ ratio }}; --image-width: {{ width }}%;"
   {% if block.settings.image == blank %}data-placeholder{% endif %}
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
   {% render 'image',
     image: block.settings.image,
@@ -32,6 +32,8 @@
     placeholder: 'hero-1'
   %}
 </{{ tag }}>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .image-block { width: var(--image-width, 100%); max-width: 100%; }
@@ -72,7 +74,10 @@
       "default": 100
     },
     { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": true },
-    { "type": "url", "id": "link", "label": "t:settings.link" }
+    { "type": "url", "id": "link", "label": "t:settings.link" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.image", "category": "t:categories.media" }

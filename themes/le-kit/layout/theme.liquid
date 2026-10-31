@@ -55,6 +55,7 @@
         strings: {
           addedToCart: {{ 'cart.added' | t | json }},
           checkoutError: {{ form.errors | first | json }},
+          error: {{ 'errors.generic' | t | json }},
           insufficientInventory: {{ 'errors.insufficient_inventory' | t | json }},
           largeFile: {{ 'errors.large_file' | t | json }},
           selectEmpty: {{ 'general.no_results' | t | json }},
@@ -80,6 +81,7 @@
           "@theme/events": "{{ 'events.js' | asset_url }}",
           "@theme/forms": "{{ 'forms.js' | asset_url }}",
           "@theme/header": "{{ 'header.js' | asset_url }}",
+          "@theme/hotspot": "{{ 'hotspot.js' | asset_url }}",
           "@theme/jumbo-text": "{{ 'jumbo-text.js' | asset_url }}",
           "@theme/layered-slideshow": "{{ 'layered-slideshow.js' | asset_url }}",
           "@theme/linked-fields": "{{ 'linked-fields.js' | asset_url }}",
@@ -134,6 +136,7 @@
 
   <body
     data-card-hover="{{ settings.card_hover_effect | default: 'zoom' }}"
+    data-card-style="{{ settings.card_style | default: 'panel' }}"
     {% if settings.reveal_on_scroll %}data-reveal{% endif %}
   >
     <a class="skip-link button" href="#main-content">{{ 'accessibility.skip_to_content' | t }}</a>
@@ -148,17 +151,25 @@
 
     {% section 'cart-drawer' %}
 
-    <dialog class="quick-add color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}" id="quick-add">
-      <button
-        class="button button--ghost button--icon quick-add__close"
-        type="button"
-        aria-label="{{ 'accessibility.close' | t }}"
-        data-close-dialog
-      >
-        {% render 'icon', name: 'close' %}
-      </button>
-      <div class="quick-add__content" data-quick-add-content></div>
-    </dialog>
+    <div class="drawer quick-add color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}" id="quick-add" popover>
+      <div class="drawer__header">
+        <span class="drawer__title" data-quick-add-title data-default="{{ 'product.quick_view' | t | escape }}">{{ 'product.quick_view' | t }}</span>
+        <button class="button button--ghost button--icon" type="button" popovertarget="quick-add" popovertargetaction="hide" aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+      <div class="drawer__body quick-add__content" data-quick-add-content data-view-label="{{ 'product.view_full_page' | t | escape }}"></div>
+      <template data-quick-add-skeleton>
+        <div class="quick-add__skeleton" aria-hidden="true">
+          <span class="skeleton--media"></span>
+          <span class="skeleton--pill"></span>
+          <span class="skeleton--title"></span>
+          <span class="skeleton--price"></span>
+          <span class="skeleton--options"></span>
+          <span class="skeleton--button"></span>
+        </div>
+      </template>
+    </div>
 
     <ui-toast class="toast" id="toast" popover="manual" role="status">
       <span class="toast__icon" aria-hidden="true">

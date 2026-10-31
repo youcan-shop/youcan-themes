@@ -1,6 +1,8 @@
-<div class="accordion-block" {{ block.youcan_attributes }}>
+<div class="accordion-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% content_for 'blocks' %}
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .accordion-block { width: 100%; text-align: start; }
@@ -11,7 +13,11 @@
   "name": "t:names.accordion",
   "tag": null,
   "blocks": [{ "type": "_accordion-row" }],
-  "settings": [],
+  "settings": [
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
   "presets": [
     {
       "name": "t:names.accordion",

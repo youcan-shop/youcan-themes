@@ -1,4 +1,4 @@
-<div class="contact-form-block" {{ block.youcan_attributes }}>
+<div class="contact-form-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% form 'contact', class: 'contact-form' %}
     {% if form.posted_successfully %}
       <p class="alert" role="status">{% render 'icon', name: 'check-circle', px: 18 %} {{ 'contact.success' | t }}</p>
@@ -29,6 +29,8 @@
   {% endform %}
 </div>
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% stylesheet %}
   .contact-form-block { width: 100%; max-width: 640px; text-align: start; }
   .contact-form-block .contact-form { display: grid; gap: var(--space-md); }
@@ -50,7 +52,10 @@
         { "value": "secondary", "label": "t:options.secondary" }
       ],
       "default": "primary"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.contact_form", "category": "t:categories.forms" }

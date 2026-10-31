@@ -9,9 +9,11 @@
   endcase
 -%}
 
-<div class="collection-card-block" {{ block.youcan_attributes }}>
+<div class="collection-card-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% render 'collection-card', collection: block.settings.collection, ratio: ratio, style: block.settings.style, sizes: '(min-width: 750px) 33vw, 50vw' %}
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .collection-card-block { width: 100%; }
@@ -43,7 +45,10 @@
         { "value": "overlay", "label": "t:options.on_image" }
       ],
       "default": "below"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.collection_card", "category": "t:categories.collections" }

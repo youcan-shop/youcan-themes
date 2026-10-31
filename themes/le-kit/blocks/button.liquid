@@ -8,17 +8,19 @@
 
 {% if label != blank %}
   <a
-    class="button-block button button--{{ block.settings.style }} button--{{ block.settings.size }}{% if block.settings.full_width %} button--full{% endif %}"
+    class="button-block button button--{{ block.settings.style }} button--{{ block.settings.size }}{% if block.settings.full_width %} button--full{% endif %}{% if block.settings.show_arrow %} button--arrow{% endif %}"
     href="{{ block.settings.link | default: '#' }}"
     {% if block.settings.new_tab %}target="_blank" rel="noopener"{% endif %}
-    {{ block.youcan_attributes }}
+    {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
   >
     {{- label | escape -}}
     {% if block.settings.show_arrow %}
-      {% render 'icon', name: 'arrow-right', px: 16, class: 'icon--flip' %}
+      {% render 'icon', name: 'caret-right', px: 10, class: 'button__arrow' %}
     {% endif %}
   </a>
 {% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
@@ -74,8 +76,11 @@
       "type": "checkbox",
       "id": "show_arrow",
       "label": "t:settings.show_arrow",
-      "default": false
-    }
+      "default": true
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.button", "category": "t:categories.basic" }

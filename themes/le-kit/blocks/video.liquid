@@ -1,24 +1,4 @@
 {%- liquid
-  assign url = block.settings.video | append: ''
-  assign provider = ''
-  assign video_id = ''
-
-  if url contains 'youtu'
-    assign provider = 'youtube'
-    if url contains 'youtu.be/'
-      assign video_id = url | split: 'youtu.be/' | last | split: '?' | first
-    elsif url contains 'shorts/'
-      assign video_id = url | split: 'shorts/' | last | split: '?' | first
-    elsif url contains 'embed/'
-      assign video_id = url | split: 'embed/' | last | split: '?' | first
-    else
-      assign video_id = url | split: 'v=' | last | split: '&' | first
-    endif
-  elsif url contains 'vimeo'
-    assign provider = 'vimeo'
-    assign video_id = url | split: '?' | first | split: '/' | last
-  endif
-
   case block.settings.ratio
     when 'square'
       assign ratio = '1 / 1'
@@ -27,68 +7,29 @@
     else
       assign ratio = '16 / 9'
   endcase
-
-  if provider == 'youtube'
-    assign embed = 'https://www.youtube-nocookie.com/embed/' | append: video_id | append: '?autoplay=1&rel=0&playsinline=1'
-  elsif provider == 'vimeo'
-    assign embed = 'https://player.vimeo.com/video/' | append: video_id | append: '?autoplay=1'
+  assign style = '--ratio: ' | append: ratio | append: ';'
+  assign classes = 'video-block media'
+  if block.settings.rounded
+    assign classes = classes | append: ' image-block--rounded'
   endif
 -%}
 
-<ui-video
-  class="video-block media{% if block.settings.rounded %} image-block--rounded{% endif %}"
-  style="--ratio: {{ ratio }};"
-  data-embed="{{ embed }}"
-  {{ block.youcan_attributes }}
->
-  {% if block.settings.cover != blank %}
-    {% render 'image', image: block.settings.cover, alt: block.settings.alt, sizes: '(min-width: 750px) 60vw, 100vw' %}
-  {% elsif provider == 'youtube' %}
-    <img src="https://i.ytimg.com/vi/{{ video_id }}/hqdefault.jpg" alt="{{ block.settings.alt | escape }}" loading="lazy" width="480" height="360">
-  {% else %}
-    {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
-  {% endif %}
-  {% if embed %}
-    <button class="video-block__play" type="button" ref="playButton" aria-label="{{ 'accessibility.play_video' | t }}">
-      {% render 'icon', name: 'play', px: 28 %}
-    </button>
-  {% endif %}
-</ui-video>
+<div class="video-block-wrapper" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% render 'video-player', url: block.settings.video_link, mode: 'click', poster: block.settings.cover, alt: block.settings.alt, sizes: '(min-width: 750px) 60vw, 100vw', controls: true, class: classes, style: style %}
+</div>
 
-<script type="module" src="{{ 'video.js' | asset_url }}"></script>
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
-  .video-block { width: 100%; }
-  .video-block__play {
-    position: absolute;
-    inset: 0;
-    margin: auto;
-    display: grid;
-    place-items: center;
-    width: 72px;
-    height: 72px;
-    border: 0;
-    border-radius: 50%;
-    background: var(--color-background);
-    color: var(--color-foreground);
-    box-shadow: var(--shadow-popover);
-    transition: transform var(--duration) var(--ease);
-  }
-  .video-block__play:hover { transform: scale(1.06); }
+  .video-block-wrapper, .video-block { width: 100%; }
 {% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:names.video",
   "tag": null,
   "settings": [
-    {
-      "type": "video_url",
-      "id": "video",
-      "label": "t:settings.video_url",
-      "accept": ["youtube", "vimeo"],
-      "placeholder": "https://www.youtube.com/watch?v=..."
-    },
+    { "type": "url", "id": "video_link", "label": "t:settings.video_link" },
+    { "type": "paragraph", "content": "t:info.video_link" },
     { "type": "image_picker", "id": "cover", "label": "t:settings.cover_image" },
     { "type": "text", "id": "alt", "label": "t:settings.alt_text" },
     {
@@ -102,7 +43,10 @@
       ],
       "default": "wide"
     },
-    { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": true }
+    { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.video", "category": "t:categories.media" }

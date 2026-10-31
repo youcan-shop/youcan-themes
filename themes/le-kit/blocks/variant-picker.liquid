@@ -1,17 +1,19 @@
 {% assign p = closest.product | default: product %}
 
 {% if p and p.options.size > 0 %}
-  <div class="variant-picker-block" {{ block.youcan_attributes }}>
+  <div class="variant-picker-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
     {% render 'variant-picker', product: p %}
   </div>
 {% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
   "name": "t:names.variant_picker",
   "tag": null,
   "settings": [
-    { "type": "paragraph", "content": "t:info.variant_picker" }
+    { "type": "paragraph", "content": "t:info.variant_picker" }, { "type": "header", "content": "t:content.advanced" }, { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" }, { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.variant_picker", "category": "t:categories.product" }

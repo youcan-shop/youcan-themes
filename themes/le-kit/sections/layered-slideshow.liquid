@@ -17,6 +17,8 @@
 
 <script type="module" src="{{ 'layered-slideshow.js' | asset_url }}"></script>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
   .layered { display: flex; gap: var(--space-xs); height: var(--layered-height, 560px); }
   .layered[data-height="small"] { --layered-height: 420px; }
@@ -87,9 +89,10 @@
       "label": "t:settings.header_alignment",
       "options": [
         { "value": "start", "label": "t:options.start" },
-        { "value": "center", "label": "t:options.center" }
+        { "value": "center", "label": "t:options.center" },
+        { "value": "split", "label": "t:options.split" }
       ],
-      "default": "start"
+      "default": "split"
     },
     {
       "type": "select",
@@ -116,8 +119,11 @@
     { "type": "range", "id": "speed", "label": "t:settings.change_every", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 6, "visible_if": { "setting_id": "autoplay", "value": true } },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

@@ -9,12 +9,14 @@
   {% if block.settings.fit %}data-fit{% endif %}
   data-align="{{ block.settings.alignment }}"
   style="--jumbo-size: {{ block.settings.size }}vw;"
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
   {{- td_text | escape -}}
 </ui-jumbo-text>
 
 <script type="module" src="{{ 'jumbo-text.js' | asset_url }}"></script>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .jumbo-text {
@@ -53,7 +55,10 @@
         { "value": "right", "label": "t:options.end" }
       ],
       "default": "center"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.jumbo_text", "category": "t:categories.text" }

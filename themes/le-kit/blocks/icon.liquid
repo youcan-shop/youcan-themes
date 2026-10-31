@@ -1,9 +1,11 @@
-<div class="icon-block" style="--icon-size: {{ block.settings.size }}px;" {{ block.youcan_attributes }}>
+<div class="icon-block" style="--icon-size: {{ block.settings.size }}px;" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% render 'icon', name: block.settings.icon, px: block.settings.size %}
   {% if block.settings.label != blank %}
     <span class="icon-block__label">{{ block.settings.label }}</span>
   {% endif %}
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .icon-block { display: inline-flex; align-items: center; gap: var(--space-xs); }
@@ -53,7 +55,10 @@
       "unit": "px",
       "default": 24
     },
-    { "type": "inline_richtext", "id": "label", "label": "t:settings.label" }
+    { "type": "inline_richtext", "id": "label", "label": "t:settings.label" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.icon", "category": "t:categories.basic" }

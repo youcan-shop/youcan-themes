@@ -42,6 +42,16 @@
         </button>
       {% endunless %}
 
+      {% if s.show_next_preview %}
+        <button class="slideshow__next" type="button" ref="nextPreview" hidden>
+          <span class="slideshow__next-media"><img ref="nextImage" alt="" width="124" height="96" hidden></span>
+          <span class="slideshow__next-text">
+            <span class="slideshow__next-label">{{ 'slideshow.next_slide' | t }}</span>
+            <span class="slideshow__next-title" ref="nextTitle"></span>
+          </span>
+        </button>
+      {% endif %}
+
       {% case s.pagination %}
         {% when 'dots' %}
           <div class="slideshow__pagination slideshow__dots">
@@ -65,6 +75,8 @@
     {% endif %}
   </ui-carousel>
 </div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
 
 {% stylesheet %}
   .slideshow { --slider-gap: 0px; --slide-height: 680px; position: relative; display: block; }
@@ -121,7 +133,7 @@
     box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.2);
   }
   .slideshow[data-nav-background="circle"] .slideshow__arrow { border-radius: 50%; }
-  .slideshow[data-nav-background="square"] .slideshow__arrow { border-radius: var(--radius-input); }
+  .slideshow[data-nav-background="square"] .slideshow__arrow { border-radius: var(--radius-item); }
   .slideshow[data-nav-background="circle"] .slideshow__arrow:hover:not(:disabled),
   .slideshow[data-nav-background="square"] .slideshow__arrow:hover:not(:disabled) { background: #f2f2f2; }
 
@@ -159,6 +171,40 @@
   .slideshow[data-content-position="on_media"] .slideshow__pagination > * { pointer-events: auto; }
   .slideshow[data-content-position="below_media"] .slideshow__pagination { padding-block: var(--space-md) 0; }
   .slideshow[data-content-position="on_media"] .slider__dot { background-color: #fff; box-shadow: 0 0 2px rgb(0 0 0 / 0.4); }
+  .slideshow__dots .slider__dot { width: 48px; height: 24px; padding-block: 11px; border-radius: 0; background-clip: content-box; box-shadow: none; opacity: 0.4; }
+  .slideshow__dots .slider__dot:hover { opacity: 0.7; }
+  .slideshow__dots .slider__dot[aria-current="true"] { opacity: 1; }
+  .slideshow[data-content-position="on_media"] .slideshow__dots .slider__dot { box-shadow: none; }
+  .slideshow[data-content-position="on_media"] .slideshow__dots { justify-content: flex-start; padding-inline: var(--page-gutter); }
+
+  .slideshow__next {
+    position: absolute;
+    inset-block-end: var(--space-2xl);
+    inset-inline-end: var(--page-gutter);
+    z-index: 2;
+    display: none;
+    align-items: center;
+    gap: var(--space-md);
+    width: 340px;
+    padding: 8px;
+    border: 0;
+    border-radius: var(--radius-box);
+    background: #fff;
+    color: #2e2e2e;
+    text-align: start;
+    cursor: pointer;
+    transition: translate var(--duration) var(--ease);
+  }
+  .slideshow__next:hover { translate: 0 -2px; }
+  .slideshow__next-media { flex: 0 0 124px; height: 96px; overflow: hidden; border-radius: var(--radius-item); background: #f6f6f6; }
+  .slideshow__next-media img { width: 100%; height: 100%; object-fit: cover; }
+  .slideshow__next-text { display: grid; gap: 4px; min-width: 0; }
+  .slideshow__next-label { color: #6c6c6c; font-size: var(--text-xs); }
+  .slideshow__next-title { overflow: hidden; font-size: var(--text-sm); font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+  @media (min-width: 990px) {
+    .slideshow[data-content-position="on_media"] .slideshow__next:not([hidden]) { display: flex; }
+  }
+
   .slideshow__counter { align-items: baseline; font-size: var(--text-sm); font-variant-numeric: tabular-nums; font-weight: 500; }
   .slideshow[data-content-position="on_media"] .slideshow__counter { text-shadow: 0 1px 3px rgb(0 0 0 / 0.45); }
 {% endstylesheet %}
@@ -211,7 +257,7 @@
           "label": "t:options.full_screen"
         }
       ],
-      "default": "large"
+      "default": "screen"
     },
     {
       "type": "select",
@@ -259,7 +305,7 @@
           "label": "t:options.none"
         }
       ],
-      "default": "large_arrows"
+      "default": "none"
     },
     {
       "type": "select",
@@ -302,6 +348,13 @@
       ],
       "default": "dots"
     },
+    {
+      "type": "checkbox",
+      "id": "show_next_preview",
+      "label": "t:settings.show_next_preview",
+      "default": true
+    },
+    { "type": "paragraph", "content": "t:info.show_next_preview" },
     {
       "type": "checkbox",
       "id": "autoplay",
@@ -351,7 +404,10 @@
       "step": 4,
       "unit": "px",
       "default": 0
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

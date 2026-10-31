@@ -28,8 +28,11 @@
     <div class="slider__track carousel-section__track{% if s.width == 'full' %} carousel-section__track--full{% endif %}" ref="track">
       {% content_for 'blocks' %}
     </div>
+    <div class="slider__progress" ref="progress" aria-hidden="true" hidden></div>
   </ui-carousel>
 </div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
 
 {% stylesheet %}
   .carousel-section__track > * { min-width: 0; }
@@ -49,9 +52,10 @@
       "label": "t:settings.header_alignment",
       "options": [
         { "value": "start", "label": "t:options.start" },
-        { "value": "center", "label": "t:options.center" }
+        { "value": "center", "label": "t:options.center" },
+        { "value": "split", "label": "t:options.split" }
       ],
-      "default": "start"
+      "default": "split"
     },
     { "type": "header", "content": "t:content.layout" },
     { "type": "range", "id": "columns", "label": "t:settings.columns_desktop", "min": 1, "max": 6, "step": 1, "default": 3 },
@@ -72,8 +76,11 @@
     { "type": "range", "id": "speed", "label": "t:settings.change_every", "min": 3, "max": 10, "step": 1, "unit": "s", "default": 5, "visible_if": { "setting_id": "autoplay", "value": true } },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

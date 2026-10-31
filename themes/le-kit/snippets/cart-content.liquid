@@ -6,6 +6,7 @@
   Accepts:
   - context: {String} drawer | page
   - show_coupon: {Boolean} (Optional)
+  - summary_scheme: {String} (Optional) Color scheme of the summary (drawer box, cart page panel)
 
   Usage:
   {% render 'cart-content', context: 'drawer' %}
@@ -69,51 +70,117 @@
       </ul>
     </div>
 
-    <div class="cart__summary{% if context == 'drawer' %} drawer__footer{% endif %}">
+    {%- capture coupon_form -%}
+      {% if cart.coupon %}
+        {% form 'coupon_remove', class: 'cart__coupon-applied', data-coupon-form: '' %}
+          {% render 'icon', name: 'tag', px: 16 %}
+          <span class="cart__coupon-code">{{ cart.coupon.code }}</span>
+          <button class="button button--ghost button--icon button--sm" type="submit" aria-label="{{ 'cart.coupon.remove' | t }}">
+            {% render 'icon', name: 'close', px: 14 %}
+          </button>
+        {% endform %}
+      {% else %}
+        {% form 'coupon', class: 'cart__coupon', data-coupon-form: '' %}
+          <label class="visually-hidden" for="coupon-{{ section.id }}">{{ 'cart.coupon.label' | t }}</label>
+          <input class="input" id="coupon-{{ section.id }}" type="text" name="coupon" value="{{ form.coupon | escape }}" placeholder="{{ 'cart.coupon.placeholder' | t }}" autocomplete="off" required>
+          <button class="button button--full" type="submit">{{ 'cart.coupon.apply' | t }}</button>
+        {% endform %}
+      {% endif %}
+    {%- endcapture -%}
+
+    {%- capture coupon_link -%}
       {% if show_coupon %}
-        {% if cart.coupon %}
-          <div class="cart__coupon-applied">
-            {% render 'icon', name: 'tag', px: 16 %}
-            <span class="cart__coupon-code">{{ cart.coupon.code }}</span>
-            <button class="button button--ghost button--icon button--sm" type="button" data-coupon-remove aria-label="{{ 'cart.coupon.remove' | t }}">
-              {% render 'icon', name: 'close', px: 14 %}
+        <button class="cart__summary-link" type="button" data-cart-panel-toggle aria-controls="cart-coupon-{{ section.id }}" aria-expanded="false">
+          {%- if cart.coupon -%}{{ cart.coupon.code }}{%- else -%}{{ 'cart.coupon.label' | t }}{%- endif -%}
+        </button>
+      {% endif %}
+    {%- endcapture -%}
+
+    {%- capture coupon_panel -%}
+      {% if show_coupon %}
+        <div class="cart-panel color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}" id="cart-coupon-{{ section.id }}" role="dialog" aria-labelledby="cart-coupon-title-{{ section.id }}" data-cart-panel>
+          <div class="drawer__header">
+            <span class="drawer__title" id="cart-coupon-title-{{ section.id }}">{{ 'cart.coupon.label' | t }}</span>
+            <button class="button button--ghost button--icon" type="button" data-cart-panel-toggle aria-label="{{ 'accessibility.close' | t }}">
+              {% render 'icon', name: 'close' %}
             </button>
           </div>
-        {% else %}
-          <form class="cart__coupon" data-coupon-form>
-            <label class="visually-hidden" for="coupon-{{ section.id }}">{{ 'cart.coupon.label' | t }}</label>
-            <input class="input" id="coupon-{{ section.id }}" type="text" name="coupon_code" placeholder="{{ 'cart.coupon.placeholder' | t }}" autocomplete="off">
-            <button class="button button--secondary" type="submit">{{ 'cart.coupon.apply' | t }}</button>
-          </form>
-        {% endif %}
-      {% endif %}
-
-      <dl class="cart__totals">
-        <div class="cart__total-row">
-          <dt>{{ 'cart.subtotal' | t }}</dt>
-          <dd>{{ cart.sub_total | default: 0 | money }}</dd>
-        </div>
-        {% if cart.coupon %}
-          <div class="cart__total-row cart__total-row--discount">
-            <dt>{{ 'cart.discount' | t }}</dt>
-            <dd>{% render 'discount-value', coupon: cart.coupon %}</dd>
+          <div class="cart-panel__body">
+            {{ coupon_form }}
           </div>
-        {% endif %}
-        <div class="cart__total-row cart__total-row--total">
-          <dt>{{ 'cart.total' | t }}</dt>
-          <dd>{{ cart.discounted_sub_total | default: cart.sub_total | default: 0 | money }}</dd>
         </div>
-      </dl>
-      <p class="cart__note text-xs text-muted">{{ 'cart.taxes_note' | t }}</p>
-
-      <a class="button button--lg button--full" href="{{ cart.cart_submit_url }}" data-checkout-button>
-        {% render 'icon', name: 'lock', px: 16 %}
-        {{ 'cart.checkout' | t }}
-      </a>
-      {% if context == 'drawer' and settings.cart_type != 'page' %}
-        <a class="button button--link button--sm cart__view-cart" href="/cart">{{ 'cart.view_cart' | t }}</a>
       {% endif %}
-    </div>
+    {%- endcapture -%}
+
+    {%- capture total_row -%}
+      <div class="cart__total-row cart__total-row--total">
+        <dt>{{ 'cart.total' | t }}</dt>
+        <dd>{{ cart.discounted_sub_total | default: cart.sub_total | default: 0 | money }}</dd>
+      </div>
+    {%- endcapture -%}
+
+    {%- capture actions -%}
+      <div class="cart__actions">
+        {% if context == 'drawer' and settings.cart_type != 'page' %}
+          <a class="button button--secondary cart__view-cart" href="/cart">{{ 'cart.view_cart' | t }}</a>
+        {% endif %}
+        <a class="button cart__checkout" href="{{ cart.cart_submit_url }}" data-checkout-button>
+          {{ 'cart.checkout' | t }}
+        </a>
+      </div>
+      <p class="cart__note text-xs text-muted">{{ 'cart.taxes_note' | t }}</p>
+    {%- endcapture -%}
+
+    {% if context == 'drawer' %}
+      <div class="cart__summary drawer__footer{% if summary_scheme != blank %} cart__summary--box color-scheme color-{{ summary_scheme }}{% endif %}">
+        <div class="cart__summary-head">
+          <dl class="cart__totals">
+            <div class="cart__total-row">
+              <dt>{{ 'cart.subtotal' | t }}</dt>
+              <dd>{{ cart.sub_total | default: 0 | money }}</dd>
+            </div>
+            {% if cart.coupon %}
+              <div class="cart__total-row cart__total-row--discount">
+                <dt>{{ 'cart.discount' | t }}</dt>
+                <dd>{% render 'discount-value', coupon: cart.coupon %}</dd>
+              </div>
+            {% endif %}
+            {{ total_row }}
+          </dl>
+          {{ coupon_link }}
+        </div>
+        {{ actions }}
+      </div>
+      {{ coupon_panel }}
+    {% else %}
+      <div class="cart__summary cart__summary--page color-scheme color-{{ summary_scheme | default: 'scheme-3' }}">
+        <h2 class="cart__summary-title">{{ 'cart.summary' | t }}</h2>
+        <dl class="cart__totals">
+          <div class="cart__total-row">
+            <dt>{{ 'cart.subtotal' | t }}</dt>
+            <dd>{{ cart.sub_total | default: 0 | money }}</dd>
+          </div>
+          {% if cart.coupon %}
+            <div class="cart__total-row cart__total-row--discount">
+              <dt>{{ 'cart.discount' | t }} ({{ cart.coupon.code }})</dt>
+              <dd>{% render 'discount-value', coupon: cart.coupon %}</dd>
+            </div>
+          {% endif %}
+          <div class="cart__total-row">
+            <dt>{{ 'cart.shipping' | t }}</dt>
+            <dd>{{ 'cart.shipping_at_checkout' | t }}</dd>
+          </div>
+        </dl>
+        <div class="cart__summary-card color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}">
+          <div class="cart__summary-head">
+            <dl class="cart__totals">{{ total_row }}</dl>
+            {{ coupon_link }}
+          </div>
+          {{ actions }}
+        </div>
+        {{ coupon_panel }}
+      </div>
+    {% endif %}
   {% else %}
     <div class="cart__body{% if context == 'drawer' %} drawer__body{% endif %}">
       {% render 'empty-state', type: 'cart' %}

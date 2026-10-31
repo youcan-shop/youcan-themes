@@ -229,17 +229,23 @@ export class EnhancedSelect {
       this.popup?.style.removeProperty("top");
       this.popup?.style.removeProperty("left");
       this.popup?.style.removeProperty("min-width");
+      this.popup?.style.removeProperty("max-width");
       return;
     }
 
+    // Fits the options, never narrower than the trigger. A wide field (country) keeps its own width;
+    // a small trigger (sort) lets the list grow up to 240px. The compact phone picker uses its CSS sizing.
     const rect = this.trigger.getBoundingClientRect();
+    if (!this.compact) {
+      this.popup.style.minWidth = `${rect.width}px`;
+      this.popup.style.maxWidth = `${Math.max(rect.width, 240)}px`;
+    }
+    const width = this.popup.offsetWidth;
     const popupHeight = this.popup.offsetHeight;
     const spaceBelow = window.innerHeight - rect.bottom;
     const above = spaceBelow < popupHeight + 8 && rect.top > spaceBelow;
-    const width = Math.max(rect.width, this.compact ? 300 : 160);
     const left = Math.min(Math.max(8, rect.left), window.innerWidth - width - 8);
 
-    this.popup.style.minWidth = `${width}px`;
     this.popup.style.left = `${left}px`;
     this.popup.style.top = above ? `${Math.max(8, rect.top - popupHeight - 4)}px` : `${rect.bottom + 4}px`;
     this.popup.dataset.side = above ? "top" : "bottom";

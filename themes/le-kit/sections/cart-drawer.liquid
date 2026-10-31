@@ -8,15 +8,21 @@
       {% render 'icon', name: 'close' %}
     </button>
   </div>
-  {% render 'cart-content', context: 'drawer', show_coupon: section.settings.show_coupon %}
+  {% render 'cart-content', context: 'drawer', show_coupon: section.settings.show_coupon, summary_scheme: section.settings.summary_color_scheme %}
 </div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
 
 {% schema %}
 {
   "name": "t:names.cart_drawer",
   "settings": [
     { "type": "paragraph", "content": "t:info.cart_drawer" },
-    { "type": "checkbox", "id": "show_coupon", "label": "t:settings.show_coupon", "default": false }
+    { "type": "checkbox", "id": "show_coupon", "label": "t:settings.show_coupon", "default": true },
+    { "type": "color_scheme", "id": "summary_color_scheme", "label": "t:settings.summary_color_scheme", "default": "scheme-3" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ]
 }
 {% endschema %}

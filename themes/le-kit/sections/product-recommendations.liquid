@@ -36,9 +36,12 @@
           <li data-carousel-item>{% content_for 'block', type: '_product-card', id: 'product-card', card_product: item, sizes: sizes %}</li>
         {% endfor %}
       </ul>
+      <div class="slider__progress" ref="progress" aria-hidden="true" hidden></div>
     </ui-carousel>
   </div>
 {% endif %}
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
 
 {% schema %}
 {
@@ -54,9 +57,10 @@
       "label": "t:settings.header_alignment",
       "options": [
         { "value": "start", "label": "t:options.start" },
-        { "value": "center", "label": "t:options.center" }
+        { "value": "center", "label": "t:options.center" },
+        { "value": "split", "label": "t:options.split" }
       ],
-      "default": "start"
+      "default": "split"
     },
     { "type": "range", "id": "limit", "label": "t:settings.products_limit", "min": 2, "max": 12, "step": 1, "default": 8 },
     {
@@ -73,8 +77,11 @@
     { "type": "range", "id": "columns_mobile", "label": "t:settings.columns_mobile", "min": 1, "max": 2, "step": 1, "default": 2 },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     { "name": "t:names.product_recommendations", "category": "t:categories.products" }
