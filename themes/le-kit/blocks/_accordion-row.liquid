@@ -8,7 +8,7 @@
     assign td_content = td_content | remove_first: 't:' | t
   endif
 -%}
-<details class="accordion" {% if block.settings.open %}open{% endif %} {{ block.youcan_attributes }}>
+<details class="accordion" {% if block.settings.open %}open{% endif %} {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   <summary class="accordion__summary">
     <span class="accordion__heading">
       {%- if block.settings.icon != 'none' -%}
@@ -23,6 +23,8 @@
     {% content_for 'blocks' %}
   </div>
 </details>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .accordion__heading { display: inline-flex; align-items: center; gap: var(--space-xs); }
@@ -64,7 +66,10 @@
       "default": "none"
     },
     { "type": "richtext", "id": "content", "label": "t:settings.content", "default": "t:defaults.accordion_content" },
-    { "type": "checkbox", "id": "open", "label": "t:settings.open_by_default", "default": false }
+    { "type": "checkbox", "id": "open", "label": "t:settings.open_by_default", "default": false },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.accordion_row" }

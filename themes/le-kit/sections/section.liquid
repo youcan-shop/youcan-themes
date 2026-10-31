@@ -19,6 +19,8 @@
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% schema %}
 {
   "name": "t:names.section",
@@ -206,7 +208,7 @@
       "max": 160,
       "step": 4,
       "unit": "px",
-      "default": 48
+      "default": 80
     },
     {
       "type": "range",
@@ -216,8 +218,11 @@
       "max": 160,
       "step": 4,
       "unit": "px",
-      "default": 48
-    }
+      "default": 80
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     {

@@ -25,7 +25,7 @@
   class="comparison media"
   style="--ratio: {{ ratio }}; --position: {{ block.settings.start }}%;"
   data-orientation="{{ block.settings.orientation }}"
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
   <div class="comparison__layer">
     {% render 'image', image: block.settings.image_after, alt: td_label_after, sizes: '(min-width: 750px) 60vw, 100vw', placeholder: 'hero-2' %}
@@ -48,6 +48,8 @@
 </ui-comparison>
 
 <script type="module" src="{{ 'comparison-slider.js' | asset_url }}"></script>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .comparison { width: 100%; border-radius: var(--radius-surface); user-select: none; }
@@ -79,7 +81,7 @@
     background: #fff;
     box-shadow: var(--shadow-popover);
   }
-  .comparison__handle .icon { position: relative; color: #262626; }
+  .comparison__handle .icon { position: relative; flex-shrink: 0; max-width: none; color: #262626; }
   .comparison[data-orientation="vertical"] .comparison__handle {
     inset-block: var(--position) auto;
     inset-inline: 0;
@@ -133,7 +135,10 @@
         { "value": "wide", "label": "t:options.wide" }
       ],
       "default": "landscape"
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.comparison_slider", "category": "t:categories.media" }

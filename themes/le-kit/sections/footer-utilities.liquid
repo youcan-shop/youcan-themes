@@ -30,6 +30,8 @@
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
   .footer-utilities__inner {
     display: flex;
@@ -54,11 +56,15 @@
   "name": "t:names.footer_utilities",
   "enabled_on": { "groups": ["footer"] },
   "settings": [
-    { "type": "text", "id": "copyright", "label": "t:settings.copyright", "default": "© [year] [store]", "info": "t:info.copyright" },
+    { "type": "text", "id": "copyright", "label": "t:settings.copyright", "default": "© [year] [store]" },
+    { "type": "paragraph", "content": "t:info.copyright" },
     { "type": "link_list", "id": "menu", "label": "t:settings.policies_menu" },
     { "type": "checkbox", "id": "show_social", "label": "t:settings.show_social", "default": false },
-    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-2" },
-    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 8, "max": 48, "step": 4, "unit": "px", "default": 16 }
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" },
+    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 8, "max": 48, "step": 4, "unit": "px", "default": 16 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     { "name": "t:names.footer_utilities" }

@@ -20,7 +20,7 @@
             <button class="button button--ghost button--sm" type="button" data-open-dialog="profile-dialog">{{ 'account.edit' | t }}</button>
           </div>
           <dl class="account-card__list">
-            <div><dt>{{ 'account.profile.name' | t }}</dt><dd>{{ customer.name | default: '—' }}</dd></div>
+            <div><dt>{{ 'account.profile.name' | t }}</dt><dd>{{ customer.name | default: '-' }}</dd></div>
             <div><dt>{{ 'account.email' | t }}</dt><dd>{{ customer.email }}</dd></div>
             {% if customer.phone != blank %}<div><dt>{{ 'account.address.phone' | t }}</dt><dd dir="ltr">{{ customer.phone }}</dd></div>{% endif %}
             <div><dt>{{ 'account.profile.orders' | t }}</dt><dd>{{ customer.orders_count | default: 0 }}</dd></div>
@@ -137,6 +137,8 @@
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% schema %}
 {
   "name": "t:names.customer_account",
@@ -144,8 +146,11 @@
   "limit": 1,
   "settings": [
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 40 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ]
 }
 {% endschema %}

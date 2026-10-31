@@ -1,6 +1,6 @@
 {% assign pg = block.settings.page | default: closest.page | default: page %}
 
-<div class="page-content-block" {{ block.youcan_attributes }}>
+<div class="page-content-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   {% if pg %}
     {% if block.settings.show_title %}
       <h2 class="h3">{{ pg.name }}</h2>
@@ -10,6 +10,8 @@
     <p class="text-muted">{{ 'page_content.placeholder' | t }}</p>
   {% endif %}
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .page-content-block { display: grid; gap: var(--space-md); width: 100%; max-width: 72ch; text-align: start; }
@@ -21,7 +23,10 @@
   "tag": null,
   "settings": [
     { "type": "page", "id": "page", "label": "t:settings.page" },
-    { "type": "checkbox", "id": "show_title", "label": "t:settings.show_title", "default": true }
+    { "type": "checkbox", "id": "show_title", "label": "t:settings.show_title", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.page_content", "category": "t:categories.text" }

@@ -15,6 +15,10 @@
   assign variant = product.selected_or_first_available_variant
   assign price = variant.price | default: product.price | default: 0
   assign compare_at_price = variant.compare_at_price | default: product.compare_at_price
+  assign available = variant.available
+  if product == blank
+    assign available = true
+  endif
   assign on_sale = false
   if compare_at_price and compare_at_price > price
     assign on_sale = true
@@ -33,7 +37,8 @@
     {% if on_sale %}
       {% assign percentage = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round %}
     {% endif %}
-    <span class="badge badge--sale" data-product-save {% unless on_sale %}hidden{% endunless %}>
+    <span class="badge badge--muted" data-product-sold-out {% if available %}hidden{% endif %}>{{ 'product.sold_out' | t }}</span>
+    <span class="badge badge--sale" data-product-save {% unless on_sale and available %}hidden{% endunless %}>
       -<span data-product-save-value>{{ percentage }}</span>%
     </span>
   {% endif %}

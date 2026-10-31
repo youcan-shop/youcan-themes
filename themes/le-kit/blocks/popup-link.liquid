@@ -20,7 +20,7 @@
   endif
 -%}
 
-<div class="popup-link" {{ block.youcan_attributes }}>
+<div class="popup-link" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   <button class="button button--{{ block.settings.style }}" type="button" data-open-dialog="{{ dialog_id }}">
     {{ td_label | escape }}
   </button>
@@ -40,6 +40,8 @@
     </div>
   </dialog>
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .popup-link__dialog[open] { display: flex; flex-direction: column; }
@@ -67,7 +69,11 @@
     { "type": "header", "content": "t:content.popup" },
     { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.popup_heading" },
     { "type": "richtext", "id": "content", "label": "t:settings.content", "default": "t:defaults.popup_content" },
-    { "type": "page", "id": "page", "label": "t:settings.page", "info": "t:info.popup_page" }
+    { "type": "page", "id": "page", "label": "t:settings.page" },
+    { "type": "paragraph", "content": "t:info.popup_page" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.popup_link", "category": "t:categories.basic" }

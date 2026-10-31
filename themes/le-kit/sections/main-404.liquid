@@ -13,12 +13,12 @@
 
     {% if section.settings.show_search %}
       <form class="search-form not-found__search" action="/search" method="get" role="search">
-        <label class="visually-hidden" for="not-found-search">{{ 'header.search' | t }}</label>
-        <input class="input" id="not-found-search" type="search" name="q" placeholder="{{ 'header.search_placeholder' | t }}">
-        <button class="button button--secondary" type="submit">
+        <label class="search-form__field input">
           {% render 'icon', name: 'search', px: 18 %}
-          {{ 'search.submit' | t }}
-        </button>
+          <span class="visually-hidden">{{ 'header.search' | t }}</span>
+          <input id="not-found-search" type="search" name="q" placeholder="{{ 'header.search_placeholder' | t }}">
+        </label>
+        <button class="button" type="submit">{{ 'search.submit' | t }}</button>
       </form>
     {% endif %}
 
@@ -27,6 +27,8 @@
     </a>
   </div>
 </div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
 
 {% stylesheet %}
   .not-found {
@@ -65,8 +67,11 @@
     { "type": "text", "id": "button_label", "label": "t:settings.button_label" },
     { "type": "url", "id": "button_link", "label": "t:settings.link" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 112 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 120 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ]
 }
 {% endschema %}

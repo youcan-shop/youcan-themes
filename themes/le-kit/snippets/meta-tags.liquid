@@ -60,7 +60,10 @@
 {%- liquid
   assign canonical_url = request.url | split: '?' | first
   if request.url contains 'page='
-    assign canonical_url = request.url
+    assign current_page = request.url | split: 'page=' | last | split: '&' | first
+    if current_page != '1'
+      assign canonical_url = canonical_url | append: '?page=' | append: current_page
+    endif
   endif
   assign og_title = store_title
   assign og_type = 'website'
@@ -80,6 +83,10 @@
       assign og_title = page.name
       assign meta_description = page.content | strip_html | strip_newlines | truncate: 160 | default: meta_description
   endcase
+  assign og_image_start = og_image | slice: 0, 2
+  if og_image_start == '//'
+    assign og_image = 'https:' | append: og_image
+  endif
 
   assign noindex = false
   case template.name
@@ -114,6 +121,7 @@
 {%- endif %}
 
 <meta property="og:site_name" content="{{ store.name | escape }}">
+<meta property="og:locale" content="{{ request.locale.iso_code | default: store.store_locale.iso_code | default: 'en' }}">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:title" content="{{ og_title | escape }}">
 <meta property="og:type" content="{{ og_type }}">

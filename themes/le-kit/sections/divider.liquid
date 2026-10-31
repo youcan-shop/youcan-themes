@@ -4,6 +4,8 @@
   </div>
 </div>
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
   .section-divider { border: 0; border-block-start: 1px solid var(--color-border); }
 {% endstylesheet %}
@@ -15,7 +17,10 @@
     { "type": "range", "id": "thickness", "label": "t:settings.thickness", "min": 1, "max": 8, "step": 1, "unit": "px", "default": 1 },
     { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 },
     { "type": "checkbox", "id": "full_width", "label": "t:settings.full_width", "default": false },
-    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" }
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [
     { "name": "t:names.divider", "category": "t:categories.layout" }

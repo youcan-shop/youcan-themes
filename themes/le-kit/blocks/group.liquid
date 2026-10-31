@@ -12,7 +12,7 @@
   {% if block.settings.border %}data-border{% endif %}
   {% if block.settings.rounded %}data-rounded{% endif %}
   style="--group-padding: {{ block.settings.padding }}px;"
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
   {% if block.settings.background_image != blank or block.settings.background_placeholder %}
     <div class="group-block__background media" aria-hidden="true" style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};">
@@ -30,6 +30,8 @@
     {% content_for 'blocks' %}
   </div>
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .group-block {
@@ -184,9 +186,12 @@
     {
       "type": "text",
       "id": "link_label",
-      "label": "t:settings.link_label",
-      "info": "t:info.link_label"
-    }
+      "label": "t:settings.link_label"
+    },
+    { "type": "paragraph", "content": "t:info.link_label" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     {

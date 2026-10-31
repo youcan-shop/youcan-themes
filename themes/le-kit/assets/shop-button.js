@@ -89,7 +89,7 @@ export class ShopButtonComponent extends Component {
 
     if (!this.isExpress) {
       this.#addToCart(mainId, bundleId, attachedImage, addOnIds);
-    } else if (!addOnIds.length) {
+    } else if (typeof youcanjs === "undefined") {
       this.#submitOrder(mainId, bundleId, attachedImage);
     } else {
       Promise.all([
@@ -166,7 +166,7 @@ export class ShopButtonComponent extends Component {
     const form = /** @type {HTMLFormElement} */ (this.form);
     const fields = Object.fromEntries(new FormData(form));
     ["form_type", "hidden_check", "id", "quantity", "bundle_id", "is_bundle", "attachedImage"].forEach((name) => delete fields[name]);
-    form.querySelectorAll("[error-message]").forEach((field) => field.removeAttribute("error-message"));
+    this.#showErrors(form, "");
 
     try {
       const response = await youcanjs.checkout.placeExpressCheckoutOrder({
@@ -184,20 +184,41 @@ export class ShopButtonComponent extends Component {
             follow(data, redirect);
           })
           .onValidationErr((/** @type {any} */ error) => {
-            showToast(error.message, "error");
-            for (const [field, message] of Object.entries(error.meta?.fields ?? {})) {
-              const name = field.includes("extra_fields") ? `${field.replace(".", "[")}]` : field;
-              form.querySelector(`[name="${name}"]`)?.closest(".field")?.setAttribute("error-message", String(message));
-            }
+            this.#showErrors(form, error.message, error.meta?.fields);
             resolve(null);
           })
           .onSkipShippingStep(follow)
           .onSkipPaymentStep(follow);
       });
     } catch (error) {
-      showToast(/** @type {Error} */ (error).message, "error");
+      this.#showErrors(form, /** @type {Error} */ (error).message || translate("error"));
       return null;
     }
+  }
+
+  /**
+   * Shows each error under its field, or in a toast when it has none. An empty message clears them.
+   * @param {HTMLFormElement} form
+   * @param {string} message
+   * @param {Record<string, string | string[]>} [fields]
+   */
+  #showErrors(form, message, fields = {}) {
+    form.querySelectorAll("[error-message]").forEach((field) => field.removeAttribute("error-message"));
+    if (!message) return;
+
+    for (const [field, value] of Object.entries(fields)) {
+      const name = field.includes("extra_fields") ? `${field.replace(".", "[")}]` : field;
+      const text = Array.isArray(value) ? value.join(" ") : String(value);
+      form.querySelector(`[name="${name}"]`)?.closest(".field")?.setAttribute("error-message", text);
+    }
+
+    const first = form.querySelector(".field[error-message]");
+    if (!first) {
+      showToast(message, "error");
+      return;
+    }
+    first.scrollIntoView({ behavior: "smooth", block: "center" });
+    first.querySelector("input:not([type='hidden']), select, textarea")?.focus({ preventScroll: true });
   }
 
   /** @param {boolean} loading */

@@ -4,7 +4,7 @@
 -%}
 
 {% if c %}
-  <div class="collection-title" {{ block.youcan_attributes }}>
+  <div class="collection-title" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
     <{{ tag }} class="{{ block.settings.size }}">
       {%- if block.settings.link -%}
         <a href="/collections/{{ c.slug }}">{{ c.name }}</a>
@@ -18,6 +18,8 @@
   </div>
 {% endif %}
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% stylesheet %}
   .collection-title { display: grid; gap: var(--space-xs); }
   .collection-title a { text-decoration: none; }
@@ -28,7 +30,8 @@
   "name": "t:names.collection_title",
   "tag": null,
   "settings": [
-    { "type": "collection", "id": "collection", "label": "t:settings.collection", "info": "t:info.collection_title" },
+    { "type": "collection", "id": "collection", "label": "t:settings.collection" },
+    { "type": "paragraph", "content": "t:info.collection_title" },
     {
       "type": "select",
       "id": "tag",
@@ -54,7 +57,10 @@
       "default": "h3"
     },
     { "type": "checkbox", "id": "show_description", "label": "t:settings.show_description", "default": false },
-    { "type": "checkbox", "id": "link", "label": "t:settings.link_to_collection", "default": true }
+    { "type": "checkbox", "id": "link", "label": "t:settings.link_to_collection", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.collection_title", "category": "t:categories.collections" }

@@ -6,58 +6,121 @@
   endif
 -%}
 
-<div
-  class="hotspot"
+<ui-hotspot
+  class="hotspot color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}"
   style="--x: {{ block.settings.x }}%; --y: {{ block.settings.y }}%;"
-  data-flip-x="{% if block.settings.x > 60 %}true{% endif %}"
-  data-flip-y="{% if block.settings.y > 60 %}true{% endif %}"
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
-  <button class="hotspot__dot" type="button" popovertarget="hotspot-{{ block.id }}" aria-label="{{ label | escape }}" style="anchor-name: --hotspot-{{ block.id }};">
-    {% render 'icon', name: 'plus', px: 14 %}
-  </button>
-  <div class="hotspot__card color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}" id="hotspot-{{ block.id }}" popover style="position-anchor: --hotspot-{{ block.id }};">
-    {% render 'product-card', product: p %}
+  <div class="hotspot__box" ref="box">
+    <button class="hotspot__toggle" type="button" ref="toggle" aria-expanded="false" aria-controls="hotspot-{{ block.id }}" aria-label="{{ label | escape }}">
+      <span class="hotspot__icon">{% render 'icon', name: 'plus', px: 14 %}</span>
+    </button>
+    <a class="hotspot__card" id="hotspot-{{ block.id }}" href="{{ p.url | default: '#' }}" tabindex="-1" ref="card">
+      <span class="media hotspot__media" style="--ratio: 1 / 1;">
+        {% render 'image', image: p.preview_image, alt: '', width: 240, sizes: '116px', placeholder: 'product-1' %}
+      </span>
+      <span class="hotspot__info">
+        <span class="hotspot__name">{{ label }}</span>
+        {% render 'price', product: p, class: 'text-sm' %}
+      </span>
+    </a>
   </div>
-</div>
+</ui-hotspot>
+
+<script type="module" src="{{ 'hotspot.js' | asset_url }}"></script>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
-  .hotspot { position: absolute; inset-inline-start: var(--x); inset-block-start: var(--y); z-index: 2; }
+  .hotspot {
+    --card-width: min(400px, var(--canvas-width, 400px) - 16px);
+    --card-height: 132px;
+    position: absolute;
+    inset-inline-start: var(--x);
+    inset-block-start: var(--y);
+    z-index: 2;
+    width: 0;
+    height: 0;
+    background: none;
+  }
   [dir="rtl"] .hotspot { inset-inline-start: auto; inset-inline-end: var(--x); }
-  .hotspot__dot {
+  .hotspot[data-open] { z-index: 3; }
+  .hotspot__box {
+    position: absolute;
+    inset-block-start: -28px;
+    inset-inline-start: -28px;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+    border-radius: 28px;
+    background-color: rgb(255 255 255 / 0.4);
+    transition-property: width, height, inset-block-start, inset-inline-start, border-radius, background-color;
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hotspot[data-open] .hotspot__box {
+    inset-block-start: calc(var(--card-height) / -2 + var(--shift-y, 0px));
+    inset-inline-start: calc(var(--card-width) / -2 + var(--shift-x, 0px));
+    width: var(--card-width);
+    height: var(--card-height);
+    border-radius: var(--radius-box);
+    background-color: var(--color-background);
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  .hotspot__toggle {
+    position: absolute;
+    inset-block-start: 10px;
+    inset-inline-start: 10px;
+    z-index: 1;
     display: grid;
     place-items: center;
-    width: 32px;
-    height: 32px;
-    margin: -16px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     border: 0;
     border-radius: 50%;
-    background: var(--color-background);
-    color: var(--color-foreground);
-    box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-background) 40%, transparent);
-    transition: transform var(--duration) var(--ease);
+    background-color: #fff;
+    color: #2e2e2e;
+    cursor: pointer;
+    transition: opacity 200ms var(--ease), scale 300ms var(--ease);
   }
-  .hotspot__dot:hover { transform: scale(1.1); }
+  .hotspot__toggle:hover { scale: 1.08; }
+  .hotspot[data-open] .hotspot__toggle { opacity: 0; pointer-events: none; }
   .hotspot__card {
-    position: fixed;
-    inset: auto;
-    margin: 0;
-    width: 220px;
-    padding: var(--space-sm);
-    border: 0;
-    border-radius: var(--radius-card);
-    box-shadow: var(--shadow-popover);
-    inset-block-start: 50%;
-    inset-inline-start: 50%;
-    translate: -50% -50%;
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    width: var(--card-width);
+    height: var(--card-height);
+    padding: 8px;
+    color: var(--color-foreground);
+    text-decoration: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms var(--ease), visibility 0s 200ms;
   }
-  @supports (position-anchor: --a) {
-    .hotspot__card {
-      inset-block-start: anchor(bottom);
-      inset-inline-start: anchor(center);
-      translate: -50% 12px;
-      position-try-fallbacks: flip-block;
-    }
+  .hotspot[data-open] .hotspot__card {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 300ms var(--ease) 200ms, visibility 0s;
+  }
+  .hotspot__media {
+    flex: 0 0 116px;
+    border-radius: var(--radius-item);
+    background-color: var(--color-subtle);
+  }
+  .hotspot__info { display: grid; gap: 4px; min-width: 0; }
+  .hotspot__name { overflow: hidden; font-size: var(--text-sm); text-overflow: ellipsis; white-space: nowrap; }
+  .hotspot__card:hover .hotspot__name { text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 749px) {
+    .hotspot { --card-height: 104px; }
+    .hotspot__media { flex-basis: 88px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hotspot__box, .hotspot__card { transition-duration: 0s !important; transition-delay: 0s !important; }
   }
 {% endstylesheet %}
 
@@ -68,7 +131,10 @@
   "settings": [
     { "type": "product", "id": "product", "label": "t:settings.product" },
     { "type": "range", "id": "x", "label": "t:settings.horizontal_position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
-    { "type": "range", "id": "y", "label": "t:settings.vertical_position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 }
+    { "type": "range", "id": "y", "label": "t:settings.vertical_position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.hotspot" }

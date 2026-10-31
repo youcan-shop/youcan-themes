@@ -3,7 +3,6 @@
 
   Accepts:
   - type: {String} cart | search | collection | collections
-  - icon: {String} (Optional) Icon name
 
   Usage:
   {% render 'empty-state', type: 'cart' %}
@@ -12,16 +11,12 @@
 {%- liquid
   case type
     when 'cart'
-      assign icon = icon | default: 'cart'
       assign url = settings.empty_cart_link | default: '/collections'
     when 'search'
-      assign icon = icon | default: 'search'
       assign url = '/collections'
     when 'collection'
-      assign icon = icon | default: 'tag'
       assign url = '/collections'
     else
-      assign icon = icon | default: 'tag'
       assign url = '/'
   endcase
   assign heading_key = 'empty.' | append: type | append: '.heading'
@@ -30,8 +25,7 @@
 -%}
 
 <div class="empty-state">
-  <span class="empty-state__icon">{% render 'icon', name: icon, px: 24 %}</span>
-  <h2 class="h5">{{ heading_key | t }}</h2>
-  <p class="text-sm">{{ text_key | t }}</p>
-  <a class="button button--secondary" href="{{ url }}">{{ button_key | t }}</a>
+  <h2 class="empty-state__title">{{ heading_key | t }}</h2>
+  <p>{{ text_key | t }}</p>
+  <a class="button" href="{{ url }}">{{ button_key | t }}</a>
 </div>

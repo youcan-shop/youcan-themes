@@ -54,6 +54,7 @@
     endif
   endif
 
+  assign quick_add_style = settings.card_quick_add_style | default: 'floating'
   assign use_carousel = false
   if settings.card_image_carousel and product.images.size > 1
     assign use_carousel = true
@@ -74,6 +75,12 @@
           </span>
         {% endfor %}
       </a>
+      <button class="product-card__arrow product-card__arrow--prev" type="button" tabindex="-1" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+        {% render 'icon', name: 'caret-right', px: 10, class: 'icon--flip-start' %}
+      </button>
+      <button class="product-card__arrow product-card__arrow--next" type="button" tabindex="-1" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+        {% render 'icon', name: 'caret-right', px: 10, class: 'icon--flip' %}
+      </button>
       <span class="product-card__dots" aria-hidden="true">
         {% for image in product.images limit: 5 %}
           <button class="slider__dot" type="button" tabindex="-1" ref="dots[]" {% if forloop.first %}aria-current="true"{% endif %}></button>
@@ -130,15 +137,21 @@
     {% endif %}
   </div>
 
-  {% if settings.card_show_quick_add and product != blank %}
+  {% if settings.card_show_quick_add and product != blank and quick_add_style == 'floating' %}
+    <ui-quick-add class="product-card__quick-view{% if settings.card_quick_add_mobile == false %} product-card__action--desktop{% endif %}" data-url="{{ product.url }}">
+      <button class="product-card__quick-view-button" type="button" ref="button" aria-label="{{ 'product.quick_view' | t }}: {{ title | escape }}">
+        {% render 'icon', name: 'eye', px: 20 %}
+      </button>
+    </ui-quick-add>
+  {% elsif settings.card_show_quick_add and product != blank %}
     <div class="product-card__action{% if settings.card_quick_add_mobile == false %} product-card__action--desktop{% endif %}">
       {% if available == false %}
-        <button class="button button--secondary button--full" type="button" disabled>{{ 'product.sold_out' | t }}</button>
+        <button class="button button--full" type="button" disabled>{{ 'product.sold_out' | t }}</button>
       {% elsif settings.shopping_flow != 'express_checkout' and product.variants.size <= 1 and product.is_bundle != true %}
-        {% render 'shop-button', product: product, style: 'secondary', source: 'product-card', full_width: true %}
+        {% render 'shop-button', product: product, source: 'product-card', full_width: true %}
       {% else %}
         <ui-quick-add data-url="{{ product.url }}">
-          <button class="button button--secondary button--full" type="button" ref="button">
+          <button class="button button--full" type="button" ref="button">
             {%- if settings.shopping_flow == 'express_checkout' -%}
               {{ 'product.buy_now' | t }}
             {%- else -%}

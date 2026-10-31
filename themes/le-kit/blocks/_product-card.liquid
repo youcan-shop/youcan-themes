@@ -3,7 +3,7 @@
   {% content_for 'block', type: '_product-card', id: 'product-card', card_product: product, sizes: sizes %}
 {% endcomment %}
 
-{% capture attributes %}{{ block.youcan_attributes }}{% endcapture %}
+{% capture attributes %}{{ block.youcan_attributes }} data-block-id="{{ block.id }}"{% endcapture %}
 {% render 'product-card',
   product: card_product,
   card: block.settings,
@@ -12,6 +12,8 @@
   placeholder_index: placeholder_index,
   attributes: attributes
 %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
@@ -45,7 +47,10 @@
     },
     { "type": "checkbox", "id": "show_badges", "label": "t:settings.show_badges", "default": true },
     { "type": "checkbox", "id": "show_rating", "label": "t:settings.show_rating", "default": false },
-    { "type": "checkbox", "id": "show_swatches", "label": "t:settings.show_swatches", "default": true }
+    { "type": "checkbox", "id": "show_swatches", "label": "t:settings.show_swatches", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ]
 }
 {% endschema %}

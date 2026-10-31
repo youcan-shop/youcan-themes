@@ -26,13 +26,25 @@
     assign loading = 'lazy'
     assign priority = 'auto'
   endif
+  assign image_width = max_width
+  assign image_height = nil
+  if image.width > 0 and image.height > 0
+    if image.width < max_width
+      assign image_width = image.width
+    endif
+    assign image_height = image.height | times: image_width | divided_by: image.width
+  endif
+  assign focal = nil
+  if image.focal_point
+    assign focal = 'object-position: ' | append: image.focal_point.x | append: '% ' | append: image.focal_point.y | append: '%;'
+  endif
 -%}
 
 {%- if image != blank -%}
   {{
     image
     | image_url: width: max_width
-    | image_tag: alt: alt, sizes: sizes, widths: widths, class: class, loading: loading, fetchpriority: priority
+    | image_tag: alt: alt, width: image_width, height: image_height, sizes: sizes, widths: widths, class: class, loading: loading, fetchpriority: priority, style: focal
   }}
 {%- else -%}
   {{ placeholder | default: 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}

@@ -1,26 +1,7 @@
 {% assign p = block.settings.product %}
 
-<div class="video-review" data-carousel-item {{ block.youcan_attributes }}>
-  <ui-video-card class="media video-review__media" style="--ratio: var(--video-ratio, 9 / 16);">
-    {% if block.settings.video != blank %}
-      <video
-        ref="video"
-        src="{{ block.settings.video }}"
-        {% if block.settings.poster != blank %}poster="{{ block.settings.poster | image_url: width: 800 }}"{% endif %}
-        preload="metadata"
-        playsinline
-        loop
-        muted
-      ></video>
-      <button class="video-review__toggle" type="button" ref="playButton" aria-label="{{ 'accessibility.play_video' | t }}">
-        {% render 'icon', name: 'play', px: 22 %}
-      </button>
-    {% elsif block.settings.poster != blank %}
-      {% render 'image', image: block.settings.poster, alt: '', sizes: '(min-width: 750px) 25vw, 60vw' %}
-    {% else %}
-      {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
-    {% endif %}
-  </ui-video-card>
+<div class="video-review" data-carousel-item {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% render 'video-player', url: block.settings.video, mode: 'click', poster: block.settings.poster, sizes: '(min-width: 750px) 25vw, 60vw', loop: true, class: 'media video-review__media', style: '--ratio: var(--video-ratio, 9 / 16);' %}
   {% if p %}
     <a class="video-review__product" href="{{ p.url }}">
       <span class="media video-review__thumb" style="--ratio: 1 / 1;">
@@ -34,26 +15,23 @@
   {% endif %}
 </div>
 
-<script type="module" src="{{ 'video.js' | asset_url }}"></script>
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% stylesheet %}
   .video-review { display: grid; gap: var(--space-sm); }
   .video-review__media { border-radius: var(--radius-surface); }
-  .video-review__media video { width: 100%; height: 100%; object-fit: cover; }
-  .video-review__toggle {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    width: 100%;
-    border: 0;
-    background: linear-gradient(to top, rgb(0 0 0 / 0.24), transparent 40%);
-    color: #fff;
-    cursor: pointer;
+  .video-review__media .video-player__play { width: 100%; height: 100%; border-radius: 0; background: linear-gradient(to top, rgb(0 0 0 / 0.24), transparent 40%); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .video-review__media .video-player__play:hover { scale: 1; }
+  .video-review__media .video-player__play .icon {
+    box-sizing: content-box;
+    padding: 14px;
+    border-radius: 50%;
+    background-color: rgb(46 46 46 / 0.45);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
   }
-  .video-review__toggle .icon { filter: drop-shadow(0 1px 4px rgb(0 0 0 / 0.4)); }
-  ui-video-card[data-playing] .video-review__toggle { background: none; }
-  ui-video-card[data-playing] .video-review__toggle .icon { opacity: 0; }
+  .video-review__media[data-playing] .video-player__play { background: none; }
+  .video-review__media[data-playing] .video-player__play .icon { opacity: 0; }
   .video-review__product {
     display: flex;
     align-items: center;
@@ -64,7 +42,7 @@
     box-shadow: var(--shadow-xs);
     text-decoration: none;
   }
-  .video-review__thumb { flex: 0 0 40px; border-radius: var(--radius-input); }
+  .video-review__thumb { flex: 0 0 40px; border-radius: var(--radius-item); }
   .video-review__product-info { display: grid; min-width: 0; }
   .video-review__product-name { overflow: hidden; font-size: var(--text-sm); font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
 {% endstylesheet %}
@@ -74,9 +52,13 @@
   "name": "t:names.video_review",
   "tag": null,
   "settings": [
-    { "type": "url", "id": "video", "label": "t:settings.video_file_url", "info": "t:info.video_review_url" },
+    { "type": "url", "id": "video", "label": "t:settings.video_link" },
+    { "type": "paragraph", "content": "t:info.video_link" },
     { "type": "image_picker", "id": "poster", "label": "t:settings.cover_image" },
-    { "type": "product", "id": "product", "label": "t:settings.product" }
+    { "type": "product", "id": "product", "label": "t:settings.product" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.video_review" }

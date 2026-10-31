@@ -1,4 +1,4 @@
-<nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}" {{ block.youcan_attributes }}>
+<nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
   <ol>
     <li><a href="/">{{ 'general.home' | t }}</a></li>
     {% if template.name == 'product' %}
@@ -17,11 +17,17 @@
   </ol>
 </nav>
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% schema %}
 {
   "name": "t:names.breadcrumbs",
   "tag": null,
-  "settings": [],
+  "settings": [
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
   "presets": [
     { "name": "t:names.breadcrumbs", "category": "t:categories.navigation" }
   ]

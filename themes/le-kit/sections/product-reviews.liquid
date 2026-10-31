@@ -78,10 +78,12 @@
         <dialog class="review-form" ref="dialog" aria-labelledby="review-form-title-{{ section.id }}">
           {% form 'product_review', p, class: 'review-form__form' %}
             <div class="review-form__header">
-              <h2 class="drawer__title" id="review-form-title-{{ section.id }}">{{ 'reviews.form.title' | t }}</h2>
-              <p class="text-sm text-muted">{{ p.name }}</p>
+              <div class="review-form__heading">
+                <h2 class="drawer__title" id="review-form-title-{{ section.id }}">{{ 'reviews.form.title' | t }}</h2>
+                <p class="text-sm text-muted">{{ p.name }}</p>
+              </div>
               <button
-                class="button button--ghost button--icon button--sm review-form__close"
+                class="button button--ghost button--icon review-form__close"
                 type="button"
                 aria-label="{{ 'accessibility.close' | t }}"
                 data-close-dialog
@@ -174,6 +176,8 @@
   <script type="module" src="{{ 'reviews.js' | asset_url }}"></script>
 {% endif %}
 
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
 {% stylesheet %}
   .reviews {
     display: grid;
@@ -243,7 +247,7 @@
     height: 56px;
     object-fit: cover;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-input);
+    border-radius: var(--radius-box);
   }
   .reviews__more {
     justify-self: center;
@@ -259,21 +263,28 @@
     min-height: 0;
   }
   .review-form__header {
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-height: 72px;
+    padding: var(--space-md) var(--space-lg);
+    border-block-end: 1px solid var(--color-border);
+  }
+  .review-form__heading {
     display: grid;
-    gap: 4px;
-    padding: var(--space-lg) var(--space-lg) var(--space-sm);
-    padding-inline-end: 56px;
+    gap: 2px;
+    min-width: 0;
   }
   .review-form__close {
-    position: absolute;
-    inset-block-start: var(--space-md);
-    inset-inline-end: var(--space-md);
+    width: 32px;
+    height: 32px;
+    margin-inline-end: -6px;
   }
   .review-form__body {
     display: grid;
     gap: var(--space-md);
-    padding: var(--space-sm) var(--space-lg) var(--space-lg);
+    padding: var(--space-lg);
     overflow-y: auto;
   }
   .review-form__row {
@@ -283,11 +294,13 @@
   }
   .review-form__footer {
     display: flex;
-    justify-content: flex-end;
     gap: var(--space-xs);
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-lg);
     border-block-start: 1px solid var(--color-border);
-    background-color: color-mix(in srgb, var(--color-foreground) 2.5%, var(--color-background));
+    background-color: var(--color-background);
+  }
+  .review-form__footer .button {
+    flex: 1;
   }
   .review-form__images {
     display: flex;
@@ -302,7 +315,7 @@
     width: 64px;
     height: 64px;
     border: 1px dashed var(--color-input);
-    border-radius: var(--radius-input);
+    border-radius: var(--radius-box);
     cursor: pointer;
   }
   .review-form__preview {
@@ -361,8 +374,11 @@
     { "type": "checkbox", "id": "show_add_review", "label": "t:settings.show_add_review", "default": true },
     { "type": "header", "content": "t:content.appearance" },
     { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
-    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 },
-    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 48 }
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
   ],
   "presets": [{ "name": "t:names.product_reviews", "category": "t:categories.products" }]
 }

@@ -19,7 +19,23 @@ templates/  JSON templates
 
 ## Design
 
-Neutral and quiet by default. Controls (buttons, inputs, pills, quantity) share a 10px radius, a subtle shadow with an inner highlight and a 3px focus ring. Surfaces (drawers, dialogs, cards) are rounder (`--radius-surface`, 1.6× the button radius). Drawers float inset from the viewport edges on desktop. Dialogs sit slightly above center on desktop and become bottom sheets on mobile. Every radius and color comes from Theme settings.
+Quiet and editorial by default:
+- **Type:** Inter in medium weight for headings, with slightly wide letter spacing.
+- **Shapes:** pill-shaped buttons and inputs (48px), product cards on a tinted panel with 24px corners, square color swatches.
+- **Space:** generous spacing between sections, reduced on mobile.
+
+Every value is a Theme settings default, so sellers can change the look without touching code. Radii, colors and fonts come from Theme settings. `--radius-box` and `--radius-item` cap the input radius for popups, thumbnails and list items, so a pill input setting never turns those into ovals.
+
+Recurring layouts:
+- **Section headers** can be split: the heading on one side, the description and a "View all" button on the other (`header_alignment: split`).
+- **Carousels** show a thin progress line (`ref="progress"`).
+- **Slideshows** can show a "next slide" card (`ref="nextPreview"`).
+- **Product page:** an edge-to-edge two-column gallery and a floating add-to-cart card on desktop.
+- **Collection pages:** pill links to collections.
+- **Cart drawer:** the summary is a separate box with its own color scheme.
+- **Sheets:** quick view, search and the cart drawer are floating side sheets, 444px wide and 36px from the edges on desktop and full screen on mobile.
+- **Search:** the header opens a small sheet with only the search field. Submitting it opens the search page (`/search?q=…`), which shows the results.
+- **Product cards:** swipe through images with arrows and dash indicators (Theme settings > Product cards). Quick add is either a frosted icon on the image that opens quick view, or a button below the details.
 
 Selects are enhanced by `assets/select.js`: a listbox popup on desktop and a bottom drawer on mobile. The native `<select>` stays in the DOM, so forms, validation and `change` listeners keep working. Add `data-native` to opt out.
 

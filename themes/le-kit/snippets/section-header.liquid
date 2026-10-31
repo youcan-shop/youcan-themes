@@ -7,36 +7,76 @@
   - link: {String} (Optional) "View all" URL
   - link_label: {String} (Optional)
   - arrows: {Boolean} (Optional) Show slider arrows (inside ui-carousel)
-  - alignment: {String} (Optional) start | center
+  - alignment: {String} (Optional) start | center | split (heading on one side, text and link on the other)
 
   Usage:
   {% render 'section-header', heading: section.settings.heading %}
 {% endcomment %}
 
+{%- liquid
+  assign alignment = alignment | default: 'start'
+  if link_label == blank
+    assign link_label = 'general.view_all' | t
+  endif
+-%}
+
 {% if heading != blank or description != blank or link != blank or arrows %}
-  <div class="section-header" data-align="{{ alignment | default: 'start' }}">
-    {% if heading != blank or description != blank %}
-      <div class="section-header__text">
-        {% if heading != blank %}
-          <h2 class="h3">{{ heading }}</h2>
+  <div class="section-header" data-align="{{ alignment }}">
+    {% if alignment == 'split' %}
+      {% if heading != blank %}
+        <h2 class="section-header__heading">{{ heading }}</h2>
+      {% endif %}
+      {% if description != blank or link != blank or arrows %}
+        <div class="section-header__aside">
+          {% if description != blank %}
+            <p class="section-header__description">{{ description }}</p>
+          {% endif %}
+          {% if link != blank or arrows %}
+            <div class="slider__controls">
+              {% if link != blank %}
+                <a class="button button--secondary button--arrow" href="{{ link }}">
+                  {{- link_label -}}
+                  {% render 'icon', name: 'caret-right', px: 10, class: 'button__arrow' %}
+                </a>
+              {% endif %}
+              {% if arrows %}
+                <span class="section-header__arrows">
+                  <button class="button button--secondary button--icon" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+                    {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
+                  </button>
+                  <button class="button button--secondary button--icon" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+                    {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
+                  </button>
+                </span>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% else %}
+      {% if heading != blank or description != blank %}
+        <div class="section-header__text">
+          {% if heading != blank %}
+            <h2 class="h3">{{ heading }}</h2>
+          {% endif %}
+          {% if description != blank %}
+            <p class="text-muted">{{ description }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+      <div class="slider__controls">
+        {% if link != blank %}
+          <a class="button button--link" href="{{ link }}">{{ link_label }}</a>
         {% endif %}
-        {% if description != blank %}
-          <p class="text-muted">{{ description }}</p>
+        {% if arrows %}
+          <button class="button button--secondary button--icon" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
+            {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
+          </button>
+          <button class="button button--secondary button--icon" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
+            {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
+          </button>
         {% endif %}
       </div>
     {% endif %}
-    <div class="slider__controls">
-      {% if link != blank %}
-        <a class="button button--link" href="{{ link }}">{% if link_label != blank %}{{ link_label }}{% else %}{{ 'general.view_all' | t }}{% endif %}</a>
-      {% endif %}
-      {% if arrows %}
-        <button class="button button--secondary button--icon" type="button" ref="previous" aria-label="{{ 'accessibility.previous' | t }}">
-          {% render 'icon', name: 'chevron-left', class: 'icon--flip' %}
-        </button>
-        <button class="button button--secondary button--icon" type="button" ref="next" aria-label="{{ 'accessibility.next' | t }}">
-          {% render 'icon', name: 'chevron-right', class: 'icon--flip' %}
-        </button>
-      {% endif %}
-    </div>
   </div>
 {% endif %}

@@ -5,7 +5,7 @@
 -%}
 
 {% if p %}
-  <div class="buy-buttons" {{ block.youcan_attributes }}>
+  <div class="buy-buttons" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
     {% if p.is_bundle and block.settings.show_bundles %}
       {% render 'bundles', product: p %}
     {% endif %}
@@ -83,6 +83,8 @@
 
 <script type="module" src="{{ 'sticky-buy.js' | asset_url }}"></script>
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% schema %}
 {
   "name": "t:names.buy_buttons",
@@ -91,10 +93,14 @@
     { "type": "paragraph", "content": "t:info.buy_buttons" },
     { "type": "checkbox", "id": "show_quantity", "label": "t:settings.show_quantity", "default": true },
     { "type": "checkbox", "id": "show_bundles", "label": "t:settings.show_bundles", "default": true },
-    { "type": "text", "id": "button_label", "label": "t:settings.add_to_cart_label", "info": "t:info.add_to_cart_label" },
+    { "type": "text", "id": "button_label", "label": "t:settings.add_to_cart_label" },
+    { "type": "paragraph", "content": "t:info.add_to_cart_label" },
     { "type": "header", "content": "t:content.sticky_bar" },
     { "type": "checkbox", "id": "sticky_mobile", "label": "t:settings.sticky_mobile", "default": true },
-    { "type": "checkbox", "id": "sticky_desktop", "label": "t:settings.sticky_desktop", "default": false }
+    { "type": "checkbox", "id": "sticky_desktop", "label": "t:settings.sticky_desktop", "default": false },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.buy_buttons", "category": "t:categories.product" }

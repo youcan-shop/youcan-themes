@@ -13,7 +13,7 @@
 -%}
 
 {% if p.isTrackingInventory %}
-  <div class="inventory" data-threshold="{{ threshold }}" {{ block.youcan_attributes }}>
+  <div class="inventory" data-threshold="{{ threshold }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
     <p class="inventory__status" data-inventory-status="sold-out" {% unless status == 'sold-out' %}hidden{% endunless %}>
       <span class="inventory__dot inventory__dot--out"></span>{{ 'product.inventory.sold_out' | t }}
     </p>
@@ -30,12 +30,14 @@
   </div>
 {% endif %}
 
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
 {% schema %}
 {
   "name": "t:names.inventory",
   "tag": null,
   "settings": [
-    { "type": "range", "id": "threshold", "label": "t:settings.low_stock_threshold", "min": 2, "max": 100, "step": 1, "default": 10 }
+    { "type": "range", "id": "threshold", "label": "t:settings.low_stock_threshold", "min": 2, "max": 100, "step": 1, "default": 10 }, { "type": "header", "content": "t:content.advanced" }, { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" }, { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.inventory", "category": "t:categories.product" }

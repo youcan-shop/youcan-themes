@@ -8,7 +8,7 @@
   class="layered-slide{% if block.settings.use_color_scheme %} color-scheme color-{{ block.settings.color_scheme }}{% endif %}"
   style="--overlay-opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"
   ref="layers[]"
-  {{ block.youcan_attributes }}
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
 >
   <div class="layered-slide__media" aria-hidden="true">
     {% if block.settings.image != blank %}
@@ -24,6 +24,8 @@
     </div>
   </div>
 </div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
@@ -94,7 +96,10 @@
       "label": "t:settings.color_scheme",
       "default": "scheme-4",
       "visible_if": { "setting_id": "use_color_scheme", "value": true }
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.layered_slide" }

@@ -8,7 +8,7 @@
 
 {% if p.description != blank %}
   {% if block.settings.collapsible %}
-    <details class="accordion product-description" {% if block.settings.open %}open{% endif %} {{ block.youcan_attributes }}>
+    <details class="accordion product-description" {% if block.settings.open %}open{% endif %} {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
       <summary class="accordion__summary">
         {{ heading | escape }}
         {% render 'icon', name: 'chevron-down', px: 18 %}
@@ -17,7 +17,7 @@
     </details>
   {% else %}
     {% if block.settings.read_more %}
-      <ui-read-more class="read-more" style="--read-more-height: {{ block.settings.read_more_height }}px;" {{ block.youcan_attributes }}>
+      <ui-read-more class="read-more" style="--read-more-height: {{ block.settings.read_more_height }}px;" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
         <div class="product-description rte read-more__content" ref="content">{{ p.description }}</div>
         <button class="button button--link button--sm read-more__toggle" type="button" ref="toggle" hidden aria-expanded="false">
           <span ref="moreLabel">{{ 'product.read_more' | t }}</span>
@@ -25,12 +25,14 @@
         </button>
       </ui-read-more>
     {% else %}
-      <div class="product-description rte" {{ block.youcan_attributes }}>{{ p.description }}</div>
+      <div class="product-description rte" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">{{ p.description }}</div>
     {% endif %}
   {% endif %}
 {% endif %}
 
 <script type="module" src="{{ 'read-more.js' | asset_url }}"></script>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
@@ -68,7 +70,10 @@
       "label": "t:settings.open_by_default",
       "default": true,
       "visible_if": { "setting_id": "collapsible", "value": true }
-    }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.product_description", "category": "t:categories.product" }

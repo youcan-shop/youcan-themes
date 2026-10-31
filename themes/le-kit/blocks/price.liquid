@@ -1,10 +1,12 @@
 {% assign p = closest.product | default: product %}
 
 {% if p %}
-  <div class="price-block text-{{ block.settings.size }}" {{ block.youcan_attributes }}>
+  <div class="price-block text-{{ block.settings.size }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
     {% render 'price', product: p, show_badge: block.settings.show_badge %}
   </div>
 {% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
 
 {% schema %}
 {
@@ -22,7 +24,10 @@
       ],
       "default": "lg"
     },
-    { "type": "checkbox", "id": "show_badge", "label": "t:settings.show_sale_badge", "default": true }
+    { "type": "checkbox", "id": "show_badge", "label": "t:settings.show_sale_badge", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
   ],
   "presets": [
     { "name": "t:names.price", "category": "t:categories.product" }

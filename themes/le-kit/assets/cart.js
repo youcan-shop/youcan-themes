@@ -23,11 +23,23 @@ class CartComponent extends Component {
       const remove = target.closest("[data-cart-remove]");
       if (remove) this.#removeItems(/** @type {HTMLButtonElement} */ (remove));
       if (target.closest("[data-checkout-button]")) window.Dotshop?.pixels?.publish("initiate-checkout", this.cart);
+      if (target.closest("[data-cart-panel-toggle]")) this.#togglePanel();
     }, { signal });
 
     this.addEventListener("submit", (event) => {
       if (/** @type {HTMLElement} */ (event.target).matches("[data-coupon-form]")) this.#submitCoupon(event);
     }, { signal });
+  }
+
+  /** Toggles the coupon panel. */
+  #togglePanel() {
+    const panel = /** @type {HTMLElement | null} */ (this.querySelector("[data-cart-panel]"));
+    if (!panel) return;
+
+    const open = !panel.hasAttribute("data-open");
+    panel.toggleAttribute("data-open", open);
+    this.querySelectorAll("[data-cart-panel-toggle][aria-expanded]").forEach((toggle) => toggle.setAttribute("aria-expanded", String(open)));
+    if (open) panel.querySelector("input")?.focus({ preventScroll: true });
   }
 
   get cart() {
@@ -210,7 +222,8 @@ document.addEventListener(ThemeEvents.cartUpdate, async (event) => {
   await refreshCarts();
   if (!fromProduct) return;
 
-  /** @type {HTMLDialogElement | null} */ (document.querySelector("dialog#quick-add[open]"))?.close();
+  const quickView = document.getElementById("quick-add");
+  if (quickView?.matches(":popover-open")) quickView.hidePopover();
 
   if (theme.autoOpenCart === false) {
     if (theme.cartAnimation) flyToCart(image);
