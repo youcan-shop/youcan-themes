@@ -1,5 +1,11 @@
 # chameleon
 
+## 4.10.1
+
+### Patch Changes
+
+- 4a5c8fc: All themes > show the amount a fixed coupon takes off instead of the coupon's value
+
 ## 4.10.0
 
 ### Minor Changes
