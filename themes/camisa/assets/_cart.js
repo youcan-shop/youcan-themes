@@ -752,7 +752,7 @@ class CartSummary extends HTMLElement {
       return `-${formatCurrency(discountedPrice)} (${coupon.value}%)`;
     }
 
-    return `-${formatCurrency(coupon.value)}`;
+    return `-${formatCurrency(discountedPrice)}`;
   }
 
   clearCouponForm() {
