@@ -1,5 +1,11 @@
 # bella
 
+## 1.3.1
+
+### Patch Changes
+
+- 4a5c8fc: All themes > show the amount a fixed coupon takes off instead of the coupon's value
+
 ## 1.3.0
 
 ### Minor Changes
