@@ -80,7 +80,7 @@ const CartUI = {
     if (couponsEnabled) {
       if (coupon && discount) {
         const percentageDiscount = `${coupon.value}%`;
-        const fixedDiscount = formatCurrency(coupon.value, CURRENCY_CODE, CUSTOMER_LOCALE);
+        const fixedDiscount = formatCurrency(discount, CURRENCY_CODE, CUSTOMER_LOCALE);
         couponType = coupon.type === 1 ? percentageDiscount : fixedDiscount;
 
         couponsEnabled.innerHTML = `
