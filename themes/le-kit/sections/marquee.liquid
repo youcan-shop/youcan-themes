@@ -1,0 +1,57 @@
+<ui-marquee
+  class="marquee color-scheme color-{{ section.settings.color_scheme }}"
+  style="--marquee-duration: {{ section.settings.speed }}s; --section-pt: {{ section.settings.padding }}px; --section-pb: {{ section.settings.padding }}px;"
+  {% if section.settings.reverse %}data-reverse{% endif %}
+  {% if section.settings.pause_on_hover %}data-pause-on-hover{% endif %}
+>
+  <div class="marquee__track section" ref="track">
+    <div class="marquee__group text-{{ section.settings.size }}" ref="group">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</ui-marquee>
+
+<script type="module" src="{{ 'marquee.js' | asset_url }}"></script>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
+{% schema %}
+{
+  "name": "t:names.marquee",
+  "max_blocks": 6,
+  "blocks": [{ "type": "_marquee-item" }],
+  "settings": [
+    { "type": "range", "id": "speed", "label": "t:settings.duration", "min": 10, "max": 80, "step": 5, "unit": "s", "default": 30 },
+    { "type": "checkbox", "id": "reverse", "label": "t:settings.reverse_direction", "default": false },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "t:settings.pause_on_hover", "default": true },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.text_size",
+      "options": [
+        { "value": "md", "label": "t:options.medium" },
+        { "value": "lg", "label": "t:options.large" },
+        { "value": "xl", "label": "t:options.extra_large" }
+      ],
+      "default": "lg"
+    },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-3" },
+    { "type": "range", "id": "padding", "label": "t:settings.padding", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.marquee",
+      "category": "t:categories.text",
+      "blocks": [
+        { "type": "_marquee-item", "settings": { "text": "t:defaults.marquee_1", "icon": "sparkle" } },
+        { "type": "_marquee-item", "settings": { "text": "t:defaults.marquee_2", "icon": "sparkle" } },
+        { "type": "_marquee-item", "settings": { "text": "t:defaults.marquee_3", "icon": "sparkle" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

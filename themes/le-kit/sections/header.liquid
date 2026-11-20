@@ -1,0 +1,432 @@
+{%- liquid
+  assign menu = section.settings.menu
+  if menu == blank
+    assign menu = main-link-list
+  endif
+  assign logo = settings.logo
+  assign store_name = store.name | escape
+  assign scheme_class = 'color-' | append: section.settings.color_scheme
+  assign transparent = false
+  if section.settings.transparent_home and template.name == 'index'
+    assign transparent = true
+    assign transparent_class = 'color-' | append: section.settings.transparent_color_scheme
+  endif
+-%}
+
+<ui-header
+  class="site-header color-scheme {% if transparent %}{{ transparent_class }}{% else %}{{ scheme_class }}{% endif %}"
+  data-sticky="{{ section.settings.sticky }}"
+  data-logo-position="{{ section.settings.logo_position }}"
+  data-menu-position="{{ section.settings.menu_position }}"
+  {% if transparent %}
+    data-transparent
+    data-transparent-active
+    data-scheme-class="{{ scheme_class }}"
+    data-transparent-class="{{ transparent_class }}"
+  {% endif %}
+  {% if section.settings.border %}data-border{% endif %}
+  {% if section.settings.show_action_labels %}data-action-labels{% endif %}
+>
+  <div class="page-width site-header__inner">
+    <button
+      class="button button--ghost button--icon site-header__menu-toggle"
+      type="button"
+      popovertarget="menu-drawer"
+      aria-label="{{ 'header.menu' | t }}"
+    >
+      {% render 'icon', name: 'menu' %}
+    </button>
+
+    <a class="site-header__logo" href="/" style="--logo-width: {{ section.settings.logo_width }}px; --logo-width-mobile: {{ section.settings.logo_width_mobile }}px;">
+      {% if logo != blank %}
+        {{
+          logo
+          | image_url: width: 600
+          | image_tag: alt: store_name, widths: '150, 300, 450, 600', sizes: '(min-width: 750px) 300px, 200px', loading: 'eager', fetchpriority: 'high', class: 'site-header__logo-image'
+        }}
+        {% if settings.logo_inverse != blank and transparent %}
+          {{
+            settings.logo_inverse
+            | image_url: width: 600
+            | image_tag: alt: store_name, widths: '150, 300, 450, 600', sizes: '(min-width: 750px) 300px, 200px', loading: 'eager', class: 'site-header__logo-image site-header__logo-image--inverse'
+          }}
+        {% endif %}
+      {% else %}
+        <span class="site-header__store-name">{{ store_name }}</span>
+      {% endif %}
+    </a>
+
+    <nav class="site-header__nav" aria-label="{{ 'header.main_navigation' | t }}">
+      <ul class="header-menu" role="list">
+        {% for link in menu.links %}
+          <li class="header-menu__item">
+            {% if link.links.size > 0 %}
+              <details class="header-menu__dropdown" ref="dropdowns[]">
+                <summary class="header-menu__link">
+                  {{ link.title | escape }}
+                  {% render 'icon', name: 'chevron-down', px: 14 %}
+                </summary>
+                <ul class="header-menu__submenu color-scheme color-{{ section.settings.menu_color_scheme }}" role="list">
+                  {% for child in link.links %}
+                    <li><a class="header-menu__sublink" href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                  {% endfor %}
+                </ul>
+              </details>
+            {% else %}
+              <a class="header-menu__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      {% if section.settings.show_search %}
+        <button class="button button--ghost button--icon site-header__action" type="button" popovertarget="search-modal" aria-label="{{ 'header.search' | t }}">
+          {% render 'icon', name: 'search' %}
+          <span class="site-header__label" aria-hidden="true">{{ 'header.search' | t }}</span>
+        </button>
+      {% endif %}
+      {% if section.settings.show_account %}
+        <a class="button button--ghost button--icon site-header__action site-header__account" href="{{ routes.account_url | default: '/account' }}" aria-label="{% if customer %}{{ 'header.account' | t }}{% else %}{{ 'header.login' | t }}{% endif %}">
+          {% render 'icon', name: 'user' %}
+          <span class="site-header__label" aria-hidden="true">{% if customer %}{{ 'header.account' | t }}{% else %}{{ 'header.login' | t }}{% endif %}</span>
+        </a>
+      {% endif %}
+      {% if settings.cart_type == 'page' %}
+        <a class="button button--ghost button--icon site-header__action site-header__cart" href="/cart" aria-label="{{ 'header.cart' | t }}">
+          {% render 'icon', name: 'cart' %}
+          <span class="site-header__label" aria-hidden="true">{{ 'header.cart' | t }}</span>
+          <ui-cart-bubble class="cart-bubble" {% unless cart.count > 0 %}hidden{% endunless %}>{{ cart.count }}</ui-cart-bubble>
+        </a>
+      {% else %}
+        <button class="button button--ghost button--icon site-header__action site-header__cart" type="button" popovertarget="cart-drawer" aria-label="{{ 'header.cart' | t }}">
+          {% render 'icon', name: 'cart' %}
+          <span class="site-header__label" aria-hidden="true">{{ 'header.cart' | t }}</span>
+          <ui-cart-bubble class="cart-bubble" {% unless cart.count > 0 %}hidden{% endunless %}>{{ cart.count }}</ui-cart-bubble>
+        </button>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="drawer drawer--start menu-drawer color-scheme color-{{ section.settings.menu_color_scheme }}" id="menu-drawer" popover>
+    <div class="drawer__header">
+      <span class="drawer__title">{{ 'header.menu' | t }}</span>
+      <button class="button button--ghost button--icon" type="button" popovertarget="menu-drawer" popovertargetaction="hide" aria-label="{{ 'accessibility.close' | t }}">
+        {% render 'icon', name: 'close' %}
+      </button>
+    </div>
+    <nav class="drawer__body">
+      <ul class="menu-drawer__list" role="list">
+        {% for link in menu.links %}
+          <li>
+            {% if link.links.size > 0 %}
+              <details class="menu-drawer__details">
+                <summary class="menu-drawer__link">
+                  {{ link.title | escape }}
+                  {% render 'icon', name: 'chevron-down', px: 18 %}
+                </summary>
+                <ul class="menu-drawer__sublist" role="list">
+                  <li><a class="menu-drawer__sublink" href="{{ link.url }}">{{ 'general.view_all' | t }}</a></li>
+                  {% for child in link.links %}
+                    <li><a class="menu-drawer__sublink" href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                  {% endfor %}
+                </ul>
+              </details>
+            {% else %}
+              <a class="menu-drawer__link" href="{{ link.url }}">{{ link.title | escape }}</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    {% if section.settings.show_account %}
+      <div class="drawer__footer">
+        <a class="button button--secondary button--full" href="{{ routes.account_url | default: '/account' }}">
+          {% render 'icon', name: 'user', px: 18 %}
+          {% if customer %}{{ 'header.account' | t }}{% else %}{{ 'header.login' | t }}{% endif %}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_search %}
+    <div class="drawer search-sheet color-scheme color-{{ section.settings.menu_color_scheme }}" id="search-modal" popover>
+      <form class="search-sheet__form" action="/search" method="get" role="search">
+        {% render 'icon', name: 'search', px: 18 %}
+        <label class="visually-hidden" for="search-modal-input">{{ 'header.search' | t }}</label>
+        <input
+          class="search-sheet__input"
+          id="search-modal-input"
+          type="search"
+          name="q"
+          placeholder="{{ 'header.search_placeholder' | t }}"
+          autocomplete="off"
+          enterkeyhint="search"
+          required
+          autofocus
+        >
+        <button class="button button--ghost button--icon" type="button" popovertarget="search-modal" popovertargetaction="hide" aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'icon', name: 'close' %}
+        </button>
+      </form>
+    </div>
+  {% endif %}
+</ui-header>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
+{% stylesheet %}
+  .header-wrapper:has(> .site-header[data-sticky="always"]),
+  .header-wrapper:has(> .site-header[data-sticky="scroll-up"]) {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    transition: transform var(--duration) var(--ease);
+  }
+  .header-wrapper:has(> .site-header[data-hidden]) { transform: translateY(-100%); }
+  .header-wrapper:has(> .site-header[data-transparent]) { position: relative; z-index: 20; margin-block-end: calc(-1 * var(--header-height)); }
+  .header-wrapper:has(> .site-header[data-transparent][data-sticky="always"]),
+  .header-wrapper:has(> .site-header[data-transparent][data-sticky="scroll-up"]) { position: sticky; }
+  .site-header { transition: background-color var(--duration) var(--ease), color var(--duration) var(--ease), border-color var(--duration) var(--ease); }
+  .site-header[data-transparent-active] { background-color: transparent; border-color: transparent; }
+  .site-header[data-menu-position="center"] .header-menu { justify-content: center; }
+  .site-header__logo-image--inverse,
+  .site-header[data-transparent-active] .site-header__logo:has(.site-header__logo-image--inverse) .site-header__logo-image:not(.site-header__logo-image--inverse) { display: none; }
+  .site-header[data-transparent-active] .site-header__logo-image--inverse { display: block; }
+  /* If the header group renders inside its own container, let the header stick relative to the page */
+  :not(body):has(> .header-wrapper > .site-header:is([data-sticky="always"], [data-sticky="scroll-up"])) { display: contents; }
+
+  .site-header { display: block; }
+  .site-header[data-border] { border-block-end: 1px solid var(--color-border); }
+  .site-header__inner {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-areas: "toggle logo nav actions";
+    align-items: center;
+    gap: var(--space-md);
+    min-height: var(--header-min-height);
+    padding-block: 8px;
+  }
+  .site-header__menu-toggle { grid-area: toggle; margin-inline-start: -10px; }
+  .site-header__logo { grid-area: logo; display: inline-flex; text-decoration: none; }
+  .site-header__logo img { width: var(--logo-width-mobile); height: auto; }
+  .site-header__store-name { font-family: var(--font-heading-family); font-weight: var(--font-heading-weight); font-size: var(--text-xl); }
+  .site-header__nav { grid-area: nav; display: none; min-width: 0; }
+  .site-header__actions { grid-area: actions; display: flex; align-items: center; justify-content: flex-end; margin-inline-end: -10px; }
+  .site-header__cart { position: relative; }
+  @media (max-width: 989px) { .site-header__account { display: none; } }
+  .cart-bubble {
+    position: absolute;
+    inset-block-start: 2px;
+    inset-inline-end: 0;
+    display: grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding-inline: 4px;
+    border-radius: 9px;
+    background: var(--color-primary);
+    color: var(--color-primary-foreground);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .cart-bubble[data-pulse] { animation: bubble-pulse 600ms var(--ease); }
+  .site-header__label { display: none; }
+  @media (min-width: 990px) {
+    .site-header[data-action-labels] .site-header__actions { gap: var(--space-lg); margin-inline-end: 0; }
+    .site-header[data-action-labels] .site-header__action {
+      width: auto;
+      height: 40px;
+      gap: var(--space-xs);
+      padding-inline: 0;
+      background: none;
+    }
+    .site-header[data-action-labels] .site-header__action:hover { opacity: 0.64; }
+    .site-header[data-action-labels] .site-header__action .icon { width: 18px; height: 18px; opacity: 1; }
+    .site-header[data-action-labels] .site-header__label { display: inline; }
+    .site-header[data-action-labels] .site-header__cart { gap: var(--space-sm); }
+    .site-header[data-action-labels] .site-header__cart .icon { display: none; }
+    .site-header[data-action-labels] .cart-bubble,
+    .site-header[data-action-labels] .cart-bubble[hidden] {
+      position: static;
+      display: grid !important;
+      min-width: 32px;
+      height: 32px;
+      border: 1px solid currentColor;
+      border-radius: 16px;
+      background: none;
+      color: inherit;
+      font-size: var(--text-sm);
+      font-weight: 500;
+    }
+  }
+  @keyframes bubble-pulse { 50% { transform: scale(1.3); } }
+
+  @media (max-width: 989px) {
+    .site-header__inner { grid-template-columns: 1fr auto 1fr; grid-template-areas: "toggle logo actions"; }
+    .site-header__menu-toggle { justify-self: start; }
+  }
+
+  @media (min-width: 990px) {
+    .site-header__menu-toggle { display: none; }
+    .site-header__logo img { width: var(--logo-width); }
+    .site-header__nav { display: block; }
+    .site-header[data-logo-position="center"] .site-header__inner {
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-areas: "nav logo actions";
+    }
+  }
+
+  .header-menu { display: flex; flex-wrap: wrap; gap: var(--space-2xs); padding: 0; list-style: none; }
+  /* Dropdowns of the last items open towards the start so they stay in the viewport */
+  .header-menu__item:nth-last-child(-n + 2):not(:nth-child(-n + 2)) .header-menu__submenu { inset-inline: auto 0; }
+  .header-menu__item { position: relative; }
+  .header-menu__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+    transition: opacity var(--duration-fast) var(--ease);
+  }
+  .header-menu__link::-webkit-details-marker { display: none; }
+  .header-menu__link:hover { opacity: 0.64; }
+  .header-menu__dropdown[open] .header-menu__link .icon { transform: rotate(180deg); }
+  .header-menu__submenu {
+    position: absolute;
+    inset-block-start: calc(100% + 6px);
+    inset-inline-start: 0;
+    z-index: 10;
+    min-width: 224px;
+    padding: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-box);
+    box-shadow: var(--shadow-popover);
+    list-style: none;
+  }
+  .header-menu__sublink {
+    display: block;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-item);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+  .header-menu__sublink:hover { background: var(--color-subtle); }
+
+  .menu-drawer__list, .menu-drawer__sublist { display: grid; padding: 0; list-style: none; }
+  .menu-drawer__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-sm);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    list-style: none;
+  }
+  .menu-drawer__link::-webkit-details-marker { display: none; }
+  .menu-drawer__link .icon { transition: transform var(--duration) var(--ease); }
+  .menu-drawer__details[open]:not([data-state="closed"]) > .menu-drawer__link .icon { transform: rotate(180deg); }
+  .menu-drawer__sublist { padding-inline-start: var(--space-md); padding-block-end: var(--space-sm); }
+  .menu-drawer__sublink { display: block; padding-block: var(--space-xs); color: var(--color-muted); text-decoration: none; }
+
+  .search-sheet { height: auto; inset-block-end: auto; }
+  .search-sheet__form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-height: 72px;
+    padding: var(--space-md) var(--space-lg);
+  }
+  .search-sheet__form > .icon { flex-shrink: 0; }
+  .search-sheet__form .button--icon { width: 32px; height: 32px; margin-inline-end: -6px; }
+  .search-sheet__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: var(--text-md);
+    outline: none;
+  }
+  .search-sheet__input::-webkit-search-cancel-button { display: none; }
+  @media (max-width: 749px) { .search-sheet { width: 100vw; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.header",
+  "tag": "header",
+  "class": "header-wrapper",
+  "limit": 1,
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "t:settings.menu", "default": "main-menu" },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "t:settings.logo_position",
+      "options": [
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "center"
+    },
+    { "type": "range", "id": "logo_width", "label": "t:settings.logo_width_desktop", "min": 40, "max": 300, "step": 5, "unit": "px", "default": 120 },
+    { "type": "range", "id": "logo_width_mobile", "label": "t:settings.logo_width_mobile", "min": 40, "max": 200, "step": 5, "unit": "px", "default": 90 },
+    { "type": "paragraph", "content": "t:info.logo_global" },
+    {
+      "type": "select",
+      "id": "sticky",
+      "label": "t:settings.sticky_header",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "always", "label": "t:options.always" },
+        { "value": "scroll-up", "label": "t:options.on_scroll_up" }
+      ],
+      "default": "always"
+    },
+    {
+      "type": "select",
+      "id": "menu_position",
+      "label": "t:settings.menu_position",
+      "options": [
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "start"
+    },
+    { "type": "paragraph", "content": "t:info.menu_position" },
+    { "type": "checkbox", "id": "show_search", "label": "t:settings.show_search", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "t:settings.show_account", "default": true },
+    { "type": "paragraph", "content": "t:info.show_account" },
+    { "type": "checkbox", "id": "show_action_labels", "label": "t:settings.show_action_labels", "default": true },
+    { "type": "paragraph", "content": "t:info.show_action_labels" },
+    { "type": "checkbox", "id": "border", "label": "t:settings.border", "default": false },
+    { "type": "header", "content": "t:content.appearance" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "color_scheme", "id": "menu_color_scheme", "label": "t:settings.menu_color_scheme", "default": "scheme-1" },
+    { "type": "header", "content": "t:content.home_page" },
+    { "type": "checkbox", "id": "transparent_home", "label": "t:settings.transparent_home", "default": true },
+    { "type": "paragraph", "content": "t:info.transparent_home" },
+    {
+      "type": "color_scheme",
+      "id": "transparent_color_scheme",
+      "label": "t:settings.transparent_color_scheme",
+      "default": "scheme-4",
+      "visible_if": { "setting_id": "transparent_home", "value": true }
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,31 @@
+{% comment %}
+  Renders a quantity selector
+
+  Accepts:
+  - item: {Object} (Optional) Cart item, the selector updates this line
+  - scale: {String} (Optional) sm | md
+
+  Usage:
+  {% render 'quantity' %}
+  {% render 'quantity', item: item, scale: 'sm' %}
+{% endcomment %}
+
+{% assign quantity = item.quantity | default: 1 %}
+
+<ui-quantity
+  class="quantity quantity--{{ scale | default: 'md' }}"
+  quantity="{{ quantity }}"
+  {% if item %}
+    item="{{ item.id }}"
+    product-variant="{{ item.product_variant_id }}"
+    {% if item.inventory %}inventory="{{ item.inventory }}"{% endif %}
+  {% endif %}
+>
+  <button class="quantity__button" type="button" name="minus" ref="decrease" aria-label="{{ 'accessibility.decrease_quantity' | t }}">
+    {% render 'icon', name: 'minus', px: 16 %}
+  </button>
+  <span class="quantity__value" ref="value" aria-live="polite">{{ quantity }}</span>
+  <button class="quantity__button" type="button" name="plus" ref="increase" aria-label="{{ 'accessibility.increase_quantity' | t }}">
+    {% render 'icon', name: 'plus', px: 16 %}
+  </button>
+</ui-quantity>

@@ -1,0 +1,79 @@
+{% comment %}
+  Renders schema.org JSON-LD: Organization and WebSite (with search) on the home page,
+  the product (from product.structured_data) and breadcrumbs on product and collection pages.
+
+  Usage:
+  {% render 'structured-data' %}
+{% endcomment %}
+
+{%- assign base_url = 'https://' | append: request.host -%}
+
+{%- case template.name -%}
+  {%- when 'index' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": {{ store.name | json }},
+            "url": {{ base_url | json }}
+            {%- if settings.logo != blank -%}
+              , "logo": {{ settings.logo | image_url: width: 600 | prepend: 'https:' | replace: 'https:https:', 'https:' | json }}
+            {%- endif -%}
+          },
+          {
+            "@type": "WebSite",
+            "name": {{ store.name | json }},
+            "url": {{ base_url | json }},
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {{ base_url | append: '/search?q={search_term_string}' | json }},
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+
+  {%- when 'product' -%}
+    {%- if product.structured_data != blank -%}
+      {%- if product.structured_data contains '<script' -%}
+        {{ product.structured_data }}
+      {%- else -%}
+        <script type="application/ld+json">{{ product.structured_data }}</script>
+      {%- endif -%}
+    {%- endif -%}
+    {%- liquid
+      assign category = product.categories.first
+      assign product_url = product.url
+      unless product_url contains '://'
+        assign product_url = base_url | append: product.url
+      endunless
+    -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": {{ 'general.home' | t | json }}, "item": {{ base_url | json }} }
+          {%- if category -%}
+            , { "@type": "ListItem", "position": 2, "name": {{ category.name | json }}, "item": {{ base_url | append: '/collections/' | append: category.slug | json }} }
+          {%- endif -%}
+          , { "@type": "ListItem", "position": {% if category %}3{% else %}2{% endif %}, "name": {{ product.name | json }}, "item": {{ product_url | json }} }
+        ]
+      }
+    </script>
+
+  {%- when 'collection' -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": {{ 'general.home' | t | json }}, "item": {{ base_url | json }} },
+          { "@type": "ListItem", "position": 2, "name": {{ category.name | json }}, "item": {{ request.url | split: '?' | first | json }} }
+        ]
+      }
+    </script>
+{%- endcase -%}

@@ -1,0 +1,39 @@
+{% comment %}
+  Renders a collection card
+
+  Accepts:
+  - collection: {Object} Collection (category)
+  - ratio: {String} (Optional) CSS aspect-ratio, defaults to 1 / 1
+  - style: {String} (Optional) below | overlay
+  - sizes: {String} (Optional) Image sizes attribute
+  - placeholder_index: {Number} (Optional)
+
+  Usage:
+  {% render 'collection-card', collection: collection %}
+{% endcomment %}
+
+{%- liquid
+  assign title = collection.name
+  if title == blank
+    assign title = 'collections.placeholder_title' | t
+  endif
+  assign url = '#'
+  if collection.slug
+    assign url = '/collections/' | append: collection.slug
+  endif
+-%}
+
+<a class="collection-card collection-card--{{ style | default: 'below' }}" href="{{ url }}">
+  <span class="media collection-card__media" style="--ratio: {{ ratio | default: '1 / 1' }};">
+    {% if collection.preview_image %}
+      {% render 'image', image: collection.preview_image, alt: collection.name, width: 900, sizes: sizes %}
+    {% else %}
+      {% assign placeholder = placeholder_index | default: 0 | modulo: 3 | plus: 1 | prepend: 'collection-' %}
+      {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </span>
+  <span class="collection-card__title">
+    {{ title }}
+    {% render 'icon', name: 'arrow-right', px: 16, class: 'icon--flip' %}
+  </span>
+</a>

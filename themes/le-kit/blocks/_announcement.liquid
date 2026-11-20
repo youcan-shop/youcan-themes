@@ -1,0 +1,51 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
+<p class="announcement" data-carousel-item data-visibility="{{ block.settings.visibility | default: 'all' }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% if block.settings.link != blank %}
+    <a href="{{ block.settings.link }}">{{ td_text }}</a>
+  {% else %}
+    {{ td_text }}
+  {% endif %}
+</p>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .announcement { text-align: center; padding-block: var(--space-xs); font-weight: 500; letter-spacing: 0.02em; }
+  .announcement a { text-decoration: none; }
+  @media (max-width: 749px) { .announcement[data-visibility="desktop"] { display: none; } }
+  @media (min-width: 750px) { .announcement[data-visibility="mobile"] { display: none; } }
+  .announcement a:hover { text-decoration: underline; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.announcement",
+  "tag": null,
+  "settings": [
+    { "type": "inline_richtext", "id": "text", "label": "t:settings.text", "default": "t:defaults.announcement" },
+    { "type": "url", "id": "link", "label": "t:settings.link" },
+    {
+      "type": "select",
+      "id": "visibility",
+      "label": "t:settings.show_on",
+      "options": [
+        { "value": "all", "label": "t:options.all_devices" },
+        { "value": "mobile", "label": "t:options.mobile_only" },
+        { "value": "desktop", "label": "t:options.desktop_only" }
+      ],
+      "default": "all"
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.announcement" }
+  ]
+}
+{% endschema %}

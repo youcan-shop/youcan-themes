@@ -1,0 +1,30 @@
+<div
+  class="spacer-block"
+  style="--spacer-mobile: {{ block.settings.height_mobile }}px; --spacer-desktop: {{ block.settings.height }}px;"
+  aria-hidden="true"
+  {{ block.youcan_attributes }} data-block-id="{{ block.id }}"
+></div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .spacer-block { flex-shrink: 0; height: var(--spacer-mobile); width: 100%; }
+  @media (min-width: 750px) { .spacer-block { height: var(--spacer-desktop); } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.spacer",
+  "tag": null,
+  "settings": [
+    { "type": "range", "id": "height", "label": "t:settings.height_desktop", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "height_mobile", "label": "t:settings.height_mobile", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 24 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.spacer", "category": "t:categories.layout" }
+  ]
+}
+{% endschema %}

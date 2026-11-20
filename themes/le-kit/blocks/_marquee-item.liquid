@@ -1,0 +1,68 @@
+{%- liquid
+  assign td_text = block.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
+<span class="marquee-item" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% if block.settings.icon != 'none' %}
+    {% render 'icon', name: block.settings.icon, px: 20 %}
+  {% endif %}
+  {% if block.settings.link != blank %}
+    <a href="{{ block.settings.link }}">{{ td_text }}</a>
+  {% else %}
+    {{ td_text }}
+  {% endif %}
+</span>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .marquee-item { display: inline-flex; align-items: center; gap: var(--space-xl); white-space: nowrap; font-weight: 500; }
+  .marquee-item a { text-decoration: none; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.marquee_item",
+  "tag": null,
+  "settings": [
+    { "type": "inline_richtext", "id": "text", "label": "t:settings.text", "default": "t:defaults.marquee_1" },
+    { "type": "url", "id": "link", "label": "t:settings.link" },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:settings.separator_icon",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "check-circle", "label": "t:options.icons.check" },
+        { "value": "truck", "label": "t:options.icons.truck" },
+        { "value": "return", "label": "t:options.icons.return" },
+        { "value": "shield", "label": "t:options.icons.shield" },
+        { "value": "lock", "label": "t:options.icons.lock" },
+        { "value": "gift", "label": "t:options.icons.gift" },
+        { "value": "heart", "label": "t:options.icons.heart" },
+        { "value": "star", "label": "t:options.icons.star" },
+        { "value": "sparkle", "label": "t:options.icons.sparkle" },
+        { "value": "leaf", "label": "t:options.icons.leaf" },
+        { "value": "tag", "label": "t:options.icons.tag" },
+        { "value": "clock", "label": "t:options.icons.clock" },
+        { "value": "chat", "label": "t:options.icons.chat" },
+        { "value": "mail", "label": "t:options.icons.mail" },
+        { "value": "phone", "label": "t:options.icons.phone" },
+        { "value": "map-pin", "label": "t:options.icons.map_pin" },
+        { "value": "user", "label": "t:options.icons.user" },
+        { "value": "cart", "label": "t:options.icons.cart" },
+        { "value": "info", "label": "t:options.icons.info" }
+      ],
+      "default": "sparkle"
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.marquee_item" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+{%- liquid
+  case block.settings.ratio
+    when 'square'
+      assign ratio = '1 / 1'
+    when 'portrait'
+      assign ratio = '9 / 16'
+    else
+      assign ratio = '16 / 9'
+  endcase
+  assign style = '--ratio: ' | append: ratio | append: ';'
+  assign classes = 'video-block media'
+  if block.settings.rounded
+    assign classes = classes | append: ' image-block--rounded'
+  endif
+-%}
+
+<div class="video-block-wrapper" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% render 'video-player', url: block.settings.video_link, mode: 'click', poster: block.settings.cover, alt: block.settings.alt, sizes: '(min-width: 750px) 60vw, 100vw', controls: true, class: classes, style: style %}
+</div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .video-block-wrapper, .video-block { width: 100%; }
+{% endstylesheet %}
+{% schema %}
+{
+  "name": "t:names.video",
+  "tag": null,
+  "settings": [
+    { "type": "url", "id": "video_link", "label": "t:settings.video_link" },
+    { "type": "paragraph", "content": "t:info.video_link" },
+    { "type": "image_picker", "id": "cover", "label": "t:settings.cover_image" },
+    { "type": "text", "id": "alt", "label": "t:settings.alt_text" },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "wide", "label": "t:options.wide" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" }
+      ],
+      "default": "wide"
+    },
+    { "type": "checkbox", "id": "rounded", "label": "t:settings.rounded_corners", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.video", "category": "t:categories.media" }
+  ]
+}
+{% endschema %}

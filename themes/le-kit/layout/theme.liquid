@@ -1,0 +1,188 @@
+<!doctype html>
+{% assign lang = request.locale.iso_code | default: store.store_locale.iso_code | default: 'en' %}
+{% assign direction = 'ltr' %}
+{% if lang == 'ar' %}
+  {% assign direction = 'rtl' %}
+{% endif %}
+
+<html lang="{{ lang }}" dir="{{ direction }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://cdn.youcan.shop">
+
+    {% render 'meta-tags' %}
+    {% render 'structured-data' %}
+    {% render 'favicon' %}
+    {% render 'theme-styles' %}
+
+    {% unless request.design_mode %}
+      <script type="speculationrules">
+        {
+          "prefetch": [
+            {
+              "where": {
+                "and": [
+                  { "href_matches": "/*" },
+                  { "not": { "href_matches": ["/cart*", "/checkout*", "/account*", "/*/cart*", "/*/checkout*", "/*/account*", "/*\\?*"] } },
+                  { "not": { "selector_matches": "[rel~=nofollow], [target=_blank], [data-no-prefetch]" } }
+                ]
+              },
+              "eagerness": "moderate"
+            }
+          ]
+        }
+      </script>
+    {% endunless %}
+
+    {% if settings.page_transitions %}
+      <style>@view-transition { navigation: auto; }</style>
+    {% endif %}
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'commerce.css' | asset_url | stylesheet_tag }}
+    {% if template.name contains 'customer' %}
+      {{ 'account.css' | asset_url | stylesheet_tag }}
+    {% endif %}
+
+    {{ content_for_header }}
+
+    <script>
+      window.theme = {
+        cartType: {{ settings.cart_type | default: 'drawer' | json }},
+        autoOpenCart: {% if settings.auto_open_cart == false %}false{% else %}true{% endif %},
+        cartAnimation: {% if settings.add_to_cart_animation %}true{% else %}false{% endif %},
+        strings: {
+          addedToCart: {{ 'cart.added' | t | json }},
+          checkoutError: {{ form.errors | first | json }},
+          error: {{ 'errors.generic' | t | json }},
+          insufficientInventory: {{ 'errors.insufficient_inventory' | t | json }},
+          largeFile: {{ 'errors.large_file' | t | json }},
+          selectEmpty: {{ 'general.no_results' | t | json }},
+          selectSearch: {{ 'general.search' | t | json }},
+          soldOut: {{ 'product.sold_out' | t | json }},
+        },
+      };
+    </script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@theme/accordion": "{{ 'accordion.js' | asset_url }}",
+          "@theme/address-fields": "{{ 'address-fields.js' | asset_url }}",
+          "@theme/auth": "{{ 'auth.js' | asset_url }}",
+          "@theme/carousel": "{{ 'carousel.js' | asset_url }}",
+          "@theme/cart": "{{ 'cart.js' | asset_url }}",
+          "@theme/collection-links": "{{ 'collection-links.js' | asset_url }}",
+          "@theme/comparison-slider": "{{ 'comparison-slider.js' | asset_url }}",
+          "@theme/component": "{{ 'component.js' | asset_url }}",
+          "@theme/countdown": "{{ 'countdown.js' | asset_url }}",
+          "@theme/dialog": "{{ 'dialog.js' | asset_url }}",
+          "@theme/events": "{{ 'events.js' | asset_url }}",
+          "@theme/forms": "{{ 'forms.js' | asset_url }}",
+          "@theme/header": "{{ 'header.js' | asset_url }}",
+          "@theme/hotspot": "{{ 'hotspot.js' | asset_url }}",
+          "@theme/jumbo-text": "{{ 'jumbo-text.js' | asset_url }}",
+          "@theme/layered-slideshow": "{{ 'layered-slideshow.js' | asset_url }}",
+          "@theme/linked-fields": "{{ 'linked-fields.js' | asset_url }}",
+          "@theme/marquee": "{{ 'marquee.js' | asset_url }}",
+          "@theme/phone-input": "{{ 'phone-input.js' | asset_url }}",
+          "@theme/product": "{{ 'product.js' | asset_url }}",
+          "@theme/quantity-selector": "{{ 'quantity-selector.js' | asset_url }}",
+          "@theme/quick-add": "{{ 'quick-add.js' | asset_url }}",
+          "@theme/quick-order": "{{ 'quick-order.js' | asset_url }}",
+          "@theme/read-more": "{{ 'read-more.js' | asset_url }}",
+          "@theme/reviews": "{{ 'reviews.js' | asset_url }}",
+          "@theme/scroll-reveal": "{{ 'scroll-reveal.js' | asset_url }}",
+          "@theme/select": "{{ 'select.js' | asset_url }}",
+          "@theme/share": "{{ 'share.js' | asset_url }}",
+          "@theme/shop-button": "{{ 'shop-button.js' | asset_url }}",
+          "@theme/special-offer": "{{ 'special-offer.js' | asset_url }}",
+          "@theme/sticky-buy": "{{ 'sticky-buy.js' | asset_url }}",
+          "@theme/toast": "{{ 'toast.js' | asset_url }}",
+          "@theme/upsell": "{{ 'upsell.js' | asset_url }}",
+          "@theme/utilities": "{{ 'utilities.js' | asset_url }}",
+          "@theme/video": "{{ 'video.js' | asset_url }}"
+        }
+      }
+    </script>
+
+    <link rel="modulepreload" href="{{ 'component.js' | asset_url }}">
+    <link rel="modulepreload" href="{{ 'utilities.js' | asset_url }}">
+    <link rel="modulepreload" href="{{ 'events.js' | asset_url }}">
+
+    <script src="https://unpkg.com/@youcan/js@1.3.0/dist/index.umd.js" defer></script>
+    {% if checkout.phone_validation %}
+      <script src="https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js" defer></script>
+      <script type="module" src="{{ 'phone-input.js' | asset_url }}"></script>
+    {% endif %}
+    {% if checkout.linked_fields %}
+      <script type="module" src="{{ 'linked-fields.js' | asset_url }}"></script>
+    {% endif %}
+    <script type="module" src="{{ 'toast.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'header.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'cart.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'quantity-selector.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'carousel.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'select.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'accordion.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'dialog.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'forms.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'scroll-reveal.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'product.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'shop-button.js' | asset_url }}"></script>
+    <script type="module" src="{{ 'quick-add.js' | asset_url }}"></script>
+  </head>
+
+  <body
+    data-card-hover="{{ settings.card_hover_effect | default: 'zoom' }}"
+    data-card-style="{{ settings.card_style | default: 'panel' }}"
+    {% if settings.reveal_on_scroll %}data-reveal{% endif %}
+  >
+    <a class="skip-link button" href="#main-content">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="main-content" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
+
+    <div class="drawer quick-add color-scheme color-{{ settings.drawer_color_scheme | default: 'scheme-1' }}" id="quick-add" popover>
+      <div class="drawer__header">
+        <span class="drawer__title" data-quick-add-title data-default="{{ 'product.quick_view' | t | escape }}">{{ 'product.quick_view' | t }}</span>
+        <button class="button button--ghost button--icon" type="button" popovertarget="quick-add" popovertargetaction="hide" aria-label="{{ 'accessibility.close' | t }}">
+          {% render 'icon', name: 'close' %}
+        </button>
+      </div>
+      <div class="drawer__body quick-add__content" data-quick-add-content data-view-label="{{ 'product.view_full_page' | t | escape }}"></div>
+      <template data-quick-add-skeleton>
+        <div class="quick-add__skeleton" aria-hidden="true">
+          <span class="skeleton--media"></span>
+          <span class="skeleton--pill"></span>
+          <span class="skeleton--title"></span>
+          <span class="skeleton--price"></span>
+          <span class="skeleton--options"></span>
+          <span class="skeleton--button"></span>
+        </div>
+      </template>
+    </div>
+
+    <ui-toast class="toast" id="toast" popover="manual" role="status">
+      <span class="toast__icon" aria-hidden="true">
+        {%- render 'icon', name: 'info', px: 18 -%}
+        {%- render 'icon', name: 'check-circle', px: 18 -%}
+        {%- render 'icon', name: 'alert', px: 18 -%}
+      </span>
+      <span class="toast__message" ref="message"></span>
+      <button class="button button--ghost button--icon button--sm" type="button" aria-label="{{ 'accessibility.close' | t }}" ref="closeButton">
+        {% render 'icon', name: 'close', px: 16 %}
+      </button>
+    </ui-toast>
+
+    {{ content_for_footer }}
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{% comment %}
+  Renders the coupon discount value
+
+  Accepts:
+  - coupon: {Object} Applied coupon
+
+  Usage:
+  {% render 'discount-value', coupon: cart.coupon %}
+{% endcomment %}
+
+{% assign percentage_coupon_type = '1' %}
+{% assign fixed_coupon_type = '2' %}
+
+{%- if coupon.type == percentage_coupon_type -%}
+  -{{ coupon.deducted_amount | default: 0 | money }} ({{ coupon.value }}%)
+{%- elsif coupon.type == fixed_coupon_type -%}
+  -{{ coupon.value | default: 0 | money }}
+{%- endif -%}
