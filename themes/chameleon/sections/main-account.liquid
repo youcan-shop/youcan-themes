@@ -1,0 +1,229 @@
+{{ 'section.account.css' | asset_url | stylesheet_tag }}
+{{ 'ui.pagination.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign greeting_name = customer.first_name | default: customer.name
+  assign greeting = 'account.greeting' | t | replace: '[name]', greeting_name
+
+  assign full_name = customer.first_name | append: ' ' | append: customer.last_name | strip
+  assign display_name = full_name | default: customer.name
+
+  assign addresses_url = routes.account_addresses_url | default: '/account/addresses'
+  assign collections_url = routes.collections_url | default: '/collections'
+
+  assign profile_edit_title = 'account.profile.edit' | t
+  assign save_label = 'account.save' | t
+  assign phone_label = 'account.address.phone' | t
+  assign phone_placeholder = 'placeholders.phone' | t
+  assign no_orders = 'account.no_orders' | t
+-%}
+
+<div section="account">
+  <div class="account-head">
+    <div class="titles">
+      <p class="eyebrow">{{ 'account.title' | t }}</p>
+      <h1 class="title">{{ greeting }}</h1>
+    </div>
+    {% render 'misc-account-nav', current: 'orders' %}
+  </div>
+
+  <div class="account-layout">
+    <div class="account-side">
+      <div class="card">
+        <div class="card-row">
+          <h2 class="title">{{ 'account.profile.title' | t }}</h2>
+          <ui-drawer class="profile-edit">
+            <button type="button" class="drawer-trigger" ui-button data-variant="tertiary" data-size="sm">
+              {% render 'ui-icon', name: 'edit' %}
+              <span>{{ 'account.edit' | t }}</span>
+            </button>
+            <div class="drawer-content" data-state="closed">
+              {% form 'customer_update' %}
+                <div class="header">
+                  <h2 class="title">{{ profile_edit_title }}</h2>
+                  <button type="button" ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="close">
+                    {% render 'ui-icon', name: 'close' %}
+                  </button>
+                </div>
+                <div class="main">
+                  {% if form.posted_successfully %}
+                    <div class="success" role="status" tabindex="-1">
+                      {% render 'ui-icon', name: 'check_circle' %}
+                      <span>{{ 'account.saved' | t }}</span>
+                    </div>
+                  {% endif %}
+                  {% render 'misc-form-errors', form: form %}
+                  <div class="fields">
+                    <div class="field-grid">
+                      <div class="field">
+                        <label for="profile-first-name">{{ 'account.address.first_name' | t }}</label>
+                        <input
+                          id="profile-first-name"
+                          type="text"
+                          name="first_name"
+                          value="{{ customer.first_name | escape }}"
+                          placeholder="{{ 'placeholders.first_name' | t }}"
+                          autocomplete="given-name"
+                          minlength="2"
+                          required
+                        >
+                      </div>
+                      <div class="field">
+                        <label for="profile-last-name">{{ 'account.address.last_name' | t }}</label>
+                        <input
+                          id="profile-last-name"
+                          type="text"
+                          name="last_name"
+                          value="{{ customer.last_name | escape }}"
+                          placeholder="{{ 'placeholders.last_name' | t }}"
+                          autocomplete="family-name"
+                          minlength="2"
+                          required
+                        >
+                      </div>
+                    </div>
+                    <div class="field">
+                      <label for="profile-email">{{ 'account.email' | t }}</label>
+                      <input
+                        id="profile-email"
+                        type="email"
+                        name="email"
+                        value="{{ customer.email | escape }}"
+                        placeholder="{{ 'placeholders.email' | t }}"
+                        autocomplete="email"
+                        required
+                      >
+                    </div>
+                    {% render 'misc-phone-validation',
+                      name: 'phone',
+                      label: phone_label,
+                      placeholder: phone_placeholder,
+                      value: customer.phone,
+                      standalone: true
+                    %}
+                    <details {% if form.errors %}open{% endif %}>
+                      <summary>{{ 'account.profile.change_password' | t }}</summary>
+                      <div class="fields">
+                        <div class="field">
+                          <label for="profile-password">{{ 'account.new_password' | t }}</label>
+                          <input
+                            id="profile-password"
+                            type="password"
+                            name="password"
+                            minlength="6"
+                            maxlength="72"
+                            placeholder="{{ 'placeholders.new_password' | t }}"
+                            autocomplete="new-password"
+                          >
+                          <span class="hint">{{ 'account.password_hint' | t }}</span>
+                        </div>
+                        <div class="field">
+                          <label for="profile-password-confirmation">{{ 'account.password_confirmation' | t }}</label>
+                          <input
+                            id="profile-password-confirmation"
+                            type="password"
+                            name="password_confirmation"
+                            minlength="6"
+                            maxlength="72"
+                            placeholder="{{ 'placeholders.password_confirmation' | t }}"
+                            autocomplete="new-password"
+                          >
+                        </div>
+                      </div>
+                    </details>
+                    <div class="field">
+                      <label for="profile-current-password">{{ 'account.current_password' | t }}</label>
+                      <input
+                        id="profile-current-password"
+                        type="password"
+                        name="current_password"
+                        placeholder="{{ 'placeholders.current_password' | t }}"
+                        autocomplete="current-password"
+                      >
+                      <span class="hint">{{ 'account.current_password_hint' | t }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="footer">
+                  <button type="submit" ui-button data-variant="primary" data-size="md">
+                    {{ save_label }}
+                  </button>
+                </div>
+              {% endform %}
+            </div>
+          </ui-drawer>
+        </div>
+        <dl>
+          <dt>{{ 'account.profile.name' | t }}</dt>
+          <dd>{{ display_name }}</dd>
+          <dt>{{ 'account.email' | t }}</dt>
+          <dd>{{ customer.email }}</dd>
+          {% if customer.phone != blank %}
+            <dt>{{ phone_label }}</dt>
+            <dd dir="ltr">{{ customer.phone }}</dd>
+          {% endif %}
+          <dt>{{ 'account.profile.orders' | t }}</dt>
+          <dd>{{ customer.orders_count }}</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <div class="card-row">
+          <h2 class="title">{{ 'account.default_address' | t }}</h2>
+          <a href="{{ addresses_url }}" ui-button data-variant="tertiary" data-size="sm">
+            <span>{{ 'account.manage' | t }}</span>
+          </a>
+        </div>
+        {% if customer.default_address %}
+          {% render 'misc-address-summary', address: customer.default_address %}
+        {% else %}
+          <p class="info">{{ 'account.no_address' | t }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="account-main">
+      <div class="card">
+        <div class="card-row">
+          <h2 class="title">{{ 'account.order_history' | t }}</h2>
+        </div>
+        {% paginate customer.orders by 10 %}
+          {% if customer.orders.size > 0 %}
+            <div class="orders">
+              <div class="orders-head">
+                <span class="name">{{ 'account.order.number' | t }}</span>
+                <span class="date">{{ 'account.order.date' | t }}</span>
+                <span class="status-label">{{ 'account.order.status' | t }}</span>
+                <span class="total">{{ 'order.total' | t }}</span>
+              </div>
+              {% for order in customer.orders %}
+                <a href="{{ order.customer_url }}" class="order-row">
+                  <span class="name">{{ order.name }}</span>
+                  <span class="date">{{ order.created_at | date: '%d/%m/%Y' }}</span>
+                  {% render 'const-payment-status', status: order.paymentStatusSlug %}
+                  <span class="total">{{ order.total | money }}</span>
+                </a>
+              {% endfor %}
+            </div>
+            {% render 'ui-pagination', next_page_url: paginate.next.url, previous_page_url: paginate.previous.url, current: paginate.current_page, last: paginate.pages, param: paginate.page_param %}
+          {% else %}
+            {% render 'ui-empty', content: no_orders %}
+            <a href="{{ collections_url }}" ui-button data-variant="tertiary" data-size="md">
+              {{ 'account.browse_products' | t }}
+            </a>
+          {% endif %}
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ 'misc.account.js' | asset_url | script_tag_deferred }}
+
+{%- schema -%}
+{
+  "label": "t:sections.customer_account.label",
+  "templates": ["customer-account"],
+  "limit": 1
+}
+{%- endschema -%}
