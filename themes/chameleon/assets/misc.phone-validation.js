@@ -11,6 +11,9 @@ if (!customElements.get("ui-phone-validation")) {
       this.phoneNumber = this.querySelector("[ui-phone-number]");
       this.phoneHiddenInput = this.querySelector("[ui-phone-hidden-input]");
       this.phoneErrorElement = this.querySelector("[ui-phone-error]");
+
+      this.prefillUnmatched = false;
+      this.prefillValue = "";
     }
 
     async connectedCallback() {
@@ -22,7 +25,53 @@ if (!customElements.get("ui-phone-validation")) {
 
       await this.buildCountryCodeOptions();
       this.attachListeners();
+      this.applyInitialValue();
       this.displaySelectedCountryCode();
+    }
+
+    applyInitialValue() {
+      const initialValue = (this.dataset.initialValue || "").trim();
+
+      if (!initialValue) return;
+
+      this.phoneNumber.value = initialValue;
+
+      if (!this.syncCountryCodeFromInput()) {
+        this.phoneNumber.value = initialValue;
+
+        if (this.setHiddenInputFromValue(initialValue)) {
+          this.prefillUnmatched = true;
+          this.prefillValue = initialValue;
+        }
+
+        return;
+      }
+
+      this.updatePhoneField();
+    }
+
+    setHiddenInputFromValue(value) {
+      try {
+        const parsed = libphonenumber.parsePhoneNumber(value);
+
+        if (parsed && parsed.isValid()) {
+          this.phoneHiddenInput.value = parsed.number;
+
+          return true;
+        }
+      } catch (e) {
+      }
+
+      return false;
+    }
+
+    isUntouchedUnmatchedPrefill() {
+      return this.prefillUnmatched && this.phoneNumber.value === this.prefillValue;
+    }
+
+    clearPrefillUnmatched() {
+      this.prefillUnmatched = false;
+      this.prefillValue = "";
     }
 
     validateElements() {
@@ -114,7 +163,7 @@ if (!customElements.get("ui-phone-validation")) {
 
     syncCountryCodeFromInput() {
       const inputValue = this.phoneNumber.value.trim();
-      if (!inputValue.startsWith("+")) return;
+      if (!inputValue.startsWith("+")) return false;
 
       try {
         const parsed = libphonenumber.parsePhoneNumberFromString(inputValue);
@@ -128,26 +177,36 @@ if (!customElements.get("ui-phone-validation")) {
           if (matchingOption) {
             this.phoneSelectCountryCode.value = parsed.countryCallingCode;
             this.displaySelectedCountryCode();
+
+            return true;
           }
         }
       } catch (e) {
         // Ignore parsing errors during typing
       }
+
+      return false;
     }
 
     attachListeners() {
       this.phoneSelectCountryCode.addEventListener("change", () => {
+        this.clearPrefillUnmatched();
         this.toggleError(false);
         this.updatePhoneField();
         this.displaySelectedCountryCode();
       });
 
       this.phoneNumber.addEventListener("input", () => {
+        this.clearPrefillUnmatched();
         this.toggleError(false);
         this.syncCountryCodeFromInput();
       });
 
-      this.phoneNumber.addEventListener("blur", () => this.updatePhoneField());
+      this.phoneNumber.addEventListener("blur", () => {
+        if (this.isUntouchedUnmatchedPrefill()) return;
+
+        this.updatePhoneField();
+      });
     }
   }
 
