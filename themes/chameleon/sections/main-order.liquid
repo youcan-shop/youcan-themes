@@ -1,7 +1,7 @@
 {{ 'section.account.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
-  assign account_url = routes.account_url | default: '/account'
+  assign orders_url = routes.account_url | default: '/account' | append: '#orders'
 
   assign order_title = 'account.order.title' | t | replace: '[name]', order.name
   assign order_date = order.created_at | date: '%d/%m/%Y'
@@ -15,7 +15,7 @@
 -%}
 
 <div section="account">
-  <a href="{{ account_url }}" class="order-back" ui-button data-variant="ghost" data-size="sm">
+  <a href="{{ orders_url }}" class="order-back" ui-button data-variant="ghost" data-size="sm">
     {% render 'ui-icon', name: 'arrow_back', flip_in_rtl: true %}
     <span>{{ 'account.back_to_orders' | t }}</span>
   </a>

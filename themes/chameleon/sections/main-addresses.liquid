@@ -8,91 +8,48 @@
 -%}
 
 <div section="account">
-  <div class="account-head">
-    <div class="titles">
-      <p class="eyebrow">{{ 'account.title' | t }}</p>
-      <h1 class="title">{{ 'account.addresses' | t }}</h1>
-    </div>
+  <div class="account-shell">
     {% render 'misc-account-nav', current: 'addresses' %}
-  </div>
 
-  <div class="addresses">
-    {% for address in customer.addresses %}
-      <div class="card address-card">
-        <div class="card-row">
+    <div class="account-panel">
+      <div class="addresses">
+        {% for address in customer.addresses %}
           {% if address.default %}
-            <span class="tag">{{ 'account.address.default' | t }}</span>
+            {% render 'misc-address-card', address: address, confirm_remove: confirm_remove, edit_title: edit_title, save_label: save_label %}
           {% endif %}
-          <div class="address-actions">
-            <ui-drawer>
-              <button type="button" class="drawer-trigger" ui-button data-variant="tertiary" data-size="sm">
-                {% render 'ui-icon', name: 'edit' %}
-                <span>{{ 'account.edit' | t }}</span>
-              </button>
-              <div class="drawer-content" data-state="closed">
-                {% form 'customer_address', address %}
-                  <div class="header">
-                    <h2 class="title">{{ edit_title }}</h2>
-                    <button type="button" ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="close">
-                      {% render 'ui-icon', name: 'close' %}
-                    </button>
-                  </div>
-                  <div class="main">
-                    {% render 'misc-form-errors', form: form %}
-                    {% render 'misc-address-form', address: address, uid: address.id %}
-                  </div>
-                  <div class="footer">
-                    <button type="submit" ui-button data-variant="primary" data-size="md">
-                      {{ save_label }}
-                    </button>
-                  </div>
-                {% endform %}
+        {% endfor %}
+        {% for address in customer.addresses %}
+          {% unless address.default %}
+            {% render 'misc-address-card', address: address, confirm_remove: confirm_remove, edit_title: edit_title, save_label: save_label %}
+          {% endunless %}
+        {% endfor %}
+        <ui-drawer class="address-new">
+          <button type="button" class="drawer-trigger">
+            {% render 'ui-icon', name: 'add' %}
+            <span>{{ add_title }}</span>
+          </button>
+          <div class="drawer-content" data-state="closed">
+            {% form 'customer_address', customer.new_address %}
+              <div class="header">
+                <h2 class="title">{{ add_title }}</h2>
+                <button type="button" ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="close">
+                  {% render 'ui-icon', name: 'close' %}
+                </button>
               </div>
-            </ui-drawer>
-            {% form 'customer_address_remove', address %}
-              <button
-                type="submit"
-                ui-button
-                data-variant="tertiary"
-                data-size="sm"
-                as-icon
-                aria-label="remove"
-                data-confirm-message="{{ confirm_remove | escape }}"
-              >
-                {% render 'ui-icon', name: 'delete' %}
-              </button>
+              <div class="main">
+                {% render 'misc-form-errors', form: form %}
+                {% render 'misc-address-form', address: customer.new_address %}
+              </div>
+              <div class="footer">
+                <button type="submit" ui-button data-variant="primary" data-size="md">
+                  {{ save_label }}
+                </button>
+              </div>
             {% endform %}
           </div>
-        </div>
-        {% render 'misc-address-summary', address: address %}
+        </ui-drawer>
       </div>
-    {% endfor %}
-
-    <ui-drawer class="address-new">
-      <button type="button" class="drawer-trigger">
-        {% render 'ui-icon', name: 'add' %}
-        <span>{{ add_title }}</span>
-      </button>
-      <div class="drawer-content" data-state="closed">
-        {% form 'customer_address', customer.new_address %}
-          <div class="header">
-            <h2 class="title">{{ add_title }}</h2>
-            <button type="button" ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="close">
-              {% render 'ui-icon', name: 'close' %}
-            </button>
-          </div>
-          <div class="main">
-            {% render 'misc-form-errors', form: form %}
-            {% render 'misc-address-form', address: customer.new_address %}
-          </div>
-          <div class="footer">
-            <button type="submit" ui-button data-variant="primary" data-size="md">
-              {{ save_label }}
-            </button>
-          </div>
-        {% endform %}
-      </div>
-    </ui-drawer>
+    </div>
   </div>
 </div>
 

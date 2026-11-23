@@ -1,42 +1,53 @@
+{%- liquid
+  assign account_url = routes.account_url | default: '/account'
+  assign addresses_url = routes.account_addresses_url | default: '/account/addresses'
+  assign logout_url = routes.account_logout_url | default: '/account/logout'
+  assign account_href = account_url | append: '#account'
+  assign orders_href = account_url | append: '#orders'
+-%}
 
 <nav class="account-nav" aria-label="{{ 'account.title' | t }}">
-  <a
-    href="{{ routes.account_url | default: '/account' }}"
-    ui-button
-    data-size="sm"
-    {% if current == 'orders' %}
-      data-variant="tertiary"
-      aria-current="page"
-    {% else %}
+  <div class="links">
+    <a
+      href="{{ account_href }}"
+      ui-button
       data-variant="ghost"
-    {% endif %}
-  >
-    {% render 'ui-icon', name: 'shopping_cart' %}
-    <span>{{ 'account.orders' | t }}</span>
-  </a>
-  <a
-    href="{{ routes.account_addresses_url | default: '/account/addresses' }}"
-    ui-button
-    data-size="sm"
-    {% if current == 'addresses' %}
-      data-variant="tertiary"
-      aria-current="page"
-    {% else %}
+      data-size="md"
+      data-account-tab="account"
+      {% if current == 'account' %}
+        aria-current="page"
+      {% endif %}
+    >
+      {% render 'ui-icon', name: 'person' %}
+      <span>{{ 'account.nav_account' | t }}</span>
+    </a>
+    <a
+      href="{{ orders_href }}"
+      ui-button
       data-variant="ghost"
-    {% endif %}
-  >
-    {% render 'ui-icon', name: 'location_on' %}
-    <span>{{ 'account.addresses' | t }}</span>
-    {% if customer.addresses_count > 0 %}
-      <span>({{ customer.addresses_count }})</span>
-    {% endif %}
-  </a>
-  <a
-    href="{{ routes.account_logout_url | default: '/account/logout' }}"
-    ui-button
-    data-size="sm"
-    data-variant="ghost"
-  >
+      data-size="md"
+      data-account-tab="orders"
+      {% if current == 'orders' %}
+        aria-current="page"
+      {% endif %}
+    >
+      {% render 'ui-icon', name: 'shopping_cart' %}
+      <span>{{ 'account.orders' | t }}</span>
+    </a>
+    <a
+      href="{{ addresses_url }}"
+      ui-button
+      data-variant="ghost"
+      data-size="md"
+      {% if current == 'addresses' %}
+        aria-current="page"
+      {% endif %}
+    >
+      {% render 'ui-icon', name: 'location_on' %}
+      <span>{{ 'account.addresses' | t }}</span>
+    </a>
+  </div>
+  <a href="{{ logout_url }}" class="logout" ui-button data-variant="ghost" data-size="md">
     {% render 'ui-icon', name: 'logout', flip_in_rtl: true %}
     <span>{{ 'account.logout' | t }}</span>
   </a>

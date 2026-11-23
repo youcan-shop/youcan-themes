@@ -211,6 +211,11 @@
   }
 }
 
+[layout="main"] > :has([section="account"] > .account-shell) {
+  flex: 1;
+  display: grid;
+}
+
 [section="account"] {
   display: grid;
   gap: var(--spacing-12);
@@ -221,7 +226,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--spacing-24);
-    padding: var(--spacing-64);
+    padding: var(--spacing-24) var(--spacing-24);
     border-radius: var(--radius-md);
     background-color: var(--color-surface-container-low);
 
@@ -240,10 +245,53 @@
     }
   }
 
+  .account-shell {
+    display: grid;
+    align-items: stretch;
+    gap: var(--spacing-12);
+    margin-block-start: var(--spacing-40);
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  ui-account-tabs:not([data-tab="orders"]) [data-account-panel="orders"],
+  ui-account-tabs[data-tab="orders"] [data-account-panel="account"] {
+    display: none;
+  }
+
   .account-nav {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-8);
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--spacing-64);
+    min-height: 320px;
+    padding: var(--spacing-16);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-container-low);
+
+    .links {
+      display: grid;
+      gap: var(--spacing-4);
+    }
+
+    [ui-button] {
+      justify-content: flex-start;
+    }
+
+    [aria-current="page"] {
+      background-color: var(--color-surface-container-high);
+    }
+  }
+
+  .account-panel {
+    display: grid;
+    align-items: start;
+    align-content: start;
+    gap: var(--spacing-12);
+
+    .card {
+      gap: var(--spacing-16);
+      padding: var(--spacing-24);
+    }
   }
 
   .card {
@@ -347,16 +395,18 @@
   }
 
   .address-card {
+    display: flex;
+    flex-direction: column;
     gap: var(--spacing-16);
     padding: var(--spacing-24);
-    align-content: start;
   }
 
   .address-actions {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: var(--spacing-8);
-    margin-inline-start: auto;
+    margin-block-start: auto;
   }
 
   .address-new {
@@ -646,8 +696,31 @@
   }
 
   [section="account"] {
-    .account-head {
-      padding: calc(var(--spacing-24) + var(--spacing-8));
+    .account-shell {
+      align-content: start;
+      grid-template-columns: 1fr;
+    }
+
+    .account-nav {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-8);
+      min-height: 0;
+      padding: var(--spacing-8);
+      overflow-x: auto;
+
+      .links {
+        display: flex;
+        gap: var(--spacing-4);
+      }
+
+      [ui-button] {
+        white-space: nowrap;
+      }
+
+      .logout {
+        margin-inline-start: auto;
+      }
     }
 
     .address-card {

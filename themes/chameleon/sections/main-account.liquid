@@ -2,13 +2,14 @@
 {{ 'ui.pagination.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
-  assign greeting_name = customer.first_name | default: customer.name
-  assign greeting = 'account.greeting' | t | replace: '[name]', greeting_name
+  assign initial_tab = 'account'
+  if request.url contains 'page='
+    assign initial_tab = 'orders'
+  endif
 
   assign full_name = customer.first_name | append: ' ' | append: customer.last_name | strip
   assign display_name = full_name | default: customer.name
 
-  assign addresses_url = routes.account_addresses_url | default: '/account/addresses'
   assign collections_url = routes.collections_url | default: '/collections'
 
   assign profile_edit_title = 'account.profile.edit' | t
@@ -19,16 +20,10 @@
 -%}
 
 <div section="account">
-  <div class="account-head">
-    <div class="titles">
-      <p class="eyebrow">{{ 'account.title' | t }}</p>
-      <h1 class="title">{{ greeting }}</h1>
-    </div>
-    {% render 'misc-account-nav', current: 'orders' %}
-  </div>
+  <ui-account-tabs class="account-shell" data-tab="{{ initial_tab }}">
+    {% render 'misc-account-nav', current: initial_tab %}
 
-  <div class="account-layout">
-    <div class="account-side">
+    <div class="account-panel" data-account-panel="account">
       <div class="card">
         <div class="card-row">
           <h2 class="title">{{ 'account.profile.title' | t }}</h2>
@@ -170,9 +165,6 @@
       <div class="card">
         <div class="card-row">
           <h2 class="title">{{ 'account.default_address' | t }}</h2>
-          <a href="{{ addresses_url }}" ui-button data-variant="tertiary" data-size="sm">
-            <span>{{ 'account.manage' | t }}</span>
-          </a>
         </div>
         {% if customer.default_address %}
           {% render 'misc-address-summary', address: customer.default_address %}
@@ -182,7 +174,7 @@
       </div>
     </div>
 
-    <div class="account-main">
+    <div class="account-panel" data-account-panel="orders">
       <div class="card">
         <div class="card-row">
           <h2 class="title">{{ 'account.order_history' | t }}</h2>
@@ -215,7 +207,7 @@
         {% endpaginate %}
       </div>
     </div>
-  </div>
+  </ui-account-tabs>
 </div>
 
 {{ 'misc.account.js' | asset_url | script_tag_deferred }}
