@@ -91,6 +91,21 @@
   {{ 'ui.pagination.css' | asset_url | stylesheet_tag }}
 {% endif %}
 
+{% if template.name == 'customer-addresses' or template.name == 'customer-register' or template.name == 'customer-account' %}
+  <script>
+    if (!window.storeMarketCountries) {
+      window.storeMarketCountries = new Promise((resolve) => {
+        document.addEventListener('DOMContentLoaded', async () => {
+          const data = await youcanjs.misc.getStoreMarketCountries();
+          resolve(data);
+        });
+      });
+      window.storeRegions = {};
+      window.storeCities = {};
+    }
+  </script>
+{% endif %}
+
 <script>
   window.errorStrings = {
     checkout: `{{ form.errors | first }}`,

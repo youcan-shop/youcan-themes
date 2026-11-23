@@ -1,0 +1,124 @@
+{{ 'section.account.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign view = 'login'
+  if request.url contains '/account/recover'
+    assign view = 'recover'
+  endif
+  assign recover_url = routes.account_recover_url | default: '/account/recover'
+  assign login_url = routes.account_login_url | default: '/account/login'
+
+  assign heading_fallback = 'account.login.title' | t
+  assign login_heading = section.settings.heading | default: heading_fallback
+  assign login_text = section.settings.text | default: ''
+-%}
+
+<div section="auth">
+  <ui-account-view data-view="{{ view }}">
+    <div class="card" data-auth-view="login">
+      <div class="card-head">
+        <h1 class="title">{{ login_heading }}</h1>
+        {% if login_text != '' %}
+          <p class="description">{{ login_text }}</p>
+        {% endif %}
+      </div>
+      {% form 'customer_login' %}
+        {% render 'misc-form-errors', form: form %}
+        <div class="fields">
+          <div class="field">
+            <label for="login-email">{{ 'account.email' | t }}</label>
+            <input
+              id="login-email"
+              type="email"
+              name="email"
+              value="{{ form.email | escape }}"
+              placeholder="{{ 'placeholders.email' | t }}"
+              autocomplete="email"
+              required
+            >
+          </div>
+          <div class="field">
+            <div class="field-row">
+              <label for="login-password">{{ 'account.password' | t }}</label>
+              <a href="{{ recover_url }}" class="link" data-auth-switch="recover">
+                {{- 'account.login.forgot' | t -}}
+              </a>
+            </div>
+            <input
+              id="login-password"
+              type="password"
+              name="password"
+              placeholder="{{ 'placeholders.password' | t }}"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+        </div>
+        <button type="submit" ui-button data-variant="primary" data-size="md">
+          {{ 'account.login.submit' | t }}
+        </button>
+      {% endform %}
+      <p class="card-foot">
+        {{ 'account.login.no_account' | t }}
+        <a href="{{ routes.account_register_url | default: '/account/register' }}" class="link">{{ 'account.login.create' | t }}</a>
+      </p>
+    </div>
+
+    <div class="card" data-auth-view="recover">
+      <div class="card-head">
+        <h1 class="title">{{ 'account.recover.title' | t }}</h1>
+        <p class="description">{{ 'account.recover.text' | t }}</p>
+      </div>
+      {% form 'recover_customer_password' %}
+        {% if form.posted_successfully %}
+          <div class="success" role="status">
+            {% render 'ui-icon', name: 'mail' %}
+            <span>{{ 'account.recover.success' | t }}</span>
+          </div>
+        {% endif %}
+        {% render 'misc-form-errors', form: form %}
+        <div class="fields">
+          <div class="field">
+            <label for="recover-email">{{ 'account.email' | t }}</label>
+            <input
+              id="recover-email"
+              type="email"
+              name="email"
+              placeholder="{{ 'placeholders.email' | t }}"
+              autocomplete="email"
+              required
+            >
+          </div>
+        </div>
+        <button type="submit" ui-button data-variant="primary" data-size="md">
+          {{ 'account.recover.submit' | t }}
+        </button>
+      {% endform %}
+      <p class="card-foot">
+        <a href="{{ login_url }}" class="link" data-auth-switch="login">{{ 'account.recover.back' | t }}</a>
+      </p>
+    </div>
+  </ui-account-view>
+</div>
+
+{{ 'misc.account.js' | asset_url | script_tag_deferred }}
+
+{%- schema -%}
+{
+  "label": "t:sections.customer_login.label",
+  "templates": ["customer-login"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.customer_login.heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.customer_login.text"
+    }
+  ]
+}
+{%- endschema -%}

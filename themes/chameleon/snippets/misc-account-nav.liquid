@@ -1,0 +1,43 @@
+
+<nav class="account-nav" aria-label="{{ 'account.title' | t }}">
+  <a
+    href="{{ routes.account_url | default: '/account' }}"
+    ui-button
+    data-size="sm"
+    {% if current == 'orders' %}
+      data-variant="tertiary"
+      aria-current="page"
+    {% else %}
+      data-variant="ghost"
+    {% endif %}
+  >
+    {% render 'ui-icon', name: 'shopping_cart' %}
+    <span>{{ 'account.orders' | t }}</span>
+  </a>
+  <a
+    href="{{ routes.account_addresses_url | default: '/account/addresses' }}"
+    ui-button
+    data-size="sm"
+    {% if current == 'addresses' %}
+      data-variant="tertiary"
+      aria-current="page"
+    {% else %}
+      data-variant="ghost"
+    {% endif %}
+  >
+    {% render 'ui-icon', name: 'location_on' %}
+    <span>{{ 'account.addresses' | t }}</span>
+    {% if customer.addresses_count > 0 %}
+      <span>({{ customer.addresses_count }})</span>
+    {% endif %}
+  </a>
+  <a
+    href="{{ routes.account_logout_url | default: '/account/logout' }}"
+    ui-button
+    data-size="sm"
+    data-variant="ghost"
+  >
+    {% render 'ui-icon', name: 'logout', flip_in_rtl: true %}
+    <span>{{ 'account.logout' | t }}</span>
+  </a>
+</nav>
