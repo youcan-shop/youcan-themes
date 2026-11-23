@@ -1,9 +1,22 @@
 {% comment %}
   Renders menu drawer
 
+  Accepts:
+  - show_account: {Boolean} (optional) Render the customer account link
+
   Usage:
-  {% render 'ui-menu-drawer' %}
+  {% render 'ui-menu-drawer', show_account: true %}
 {% endcomment %}
+
+{%- liquid
+  assign account_url = routes.account_url | default: '/account'
+
+  if customer
+    assign account_label = 'account.title' | t
+  else
+    assign account_label = 'account.login.title' | t
+  endif
+-%}
 
 <ui-drawer class="menu">
   <button class="drawer-trigger action" aria-expanded="false" aria-label="menu">
@@ -36,6 +49,18 @@
           </li>
         {% endfor %}
       </ul>
+      {% if show_account %}
+        <a
+          href="{{ account_url }}"
+          ui-button
+          data-variant="tertiary"
+          data-size="md"
+          aria-label="{{ account_label }}"
+        >
+          {% render 'ui-icon', name: 'person' %}
+          <span>{{ account_label }}</span>
+        </a>
+      {% endif %}
     </div>
   </div>
 </ui-drawer>
