@@ -1,11 +1,8 @@
 {% comment %}
   Renders menu drawer
 
-  Accepts:
-  - show_account: {Boolean} (optional) Render the customer account link
-
   Usage:
-  {% render 'ui-menu-drawer', show_account: true %}
+  {% render 'ui-menu-drawer' %}
 {% endcomment %}
 
 {%- liquid
@@ -49,18 +46,16 @@
           </li>
         {% endfor %}
       </ul>
-      {% if show_account %}
-        <a
-          href="{{ account_url }}"
-          ui-button
-          data-variant="tertiary"
-          data-size="md"
-          aria-label="{{ account_label }}"
-        >
-          {% render 'ui-icon', name: 'person' %}
-          <span>{{ account_label }}</span>
-        </a>
-      {% endif %}
+      <a
+        href="{{ account_url }}"
+        ui-button
+        data-variant="tertiary"
+        data-size="md"
+        aria-label="{{ account_label }}"
+      >
+        {% render 'ui-icon', name: 'person' %}
+        <span>{{ account_label }}</span>
+      </a>
     </div>
   </div>
 </ui-drawer>

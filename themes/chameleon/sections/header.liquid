@@ -60,13 +60,11 @@
     </a>
   </div>
   <ul class="actions">
-    {% if section.settings.show_account %}
-      <li data-account>
-        <a class="action" href="{{ account_url }}" aria-label="{{ account_label }}">
-          {% render 'ui-icon', name: 'person' %}
-        </a>
-      </li>
-    {% endif %}
+    <li data-account>
+      <a class="action" href="{{ account_url }}" aria-label="{{ account_label }}">
+        {% render 'ui-icon', name: 'person' %}
+      </a>
+    </li>
     <li>
       {% render 'ui-search' %}
     </li>
@@ -74,7 +72,7 @@
       {% render 'ui-cart-drawer' %}
     </li>
     <li>
-      {% render 'ui-menu-drawer', show_account: section.settings.show_account %}
+      {% render 'ui-menu-drawer' %}
     </li>
   </ul>
 </header>
@@ -139,12 +137,6 @@
       "id": "header_sticky",
       "label": "t:sections.header.sticky_mode",
       "default": false
-    },
-    {
-      "type": "checkbox",
-      "id": "show_account",
-      "label": "t:sections.header.show_account",
-      "default": true
     }
   ]
 }
