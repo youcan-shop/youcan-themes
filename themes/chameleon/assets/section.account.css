@@ -110,6 +110,7 @@
   }
 
   .field > input,
+  .field > .password-field > input,
   .field > select,
   [ui-account-phone-field] input[ui-phone-number],
   [ui-account-phone-field] [ui-phone-displayed-country-code] {
@@ -217,6 +218,32 @@
 
 html:has([section="account"] ui-drawer > .drawer-content[data-state="open"]) {
   overflow: hidden;
+}
+
+:is([section="auth"], [section="account"]) .password-field {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding-inline-end: calc(var(--spacing-32) + var(--spacing-12));
+  }
+
+  .password-toggle {
+    width: 32px;
+    position: absolute;
+    inset-inline-end: var(--spacing-6);
+    inset-block-start: 50%;
+    translate: 0 -50%;
+  }
+}
+
+:is([section="auth"], [section="account"]) input[name="hidden_check"] {
+  inset: auto !important;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  clip-path: inset(50%);
 }
 
 :is([section="auth"], [section="account"]) [data-captcha] {

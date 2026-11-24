@@ -18,7 +18,7 @@ if (!customElements.get("ui-account-view")) {
           event.preventDefault();
           this.dataset.view = link.dataset.authSwitch;
           this.querySelector(
-            `[data-auth-view="${link.dataset.authSwitch}"] input:not([type="hidden"])`,
+            `[data-auth-view="${link.dataset.authSwitch}"] input:not([type="hidden"], [tabindex="-1"])`,
           )?.focus();
           history.replaceState(null, "", link.href);
         });
@@ -85,6 +85,19 @@ if (!window.uiAccountFormsReady) {
     });
   });
 
+  document.addEventListener("click", (event) => {
+    const toggle = event.target.closest?.(".password-toggle");
+    const input = toggle?.closest(".password-field")?.querySelector("input");
+    if (!input) return;
+
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    toggle.setAttribute("aria-pressed", String(show));
+    toggle.setAttribute("aria-label", show ? toggle.dataset.labelHide : toggle.dataset.labelShow);
+    const icon = toggle.querySelector("[ui-icon]");
+    if (icon) icon.textContent = show ? "visibility_off" : "visibility";
+  });
+
   document.addEventListener("submit", (event) => {
     const trigger = event.submitter?.closest("[data-confirm-message]");
     if (trigger && !window.confirm(trigger.dataset.confirmMessage)) event.preventDefault();
@@ -103,7 +116,7 @@ if (!window.uiAccountFormsReady) {
     if (!form.closest?.('[section="account"]')) return;
 
     if (form.closest(".profile-edit")) {
-      form.querySelectorAll('input[type="password"]').forEach((input) => {
+      form.querySelectorAll(".password-field input").forEach((input) => {
         if (input.name !== "current_password" && input.value === "") input.disabled = true;
       });
     }

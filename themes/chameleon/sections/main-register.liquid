@@ -66,30 +66,36 @@
         {% endif %}
         <div class="field">
           <label for="register-password">{{ 'account.password' | t }}</label>
-          <input
-            id="register-password"
-            type="password"
-            name="password"
-            minlength="6"
-            maxlength="72"
-            placeholder="{{ 'placeholders.new_password' | t }}"
-            autocomplete="new-password"
-            required
-          >
+          <div class="password-field">
+            <input
+              id="register-password"
+              type="password"
+              name="password"
+              minlength="6"
+              maxlength="72"
+              placeholder="{{ 'placeholders.new_password' | t }}"
+              autocomplete="new-password"
+              required
+            >
+            {% render 'misc-password-toggle' %}
+          </div>
           <span class="hint">{{ 'account.password_hint' | t }}</span>
         </div>
         <div class="field">
           <label for="register-password-confirmation">{{ 'account.password_confirmation' | t }}</label>
-          <input
-            id="register-password-confirmation"
-            type="password"
-            name="password_confirmation"
-            minlength="6"
-            maxlength="72"
-            placeholder="{{ 'placeholders.password_confirmation' | t }}"
-            autocomplete="new-password"
-            required
-          >
+          <div class="password-field">
+            <input
+              id="register-password-confirmation"
+              type="password"
+              name="password_confirmation"
+              minlength="6"
+              maxlength="72"
+              placeholder="{{ 'placeholders.password_confirmation' | t }}"
+              autocomplete="new-password"
+              required
+            >
+            {% render 'misc-password-toggle' %}
+          </div>
         </div>
       </div>
       <button type="submit" ui-button data-variant="primary" data-size="md">
@@ -102,6 +108,8 @@
     </p>
   </div>
 </div>
+
+{{ 'misc.account.js' | asset_url | script_tag_deferred }}
 
 {%- schema -%}
 {

@@ -10,7 +10,7 @@
   assign full_name = customer.first_name | append: ' ' | append: customer.last_name | strip
   assign display_name = full_name | default: customer.name
 
-  assign collections_url = routes.collections_url | default: '/collections'
+  assign home_url = routes.root_url | default: '/'
 
   assign profile_edit_title = 'account.profile.edit' | t
   assign save_label = 'account.save' | t
@@ -101,40 +101,49 @@
                       <div class="fields">
                         <div class="field">
                           <label for="profile-password">{{ 'account.new_password' | t }}</label>
-                          <input
-                            id="profile-password"
-                            type="password"
-                            name="password"
-                            minlength="6"
-                            maxlength="72"
-                            placeholder="{{ 'placeholders.new_password' | t }}"
-                            autocomplete="new-password"
-                          >
+                          <div class="password-field">
+                            <input
+                              id="profile-password"
+                              type="password"
+                              name="password"
+                              minlength="6"
+                              maxlength="72"
+                              placeholder="{{ 'placeholders.new_password' | t }}"
+                              autocomplete="new-password"
+                            >
+                            {% render 'misc-password-toggle' %}
+                          </div>
                           <span class="hint">{{ 'account.password_hint' | t }}</span>
                         </div>
                         <div class="field">
                           <label for="profile-password-confirmation">{{ 'account.password_confirmation' | t }}</label>
-                          <input
-                            id="profile-password-confirmation"
-                            type="password"
-                            name="password_confirmation"
-                            minlength="6"
-                            maxlength="72"
-                            placeholder="{{ 'placeholders.password_confirmation' | t }}"
-                            autocomplete="new-password"
-                          >
+                          <div class="password-field">
+                            <input
+                              id="profile-password-confirmation"
+                              type="password"
+                              name="password_confirmation"
+                              minlength="6"
+                              maxlength="72"
+                              placeholder="{{ 'placeholders.password_confirmation' | t }}"
+                              autocomplete="new-password"
+                            >
+                            {% render 'misc-password-toggle' %}
+                          </div>
                         </div>
                       </div>
                     </details>
                     <div class="field">
                       <label for="profile-current-password">{{ 'account.current_password' | t }}</label>
-                      <input
-                        id="profile-current-password"
-                        type="password"
-                        name="current_password"
-                        placeholder="{{ 'placeholders.current_password' | t }}"
-                        autocomplete="current-password"
-                      >
+                      <div class="password-field">
+                        <input
+                          id="profile-current-password"
+                          type="password"
+                          name="current_password"
+                          placeholder="{{ 'placeholders.current_password' | t }}"
+                          autocomplete="current-password"
+                        >
+                        {% render 'misc-password-toggle' %}
+                      </div>
                       <span class="hint">{{ 'account.current_password_hint' | t }}</span>
                     </div>
                   </div>
@@ -200,7 +209,7 @@
             {% render 'ui-pagination', next_page_url: paginate.next.url, previous_page_url: paginate.previous.url, current: paginate.current_page, last: paginate.pages, param: paginate.page_param %}
           {% else %}
             {% render 'ui-empty', content: no_orders %}
-            <a href="{{ collections_url }}" ui-button data-variant="tertiary" data-size="md">
+            <a href="{{ home_url }}" ui-button data-variant="tertiary" data-size="md">
               {{ 'account.browse_products' | t }}
             </a>
           {% endif %}
