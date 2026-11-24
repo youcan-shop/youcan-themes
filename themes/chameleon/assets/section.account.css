@@ -132,6 +132,29 @@
     }
   }
 
+  .field > select {
+    cursor: pointer;
+    appearance: none;
+    padding-inline-end: calc(var(--spacing-16) * 2 + 6px);
+  }
+
+  .field:has(> select) {
+    position: relative;
+
+    &::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      rotate: 45deg;
+      position: absolute;
+      inset-block-end: 20px;
+      inset-inline-end: var(--spacing-16);
+      pointer-events: none;
+      border-bottom: 1.2px solid currentColor;
+      border-right: 1.2px solid currentColor;
+    }
+  }
+
   .field-checkbox {
     display: flex;
     align-items: center;
