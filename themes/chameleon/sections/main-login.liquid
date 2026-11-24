@@ -75,24 +75,25 @@
             {% render 'ui-icon', name: 'mail' %}
             <span>{{ 'account.recover.success' | t }}</span>
           </div>
-        {% endif %}
-        {% render 'misc-form-errors', form: form %}
-        <div class="fields">
-          <div class="field">
-            <label for="recover-email">{{ 'account.email' | t }}</label>
-            <input
-              id="recover-email"
-              type="email"
-              name="email"
-              placeholder="{{ 'placeholders.email' | t }}"
-              autocomplete="email"
-              required
-            >
+        {% else %}
+          {% render 'misc-form-errors', form: form %}
+          <div class="fields">
+            <div class="field">
+              <label for="recover-email">{{ 'account.email' | t }}</label>
+              <input
+                id="recover-email"
+                type="email"
+                name="email"
+                placeholder="{{ 'placeholders.email' | t }}"
+                autocomplete="email"
+                required
+              >
+            </div>
           </div>
-        </div>
-        <button type="submit" ui-button data-variant="primary" data-size="md">
-          {{ 'account.recover.submit' | t }}
-        </button>
+          <button type="submit" ui-button data-variant="primary" data-size="md">
+            {{ 'account.recover.submit' | t }}
+          </button>
+        {% endif %}
       {% endform %}
       <p class="card-foot">
         <a href="{{ login_url }}" class="link" data-auth-switch="login">{{ 'account.recover.back' | t }}</a>

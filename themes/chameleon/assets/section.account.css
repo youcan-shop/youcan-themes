@@ -169,9 +169,13 @@
 }
 
 :is([section="auth"], [section="account"]) {
+  :is([data-form-has-errors], .success)[tabindex="-1"]:focus {
+    outline: none;
+  }
+
   [data-form-has-errors] {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-8);
     padding: var(--spacing-12) var(--spacing-16);
     border-radius: var(--radius-xs);
@@ -194,7 +198,7 @@
   .success,
   .info {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-8);
     padding: var(--spacing-12) var(--spacing-16);
     border-radius: var(--radius-xs);
@@ -213,6 +217,15 @@
 
 html:has([section="account"] ui-drawer > .drawer-content[data-state="open"]) {
   overflow: hidden;
+}
+
+:is([section="auth"], [section="account"]) [data-captcha] {
+  display: flex;
+  justify-content: center;
+}
+
+[section="auth"] form:has(> .success) [data-captcha] {
+  display: none;
 }
 
 [layout="main"] > :has([section="account"] > .account-shell) {
