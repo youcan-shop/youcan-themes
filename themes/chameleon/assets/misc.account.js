@@ -39,6 +39,7 @@ if (!customElements.get("ui-account-tabs")) {
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
           event.preventDefault();
           this.show(link.dataset.accountTab);
+          link.closest("details")?.removeAttribute("open");
           history.replaceState(null, "", link.getAttribute("href"));
         });
       });
@@ -78,9 +79,23 @@ if (!window.uiAccountFormsReady) {
     requestAnimationFrame(() => feedback.focus());
   };
 
+  document.addEventListener("click", (event) => {
+    document.querySelectorAll(".account-nav details[open]").forEach((menu) => {
+      if (!menu.contains(event.target)) menu.removeAttribute("open");
+    });
+  });
+
   document.addEventListener("submit", (event) => {
     const trigger = event.submitter?.closest("[data-confirm-message]");
     if (trigger && !window.confirm(trigger.dataset.confirmMessage)) event.preventDefault();
+  });
+
+  document.addEventListener("submit", (event) => {
+    if (event.target.querySelector?.('input[name="form_type"][value="customer_login"]')) {
+      try {
+        sessionStorage.setItem("account-login-redirect", "1");
+      } catch (error) {}
+    }
   });
 
   document.addEventListener("submit", (event) => {

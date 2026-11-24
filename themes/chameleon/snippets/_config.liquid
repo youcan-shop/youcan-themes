@@ -91,6 +91,16 @@
   {{ 'ui.pagination.css' | asset_url | stylesheet_tag }}
 {% endif %}
 
+<script>
+  try {
+    if (sessionStorage.getItem('account-login-redirect')) {
+      sessionStorage.removeItem('account-login-redirect');
+      if (!window.location.pathname.startsWith('/account/login')) {
+        window.location.replace(`{{ routes.account_url | default: '/account' }}#orders`);
+      }
+    }
+  } catch (error) {}
+</script>
 {% if template.name == 'customer-addresses' or template.name == 'customer-register' or template.name == 'customer-account' %}
   <script>
     if (!window.storeMarketCountries) {

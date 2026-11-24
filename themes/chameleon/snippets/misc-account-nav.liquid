@@ -6,49 +6,66 @@
   assign orders_href = account_url | append: '#orders'
 -%}
 
-<nav class="account-nav" aria-label="{{ 'account.title' | t }}">
-  <div class="links">
-    <a
-      href="{{ account_href }}"
-      ui-button
-      data-variant="ghost"
-      data-size="md"
-      data-account-tab="account"
-      {% if current == 'account' %}
-        aria-current="page"
-      {% endif %}
-    >
-      {% render 'ui-icon', name: 'person' %}
-      <span>{{ 'account.nav_account' | t }}</span>
-    </a>
-    <a
-      href="{{ orders_href }}"
-      ui-button
-      data-variant="ghost"
-      data-size="md"
-      data-account-tab="orders"
-      {% if current == 'orders' %}
-        aria-current="page"
-      {% endif %}
-    >
-      {% render 'ui-icon', name: 'shopping_cart' %}
-      <span>{{ 'account.orders' | t }}</span>
-    </a>
-    <a
-      href="{{ addresses_url }}"
-      ui-button
-      data-variant="ghost"
-      data-size="md"
-      {% if current == 'addresses' %}
-        aria-current="page"
-      {% endif %}
-    >
-      {% render 'ui-icon', name: 'location_on' %}
-      <span>{{ 'account.addresses' | t }}</span>
-    </a>
-  </div>
+{%- capture tab_links -%}
+  <a
+    href="{{ account_href }}"
+    ui-button
+    data-variant="ghost"
+    data-size="md"
+    data-account-tab="account"
+    {% if current == 'account' %}
+      aria-current="page"
+    {% endif %}
+  >
+    {% render 'ui-icon', name: 'person' %}
+    <span>{{ 'account.nav_account' | t }}</span>
+  </a>
+  <a
+    href="{{ orders_href }}"
+    ui-button
+    data-variant="ghost"
+    data-size="md"
+    data-account-tab="orders"
+    {% if current == 'orders' %}
+      aria-current="page"
+    {% endif %}
+  >
+    {% render 'ui-icon', name: 'shopping_cart' %}
+    <span>{{ 'account.orders' | t }}</span>
+  </a>
+  <a
+    href="{{ addresses_url }}"
+    ui-button
+    data-variant="ghost"
+    data-size="md"
+    {% if current == 'addresses' %}
+      aria-current="page"
+    {% endif %}
+  >
+    {% render 'ui-icon', name: 'location_on' %}
+    <span>{{ 'account.addresses' | t }}</span>
+  </a>
+{%- endcapture -%}
+
+{%- capture logout_link -%}
   <a href="{{ logout_url }}" class="logout" ui-button data-variant="ghost" data-size="md">
     {% render 'ui-icon', name: 'logout', flip_in_rtl: true %}
     <span>{{ 'account.logout' | t }}</span>
   </a>
+{%- endcapture -%}
+
+<nav class="account-nav" aria-label="{{ 'account.title' | t }}">
+  <div class="links">
+    {{ tab_links }}
+  </div>
+  {{ logout_link }}
+  <details class="more">
+    <summary ui-button data-variant="ghost" data-size="md" as-icon aria-label="{{ 'general.show_more' | t }}">
+      {% render 'ui-icon', name: 'more_horiz' %}
+    </summary>
+    <div class="menu">
+      {{ tab_links }}
+      {{ logout_link }}
+    </div>
+  </details>
 </nav>
