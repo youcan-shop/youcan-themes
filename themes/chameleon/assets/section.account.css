@@ -414,6 +414,10 @@ html:has([section="account"] ui-drawer > .drawer-content[data-state="open"]) {
   ui-drawer > .drawer-trigger:has(+ .drawer-content[data-state="open"]) {
     scale: none;
     transition: none;
+
+    &[data-variant="tertiary"] {
+      background-color: var(--color-surface-container-high);
+    }
   }
 
   ui-drawer .drawer-content {
@@ -481,7 +485,7 @@ html:has([section="account"] ui-drawer > .drawer-content[data-state="open"]) {
       background-color: transparent;
       transition: background-color var(--transition-standard-default-effects);
 
-      &:hover {
+      &:hover:not(:has(+ .drawer-content[data-state="open"])) {
         background-color: var(--color-surface-container-low);
       }
     }

@@ -5,6 +5,11 @@
   assign add_title = 'account.address.add' | t
   assign edit_title = 'account.address.edit' | t
   assign save_label = 'account.save' | t
+
+  assign first_address = true
+  for address in customer.addresses
+    assign first_address = false
+  endfor
 -%}
 
 <div section="account">
@@ -38,7 +43,7 @@
               </div>
               <div class="main">
                 {% render 'misc-form-errors', form: form %}
-                {% render 'misc-address-form', address: customer.new_address %}
+                {% render 'misc-address-form', address: customer.new_address, force_default: first_address %}
               </div>
               <div class="footer">
                 <button type="submit" ui-button data-variant="primary" data-size="md">

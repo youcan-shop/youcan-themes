@@ -72,7 +72,12 @@
     </div>
 
     <label class="field-checkbox">
-      <input type="checkbox" name="default" value="1" {% if address.default %}checked{% endif %}>
+      {% if force_default or address.default %}
+        <input type="hidden" name="default" value="1">
+        <input type="checkbox" checked disabled>
+      {% else %}
+        <input type="checkbox" name="default" value="1" {% if address.default %}checked{% endif %}>
+      {% endif %}
       <span>{{ 'account.address.set_default' | t }}</span>
     </label>
   </div>
