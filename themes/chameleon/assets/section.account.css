@@ -211,6 +211,10 @@
   }
 }
 
+html:has([section="account"] ui-drawer > .drawer-content[data-state="open"]) {
+  overflow: hidden;
+}
+
 [layout="main"] > :has([section="account"] > .account-shell) {
   flex: 1;
   display: grid;
@@ -249,7 +253,7 @@
     display: grid;
     align-items: stretch;
     gap: var(--spacing-12);
-    margin-block-start: var(--spacing-40);
+    margin-block: var(--spacing-32);
     grid-template-columns: 260px minmax(0, 1fr);
   }
 
@@ -407,7 +411,14 @@
     }
   }
 
+  ui-drawer > .drawer-trigger:has(+ .drawer-content[data-state="open"]) {
+    scale: none;
+    transition: none;
+  }
+
   ui-drawer .drawer-content {
+    max-height: calc(100dvh - var(--preview-bar-height, 0px) - var(--spacing-24)) !important;
+
     & > form {
       flex: 1;
       min-height: 0;
