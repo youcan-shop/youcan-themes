@@ -491,6 +491,7 @@ class CartSummary extends HTMLElement {
     this.subtotal = this.querySelector('[ui-summary-box="subtotal"]');
     this.couponCode = this.querySelector('[ui-summary-box="coupon-code"]');
     this.discount = this.querySelector('[ui-summary-box="discount"]');
+    this.discountValue = this.querySelector('[ui-summary-box="discount-value"]');
     this.removeCouponButton = this.querySelector('[ui-summary-box="remove-coupon"]');
 
     if (this.couponForm) {
@@ -569,14 +570,13 @@ class CartSummary extends HTMLElement {
   }
 
   updateCoupon(coupon, discountedPrice) {
-    if (!this.couponForm) return;
-
     if (!coupon) {
       this.setShowCouponInSummary(false);
 
       return;
     }
 
+    if (this.discountValue) this.discountValue.textContent = this.getFormattedDiscountValue(coupon, discountedPrice);
     if (this.couponCode) this.couponCode.textContent = coupon.code;
 
     this.setShowCouponInSummary(true);
