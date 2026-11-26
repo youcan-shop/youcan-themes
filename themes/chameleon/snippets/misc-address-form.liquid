@@ -1,0 +1,85 @@
+{{ 'misc.address-fields.js' | asset_url | script_tag_deferred }}
+
+{%- liquid
+  assign uid = uid | default: address.id | default: 'new'
+  assign address_phone_label = 'account.address.phone' | t
+  assign address_phone_placeholder = 'placeholders.phone' | t
+-%}
+
+<ui-address-fields data-country="{{ address.country_code | escape }}" data-region="{{ address.province | escape }}">
+  <div class="fields">
+    <div class="field-grid">
+      <div class="field">
+        <label for="address-{{ uid }}-first_name">{{ 'account.address.first_name' | t }}</label>
+        <input id="address-{{ uid }}-first_name" type="text" name="first_name" value="{{ address.first_name | escape }}" placeholder="{{ 'placeholders.first_name' | t }}" autocomplete="given-name" required>
+      </div>
+      <div class="field">
+        <label for="address-{{ uid }}-last_name">{{ 'account.address.last_name' | t }}</label>
+        <input id="address-{{ uid }}-last_name" type="text" name="last_name" value="{{ address.last_name | escape }}" placeholder="{{ 'placeholders.last_name' | t }}" autocomplete="family-name" required>
+      </div>
+    </div>
+
+    {% render 'misc-phone-validation',
+      name: 'phone',
+      label: address_phone_label,
+      placeholder: address_phone_placeholder,
+      value: address.phone,
+      required: true,
+      standalone: true
+    %}
+
+    <div class="field">
+      <label for="address-{{ uid }}-first_line">{{ 'account.address.address1' | t }}</label>
+      <input id="address-{{ uid }}-first_line" type="text" name="first_line" value="{{ address.address1 | escape }}" placeholder="{{ 'placeholders.address1' | t }}" autocomplete="address-line1" required>
+    </div>
+    <div class="field">
+      <label for="address-{{ uid }}-second_line">{{ 'account.address.address2' | t }}</label>
+      <input id="address-{{ uid }}-second_line" type="text" name="second_line" value="{{ address.address2 | escape }}" placeholder="{{ 'placeholders.address2' | t }}" autocomplete="address-line2">
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label for="address-{{ uid }}-country_code">{{ 'account.address.country' | t }}</label>
+        <select id="address-{{ uid }}-country_code" name="country_code" autocomplete="country" data-address-country required>
+          {% if address.country_code != blank %}
+            <option value="{{ address.country_code | escape }}" selected>{{ address.country | default: address.country_code | escape }}</option>
+          {% endif %}
+        </select>
+      </div>
+      <div class="field" data-address-region-field>
+        <label for="address-{{ uid }}-region">{{ 'account.address.region' | t }}</label>
+        <select id="address-{{ uid }}-region" name="region" autocomplete="address-level1" data-address-region>
+          {% if address.province != blank %}
+            <option value="{{ address.province | escape }}" selected>{{ address.province | escape }}</option>
+          {% endif %}
+        </select>
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field">
+        <label for="address-{{ uid }}-city">{{ 'account.address.city' | t }}</label>
+        <input id="address-{{ uid }}-city" type="text" name="city" value="{{ address.city | escape }}" placeholder="{{ 'placeholders.city' | t }}" autocomplete="address-level2" required>
+      </div>
+      <div class="field">
+        <label for="address-{{ uid }}-zip_code">{{ 'account.address.zip' | t }}</label>
+        <input id="address-{{ uid }}-zip_code" type="text" name="zip_code" value="{{ address.zip | escape }}" placeholder="{{ 'placeholders.zip' | t }}" autocomplete="postal-code" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="address-{{ uid }}-company">{{ 'account.address.company' | t }}</label>
+      <input id="address-{{ uid }}-company" type="text" name="company" value="{{ address.company | escape }}" placeholder="{{ 'placeholders.company' | t }}" autocomplete="organization">
+    </div>
+
+    <label class="field-checkbox">
+      {% if force_default or address.default %}
+        <input type="hidden" name="default" value="1">
+        <input type="checkbox" checked disabled>
+      {% else %}
+        <input type="checkbox" name="default" value="1" {% if address.default %}checked{% endif %}>
+      {% endif %}
+      <span>{{ 'account.address.set_default' | t }}</span>
+    </label>
+  </div>
+</ui-address-fields>

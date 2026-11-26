@@ -3,10 +3,22 @@
 {{ 'https://unpkg.com/libphonenumber-js@1.12.27/bundle/libphonenumber-min.js' | script_tag_deferred }}
 {{ 'misc.phone-validation.js' | asset_url | script_tag_deferred }}
 
-<ui-phone-validation>
-  <label ui-express-checkout-field>
-    <input type="hidden" name="{{ field.name }}" ui-phone-hidden-input>
-    <span ui-express-checkout-label>{{ field.display_name }}</span>
+
+{% assign phone_name = name | default: field.name %}
+{% assign phone_label = label | default: field.display_name %}
+{% assign phone_type = type | default: field.type %}
+{% if standalone %}
+  {% assign phone_type = type | default: 'tel' %}
+{% endif %}
+{% assign phone_placeholder = placeholder | default: field.placeholder %}
+{% assign phone_required = required | default: field.required %}
+
+<ui-phone-validation{% if value %} data-initial-value="{{ value | escape }}"{% endif %}>
+  <label {% if standalone %}ui-account-phone-field{% else %}ui-express-checkout-field{% endif %}>
+    <input type="hidden" name="{{ phone_name }}" ui-phone-hidden-input>
+    {% if standalone %}
+      {% if phone_label %}<span ui-account-phone-label>{{ phone_label }}</span>{% endif %}
+    {% else %}<span ui-express-checkout-label>{{ phone_label }}</span>{% endif %}
     <div ui-phone-input-wrapper>
       <div ui-phone-countries-wrapper>
         <span ui-phone-displayed-country-code></span>
@@ -17,13 +29,13 @@
         ></select>
       </div>
       <input
-        type="{{ field.type }}"
+        type="{{ phone_type }}"
         inputmode="tel"
         name="phone_number"
-        placeholder="{{ field.placeholder }}"
+        placeholder="{{ phone_placeholder }}"
         autocomplete="tel-national"
         ui-phone-number
-        {% if field.required %}
+        {% if phone_required %}
           required
         {% endif %}
       >

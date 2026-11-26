@@ -1,0 +1,136 @@
+{{ 'section.account.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign orders_url = routes.account_url | default: '/account' | append: '#orders'
+
+  assign order_title = 'account.order.title' | t | replace: '[name]', order.name
+  assign order_date = order.created_at | date: '%d/%m/%Y'
+  assign placed_on = 'account.order.placed_on' | t | replace: '[date]', order_date
+
+  if order.shippingCost == 0 or order.shippingCost == null
+    assign shipping_value = 'order.free' | t
+  else
+    assign shipping_value = order.shippingCost | money
+  endif
+-%}
+
+<div section="account">
+  <a href="{{ orders_url }}" class="order-back" ui-button data-variant="ghost" data-size="sm">
+    {% render 'ui-icon', name: 'arrow_back', flip_in_rtl: true %}
+    <span>{{ 'account.back_to_orders' | t }}</span>
+  </a>
+
+  <div class="account-head">
+    <div class="titles">
+      <h1 class="title">{{ order_title }}</h1>
+      <p class="eyebrow">{{ placed_on }}</p>
+    </div>
+    {% render 'const-payment-status', status: order.paymentStatusSlug %}
+  </div>
+
+  <div class="account-layout">
+    <div class="account-side">
+      <div class="card">
+        <div class="card-row">
+          <h2 class="title">{{ 'account.order.shipping_address' | t }}</h2>
+        </div>
+        {% if order.shipping_address %}
+          {% render 'misc-address-summary', address: order.shipping_address %}
+        {% else %}
+          <p class="info">{{ 'account.no_address' | t }}</p>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <div class="card-row">
+          <h2 class="title">{{ 'order.payment' | t }}</h2>
+        </div>
+        <dl>
+          <dt>{{ 'order.payment_method.label' | t }}</dt>
+          <dd>{% render 'const-payment-gateway', type: order.gatewayType %}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="account-main">
+      <div class="card order-card">
+        <div class="card-row">
+          <h2 class="title">{{ 'order.products' | t }}</h2>
+        </div>
+        {% if order.order_variants.size %}
+          <div class="order-info">
+            {% for item in order.order_variants %}
+              {%- liquid
+                assign unit_price = item.price | default: 0 | money
+                assign line_total = item.price | default: 0 | times: item.quantity | money
+              -%}
+              <div class="product">
+                <div class="image">
+                  {% if item.image %}
+                    <img
+                      src="{{ item.image }}"
+                      alt="{{ item.name | escape }}"
+                      height="100%"
+                      width="100%"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'ui-icon', name: 'image', filled: true %}
+                  {% endif %}
+                </div>
+                <div class="content">
+                  <a class="title" href="/products/{{ item.slug }}">{{ item.name }}</a>
+                  {% unless item.variations == null or item.variations.default %}
+                    <div class="variants">
+                      {% for variation in item.variations %}
+                        <span class="variant">{{ variation[1] }}</span>
+                      {% endfor %}
+                    </div>
+                  {% endunless %}
+                  <span class="count" dir="ltr">{{ unit_price }} × {{ item.quantity }}</span>
+                </div>
+                <div class="price">
+                  <span class="total">{{ line_total }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% render 'misc-order-bundles', bundles: order.bundles %}
+      </div>
+
+      <div class="card">
+        <div class="card-row">
+          <h2 class="title">{{ 'order.order_summary' | t }}</h2>
+        </div>
+        <dl class="order-totals">
+          <dt>{{ 'order.subtotal' | t }}</dt>
+          <dd>{{ order.sub_total | default: 0 | money }}</dd>
+          {% if order.coupon %}
+            <dt>{{ 'order.discount_amount' | t }}</dt>
+            <dd>{% render 'const-discount-value', coupon: order.coupon %}</dd>
+          {% endif %}
+          <dt>{{ 'order.shipping' | t }}</dt>
+          <dd>{{ shipping_value }}</dd>
+          {% if order.vat and order.vat != 0 %}
+            <dt>
+              {{ 'cart.page.summary.vat' | t }}
+              <span dir="ltr">({{ order.vat | times: 100 | append: '%' }})</span>
+            </dt>
+            <dd>{{ order.total_tax_amount | default: 0 | money }}</dd>
+          {% endif %}
+          <dt>{{ 'order.total' | t }}</dt>
+          <dd>{{ order.total | default: 0 | money }}</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- schema -%}
+{
+  "label": "t:sections.customer_order.label",
+  "templates": ["customer-order"],
+  "limit": 1
+}
+{%- endschema -%}

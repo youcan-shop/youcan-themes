@@ -1,0 +1,134 @@
+if (!customElements.get("ui-account-view")) {
+  class AccountView extends HTMLElement {
+    connectedCallback() {
+      if (window.location.pathname.includes("/account/recover")) {
+        this.dataset.view = "recover";
+      }
+
+      const current = this.dataset.view;
+      const target = [...this.querySelectorAll("[data-auth-view]")].find(
+        (view) =>
+          view.dataset.authView !== current &&
+          view.querySelector('[data-form-has-errors], [role="status"]'),
+      );
+      if (target) this.dataset.view = target.dataset.authView;
+
+      this.querySelectorAll("[data-auth-switch]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          this.dataset.view = link.dataset.authSwitch;
+          this.querySelector(
+            `[data-auth-view="${link.dataset.authSwitch}"] input:not([type="hidden"], [tabindex="-1"])`,
+          )?.focus();
+          history.replaceState(null, "", link.href);
+        });
+      });
+    }
+  }
+
+  customElements.define("ui-account-view", AccountView);
+}
+
+if (!customElements.get("ui-account-tabs")) {
+  class AccountTabs extends HTMLElement {
+    connectedCallback() {
+      this.links = [...this.querySelectorAll("[data-account-tab]")];
+
+      this.links.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return;
+          event.preventDefault();
+          this.show(link.dataset.accountTab);
+          link.closest("details")?.removeAttribute("open");
+          history.replaceState(null, "", link.getAttribute("href"));
+        });
+      });
+
+      window.addEventListener("hashchange", () => this.show(this.fromLocation()));
+      this.show(this.fromLocation());
+    }
+
+    fromLocation() {
+      if (window.location.hash === "#account") return "account";
+      if (window.location.hash === "#orders") return "orders";
+      return new URLSearchParams(window.location.search).has("page") ? "orders" : "account";
+    }
+
+    show(tab) {
+      this.dataset.tab = tab;
+      this.links.forEach((link) => {
+        if (link.dataset.accountTab === tab) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    }
+  }
+
+  customElements.define("ui-account-tabs", AccountTabs);
+}
+
+if (!window.uiAccountFormsReady) {
+  window.uiAccountFormsReady = true;
+
+  const revealFormFeedback = () => {
+    const feedback = document.querySelector(
+      '[data-form-has-errors], .drawer-content [role="status"]',
+    );
+    if (!feedback) return;
+
+    feedback.closest(".drawer-content")?.setAttribute("data-state", "open");
+    requestAnimationFrame(() => feedback.focus());
+  };
+
+  document.addEventListener("click", (event) => {
+    document.querySelectorAll(".account-nav details[open]").forEach((menu) => {
+      if (!menu.contains(event.target)) menu.removeAttribute("open");
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const toggle = event.target.closest?.(".password-toggle");
+    const input = toggle?.closest(".password-field")?.querySelector("input");
+    if (!input) return;
+
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    toggle.setAttribute("aria-pressed", String(show));
+    toggle.setAttribute("aria-label", show ? toggle.dataset.labelHide : toggle.dataset.labelShow);
+    const icon = toggle.querySelector("[ui-icon]");
+    if (icon) icon.textContent = show ? "visibility_off" : "visibility";
+  });
+
+  document.addEventListener("submit", (event) => {
+    const trigger = event.submitter?.closest("[data-confirm-message]");
+    if (trigger && !window.confirm(trigger.dataset.confirmMessage)) event.preventDefault();
+  });
+
+  document.addEventListener("submit", (event) => {
+    if (event.target.querySelector?.('input[name="form_type"][value="customer_login"]')) {
+      try {
+        sessionStorage.setItem("account-login-redirect", "1");
+      } catch (error) {}
+    }
+  });
+
+  document.addEventListener("submit", (event) => {
+    const form = event.target;
+    if (!form.closest?.('[section="account"]')) return;
+
+    if (form.closest(".profile-edit")) {
+      form.querySelectorAll(".password-field input").forEach((input) => {
+        if (input.name !== "current_password" && input.value === "") input.disabled = true;
+      });
+    }
+
+    const hidden = form.querySelector("input[ui-phone-hidden-input]");
+    const typed = form.querySelector("input[ui-phone-number]");
+    if (hidden && typed && hidden.value === "" && typed.value !== "") hidden.disabled = true;
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", revealFormFeedback);
+  } else {
+    revealFormFeedback();
+  }
+}

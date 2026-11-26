@@ -1,0 +1,45 @@
+<div class="card address-card">
+  {% if address.default %}
+    <span class="tag">{{ 'account.address.default' | t }}</span>
+  {% endif %}
+  {% render 'misc-address-summary', address: address %}
+  <div class="address-actions">
+    <ui-drawer>
+      <button type="button" class="drawer-trigger" ui-button data-variant="tertiary" data-size="sm">
+        {% render 'ui-icon', name: 'edit' %}
+        <span>{{ 'account.edit' | t }}</span>
+      </button>
+      <div class="drawer-content" data-state="closed">
+        {% form 'customer_address', address %}
+          <div class="header">
+            <h2 class="title">{{ edit_title }}</h2>
+            <button type="button" ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="close">
+              {% render 'ui-icon', name: 'close' %}
+            </button>
+          </div>
+          <div class="main">
+            {% render 'misc-form-errors', form: form %}
+            {% render 'misc-address-form', address: address, uid: address.id %}
+          </div>
+          <div class="footer">
+            <button type="submit" ui-button data-variant="primary" data-size="md">
+              {{ save_label }}
+            </button>
+          </div>
+        {% endform %}
+      </div>
+    </ui-drawer>
+    {% form 'customer_address_remove', address %}
+      <button
+        type="submit"
+        ui-button
+        data-variant="tertiary"
+        data-size="sm"
+        data-confirm-message="{{ confirm_remove | escape }}"
+      >
+        {% render 'ui-icon', name: 'delete' %}
+        <span>{{ 'account.address.remove' | t }}</span>
+      </button>
+    {% endform %}
+  </div>
+</div>

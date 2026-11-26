@@ -1,0 +1,69 @@
+{{ 'section.account.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign confirm_remove = 'account.address.confirm_remove' | t
+  assign add_title = 'account.address.add' | t
+  assign edit_title = 'account.address.edit' | t
+  assign save_label = 'account.save' | t
+
+  assign first_address = true
+  for address in customer.addresses
+    assign first_address = false
+  endfor
+-%}
+
+<div section="account">
+  <div class="account-shell">
+    {% render 'misc-account-nav', current: 'addresses' %}
+
+    <div class="account-panel">
+      <div class="addresses">
+        {% for address in customer.addresses %}
+          {% if address.default %}
+            {% render 'misc-address-card', address: address, confirm_remove: confirm_remove, edit_title: edit_title, save_label: save_label %}
+          {% endif %}
+        {% endfor %}
+        {% for address in customer.addresses %}
+          {% unless address.default %}
+            {% render 'misc-address-card', address: address, confirm_remove: confirm_remove, edit_title: edit_title, save_label: save_label %}
+          {% endunless %}
+        {% endfor %}
+        <ui-drawer class="address-new">
+          <button type="button" class="drawer-trigger">
+            {% render 'ui-icon', name: 'add' %}
+            <span>{{ add_title }}</span>
+          </button>
+          <div class="drawer-content" data-state="closed">
+            {% form 'customer_address', customer.new_address %}
+              <div class="header">
+                <h2 class="title">{{ add_title }}</h2>
+                <button type="button" ui-button data-variant="tertiary" data-size="sm" as-icon aria-label="close">
+                  {% render 'ui-icon', name: 'close' %}
+                </button>
+              </div>
+              <div class="main">
+                {% render 'misc-form-errors', form: form %}
+                {% render 'misc-address-form', address: customer.new_address, force_default: first_address %}
+              </div>
+              <div class="footer">
+                <button type="submit" ui-button data-variant="primary" data-size="md">
+                  {{ save_label }}
+                </button>
+              </div>
+            {% endform %}
+          </div>
+        </ui-drawer>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ 'misc.account.js' | asset_url | script_tag_deferred }}
+
+{%- schema -%}
+{
+  "label": "t:sections.customer_addresses.label",
+  "templates": ["customer-addresses"],
+  "limit": 1
+}
+{%- endschema -%}

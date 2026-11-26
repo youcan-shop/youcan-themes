@@ -2,6 +2,16 @@
 {{ 'ui.search.css' | asset_url | stylesheet_tag }}
 {{ 'ui.drawer.js' | asset_url | script_tag_deferred }}
 
+{%- liquid
+  assign account_url = routes.account_url | default: '/account'
+
+  if customer
+    assign account_label = 'account.title' | t
+  else
+    assign account_label = 'account.login.title' | t
+  endif
+-%}
+
 <header
   layout="header"
   {% if section.settings.header_sticky %}
@@ -50,6 +60,13 @@
     </a>
   </div>
   <ul class="actions">
+    {% if store.customer_accounts_enabled %}
+      <li data-account>
+        <a class="action" href="{{ account_url }}" aria-label="{{ account_label }}">
+          {% render 'ui-icon', name: 'person' %}
+        </a>
+      </li>
+    {% endif %}
     <li>
       {% render 'ui-search' %}
     </li>

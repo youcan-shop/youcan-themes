@@ -1,0 +1,16 @@
+
+{% if form.errors %}
+  <div data-form-has-errors role="alert" tabindex="-1">
+    <div class="error">
+      {% render 'ui-icon', name: 'error', filled: true %}
+    </div>
+    <div class="form-errors">
+      <ul>
+        {% for error in form.errors %}
+          {% assign message = error[1] %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}

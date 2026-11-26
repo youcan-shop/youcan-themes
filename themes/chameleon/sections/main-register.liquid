@@ -1,0 +1,138 @@
+{{ 'section.account.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign phone_label = 'account.address.phone' | t
+  assign phone_placeholder = 'placeholders.phone' | t
+
+  assign heading_fallback = 'account.login.create' | t
+  assign register_heading = section.settings.heading | default: heading_fallback
+  assign register_text = section.settings.text | default: ''
+-%}
+
+<div section="auth">
+  <div class="card" data-wide>
+    <div class="card-head">
+      <h1 class="title">{{ register_heading }}</h1>
+      {% if register_text != '' %}
+        <p class="description">{{ register_text }}</p>
+      {% endif %}
+    </div>
+    {% form 'create_customer' %}
+      {% render 'misc-form-errors', form: form %}
+      <div class="fields">
+        <div class="field-grid">
+          <div class="field">
+            <label for="register-first-name">{{ 'account.address.first_name' | t }}</label>
+            <input
+              id="register-first-name"
+              type="text"
+              name="first_name"
+              value="{{ form.first_name | escape }}"
+              placeholder="{{ 'placeholders.first_name' | t }}"
+              autocomplete="given-name"
+            >
+          </div>
+          <div class="field">
+            <label for="register-last-name">{{ 'account.address.last_name' | t }}</label>
+            <input
+              id="register-last-name"
+              type="text"
+              name="last_name"
+              value="{{ form.last_name | escape }}"
+              placeholder="{{ 'placeholders.last_name' | t }}"
+              autocomplete="family-name"
+            >
+          </div>
+        </div>
+        <div class="field">
+          <label for="register-email">{{ 'account.email' | t }}</label>
+          <input
+            id="register-email"
+            type="email"
+            name="email"
+            value="{{ form.email | escape }}"
+            placeholder="{{ 'placeholders.email' | t }}"
+            autocomplete="email"
+            required
+          >
+        </div>
+        {% if section.settings.show_phone %}
+          {% render 'misc-phone-validation',
+            name: 'phone',
+            label: phone_label,
+            placeholder: phone_placeholder,
+            standalone: true
+          %}
+        {% endif %}
+        <div class="field">
+          <label for="register-password">{{ 'account.password' | t }}</label>
+          <div class="password-field">
+            <input
+              id="register-password"
+              type="password"
+              name="password"
+              minlength="6"
+              maxlength="72"
+              placeholder="{{ 'placeholders.new_password' | t }}"
+              autocomplete="new-password"
+              required
+            >
+            {% render 'misc-password-toggle' %}
+          </div>
+          <span class="hint">{{ 'account.password_hint' | t }}</span>
+        </div>
+        <div class="field">
+          <label for="register-password-confirmation">{{ 'account.password_confirmation' | t }}</label>
+          <div class="password-field">
+            <input
+              id="register-password-confirmation"
+              type="password"
+              name="password_confirmation"
+              minlength="6"
+              maxlength="72"
+              placeholder="{{ 'placeholders.password_confirmation' | t }}"
+              autocomplete="new-password"
+              required
+            >
+            {% render 'misc-password-toggle' %}
+          </div>
+        </div>
+      </div>
+      <button type="submit" ui-button data-variant="primary" data-size="md">
+        {{ 'account.register.submit' | t }}
+      </button>
+    {% endform %}
+    <p class="card-foot">
+      {{ 'account.register.has_account' | t }}
+      <a href="{{ routes.account_login_url | default: '/account/login' }}" class="link">{{ 'account.register.login' | t }}</a>
+    </p>
+  </div>
+</div>
+
+{{ 'misc.account.js' | asset_url | script_tag_deferred }}
+
+{%- schema -%}
+{
+  "label": "t:sections.customer_register.label",
+  "templates": ["customer-register"],
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.customer_register.heading"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "t:sections.customer_register.text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_phone",
+      "label": "t:sections.customer_register.show_phone",
+      "default": true
+    }
+  ]
+}
+{%- endschema -%}
