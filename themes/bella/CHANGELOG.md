@@ -1,5 +1,11 @@
 # bella
 
+## 1.4.3
+
+### Patch Changes
+
+- 86a345c: Kinder, Bella > show the coupon discount above the estimated total on the cart page
+
 ## 1.4.2
 
 ### Patch Changes
