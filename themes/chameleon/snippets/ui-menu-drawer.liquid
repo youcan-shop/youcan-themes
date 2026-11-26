@@ -46,16 +46,18 @@
           </li>
         {% endfor %}
       </ul>
-      <a
-        href="{{ account_url }}"
-        ui-button
-        data-variant="tertiary"
-        data-size="md"
-        aria-label="{{ account_label }}"
-      >
-        {% render 'ui-icon', name: 'person' %}
-        <span>{{ account_label }}</span>
-      </a>
+      {% if store.customer_accounts_enabled %}
+        <a
+          href="{{ account_url }}"
+          ui-button
+          data-variant="tertiary"
+          data-size="md"
+          aria-label="{{ account_label }}"
+        >
+          {% render 'ui-icon', name: 'person' %}
+          <span>{{ account_label }}</span>
+        </a>
+      {% endif %}
     </div>
   </div>
 </ui-drawer>

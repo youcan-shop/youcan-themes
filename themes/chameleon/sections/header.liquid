@@ -60,11 +60,13 @@
     </a>
   </div>
   <ul class="actions">
-    <li data-account>
-      <a class="action" href="{{ account_url }}" aria-label="{{ account_label }}">
-        {% render 'ui-icon', name: 'person' %}
-      </a>
-    </li>
+    {% if store.customer_accounts_enabled %}
+      <li data-account>
+        <a class="action" href="{{ account_url }}" aria-label="{{ account_label }}">
+          {% render 'ui-icon', name: 'person' %}
+        </a>
+      </li>
+    {% endif %}
     <li>
       {% render 'ui-search' %}
     </li>
