@@ -35,6 +35,8 @@ if (!customElements.get("ui-comparison-slider")) {
       if (this.isVertical && event.pointerType === "touch" && !this.handle.contains(event.target)) return;
 
       this.pointerId = event.pointerId;
+      this.rect = this.getBoundingClientRect();
+      this.rtl = this.isRtl;
       this.setPointerCapture(event.pointerId);
       this.moveTo(event);
     }
@@ -58,6 +60,8 @@ if (!customElements.get("ui-comparison-slider")) {
       const positions = {
         [next]: this.position + step,
         [previous]: this.position - step,
+        PageUp: this.position + 10,
+        PageDown: this.position - 10,
         Home: 0,
         End: 100,
       };
@@ -69,16 +73,17 @@ if (!customElements.get("ui-comparison-slider")) {
     }
 
     moveTo(event) {
-      const rect = this.getBoundingClientRect();
+      const { rect } = this;
       const ratio = this.isVertical ? (event.clientY - rect.top) / rect.height : (event.clientX - rect.left) / rect.width;
 
-      this.setPosition((this.isRtl && !this.isVertical ? 1 - ratio : ratio) * 100);
+      this.setPosition((this.rtl && !this.isVertical ? 1 - ratio : ratio) * 100);
     }
 
     setPosition(value) {
       this.position = Math.min(100, Math.max(0, value));
       this.style.setProperty("--position", `${this.position}%`);
       this.handle.setAttribute("aria-valuenow", Math.round(this.position));
+      this.handle.setAttribute("aria-valuetext", `${Math.round(this.position)}%`);
     }
   }
 

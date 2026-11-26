@@ -50,6 +50,7 @@
           {% endunless %}
         >
           {% for block in section.blocks %}
+            {% assign alt_fallback = 'accessibility.comparison_' | append: block.type | t %}
             <div class="layer" data-layer="{{ block.type }}" {{ block.youcan_attributes }}>
               {% if block.settings.desktop_image.src or block.settings.mobile_image.src %}
                 <picture>
@@ -63,7 +64,7 @@
                     src="{{ block.settings.desktop_image.src | default: block.settings.mobile_image.src }}"
                     data-focal-point
                     style="{% render 'misc.focal-point', desktop: block.settings.desktop_image, mobile: block.settings.mobile_image %}"
-                    alt="{{ block.settings.heading | default: block.type }}"
+                    alt="{{ block.settings.heading | default: alt_fallback }}"
                     height="100%"
                     width="100%"
                     draggable="false"
@@ -79,7 +80,14 @@
                 <picture>{{ placeholder_name | placeholder_svg_tag: 'placeholder-hero' }}</picture>
               {% endif %}
               {% if block.settings.heading != blank %}
-                <span ui-slot="badge" data-variant="filled" data-size="md" data-color="primary" class="label">
+                <span
+                  ui-slot="badge"
+                  data-variant="filled"
+                  data-size="md"
+                  data-color="primary"
+                  class="label"
+                  aria-hidden="true"
+                >
                   {{- block.settings.heading -}}
                 </span>
               {% endif %}
@@ -95,6 +103,7 @@
               aria-valuemin="0"
               aria-valuemax="100"
               aria-valuenow="50"
+              aria-valuetext="50%"
             >
               <span class="knob">
                 {% if section.settings.direction == 'vertical' %}
@@ -111,7 +120,7 @@
       {% endif %}
       {% if product != blank %}
         <div class="product">
-          <a class="media" href="{{ product.url }}">
+          <a class="media" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
             {% if product.preview_image %}
               <img
                 src="{{ product.preview_image.small }}"
