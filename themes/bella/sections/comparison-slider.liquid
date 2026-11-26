@@ -1,0 +1,343 @@
+{{ 'section.comparison-slider.css' | asset_url | stylesheet_tag }}
+{{ 'section.comparison-slider.js' | asset_url | script_tag_deferred }}
+
+{% assign product = section.settings.product %}
+{% assign default_variant = product.selected_or_first_available_variant %}
+{% assign price = default_variant.price | default: product.price %}
+{% assign compare_at_price = default_variant.compare_at_price | default: product.compare_at_price %}
+
+<div
+  ui-section="comparison-slider"
+  style="
+    --top-spacing: {{ section.settings.top_spacing }}px;
+    --bottom-spacing: {{ section.settings.bottom_spacing }}px;
+    {% if section.settings.override_global_colors %}
+      --brand-lightness: {{ section.settings.main_color.lightness | divided_by: 100.0 }};
+      --brand-chroma: {{ section.settings.main_color.chroma }};
+      --brand-hue: {{ section.settings.main_color.oklch_hue }};
+    {% endif %}
+  "
+  {% if section.settings.override_global_colors %}
+    data-scoped-color
+    data-intensity="{{ section.settings.color_intensity }}"
+  {% endif %}
+>
+  {% if section.settings.subheading != blank or section.settings.heading != blank or section.settings.description != blank %}
+    <div ui-slot="head">
+      {% if section.settings.subheading != blank %}
+        <p class="subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h1 class="heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% if section.blocks.size > 0 or product != blank %}
+    <div class="body">
+      {% if section.blocks.size > 0 %}
+        <ui-comparison-slider
+          class="comparison"
+          data-direction="{{ section.settings.direction }}"
+          data-height="{{ section.settings.image_height }}"
+          {% if section.blocks.size > 1 %}
+            data-compare
+          {% endif %}
+          {% unless section.settings.image_height == 'auto' %}
+            style="--height: {{ section.settings.image_height }}vh;"
+          {% endunless %}
+        >
+          {% for block in section.blocks %}
+            <div class="layer" data-layer="{{ block.type }}" {{ block.youcan_attributes }}>
+              {% if block.settings.desktop_image.src or block.settings.mobile_image.src %}
+                <picture>
+                  {% if block.settings.mobile_image.src %}
+                    <source srcset="{{ block.settings.mobile_image.src }}" media="(max-width: 768px)">
+                  {% endif %}
+                  {% if block.settings.desktop_image.src %}
+                    <source srcset="{{ block.settings.desktop_image.src }}" media="(min-width: 769px)">
+                  {% endif %}
+                  <img
+                    src="{{ block.settings.desktop_image.src | default: block.settings.mobile_image.src }}"
+                    data-focal-point
+                    style="{% render 'misc.focal-point', desktop: block.settings.desktop_image, mobile: block.settings.mobile_image %}"
+                    alt="{{ block.settings.heading | default: block.type }}"
+                    height="100%"
+                    width="100%"
+                    draggable="false"
+                    loading="lazy"
+                  >
+                </picture>
+              {% else %}
+                {%- if block.type == 'before' -%}
+                  {%- assign placeholder_name = 'hero-1' -%}
+                {%- else -%}
+                  {%- assign placeholder_name = 'hero-2' -%}
+                {%- endif -%}
+                <picture>{{ placeholder_name | placeholder_svg_tag: 'placeholder-hero' }}</picture>
+              {% endif %}
+              {% if block.settings.heading != blank %}
+                <span ui-slot="badge" data-variant="filled" data-size="md" data-color="primary" class="label">
+                  {{- block.settings.heading -}}
+                </span>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% if section.blocks.size > 1 %}
+            <div
+              ui-comparison-slider="handle"
+              role="slider"
+              tabindex="0"
+              aria-label="{{ 'accessibility.comparison_slider' | t }}"
+              aria-orientation="{{ section.settings.direction }}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-valuenow="50"
+            >
+              <span class="knob">
+                {% if section.settings.direction == 'vertical' %}
+                  {% render 'misc.icon', name: 'hgi-arrow-up-01' %}
+                  {% render 'misc.icon', name: 'hgi-arrow-down-01' %}
+                {% else %}
+                  {% render 'misc.icon', name: 'hgi-arrow-left-01' %}
+                  {% render 'misc.icon', name: 'hgi-arrow-right-01' %}
+                {% endif %}
+              </span>
+            </div>
+          {% endif %}
+        </ui-comparison-slider>
+      {% endif %}
+      {% if product != blank %}
+        <div class="product">
+          <a class="media" href="{{ product.url }}">
+            {% if product.preview_image %}
+              <img
+                src="{{ product.preview_image.small }}"
+                alt="{{ product.name }}"
+                height="100%"
+                width="100%"
+                loading="lazy"
+              >
+            {% else %}
+              {% render 'misc.image-fallback', icon_size: 24 %}
+            {% endif %}
+          </a>
+          <div class="info">
+            <a class="title" ui-slot="link-button" data-variant="black" data-size="md" href="{{ product.url }}">
+              {{ product.name }}
+            </a>
+            <div class="price">
+              <span class="original-price">{{ price | default: 0 | money }}</span>
+              {% if compare_at_price %}
+                <s class="compare-at-price">{{ compare_at_price | money }}</s>
+              {% endif %}
+            </div>
+          </div>
+          <a
+            class="cta"
+            ui-slot="button"
+            data-variant="primary"
+            data-mode="filled"
+            data-size="lg"
+            href="{{ product.url }}"
+          >
+            {{ 'general.shop_now' | t }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "label": "t:sections.comparison_slider.label",
+  "templates": ["index", "product", "page"],
+  "limit": 3,
+  "max_blocks": 2,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:common.headers.colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "override_global_colors",
+      "label": "t:common.colors.override_global_colors",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "main_color",
+      "label": "t:common.colors.main_color",
+      "default": "#121212"
+    },
+    {
+      "type": "select",
+      "id": "color_intensity",
+      "label": "t:common.colors.color_intensity",
+      "options": [
+        { "label": "t:common.colors.options.as_solid_bg", "value": "as-solid-bg" },
+        { "label": "t:common.colors.options.as_light_bg", "value": "as-light-bg" },
+        { "label": "t:common.colors.options.as_foreground", "value": "as-foreground" }
+      ],
+      "default": "as-foreground"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.header"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "t:common.header.subheading",
+      "default": "t:sections.comparison_slider.default.subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:common.header.heading",
+      "default": "t:sections.comparison_slider.default.heading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "t:common.header.description",
+      "default": "t:sections.comparison_slider.default.description"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.layout"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "t:sections.comparison_slider.direction",
+      "options": [
+        { "label": "t:common.layout.orientation.horizontal", "value": "horizontal" },
+        { "label": "t:common.layout.orientation.vertical", "value": "vertical" }
+      ],
+      "default": "horizontal"
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "label": "t:common.globals.height",
+      "options": [
+        { "label": "t:common.layout.size.auto", "value": "auto" },
+        { "label": "t:common.layout.size.medium", "value": "55" },
+        { "label": "t:common.layout.size.large", "value": "70" }
+      ],
+      "default": "55"
+    },
+    {
+      "type": "header",
+      "content": "t:common.globals.product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:common.globals.product"
+    },
+    {
+      "type": "header",
+      "content": "t:common.headers.spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_spacing",
+      "label": "t:common.spacing.top_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "bottom_spacing",
+      "label": "t:common.spacing.bottom_spacing",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "before",
+      "label": "t:common.globals.image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:common.headers.image"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "t:common.globals.desktop_image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "t:common.globals.mobile_image"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.content"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:common.header.heading",
+          "default": "t:sections.comparison_slider.blocks.before.default.heading"
+        }
+      ]
+    },
+    {
+      "type": "after",
+      "label": "t:common.globals.image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:common.headers.image"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "t:common.globals.desktop_image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "t:common.globals.mobile_image"
+        },
+        {
+          "type": "header",
+          "content": "t:common.headers.content"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:common.header.heading",
+          "default": "t:sections.comparison_slider.blocks.after.default.heading"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.comparison_slider.label",
+      "blocks": [
+        { "type": "before" },
+        { "type": "after" }
+      ]
+    }
+  ]
+}
+{% endschema %}
