@@ -1,0 +1,95 @@
+{%- liquid
+  assign placeholder = block.settings.placeholder
+  if placeholder == blank
+    assign placeholder = 'newsletter.email' | t
+  endif
+  assign button_label = block.settings.button_label
+  if button_label == blank
+    assign button_label = 'newsletter.subscribe' | t
+  endif
+-%}
+
+<div class="email-signup{% if block.settings.button_inside %} email-signup--inside{% endif %}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% form 'customer', class: 'email-signup__form' %}
+    {% if form.posted_successfully %}
+      <p class="alert" role="status">
+        {% render 'icon', name: 'check-circle', px: 18 %}
+        {{ 'newsletter.success' | t }}
+      </p>
+    {% else %}
+      {% if form.errors %}
+        <p class="alert alert--error" role="alert">{{ form.errors | first | last }}</p>
+      {% endif %}
+      <div class="email-signup__field">
+        <label class="visually-hidden" for="email-{{ block.id }}">{{ 'newsletter.email' | t }}</label>
+        <input
+          class="input"
+          id="email-{{ block.id }}"
+          type="email"
+          name="email"
+          autocomplete="email"
+          placeholder="{{ placeholder | escape }}"
+          required
+        >
+        {% if block.settings.button_inside %}
+          <button class="button button--icon email-signup__submit" type="submit" aria-label="{{ button_label | escape }}">
+            {% render 'icon', name: 'mail', px: 18 %}
+          </button>
+        {% else %}
+          <button class="button button--{{ block.settings.button_style }}" type="submit">
+            {{ button_label | escape }}
+          </button>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endform %}
+</div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .email-signup { width: 100%; max-width: 480px; }
+  .layout-panel[style*="--align-items: center"] > .email-signup { margin-inline: auto; }
+  .email-signup__field { display: flex; gap: var(--space-xs); }
+  .email-signup__field .input { flex: 1; min-width: 0; }
+  .email-signup--inside .email-signup__field {
+    position: relative;
+    gap: 0;
+    padding: 4px;
+    border: 1px solid var(--color-input);
+    border-radius: var(--radius-input);
+    background-color: var(--color-background);
+  }
+  .email-signup--inside .email-signup__field:focus-within { border-color: var(--color-foreground); }
+  .email-signup--inside .input { min-height: 44px; padding-inline: 18px 8px; border: 0; background: none; }
+  .email-signup--inside .input:focus-visible { background: none; }
+  .email-signup__submit { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.email_signup",
+  "tag": null,
+  "settings": [
+    { "type": "text", "id": "placeholder", "label": "t:settings.placeholder" },
+    { "type": "checkbox", "id": "button_inside", "label": "t:settings.button_inside", "default": true },
+    { "type": "text", "id": "button_label", "label": "t:settings.button_label" },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:settings.button_style",
+      "options": [
+        { "value": "primary", "label": "t:options.primary" },
+        { "value": "secondary", "label": "t:options.secondary" }
+      ],
+      "default": "primary"
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.email_signup", "category": "t:categories.forms" }
+  ]
+}
+{% endschema %}

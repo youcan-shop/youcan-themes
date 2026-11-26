@@ -1,0 +1,67 @@
+<div class="icon-block" style="--icon-size: {{ block.settings.size }}px;" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% render 'icon', name: block.settings.icon, px: block.settings.size %}
+  {% if block.settings.label != blank %}
+    <span class="icon-block__label">{{ block.settings.label }}</span>
+  {% endif %}
+</div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .icon-block { display: inline-flex; align-items: center; gap: var(--space-xs); }
+  .icon-block .icon { flex-shrink: 0; }
+  .icon-block__label { font-size: var(--text-sm); font-weight: 500; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:settings.icon",
+      "options": [
+        { "value": "check-circle", "label": "t:options.icons.check" },
+        { "value": "truck", "label": "t:options.icons.truck" },
+        { "value": "return", "label": "t:options.icons.return" },
+        { "value": "shield", "label": "t:options.icons.shield" },
+        { "value": "lock", "label": "t:options.icons.lock" },
+        { "value": "gift", "label": "t:options.icons.gift" },
+        { "value": "heart", "label": "t:options.icons.heart" },
+        { "value": "star", "label": "t:options.icons.star" },
+        { "value": "sparkle", "label": "t:options.icons.sparkle" },
+        { "value": "leaf", "label": "t:options.icons.leaf" },
+        { "value": "tag", "label": "t:options.icons.tag" },
+        { "value": "clock", "label": "t:options.icons.clock" },
+        { "value": "chat", "label": "t:options.icons.chat" },
+        { "value": "mail", "label": "t:options.icons.mail" },
+        { "value": "phone", "label": "t:options.icons.phone" },
+        { "value": "map-pin", "label": "t:options.icons.map_pin" },
+        { "value": "user", "label": "t:options.icons.user" },
+        { "value": "cart", "label": "t:options.icons.cart" },
+        { "value": "info", "label": "t:options.icons.info" }
+      ],
+      "default": "check-circle"
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "t:settings.size",
+      "min": 16,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    { "type": "inline_richtext", "id": "label", "label": "t:settings.label" },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.icon", "category": "t:categories.basic" }
+  ]
+}
+{% endschema %}

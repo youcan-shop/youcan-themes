@@ -1,0 +1,31 @@
+{% comment %}
+  Renders an empty state
+
+  Accepts:
+  - type: {String} cart | search | collection | collections
+
+  Usage:
+  {% render 'empty-state', type: 'cart' %}
+{% endcomment %}
+
+{%- liquid
+  case type
+    when 'cart'
+      assign url = settings.empty_cart_link | default: '/collections'
+    when 'search'
+      assign url = '/collections'
+    when 'collection'
+      assign url = '/collections'
+    else
+      assign url = '/'
+  endcase
+  assign heading_key = 'empty.' | append: type | append: '.heading'
+  assign text_key = 'empty.' | append: type | append: '.text'
+  assign button_key = 'empty.' | append: type | append: '.button'
+-%}
+
+<div class="empty-state">
+  <h2 class="empty-state__title">{{ heading_key | t }}</h2>
+  <p>{{ text_key | t }}</p>
+  <a class="button" href="{{ url }}">{{ button_key | t }}</a>
+</div>

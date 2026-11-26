@@ -1,0 +1,77 @@
+{% comment %}
+  Renders a video from a link: an MP4 file, or a YouTube, Vimeo, TikTok, Instagram or Facebook video.
+
+  Accepts:
+  - url: {String} Video link
+  - mode: {String} background (muted loop, no controls) | click (cover with a play button)
+  - poster: {Object} (Optional) Cover image. Without one, the cover comes from the video when the provider allows it.
+  - alt: {String} (Optional) Cover alt text
+  - sizes: {String} (Optional) Cover sizes attribute
+  - eager: {Boolean} (Optional) Load the cover immediately
+  - controls: {Boolean} (Optional) Show the native controls once a file plays (click mode)
+  - loop: {Boolean} (Optional) Loop a file (click mode)
+  - class: {String} (Optional) Extra classes
+  - style: {String} (Optional) Inline style (e.g. --ratio)
+
+  Usage:
+  {% render 'video-player', url: section.settings.video, mode: 'background', poster: section.settings.image %}
+{% endcomment %}
+
+{%- liquid
+  assign link = url | strip
+  assign lower = link | downcase | split: '?' | first
+  assign is_file = false
+  if lower contains '.mp4' or lower contains '.webm' or lower contains '.mov'
+    assign is_file = true
+  endif
+
+  assign youtube_id = ''
+  if poster == blank and lower contains 'youtu'
+    assign markers = 'v=,youtu.be/,shorts/,embed/,live/' | split: ','
+    for marker in markers
+      if link contains marker
+        assign youtube_id = link | split: marker | last | split: '?' | first | split: '&' | first | split: '/' | first
+        break
+      endif
+    endfor
+  endif
+-%}
+
+<ui-video
+  class="video-player {{ class }}"
+  data-url="{{ link | escape }}"
+  data-mode="{{ mode | default: 'click' }}"
+  {% if controls %}data-controls{% endif %}
+  {% if poster == blank and is_file == false and youtube_id == blank %}data-auto-poster{% endif %}
+  {% if style %}style="{{ style }}"{% endif %}
+>
+  {% if is_file %}
+    <video
+      ref="video"
+      src="{{ link | escape }}{% if poster == blank and mode != 'background' %}#t=0.1{% endif %}"
+      {% if poster != blank %}poster="{{ poster | image_url: width: 1600 }}"{% endif %}
+      playsinline
+      {% if mode == 'background' %}autoplay muted loop{% else %}preload="metadata"{% if loop %} loop{% endif %}{% endif %}
+    ></video>
+  {% elsif poster != blank %}
+    {% render 'image', image: poster, alt: alt, sizes: sizes, eager: eager %}
+  {% elsif youtube_id != blank %}
+    <img
+      src="https://i.ytimg.com/vi/{{ youtube_id }}/maxresdefault.jpg"
+      alt="{{ alt | escape }}"
+      width="1280"
+      height="720"
+      {% unless eager %}loading="lazy"{% endunless %}
+      onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/{{ youtube_id }}/hqdefault.jpg'"
+    >
+  {% else %}
+    {{ 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
+  {% endif %}
+  {% if mode != 'background' and link != blank %}
+    <button class="video-player__play" type="button" ref="playButton" aria-label="{{ 'accessibility.play_video' | t }}">
+      {% render 'icon', name: 'play', px: 28 %}
+    </button>
+  {% endif %}
+</ui-video>
+
+<script type="module" src="{{ 'video.js' | asset_url }}"></script>

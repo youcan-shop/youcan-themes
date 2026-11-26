@@ -1,0 +1,81 @@
+{%- liquid
+  assign td_heading = section.settings.heading
+  if td_heading contains 't:defaults.'
+    assign td_heading = td_heading | remove_first: 't:' | t
+  endif
+  assign td_text = section.settings.text
+  if td_text contains 't:defaults.'
+    assign td_text = td_text | remove_first: 't:' | t
+  endif
+-%}
+<div
+  class="section color-scheme color-{{ section.settings.color_scheme }}"
+  style="--section-pt: {{ section.settings.padding_top }}px; --section-pb: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="page-width auth">
+    <div class="auth__card auth__card--wide">
+      <header class="auth__header">
+        <h1 class="h3">{{ td_heading }}</h1>
+        {% if td_text != blank %}<p class="text-sm text-muted">{{ td_text }}</p>{% endif %}
+      </header>
+      {% form 'create_customer', class: 'auth__form' %}
+        {% render 'form-errors', form: form %}
+        <div class="address-form__row">
+          <label class="field">
+            <span class="field__label">{{ 'account.address.first_name' | t }}</span>
+            <input placeholder="{{ 'placeholders.first_name' | t }}" class="input" type="text" name="first_name" value="{{ form.first_name | escape }}" autocomplete="given-name">
+          </label>
+          <label class="field">
+            <span class="field__label">{{ 'account.address.last_name' | t }}</span>
+            <input placeholder="{{ 'placeholders.last_name' | t }}" class="input" type="text" name="last_name" value="{{ form.last_name | escape }}" autocomplete="family-name">
+          </label>
+        </div>
+        <label class="field">
+          <span class="field__label">{{ 'account.email' | t }}</span>
+          <input placeholder="{{ 'placeholders.email' | t }}" class="input" type="email" name="email" value="{{ form.email | escape }}" autocomplete="email" required>
+        </label>
+        {% if section.settings.show_phone %}
+          <label class="field">
+            <span class="field__label">{{ 'account.address.phone' | t }}</span>
+            <input placeholder="{{ 'placeholders.phone' | t }}" class="input" type="tel" name="phone" value="{{ form.phone | escape }}" autocomplete="tel">
+          </label>
+        {% endif %}
+        <label class="field">
+          <span class="field__label">{{ 'account.password' | t }}</span>
+          <input placeholder="{{ 'placeholders.new_password' | t }}" class="input" type="password" name="password" minlength="6" maxlength="72" autocomplete="new-password" required>
+          <span class="text-xs text-muted">{{ 'account.password_hint' | t }}</span>
+        </label>
+        <label class="field">
+          <span class="field__label">{{ 'account.password_confirmation' | t }}</span>
+          <input placeholder="{{ 'placeholders.password_confirmation' | t }}" class="input" type="password" name="password_confirmation" minlength="6" maxlength="72" autocomplete="new-password" required>
+        </label>
+        <button class="button button--full" type="submit">{{ 'account.register.submit' | t }}</button>
+      {% endform %}
+      <p class="auth__footer text-sm text-muted">
+        {{ 'account.register.has_account' | t }}
+        <a href="{{ routes.account_login_url }}">{{ 'account.register.login' | t }}</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+{% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+
+{% schema %}
+{
+  "name": "t:names.customer_register",
+  "templates": ["customer-register"],
+  "limit": 1,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "t:settings.heading", "default": "t:defaults.register_heading" },
+    { "type": "textarea", "id": "text", "label": "t:settings.text", "default": "t:defaults.register_text" },
+    { "type": "checkbox", "id": "show_phone", "label": "t:settings.show_phone", "default": true },
+    { "type": "color_scheme", "id": "color_scheme", "label": "t:settings.color_scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding_top", "label": "t:settings.padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    { "type": "range", "id": "padding_bottom", "label": "t:settings.padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 96 },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "h2 { color: #e1116f; }" },
+    { "type": "paragraph", "content": "t:info.custom_css_section" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,94 @@
+{% comment %}
+  Renders the product bundle offers (single, multi, buy X get Y) as selectable options.
+
+  Accepts:
+  - product: {Object} Product
+
+  Usage:
+  {% render 'bundles', product: product %}
+{% endcomment %}
+
+{% assign types = 'single,multi,buyxgety' | split: ',' %}
+
+<div class="bundles">
+  {% for type in types %}
+    {% for bundle in product.bundles[type] %}
+      <label class="bundle" data-bundle="{{ type }}">
+        <span class="bundle__header">
+          <input type="checkbox" value="{{ bundle.id }}" ref="bundles[]">
+          <span class="bundle__title">{{ bundle.title }}</span>
+          <span class="badge badge--muted">x{{ bundle.bundle_products.size }}</span>
+          {% if bundle.saving_percentage %}
+            <span class="badge badge--sale">-{{ bundle.saving_percentage }}%</span>
+          {% endif %}
+          <span class="price bundle__price">
+            <span class="price__current">{{ bundle.total_price | money }}</span>
+            {% if bundle.compare_price %}
+              <s class="price__compare">{{ bundle.compare_price | money }}</s>
+            {% endif %}
+          </span>
+        </span>
+
+        <span class="bundle__items">
+          {% if type == 'single' %}
+            <span class="bundle-item">
+              <span class="media bundle-item__media" style="--ratio: 1 / 1;">
+                {% render 'image', image: product.preview_image, alt: product.name, width: 120, sizes: '48px', placeholder: 'product-1' %}
+              </span>
+              <span class="bundle-item__info">
+                <span class="bundle-item__name">{{ product.name }}</span>
+                {% for item in bundle.bundle_products %}
+                  {% assign v = item.selected_variant %}
+                  {% unless v.variations == null or v.variations.default %}
+                    <span class="bundle-item__variants">
+                      #{{ forloop.index }}
+                      {% for variation in v.variations %}<span>{{ variation[1] }}</span>{% endfor %}
+                    </span>
+                  {% endunless %}
+                {% endfor %}
+              </span>
+            </span>
+          {% else %}
+            {% for item in bundle.bundle_products %}
+              {% assign v = item.selected_variant %}
+              {% assign is_gift = false %}
+              {% if type == 'buyxgety' and item.discount_value %}
+                {% assign is_gift = true %}
+              {% endif %}
+              <span class="bundle-item{% if is_gift %} bundle-item--gift{% endif %}">
+                <span class="media bundle-item__media" style="--ratio: 1 / 1;">
+                  {% if v.image %}
+                    <img src="https://cdn.youcan.shop/{{ v.image }}" alt="{{ item.product.name | escape }}" width="48" height="48" loading="lazy">
+                  {% elsif item.thumbnail %}
+                    <img src="{{ item.thumbnail }}" alt="{{ item.product.name | escape }}" width="48" height="48" loading="lazy">
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% endif %}
+                </span>
+                <span class="bundle-item__info">
+                  <span class="bundle-item__name">{{ item.product.name }}</span>
+                  <span class="price">
+                    {% if is_gift %}
+                      <span class="badge badge--sale">{% render 'icon', name: 'gift', px: 12 %} {{ 'general.free' | t }}</span>
+                      <s class="price__compare">{{ v.price | default: 0 | money }}</s>
+                    {% else %}
+                      <span class="price__current">{{ item.price | money }}</span>
+                      {% if item.discount_value %}
+                        <s class="price__compare">{{ v.price | default: 0 | money }}</s>
+                      {% endif %}
+                    {% endif %}
+                  </span>
+                  {% unless v.variations == null or v.variations.default %}
+                    <span class="bundle-item__variants">
+                      {% for variation in v.variations %}<span>{{ variation[1] }}</span>{% endfor %}
+                    </span>
+                  {% endunless %}
+                </span>
+              </span>
+            {% endfor %}
+          {% endif %}
+        </span>
+      </label>
+    {% endfor %}
+  {% endfor %}
+</div>

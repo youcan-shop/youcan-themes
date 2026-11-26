@@ -1,0 +1,47 @@
+{% assign p = closest.product | default: product %}
+
+{% if p %}
+  {% assign tag = block.settings.tag | default: 'h1' %}
+  <{{ tag }} class="product-title {{ block.settings.size }}" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">{{ p.name }}</{{ tag }}>
+{% endif %}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% schema %}
+{
+  "name": "t:names.product_title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "t:settings.html_tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "p", "label": "t:options.paragraph" }
+      ],
+      "default": "h1"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "t:settings.size",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }
+      ],
+      "default": "h3"
+    },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    { "name": "t:names.product_title", "category": "t:categories.product" }
+  ]
+}
+{% endschema %}

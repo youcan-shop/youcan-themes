@@ -1,0 +1,20 @@
+{% comment %}
+  Outputs the custom CSS of a section or block, scoped to it with CSS nesting.
+
+  Accepts:
+  - css: {String} The custom CSS setting
+  - section_id: {String} (Optional) Scope to this section
+  - block_id: {String} (Optional) Scope to this block
+
+  Usage:
+  {% render 'custom-css', css: section.settings.custom_css, section_id: section.id %}
+{% endcomment %}
+
+{%- if css != blank -%}
+  {%- if block_id -%}
+    {%- assign selector = '[data-block-id="' | append: block_id | append: '"]' -%}
+  {%- else -%}
+    {%- assign selector = '#youcan-section--' | append: section_id -%}
+  {%- endif -%}
+  <style>{{ selector }} { {{ css | replace: '</', '<\/' }} }</style>
+{%- endif -%}

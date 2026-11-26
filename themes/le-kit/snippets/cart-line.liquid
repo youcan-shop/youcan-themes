@@ -1,0 +1,65 @@
+{% comment %}
+  Renders a cart line
+
+  Accepts:
+  - item: {Object} Cart item
+  - bundled: {Boolean} (Optional) Item is part of a bundle (no quantity / remove controls)
+
+  Usage:
+  {% render 'cart-line', item: item %}
+{% endcomment %}
+
+{%- liquid
+  assign line_total = item.price | times: item.quantity
+  assign has_image = true
+  if item.image == blank or item.image contains '/store-front/images/product-default'
+    assign has_image = false
+  endif
+-%}
+
+<li class="cart-line{% if bundled %} cart-line--bundled{% endif %}">
+  <a class="media cart-line__media" href="{{ item.url }}" tabindex="-1" aria-hidden="true" style="--ratio: 1 / 1;">
+    {% if has_image %}
+      {% render 'image', image: item.image, alt: '', width: 240, sizes: '96px' %}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {% endif %}
+  </a>
+
+  <div class="cart-line__info">
+    <a class="cart-line__name" href="{{ item.url }}">{{ item.name }}</a>
+    {% unless item.variations == null or item.variations.default %}
+      <p class="cart-line__variants">
+        {% for variation in item.variations %}{{ variation[1] }}{% unless forloop.last %} / {% endunless %}{% endfor %}
+      </p>
+    {% endunless %}
+    <div class="price text-sm">
+      {% if bundled and line_total == 0 %}
+        <span class="badge badge--sale">{% render 'icon', name: 'gift', px: 12 %} {{ 'general.free' | t }}</span>
+      {% else %}
+        <span class="price__current">{{ item.price | default: 0 | money }}</span>
+      {% endif %}
+      {% if item.compare_at_price and item.compare_at_price > item.price %}
+        <s class="price__compare">{{ item.compare_at_price | money }}</s>
+      {% endif %}
+    </div>
+    {% unless bundled %}
+      <div class="cart-line__actions">
+        {% render 'quantity', item: item, scale: 'sm' %}
+        <button
+          class="button button--link button--sm cart-line__remove"
+          type="button"
+          data-cart-remove
+          data-item="{{ item.id }}"
+          data-variant="{{ item.product_variant_id }}"
+        >
+          {{ 'cart.remove' | t }}
+        </button>
+      </div>
+    {% endunless %}
+  </div>
+
+  {% unless bundled %}
+    <p class="cart-line__total">{{ line_total | money }}</p>
+  {% endunless %}
+</li>

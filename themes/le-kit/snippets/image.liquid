@@ -1,0 +1,51 @@
+{% comment %}
+  Renders a responsive image, or a placeholder when the image is blank.
+
+  Accepts:
+  - image: {Object|String} Image object or image URL
+  - alt: {String} (Optional) Alt text
+  - width: {Number} (Optional) Largest width to request, defaults to 1600
+  - sizes: {String} (Optional) sizes attribute, defaults to 100vw
+  - widths: {String} (Optional) Comma-separated srcset widths
+  - class: {String} (Optional) Image classes
+  - eager: {Boolean} (Optional) Load immediately with high priority (above the fold)
+  - placeholder: {String} (Optional) Placeholder name (hero-1, product-1, collection-1..)
+
+  Usage:
+  {% render 'image', image: section.settings.image, sizes: '50vw' %}
+{% endcomment %}
+
+{%- liquid
+  assign max_width = width | default: 1600
+  assign sizes = sizes | default: '100vw'
+  assign widths = widths | default: '360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048'
+  if eager
+    assign loading = 'eager'
+    assign priority = 'high'
+  else
+    assign loading = 'lazy'
+    assign priority = 'auto'
+  endif
+  assign image_width = max_width
+  assign image_height = nil
+  if image.width > 0 and image.height > 0
+    if image.width < max_width
+      assign image_width = image.width
+    endif
+    assign image_height = image.height | times: image_width | divided_by: image.width
+  endif
+  assign focal = nil
+  if image.focal_point
+    assign focal = 'object-position: ' | append: image.focal_point.x | append: '% ' | append: image.focal_point.y | append: '%;'
+  endif
+-%}
+
+{%- if image != blank -%}
+  {{
+    image
+    | image_url: width: max_width
+    | image_tag: alt: alt, width: image_width, height: image_height, sizes: sizes, widths: widths, class: class, loading: loading, fetchpriority: priority, style: focal
+  }}
+{%- else -%}
+  {{ placeholder | default: 'hero-1' | placeholder_svg_tag: 'placeholder-svg' }}
+{%- endif -%}

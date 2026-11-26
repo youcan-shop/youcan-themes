@@ -1,0 +1,56 @@
+{% comment %}
+  Static product card block. Rendered once per product by list sections:
+  {% content_for 'block', type: '_product-card', id: 'product-card', card_product: product, sizes: sizes %}
+{% endcomment %}
+
+{% capture attributes %}{{ block.youcan_attributes }} data-block-id="{{ block.id }}"{% endcapture %}
+{% render 'product-card',
+  product: card_product,
+  card: block.settings,
+  eager: eager,
+  sizes: sizes,
+  placeholder_index: placeholder_index,
+  attributes: attributes
+%}
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% schema %}
+{
+  "name": "t:names.product_card",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "t:info.product_card" },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "t:settings.aspect_ratio",
+      "options": [
+        { "value": "inherit", "label": "t:options.theme_default" },
+        { "value": "square", "label": "t:options.square" },
+        { "value": "portrait", "label": "t:options.portrait" },
+        { "value": "tall", "label": "t:options.tall" },
+        { "value": "landscape", "label": "t:options.landscape" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "options": [
+        { "value": "inherit", "label": "t:options.theme_default" },
+        { "value": "start", "label": "t:options.start" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "inherit"
+    },
+    { "type": "checkbox", "id": "show_badges", "label": "t:settings.show_badges", "default": true },
+    { "type": "checkbox", "id": "show_rating", "label": "t:settings.show_rating", "default": false },
+    { "type": "checkbox", "id": "show_swatches", "label": "t:settings.show_swatches", "default": true },
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ]
+}
+{% endschema %}

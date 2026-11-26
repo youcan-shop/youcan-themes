@@ -1,0 +1,33 @@
+<div class="accordion-block" {{ block.youcan_attributes }} data-block-id="{{ block.id }}">
+  {% content_for 'blocks' %}
+</div>
+
+{% render 'custom-css', css: block.settings.custom_css, block_id: block.id %}
+
+{% stylesheet %}
+  .accordion-block { width: 100%; text-align: start; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.accordion",
+  "tag": null,
+  "blocks": [{ "type": "_accordion-row" }],
+  "settings": [
+    { "type": "header", "content": "t:content.advanced" },
+    { "type": "textarea", "id": "custom_css", "label": "t:settings.custom_css", "placeholder": "color: #e1116f;" },
+    { "type": "paragraph", "content": "t:info.custom_css_block" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.accordion",
+      "category": "t:categories.layout",
+      "blocks": [
+        { "type": "_accordion-row", "settings": { "heading": "t:defaults.faq_question_1" } },
+        { "type": "_accordion-row", "settings": { "heading": "t:defaults.faq_question_2" } },
+        { "type": "_accordion-row", "settings": { "heading": "t:defaults.faq_question_3" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

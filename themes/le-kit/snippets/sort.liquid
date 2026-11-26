@@ -1,0 +1,38 @@
+{% comment %}
+  Renders the sort select for product listings (sort_field / sort_order query params).
+
+  Accepts:
+  - url: {String} A URL that contains the current query params (e.g. previous_page)
+  - terms: {String} (Optional) Search terms to keep
+
+  Usage:
+  {% render 'sort', url: previous_page %}
+{% endcomment %}
+
+{%- liquid
+  assign sort_field = ''
+  assign sort_order = ''
+  assign source = request.url | append: '&' | append: url
+  assign params = source | replace: '?', '&' | split: '&'
+  for param in params
+    if param contains 'sort_field='
+      assign sort_field = param | split: '=' | last
+    elsif param contains 'sort_order='
+      assign sort_order = param | split: '=' | last
+    endif
+  endfor
+  assign current = sort_field | append: ':' | append: sort_order
+  assign options = 'created_at:desc,created_at:asc,name:asc,name:desc,price:asc,price:desc' | split: ','
+  assign labels = 'newest,oldest,alphabetical_asc,alphabetical_desc,price_low_high,price_high_low' | split: ','
+-%}
+
+<label class="sort">
+  <span class="sort__label">{{ 'sort.label' | t }}</span>
+  <select class="select select--sm" data-sort-select {% if terms != blank %}data-terms="{{ terms | escape }}"{% endif %}>
+    <option value="" {% if current == ':' %}selected{% endif %}>{{ 'sort.featured' | t }}</option>
+    {% for option in options %}
+      {% assign label_key = 'sort.' | append: labels[forloop.index0] %}
+      <option value="{{ option }}" {% if option == current %}selected{% endif %}>{{ label_key | t }}</option>
+    {% endfor %}
+  </select>
+</label>

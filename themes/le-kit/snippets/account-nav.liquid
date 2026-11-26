@@ -1,0 +1,25 @@
+{% comment %}
+  Renders the customer account navigation (orders, addresses, log out).
+
+  Accepts:
+  - current: {String} orders | addresses
+
+  Usage:
+  {% render 'account-nav', current: 'orders' %}
+{% endcomment %}
+
+<nav class="account-nav" aria-label="{{ 'account.title' | t }}">
+  <a class="account-nav__link" href="{{ routes.account_url }}" {% if current == 'orders' %}aria-current="page"{% endif %}>
+    {% render 'icon', name: 'cart', px: 18 %}
+    {{ 'account.orders' | t }}
+  </a>
+  <a class="account-nav__link" href="{{ routes.account_addresses_url }}" {% if current == 'addresses' %}aria-current="page"{% endif %}>
+    {% render 'icon', name: 'map-pin', px: 18 %}
+    {{ 'account.addresses' | t }}
+    {% if customer.addresses_count > 0 %}<span class="badge badge--muted">{{ customer.addresses_count }}</span>{% endif %}
+  </a>
+  <a class="account-nav__link account-nav__link--logout" href="{{ routes.account_logout_url }}">
+    {% render 'icon', name: 'arrow-right', px: 18, class: 'icon--flip' %}
+    {{ 'account.logout' | t }}
+  </a>
+</nav>
